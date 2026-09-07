@@ -57,14 +57,12 @@ function parseItems(itemsJson: string): OrderItem[] {
 }
 
 // Compact time badge for single-line mini cards (e.g. "Jetzt", "4m", "18:42")
-function formatMiniOrderTime(order: Order, now: number): string {
+function formatMiniOrderTime(order: Order, _now?: number): string {
   const timeMs =
+    order.createdAt ||
     order._creationTime ||
     (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
   if (!timeMs) return "";
-  const elapsedMinutes = Math.floor((now - timeMs) / (1000 * 60));
-  if (elapsedMinutes < 1) return "Jetzt";
-  if (elapsedMinutes < 60) return `${elapsedMinutes}m`;
   return new Date(timeMs).toLocaleTimeString("de-DE", {
     hour: "2-digit",
     minute: "2-digit",
@@ -72,18 +70,16 @@ function formatMiniOrderTime(order: Order, now: number): string {
 }
 
 // Detailed time label for header in detail explorer pane
-function formatDetailOrderTime(order: Order, now: number): string {
+function formatDetailOrderTime(order: Order, _now?: number): string {
   const timeMs =
+    order.createdAt ||
     order._creationTime ||
     (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
   if (!timeMs) return "";
-  const elapsedMinutes = Math.floor((now - timeMs) / (1000 * 60));
   const timeStr = new Date(timeMs).toLocaleTimeString("de-DE", {
     hour: "2-digit",
     minute: "2-digit",
   });
-  if (elapsedMinutes < 1) return `Gerade eben (${timeStr} Uhr)`;
-  if (elapsedMinutes < 60) return `vor ${elapsedMinutes} Min. (${timeStr} Uhr)`;
   return `${timeStr} Uhr`;
 }
 
@@ -200,25 +196,47 @@ export function LiveOrdersContent({
   }, [org, router, t]);
 
   // Split orders into in_progress and recently completed
+  // Oldest active order stands at the top (FIFO kitchen order)
   const inProgressOrders = useMemo(
     () =>
-      localOrders.filter(
-        (o) => o.status !== "completed" && o.status !== "cancelled",
-      ),
+      localOrders
+        .filter((o) => o.status !== "completed" && o.status !== "cancelled")
+        .sort((a, b) => {
+          const timeA =
+            a.createdAt ||
+            a._creationTime ||
+            (a.$createdAt ? new Date(a.$createdAt).getTime() : 0);
+          const timeB =
+            b.createdAt ||
+            b._creationTime ||
+            (b.$createdAt ? new Date(b.$createdAt).getTime() : 0);
+          return timeA - timeB; // ascending: oldest active order first
+        }),
     [localOrders],
   );
 
+  // Oldest completed order (expiring/archiving soonest) stands at the top
   const completedOrders = useMemo(
     () =>
-      localOrders.filter((o) => {
-        if (o.status !== "completed") return false;
-        const timestamp = o.completedAt
-          ? o.completedAt
-          : o.$updatedAt
-          ? new Date(o.$updatedAt).getTime()
-          : new Date(o.$createdAt || o._creationTime || Date.now()).getTime();
-        return now - timestamp < KITCHEN_CLEANUP_TIMEOUT;
-      }),
+      localOrders
+        .filter((o) => {
+          if (o.status !== "completed") return false;
+          const timestamp = o.completedAt
+            ? o.completedAt
+            : o.$updatedAt
+            ? new Date(o.$updatedAt).getTime()
+            : new Date(o.$createdAt || o._creationTime || Date.now()).getTime();
+          return now - timestamp < KITCHEN_CLEANUP_TIMEOUT;
+        })
+        .sort((a, b) => {
+          const timeA =
+            a.completedAt ||
+            (a.$updatedAt ? new Date(a.$updatedAt).getTime() : a.createdAt || a._creationTime || 0);
+          const timeB =
+            b.completedAt ||
+            (b.$updatedAt ? new Date(b.$updatedAt).getTime() : b.createdAt || b._creationTime || 0);
+          return timeA - timeB; // ascending: oldest completed (expiring next) first
+        }),
     [localOrders, now],
   );
 
@@ -359,7 +377,7 @@ export function LiveOrdersContent({
   return (
     <div className="flex-1 min-h-0 h-full flex flex-col space-y-4 print:hidden">
       {/* Top Bar */}
-      <div className="flex items-center justify-between shrink-0 sm:-mt-[3.2px]">
+      <div className="flex items-center justify-between shrink-0 -mt-[2.4px] sm:-mt-[5.6px]">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
             {t("orders")}

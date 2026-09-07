@@ -177,7 +177,7 @@ export function DashboardShell({
                     variant="ghost"
                     className={cn(
                       "w-full h-10 transition-colors relative overflow-visible",
-                      isExpanded ? "justify-start px-2.5" : "justify-center px-0",
+                      isExpanded ? "justify-start pl-[13px] pr-2.5" : "justify-center px-0",
                       isActive
                         ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary"
                         : "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
@@ -345,7 +345,7 @@ export function DashboardShell({
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background lg:rounded-l-[1.5rem] shadow-sm print:overflow-visible print:block print:bg-white print:shadow-none">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background lg:rounded-l-[1.5rem] shadow-sm print:overflow-visible print:block print:bg-white print:shadow-none @container">
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary-foreground/10 px-4 lg:hidden print:hidden bg-primary text-primary-foreground">
           <Link href={zakkigUrl} target="_blank" rel="noopener noreferrer">
             <Image

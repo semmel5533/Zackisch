@@ -41,8 +41,8 @@ export async function placeOrderAction(
     return { error: "Ungültige E-Mail-Adresse." };
   }
 
-  if (tableNumber && tableNumber.length > 20) {
-    return { error: "Tischnummer darf maximal 20 Zeichen lang sein." };
+  if (tableNumber && tableNumber.length > 4) {
+    return { error: "Die Tischnummer darf maximal 4 Zeichen lang sein." };
   }
 
   let items: OrderItem[];

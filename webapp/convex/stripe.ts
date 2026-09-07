@@ -258,7 +258,7 @@ export const createCheckoutSession = action({
       }
 
       // 3. Validate tableNumber
-      if (args.tableNumber && args.tableNumber.length > 20) {
+      if (args.tableNumber && args.tableNumber.length > 4) {
         return { error: "Ungültige Tischnummer." };
       }
 
@@ -426,7 +426,7 @@ export const createPaymentIntent = action({
       }
 
       // 3. Validate tableNumber
-      if (args.tableNumber && args.tableNumber.length > 20) {
+      if (args.tableNumber && args.tableNumber.length > 4) {
         return { error: "Ungültige Tischnummer." };
       }
 

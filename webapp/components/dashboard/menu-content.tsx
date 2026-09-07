@@ -85,15 +85,19 @@ interface MenuContentProps {
 
 const EMPTY_ITEMS: MenuItem[] = [];
 
-function useIsDesktop() {
+function useIsDesktop(containerRef: React.RefObject<HTMLDivElement | null>) {
   const [isDesktop, setIsDesktop] = useState(false);
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 1400px)");
-    setIsDesktop(media.matches);
-    const listener = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
-  }, []);
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setIsDesktop(entry.contentRect.width >= 700);
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [containerRef]);
   return isDesktop;
 }
 
@@ -154,7 +158,8 @@ export function MenuContent({
 }: MenuContentProps) {
   const { t } = useTranslation();
   const [, startTransition] = useTransition();
-  const isDesktop = useIsDesktop();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useIsDesktop(containerRef);
 
   // Persistent client state for categories and items to eliminate drag & drop flickering
   const [categories, setCategories] = useState<MenuCategory[]>(() =>
@@ -637,7 +642,7 @@ export function MenuContent({
   );
 
   return (
-    <div className="flex-1 space-y-4">
+    <div ref={containerRef} className="flex-1 space-y-4 @container">
       {/* Header Bar */}
       <div className="flex items-center justify-between space-y-2 print:hidden">
         <div>
@@ -708,9 +713,9 @@ export function MenuContent({
                       type="button"
                       variant="ghost"
                       onClick={openNewCategory}
-                      className="w-full border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
+                      className="w-full h-14 sm:h-16 rounded-2xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
                     >
-                      <Plus className="h-4 w-4 shrink-0" weight="bold" />
+                      <Plus className="h-5 w-5 shrink-0" weight="bold" />
                       <span>{t("addCategory")}</span>
                     </Button>
                   )}
@@ -741,9 +746,9 @@ export function MenuContent({
                       type="button"
                       variant="ghost"
                       onClick={openNewCategory}
-                      className="w-full border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
+                      className="w-full h-14 sm:h-16 rounded-2xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
                     >
-                      <Plus className="h-4 w-4 shrink-0" weight="bold" />
+                      <Plus className="h-5 w-5 shrink-0" weight="bold" />
                       <span>{t("addCategory")}</span>
                     </Button>
                   )}
@@ -773,9 +778,9 @@ export function MenuContent({
                   type="button"
                   variant="ghost"
                   onClick={openNewCategory}
-                  className="w-full border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
+                  className="w-full h-14 sm:h-16 rounded-2xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
                 >
-                  <Plus className="h-4 w-4 shrink-0" weight="bold" />
+                  <Plus className="h-5 w-5 shrink-0" weight="bold" />
                   <span>{t("addCategory")}</span>
                 </Button>
               </div>
@@ -1022,14 +1027,14 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
       <Card
         ref={setDroppableRef}
         className={cn(
-          "transition-colors",
+          "transition-colors @container",
           isOver &&
             isDraggingItem &&
             (isCollapsed || categoryItems.length === 0) &&
             "ring-2 ring-primary bg-primary/5",
         )}
       >
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 gap-2 sm:gap-4 w-full">
+        <CardHeader className="flex flex-col @min-[450px]:flex-row @min-[450px]:items-center @min-[450px]:justify-between pb-2 gap-2 @min-[450px]:gap-4 w-full">
           <div className="flex items-center gap-3 min-w-0 flex-1 w-full">
             <button
               type="button"
@@ -1083,13 +1088,13 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
               </button>
             )}
             {!isEditingName && (
-              <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto sm:ml-0 tabular-nums leading-none">
+              <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto @min-[450px]:ml-0 tabular-nums leading-none">
                 {categoryItems.length}
               </Badge>
             )}
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end gap-1.5 shrink-0 border-t border-border/40 pt-2 sm:pt-0 sm:border-t-0 w-full sm:w-auto">
+          <div className="flex items-center justify-between @min-[450px]:justify-end gap-1.5 shrink-0 border-t border-border/40 pt-2 @min-[450px]:pt-0 @min-[450px]:border-t-0 w-full @min-[450px]:w-auto">
             <Button
               variant="ghost"
               size="icon"
@@ -1140,7 +1145,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
               items={categoryItems.map((i) => i.$id)}
               strategy={rectSortingStrategy}
             >
-              <div className="grid grid-cols-1 min-[1900px]:grid-cols-2 gap-2.5 min-h-[60px] p-1.5 transition-colors rounded-lg">
+              <div className="grid grid-cols-1 @min-[1500px]:grid-cols-2 gap-2.5 min-h-[60px] p-1.5 transition-colors rounded-lg">
                 {categoryItems.length === 0 ? (
                   <div className="col-span-full py-6 text-center flex flex-col items-center justify-center gap-1 border border-dashed rounded-lg bg-muted/10">
                     <p className="text-sm font-medium text-muted-foreground">

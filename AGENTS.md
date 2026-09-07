@@ -87,6 +87,15 @@ Follow this unified, multi-layered architecture for all features and changes:
 7. **Terminal Session Persistence:**
    - Terminal pairing tokens from URLs (`?token=...`) must be persisted via secure, HttpOnly, SameSite=lax cookies (`order_session_[orgId]`, `availability_session_[orgId]`). Never store pairing tokens in unencrypted client `localStorage`.
 
+8. **Table Name & Number Boundary (Max 4 Characters):**
+   - Table names and numbers must strictly never exceed 4 characters (`<= 4`). Enforce both client-side (`maxLength={4}`, input clamping) and server-side across all Server Actions (`settings-actions`, `checkout-actions`, `order-actions`) and Convex mutations (`organizations`, `orders`, `stripe`).
+
+9. **Order Numbering Integrity (Rolling 001 - 999):**
+   - Order numbers strictly count sequentially upwards from `001` to `999` and roll over back to `001`. The calculation must always inspect the maximum allocated number (`maxNum`) from recent orders to prevent countdown artifacts.
+
+10. **Container-Width-Based Responsive Layouts:**
+   - Dashboard layouts and responsive switches must evaluate against the available content width without the sidebar. Use CSS Container Queries (`@container`, `desktop:*`, `tablet:*`, `@min-[...]`) and `ResizeObserver` on the content container instead of window viewport media queries (`window.innerWidth`, `window.matchMedia`).
+
 <!-- END:architecture-security-rules -->
 
 <!-- BEGIN:ui-feedback-conventions -->

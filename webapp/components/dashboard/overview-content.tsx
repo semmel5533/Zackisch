@@ -24,7 +24,6 @@ import {
   Archive,
   CheckSquare,
   Check,
-  SelectionAll,
   DotsSixVertical,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
@@ -466,7 +465,7 @@ function QrCodeGeneratorCard({
       setNewTableInput("");
       return;
     }
-    if (trimmed.length > 10) {
+    if (trimmed.length > 4) {
       toast.error(t("tableTooLong"));
       return;
     }
@@ -534,7 +533,7 @@ function QrCodeGeneratorCard({
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full print:hidden">
+      <div className="grid grid-cols-1 @min-[768px]:grid-cols-2 gap-4 h-full print:hidden">
         {/* Left Card: QR Code Preview */}
         <Card className="relative flex flex-col items-center justify-end p-6 shadow-sm w-full h-full min-h-[600px] transition-colors duration-200 bg-white">
           <div className="absolute top-4 left-6 right-4 flex items-center justify-between gap-2">
@@ -676,7 +675,6 @@ function QrCodeGeneratorCard({
                       selectedTables.length > 0 ? "sm:flex-1" : "",
                     )}
                   >
-                    <SelectionAll className="h-4 w-4 shrink-0" weight="bold" />
                     <span>{t("selectAll")}</span>
                   </Button>
 
@@ -730,7 +728,7 @@ function QrCodeGeneratorCard({
                               value={newTableInput}
                               onChange={(e) => {
                                 const val = e.target.value;
-                                if (val.length <= 10) setNewTableInput(val);
+                                if (val.length <= 4) setNewTableInput(val);
                               }}
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") {
@@ -747,7 +745,7 @@ function QrCodeGeneratorCard({
                                   setIsAddingTable(false);
                                 }
                               }}
-                              maxLength={10}
+                              maxLength={4}
                               className="w-full h-11 text-center text-sm font-medium border border-dashed border-primary rounded-xl focus-visible:ring-0"
                             />
                           ) : (
@@ -889,13 +887,19 @@ export function OverviewContent({
   const [period, setPeriod] = useState<TimePeriod>("30d");
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setIsMobile(entry.contentRect.width < 768);
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   const baseUrl =
@@ -905,7 +909,7 @@ export function OverviewContent({
 
   return (
     <>
-      <div className="flex-1 space-y-4">
+      <div ref={containerRef} className="flex-1 space-y-4 @container">
         <div className="flex items-center justify-between space-y-2 print:hidden">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
@@ -914,7 +918,7 @@ export function OverviewContent({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 print:block">
+        <div className="grid grid-cols-1 @min-[1300px]:grid-cols-2 gap-4 print:block">
           <StatisticsCard
             orders={orders}
             period={period}
@@ -925,10 +929,10 @@ export function OverviewContent({
           <QrCodeGeneratorCard organization={organization} baseUrl={baseUrl} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4 print:hidden">
+        <div className="grid grid-cols-1 @min-[700px]:grid-cols-2 @min-[1300px]:grid-cols-4 gap-4 print:hidden">
           {children}
 
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
+          <div className="@min-[700px]:col-span-2 grid grid-cols-1 @min-[500px]:grid-cols-2 gap-4 h-full">
             <Link
               href={`/dashboard/${organization.$id}/menu`}
               className="flex items-start gap-3 p-4 bg-background border rounded-xl hover:bg-muted/50 transition-colors shadow-sm h-full"

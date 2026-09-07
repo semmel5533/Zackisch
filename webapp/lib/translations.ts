@@ -267,7 +267,7 @@ export const translations = {
     nameTooLong: "Der Name darf maximal 100 Zeichen lang sein.",
     descTooLong: "Die Beschreibung darf maximal 500 Zeichen lang sein.",
     addressTooLong: "Die Adresse darf maximal 200 Zeichen lang sein.",
-    tableTooLong: "Die Tischnummer darf maximal 10 Zeichen lang sein.",
+    tableTooLong: "Die Tischnummer darf maximal 4 Zeichen lang sein.",
     emailTooLong: "Die E-Mail-Adresse darf maximal 100 Zeichen lang sein.",
     itemNamePlaceholder:
       "z.B. Cheeseburger Deluxe, Pizza Margherita, Döner Special",
@@ -825,7 +825,7 @@ export const translations = {
     nameTooLong: "The name must not exceed 100 characters.",
     descTooLong: "The description must not exceed 500 characters.",
     addressTooLong: "The address must not exceed 200 characters.",
-    tableTooLong: "The table number must not exceed 10 characters.",
+    tableTooLong: "The table number must not exceed 4 characters.",
     emailTooLong: "The email address must not exceed 100 characters.",
     itemNamePlaceholder:
       "e.g. Cheeseburger Deluxe, Pizza Margherita, Doner Special",

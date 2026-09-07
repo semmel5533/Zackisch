@@ -124,8 +124,8 @@ export const create = mutation({
       }
       for (const table of args.tables) {
         const trimmed = table.trim();
-        if (trimmed.length < 1 || trimmed.length > 10) {
-          throw new Error("Table name must be between 1 and 10 characters");
+        if (trimmed.length < 1 || trimmed.length > 4) {
+          throw new Error("Table name must be between 1 and 4 characters");
         }
       }
     }
@@ -189,8 +189,8 @@ export const update = mutation({
       }
       for (const table of patchData.tables) {
         const trimmed = table.trim();
-        if (trimmed.length < 1 || trimmed.length > 10) {
-          throw new Error("Table name must be between 1 and 10 characters");
+        if (trimmed.length < 1 || trimmed.length > 4) {
+          throw new Error("Table name must be between 1 and 4 characters");
         }
       }
     }

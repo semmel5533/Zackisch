@@ -71,8 +71,8 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
   - **Statistik-Kacheln:** Zwei Hauptkacheln (Anzahl der Bestellungen & Netto-Umsatz abzüglich aller Gebühren). Zeitraum umschaltbar (24 Stunden, 30 Tage, 90 Tage) inklusive Graphen.
   - **Quick-Links:** Navigation zu den weiteren Dashboard-Seiten.
   - **Kitchen-Session Management:** Ansicht zum Erstellen und Verwalten von Kitchen-Sessions inkl. kopierbarem Pairing-Link.
-  - **QR-Code Generator:** Erstellung von QR-Codes für To-Go und To-Stay (inkl. sichtbarer Tischnummer über dem Code). Generierte QR-Codes sind als PDF für den Druck herunterladbar.
-- **Live-Bestellungen (`/live-orders`):** Echtzeit-Ansicht der aktiven Bestellungen (In Bearbeitung, Abgeschlossen, Storniert).
+  - **QR-Code Generator:** Erstellung von QR-Codes für To-Go und To-Stay (inkl. sichtbarer Tischnummer über dem Code, streng auf maximal 4 Zeichen limitiert). Generierte QR-Codes sind als PDF für den Druck herunterladbar.
+- **Live-Bestellungen (`/live-orders`):** Echtzeit-Ansicht der aktiven Bestellungen (In Bearbeitung, Abgeschlossen, Storniert). Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar (1 Spalte Mobile unter 500px, 2 Spalten zwischen 500px und 1100px, 3 Spalten ab 1100px). Beim Ein- und Ausklappen der Sidebar passt sich das Board somit automatisch an.
 - **Archiv (`/archive`):** Detaillierte Historien-Tabelle aller vergangenen Bestellungen mit Filter-/Suchfunktionen und dem DATEV CSV-Export für den Steuerberater. Die Sortierung erfolgt millisekundengenau absteigend (neueste Bestellungen oben), während die Anzeige im Interface sauber auf die Minute formatiert ist.
 - **Menu (`/menu`):** Zentrale Verwaltung der Speisekarte, Getränke, Kategorien, Preise und Bilder.
 - **Settings (`/settings`):** Verwaltung von Account- und Betriebsdaten (z. B. Logo-Upload im Full-Width Layout auf Desktop) und Stripe-Details. Die Kontolöschung erfolgt über einen zweistufigen Verifizierungsprozess: Eine serverseitige Mutation (`deleteAccount`) generiert einen temporären Token und sendet eine Bestätigungs-E-Mail über den eigenen SMTP-Server. Erst nach Klick auf den E-Mail-Link wird das Konto restlos gelöscht.
@@ -80,8 +80,8 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
 ### 2.3 Core Features: Kitchen Board View
 
 - **Aufbau:** Ansicht mit den Status "In Bearbeitung", "Abgeschlossen" und "Storniert". Aktualisiert sich reaktiv in Echtzeit.
-- **Ablauf:** Eingehende Bestellungen erscheinen als Kacheln in historischer Reihenfolge. Ein Klick markiert die Bestellung als abgeschlossen und verschiebt sie.
-- **Cleanup & Auto-Archivierung:** Abgeschlossene Kacheln bleiben für 30 Minuten auf dem Kitchen Board sichtbar und zeigen einen Live-Timer an ("Auto-Archiv in X Min."). Anschließend werden sie automatisch ausgeblendet und sind im Archiv auffindbar.
+- **Ablauf:** Eingehende Bestellungen erscheinen als Kacheln in historischer Reihenfolge (FIFO-Prinzip: älteste offene Bestellung stets oben; bei Abgeschlossen steht die demnächst ablaufende Bestellung oben). Bei neuen Bestellungen werden exakte Eingangs-Uhrzeiten angezeigt. Ein Klick markiert die Bestellung als abgeschlossen und verschiebt sie.
+- **Cleanup & Auto-Archivierung:** Abgeschlossene Kacheln bleiben für 30 Minuten auf dem Kitchen Board sichtbar und zeigen einen Live-Timer an (z. B. "30m", "5m"). Anschließend werden sie automatisch ausgeblendet und sind im Archiv auffindbar.
 
 ### 2.4 Core Features: Gast-Frontend (To-Stay & To-Go)
 
@@ -91,7 +91,7 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
   - **Fokussierte Warenkorb-Seite:** Beim Klick auf den Banner wechselt die Ansicht in den Warenkorb – das Restaurant-Hero-Banner wird ausgeblendet und ein Zurück-Pfeil oben links führt jederzeit zurück zum Menü.
 - **Warenkorb (Client State):** Wird lokal via `Zustand` verwaltet. Mengenänderungen (+ / -) sind direkt möglich. Bei einem Page-Reload wird der Warenkorb resettet.
 - **Checkout:** Abfrage der E-Mail-Adresse (Pflicht für digitalen Beleg), Auswahl der Zahlungsmethode (Apple Pay, Google Pay, Karte) und sofortige Bezahlung. Der Bon wird per E-Mail gesendet.
-- **Bestellnummern (Rolling 001 - 999):** Die für Gäste, Gastronomen und Küche sichtbare Bestellnummer rotiert fortlaufend im dreistelligen Format von `001` bis `999` und beginnt danach automatisch wieder bei `001`. Intern wird jede Bestellung zusätzlich durch eine eindeutige Dokumenten-ID sowie die Stripe-Payment-ID identifiziert.
+- **Bestellnummern (Rolling 001 - 999):** Die für Gäste, Gastronomen und Küche sichtbare Bestellnummer rotiert fortlaufend streng aufsteigend im dreistelligen Format von `001` bis `999` und beginnt danach automatisch wieder bei `001` (abgesichert gegen historische Seed-Verschiebungen und Rollover). Intern wird jede Bestellung zusätzlich durch eine eindeutige Dokumenten-ID sowie die Stripe-Payment-ID identifiziert.
 - **Nach der Bestellung:**
   - **To-Stay:** Anzeige der Bestellnummer auf dem Screen. Gast wartet am Tisch. (Page-Reload resettet den State für eine potenzielle neue Bestellung).
   - **To-Go:** Automatische Weiterleitung auf den Order-Tracker mit Live-Status und Anzeige der 3-stelligen Abholnummer. Der Link bleibt nach Bestellabschluss (Abholbereit) 10 Minuten lang mit einem Live-Restzeit-Countdown aktiv ("Tracking-Link aktiv für noch X:XX Min."), danach wird er ungültig und schaltet auf den sauberen Ablauf-Screen um.

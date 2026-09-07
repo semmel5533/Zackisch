@@ -276,7 +276,7 @@ export function ArchiveContent({
   }
 
   return (
-    <div className="flex-1 space-y-4">
+    <div className="flex-1 space-y-4 @container">
       <div className="flex items-center justify-between space-y-2 print:hidden">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("archive")}</h1>
@@ -285,37 +285,35 @@ export function ArchiveContent({
 
       <div className="flex flex-col gap-4">
         {/* Controls Layout */}
-        <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center justify-between">
-          <div className="flex flex-col md:flex-row flex-1 items-start md:items-center gap-3 w-full">
-            {/* Search Input & Selector */}
-            <div className="flex w-full md:max-w-md items-center gap-2">
-              <div className="relative flex-1 min-w-0">
-                <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  type="text"
-                  placeholder={t("search")}
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
+        <div className="flex flex-col @min-[700px]:flex-row gap-3 @min-[700px]:items-center justify-between">
+          <div className="flex items-center gap-2 flex-1 w-full @min-[700px]:w-auto @min-[700px]:max-w-xl">
+            {/* Search Input */}
+            <div className="relative flex-1 min-w-0">
+              <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                type="text"
+                placeholder={t("search")}
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                maxLength={100}
+                className="pl-9 pr-9 bg-background"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
                     setCurrentPage(1);
                   }}
-                  maxLength={100}
-                  className="pl-9 pr-9 bg-background"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setCurrentPage(1);
-                    }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
-                    title={t("clearSearch")}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                  title={t("clearSearch")}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
             {/* Filter Multi-Select */}
@@ -324,7 +322,7 @@ export function ArchiveContent({
                 render={
                   <Button
                     variant="default"
-                    className="justify-between min-w-[120px]"
+                    className="justify-between shrink-0 min-w-[110px]"
                   >
                     <div className="flex items-center gap-2">
                       <Funnel className="h-4 w-4 mr-2" />
@@ -391,7 +389,7 @@ export function ArchiveContent({
           <Button
             variant="default"
             onClick={handleExportCSV}
-            className="w-full xl:w-auto shrink-0"
+            className="w-full @min-[700px]:w-auto shrink-0"
           >
             <DownloadSimple className="mr-2 h-4 w-4" weight="bold" />
             {t("exportCSV")}
@@ -605,7 +603,7 @@ export function ArchiveContent({
         </Card>
 
         {/* Pagination & Items Per Page Controls */}
-        <div className="mt-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-4 flex flex-col @min-[700px]:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>{t("itemsPerPage")}</span>
             <DropdownMenu>
@@ -714,7 +712,7 @@ export function ArchiveContent({
             </div>
           )}
           {/* Spacer for right alignment balancing */}
-          <div className="hidden md:block md:w-[150px]"></div>
+          <div className="hidden @min-[700px]:block @min-[700px]:w-[150px]"></div>
         </div>
       </div>
     </div>

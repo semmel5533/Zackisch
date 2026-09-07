@@ -48,7 +48,7 @@ Alle Tabellen sind typsicher über Convex definiert:
 2. **`organizations`:** Restaurant-Stammdaten (Name, Adresse, Logo-Storage-ID, Owner-ID, Stripe-Verbindungsstatus, Tische, Schalter für Abholung / Tischbestellung).
 3. **`menuCategories`:** Speisekarten-Kategorien mit Sortier-Index (`by_organizationId_and_sortOrder`).
 4. **`menuItems`:** Gerichte & Getränke mit Preisen in Cent, Bild-Storage-ID, MwSt.-Satz, Verfügbarkeits-Status und JSON-konfigurierten `customizations` (z.B. Größen, Teig, Toppings).
-5. **`orders`:** Bestellungen mit rollierender dreistelliger Bestellnummer (`001`–`999`), Bestelltyp (`takeaway` / `dine-in`), Tischnummer, Status (`in_progress`, `completed`, `cancelled`), Gesamtsumme und Gebührenaufschlüsselung.
+5. **`orders`:** Bestellungen mit fortlaufend aufsteigender, rollierender dreistelliger Bestellnummer (`001`–`999`, mit Rollover-Absicherung), Bestelltyp (`takeaway` / `dine-in`), Tischnummer (strikt auf max. 4 Zeichen begrenzt), Status (`in_progress`, `completed`, `cancelled`), Gesamtsumme und Gebührenaufschlüsselung.
 6. **`orderSessions` & `availabilitySessions`:** Autorisierungs-Token für separate Tablet-Terminals.
 7. **`verificationCodes`:** Temporäre Prüfcodes für Login-OTPs, Passwort-Resets und Stammdaten-Änderungen.
 
@@ -58,7 +58,7 @@ Alle Tabellen sind typsicher über Convex definiert:
 
 Convex synchronisiert Änderungen automatisch und ohne manuelle WebSocket-Verwaltung an alle aktiven Clients:
 
-- **Kitchen Board (`/dashboard/[orgId]/live-orders` & `/orders/[orgId]`):** Nutzt reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions. Sobald ein Gast bezahlt oder der Status geändert wird, aktualisieren sich alle Displays blitzschnell.
+- **Kitchen Board (`/dashboard/[orgId]/live-orders` & `/orders/[orgId]`):** Nutzt reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions. Sobald ein Gast bezahlt oder der Status geändert wird, aktualisieren sich alle Displays blitzschnell. Responsive Layout-Umschaltungen (1 Spalte unter 500px, 2 Spalten zwischen 500px und 1100px, 3 Spalten ab 1100px) basieren auf CSS Container Queries (`@container`) und berechnen den verfügbaren Platz exklusiv anhand der Inhaltsbreite ohne Sidebar.
 - **Verfügbarkeits-Board (`/availability/[orgId]`):** Kassenpersonal kann Speisen oder Optionen sekundenschnell als ausverkauft schalten (`toggleMenuItemAvailability`). Gäste und Terminals sehen dies sofort im UI.
 - **Gast-Bestellverfolgung (`/to-go` & `/to-stay` Tracker):** Der Gast sieht den aktuellen Zubereitungs-Status seiner Bestellung in Echtzeit über `useQuery(api.orders.getOrder)`.
 
@@ -107,6 +107,8 @@ Logos, Restaurant-Banner und Speisekarten-Bilder werden im nativen Convex File S
    - Bei der Bestellverfolgung werden Plattform- und Zahlungsgebühren (`zakkigFee`, `stripeFee`, `netAmount`, `stripePaymentId`) serverseitig auf 0 gesetzt, sodass Gäste ausschließlich für sie relevante Bestelldaten einsehen können.
 4. **Serverseitige Preis- und Integritätsprüfung:**
    - Gast-Warenkörbe werden im Checkout niemals ungeprüft akzeptiert. Die Convex Action `createCheckoutSession` liest alle Artikelpreise direkt aus der Datenbank und rechnet die Gesamtsumme centgenau nach.
+5. **Tischnamen- und Tischnummern-Begrenzung:**
+   - Alle Tischnummern sind durchgängig auf maximal 4 Zeichen limitiert (`<= 4`). Dies wird sowohl im Frontend (`maxLength={4}`, Input Clamping) als auch in den Server Actions (`settings-actions`, `checkout-actions`, `order-actions`) und Convex-Mutationen (`organizations`, `orders`, `stripe`) strikt durchgesetzt.
 
 ## Routing & Verzeichnisstruktur
 

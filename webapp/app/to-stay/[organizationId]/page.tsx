@@ -33,8 +33,9 @@ export async function generateMetadata({
     };
   }
 
-  const prefix = table
-    ? dict.titleToStay.replace("{table}", table)
+  const cleanTable = table ? table.trim().slice(0, 4) : undefined;
+  const prefix = cleanTable
+    ? dict.titleToStay.replace("{table}", cleanTable)
     : dict.titleToStayNoTable;
 
   return {
@@ -117,13 +118,15 @@ export default async function ToStayPage({
     ownerId: "",
   };
 
+  const cleanTable = table ? table.trim().slice(0, 4) : undefined;
+
   return (
     <GuestFrontend
       organization={structuredClone(publicOrganization)}
       categories={structuredClone(categories)}
       items={structuredClone(items)}
       type="dine-in"
-      tableNumber={table}
+      tableNumber={cleanTable}
     />
   );
 }

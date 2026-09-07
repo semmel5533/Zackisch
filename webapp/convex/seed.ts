@@ -58,7 +58,7 @@ export const seedDemoData = internalMutation({
         legalName: "Gusto Gastronomie GmbH",
         taxId: "DE123456789",
         currency: "EUR",
-        tables: ["1", "2", "3", "4", "5", "6", "Terrasse 1", "Terrasse 2"],
+        tables: ["1", "2", "3", "4", "5", "6", "T1", "T2"],
       });
     } else if (existingOrg && orgId && existingOrg.ownerId !== userId) {
       await ctx.db.patch(orgId, { ownerId: userId });

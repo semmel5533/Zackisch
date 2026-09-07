@@ -87,7 +87,7 @@ export function SessionsOverviewCard({
   return (
     <Fragment>
       {/* Order Sessions Card */}
-      <Card className="h-full flex flex-col">
+      <Card className="h-full flex flex-col @container">
         <CardHeader className="flex flex-col gap-1 pb-2">
           <div className="flex items-start justify-between gap-4 w-full">
             <h3 className="text-lg font-semibold leading-tight tracking-tight flex-1">
@@ -160,11 +160,11 @@ export function SessionsOverviewCard({
           </p>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col justify-end gap-3 pt-4">
-          <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+          <div className="flex flex-col @min-[370px]:flex-row items-center gap-2 w-full">
             <Button
               variant="outline"
               onClick={() => copyLinkText("orders", orderToken)}
-              className="w-full sm:flex-1 gap-2"
+              className="w-full @min-[370px]:flex-1 gap-2"
               disabled={isPending}
             >
               <Copy className="h-4 w-4 shrink-0" weight="bold" />
@@ -173,7 +173,7 @@ export function SessionsOverviewCard({
             <Button
               variant="outline"
               onClick={() => setRegenerateOrderOpen(true)}
-              className="w-full sm:flex-1 gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+              className="w-full @min-[370px]:flex-1 gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
               disabled={isPending}
             >
               <ArrowsClockwise className="h-4 w-4" weight="bold" />
@@ -184,7 +184,7 @@ export function SessionsOverviewCard({
       </Card>
 
       {/* Availability Sessions Card */}
-      <Card className="h-full flex flex-col">
+      <Card className="h-full flex flex-col @container">
         <CardHeader className="flex flex-col gap-1 pb-2">
           <div className="flex items-start justify-between gap-4 w-full">
             <h3 className="text-lg font-semibold leading-tight tracking-tight flex-1">
@@ -260,11 +260,11 @@ export function SessionsOverviewCard({
           </p>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col justify-end gap-3 pt-4">
-          <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+          <div className="flex flex-col @min-[370px]:flex-row items-center gap-2 w-full">
             <Button
               variant="outline"
               onClick={() => copyLinkText("availability", availabilityToken)}
-              className="w-full sm:flex-1 gap-2"
+              className="w-full @min-[370px]:flex-1 gap-2"
               disabled={isPending}
             >
               <Copy className="h-4 w-4 shrink-0" weight="bold" />
@@ -273,7 +273,7 @@ export function SessionsOverviewCard({
             <Button
               variant="outline"
               onClick={() => setRegenerateAvailabilityOpen(true)}
-              className="w-full sm:flex-1 gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+              className="w-full @min-[370px]:flex-1 gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
               disabled={isPending}
             >
               <ArrowsClockwise className="h-4 w-4" weight="bold" />

@@ -25,8 +25,8 @@ export async function createCheckoutSessionAction(params: CreateCheckoutSessionP
   if (!params.total || params.total <= 0 || params.total > 1000000) {
     return { error: "Ungültiger Gesamtbetrag." };
   }
-  if (params.tableNumber && params.tableNumber.length > 20) {
-    return { error: "Die Tischnummer darf maximal 20 Zeichen lang sein." };
+  if (params.tableNumber && params.tableNumber.length > 4) {
+    return { error: "Die Tischnummer darf maximal 4 Zeichen lang sein." };
   }
 
   try {
@@ -61,6 +61,17 @@ export async function createCheckoutSessionAction(params: CreateCheckoutSessionP
 }
 
 export const createPaymentIntentAction = createCheckoutSessionAction;
+
+function extractItemsFromMetadata(meta: Record<string, any>): string {
+  if (meta.items) return meta.items;
+  let itemsStr = "";
+  let i = 0;
+  while (meta[`items_${i}`]) {
+    itemsStr += meta[`items_${i}`];
+    i++;
+  }
+  return itemsStr || "[]";
+}
 
 export async function getOrderBySessionAction(identifier: string) {
   if (!identifier) {
@@ -99,11 +110,12 @@ export async function getOrderBySessionAction(identifier: string) {
             const currency = (session.currency || metadata.currency || "EUR").toUpperCase();
             const piId = typeof session.payment_intent === "string" ? session.payment_intent : undefined;
 
+            const itemsJson = extractItemsFromMetadata(metadata);
             const newOrderRes = await convexServer.mutation(api.orders.createOrder, {
               organizationId,
               tableNumber: metadata.tableNumber || undefined,
               type: (metadata.type as any) || "dine-in",
-              items: metadata.items || "[]",
+              items: itemsJson,
               total,
               email: metadata.email || session.customer_details?.email || session.customer_email || "",
               stripePaymentId: piId || session.id,
@@ -136,11 +148,12 @@ export async function getOrderBySessionAction(identifier: string) {
             const total = parseInt(metadata.total || String(paymentIntent.amount), 10);
             const currency = metadata.currency || paymentIntent.currency.toUpperCase();
 
+            const itemsJson = extractItemsFromMetadata(metadata);
             const newOrderRes = await convexServer.mutation(api.orders.createOrder, {
               organizationId,
               tableNumber: metadata.tableNumber || undefined,
               type: (metadata.type as any) || "dine-in",
-              items: metadata.items || "[]",
+              items: itemsJson,
               total,
               email: metadata.email || "",
               stripePaymentId: paymentIntent.id,

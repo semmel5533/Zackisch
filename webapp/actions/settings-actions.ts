@@ -328,16 +328,16 @@ export async function updateTablesAction(
   try {
     await requireOwner(organizationId);
 
-    // Validate tables array: max 100 tables, each between 1 and 10 characters
+    // Validate tables array: max 100 tables, each between 1 and 4 characters
     if (!Array.isArray(tables) || tables.length > 100) {
       return { error: "Ungültige Tischanzahl (maximal 100 Tische)." };
     }
     const cleanTables: string[] = [];
     for (const t of tables) {
       const trimmed = String(t).trim();
-      if (trimmed.length < 1 || trimmed.length > 10) {
+      if (trimmed.length < 1 || trimmed.length > 4) {
         return {
-          error: "Tischnummern müssen zwischen 1 und 10 Zeichen lang sein.",
+          error: "Tischnummern müssen zwischen 1 und 4 Zeichen lang sein.",
         };
       }
       cleanTables.push(trimmed);

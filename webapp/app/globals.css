@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant desktop (@container (width >= 1110px));
+@custom-variant tablet (@container (width >= 500px));
 
 :root {
   --background: oklch(1 0 0);
@@ -99,8 +101,6 @@
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
-  --breakpoint-tablet: 500px;
-  --breakpoint-desktop: 1100px;
   --breakpoint-3xl: 1600px;
   --breakpoint-4xl: 1800px;
 

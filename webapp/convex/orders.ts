@@ -213,22 +213,42 @@ export const createOrder = mutation({
     orderNumber: v.string(),
   }),
   handler: async (ctx, args) => {
+    if (args.tableNumber && args.tableNumber.trim().length > 4) {
+      throw new Error("Table number must not exceed 4 characters");
+    }
+
     // 1. Rolling 3-digit order number (001 - 999) calculated atomically in transaction
-    const latestOrder = await ctx.db
+    const recentOrders = await ctx.db
       .query("orders")
       .withIndex("by_organizationId", (q) =>
         q.eq("organizationId", args.organizationId)
       )
       .order("desc")
-      .first();
+      .take(20);
 
-    let nextNum = 1;
-    if (latestOrder) {
-      const parsed = parseInt(latestOrder.orderNumber, 10);
-      if (!isNaN(parsed) && parsed >= 1) {
-        nextNum = (parsed % 999) + 1;
+    let maxNum = 0;
+    if (recentOrders.length > 0) {
+      const latest = recentOrders[0];
+      const latestParsed = parseInt(latest.orderNumber, 10);
+      const isRollover =
+        latestParsed < 100 &&
+        recentOrders.some((o) => parseInt(o.orderNumber, 10) > 900);
+
+      if (isRollover) {
+        maxNum = latestParsed;
+      } else {
+        for (const ord of recentOrders) {
+          const parsed = parseInt(ord.orderNumber, 10);
+          if (!isNaN(parsed) && parsed >= 1 && parsed <= 999) {
+            if (parsed > maxNum) {
+              maxNum = parsed;
+            }
+          }
+        }
       }
     }
+
+    const nextNum = maxNum >= 999 ? 1 : maxNum + 1;
     const orderNumber = String(nextNum).padStart(3, "0");
 
     const orderId = await ctx.db.insert("orders", {
@@ -295,21 +315,37 @@ export const createPaidOrderFromWebhook = internalMutation({
       }
     }
 
-    const latestOrder = await ctx.db
+    const recentOrders = await ctx.db
       .query("orders")
       .withIndex("by_organizationId", (q) =>
         q.eq("organizationId", args.organizationId)
       )
       .order("desc")
-      .first();
+      .take(20);
 
-    let nextNum = 1;
-    if (latestOrder) {
-      const parsed = parseInt(latestOrder.orderNumber, 10);
-      if (!isNaN(parsed) && parsed >= 1) {
-        nextNum = (parsed % 999) + 1;
+    let maxNum = 0;
+    if (recentOrders.length > 0) {
+      const latest = recentOrders[0];
+      const latestParsed = parseInt(latest.orderNumber, 10);
+      const isRollover =
+        latestParsed < 100 &&
+        recentOrders.some((o) => parseInt(o.orderNumber, 10) > 900);
+
+      if (isRollover) {
+        maxNum = latestParsed;
+      } else {
+        for (const ord of recentOrders) {
+          const parsed = parseInt(ord.orderNumber, 10);
+          if (!isNaN(parsed) && parsed >= 1 && parsed <= 999) {
+            if (parsed > maxNum) {
+              maxNum = parsed;
+            }
+          }
+        }
       }
     }
+
+    const nextNum = maxNum >= 999 ? 1 : maxNum + 1;
     const orderNumber = String(nextNum).padStart(3, "0");
 
     const zakkigFee = Math.round(args.total * 0.01);
@@ -318,7 +354,7 @@ export const createPaidOrderFromWebhook = internalMutation({
 
     return await ctx.db.insert("orders", {
       organizationId: args.organizationId,
-      tableNumber: args.tableNumber,
+      tableNumber: args.tableNumber ? args.tableNumber.trim().slice(0, 4) : undefined,
       type: args.type,
       items: args.items,
       total: args.total,
@@ -353,3 +389,38 @@ export const updateStatus = mutation({
     return null;
   },
 });
+
+export const patchOrderItems = internalMutation({
+  args: {
+    id: v.id("orders"),
+    items: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { items: args.items });
+    return null;
+  },
+});
+
+export const patchOrder = internalMutation({
+  args: {
+    id: v.id("orders"),
+    orderNumber: v.optional(v.string()),
+    items: v.optional(v.string()),
+    status: v.optional(
+      v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled"))
+    ),
+    completedAt: v.optional(v.number()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const patch: any = {};
+    if (args.orderNumber !== undefined) patch.orderNumber = args.orderNumber;
+    if (args.items !== undefined) patch.items = args.items;
+    if (args.status !== undefined) patch.status = args.status;
+    if (args.completedAt !== undefined) patch.completedAt = args.completedAt;
+    await ctx.db.patch(args.id, patch);
+    return null;
+  },
+});
+
