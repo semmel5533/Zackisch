@@ -2,20 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery, useAction } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { LocalizedText } from "@/components/ui/localized-text";
 import { SpinnerGap } from "@phosphor-icons/react";
 import { useCartStore } from "@/store/cart-store";
 import { useTranslation } from "@/lib/i18n";
 import { toast } from "sonner";
+import { getOrderBySessionAction } from "@/actions/checkout-actions";
 
 export function PaymentSuccessPoller({
+  sessionId,
   paymentIntentId,
   organizationId,
   type,
 }: {
-  paymentIntentId: string;
+  sessionId?: string;
+  paymentIntentId?: string;
   organizationId: string;
   type: "takeaway" | "dine-in";
 }) {
@@ -24,22 +27,22 @@ export function PaymentSuccessPoller({
   const { t } = useTranslation();
   const [timedOut, setTimedOut] = useState(false);
 
+  const stripeIdentifier = sessionId || paymentIntentId || "";
+
   // Reactive subscription to order created via webhook
   const order = useQuery(api.orders.getOrderByPaymentIntent, {
-    stripePaymentId: paymentIntentId,
+    stripePaymentId: stripeIdentifier,
   });
 
-  const verifyPayment = useAction(api.stripe.verifyPaymentAndCreateOrder);
-
-  // If webhook is delayed or in local development, verify directly with Stripe
+  // If webhook is delayed or in local development, verify directly with Stripe via Server Action
   useEffect(() => {
-    if (order === null) {
+    if (order === null && stripeIdentifier) {
       const timer = setTimeout(() => {
-        verifyPayment({ paymentIntentId }).catch(console.error);
+        getOrderBySessionAction(stripeIdentifier).catch(console.error);
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [order, paymentIntentId, verifyPayment]);
+  }, [order, stripeIdentifier]);
 
   useEffect(() => {
     if (order) {

@@ -17,17 +17,18 @@ export default async function ToGoSuccessPage({
   searchParams,
 }: {
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ payment_intent?: string }>;
+  searchParams: Promise<{ payment_intent?: string; session_id?: string }>;
 }) {
   const { organizationId } = await params;
-  const { payment_intent } = await searchParams;
+  const { payment_intent, session_id } = await searchParams;
 
-  if (!payment_intent) {
+  if (!payment_intent && !session_id) {
     redirect(`/to-go/${organizationId}`);
   }
 
   return (
     <PaymentSuccessPoller
+      sessionId={session_id}
       paymentIntentId={payment_intent}
       organizationId={organizationId}
       type="takeaway"

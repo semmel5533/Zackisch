@@ -106,7 +106,7 @@ Logos, Restaurant-Banner und Speisekarten-Bilder werden im nativen Convex File S
    - Auf öffentlichen Gast-Seiten (`/to-go/[orgId]`, `/to-stay/[orgId]`) werden sensible Betreiberdaten (`stripeAccountId`, `taxId`, `ownerId`) vor der Serialisierung in den React Server Component Payload unkenntlich gemacht bzw. genullt.
    - Bei der Bestellverfolgung werden Plattform- und Zahlungsgebühren (`zakkigFee`, `stripeFee`, `netAmount`, `stripePaymentId`) serverseitig auf 0 gesetzt, sodass Gäste ausschließlich für sie relevante Bestelldaten einsehen können.
 4. **Serverseitige Preis- und Integritätsprüfung:**
-   - Gast-Warenkörbe werden im Checkout niemals ungeprüft akzeptiert. Die Convex Action `createPaymentIntent` liest alle Artikelpreise direkt aus der Datenbank und rechnet die Gesamtsumme centgenau nach.
+   - Gast-Warenkörbe werden im Checkout niemals ungeprüft akzeptiert. Die Convex Action `createCheckoutSession` liest alle Artikelpreise direkt aus der Datenbank und rechnet die Gesamtsumme centgenau nach.
 
 ## Routing & Verzeichnisstruktur
 

@@ -18,6 +18,7 @@ export const getLiveOrders = query({
       email: v.string(),
       orderNumber: v.string(),
       stripePaymentId: v.optional(v.string()),
+      stripeSessionId: v.optional(v.string()),
       zakkigFee: v.number(),
       stripeFee: v.number(),
       netAmount: v.number(),
@@ -73,6 +74,7 @@ export const getOrders = query({
       email: v.string(),
       orderNumber: v.string(),
       stripePaymentId: v.optional(v.string()),
+      stripeSessionId: v.optional(v.string()),
       zakkigFee: v.number(),
       stripeFee: v.number(),
       netAmount: v.number(),
@@ -118,6 +120,7 @@ export const getOrder = query({
       email: v.string(),
       orderNumber: v.string(),
       stripePaymentId: v.optional(v.string()),
+      stripeSessionId: v.optional(v.string()),
       zakkigFee: v.number(),
       stripeFee: v.number(),
       netAmount: v.number(),
@@ -154,6 +157,7 @@ export const getOrderByPaymentIntent = query({
       email: v.string(),
       orderNumber: v.string(),
       stripePaymentId: v.optional(v.string()),
+      stripeSessionId: v.optional(v.string()),
       zakkigFee: v.number(),
       stripeFee: v.number(),
       netAmount: v.number(),
@@ -161,12 +165,22 @@ export const getOrderByPaymentIntent = query({
     })
   ),
   handler: async (ctx, args) => {
-    const order = await ctx.db
+    let order = await ctx.db
       .query("orders")
       .withIndex("by_stripePaymentId", (q) =>
         q.eq("stripePaymentId", args.stripePaymentId)
       )
       .first();
+
+    if (!order) {
+      order = await ctx.db
+        .query("orders")
+        .withIndex("by_stripeSessionId", (q) =>
+          q.eq("stripeSessionId", args.stripePaymentId)
+        )
+        .first();
+    }
+
     if (!order) return null;
     return {
       ...order,
@@ -177,6 +191,8 @@ export const getOrderByPaymentIntent = query({
   },
 });
 
+export const getOrderBySession = getOrderByPaymentIntent;
+
 export const createOrder = mutation({
   args: {
     organizationId: v.id("organizations"),
@@ -186,6 +202,7 @@ export const createOrder = mutation({
     total: v.number(),
     email: v.string(),
     stripePaymentId: v.optional(v.string()),
+    stripeSessionId: v.optional(v.string()),
     zakkigFee: v.number(),
     stripeFee: v.number(),
     netAmount: v.number(),
@@ -225,6 +242,7 @@ export const createOrder = mutation({
       email: args.email,
       orderNumber,
       stripePaymentId: args.stripePaymentId,
+      stripeSessionId: args.stripeSessionId,
       zakkigFee: args.zakkigFee,
       stripeFee: args.stripeFee,
       netAmount: args.netAmount,
@@ -246,21 +264,35 @@ export const createPaidOrderFromWebhook = internalMutation({
     items: v.string(),
     total: v.number(),
     email: v.string(),
-    stripePaymentId: v.string(),
+    stripePaymentId: v.optional(v.string()),
+    stripeSessionId: v.optional(v.string()),
     currency: v.string(),
   },
   returns: v.id("orders"),
   handler: async (ctx, args) => {
-    // Prevent duplicate orders for the same payment intent
-    const existing = await ctx.db
-      .query("orders")
-      .withIndex("by_stripePaymentId", (q) =>
-        q.eq("stripePaymentId", args.stripePaymentId)
-      )
-      .first();
+    // Prevent duplicate orders for the same payment intent or session
+    if (args.stripePaymentId) {
+      const existingByPi = await ctx.db
+        .query("orders")
+        .withIndex("by_stripePaymentId", (q) =>
+          q.eq("stripePaymentId", args.stripePaymentId)
+        )
+        .first();
+      if (existingByPi) {
+        return existingByPi._id;
+      }
+    }
 
-    if (existing) {
-      return existing._id;
+    if (args.stripeSessionId) {
+      const existingBySession = await ctx.db
+        .query("orders")
+        .withIndex("by_stripeSessionId", (q) =>
+          q.eq("stripeSessionId", args.stripeSessionId)
+        )
+        .first();
+      if (existingBySession) {
+        return existingBySession._id;
+      }
     }
 
     const latestOrder = await ctx.db
@@ -294,6 +326,7 @@ export const createPaidOrderFromWebhook = internalMutation({
       email: args.email,
       orderNumber,
       stripePaymentId: args.stripePaymentId,
+      stripeSessionId: args.stripeSessionId,
       zakkigFee,
       stripeFee,
       netAmount,

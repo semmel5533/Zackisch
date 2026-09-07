@@ -118,3 +118,19 @@ Follow this unified, multi-layered architecture for all features and changes:
    - When viewing the cart, the merchant hero banner is suppressed. The view features a top header with an `<ArrowLeft>` back button returning to the menu, the cart title, restaurant subtitle, and order type tag.
 
 <!-- END:guest-ordering-ux-conventions -->
+
+<!-- BEGIN:stripe-conventions -->
+
+# Stripe Integration Conventions (Checkout Sessions API + Payment Element)
+
+- **Default API Choice**: Prefer the **Checkout Sessions API** with the **Payment Element** (`ui_mode: "elements"`) over raw Payment Intents for payment integrations.
+- **Why**: Checkout Sessions covers the same use cases with significantly less code, supports modern Stripe features (such as Adaptive Pricing, automatic tax, and dynamic payment methods), and simplifies confirmation.
+- **React Frontend**:
+  - Import providers and hooks from `@stripe/react-stripe-js/checkout`.
+  - Initialize using `<CheckoutElementsProvider>` with `stripe` and `options={{ clientSecret }}`.
+  - Mount `<PaymentElement />` and confirm payment using `checkout.confirm()`.
+- **Backend / Convex**:
+  - Create session via `stripe.checkout.sessions.create({ ui_mode: "elements", mode: "payment", ... })`.
+  - Return `session.client_secret` to initialize `CheckoutElementsProvider`.
+
+<!-- END:stripe-conventions -->

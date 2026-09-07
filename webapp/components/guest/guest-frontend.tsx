@@ -328,39 +328,41 @@ function GuestMenu({
                             </p>
                           )}
                         </div>
-                        <div className="mt-4 relative">
-                          <Button
-                            size="lg"
-                            className="w-full rounded-full h-11 sm:h-12 px-4 sm:px-5 flex items-center justify-between font-bold text-sm sm:text-base cursor-pointer shadow-xs transition-all active:scale-[0.98]"
+                        <div className="mt-4">
+                          <button
+                            type="button"
                             onClick={() => handleAddClick(item)}
+                            className="group relative w-full h-11 sm:h-12 rounded-full bg-primary hover:bg-neutral-800 text-primary-foreground transition-all duration-200 active:scale-[0.98] shadow-xs flex items-center p-1 cursor-pointer select-none"
                           >
-                            <div className="flex items-center justify-center shrink-0">
-                              <Plus weight="bold" className="h-[18px] w-[18px]" />
+                            <div className="relative shrink-0">
+                              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors">
+                                <Plus weight="bold" className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
+                              </div>
+
+                              {totalQuantity > 0 && (
+                                <span
+                                  className={cn(
+                                    "absolute -top-[2px] -right-[6px] h-5 rounded-full bg-primary text-primary-foreground border border-background text-[11px] font-extrabold flex items-center justify-center leading-none shadow-sm tabular-nums pointer-events-none",
+                                    totalQuantity > 9
+                                      ? "min-w-5 px-1"
+                                      : "w-5 aspect-square p-0"
+                                  )}
+                                >
+                                  {totalQuantity}
+                                </span>
+                              )}
                             </div>
 
-                            <span className="font-bold text-sm sm:text-base truncate text-center flex-1 px-3">
+                            <span className="font-bold text-sm sm:text-base truncate text-center flex-1 px-3 text-primary-foreground">
                               {t("addToCart")}
                             </span>
 
-                            <span className="font-bold text-sm sm:text-base tabular-nums shrink-0 mr-2 sm:mr-2.5">
+                            <span className="font-bold text-sm sm:text-base tabular-nums shrink-0 mr-3 sm:mr-4 text-primary-foreground">
                               {hasPaidCustomizations(item.customizations)
                                 ? t("fromPrice", { price: formatPrice(item.price) })
                                 : formatPrice(item.price)}
                             </span>
-                          </Button>
-
-                          {totalQuantity > 0 && (
-                            <span
-                              className={cn(
-                                "absolute -top-1.5 -right-1 h-6 rounded-full bg-background text-primary border border-border text-xs font-extrabold flex items-center justify-center leading-none shadow-sm tabular-nums pointer-events-none",
-                                totalQuantity > 9
-                                  ? "min-w-6 px-1.5"
-                                  : "w-6 aspect-square p-0"
-                              )}
-                            >
-                              {totalQuantity}
-                            </span>
-                          )}
+                          </button>
                         </div>
                       </div>
                     </Card>
@@ -539,31 +541,31 @@ function LieferandoCartBanner({
             type="button"
             id="floating-cart-banner"
             onClick={onOpenCart}
-            className="pointer-events-auto w-full h-12 bg-primary text-primary-foreground rounded-full shadow-2xl border border-primary-foreground/20 px-5 flex items-center justify-between hover:bg-neutral-800 hover:text-primary-foreground active:scale-[0.98] transition-all cursor-pointer select-none"
+            className="pointer-events-auto group w-full h-12 bg-primary/95 backdrop-blur-md text-primary-foreground rounded-full shadow-2xl p-1 sm:p-1.5 flex items-center justify-between hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer select-none"
           >
-            <div className="flex items-center justify-center shrink-0">
-              <ShoppingCart weight="bold" className="h-[18px] w-[18px]" />
+            <div className="relative shrink-0">
+              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors">
+                <ShoppingCart weight="bold" className="h-5 w-5" />
+              </div>
+
+              <span
+                className={cn(
+                  "absolute -top-[2px] -right-[6px] h-5 rounded-full bg-primary text-primary-foreground border border-background text-[11px] font-extrabold flex items-center justify-center leading-none shadow-sm tabular-nums pointer-events-none",
+                  count > 9 ? "min-w-5 px-1" : "w-5 aspect-square p-0"
+                )}
+              >
+                {count}
+              </span>
             </div>
 
-            <span className="font-bold text-base truncate text-center flex-1 px-3">
+            <span className="font-bold text-base truncate text-center flex-1 px-3 text-primary-foreground">
               {t("viewCart")}
             </span>
 
-            <span className="font-bold text-base tabular-nums shrink-0 mr-1 sm:mr-1.5">
+            <span className="font-bold text-base tabular-nums shrink-0 mr-3 sm:mr-4 text-primary-foreground">
               {formatPrice(total())}
             </span>
           </button>
-
-          <span
-            className={cn(
-              "absolute -top-1.5 -right-1 h-6 rounded-full bg-background text-primary border border-border text-xs font-extrabold flex items-center justify-center leading-none shadow-sm tabular-nums pointer-events-none",
-              count > 9
-                ? "min-w-6 px-1.5"
-                : "w-6 aspect-square p-0"
-            )}
-          >
-            {count}
-          </span>
         </div>
       </div>
     </aside>

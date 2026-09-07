@@ -3,9 +3,10 @@
 import { convexServer } from "@/lib/convex/server";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { headers } from "next/headers";
 import Stripe from "stripe";
 
-interface CreatePaymentIntentParams {
+interface CreateCheckoutSessionParams {
   organizationId: string;
   type: "dine-in" | "takeaway";
   tableNumber?: string;
@@ -14,7 +15,7 @@ interface CreatePaymentIntentParams {
   email: string;
 }
 
-export async function createPaymentIntentAction(params: CreatePaymentIntentParams) {
+export async function createCheckoutSessionAction(params: CreateCheckoutSessionParams) {
   if (!params.organizationId) {
     return { error: "Betriebs-ID fehlt." };
   }
@@ -29,13 +30,19 @@ export async function createPaymentIntentAction(params: CreatePaymentIntentParam
   }
 
   try {
-    const res = await convexServer.action(api.stripe.createPaymentIntent, {
+    const reqHeaders = await headers();
+    const host = reqHeaders.get("host") || "localhost:3000";
+    const proto = reqHeaders.get("x-forwarded-proto") || "http";
+    const origin = reqHeaders.get("origin") || `${proto}://${host}`;
+
+    const res = await convexServer.action(api.stripe.createCheckoutSession, {
       organizationId: params.organizationId as Id<"organizations">,
       type: params.type,
       tableNumber: params.tableNumber,
       items: JSON.stringify(params.items),
       total: params.total,
       email: params.email,
+      origin,
     });
 
     if (res.error) {
@@ -44,18 +51,25 @@ export async function createPaymentIntentAction(params: CreatePaymentIntentParam
 
     return {
       clientSecret: res.clientSecret,
-      paymentIntentId: res.paymentIntentId,
+      sessionId: res.sessionId,
+      paymentIntentId: res.sessionId,
     };
   } catch (error: any) {
-    console.error("createPaymentIntentAction failed:", error);
-    return { error: error.message || "Failed to create payment intent" };
+    console.error("createCheckoutSessionAction failed:", error);
+    return { error: error.message || "Failed to create checkout session" };
   }
 }
 
-export async function getOrderByPaymentIntentAction(paymentIntentId: string) {
+export const createPaymentIntentAction = createCheckoutSessionAction;
+
+export async function getOrderBySessionAction(identifier: string) {
+  if (!identifier) {
+    return { error: "Keine Sitzungs-ID angegeben.", order: null };
+  }
+
   try {
     const doc = await convexServer.query(api.orders.getOrderByPaymentIntent, {
-      stripePaymentId: paymentIntentId,
+      stripePaymentId: identifier,
     });
 
     if (doc) {
@@ -69,41 +83,83 @@ export async function getOrderByPaymentIntentAction(paymentIntentId: string) {
     }
 
     // Fallback: If webhook hasn't fired yet, verify with Stripe directly
-    if (process.env.STRIPE_SECRET_KEY && paymentIntentId) {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    if (process.env.STRIPE_SECRET_KEY && identifier) {
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: "2026-07-29.dahlia" as any,
+      });
 
-      if (paymentIntent && (paymentIntent.status === "succeeded" || paymentIntent.status === "processing")) {
-        const metadata = paymentIntent.metadata || {};
-        const organizationId = metadata.organizationId as any;
+      if (identifier.startsWith("cs_")) {
+        const session = await stripe.checkout.sessions.retrieve(identifier);
+        if (session && (session.status === "complete" || session.payment_status === "paid")) {
+          const metadata = session.metadata || {};
+          const organizationId = metadata.organizationId as any;
 
-        if (organizationId) {
-          const total = parseInt(metadata.total || String(paymentIntent.amount), 10);
-          const currency = metadata.currency || paymentIntent.currency.toUpperCase();
+          if (organizationId) {
+            const total = session.amount_total || parseInt(metadata.total || "0", 10);
+            const currency = (session.currency || metadata.currency || "EUR").toUpperCase();
+            const piId = typeof session.payment_intent === "string" ? session.payment_intent : undefined;
 
-          const newOrderRes = await convexServer.mutation(api.orders.createOrder, {
-            organizationId,
-            tableNumber: metadata.tableNumber || undefined,
-            type: (metadata.type as any) || "dine-in",
-            items: metadata.items || "[]",
-            total,
-            email: metadata.email || "",
-            stripePaymentId: paymentIntent.id,
-            zakkigFee: Math.round(total * 0.01),
-            stripeFee: 0,
-            netAmount: total - Math.round(total * 0.01),
-            currency,
-          });
+            const newOrderRes = await convexServer.mutation(api.orders.createOrder, {
+              organizationId,
+              tableNumber: metadata.tableNumber || undefined,
+              type: (metadata.type as any) || "dine-in",
+              items: metadata.items || "[]",
+              total,
+              email: metadata.email || session.customer_details?.email || session.customer_email || "",
+              stripePaymentId: piId || session.id,
+              stripeSessionId: session.id,
+              zakkigFee: Math.round(total * 0.01),
+              stripeFee: 0,
+              netAmount: total - Math.round(total * 0.01),
+              currency,
+            });
 
-          const created = await convexServer.query(api.orders.getOrder, { id: newOrderRes._id });
-          if (created) {
-            return {
-              order: {
-                ...created,
-                $id: created._id,
-                $createdAt: new Date(created._creationTime).toISOString(),
-              },
-            };
+            const created = await convexServer.query(api.orders.getOrder, { id: newOrderRes._id });
+            if (created) {
+              return {
+                order: {
+                  ...created,
+                  $id: created._id,
+                  $createdAt: new Date(created._creationTime).toISOString(),
+                },
+              };
+            }
+          }
+        }
+      } else if (identifier.startsWith("pi_")) {
+        const paymentIntent = await stripe.paymentIntents.retrieve(identifier);
+        if (paymentIntent && (paymentIntent.status === "succeeded" || paymentIntent.status === "processing")) {
+          const metadata = paymentIntent.metadata || {};
+          const organizationId = metadata.organizationId as any;
+
+          if (organizationId) {
+            const total = parseInt(metadata.total || String(paymentIntent.amount), 10);
+            const currency = metadata.currency || paymentIntent.currency.toUpperCase();
+
+            const newOrderRes = await convexServer.mutation(api.orders.createOrder, {
+              organizationId,
+              tableNumber: metadata.tableNumber || undefined,
+              type: (metadata.type as any) || "dine-in",
+              items: metadata.items || "[]",
+              total,
+              email: metadata.email || "",
+              stripePaymentId: paymentIntent.id,
+              zakkigFee: Math.round(total * 0.01),
+              stripeFee: 0,
+              netAmount: total - Math.round(total * 0.01),
+              currency,
+            });
+
+            const created = await convexServer.query(api.orders.getOrder, { id: newOrderRes._id });
+            if (created) {
+              return {
+                order: {
+                  ...created,
+                  $id: created._id,
+                  $createdAt: new Date(created._creationTime).toISOString(),
+                },
+              };
+            }
           }
         }
       }
@@ -111,7 +167,9 @@ export async function getOrderByPaymentIntentAction(paymentIntentId: string) {
 
     return { order: null };
   } catch (error: any) {
-    console.error("getOrderByPaymentIntentAction failed:", error);
+    console.error("getOrderBySessionAction failed:", error);
     return { error: error.message, order: null };
   }
 }
+
+export const getOrderByPaymentIntentAction = getOrderBySessionAction;

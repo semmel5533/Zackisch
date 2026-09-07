@@ -9,13 +9,13 @@ import {
 } from "@phosphor-icons/react";
 import { useTranslation, formatPrice } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart-store";
-import { createPaymentIntentAction } from "@/actions/checkout-actions";
+import { createCheckoutSessionAction } from "@/actions/checkout-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+import { CheckoutElementsProvider } from "@stripe/react-stripe-js/checkout";
 import { CheckoutForm } from "./checkout-form";
 
 import { toast } from "sonner";
@@ -84,7 +84,7 @@ export function CartSheet({
     }
 
     startTransition(async () => {
-      const result = await createPaymentIntentAction({
+      const result = await createCheckoutSessionAction({
         organizationId: organization.$id,
         type,
         tableNumber,
@@ -210,9 +210,17 @@ export function CartSheet({
             </form>
           ) : (
             <div className="pb-8 overflow-y-auto max-h-[calc(90vh-8rem)]">
-              <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' }, locale: locale as any }}>
+              <CheckoutElementsProvider
+                stripe={stripePromise}
+                options={{
+                  clientSecret,
+                  elementsOptions: {
+                    appearance: { theme: "stripe" },
+                  },
+                }}
+              >
                 <CheckoutForm returnUrl={`${window.location.origin}/${type === "dine-in" ? "to-stay" : "to-go"}/${organization.$id}/success`} />
-              </Elements>
+              </CheckoutElementsProvider>
             </div>
           )}
         </div>

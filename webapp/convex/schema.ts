@@ -58,6 +58,7 @@ export default defineSchema({
     email: v.string(),
     orderNumber: v.string(), // 3-digit rolling number e.g. "001"
     stripePaymentId: v.optional(v.string()),
+    stripeSessionId: v.optional(v.string()),
     zakkigFee: v.number(), // in cents
     stripeFee: v.number(), // in cents
     netAmount: v.number(), // in cents
@@ -65,7 +66,8 @@ export default defineSchema({
   })
     .index("by_organizationId", ["organizationId"])
     .index("by_organizationId_and_status", ["organizationId", "status"])
-    .index("by_stripePaymentId", ["stripePaymentId"]),
+    .index("by_stripePaymentId", ["stripePaymentId"])
+    .index("by_stripeSessionId", ["stripeSessionId"]),
 
   orderSessions: defineTable({
     organizationId: v.id("organizations"),

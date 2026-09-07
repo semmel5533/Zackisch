@@ -10,7 +10,7 @@ function getStripeClient(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error("Missing STRIPE_SECRET_KEY in Convex environment");
   return new Stripe(key, {
-    apiVersion: "2024-06-20" as any,
+    apiVersion: "2026-07-29.dahlia" as any,
   });
 }
 
@@ -224,6 +224,175 @@ export function extractItemsFromMetadata(meta: Record<string, any>): string {
   return itemsStr || "[]";
 }
 
+export const createCheckoutSession = action({
+  args: {
+    organizationId: v.id("organizations"),
+    type: v.union(v.literal("dine-in"), v.literal("takeaway")),
+    tableNumber: v.optional(v.string()),
+    items: v.string(), // JSON string
+    total: v.number(), // in cents
+    email: v.string(),
+    currency: v.optional(v.string()),
+    origin: v.optional(v.string()),
+  },
+  returns: v.object({
+    clientSecret: v.optional(v.string()),
+    sessionId: v.optional(v.string()),
+    error: v.optional(v.string()),
+  }),
+  handler: async (ctx, args) => {
+    try {
+      const org = await ctx.runQuery(api.organizations.get, { id: args.organizationId });
+      if (!org) return { error: "Organization not found" };
+      if (!org.stripeAccountId) return { error: "Restaurant is not connected to Stripe" };
+
+      // 1. Validate total
+      if (!Number.isInteger(args.total) || args.total <= 0 || args.total > 1000000) {
+        return { error: "Ungültiger Gesamtbetrag." };
+      }
+
+      // 2. Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(args.email.trim()) || args.email.length > 100) {
+        return { error: "Ungültige E-Mail-Adresse." };
+      }
+
+      // 3. Validate tableNumber
+      if (args.tableNumber && args.tableNumber.length > 20) {
+        return { error: "Ungültige Tischnummer." };
+      }
+
+      // 4. Validate items JSON & verify prices / availability against DB
+      let parsedItems: any[];
+      try {
+        parsedItems = JSON.parse(args.items);
+      } catch {
+        return { error: "Ungültiges Artikel-Format." };
+      }
+
+      if (!Array.isArray(parsedItems) || parsedItems.length === 0 || parsedItems.length > 100) {
+        return { error: "Der Warenkorb muss zwischen 1 und 100 Artikel enthalten." };
+      }
+
+      const menuItems: any[] = await ctx.runQuery(api.menu.getItems, { organizationId: args.organizationId });
+      const menuMap = new Map(menuItems.map((m: any) => [m._id, m]));
+
+      let calculatedTotal = 0;
+      for (const item of parsedItems) {
+        const qty = Number(item.quantity);
+        const price = Number(item.price);
+
+        if (!Number.isInteger(qty) || qty <= 0 || qty > 50) {
+          return { error: "Ungültige Artikelanzahl." };
+        }
+        if (!Number.isInteger(price) || price < 0) {
+          return { error: "Ungültiger Artikelpreis." };
+        }
+
+        if (item.menuItemId && menuMap.has(item.menuItemId)) {
+          const dbItem = menuMap.get(item.menuItemId);
+          if (dbItem.available === false) {
+            return { error: `"${dbItem.name}" ist zurzeit leider nicht verfügbar.` };
+          }
+          if (price < dbItem.price) {
+            return { error: `Ungültiger Preis für "${dbItem.name}".` };
+          }
+        }
+
+        calculatedTotal += price * qty;
+      }
+
+      if (Math.round(calculatedTotal) !== Math.round(args.total)) {
+        return { error: "Gesamtbetrag stimmt nicht mit den ausgewählten Artikeln überein." };
+      }
+
+      const stripe = getStripeClient();
+      const curr = (args.currency || org.currency || "eur").toLowerCase();
+
+      // Platform margin: 1%
+      const platformMargin = Math.round(args.total * 0.01);
+      const transferAmount = Math.round(args.total - platformMargin);
+
+      const metadata: Record<string, string> = {
+        organizationId: args.organizationId,
+        tableNumber: args.tableNumber || "",
+        type: args.type,
+        email: args.email,
+        total: String(Math.round(args.total)),
+        currency: curr.toUpperCase(),
+      };
+      packItemsIntoMetadata(args.items, metadata);
+
+      const isTestSecret = process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
+      const isMockAccountId = !org.stripeAccountId || org.stripeAccountId.startsWith("acct_test_");
+
+      const origin = args.origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const returnUrl = `${origin}/${args.type === "dine-in" ? "to-stay" : "to-go"}/${args.organizationId}/success?session_id={CHECKOUT_SESSION_ID}`;
+
+      const sessionParams: Stripe.Checkout.SessionCreateParams = {
+        ui_mode: "elements",
+        mode: "payment",
+        customer_email: args.email,
+        line_items: [
+          {
+            price_data: {
+              currency: curr,
+              unit_amount: Math.round(args.total),
+              product_data: {
+                name: "Bestellung",
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        return_url: returnUrl,
+        metadata,
+      };
+
+      if (!isMockAccountId || !isTestSecret) {
+        sessionParams.payment_intent_data = {
+          metadata,
+          transfer_data: {
+            destination: org.stripeAccountId,
+            amount: transferAmount,
+          },
+        };
+      } else {
+        sessionParams.payment_intent_data = {
+          metadata,
+        };
+      }
+
+      let session: Stripe.Checkout.Session;
+      try {
+        session = await stripe.checkout.sessions.create(sessionParams);
+      } catch (err: any) {
+        if (
+          (err.code === "insufficient_capabilities_for_transfer" ||
+            err.code === "resource_missing" ||
+            err.message?.includes("capabilities") ||
+            err.message?.includes("destination") ||
+            err.message?.includes("No such destination")) &&
+          isTestSecret
+        ) {
+          delete sessionParams.payment_intent_data?.transfer_data;
+          session = await stripe.checkout.sessions.create(sessionParams);
+        } else {
+          throw err;
+        }
+      }
+
+      return {
+        clientSecret: session.client_secret ?? undefined,
+        sessionId: session.id,
+      };
+    } catch (e: any) {
+      console.error("createCheckoutSession error:", e);
+      return { error: e.message || "Failed to create checkout session" };
+    }
+  },
+});
+
 export const createPaymentIntent = action({
   args: {
     organizationId: v.id("organizations"),
@@ -370,41 +539,84 @@ export const createPaymentIntent = action({
 });
 
 export const verifyPaymentAndCreateOrder = action({
-  args: { paymentIntentId: v.string() },
+  args: {
+    sessionId: v.optional(v.string()),
+    paymentIntentId: v.optional(v.string()),
+  },
   returns: v.union(v.null(), v.id("orders")),
   handler: async (ctx, args): Promise<Id<"orders"> | null> => {
     try {
-      const existing: any = await ctx.runQuery(api.orders.getOrderByPaymentIntent, {
-        stripePaymentId: args.paymentIntentId,
-      });
-      if (existing) return existing._id;
-
       const stripe = getStripeClient();
-      const pi = await stripe.paymentIntents.retrieve(args.paymentIntentId);
-      if (pi.status !== "succeeded") {
-        return null;
+
+      if (args.sessionId) {
+        const existing: any = await ctx.runQuery(api.orders.getOrderByPaymentIntent, {
+          stripePaymentId: args.sessionId,
+        });
+        if (existing) return existing._id;
+
+        const session = await stripe.checkout.sessions.retrieve(args.sessionId);
+        if (session.status !== "complete" && session.payment_status !== "paid") {
+          return null;
+        }
+
+        const meta = session.metadata;
+        if (!meta || !meta.organizationId) return null;
+
+        const items = extractItemsFromMetadata(meta);
+        const piId = typeof session.payment_intent === "string" ? session.payment_intent : undefined;
+
+        const orderId = await ctx.runMutation(
+          internal.orders.createPaidOrderFromWebhook,
+          {
+            organizationId: meta.organizationId as any,
+            tableNumber: meta.tableNumber || undefined,
+            type: (meta.type as any) || "takeaway",
+            items,
+            total: session.amount_total || parseInt(meta.total || "0", 10),
+            email: meta.email || session.customer_details?.email || session.customer_email || "",
+            stripePaymentId: piId || session.id,
+            stripeSessionId: session.id,
+            currency: (session.currency || meta.currency || "EUR").toUpperCase(),
+          }
+        );
+
+        return orderId;
       }
 
-      const meta = pi.metadata;
-      if (!meta || !meta.organizationId) return null;
+      if (args.paymentIntentId) {
+        const existing: any = await ctx.runQuery(api.orders.getOrderByPaymentIntent, {
+          stripePaymentId: args.paymentIntentId,
+        });
+        if (existing) return existing._id;
 
-      const items = extractItemsFromMetadata(meta);
-
-      const orderId = await ctx.runMutation(
-        internal.orders.createPaidOrderFromWebhook,
-        {
-          organizationId: meta.organizationId as any,
-          tableNumber: meta.tableNumber || undefined,
-          type: (meta.type as any) || "takeaway",
-          items,
-          total: pi.amount,
-          email: meta.email || pi.receipt_email || "",
-          stripePaymentId: pi.id,
-          currency: pi.currency.toUpperCase(),
+        const pi = await stripe.paymentIntents.retrieve(args.paymentIntentId);
+        if (pi.status !== "succeeded") {
+          return null;
         }
-      );
 
-      return orderId;
+        const meta = pi.metadata;
+        if (!meta || !meta.organizationId) return null;
+
+        const items = extractItemsFromMetadata(meta);
+
+        const orderId = await ctx.runMutation(
+          internal.orders.createPaidOrderFromWebhook,
+          {
+            organizationId: meta.organizationId as any,
+            tableNumber: meta.tableNumber || undefined,
+            type: (meta.type as any) || "takeaway",
+            items,
+            total: pi.amount,
+            email: meta.email || pi.receipt_email || "",
+            stripePaymentId: pi.id,
+            currency: pi.currency.toUpperCase(),
+          }
+        );
+
+        return orderId;
+      }
+
+      return null;
     } catch (e) {
       console.error("verifyPaymentAndCreateOrder error:", e);
       return null;
