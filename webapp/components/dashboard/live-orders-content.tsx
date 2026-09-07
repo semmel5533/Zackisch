@@ -1,11 +1,26 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { Check, ReceiptX, SpeakerHigh, SpeakerSlash, Clock } from "@phosphor-icons/react";
+import { useEffect, useState, useRef, useMemo } from "react";
+import {
+  Check,
+  ReceiptX,
+  SpeakerHigh,
+  SpeakerSlash,
+  Clock,
+  ArrowCounterClockwise,
+  ArrowLeft,
+  ClipboardText,
+  Info,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +40,7 @@ import {
 } from "@/lib/constants";
 import type { Order, OrderItem } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface LiveOrdersContentProps {
   orders: Order[];
@@ -40,194 +56,48 @@ function parseItems(itemsJson: string): OrderItem[] {
   }
 }
 
-// Helper component for independent column stacking and larger kitchen-friendly typography
-function OrderGrid({
-  orders,
-  onComplete,
-  onCancel,
-  t,
-  now = Date.now(),
-}: {
-  orders: Order[];
-  onComplete?: (orderId: string) => void;
-  onCancel?: (orderId: string) => void;
-  t: (key: any, params?: any) => string;
-  now?: number;
-}) {
-  const leftOrders = orders.filter((_, i) => i % 2 === 0);
-  const rightOrders = orders.filter((_, i) => i % 2 === 1);
+// Compact time badge for single-line mini cards (e.g. "Jetzt", "4m", "18:42")
+function formatMiniOrderTime(order: Order, now: number): string {
+  const timeMs =
+    order._creationTime ||
+    (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
+  if (!timeMs) return "";
+  const elapsedMinutes = Math.floor((now - timeMs) / (1000 * 60));
+  if (elapsedMinutes < 1) return "Jetzt";
+  if (elapsedMinutes < 60) return `${elapsedMinutes}m`;
+  return new Date(timeMs).toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
-  const formatOrderTime = (order: Order): string => {
-    const timeMs =
-      order._creationTime ||
-      (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
-    if (!timeMs) return "";
-    const elapsedMinutes = Math.floor((now - timeMs) / (1000 * 60));
-    if (elapsedMinutes < 1) return "Gerade eben";
-    if (elapsedMinutes < 60) return `vor ${elapsedMinutes} Min.`;
-    return new Date(timeMs).toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+// Detailed time label for header in detail explorer pane
+function formatDetailOrderTime(order: Order, now: number): string {
+  const timeMs =
+    order._creationTime ||
+    (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
+  if (!timeMs) return "";
+  const elapsedMinutes = Math.floor((now - timeMs) / (1000 * 60));
+  const timeStr = new Date(timeMs).toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  if (elapsedMinutes < 1) return `Gerade eben (${timeStr} Uhr)`;
+  if (elapsedMinutes < 60) return `vor ${elapsedMinutes} Min. (${timeStr} Uhr)`;
+  return `${timeStr} Uhr`;
+}
 
-  const renderOrderCard = (order: Order) => {
-    const items = parseItems(order.items);
-    const timeLabel = formatOrderTime(order);
-
-    const completedTime =
-      order.completedAt ||
-      (order.$updatedAt ? new Date(order.$updatedAt).getTime() : 0) ||
-      order._creationTime ||
-      (order.$createdAt ? new Date(order.$createdAt).getTime() : Date.now());
-    const elapsedMs = Math.max(0, (now || Date.now()) - completedTime);
-    const remainingMs = Math.max(0, KITCHEN_CLEANUP_TIMEOUT - elapsedMs);
-    const remainingMins = Math.min(
-      KITCHEN_CLEANUP_MINUTES,
-      Math.max(1, Math.ceil(remainingMs / (60 * 1000))),
-    );
-
-    return (
-      <Card key={order.$id} className="flex flex-col justify-between">
-        <div>
-          <CardHeader className="p-4 pb-2">
-            <div className="flex items-start justify-between gap-2 w-full">
-              <div className="flex flex-wrap items-center gap-2 min-w-0">
-                <h4 className="text-3xl font-black text-foreground tracking-tight tabular-nums shrink-0">
-                  {order.orderNumber}
-                </h4>
-                {order.status === "completed" ? (
-                  <span className="text-xs font-semibold text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-full inline-flex items-center gap-1 shrink-0">
-                    <Clock className="w-3 h-3 text-primary shrink-0" />
-                    {t("autoArchiveRemaining", { time: `${remainingMins} Min.` })}
-                  </span>
-                ) : timeLabel ? (
-                  <span className="text-xs font-semibold text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-full inline-flex items-center gap-1 shrink-0">
-                    <Clock className="w-3 h-3 shrink-0" />
-                    {timeLabel}
-                  </span>
-                ) : null}
-              </div>
-              <span className="text-base sm:text-lg font-extrabold text-foreground tracking-tight text-right shrink-0 whitespace-nowrap pt-0.5">
-                {order.type === "dine-in" || order.tableNumber
-                  ? `${t("toTable")} ${order.tableNumber || ""}`.trim()
-                  : t("toPickUp")}
-              </span>
-            </div>
-          </CardHeader>
-          <CardContent className="p-4 pt-2 pb-4">
-            <div className="flex flex-col gap-2.5">
-              {items.map((item: any, index: number) => (
-                <div
-                  key={`${item.cartItemId || item.id || item.menuItemId || item.name}-${index}`}
-                  className={`flex flex-col py-1 ${
-                    index < items.length - 1 ? "border-b border-border/40 pb-1.5" : ""
-                  }`}
-                >
-                  <div className="flex justify-between items-baseline text-base gap-2">
-                    <span className="font-semibold text-foreground leading-snug break-words flex-1 min-w-0">
-                      <span className="font-extrabold text-primary mr-2 text-lg shrink-0">
-                        {item.quantity}×
-                      </span>
-                      {item.name}
-                    </span>
-                    <span className="text-muted-foreground text-sm font-medium shrink-0 ml-2">
-                      {formatPrice(item.price * item.quantity)}
-                    </span>
-                  </div>
-                  {Array.isArray(item.customizations) && item.customizations.length > 0 && (
-                    <div className="pl-6 pt-1 flex flex-col items-start gap-1">
-                      {item.customizations.map((c: any, cIdx: number) => {
-                        const stepName = c.stepName || c.step;
-                        const label =
-                          c.optionName ||
-                          c.choice ||
-                          c.name ||
-                          (typeof c === "string" ? c : "");
-                        if (!label || !String(label).trim()) return null;
-                        return (
-                          <span
-                            key={cIdx}
-                            className="inline-block max-w-full text-xs font-medium text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-md break-words"
-                          >
-                            {stepName ? (
-                              <span className="font-semibold text-foreground/80">
-                                {stepName}:{" "}
-                              </span>
-                            ) : null}
-                            <span>{label}</span>
-                            {typeof c.extraPrice === "number" && c.extraPrice > 0 ? (
-                              <>
-                                {" "}
-                                <span className="text-muted-foreground/80 font-normal whitespace-nowrap">
-                                  (+{formatPrice(c.extraPrice)})
-                                </span>
-                              </>
-                            ) : ""}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              ))}
-              <div className="mt-3 flex items-center justify-between border-t pt-3 font-bold text-base">
-                <span>{t("total")}</span>
-                <span>{formatPrice(order.total)}</span>
-              </div>
-            </div>
-          </CardContent>
-        </div>
-        {(onComplete || onCancel) && (
-          <div
-            className={`p-4 pt-0 grid gap-2 w-full ${
-              onComplete && onCancel
-                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-1"
-                : "grid-cols-1"
-            }`}
-          >
-            {onCancel && (
-              <Button
-                variant="outline"
-                className="w-full font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
-                onClick={() => onCancel(order.$id)}
-              >
-                <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-                {t("cancelOrder")}
-              </Button>
-            )}
-            {onComplete && (
-              <Button
-                className="w-full font-semibold"
-                onClick={() => onComplete(order.$id)}
-              >
-                <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-                {t("completeAction")}
-              </Button>
-            )}
-          </div>
-        )}
-      </Card>
-    );
-  };
-
-  return (
-    <>
-      {/* Single column layout preserving natural order */}
-      <div className="flex flex-col gap-4 w-full 2xl:hidden">
-        {orders.map(renderOrderCard)}
-      </div>
-
-      {/* >= 2xl: Two-column masonry layout where cards always take 50% width on ultra-wide screens */}
-      <div className="hidden 2xl:grid grid-cols-2 gap-4 items-start w-full">
-        <div className="flex flex-col gap-4 w-full min-w-0">
-          {leftOrders.map(renderOrderCard)}
-        </div>
-        <div className="flex flex-col gap-4 w-full min-w-0">
-          {rightOrders.map(renderOrderCard)}
-        </div>
-      </div>
-    </>
+function getRemainingArchiveMins(order: Order, now: number): number {
+  const completedTime =
+    order.completedAt ||
+    (order.$updatedAt ? new Date(order.$updatedAt).getTime() : 0) ||
+    order._creationTime ||
+    (order.$createdAt ? new Date(order.$createdAt).getTime() : now);
+  const elapsedMs = Math.max(0, now - completedTime);
+  const remainingMs = Math.max(0, KITCHEN_CLEANUP_TIMEOUT - elapsedMs);
+  return Math.min(
+    KITCHEN_CLEANUP_MINUTES,
+    Math.max(1, Math.ceil(remainingMs / (60 * 1000))),
   );
 }
 
@@ -241,9 +111,14 @@ export function LiveOrdersContent({
   const [mounted, setMounted] = useState(false);
   const [localOrders, setLocalOrders] = useState<Order[]>(orders);
   const [now, setNow] = useState<number>(Date.now());
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<"in_progress" | "completed">("in_progress");
+  const [mobileView, setMobileView] = useState<"list" | "detail">("list");
+  const [inProgressTooltipOpen, setInProgressTooltipOpen] = useState(false);
+  const [completedTooltipOpen, setCompletedTooltipOpen] = useState(false);
 
-  // Reactive Convex queries for live orders and org status
+  // Reactive Convex queries
   const liveOrders = useQuery(api.orders.getLiveOrders, {
     organizationId: organizationId as Id<"organizations">,
   });
@@ -256,7 +131,11 @@ export function LiveOrdersContent({
     if (typeof window !== "undefined" && window.location.search.includes("token=")) {
       const cleanUrl = new URL(window.location.href);
       cleanUrl.searchParams.delete("token");
-      window.history.replaceState({}, "", cleanUrl.pathname + (cleanUrl.search ? cleanUrl.search : ""));
+      window.history.replaceState(
+        {},
+        "",
+        cleanUrl.pathname + (cleanUrl.search ? cleanUrl.search : ""),
+      );
     }
     const interval = setInterval(() => {
       setNow(Date.now());
@@ -267,17 +146,14 @@ export function LiveOrdersContent({
   const [soundEnabled, setSoundEnabled] = useState(true);
   const isInitialRef = useRef(true);
   const knownOrderIdsRef = useRef<Set<string>>(
-    new Set(orders.map((o) => o.$id || (o as any)._id))
+    new Set(orders.map((o) => o.$id || (o as any)._id)),
   );
 
   useEffect(() => {
-    // Read saved sound preference
     const saved = localStorage.getItem("zakkig_kitchen_sound");
     if (saved !== null) {
       setSoundEnabled(saved === "1");
     }
-
-    // Enable audio context on first click anywhere in the page
     const handleFirstClick = () => initAudioContext();
     window.addEventListener("click", handleFirstClick, { once: true });
     return () => window.removeEventListener("click", handleFirstClick);
@@ -291,11 +167,11 @@ export function LiveOrdersContent({
         $createdAt: new Date(o._creationTime).toISOString(),
       }));
 
-      // Detect new incoming orders (status: in_progress)
+      // Detect incoming active orders
       if (!isInitialRef.current) {
         const newOrders = liveOrders.filter(
           (o: any) =>
-            o.status === "in_progress" && !knownOrderIdsRef.current.has(o._id)
+            o.status === "in_progress" && !knownOrderIdsRef.current.has(o._id),
         );
 
         if (newOrders.length > 0) {
@@ -308,12 +184,10 @@ export function LiveOrdersContent({
         }
       }
 
-      // Update known IDs
       liveOrders.forEach((o: any) => {
         knownOrderIdsRef.current.add(o._id);
       });
       isInitialRef.current = false;
-
       setLocalOrders(normalized);
     }
   }, [liveOrders, soundEnabled, t]);
@@ -325,31 +199,66 @@ export function LiveOrdersContent({
     }
   }, [org, router, t]);
 
+  // Split orders into in_progress and recently completed
+  const inProgressOrders = useMemo(
+    () =>
+      localOrders.filter(
+        (o) => o.status !== "completed" && o.status !== "cancelled",
+      ),
+    [localOrders],
+  );
+
+  const completedOrders = useMemo(
+    () =>
+      localOrders.filter((o) => {
+        if (o.status !== "completed") return false;
+        const timestamp = o.completedAt
+          ? o.completedAt
+          : o.$updatedAt
+          ? new Date(o.$updatedAt).getTime()
+          : new Date(o.$createdAt || o._creationTime || Date.now()).getTime();
+        return now - timestamp < KITCHEN_CLEANUP_TIMEOUT;
+      }),
+    [localOrders, now],
+  );
+
+  // Auto-selection of active order
+  useEffect(() => {
+    if (localOrders.length === 0) {
+      setSelectedOrderId(null);
+      return;
+    }
+    const currentStillExists = localOrders.some((o) => o.$id === selectedOrderId);
+    if (!selectedOrderId || !currentStillExists) {
+      const firstActive = inProgressOrders[0]?.$id;
+      const firstCompleted = completedOrders[0]?.$id;
+      setSelectedOrderId(firstActive || firstCompleted || null);
+    }
+  }, [localOrders, selectedOrderId, inProgressOrders, completedOrders]);
+
   if (!mounted) {
     return null;
   }
 
-  const targetOrder = localOrders.find((o) => o.$id === orderToCancel);
-  const inProgressOrders = localOrders.filter(
-    (o) => o.status !== "completed" && o.status !== "cancelled",
-  );
-  const completedOrders = localOrders.filter((o) => {
-    if (o.status !== "completed") return false;
-    const timestamp = o.completedAt
-      ? o.completedAt
-      : o.$updatedAt
-      ? new Date(o.$updatedAt).getTime()
-      : new Date(o.$createdAt || o._creationTime || Date.now()).getTime();
-    return now - timestamp < KITCHEN_CLEANUP_TIMEOUT;
-  });
+  const selectedOrder = localOrders.find((o) => o.$id === selectedOrderId) || null;
+  const targetOrderToCancel = localOrders.find((o) => o.$id === orderToCancel);
 
   async function handleStatusChange(
     orderId: string,
-    newStatus: "in_progress" | "completed" | "cancelled"
+    newStatus: "in_progress" | "completed" | "cancelled",
   ) {
     const timestamp = Date.now();
     setNow(timestamp);
-    // Optimistic UI update for instant feedback
+
+    // If completing the currently selected order, pick the next in-progress order
+    if (newStatus === "completed" && selectedOrderId === orderId) {
+      const nextInProgress = inProgressOrders.find((o) => o.$id !== orderId);
+      if (nextInProgress) {
+        setSelectedOrderId(nextInProgress.$id);
+      }
+    }
+
+    // Optimistic UI update
     setLocalOrders((prev) =>
       prev.map((o) =>
         o.$id === orderId
@@ -362,20 +271,104 @@ export function LiveOrdersContent({
           : o,
       ),
     );
+
     await updateOrderStatusAction(orderId, newStatus, organizationId);
   }
 
+  const renderMiniCard = (order: Order, isCompleted: boolean) => {
+    const isSelected = selectedOrderId === order.$id;
+    const timeLabel = formatMiniOrderTime(order, now);
+    const remainingMins = getRemainingArchiveMins(order, now);
+
+    return (
+      <button
+        key={order.$id}
+        type="button"
+        onClick={() => {
+          setSelectedOrderId(order.$id);
+          setMobileView("detail");
+        }}
+        className={cn(
+          "w-full h-10 sm:h-11 text-left rounded-lg transition-colors relative flex items-center justify-between gap-1 sm:gap-1.5 select-none bg-card text-foreground border border-border/60 hover:bg-muted/50 hover:border-border px-2 sm:px-2.5",
+          isSelected &&
+            "desktop:bg-primary desktop:text-primary-foreground desktop:border-2 desktop:border-primary desktop:shadow-xs desktop:px-[9px] desktop:hover:bg-primary desktop:hover:border-primary",
+        )}
+      >
+        {/* Left: Number and Type */}
+        <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 flex-1">
+          <span
+            className={cn(
+              "font-black tracking-tight tabular-nums text-xs sm:text-sm shrink-0 text-foreground",
+              isSelected && "desktop:text-primary-foreground",
+            )}
+          >
+            {order.orderNumber}
+          </span>
+          <span
+            className={cn(
+              "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md shrink-0 inline-flex items-center border bg-muted text-foreground/80 border-transparent",
+              isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
+            )}
+          >
+            {order.type === "dine-in" || order.tableNumber
+              ? `${t("table")} ${order.tableNumber || ""}`.trim()
+              : t("pickup")}
+          </span>
+        </div>
+
+        {/* Right: Time badge */}
+        <div className="shrink-0 flex items-center pl-1">
+          {isCompleted ? (
+            <span
+              className={cn(
+                "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 shrink-0 tabular-nums border bg-muted text-foreground/80 border-transparent",
+                isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
+              )}
+            >
+              <Clock
+                className={cn(
+                  "w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0 text-foreground/80",
+                  isSelected && "desktop:text-white",
+                )}
+                weight="bold"
+              />
+              <span>{remainingMins}m</span>
+            </span>
+          ) : timeLabel ? (
+            <span
+              className={cn(
+                "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 shrink-0 tabular-nums border bg-muted text-foreground/80 border-transparent",
+                isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
+              )}
+            >
+              <Clock
+                className={cn(
+                  "w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0 text-foreground/80",
+                  isSelected && "desktop:text-white",
+                )}
+                weight="bold"
+              />
+              <span>{timeLabel}</span>
+            </span>
+          ) : null}
+        </div>
+      </button>
+    );
+  };
+
   return (
-    <div className="flex-1 space-y-4">
-      <div className="flex items-center justify-between space-y-2 print:hidden">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight">{t("orders")}</h1>
+    <div className="flex-1 min-h-0 h-full flex flex-col space-y-4 print:hidden">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between shrink-0 sm:-mt-[3.2px]">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            {t("orders")}
+          </h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="default"
             size="default"
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={() => {
               initAudioContext();
               const next = !soundEnabled;
@@ -383,15 +376,16 @@ export function LiveOrdersContent({
               localStorage.setItem("zakkig_kitchen_sound", next ? "1" : "0");
               if (next) playNewOrderSound();
             }}
+            className="h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-4 gap-1.5 sm:gap-2"
           >
             {soundEnabled ? (
               <>
-                <SpeakerHigh className="w-4 h-4 text-primary-foreground" weight="fill" />
+                <SpeakerHigh className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-foreground" weight="fill" />
                 <span>{t("soundOn")}</span>
               </>
             ) : (
               <>
-                <SpeakerSlash className="w-4 h-4 text-primary-foreground/70" />
+                <SpeakerSlash className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-foreground/70" />
                 <span>{t("soundOff")}</span>
               </>
             )}
@@ -399,73 +393,391 @@ export function LiveOrdersContent({
         </div>
       </div>
 
-      {/* Side-by-Side Large Section Cards (Überkacheln) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        {/* Section 1: In Bearbeitung (In Progress) Big Card */}
-        <Card className="flex flex-col">
-          <CardHeader className="flex flex-row items-start justify-between pb-2 gap-4">
-            <div className="space-y-1 flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-foreground">
-                {t("inProgress")}
-              </h3>
-              <p className="text-sm text-muted-foreground text-balance leading-relaxed">
-                {t("inProgressSubline")}
-              </p>
-            </div>
-            <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 tabular-nums leading-none">
-              {inProgressOrders.length}
-            </Badge>
-          </CardHeader>
-          <CardContent className="p-4 xl:p-6">
-            {inProgressOrders.length === 0 ? (
-              <div className="py-12 text-center text-muted-foreground font-medium border border-dashed rounded-lg">
-                {t("noInProgressOrders")}
-              </div>
-            ) : (
-              <OrderGrid
-                orders={inProgressOrders}
-                onComplete={(id) => handleStatusChange(id, "completed")}
-                onCancel={(id) => setOrderToCancel(id)}
-                t={t}
-                now={now}
-              />
-            )}
-          </CardContent>
-        </Card>
+      {/* Main Explorer Screen Layout */}
+      <div className="flex-1 min-h-0 flex flex-col desktop:flex-row gap-3.5 items-stretch overflow-hidden">
+        {/* Left Side: Master Queue Panel (Strict fixed 540px width on tablet & desktop: 264px each column) */}
+        <div
+          className={cn(
+            "flex flex-col min-h-0 h-full desktop:w-[540px] desktop:min-w-[540px] desktop:max-w-[540px] shrink-0",
+            mobileView === "detail" ? "hidden desktop:flex" : "flex",
+          )}
+        >
+          {/* Mobile Tab Switcher (< 500px) */}
+          <div className="flex items-center gap-2 mb-2 tablet:hidden">
+            <Button
+              variant={mobileTab === "in_progress" ? "default" : "outline"}
+              size="default"
+              onClick={() => setMobileTab("in_progress")}
+              className="flex-1 font-semibold gap-1.5 sm:gap-2 h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-3"
+            >
+              <span>{t("inProgress")}</span>
+              <span
+                className={cn(
+                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold tabular-nums leading-none",
+                  inProgressOrders.length > 9
+                    ? "px-1 sm:px-1.5"
+                    : "aspect-square p-0",
+                  mobileTab === "in_progress"
+                    ? "bg-primary-foreground text-primary"
+                    : "bg-primary text-primary-foreground",
+                )}
+              >
+                {inProgressOrders.length}
+              </span>
+            </Button>
+            <Button
+              variant={mobileTab === "completed" ? "default" : "outline"}
+              size="default"
+              onClick={() => setMobileTab("completed")}
+              className="flex-1 font-semibold gap-1.5 sm:gap-2 h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-3"
+            >
+              <span>{t("completed")}</span>
+              <span
+                className={cn(
+                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold tabular-nums leading-none",
+                  completedOrders.length > 9
+                    ? "px-1 sm:px-1.5"
+                    : "aspect-square p-0",
+                  mobileTab === "completed"
+                    ? "bg-primary-foreground text-primary"
+                    : "bg-primary text-primary-foreground",
+                )}
+              >
+                {completedOrders.length}
+              </span>
+            </Button>
+          </div>
 
-        {/* Section 2: Abgeschlossen (Completed) Big Card */}
-        <Card className="flex flex-col">
-          <CardHeader className="flex flex-row items-start justify-between pb-2 gap-4">
-            <div className="space-y-1 flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-foreground">
-                {t("completed")}
-              </h3>
-              <p className="text-sm text-muted-foreground text-balance leading-relaxed">
-                {t("completedSubline")}
-              </p>
-            </div>
-            <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 tabular-nums leading-none">
-              {completedOrders.length}
-            </Badge>
-          </CardHeader>
-          <CardContent className="p-4 xl:p-6">
-            {completedOrders.length === 0 ? (
-              <div className="py-12 text-center text-muted-foreground font-medium border border-dashed rounded-lg">
-                {t("noCompletedRecentOrders")}
+          {/* Dual Compact Columns Side-by-Side (side-by-side on >= 500px, tabbed on < 500px) */}
+          <TooltipProvider delay={100}>
+            <div className="flex-1 min-h-0 grid grid-cols-1 tablet:grid-cols-2 gap-3 h-full w-full">
+              {/* Column 1: In Bearbeitung */}
+              <div
+                className={cn(
+                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card/60 overflow-hidden shrink-0",
+                  mobileTab !== "in_progress" && "hidden tablet:flex",
+                )}
+              >
+                {/* Header: Edge-to-Edge Divider */}
+                <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-xs sm:text-sm font-bold text-foreground truncate">
+                      {t("inProgress")}
+                    </span>
+                    <Tooltip
+                      open={inProgressTooltipOpen}
+                      onOpenChange={setInProgressTooltipOpen}
+                    >
+                      <TooltipTrigger
+                        type="button"
+                        onClick={() => setInProgressTooltipOpen((v) => !v)}
+                        className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shrink-0 cursor-pointer"
+                        aria-label={t("info")}
+                      >
+                        <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" align="start" className="max-w-[240px] p-2.5 text-xs">
+                        <p className="font-medium leading-relaxed">
+                          {t("inProgressSubline")}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <Badge
+                    className={cn(
+                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
+                      inProgressOrders.length > 9
+                        ? "px-1"
+                        : "aspect-square",
+                    )}
+                  >
+                    {inProgressOrders.length}
+                  </Badge>
+                </div>
+
+                <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
+                  {inProgressOrders.length === 0 ? (
+                    <div className="py-3.5 px-3 text-center text-xs text-muted-foreground font-medium border border-dashed border-border/80 rounded-lg">
+                      {t("noInProgressOrders")}
+                    </div>
+                  ) : (
+                    inProgressOrders.map((order) => renderMiniCard(order, false))
+                  )}
+                </div>
               </div>
-            ) : (
-              <OrderGrid
-                orders={completedOrders}
-                onCancel={(id) => setOrderToCancel(id)}
-                t={t}
-                now={now}
-              />
+
+              {/* Column 2: Abgeschlossen */}
+              <div
+                className={cn(
+                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card/60 overflow-hidden shrink-0",
+                  mobileTab !== "completed" && "hidden tablet:flex",
+                )}
+              >
+                {/* Header: Edge-to-Edge Divider */}
+                <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-xs sm:text-sm font-bold text-foreground truncate">
+                      {t("completed")}
+                    </span>
+                    <Tooltip
+                      open={completedTooltipOpen}
+                      onOpenChange={setCompletedTooltipOpen}
+                    >
+                      <TooltipTrigger
+                        type="button"
+                        onClick={() => setCompletedTooltipOpen((v) => !v)}
+                        className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shrink-0 cursor-pointer"
+                        aria-label={t("info")}
+                      >
+                        <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" align="start" className="max-w-[260px] p-2.5 text-xs">
+                        <div className="flex flex-col gap-1 text-left">
+                          <p className="font-medium leading-relaxed">
+                            {t("completedSubline")}
+                          </p>
+                          <p className="text-[11px] opacity-80 leading-relaxed">
+                            {t("autoArchiveNotice")}
+                          </p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <Badge
+                    className={cn(
+                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
+                      completedOrders.length > 9
+                        ? "px-1"
+                        : "aspect-square",
+                    )}
+                  >
+                    {completedOrders.length}
+                  </Badge>
+                </div>
+
+                <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
+                  {completedOrders.length === 0 ? (
+                    <div className="py-3.5 px-3 text-center text-xs text-muted-foreground font-medium border border-dashed border-border/80 rounded-lg">
+                      {t("noCompletedRecentOrders")}
+                    </div>
+                  ) : (
+                    completedOrders.map((order) => renderMiniCard(order, true))
+                  )}
+                </div>
+              </div>
+            </div>
+          </TooltipProvider>
+        </div>
+
+        {/* Right Side: Order Detail Explorer (Ansicht column) */}
+        <div
+          className={cn(
+            "flex-1 min-w-0 min-h-0 h-full flex flex-col shrink-0",
+            mobileView === "list" ? "hidden desktop:flex" : "flex",
+          )}
+        >
+          {/* Mobile Back Button (< 1100px) */}
+          <div className="flex items-center mb-2 desktop:hidden shrink-0">
+            <Button
+              variant="outline"
+              size="default"
+              onClick={() => setMobileView("list")}
+              className="gap-1.5 sm:gap-2 font-semibold h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-3"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" weight="bold" />
+              <span>{t("backToList")}</span>
+            </Button>
+          </div>
+
+          <div className="flex-1 min-w-0 min-h-0 h-full flex flex-col rounded-lg sm:rounded-xl border border-border bg-card overflow-hidden shadow-xs shrink-0">
+            {selectedOrder ? (
+              <div className="flex-1 min-h-0 flex flex-col h-full">
+                {/* Header */}
+                <div className="p-3 sm:p-4 border-b border-border bg-muted/20 shrink-0">
+                  <div className="flex items-center justify-between gap-2 sm:gap-2.5 flex-wrap">
+                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-wrap">
+                      <h2 className="text-xl sm:text-2xl desktop:text-3xl font-black text-foreground tracking-tight tabular-nums shrink-0">
+                        {selectedOrder.orderNumber}
+                      </h2>
+                    <span className="text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-primary text-primary-foreground border border-transparent shrink-0">
+                      {selectedOrder.status === "completed"
+                        ? t("completed")
+                        : t("inProgress")}
+                    </span>
+                    <span className="text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0">
+                      {selectedOrder.type === "dine-in" || selectedOrder.tableNumber
+                        ? `${t("toTable")} ${selectedOrder.tableNumber || ""}`.trim()
+                        : t("toPickUp")}
+                    </span>
+                  </div>
+
+                  {/* Timestamp Badge */}
+                  <div className="shrink-0 flex items-center ml-auto">
+                    <span className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0 tabular-nums">
+                      <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 opacity-80" weight="bold" />
+                      <span>
+                        {selectedOrder.status === "completed"
+                          ? t("trackingMinutes", {
+                              count: getRemainingArchiveMins(selectedOrder, now),
+                            })
+                          : formatDetailOrderTime(selectedOrder, now)}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Items List (Scrollable) */}
+              <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
+                {parseItems(selectedOrder.items).map((item: any, idx: number) => {
+                  const itemKey = `${item.cartItemId || item.id || item.menuItemId || item.name}-${idx}`;
+                  return (
+                    <div
+                      key={itemKey}
+                      className="flex flex-col pb-3 border-b border-border/40 last:border-b-0 last:pb-0"
+                    >
+                      <div className="flex justify-between items-start gap-2.5 sm:gap-3">
+                        <div className="flex items-baseline gap-2 sm:gap-2.5 min-w-0">
+                          <span className="text-lg sm:text-xl font-black text-primary tabular-nums shrink-0">
+                            {item.quantity}×
+                          </span>
+                          <span className="text-sm sm:text-base desktop:text-lg font-bold text-foreground leading-snug break-words">
+                            {item.name}
+                          </span>
+                        </div>
+                        <span className="text-xs sm:text-sm desktop:text-base font-semibold text-foreground shrink-0 tabular-nums ml-2">
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
+                      </div>
+
+                      {/* Customizations / Toppings */}
+                      {Array.isArray(item.customizations) &&
+                        item.customizations.length > 0 && (
+                          <div className="pl-5 sm:pl-7 pt-1 sm:pt-1.5">
+                            <div className="inline-block max-w-full text-xs sm:text-sm font-medium text-foreground/90 bg-muted/80 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/40 leading-relaxed break-words">
+                              {item.customizations.map((c: any, cIdx: number) => {
+                                const stepName = c.stepName || c.step;
+                                const label =
+                                  c.optionName ||
+                                  c.choice ||
+                                  c.name ||
+                                  (typeof c === "string" ? c : "");
+                                if (!label || !String(label).trim()) return null;
+                                return (
+                                  <span key={cIdx} className="inline">
+                                    {cIdx > 0 && (
+                                      <span className="text-muted-foreground/60">, </span>
+                                    )}
+                                    {stepName ? (
+                                      <span className="font-bold text-foreground mr-1">
+                                        {stepName}:
+                                      </span>
+                                    ) : null}
+                                    <span>{label}</span>
+                                    {typeof c.extraPrice === "number" &&
+                                    c.extraPrice > 0 ? (
+                                      <span className="text-muted-foreground whitespace-nowrap ml-1">
+                                        (+{formatPrice(c.extraPrice)})
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Total & Action Bar (Docked Footer) */}
+              <div className="p-3 sm:p-4 md:p-5 border-t border-border bg-card shrink-0 space-y-3 sm:space-y-4">
+                {/* Total Sum */}
+                <div className="flex items-baseline justify-between">
+                  <div className="flex items-baseline gap-1.5 sm:gap-2">
+                    <span className="text-base sm:text-lg desktop:text-xl font-black text-foreground tracking-tight">
+                      {t("total")}
+                    </span>
+                    <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                      {t("taxNote")}
+                    </span>
+                  </div>
+                  <span className="text-xl sm:text-2xl font-black text-foreground tabular-nums">
+                    {formatPrice(selectedOrder.total)}
+                  </span>
+                </div>
+
+                {/* Touch Action Buttons */}
+                <div className="flex items-center gap-2 sm:gap-3">
+                  {selectedOrder.status === "in_progress" ? (
+                    <>
+                      <Button
+                        size="default"
+                        variant="outline"
+                        className="h-9 sm:h-11 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
+                        onClick={() => setOrderToCancel(selectedOrder.$id)}
+                      >
+                        <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                        {t("cancelOrder")}
+                      </Button>
+                      <Button
+                        size="default"
+                        className="flex-1 h-9 sm:h-11 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
+                        onClick={() =>
+                          handleStatusChange(selectedOrder.$id, "completed")
+                        }
+                      >
+                        <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                        {t("completeAction")}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        size="default"
+                        variant="outline"
+                        className="h-9 sm:h-11 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
+                        onClick={() => setOrderToCancel(selectedOrder.$id)}
+                      >
+                        <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                        {t("cancelOrder")}
+                      </Button>
+                      <Button
+                        size="default"
+                        className="flex-1 h-9 sm:h-11 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
+                        onClick={() => {
+                          handleStatusChange(selectedOrder.$id, "in_progress");
+                          toast.success(t("inProgress"));
+                        }}
+                      >
+                        <ArrowCounterClockwise
+                          className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0"
+                          weight="bold"
+                        />
+                        {t("reopenOrder")}
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
+              <ClipboardText className="w-12 h-12 text-muted-foreground/40 mb-3" />
+              <h3 className="text-base font-bold text-foreground mb-1">
+                {t("noActiveOrders")}
+              </h3>
+              <p className="text-xs text-muted-foreground max-w-xs">
+                {t("selectOrderPrompt")}
+              </p>
+              </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      {/* Cancel Order Warning Dialog */}
+      {/* Cancel Order Confirmation Dialog */}
       <Dialog
         open={!!orderToCancel}
         onOpenChange={(open) => !open && setOrderToCancel(null)}
@@ -476,9 +788,9 @@ export function LiveOrdersContent({
         >
           <DialogHeader>
             <DialogTitle className="text-primary-foreground text-lg font-bold">
-              {targetOrder
+              {targetOrderToCancel
                 ? t("cancelOrderTitle", {
-                    orderNumber: targetOrder.orderNumber,
+                    orderNumber: targetOrderToCancel.orderNumber,
                   })
                 : t("cancelOrderTitleFallback")}
             </DialogTitle>

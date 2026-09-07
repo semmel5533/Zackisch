@@ -99,6 +99,8 @@
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
+  --breakpoint-tablet: 500px;
+  --breakpoint-desktop: 1100px;
   --breakpoint-3xl: 1600px;
   --breakpoint-4xl: 1800px;
 
