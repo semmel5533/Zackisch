@@ -30,7 +30,6 @@ import {
   EyeSlash,
   Check,
   X,
-  FloppyDisk,
   CircleNotch,
   ArrowLeft,
 } from "@phosphor-icons/react";
@@ -396,10 +395,7 @@ function PasswordResetFormContent({
                 {t("saving")}
               </>
             ) : (
-              <>
-                <FloppyDisk className="w-5 h-5" weight="bold" />
-                {t("changePassword")}
-              </>
+              t("changePassword")
             )}
           </Button>
         </form>

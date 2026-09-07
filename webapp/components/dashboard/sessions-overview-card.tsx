@@ -86,6 +86,103 @@ export function SessionsOverviewCard({
 
   return (
     <Fragment>
+      {/* Order Sessions Card */}
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex flex-col gap-1 pb-2">
+          <div className="flex items-start justify-between gap-4 w-full">
+            <h3 className="text-lg font-semibold leading-tight tracking-tight flex-1">
+              {t("liveOrderSessions")}
+            </h3>
+            <Dialog open={orderQrOpen} onOpenChange={setOrderQrOpen}>
+              <DialogTrigger
+                render={
+                  <Button
+                    variant="default"
+                    size="icon"
+                    className="shrink-0 rounded-full h-8 w-8"
+                  />
+                }
+              >
+                <QrCode className="h-4 w-4" />
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[400px] bg-primary text-primary-foreground border-border/20">
+                <DialogHeader className="flex flex-row items-center justify-between">
+                  <DialogTitle className="text-primary-foreground text-lg font-bold">
+                    {t("liveOrderSessions")}
+                  </DialogTitle>
+                  <DialogCloseButton />
+                </DialogHeader>
+                <div className="flex flex-col items-center gap-6 p-6">
+                  <a
+                    href={getLink("orders", orderToken)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="cursor-pointer [&_image]:invert"
+                  >
+                    <ReactQRCode
+                      value={getLink("orders", orderToken)}
+                      size={240}
+                      level="H"
+                      background="transparent"
+                      dataModulesSettings={{
+                        color: "#ffffff",
+                        style: "square-sm",
+                      }}
+                      finderPatternOuterSettings={{
+                        color: "#ffffff",
+                        style: "square",
+                      }}
+                      finderPatternInnerSettings={{
+                        color: "#ffffff",
+                        style: "square",
+                      }}
+                      imageSettings={{
+                        src: "https://www.zakkig.de/full_qr.png",
+                        height: Math.round((50 * 240) / 280),
+                        width: Math.round((157 * 240) / 280),
+                        excavate: true,
+                      }}
+                    />
+                  </a>
+                  <div className="flex items-start gap-2.5 text-xs text-left text-primary-foreground font-medium bg-primary-foreground/10 p-3 rounded-lg w-[240px]">
+                    <WarningCircle
+                      className="w-4 h-4 shrink-0 mt-0.5 text-primary-foreground"
+                      weight="fill"
+                    />
+                    <span>{t("staffQrWarning")}</span>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed mt-1">
+            {t("orderSessionsDesc")}
+          </p>
+        </CardHeader>
+        <CardContent className="flex-1 flex flex-col justify-end gap-3 pt-4">
+          <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+            <Button
+              variant="outline"
+              onClick={() => copyLinkText("orders", orderToken)}
+              className="w-full sm:flex-1 gap-2"
+              disabled={isPending}
+            >
+              <Copy className="h-4 w-4 shrink-0" weight="bold" />
+              <span>{t("copyLink")}</span>
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setRegenerateOrderOpen(true)}
+              className="w-full sm:flex-1 gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+              disabled={isPending}
+            >
+              <ArrowsClockwise className="h-4 w-4" weight="bold" />
+              <span>{t("createSession")}</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Availability Sessions Card */}
       <Card className="h-full flex flex-col">
         <CardHeader className="flex flex-col gap-1 pb-2">
@@ -176,103 +273,6 @@ export function SessionsOverviewCard({
             <Button
               variant="outline"
               onClick={() => setRegenerateAvailabilityOpen(true)}
-              className="w-full sm:flex-1 gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
-              disabled={isPending}
-            >
-              <ArrowsClockwise className="h-4 w-4" weight="bold" />
-              <span>{t("createSession")}</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Order Sessions Card */}
-      <Card className="h-full flex flex-col">
-        <CardHeader className="flex flex-col gap-1 pb-2">
-          <div className="flex items-start justify-between gap-4 w-full">
-            <h3 className="text-lg font-semibold leading-tight tracking-tight flex-1">
-              {t("liveOrderSessions")}
-            </h3>
-            <Dialog open={orderQrOpen} onOpenChange={setOrderQrOpen}>
-              <DialogTrigger
-                render={
-                  <Button
-                    variant="default"
-                    size="icon"
-                    className="shrink-0 rounded-full h-8 w-8"
-                  />
-                }
-              >
-                <QrCode className="h-4 w-4" />
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[400px] bg-primary text-primary-foreground border-border/20">
-                <DialogHeader className="flex flex-row items-center justify-between">
-                  <DialogTitle className="text-primary-foreground text-lg font-bold">
-                    {t("liveOrderSessions")}
-                  </DialogTitle>
-                  <DialogCloseButton />
-                </DialogHeader>
-                <div className="flex flex-col items-center gap-6 p-6">
-                  <a
-                    href={getLink("orders", orderToken)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="cursor-pointer [&_image]:invert"
-                  >
-                    <ReactQRCode
-                      value={getLink("orders", orderToken)}
-                      size={240}
-                      level="H"
-                      background="transparent"
-                      dataModulesSettings={{
-                        color: "#ffffff",
-                        style: "square-sm",
-                      }}
-                      finderPatternOuterSettings={{
-                        color: "#ffffff",
-                        style: "square",
-                      }}
-                      finderPatternInnerSettings={{
-                        color: "#ffffff",
-                        style: "square",
-                      }}
-                      imageSettings={{
-                        src: "https://www.zakkig.de/full_qr.png",
-                        height: Math.round((50 * 240) / 280),
-                        width: Math.round((157 * 240) / 280),
-                        excavate: true,
-                      }}
-                    />
-                  </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-primary-foreground font-medium bg-primary-foreground/10 p-3 rounded-lg w-[240px]">
-                    <WarningCircle
-                      className="w-4 h-4 shrink-0 mt-0.5 text-primary-foreground"
-                      weight="fill"
-                    />
-                    <span>{t("staffQrWarning")}</span>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-            {t("orderSessionsDesc")}
-          </p>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col justify-end gap-3 pt-4">
-          <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
-            <Button
-              variant="outline"
-              onClick={() => copyLinkText("orders", orderToken)}
-              className="w-full sm:flex-1 gap-2"
-              disabled={isPending}
-            >
-              <Copy className="h-4 w-4 shrink-0" weight="bold" />
-              <span>{t("copyLink")}</span>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setRegenerateOrderOpen(true)}
               className="w-full sm:flex-1 gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
               disabled={isPending}
             >
