@@ -248,12 +248,15 @@ export function CustomizationModal({
                   {step.options.map((option) => {
                     const isSelected = currentSelections.includes(option.name);
                     const isMaxReached = step.maxSelections > 1 && !isSelected && currentSelections.length >= step.maxSelections;
+                    const isMulti = step.maxSelections > 1;
 
                     return (
                       <button
                         key={option.name}
                         onClick={() => handleSelect(step.name, option.name)}
                         disabled={isMaxReached}
+                        role={isMulti ? "checkbox" : "radio"}
+                        aria-checked={isSelected}
                         className={`w-full flex items-center justify-between px-4 py-3 rounded-[14px] border transition-all text-left cursor-pointer ${
                           isSelected
                             ? "border-primary-foreground bg-primary-foreground/15 ring-1 ring-primary-foreground text-primary-foreground"
@@ -263,15 +266,31 @@ export function CustomizationModal({
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
-                          <div
-                            className={`w-5 h-5 flex items-center justify-center rounded-full border shrink-0 transition-colors ${
-                              isSelected
-                                ? "border-primary-foreground bg-primary-foreground text-primary"
-                                : "border-primary-foreground/30 bg-transparent"
-                            }`}
-                          >
-                            {isSelected && <Check weight="bold" className="w-3 h-3 text-primary" />}
-                          </div>
+                          {isMulti ? (
+                            <div
+                              className={cn(
+                                "w-5 h-5 flex items-center justify-center rounded-[5px] border shrink-0 transition-colors",
+                                isSelected
+                                  ? "border-primary-foreground bg-primary-foreground text-primary"
+                                  : "border-primary-foreground/30 bg-transparent"
+                              )}
+                            >
+                              {isSelected && <Check weight="bold" className="w-3.5 h-3.5 text-primary" />}
+                            </div>
+                          ) : (
+                            <div
+                              className={cn(
+                                "w-5 h-5 flex items-center justify-center rounded-full shrink-0 transition-colors",
+                                isSelected
+                                  ? "border-2 border-primary-foreground bg-transparent"
+                                  : "border border-primary-foreground/30 bg-transparent"
+                              )}
+                            >
+                              {isSelected && (
+                                <div className="w-2.5 h-2.5 rounded-full bg-primary-foreground" />
+                              )}
+                            </div>
+                          )}
                           <span className="font-medium text-sm sm:text-base text-left leading-snug break-words">
                             {option.name}
                           </span>
