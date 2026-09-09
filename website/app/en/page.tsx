@@ -5,7 +5,7 @@ import { translations } from "@/lib/translations";
 const t = translations.en;
 
 export const metadata: Metadata = {
-  title: t.metaTitle,
+  title: t.heroTitle,
   description: t.metaDescription,
   openGraph: {
     title: t.metaTitle,

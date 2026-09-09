@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "zakkig: Legal Notice",
+  title: "Legal Notice",
   description: "Legal Notice of zakkig.",
   robots: "noindex, follow",
   alternates: {

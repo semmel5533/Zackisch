@@ -7,7 +7,7 @@ import {
 } from "./PrivacySections";
 
 export const metadata: Metadata = {
-  title: "zakkig: Datenschutzerklärung",
+  title: "Datenschutzerklärung",
   description: "Datenschutzerklärung von zakkig.",
   robots: "noindex, follow",
   alternates: {

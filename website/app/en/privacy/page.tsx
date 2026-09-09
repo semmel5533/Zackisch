@@ -7,7 +7,7 @@ import {
 } from "./PrivacySections";
 
 export const metadata: Metadata = {
-  title: "zakkig: Privacy Policy",
+  title: "Privacy Policy",
   description: "Privacy Policy of zakkig.",
   robots: "noindex, follow",
   alternates: {

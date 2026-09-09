@@ -134,10 +134,12 @@ export function ImageUpload({
               alt=""
               className="absolute inset-0 w-full h-full object-cover rounded-lg"
             />
-            <div className="absolute inset-0 bg-black/40 transition-colors flex items-center justify-center gap-2 opacity-0 hover:opacity-100">
-              <span className="text-white font-medium text-xs bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+            <div className="absolute inset-0 bg-black/40 transition-colors flex items-center justify-center gap-1.5 opacity-0 hover:opacity-100">
+              <span
+                className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm cursor-pointer"
+                title={t("changeImage")}
+              >
                 <PencilSimple className="w-3.5 h-3.5" />
-                {t("changeImage")}
               </span>
               <button
                 type="button"

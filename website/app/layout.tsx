@@ -7,6 +7,10 @@ const t = translations.de;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.zakkig.de"),
+  title: {
+    default: t.metaTitle,
+    template: "zakkig: %s",
+  },
   icons: {
     icon: "/icon.png",
     apple: "/icon.png",

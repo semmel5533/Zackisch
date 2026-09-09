@@ -1327,11 +1327,10 @@ const ItemRowView = memo(function ItemRowView({
                 variant="outline"
                 size="icon"
                 onClick={onDelete}
-                className="rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 sm:w-auto sm:px-3 sm:gap-1.5 sm:rounded-lg"
+                className="rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
                 title={t("delete")}
               >
                 <Trash className="h-4 w-4 shrink-0" weight="bold" />
-                <span className="hidden sm:inline text-xs">{t("delete")}</span>
               </Button>
             </div>
           </div>

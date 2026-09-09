@@ -619,6 +619,10 @@ export function GuestFrontend({
       document.title = `zakkig: ${t("orderStatus")} - ${orgName}`;
       return;
     }
+    if (activeTab === "cart") {
+      document.title = `zakkig: ${t("cart")}`;
+      return;
+    }
     const prefix =
       type === "takeaway"
         ? t("titleToGo")
@@ -626,7 +630,7 @@ export function GuestFrontend({
         ? t("titleToStay", { table: tableNumber })
         : t("titleToStayNoTable");
     document.title = `zakkig: ${prefix} ${orgName}`;
-  }, [locale, organization.name, type, tableNumber, orderId, t]);
+  }, [locale, organization.name, type, tableNumber, orderId, activeTab, t]);
 
   if (orderId && type === "takeaway") {
     return (

@@ -1,10 +1,20 @@
-"use client";
-
 import Link from "next/link";
-import { useTranslation } from "@/lib/i18n";
+import { cookies } from "next/headers";
+import { translations, Locale } from "@/lib/translations";
 
-export default function NotFound() {
-  const { t } = useTranslation();
+export async function generateMetadata() {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "de";
+  const dict = translations[locale] || translations.de;
+  return {
+    title: dict.notFoundTitle,
+  };
+}
+
+export default async function NotFound() {
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "de";
+  const dict = translations[locale] || translations.de;
 
   return (
     <div className="bg-black text-white min-h-screen flex items-center justify-center px-6">
@@ -13,16 +23,16 @@ export default function NotFound() {
           404
         </h1>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6 text-white leading-tight whitespace-nowrap">
-          {t("notFoundTitle")}
+          {dict.notFoundTitle}
         </h2>
         <p className="text-zinc-500 font-light mb-8 text-base sm:text-lg">
-          {t("notFoundText")}
+          {dict.notFoundText}
         </p>
         <Link
           href="/"
           className="px-6 py-3 bg-white text-black hover:bg-zinc-200 transition-colors duration-200 rounded-full font-semibold inline-block text-sm cursor-pointer"
         >
-          {t("backHome")}
+          {dict.backHome}
         </Link>
       </div>
     </div>

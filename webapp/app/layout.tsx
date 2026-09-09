@@ -13,7 +13,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "zakkig",
+    default: "zakkig: Digitales Bestell- und Bezahlsystem",
     template: "zakkig: %s",
   },
   description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",

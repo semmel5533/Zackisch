@@ -89,5 +89,6 @@ export default defineSchema({
     identifier: v.string(),
     code: v.string(),
     expires: v.number(),
+    challenge: v.optional(v.string()),
   }).index("by_identifier", ["identifier"]),
 });
