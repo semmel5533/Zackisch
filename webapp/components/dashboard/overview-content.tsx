@@ -345,13 +345,13 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
         <div className="flex flex-col gap-8">
           <div className="flex flex-wrap gap-12">
             <div className="flex flex-col">
-              <div className="text-3xl font-bold">{totalOrders}</div>
+              <div className="text-3xl font-bold tabular-nums">{totalOrders}</div>
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 {t("sales")}
               </div>
             </div>
             <div className="flex flex-col">
-              <div className="text-3xl font-bold">
+              <div className="text-3xl font-bold tabular-nums">
                 {formatPrice(Math.round(netRevenue))}
               </div>
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Geist_Mono, Poppins, Geist } from "next/font/google";
+import { Geist_Mono, Poppins, Geist, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { translations } from "@/lib/translations";
 
@@ -40,6 +40,11 @@ const poppins = Poppins({
   variable: "--font-sans",
 });
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
@@ -59,6 +64,7 @@ export default function RootLayout({
         fontMono.variable,
         "font-sans",
         poppins.variable,
+        inter.variable,
       )}
     >
       <body>

@@ -524,40 +524,29 @@ function LieferandoCartBanner({
   return (
     <aside
       aria-label={t("cart")}
-      className="fixed bottom-4 left-0 right-0 z-40 flex items-center justify-center pointer-events-none animate-in fade-in slide-in-from-bottom-4 duration-200"
+      className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-center pointer-events-none"
     >
-      <div className="w-full max-w-[500px] px-4 flex justify-center">
-        <div className="relative w-full">
-          <button
-            type="button"
-            id="floating-cart-banner"
-            onClick={onOpenCart}
-            className="pointer-events-auto group w-full h-12 bg-primary/95 backdrop-blur-md text-primary-foreground rounded-full shadow-2xl p-1 sm:p-1.5 flex items-center justify-between hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer select-none"
-          >
-            <div className="relative shrink-0">
-              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors">
-                <ShoppingCart weight="bold" className="h-5 w-5" />
-              </div>
-
-              <span
-                className={cn(
-                  "absolute top-0 -right-[6px] h-5 rounded-full bg-primary text-primary-foreground border border-background text-[11px] font-extrabold flex items-center justify-center leading-none tabular-nums pointer-events-none",
-                  count > 9 ? "min-w-5 px-1" : "w-5 aspect-square p-0"
-                )}
-              >
-                {count}
-              </span>
-            </div>
-
-            <span className="font-bold text-base truncate text-center flex-1 px-3 text-primary-foreground">
-              {t("viewCart")}
+      <div className="w-full max-w-[500px] bg-background border-t border-border shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-t-[24px] px-4 pt-3.5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:pb-6 pointer-events-auto animate-in fade-in slide-in-from-bottom duration-300">
+        <button
+          type="button"
+          id="floating-cart-banner"
+          onClick={onOpenCart}
+          className="group relative w-full h-12 sm:h-13 bg-primary hover:bg-neutral-800 text-primary-foreground rounded-full shadow-md p-1 sm:p-1.5 flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer select-none"
+        >
+          <div className="h-10 w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors shrink-0">
+            <span className="font-extrabold text-sm sm:text-base tabular-nums leading-none">
+              {count}
             </span>
+          </div>
 
-            <span className="font-bold text-base tabular-nums shrink-0 mr-3 sm:mr-4 text-primary-foreground">
-              {formatPrice(total())}
-            </span>
-          </button>
-        </div>
+          <span className="font-bold text-base truncate text-center flex-1 px-3 text-primary-foreground">
+            {t("viewCart")}
+          </span>
+
+          <span className="font-bold text-base tabular-nums shrink-0 mr-3 sm:mr-4 text-primary-foreground">
+            {formatPrice(total())}
+          </span>
+        </button>
       </div>
     </aside>
   );

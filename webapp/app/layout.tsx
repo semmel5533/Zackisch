@@ -1,4 +1,4 @@
-import { Poppins } from "next/font/google";
+import { Poppins, Inter } from "next/font/google";
 import type { Metadata } from "next";
 
 import "./globals.css";
@@ -8,7 +8,13 @@ import { Toaster } from "@/components/ui/sonner";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-poppins",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -52,7 +58,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={cn("light antialiased overflow-x-clip", "font-sans", poppins.variable)}
+      className={cn("light antialiased overflow-x-clip font-sans", poppins.variable, inter.variable)}
     >
       <body className="bg-background text-foreground overflow-x-clip min-h-screen">
         <ConvexClientProvider>

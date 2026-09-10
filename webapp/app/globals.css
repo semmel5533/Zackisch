@@ -41,10 +41,12 @@
   --sidebar-border: oklch(1 0 0 / 0.1);
   --sidebar-ring: oklch(1 0 0);
 
-  /* Typography & Shadows (Restored) */
-  --font-sans: Poppins, ui-sans-serif, sans-serif, system-ui;
+  /* Typography & Shadows */
+  --font-poppins: var(--font-poppins, Poppins, ui-sans-serif, sans-serif, system-ui);
+  --font-inter: var(--font-inter, Inter, ui-sans-serif, sans-serif, system-ui);
+  --font-sans: InterDigits, var(--font-poppins);
   --font-serif: var(--font-sans);
-  --font-mono: var(--font-sans);
+  --font-mono: var(--font-inter);
   --shadow-x: 0;
   --shadow-y: 1px;
   --shadow-blur: 3px;
@@ -98,7 +100,9 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-inter: var(--font-inter);
+  --font-poppins: var(--font-poppins);
+  --font-mono: var(--font-inter);
   --font-serif: var(--font-serif);
 
   --breakpoint-3xl: 1600px;
@@ -165,4 +169,23 @@
   button, [role="button"], a {
     @apply cursor-pointer;
   }
+}
+
+/* Inter Typography for Numbers and Tabular Data */
+@font-face {
+  font-family: "InterDigits";
+  src: local("Inter"), local("Inter-Regular"), local("Inter-Medium"), local("Inter-SemiBold"), local("Inter-Bold");
+  unicode-range: U+0030-0039, U+002C, U+002E, U+0025, U+20AC, U+0024;
+  font-display: swap;
+}
+
+.tabular-nums,
+.font-tabular,
+.font-numeric,
+[data-numeric],
+[data-slot="badge"],
+input[type="number"],
+input[type="tel"] {
+  font-family: var(--font-inter), InterDigits, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-feature-settings: "tnum" on, "cv05" on, "cv11" on;
 }
