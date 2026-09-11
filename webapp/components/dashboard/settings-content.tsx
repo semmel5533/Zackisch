@@ -159,7 +159,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
 
   return (
     <div className="flex-1 space-y-4 @container">
-      <div className="sticky top-0 z-20 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
+      <div className="sticky top-0 z-30 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("settings")}</h1>
         </div>
@@ -314,7 +314,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                       <span className="text-xs text-muted-foreground">{t("bannerRecommended")}</span>
                     </div>
 
-                    <div className="relative w-full aspect-[2.3/1] rounded-[22px] sm:rounded-[26px] overflow-hidden border border-border bg-muted/40 group/banner transition-all">
+                    <div className="relative isolate w-full aspect-[2.3/1] rounded-[22px] sm:rounded-[26px] overflow-hidden border border-border bg-muted/40 group/banner transition-all">
                       {/* Banner Area */}
                       <div
                         role="button"
@@ -423,7 +423,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           if (file) handleLogoFile(file);
                         }}
                         className={cn(
-                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 w-14 h-14 @min-[768px]:w-16 @min-[768px]:h-16 rounded-[10px] sm:rounded-[12px] bg-muted border transition-all cursor-pointer flex items-center justify-center overflow-hidden group/logo",
+                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 w-14 h-14 @min-[768px]:w-16 @min-[768px]:h-16 rounded-[10px] sm:rounded-[12px] bg-muted border transition-all cursor-pointer flex items-center justify-center overflow-hidden group/logo",
                           (bannerPreview || logoPreview) ? "border-neutral-600" : "border-border",
                           isDraggingLogo && "border-primary ring-2 ring-primary/20",
                         )}
