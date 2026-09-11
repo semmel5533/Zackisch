@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
 } from "react";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
@@ -43,16 +44,22 @@ function parseCustomizations(customizations?: string): CustomizationStep[] {
   }
 }
 
-function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = useState(false);
+function useIsTwoColumns(containerRef: React.RefObject<HTMLDivElement | null>) {
+  const [isTwoColumns, setIsTwoColumns] = useState(false);
+
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 1400px)");
-    setIsDesktop(media.matches);
-    const listener = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
-  }, []);
-  return isDesktop;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setIsTwoColumns(entry.contentRect.width >= 700);
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [containerRef]);
+
+  return isTwoColumns;
 }
 
 export function AvailabilityContent({
@@ -64,7 +71,8 @@ export function AvailabilityContent({
   const router = useRouter();
   const [items, setItems] = useState(initialItems);
   const [, startTransition] = useTransition();
-  const isDesktop = useIsDesktop();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isTwoColumns = useIsTwoColumns(containerRef);
 
   const { leftCategories, rightCategories } = useMemo(() => {
     const left: MenuCategory[] = [];
@@ -190,11 +198,11 @@ export function AvailabilityContent({
   );
 
   return (
-    <div className="flex-1 space-y-4 pb-24">
-      {/* Page Header (wie bei allen anderen Dashboard Pages) */}
-      <div className="flex items-center justify-between space-y-2">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight">
+    <div ref={containerRef} className="flex-1 space-y-4 pb-24 @container">
+      {/* Sticky Page Header */}
+      <div className="sticky top-0 z-30 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             {t("availability")}
           </h1>
         </div>
@@ -206,7 +214,7 @@ export function AvailabilityContent({
           <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border border-dashed rounded-xl">
             <p>{t("menuEmpty")}</p>
           </div>
-        ) : isDesktop ? (
+        ) : isTwoColumns ? (
           <div className="flex gap-6 items-start w-full">
             {/* Left Column (Even Index: 0, 2, 4...) */}
             <div className="flex flex-col gap-6 flex-1 min-w-0">

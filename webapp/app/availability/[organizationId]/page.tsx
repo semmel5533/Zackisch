@@ -76,7 +76,7 @@ export default async function AvailabilityPage({
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 p-4 sm:p-6 overflow-y-auto @container">
+      <main className="flex-1 px-4 sm:px-6 pb-4 sm:pb-6 pt-0 overflow-y-auto @container">
         <AvailabilityContent
           categories={structuredClone(categories)}
           items={structuredClone(items)}
