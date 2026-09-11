@@ -177,10 +177,6 @@ function ChartTooltipContent({
 >) {
   const { config } = useChart();
 
-  if (!active || !payload?.length) {
-    return null;
-  }
-
   const tooltipLabel = React.useMemo(() => {
     if (hideLabel || !payload?.length) {
       return null;
@@ -216,6 +212,10 @@ function ChartTooltipContent({
     config,
     labelKey,
   ]);
+
+  if (!active || !payload?.length) {
+    return null;
+  }
 
   const nestLabel = payload?.length === 1 && indicator !== "dot";
 
