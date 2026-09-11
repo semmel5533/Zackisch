@@ -272,6 +272,7 @@ export async function updateMenuItemAction(
 ): Promise<MenuActionState> {
   const itemId = formData.get("itemId") as string;
   const organizationId = formData.get("organizationId") as string;
+  const categoryId = formData.get("categoryId") as string;
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const price = Math.round(parseFloat(formData.get("price") as string) * 100);
@@ -314,6 +315,29 @@ export async function updateMenuItemAction(
       return { error: "Artikel nicht gefunden oder unberechtigt." };
     }
 
+    if (categoryId) {
+      const categories = await getMenuCategories(organizationId);
+      if (!categories.some((c) => c.$id === categoryId)) {
+        return { error: "Kategorie nicht gefunden oder unberechtigt." };
+      }
+    }
+
+    let sortOrder = existingItem.sortOrder;
+    if (categoryId && categoryId !== existingItem.categoryId) {
+      const existingItems = await getMenuItems(organizationId);
+      const targetCategoryItems = existingItems.filter(
+        (i) => i.categoryId === categoryId,
+      );
+      const maxSortOrder = targetCategoryItems.reduce(
+        (max, i) =>
+          typeof i.sortOrder === "number" && i.sortOrder > max
+            ? i.sortOrder
+            : max,
+        -1,
+      );
+      sortOrder = maxSortOrder + 1;
+    }
+
     let imageStorageId: string | undefined = existingImageId || undefined;
 
     if (removeExistingImage) {
@@ -323,6 +347,8 @@ export async function updateMenuItemAction(
     }
 
     await updateMenuItem(itemId, {
+      categoryId: categoryId || undefined,
+      sortOrder,
       name,
       description,
       price,
@@ -335,6 +361,9 @@ export async function updateMenuItemAction(
     });
 
     revalidatePath(`/dashboard/${organizationId}/menu`);
+    revalidatePath(`/to-go/${organizationId}`);
+    revalidatePath(`/to-stay/${organizationId}`);
+    revalidatePath(`/availability/${organizationId}`);
     return { success: true };
   } catch (error: unknown) {
     const message =

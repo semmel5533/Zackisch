@@ -269,7 +269,10 @@ export function ItemWorkspace({
                       <Select
                         value={categoryId}
                         onValueChange={(val) => {
-                          if (val) setCategoryId(val);
+                          if (val) {
+                            setCategoryId(val);
+                            categoryIdRef.current = val;
+                          }
                         }}
                         items={categories.map((cat) => ({
                           label: cat.name,
