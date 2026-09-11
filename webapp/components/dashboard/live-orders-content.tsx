@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import {
   Check,
   ReceiptX,
@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   ClipboardText,
   Info,
+  CaretDown,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -114,6 +115,32 @@ export function LiveOrdersContent({
   const [mobileView, setMobileView] = useState<"list" | "detail">("list");
   const [inProgressTooltipOpen, setInProgressTooltipOpen] = useState(false);
   const [completedTooltipOpen, setCompletedTooltipOpen] = useState(false);
+
+  const [hasMoreBelow, setHasMoreBelow] = useState(false);
+  const itemsContainerRef = useRef<HTMLDivElement>(null);
+
+  const checkScroll = useCallback(() => {
+    const el = itemsContainerRef.current;
+    if (!el) {
+      setHasMoreBelow(false);
+      return;
+    }
+    const canScrollMore = el.scrollHeight - el.scrollTop - el.clientHeight > 12;
+    setHasMoreBelow(canScrollMore);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(checkScroll, 80);
+    return () => clearTimeout(timer);
+  }, [selectedOrderId, localOrders, checkScroll]);
+
+  useEffect(() => {
+    const el = itemsContainerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(checkScroll);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [checkScroll]);
 
   // Reactive Convex queries
   const liveOrders = useQuery(api.orders.getLiveOrders, {
@@ -665,67 +692,98 @@ export function LiveOrdersContent({
                   </div>
                 </div>
 
-                {/* Items List (Scrollable) */}
-                <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
-                  {parseItems(selectedOrder.items).map((item: any, idx: number) => {
-                    const itemKey = `${item.cartItemId || item.id || item.menuItemId || item.name}-${idx}`;
-                    return (
-                      <div
-                        key={itemKey}
-                        className="flex flex-col pb-3 border-b border-border/40 last:border-b-0 last:pb-0"
-                      >
-                        <div className="flex justify-between items-start gap-2.5 sm:gap-3">
-                          <div className="flex items-baseline gap-2 sm:gap-2.5 min-w-0">
-                            <span className="text-sm sm:text-base font-bold text-primary shrink-0">
-                              <span className="font-inter tabular-nums">{item.quantity}</span>×
-                            </span>
-                            <span className="text-sm sm:text-base font-semibold text-foreground leading-snug break-words">
-                              {item.name}
-                            </span>
-                          </div>
-                          <Price
-                            cents={item.price * item.quantity}
-                            className="text-xs sm:text-sm font-semibold text-foreground shrink-0 ml-2"
-                          />
-                        </div>
-
-                        {/* Customizations / Toppings - size preserved per user instruction */}
-                        {Array.isArray(item.customizations) &&
-                          item.customizations.length > 0 && (
-                            <div className="pl-5 sm:pl-7 pt-1 sm:pt-1.5 flex flex-col items-start gap-1 sm:gap-1.5">
-                              {item.customizations.map((c: any, cIdx: number) => {
-                                const stepName = c.stepName || c.step;
-                                const label =
-                                  c.optionName ||
-                                  c.choice ||
-                                  c.name ||
-                                  (typeof c === "string" ? c : "");
-                                if (!label || !String(label).trim()) return null;
-                                return (
-                                  <span
-                                    key={cIdx}
-                                    className="inline-block max-w-full text-xs sm:text-sm font-medium text-foreground/90 bg-muted/80 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/40 leading-relaxed break-words"
-                                  >
-                                    {stepName ? (
-                                      <span className="font-bold text-foreground mr-1">
-                                        {stepName}:
-                                      </span>
-                                    ) : null}
-                                    <span>{label}</span>
-                                    {typeof c.extraPrice === "number" &&
-                                    c.extraPrice > 0 ? (
-                                      <span className="text-muted-foreground whitespace-nowrap ml-1 font-normal">
-                                        (+<Price cents={c.extraPrice} />)
-                                      </span>
-                                    ) : null}
-                                  </span>
-                                );
-                              })}
+                {/* Items List (Scrollable) with Overflow Indicator */}
+                <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden">
+                  <div
+                    ref={itemsContainerRef}
+                    onScroll={checkScroll}
+                    className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4"
+                  >
+                    {parseItems(selectedOrder.items).map((item: any, idx: number) => {
+                      const itemKey = `${item.cartItemId || item.id || item.menuItemId || item.name}-${idx}`;
+                      return (
+                        <div
+                          key={itemKey}
+                          className="flex flex-col pb-3 border-b border-border/40 last:border-b-0 last:pb-0"
+                        >
+                          <div className="flex justify-between items-start gap-2.5 sm:gap-3">
+                            <div className="flex items-baseline gap-2 sm:gap-2.5 min-w-0">
+                              <span className="text-sm sm:text-base font-bold text-primary shrink-0">
+                                <span className="font-inter tabular-nums">{item.quantity}</span>×
+                              </span>
+                              <span className="text-sm sm:text-base font-semibold text-foreground leading-snug break-words">
+                                {item.name}
+                              </span>
                             </div>
-                          )}
-                      </div>
-                    );
-                  })}
+                            <Price
+                              cents={item.price * item.quantity}
+                              className="text-xs sm:text-sm font-semibold text-foreground shrink-0 ml-2"
+                            />
+                          </div>
+
+                          {/* Customizations / Toppings - size preserved per user instruction */}
+                          {Array.isArray(item.customizations) &&
+                            item.customizations.length > 0 && (
+                              <div className="pl-5 sm:pl-7 pt-1 sm:pt-1.5 flex flex-col items-start gap-1 sm:gap-1.5">
+                                {item.customizations.map((c: any, cIdx: number) => {
+                                  const stepName = c.stepName || c.step;
+                                  const label =
+                                    c.optionName ||
+                                    c.choice ||
+                                    c.name ||
+                                    (typeof c === "string" ? c : "");
+                                  if (!label || !String(label).trim()) return null;
+                                  return (
+                                    <span
+                                      key={cIdx}
+                                      className="inline-block max-w-full text-xs sm:text-sm font-medium text-foreground/90 bg-muted/80 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/40 leading-relaxed break-words"
+                                    >
+                                      {stepName ? (
+                                        <span className="font-bold text-foreground mr-1">
+                                          {stepName}:
+                                        </span>
+                                      ) : null}
+                                      <span>{label}</span>
+                                      {typeof c.extraPrice === "number" &&
+                                      c.extraPrice > 0 ? (
+                                        <span className="text-muted-foreground whitespace-nowrap ml-1 font-normal">
+                                          (+<Price cents={c.extraPrice} />)
+                                        </span>
+                                      ) : null}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Scroll Indicator: Soft Bottom Fade & Action Pill */}
+                  <div
+                    className={cn(
+                      "pointer-events-none absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-card via-card/85 to-transparent flex items-end justify-center pb-2.5 transition-all duration-200",
+                      hasMoreBelow ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none",
+                    )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        itemsContainerRef.current?.scrollBy({
+                          top: 140,
+                          behavior: "smooth",
+                        });
+                      }}
+                      className={cn(
+                        "pointer-events-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-background/95 text-foreground border border-border shadow-sm hover:bg-muted active:scale-[0.97] transition-all cursor-pointer",
+                        !hasMoreBelow && "pointer-events-none",
+                      )}
+                    >
+                      <span>{t("moreItemsBelow")}</span>
+                      <CaretDown className="w-3.5 h-3.5 text-muted-foreground animate-bounce" weight="bold" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Total & Action Bar (Docked Footer) */}

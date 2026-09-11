@@ -91,10 +91,11 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
   const logoHeight = Math.round((50 * size) / 280);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="w-full flex items-center justify-center bg-white [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&_svg]:[shape-rendering:crispEdges]">
       <ReactQRCode
         value={value}
         size={size}
+        marginSize={0}
         level="H"
         background="#FFFFFF"
         dataModulesSettings={{ color: "#000000", style: "square-sm" }}
@@ -111,21 +112,84 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
   );
 }
 
-function ScaledText({ text, className }: { text: string; className?: string }) {
+function getInkMetrics(text: string, font: string = "700 100px Inter, sans-serif") {
+  if (typeof document === "undefined") {
+    const estWidth = Math.max(text.length * 50, 200);
+    return {
+      viewBox: `0 -75 ${estWidth} 80`,
+      ascent: 75,
+      descent: 5,
+      height: 80,
+      width: estWidth,
+      left: 0,
+      right: estWidth,
+    };
+  }
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    const estWidth = Math.max(text.length * 50, 200);
+    return {
+      viewBox: `0 -75 ${estWidth} 80`,
+      ascent: 75,
+      descent: 5,
+      height: 80,
+      width: estWidth,
+      left: 0,
+      right: estWidth,
+    };
+  }
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const ascent = m.actualBoundingBoxAscent || 75;
+  const descent = m.actualBoundingBoxDescent || 5;
+  const left = m.actualBoundingBoxLeft || 0;
+  const right = m.actualBoundingBoxRight || m.width;
+  const height = ascent + descent;
+  const width = left + right;
+
+  return {
+    viewBox: `${-left} ${-ascent} ${width} ${height}`,
+    ascent,
+    descent,
+    height,
+    width,
+    left,
+    right,
+  };
+}
+
+function InkScaledText({
+  text,
+  uppercase = true,
+  className,
+}: {
+  text: string;
+  uppercase?: boolean;
+  className?: string;
+}) {
+  const displayText = uppercase ? text.toUpperCase() : text;
   const textRef = useRef<SVGTextElement>(null);
   const [viewBox, setViewBox] = useState(() => {
-    const estWidth = Math.max(text.length * 15, 50);
-    return `0 -15 ${estWidth} 30`;
+    const estWidth = Math.max(displayText.length * 50, 200);
+    return `0 -75 ${estWidth} 80`;
   });
 
   useEffect(() => {
-    if (textRef.current) {
-      try {
-        const bbox = textRef.current.getBBox();
-        setViewBox(`${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
-      } catch (e) {}
+    const update = () => {
+      if (textRef.current) {
+        try {
+          const bbox = textRef.current.getBBox();
+          const ink = getInkMetrics(displayText, "700 100px Inter, sans-serif");
+          setViewBox(`${bbox.x} ${-ink.ascent} ${bbox.width} ${ink.height}`);
+        } catch (e) {}
+      }
+    };
+    update();
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(update);
     }
-  }, [text]);
+  }, [displayText]);
 
   return (
     <svg
@@ -137,13 +201,76 @@ function ScaledText({ text, className }: { text: string; className?: string }) {
         x="0"
         y="0"
         textAnchor="middle"
-        dominantBaseline="central"
+        dominantBaseline="alphabetic"
         fill="currentColor"
-        className="font-black uppercase tracking-tighter font-inter tabular-nums"
+        className="font-bold tracking-tighter font-inter tabular-nums"
+        style={{ font: "700 100px Inter, sans-serif" }}
       >
-        {text}
+        {displayText}
       </text>
     </svg>
+  );
+}
+
+function InkConnectorText({
+  text,
+  fontSize = 20,
+  align = "left",
+  className,
+}: {
+  text: string;
+  fontSize?: number;
+  align?: "left" | "right";
+  className?: string;
+}) {
+  const displayText = text.toLowerCase();
+  const font = `700 ${fontSize}px Inter, sans-serif`;
+  const [metrics, setMetrics] = useState(() => ({
+    viewBox: `0 -${fontSize} ${displayText.length * fontSize} ${fontSize}`,
+    height: fontSize,
+    width: displayText.length * fontSize,
+  }));
+
+  useEffect(() => {
+    const update = () => {
+      const m = getInkMetrics(displayText, font);
+      setMetrics({
+        viewBox: m.viewBox,
+        height: m.height,
+        width: m.width,
+      });
+    };
+    update();
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(update);
+    }
+  }, [displayText, font]);
+
+  return (
+    <div
+      className={cn(
+        "flex w-full leading-none",
+        align === "right" ? "justify-end" : "justify-start",
+      )}
+    >
+      <svg
+        viewBox={metrics.viewBox}
+        style={{ height: `${metrics.height}px`, width: `${metrics.width}px` }}
+        className={cn("block overflow-visible text-current", className)}
+      >
+        <text
+          x="0"
+          y="0"
+          textAnchor="start"
+          dominantBaseline="alphabetic"
+          fill="currentColor"
+          className="font-bold font-inter lowercase"
+          style={{ font }}
+        >
+          {displayText}
+        </text>
+      </svg>
+    </div>
   );
 }
 
@@ -565,19 +692,22 @@ function QrCodeGeneratorCard({
                 : "",
             )}
           >
-            <div className="text-center w-[84%] mx-auto flex flex-col justify-center gap-[3px]">
-              <ScaledText
+            <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
+              <InkScaledText
                 text={t("qrCodeTitleLine1")}
                 className="text-foreground"
               />
-              <ScaledText
+              <InkScaledText
                 text={t("qrCodeTitleLine2")}
                 className="text-foreground"
               />
-              <p className="text-right w-full text-foreground font-black text-base leading-none uppercase -my-[2.5px]">
-                {qrType === "to-stay" ? t("qrCodeAt") : t("qrCodeFor")}
-              </p>
-              <ScaledText
+              <InkConnectorText
+                text={qrType === "to-stay" ? t("qrCodeAt") : t("qrCodeFor")}
+                align="right"
+                fontSize={20}
+                className="text-foreground"
+              />
+              <InkScaledText
                 text={
                   qrType === "to-stay"
                     ? `${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`
@@ -585,20 +715,23 @@ function QrCodeGeneratorCard({
                 }
                 className="text-foreground"
               />
-              <p className="text-left w-full text-foreground font-black text-base leading-none uppercase -my-[2.5px]">
-                {t("qrCodeWith")}
-              </p>
-            </div>
+              <InkConnectorText
+                text={t("qrCodeWith")}
+                align="left"
+                fontSize={20}
+                className="text-foreground"
+              />
 
-            <a
-              href={qrUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-[3px] relative bg-white rounded-xl flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-95 transition-opacity"
-              title={t("openQrLink")}
-            >
-              <StyledQRCode value={qrUrl} size={270} />
-            </a>
+              <a
+                href={qrUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full mt-[2px] relative bg-white flex items-center justify-center cursor-pointer hover:opacity-95 transition-opacity"
+                title={t("openQrLink")}
+              >
+                <StyledQRCode value={qrUrl} size={235} />
+              </a>
+            </div>
           </div>
         </Card>
 
@@ -784,29 +917,35 @@ function QrCodeGeneratorCard({
               >
                 <Card className="flex flex-col items-center justify-center p-4 bg-white shadow-sm print:shadow-none print:ring-0 print:rounded-none w-max print:border print:border-dashed print:border-black/40">
                   <div className="flex flex-col items-center w-[230px] gap-0">
-                    <div className="text-center w-[84%] mx-auto flex flex-col justify-center gap-[3px]">
-                      <ScaledText
+                    <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
+                      <InkScaledText
                         text={t("qrCodeTitleLine1")}
                         className="text-foreground"
                       />
-                      <ScaledText
+                      <InkScaledText
                         text={t("qrCodeTitleLine2")}
                         className="text-foreground"
                       />
-                      <p className="text-right w-full text-foreground font-black text-base leading-none uppercase -my-[2.5px]">
-                        {t("qrCodeAt")}
-                      </p>
-                      <ScaledText
+                      <InkConnectorText
+                        text={t("qrCodeAt")}
+                        align="right"
+                        fontSize={18}
+                        className="text-foreground"
+                      />
+                      <InkScaledText
                         text={`${t("table")} ${tNum}`}
                         className="text-foreground"
                       />
-                      <p className="text-left w-full text-foreground font-black text-base leading-none uppercase -my-[2.5px]">
-                        {t("qrCodeWith")}
-                      </p>
-                    </div>
+                      <InkConnectorText
+                        text={t("qrCodeWith")}
+                        align="left"
+                        fontSize={18}
+                        className="text-foreground"
+                      />
 
-                    <div className="mt-[3px] relative bg-white rounded-xl flex items-center justify-center overflow-hidden">
-                      <StyledQRCode value={tableQrUrl} size={230} />
+                      <div className="w-full mt-[2px] relative bg-white flex items-center justify-center">
+                        <StyledQRCode value={tableQrUrl} size={193} />
+                      </div>
                     </div>
                   </div>
                 </Card>
@@ -817,26 +956,32 @@ function QrCodeGeneratorCard({
           <div className="relative origin-top print-color-adjust-exact break-inside-avoid flex justify-center items-start">
             <Card className="flex flex-col items-center justify-center p-4 bg-white shadow-sm print:shadow-none print:ring-0 print:rounded-none w-max print:border print:border-dashed print:border-black/40">
               <div className="flex flex-col items-center w-[230px] gap-0">
-                <div className="text-center w-[84%] mx-auto flex flex-col justify-center gap-[3px]">
-                  <ScaledText
+                <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
+                  <InkScaledText
                     text={t("qrCodeTitleLine1")}
                     className="text-foreground"
                   />
-                  <ScaledText
+                  <InkScaledText
                     text={t("qrCodeTitleLine2")}
                     className="text-foreground"
                   />
-                  <p className="text-right w-full text-foreground font-black text-base leading-none uppercase -my-[2.5px]">
-                    {t("qrCodeFor")}
-                  </p>
-                  <ScaledText text={t("pickup")} className="text-foreground" />
-                  <p className="text-left w-full text-foreground font-black text-base leading-none uppercase -my-[2.5px]">
-                    {t("qrCodeWith")}
-                  </p>
-                </div>
+                  <InkConnectorText
+                    text={t("qrCodeFor")}
+                    align="right"
+                    fontSize={18}
+                    className="text-foreground"
+                  />
+                  <InkScaledText text={t("pickup")} className="text-foreground" />
+                  <InkConnectorText
+                    text={t("qrCodeWith")}
+                    align="left"
+                    fontSize={18}
+                    className="text-foreground"
+                  />
 
-                <div className="mt-[3px] relative bg-white rounded-xl flex items-center justify-center overflow-hidden">
-                  <StyledQRCode value={qrUrl} size={230} />
+                  <div className="w-full mt-[2px] relative bg-white flex items-center justify-center">
+                    <StyledQRCode value={qrUrl} size={193} />
+                  </div>
                 </div>
               </div>
             </Card>

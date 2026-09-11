@@ -15,21 +15,84 @@ const DEMO_URL = "https://app.zakkig.de/";
  * (demo link to app.zakkig.de).
  */
 
-function ScaledText({ text, className }: { text: string; className?: string }) {
+function getInkMetrics(text: string, font: string = "700 100px Inter, sans-serif") {
+  if (typeof document === "undefined") {
+    const estWidth = Math.max(text.length * 50, 200);
+    return {
+      viewBox: `0 -75 ${estWidth} 80`,
+      ascent: 75,
+      descent: 5,
+      height: 80,
+      width: estWidth,
+      left: 0,
+      right: estWidth,
+    };
+  }
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    const estWidth = Math.max(text.length * 50, 200);
+    return {
+      viewBox: `0 -75 ${estWidth} 80`,
+      ascent: 75,
+      descent: 5,
+      height: 80,
+      width: estWidth,
+      left: 0,
+      right: estWidth,
+    };
+  }
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const ascent = m.actualBoundingBoxAscent || 75;
+  const descent = m.actualBoundingBoxDescent || 5;
+  const left = m.actualBoundingBoxLeft || 0;
+  const right = m.actualBoundingBoxRight || m.width;
+  const height = ascent + descent;
+  const width = left + right;
+
+  return {
+    viewBox: `${-left} ${-ascent} ${width} ${height}`,
+    ascent,
+    descent,
+    height,
+    width,
+    left,
+    right,
+  };
+}
+
+function InkScaledText({
+  text,
+  uppercase = true,
+  className,
+}: {
+  text: string;
+  uppercase?: boolean;
+  className?: string;
+}) {
+  const displayText = uppercase ? text.toUpperCase() : text;
   const textRef = useRef<SVGTextElement>(null);
   const [viewBox, setViewBox] = useState(() => {
-    const estWidth = Math.max(text.length * 15, 50);
-    return `0 -15 ${estWidth} 30`;
+    const estWidth = Math.max(displayText.length * 50, 200);
+    return `0 -75 ${estWidth} 80`;
   });
 
   useEffect(() => {
-    if (textRef.current) {
-      try {
-        const bbox = textRef.current.getBBox();
-        setViewBox(`${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
-      } catch {}
+    const update = () => {
+      if (textRef.current) {
+        try {
+          const bbox = textRef.current.getBBox();
+          const ink = getInkMetrics(displayText, "700 100px Inter, sans-serif");
+          setViewBox(`${bbox.x} ${-ink.ascent} ${bbox.width} ${ink.height}`);
+        } catch {}
+      }
+    };
+    update();
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(update);
     }
-  }, [text]);
+  }, [displayText]);
 
   return (
     <svg viewBox={viewBox} className={cn("w-full block overflow-visible", className)}>
@@ -38,13 +101,71 @@ function ScaledText({ text, className }: { text: string; className?: string }) {
         x="0"
         y="0"
         textAnchor="middle"
-        dominantBaseline="central"
+        dominantBaseline="alphabetic"
         fill="currentColor"
-        className="font-black uppercase tracking-tighter font-inter tabular-nums"
+        className="font-bold tracking-tighter font-inter tabular-nums"
+        style={{ font: "700 100px Inter, sans-serif" }}
       >
-        {text}
+        {displayText}
       </text>
     </svg>
+  );
+}
+
+function InkConnectorText({
+  text,
+  fontSize = 20,
+  align = "left",
+  className,
+}: {
+  text: string;
+  fontSize?: number;
+  align?: "left" | "right";
+  className?: string;
+}) {
+  const displayText = text.toLowerCase();
+  const font = `700 ${fontSize}px Inter, sans-serif`;
+  const [metrics, setMetrics] = useState(() => ({
+    viewBox: `0 -${fontSize} ${displayText.length * fontSize} ${fontSize}`,
+    height: fontSize,
+    width: displayText.length * fontSize,
+  }));
+
+  useEffect(() => {
+    const update = () => {
+      const m = getInkMetrics(displayText, font);
+      setMetrics({
+        viewBox: m.viewBox,
+        height: m.height,
+        width: m.width,
+      });
+    };
+    update();
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(update);
+    }
+  }, [displayText, font]);
+
+  return (
+    <div className={cn("flex w-full leading-none", align === "right" ? "justify-end" : "justify-start")}>
+      <svg
+        viewBox={metrics.viewBox}
+        style={{ height: `${metrics.height}px`, width: `${metrics.width}px` }}
+        className={cn("block overflow-visible text-current", className)}
+      >
+        <text
+          x="0"
+          y="0"
+          textAnchor="start"
+          dominantBaseline="alphabetic"
+          fill="currentColor"
+          className="font-bold font-inter lowercase"
+          style={{ font }}
+        >
+          {displayText}
+        </text>
+      </svg>
+    </div>
   );
 }
 
@@ -63,30 +184,31 @@ function QrFace({
 }) {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center text-black">
-      <div className="flex w-[78%] flex-col gap-[3px] text-center">
-        <ScaledText text={title1} />
-        <ScaledText text={title2} />
-        <p className="w-full text-right text-base leading-none font-black uppercase -my-[2.5px]">{contextWord}</p>
-        <ScaledText text={contextValue} />
-        <p className="w-full text-left text-base leading-none font-black uppercase -my-[2.5px]">{withWord}</p>
-      </div>
+      <div className="flex w-[78%] flex-col items-center gap-[10px]">
+        <InkScaledText text={title1} />
+        <InkScaledText text={title2} />
+        <InkConnectorText text={contextWord} align="right" fontSize={20} />
+        <InkScaledText text={contextValue} />
+        <InkConnectorText text={withWord} align="left" fontSize={20} />
 
-      <div className="mt-[3px] overflow-hidden rounded-xl bg-white [&_svg]:block [&_svg]:[shape-rendering:crispEdges]">
-        <ReactQRCode
-          value={DEMO_URL}
-          size={270}
-          level="H"
-          background="#FFFFFF"
-          dataModulesSettings={{ color: "#000000", style: "square-sm" }}
-          finderPatternOuterSettings={{ color: "#000000", style: "square" }}
-          finderPatternInnerSettings={{ color: "#000000", style: "square" }}
-          imageSettings={{
-            src: "https://www.zakkig.de/full_qr.png",
-            height: 48,
-            width: 151,
-            excavate: true,
-          }}
-        />
+        <div className="w-full mt-[2px] [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&_svg]:[shape-rendering:crispEdges]">
+          <ReactQRCode
+            value={DEMO_URL}
+            size={244}
+            marginSize={0}
+            level="H"
+            background="#FFFFFF"
+            dataModulesSettings={{ color: "#000000", style: "square-sm" }}
+            finderPatternOuterSettings={{ color: "#000000", style: "square" }}
+            finderPatternInnerSettings={{ color: "#000000", style: "square" }}
+            imageSettings={{
+              src: "https://www.zakkig.de/full_qr.png",
+              height: 42,
+              width: 133,
+              excavate: true,
+            }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -201,6 +201,7 @@ export const translations = {
       "Diese Bestellung wurde storniert. Falls du bereits online oder vor Ort bezahlt hast, wende dich bitte für eine Rückerstattung direkt an das Personal.",
     toPickUp: "zum Abholen",
     toTable: "an Tisch",
+    moreItemsBelow: "Weitere Artikel unten",
     noInProgressOrders: "Keine Bestellungen in Bearbeitung.",
     noCompletedRecentOrders: "Keine kürzlich abgeschlossenen Bestellungen.",
     autoArchiveNotice:
@@ -245,7 +246,7 @@ export const translations = {
     activate: "Aktivieren",
     deactivate: "Deaktivieren",
     printMultipleCodes: "{{count}} drucken",
-    qrCodeWith: "MIT",
+    qrCodeWith: "mit",
     openQrLink: "Link in neuem Tab öffnen",
 
     // Menu
@@ -765,6 +766,7 @@ export const translations = {
       "This order has been cancelled. If you have already paid online or on-site, please contact the staff directly for a refund.",
     toPickUp: "to go",
     toTable: "to table",
+    moreItemsBelow: "More items below",
     noInProgressOrders: "No orders in progress.",
     noCompletedRecentOrders: "No recently completed orders.",
     autoArchiveNotice:
@@ -808,7 +810,7 @@ export const translations = {
     activate: "Activate",
     deactivate: "Deactivate",
     printMultipleCodes: "Print {{count}}",
-    qrCodeWith: "WITH",
+    qrCodeWith: "with",
     openQrLink: "Open link in new tab",
 
     // Menu
