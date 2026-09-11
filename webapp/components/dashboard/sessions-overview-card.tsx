@@ -105,28 +105,29 @@ export function SessionsOverviewCard({
               >
                 <QrCode className="h-4 w-4" />
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[400px] p-5 sm:p-6">
-                <DialogHeader className="flex flex-row items-center justify-between">
+              <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden gap-0">
+                <DialogHeader className="p-5 sm:p-6 pb-3 flex flex-row items-center justify-between">
                   <DialogTitle className="text-lg font-bold">
                     {t("liveOrderSessions")}
                   </DialogTitle>
                   <DialogCloseButton />
                 </DialogHeader>
-                <div className="flex flex-col items-center gap-4 w-full pt-1">
+                <div className="flex flex-col items-center w-full">
                   <a
                     href={getLink("orders", orderToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center p-1 rounded-2xl bg-white cursor-pointer group"
+                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group"
                   >
                     <ReactQRCode
                       value={getLink("orders", orderToken)}
-                      size={280}
+                      size={360}
                       level="H"
                       background="#FFFFFF"
+                      marginSize={2}
                       dataModulesSettings={{
                         color: "#000000",
-                        style: "square",
+                        style: "square-sm",
                       }}
                       finderPatternOuterSettings={{
                         color: "#000000",
@@ -138,21 +139,23 @@ export function SessionsOverviewCard({
                       }}
                       imageSettings={{
                         src: "https://www.zakkig.de/full_qr.png",
-                        height: 50,
-                        width: 157,
+                        height: Math.round((50 * 360) / 280),
+                        width: Math.round((157 * 360) / 280),
                         excavate: true,
                       }}
                       svgProps={{
-                        className: "w-full h-auto aspect-square",
+                        className: "w-full h-auto aspect-square block",
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted p-3.5 rounded-xl w-full border border-border">
-                    <WarningCircle
-                      className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
-                      weight="fill"
-                    />
-                    <span>{t("staffQrWarning")}</span>
+                  <div className="p-5 sm:p-6 pt-3 w-full">
+                    <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted p-3.5 rounded-xl w-full border border-border">
+                      <WarningCircle
+                        className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
+                        weight="fill"
+                      />
+                      <span>{t("staffQrWarning")}</span>
+                    </div>
                   </div>
                 </div>
               </DialogContent>
@@ -208,28 +211,29 @@ export function SessionsOverviewCard({
               >
                 <QrCode className="h-4 w-4" />
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[400px] p-5 sm:p-6">
-                <DialogHeader className="flex flex-row items-center justify-between">
+              <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden gap-0">
+                <DialogHeader className="p-5 sm:p-6 pb-3 flex flex-row items-center justify-between">
                   <DialogTitle className="text-lg font-bold">
                     {t("availabilitySessions")}
                   </DialogTitle>
                   <DialogCloseButton />
                 </DialogHeader>
-                <div className="flex flex-col items-center gap-4 w-full pt-1">
+                <div className="flex flex-col items-center w-full">
                   <a
                     href={getLink("availability", availabilityToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center p-1 rounded-2xl bg-white cursor-pointer group"
+                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group"
                   >
                     <ReactQRCode
                       value={getLink("availability", availabilityToken)}
-                      size={280}
+                      size={360}
                       level="H"
                       background="#FFFFFF"
+                      marginSize={2}
                       dataModulesSettings={{
                         color: "#000000",
-                        style: "square",
+                        style: "square-sm",
                       }}
                       finderPatternOuterSettings={{
                         color: "#000000",
@@ -241,21 +245,23 @@ export function SessionsOverviewCard({
                       }}
                       imageSettings={{
                         src: "https://www.zakkig.de/full_qr.png",
-                        height: 50,
-                        width: 157,
+                        height: Math.round((50 * 360) / 280),
+                        width: Math.round((157 * 360) / 280),
                         excavate: true,
                       }}
                       svgProps={{
-                        className: "w-full h-auto aspect-square",
+                        className: "w-full h-auto aspect-square block",
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted p-3.5 rounded-xl w-full border border-border">
-                    <WarningCircle
-                      className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
-                      weight="fill"
-                    />
-                    <span>{t("staffQrWarning")}</span>
+                  <div className="p-5 sm:p-6 pt-3 w-full">
+                    <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted p-3.5 rounded-xl w-full border border-border">
+                      <WarningCircle
+                        className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
+                        weight="fill"
+                      />
+                      <span>{t("staffQrWarning")}</span>
+                    </div>
                   </div>
                 </div>
               </DialogContent>

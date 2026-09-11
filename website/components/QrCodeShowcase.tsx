@@ -76,7 +76,7 @@ function QrFace({
           size={280}
           level="H"
           background="#FFFFFF"
-          dataModulesSettings={{ color: "#000000", style: "square" }}
+          dataModulesSettings={{ color: "#000000", style: "square-sm" }}
           finderPatternOuterSettings={{ color: "#000000", style: "square" }}
           finderPatternInnerSettings={{ color: "#000000", style: "square" }}
           imageSettings={{

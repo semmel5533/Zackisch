@@ -97,7 +97,7 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
         size={size}
         level="H"
         background="#FFFFFF"
-        dataModulesSettings={{ color: "#000000", style: "square" }}
+        dataModulesSettings={{ color: "#000000", style: "square-sm" }}
         finderPatternOuterSettings={{ color: "#000000", style: "square" }}
         finderPatternInnerSettings={{ color: "#000000", style: "square" }}
         imageSettings={{
