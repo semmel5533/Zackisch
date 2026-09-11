@@ -42,9 +42,9 @@
   --sidebar-ring: oklch(1 0 0);
 
   /* Typography & Shadows */
-  --font-sans: var(--font-poppins), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-poppins-variable), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-serif: var(--font-sans);
-  --font-mono: var(--font-inter), monospace;
+  --font-mono: var(--font-inter-variable), monospace;
   --shadow-x: 0;
   --shadow-y: 1px;
   --shadow-blur: 3px;
@@ -97,10 +97,10 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: var(--font-poppins), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-poppins: var(--font-poppins), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-inter: var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-inter), monospace;
+  --font-sans: var(--font-poppins-variable), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-poppins: var(--font-poppins-variable), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: var(--font-inter-variable), Inter, sans-serif;
+  --font-mono: var(--font-inter-variable), monospace;
   --font-serif: var(--font-serif);
 
   --breakpoint-3xl: 1600px;
@@ -157,12 +157,12 @@
     @apply border-border outline-ring/50;
   }
   html {
-    font-family: var(--font-poppins), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-sans);
     overflow-x: clip;
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-poppins), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-sans);
     overflow-x: clip;
   }
   button, [role="button"], a {
@@ -175,7 +175,7 @@
 .font-numeric,
 input[type="number"],
 input[type="tel"] {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-inter);
   font-feature-settings: "tnum" on;
 }
 

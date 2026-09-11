@@ -368,7 +368,7 @@ export function DashboardShell({
             <List weight="bold" className="h-6 w-6" />
           </Button>
         </header>
-        <main className="flex-1 flex flex-col min-h-0 overflow-y-auto p-4 sm:p-6 pt-[22px] lg:pt-[22px] print:overflow-visible print:p-0 print:block">
+        <main className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 pt-0 lg:pt-0 print:overflow-visible print:p-0 print:block">
           {children}
         </main>
       </div>

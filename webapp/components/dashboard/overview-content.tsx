@@ -7,6 +7,7 @@ import {
   useRef,
   useTransition,
   useOptimistic,
+  useId,
 } from "react";
 import {
   Copy,
@@ -214,13 +215,11 @@ function InkScaledText({
 
 function InkConnectorText({
   text,
-  fontSize = 20,
-  align = "left",
+  fontSize = 24,
   className,
 }: {
   text: string;
   fontSize?: number;
-  align?: "left" | "right";
   className?: string;
 }) {
   const displayText = text.toLowerCase();
@@ -246,17 +245,37 @@ function InkConnectorText({
     }
   }, [displayText, font]);
 
+  const rawId = useId();
+  const patternId = `wave-${rawId.replace(/:/g, "")}`;
+
   return (
-    <div
-      className={cn(
-        "flex w-full leading-none",
-        align === "right" ? "justify-end" : "justify-start",
-      )}
-    >
+    <div className={cn("flex items-center w-full gap-2 leading-none", className)}>
+      <svg
+        className="flex-1 h-[8px] overflow-hidden text-current scale-x-[-1]"
+        style={{ minWidth: 16 }}
+      >
+        <defs>
+          <pattern
+            id={patternId}
+            width="12"
+            height="8"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 0 4 Q 3 1, 6 4 T 12 4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="8" fill={`url(#${patternId})`} />
+      </svg>
       <svg
         viewBox={metrics.viewBox}
         style={{ height: `${metrics.height}px`, width: `${metrics.width}px` }}
-        className={cn("block overflow-visible text-current", className)}
+        className="block overflow-visible text-current shrink-0"
       >
         <text
           x="0"
@@ -269,6 +288,12 @@ function InkConnectorText({
         >
           {displayText}
         </text>
+      </svg>
+      <svg
+        className="flex-1 h-[8px] overflow-hidden text-current"
+        style={{ minWidth: 16 }}
+      >
+        <rect width="100%" height="8" fill={`url(#${patternId})`} />
       </svg>
     </div>
   );
@@ -441,7 +466,7 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
 
   return (
     <Card className="h-full flex flex-col print:hidden">
-      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
         <h3 className="text-lg font-semibold">{t("statistics")}</h3>
         <DropdownMenu>
           <DropdownMenuTrigger
@@ -469,9 +494,9 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
           </DropdownMenuContent>
         </DropdownMenu>
       </CardHeader>
-      <CardContent className="p-6 pt-4">
-        <div className="flex flex-col gap-8">
-          <div className="flex flex-wrap gap-12">
+      <CardContent className="p-6 pt-4 flex-1 flex flex-col min-h-0">
+        <div className="flex flex-col flex-1 min-h-0">
+          <div className="flex flex-wrap gap-12 shrink-0">
             <div className="flex flex-col">
               <div className="text-3xl font-bold font-inter tabular-nums">{totalOrders}</div>
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
@@ -485,11 +510,13 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
               </div>
             </div>
           </div>
-          <OverviewChart
-            chartData={chartData}
-            chartConfig={chartConfig}
-            xAxisTicks={xAxisTicks}
-          />
+          <div className="flex-1 w-full min-h-[260px] sm:min-h-[280px] min-w-0 mt-4">
+            <OverviewChart
+              chartData={chartData}
+              chartConfig={chartConfig}
+              xAxisTicks={xAxisTicks}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -661,86 +688,83 @@ function QrCodeGeneratorCard({
     <>
       <div className="grid grid-cols-1 @min-[768px]:grid-cols-2 gap-4 h-full print:hidden">
         {/* Left Card: QR Code Preview */}
-        <Card className="relative flex flex-col items-center justify-end p-6 shadow-sm w-full h-full min-h-[600px] transition-colors duration-200 bg-white">
-          <div className="absolute top-4 left-6 right-4 flex items-center justify-between gap-2">
-            <h3 className="text-lg font-semibold text-foreground">
-              {t("qrPreview")}
-            </h3>
-            <Button
-              onClick={handlePrint}
-              variant="default"
-              disabled={qrType === "to-stay" && selectedTables.length === 0}
-              className="bg-primary text-secondary shadow-sm shrink-0"
-            >
-              <Printer className="mr-2 h-4 w-4" />
-              {qrType === "to-go"
-                ? t("printQrCode")
-                : selectedTables.length > 1
-                  ? t("printMultipleCodes").replace(
-                      "{{count}}",
-                      selectedTables.length.toString(),
-                    )
-                  : t("printQrCode")}
-            </Button>
-          </div>
-
-          <div
-            className={cn(
-              "flex flex-col items-center w-[280px] gap-0 mt-auto pt-14 mb-1 transition-all duration-200",
-              qrType === "to-stay" && selectedTables.length === 0
-                ? "opacity-50 grayscale"
-                : "",
-            )}
-          >
-            <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
-              <InkScaledText
-                text={t("qrCodeTitleLine1")}
-                className="text-foreground"
-              />
-              <InkScaledText
-                text={t("qrCodeTitleLine2")}
-                className="text-foreground"
-              />
-              <InkConnectorText
-                text={qrType === "to-stay" ? t("qrCodeAt") : t("qrCodeFor")}
-                align="right"
-                fontSize={20}
-                className="text-foreground"
-              />
-              <InkScaledText
-                text={
-                  qrType === "to-stay"
-                    ? `${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`
-                    : t("pickup")
-                }
-                className="text-foreground"
-              />
-              <InkConnectorText
-                text={t("qrCodeWith")}
-                align="left"
-                fontSize={20}
-                className="text-foreground"
-              />
-
-              <a
-                href={qrUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full mt-[2px] relative bg-white flex items-center justify-center cursor-pointer hover:opacity-95 transition-opacity"
-                title={t("openQrLink")}
+        <Card className="h-full flex flex-col bg-white">
+          <CardHeader className="flex flex-col gap-3 pb-4 shrink-0">
+            <div className="flex items-center justify-between gap-4 w-full">
+              <h3 className="text-lg font-semibold text-foreground">
+                {t("qrPreview")}
+              </h3>
+              <Button
+                onClick={handlePrint}
+                variant="default"
+                disabled={qrType === "to-stay" && selectedTables.length === 0}
+                className="w-auto bg-primary text-secondary shadow-sm shrink-0"
               >
-                <StyledQRCode value={qrUrl} size={235} />
-              </a>
+                <Printer className="mr-2 h-4 w-4" />
+                {qrType === "to-go"
+                  ? t("printQrCode")
+                  : selectedTables.length > 1
+                    ? t("printMultipleCodes").replace(
+                        "{{count}}",
+                        selectedTables.length.toString(),
+                      )
+                    : t("printQrCode")}
+              </Button>
             </div>
-          </div>
+          </CardHeader>
+
+          <CardContent className="flex-1 flex flex-col items-center justify-center p-0 pb-4 min-h-0">
+            <div
+              className={cn(
+                "flex flex-col items-center w-[280px] gap-0 transition-all duration-200",
+                qrType === "to-stay" && selectedTables.length === 0
+                  ? "opacity-50 grayscale"
+                  : "",
+              )}
+            >
+              <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
+                <InkScaledText
+                  text={t("qrCodeTitleLine1")}
+                  className="text-foreground"
+                />
+                <InkScaledText
+                  text={t("qrCodeTitleLine2")}
+                  className="text-foreground"
+                />
+                <InkConnectorText
+                  text={qrType === "to-stay" ? t("qrCodeAt") : t("qrCodeFor")}
+                  fontSize={24}
+                  className="text-foreground"
+                />
+                <InkScaledText
+                  text={
+                    qrType === "to-stay"
+                      ? `${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`
+                      : t("pickup")
+                  }
+                  className="text-foreground"
+                />
+
+                <a
+                  href={qrUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full mt-[2px] relative bg-white flex items-center justify-center cursor-pointer hover:opacity-95 transition-opacity"
+                  title={t("openQrLink")}
+                >
+                  <StyledQRCode value={qrUrl} size={235} />
+                </a>
+              </div>
+            </div>
+          </CardContent>
         </Card>
 
         {/* Right Card: QR Code Management */}
         <Card className="h-full flex flex-col">
           <CardHeader className="flex flex-col gap-3 pb-4 shrink-0">
             {/* Title & Mode Selection Dropdown Row */}
-            <div className="flex items-center justify-between gap-4 w-full">
-              <h3 className="text-lg font-semibold">{t("qrManagement")}</h3>
+            <div className="flex items-center justify-between gap-2 w-full">
+              <h3 className="text-lg font-semibold whitespace-nowrap">{t("qrManagement")}</h3>
 
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -828,7 +852,7 @@ function QrCodeGeneratorCard({
                   )}
                 </div>
 
-                <ScrollArea className="w-full h-[345px]">
+                <ScrollArea className="w-full h-[255px]">
                   <DndContext
                     id="tables-dnd-context"
                     sensors={sensors}
@@ -928,18 +952,11 @@ function QrCodeGeneratorCard({
                       />
                       <InkConnectorText
                         text={t("qrCodeAt")}
-                        align="right"
-                        fontSize={18}
+                        fontSize={21}
                         className="text-foreground"
                       />
                       <InkScaledText
                         text={`${t("table")} ${tNum}`}
-                        className="text-foreground"
-                      />
-                      <InkConnectorText
-                        text={t("qrCodeWith")}
-                        align="left"
-                        fontSize={18}
                         className="text-foreground"
                       />
 
@@ -967,17 +984,10 @@ function QrCodeGeneratorCard({
                   />
                   <InkConnectorText
                     text={t("qrCodeFor")}
-                    align="right"
-                    fontSize={18}
+                    fontSize={21}
                     className="text-foreground"
                   />
                   <InkScaledText text={t("pickup")} className="text-foreground" />
-                  <InkConnectorText
-                    text={t("qrCodeWith")}
-                    align="left"
-                    fontSize={18}
-                    className="text-foreground"
-                  />
 
                   <div className="w-full mt-[2px] relative bg-white flex items-center justify-center">
                     <StyledQRCode value={qrUrl} size={193} />
@@ -1066,7 +1076,7 @@ export function OverviewContent({
   return (
     <>
       <div ref={containerRef} className="flex-1 space-y-4 @container">
-        <div className="flex items-center justify-between space-y-2 print:hidden">
+        <div className="sticky top-0 z-20 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
               {t("overview")}

@@ -38,20 +38,20 @@ import { cn } from "@/lib/utils";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
+  variable: "--font-poppins-variable",
   display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-inter",
+  variable: "--font-inter-variable",
   display: "swap",
 });
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-mono-variable",
 });
 
 export default function RootLayout({

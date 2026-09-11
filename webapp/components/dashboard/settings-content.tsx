@@ -159,7 +159,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
 
   return (
     <div className="flex-1 space-y-4 @container">
-      <div className="flex items-center justify-between space-y-2 print:hidden">
+      <div className="sticky top-0 z-20 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("settings")}</h1>
         </div>
@@ -350,13 +350,18 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                               alt="Banner"
                               className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
-                              <span
-                                className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm"
+                            <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  bannerInputRef.current?.click();
+                                }}
+                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors shadow-sm cursor-pointer active:scale-95"
                                 title={t("changeBanner")}
                               >
                                 <PencilSimple className="w-3.5 h-3.5" />
-                              </span>
+                              </button>
                               <button
                                 type="button"
                                 onClick={(e) => {
@@ -366,7 +371,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   setRemoveBanner(true);
                                   if (bannerInputRef.current) bannerInputRef.current.value = "";
                                 }}
-                                className="p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm"
+                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm cursor-pointer active:scale-95"
                                 title={t("removeBanner")}
                               >
                                 <Trash className="w-3.5 h-3.5" />
@@ -432,10 +437,18 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                               alt="Logo"
                               className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/logo:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
-                              <span className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm">
+                            <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  logoInputRef.current?.click();
+                                }}
+                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors shadow-sm cursor-pointer active:scale-95"
+                                title={t("changeLogo")}
+                              >
                                 <PencilSimple className="w-3.5 h-3.5" />
-                              </span>
+                              </button>
                               <button
                                 type="button"
                                 onClick={(e) => {
@@ -445,7 +458,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   setRemoveLogo(true);
                                   if (logoInputRef.current) logoInputRef.current.value = "";
                                 }}
-                                className="p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm"
+                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm cursor-pointer active:scale-95"
                                 title={t("removeLogo")}
                               >
                                 <Trash className="w-3.5 h-3.5" />

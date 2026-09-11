@@ -136,18 +136,17 @@ export function ImageUpload({
               alt=""
               className="absolute inset-0 w-full h-full object-cover rounded-2xl"
             />
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-all duration-200 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+            <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   inputRef.current?.click();
                 }}
-                className="px-3.5 py-2 rounded-full bg-background/90 hover:bg-background text-foreground font-medium text-xs flex items-center gap-1.5 shadow-md backdrop-blur-md transition-all active:scale-95 cursor-pointer"
+                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors shadow-sm cursor-pointer active:scale-95"
                 title={t("changeImage")}
               >
-                <PencilSimple className="w-4 h-4" weight="bold" />
-                <span>{t("changeImage")}</span>
+                <PencilSimple className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
@@ -155,10 +154,10 @@ export function ImageUpload({
                   e.stopPropagation();
                   handleRemove();
                 }}
-                className="p-2 rounded-full bg-background/90 hover:bg-destructive hover:text-destructive-foreground text-foreground shadow-md backdrop-blur-md transition-all active:scale-95 cursor-pointer"
+                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm cursor-pointer active:scale-95"
                 title={t("removeImage")}
               >
-                <Trash className="w-4 h-4" weight="bold" />
+                <Trash className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>

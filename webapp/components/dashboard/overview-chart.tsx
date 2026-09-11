@@ -24,7 +24,7 @@ const ChartInner = dynamic(
         height?: number;
       }) {
         const w = width && width > 0 ? width : 320;
-        const h = height && height > 0 ? height : 340;
+        const h = height && height > 0 ? height : 280;
 
         return (
           <AreaChart
@@ -99,7 +99,7 @@ export default function OverviewChart({
   return (
     <ChartContainer
       config={chartConfig}
-      className="h-[340px] min-h-[340px] w-full min-w-0 mt-4"
+      className="h-full w-full min-w-0 min-h-0 aspect-auto"
     >
       <ChartInner chartData={chartData} xAxisTicks={xAxisTicks} />
     </ChartContainer>

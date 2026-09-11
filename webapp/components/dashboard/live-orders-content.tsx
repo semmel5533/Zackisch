@@ -11,7 +11,7 @@ import {
   ArrowLeft,
   ClipboardText,
   Info,
-  CaretDown,
+  ArrowDown,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -413,9 +413,9 @@ export function LiveOrdersContent({
   };
 
   return (
-    <div className="h-full flex-1 min-h-0 flex flex-col gap-3 sm:gap-4">
+    <div className="h-full flex-1 min-h-0 flex flex-col gap-3 sm:gap-4 pt-[22px]">
       {/* Top Header */}
-      <div className="flex items-center justify-between shrink-0 print:hidden">
+      <div className="flex items-center justify-between shrink-0 print:hidden -mt-[2.4px] sm:-mt-[5.6px]">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("orders")}</h1>
         </div>
@@ -780,8 +780,8 @@ export function LiveOrdersContent({
                         !hasMoreBelow && "pointer-events-none",
                       )}
                     >
+                      <ArrowDown className="w-3.5 h-3.5 text-muted-foreground" weight="bold" />
                       <span>{t("moreItemsBelow")}</span>
-                      <CaretDown className="w-3.5 h-3.5 text-muted-foreground animate-bounce" weight="bold" />
                     </button>
                   </div>
                 </div>

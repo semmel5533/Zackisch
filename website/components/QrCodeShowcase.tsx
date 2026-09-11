@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useId } from "react";
 import { ReactQRCode } from "@lglab/react-qr-code";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -114,13 +114,11 @@ function InkScaledText({
 
 function InkConnectorText({
   text,
-  fontSize = 20,
-  align = "left",
+  fontSize = 24,
   className,
 }: {
   text: string;
   fontSize?: number;
-  align?: "left" | "right";
   className?: string;
 }) {
   const displayText = text.toLowerCase();
@@ -146,12 +144,37 @@ function InkConnectorText({
     }
   }, [displayText, font]);
 
+  const rawId = useId();
+  const patternId = `wave-${rawId.replace(/:/g, "")}`;
+
   return (
-    <div className={cn("flex w-full leading-none", align === "right" ? "justify-end" : "justify-start")}>
+    <div className={cn("flex items-center w-full gap-2 leading-none", className)}>
+      <svg
+        className="flex-1 h-[8px] overflow-hidden text-current scale-x-[-1]"
+        style={{ minWidth: 16 }}
+      >
+        <defs>
+          <pattern
+            id={patternId}
+            width="12"
+            height="8"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 0 4 Q 3 1, 6 4 T 12 4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="8" fill={`url(#${patternId})`} />
+      </svg>
       <svg
         viewBox={metrics.viewBox}
         style={{ height: `${metrics.height}px`, width: `${metrics.width}px` }}
-        className={cn("block overflow-visible text-current", className)}
+        className="block overflow-visible text-current shrink-0"
       >
         <text
           x="0"
@@ -165,6 +188,12 @@ function InkConnectorText({
           {displayText}
         </text>
       </svg>
+      <svg
+        className="flex-1 h-[8px] overflow-hidden text-current"
+        style={{ minWidth: 16 }}
+      >
+        <rect width="100%" height="8" fill={`url(#${patternId})`} />
+      </svg>
     </div>
   );
 }
@@ -174,22 +203,19 @@ function QrFace({
   title2,
   contextWord,
   contextValue,
-  withWord,
 }: {
   title1: string;
   title2: string;
   contextWord: string;
   contextValue: string;
-  withWord: string;
 }) {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center text-black">
       <div className="flex w-[78%] flex-col items-center gap-[10px]">
         <InkScaledText text={title1} />
         <InkScaledText text={title2} />
-        <InkConnectorText text={contextWord} align="right" fontSize={20} />
+        <InkConnectorText text={contextWord} fontSize={24} />
         <InkScaledText text={contextValue} />
-        <InkConnectorText text={withWord} align="left" fontSize={20} />
 
         <div className="w-full mt-[2px] [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&_svg]:[shape-rendering:crispEdges]">
           <ReactQRCode
@@ -226,7 +252,6 @@ export function QrCodeShowcase() {
       title2={t("qrPrintTitle2")}
       contextWord={t("qrPrintAt")}
       contextValue={t("qrPrintTable")}
-      withWord={t("qrPrintWith")}
     />
   ) : (
     <QrFace
@@ -234,7 +259,6 @@ export function QrCodeShowcase() {
       title2={t("qrPrintTitle2")}
       contextWord={t("qrPrintFor")}
       contextValue={t("qrPrintPickup")}
-      withWord={t("qrPrintWith")}
     />
   );
 

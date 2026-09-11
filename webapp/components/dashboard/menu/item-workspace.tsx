@@ -236,17 +236,17 @@ export function ItemWorkspace({
               <div className="space-y-3.5 sm:space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* Left Column (Bild) */}
-                  <div className="flex flex-col gap-2 h-full">
+                  <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm font-semibold text-foreground">
+                      <span className="text-sm font-semibold text-foreground">
                         {t("imageSection")}
-                      </Label>
+                      </span>
                       <span className="text-xs text-muted-foreground font-medium">
                         {t("itemImageRecommended")}
                       </span>
                     </div>
                     <ImageUpload
-                      className="flex-1 min-h-[220px]"
+                      className="w-full min-h-[200px] h-[240px] sm:h-[260px]"
                       existingImageId={editingItem?.imageId}
                       onFileSelect={(file) => {
                         selectedFileRef.current = file;
