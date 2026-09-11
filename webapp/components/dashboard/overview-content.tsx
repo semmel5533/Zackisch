@@ -53,7 +53,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
+import { Price } from "@/components/ui/price";
 import {
   toggleFeatureAction,
   updateTablesAction,
@@ -96,7 +97,7 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
         size={size}
         level="H"
         background="#FFFFFF"
-        dataModulesSettings={{ color: "#000000", style: "square-sm" }}
+        dataModulesSettings={{ color: "#000000", style: "square" }}
         finderPatternOuterSettings={{ color: "#000000", style: "square" }}
         finderPatternInnerSettings={{ color: "#000000", style: "square" }}
         imageSettings={{
@@ -138,7 +139,7 @@ function ScaledText({ text, className }: { text: string; className?: string }) {
         textAnchor="middle"
         dominantBaseline="central"
         fill="currentColor"
-        className="font-black uppercase tracking-tighter"
+        className="font-black uppercase tracking-tighter font-inter tabular-nums"
       >
         {text}
       </text>
@@ -223,7 +224,7 @@ function SortableTableItem({
       >
         <DotsSixVertical className="h-4 w-4" weight="bold" />
       </div>
-      <span className="truncate text-center flex-1 text-sm font-semibold">
+      <span className="truncate text-center flex-1 text-sm font-semibold font-inter tabular-nums">
         {tNum}
       </span>
     </div>
@@ -345,15 +346,13 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
         <div className="flex flex-col gap-8">
           <div className="flex flex-wrap gap-12">
             <div className="flex flex-col">
-              <div className="text-3xl font-bold tabular-nums">{totalOrders}</div>
+              <div className="text-3xl font-bold font-inter tabular-nums">{totalOrders}</div>
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 {t("sales")}
               </div>
             </div>
             <div className="flex flex-col">
-              <div className="text-3xl font-bold tabular-nums">
-                {formatPrice(Math.round(netRevenue))}
-              </div>
+              <Price cents={Math.round(netRevenue)} className="text-3xl font-bold" />
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 {t("netRevenue")}
               </div>
@@ -837,14 +836,14 @@ function QrCodeGeneratorCard({
         open={deleteTablesDialogOpen}
         onOpenChange={setDeleteTablesDialogOpen}
       >
-        <DialogContent className="bg-primary text-primary-foreground border-border/20">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>
               {selectedTables.length === 1
                 ? t("deleteTableTitle")
                 : t("deleteTablesTitle")}
             </DialogTitle>
-            <DialogDescription className="text-primary-foreground/80 mt-1">
+            <DialogDescription className="mt-1">
               {selectedTables.length === 1
                 ? t("deleteTableDesc")
                 : t("deleteTablesDesc")}
@@ -854,14 +853,14 @@ function QrCodeGeneratorCard({
             <Button
               variant="outline"
               onClick={() => setDeleteTablesDialogOpen(false)}
-              className="flex-1 bg-transparent border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground"
+              className="flex-1 rounded-full font-semibold"
             >
               {t("cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={confirmRemoveTables}
-              className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="flex-1 rounded-full font-semibold"
             >
               {t("delete")}
             </Button>

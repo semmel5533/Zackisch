@@ -84,7 +84,7 @@ function ChartContainer({
         data-slot="chart"
         data-chart={chartId}
         className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-axis-tick_text]:font-inter [&_.recharts-cartesian-axis-tick_text]:tabular-nums [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
           className,
         )}
         {...props}
@@ -104,7 +104,7 @@ function ChartContainer({
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([, config]) => config.theme ?? config.color,
+    ([, config]) => config.theme || config.color,
   );
 
   if (!colorConfig.length) {
@@ -121,15 +121,16 @@ ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ??
+      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color;
     return color ? `  --color-${key}: ${color};` : null;
   })
+  .filter(Boolean)
   .join("\n")}
 }
 `,
           )
-          .join("\n"),
+          .join(""),
       }}
     />
   );
@@ -137,26 +138,7 @@ ${colorConfig
 
 const ChartTooltip = RechartsTooltip;
 
-function ChartTooltipContent(
-  props: React.ComponentProps<typeof RechartsTooltip> &
-    React.ComponentProps<"div"> & {
-      hideLabel?: boolean;
-      hideIndicator?: boolean;
-      indicator?: "line" | "dot" | "dashed";
-      nameKey?: string;
-      labelKey?: string;
-    } & Omit<
-      DefaultTooltipContentProps<TooltipValueType, TooltipNameType>,
-      "accessibilityLayer"
-    >,
-) {
-  if (!props.active || !props.payload?.length) {
-    return null;
-  }
-  return <ChartTooltipContentInner {...props} />;
-}
-
-function ChartTooltipContentInner({
+function ChartTooltipContent({
   active,
   payload,
   className,
@@ -170,18 +152,34 @@ function ChartTooltipContentInner({
   color,
   nameKey,
   labelKey,
-}: React.ComponentProps<typeof RechartsTooltip> &
-  React.ComponentProps<"div"> & {
-    hideLabel?: boolean;
-    hideIndicator?: boolean;
-    indicator?: "line" | "dot" | "dashed";
-    nameKey?: string;
-    labelKey?: string;
-  } & Omit<
-    DefaultTooltipContentProps<TooltipValueType, TooltipNameType>,
-    "accessibilityLayer"
-  >) {
+}: React.ComponentProps<"div"> & {
+  active?: boolean;
+  payload?: any[];
+  indicator?: "dot" | "line" | "dashed";
+  hideLabel?: boolean;
+  hideIndicator?: boolean;
+  label?: any;
+  labelFormatter?: (value: any, payload: any[]) => React.ReactNode;
+  labelClassName?: string;
+  formatter?: (
+    value: any,
+    name: any,
+    item: any,
+    index: number,
+    payload: any,
+  ) => React.ReactNode;
+  color?: string;
+  nameKey?: string;
+  labelKey?: string;
+} & Omit<
+  DefaultTooltipContentProps<TooltipValueType, TooltipNameType>,
+  "accessibilityLayer"
+>) {
   const { config } = useChart();
+
+  if (!active || !payload?.length) {
+    return null;
+  }
 
   const tooltipLabel = React.useMemo(() => {
     if (hideLabel || !payload?.length) {
@@ -287,7 +285,7 @@ function ChartTooltipContentInner({
                       </span>
                     </div>
                     {item.value != null && (
-                      <span className="font-medium text-foreground tabular-nums">
+                      <span className="font-medium text-foreground font-inter tabular-nums">
                         {typeof item.value === "number"
                           ? item.value.toLocaleString()
                           : String(item.value)}

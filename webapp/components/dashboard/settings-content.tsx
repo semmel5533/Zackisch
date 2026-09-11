@@ -230,8 +230,8 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 }}
               />
 
-              {/* Form Fields: 2 Columns on md+, 1 Column on mobile */}
-              <div className="grid grid-cols-1 @min-[700px]:grid-cols-2 gap-4">
+              {/* Form Fields: 2 Columns on container >= 480px, 1 Column on narrow mobile */}
+              <div className="grid grid-cols-1 @min-[480px]:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="business-name"
@@ -304,176 +304,196 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 </div>
               </div>
 
-              {/* Visual Media & Stripe Integration: 2 Columns on xl+, 1 Column on mobile/tablet */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              {/* Visual Media & Stripe Integration: 2 Columns on container >= 600px, 1 Column on mobile/narrow */}
+              <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6 items-stretch">
                 {/* Brand Media Column */}
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">{t("brandMedia")}</label>
-                    <span className="text-xs text-muted-foreground">{t("bannerRecommended")}</span>
-                  </div>
-
-                  <div className="relative w-full aspect-[2.3/1] rounded-[22px] sm:rounded-[26px] overflow-hidden border border-border bg-muted/40 group/banner transition-all">
-                    {/* Banner Area */}
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => bannerInputRef.current?.click()}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          bannerInputRef.current?.click();
-                        }
-                      }}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        setIsDraggingBanner(true);
-                      }}
-                      onDragLeave={() => setIsDraggingBanner(false)}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        setIsDraggingBanner(false);
-                        const file = e.dataTransfer.files[0];
-                        if (file) handleBannerFile(file);
-                      }}
-                      className={cn(
-                        "w-full h-full cursor-pointer relative flex flex-col items-center justify-center transition-colors",
-                        isDraggingBanner && "bg-primary/10",
-                      )}
-                    >
-                      {bannerPreview ? (
-                        <>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={bannerPreview}
-                            alt="Banner"
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
-                            <span
-                              className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm"
-                              title={t("changeBanner")}
-                            >
-                              <PencilSimple className="w-3.5 h-3.5" />
-                            </span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (bannerPreview.startsWith("blob:")) URL.revokeObjectURL(bannerPreview);
-                                setBannerPreview(null);
-                                setRemoveBanner(true);
-                                if (bannerInputRef.current) bannerInputRef.current.value = "";
-                              }}
-                              className="p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm"
-                              title={t("removeBanner")}
-                            >
-                              <Trash className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="w-full h-full bg-muted/40" />
-                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="text-white font-medium text-xs bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-                              <UploadSimple className="w-3.5 h-3.5" />
-                              {t("uploadBanner")}
-                            </span>
-                          </div>
-                        </>
-                      )}
+                <div className="flex flex-col justify-between gap-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">{t("brandMedia")}</label>
+                      <span className="text-xs text-muted-foreground">{t("bannerRecommended")}</span>
                     </div>
 
-                    {/* Bottom-Left Logo Box */}
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        logoInputRef.current?.click();
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
+                    <div className="relative w-full aspect-[2.3/1] rounded-[22px] sm:rounded-[26px] overflow-hidden border border-border bg-muted/40 group/banner transition-all">
+                      {/* Banner Area */}
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => bannerInputRef.current?.click()}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            bannerInputRef.current?.click();
+                          }
+                        }}
+                        onDragOver={(e) => {
                           e.preventDefault();
+                          setIsDraggingBanner(true);
+                        }}
+                        onDragLeave={() => setIsDraggingBanner(false)}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          setIsDraggingBanner(false);
+                          const file = e.dataTransfer.files[0];
+                          if (file) handleBannerFile(file);
+                        }}
+                        className={cn(
+                          "w-full h-full cursor-pointer relative flex flex-col items-center justify-center transition-colors",
+                          isDraggingBanner && "bg-primary/10",
+                        )}
+                      >
+                        {bannerPreview ? (
+                          <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={bannerPreview}
+                              alt="Banner"
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                              <span
+                                className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm"
+                                title={t("changeBanner")}
+                              >
+                                <PencilSimple className="w-3.5 h-3.5" />
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (bannerPreview.startsWith("blob:")) URL.revokeObjectURL(bannerPreview);
+                                  setBannerPreview(null);
+                                  setRemoveBanner(true);
+                                  if (bannerInputRef.current) bannerInputRef.current.value = "";
+                                }}
+                                className="p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm"
+                                title={t("removeBanner")}
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-full h-full bg-muted/40" />
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
+                              <span className="text-white font-medium text-xs bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                                <UploadSimple className="w-3.5 h-3.5" />
+                                {t("uploadBanner")}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      {/* Bottom-Left Logo Box */}
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => {
                           e.stopPropagation();
                           logoInputRef.current?.click();
-                        }
-                      }}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDraggingLogo(true);
-                      }}
-                      onDragLeave={(e) => {
-                        e.stopPropagation();
-                        setIsDraggingLogo(false);
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsDraggingLogo(false);
-                        const file = e.dataTransfer.files[0];
-                        if (file) handleLogoFile(file);
-                      }}
-                      className={cn(
-                        "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 w-16 h-16 sm:w-20 sm:h-20 rounded-[10px] sm:rounded-[12px] bg-muted border transition-all cursor-pointer flex items-center justify-center overflow-hidden group/logo",
-                        (bannerPreview || logoPreview) ? "border-neutral-600" : "border-border",
-                        isDraggingLogo && "border-primary ring-2 ring-primary/20",
-                      )}
-                      title={logoPreview ? t("changeLogo") : t("uploadLogo")}
-                    >
-                      {logoPreview ? (
-                        <>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={logoPreview}
-                            alt="Logo"
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/logo:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
-                            <span className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm">
-                              <PencilSimple className="w-3.5 h-3.5" />
-                            </span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (logoPreview.startsWith("blob:")) URL.revokeObjectURL(logoPreview);
-                                setLogoPreview(null);
-                                setRemoveLogo(true);
-                                if (logoInputRef.current) logoInputRef.current.value = "";
-                              }}
-                              className="p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm"
-                              title={t("removeLogo")}
-                            >
-                              <Trash className="w-3.5 h-3.5" />
-                            </button>
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            logoInputRef.current?.click();
+                          }
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsDraggingLogo(true);
+                        }}
+                        onDragLeave={(e) => {
+                          e.stopPropagation();
+                          setIsDraggingLogo(false);
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsDraggingLogo(false);
+                          const file = e.dataTransfer.files[0];
+                          if (file) handleLogoFile(file);
+                        }}
+                        className={cn(
+                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 w-14 h-14 @min-[768px]:w-16 @min-[768px]:h-16 rounded-[10px] sm:rounded-[12px] bg-muted border transition-all cursor-pointer flex items-center justify-center overflow-hidden group/logo",
+                          (bannerPreview || logoPreview) ? "border-neutral-600" : "border-border",
+                          isDraggingLogo && "border-primary ring-2 ring-primary/20",
+                        )}
+                        title={logoPreview ? t("changeLogo") : t("uploadLogo")}
+                      >
+                        {logoPreview ? (
+                          <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={logoPreview}
+                              alt="Logo"
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/logo:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                              <span className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm">
+                                <PencilSimple className="w-3.5 h-3.5" />
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (logoPreview.startsWith("blob:")) URL.revokeObjectURL(logoPreview);
+                                  setLogoPreview(null);
+                                  setRemoveLogo(true);
+                                  if (logoInputRef.current) logoInputRef.current.value = "";
+                                }}
+                                className="p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm"
+                                title={t("removeLogo")}
+                              >
+                                <Trash className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="w-full h-full bg-muted flex items-center justify-center">
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/logo:opacity-100 transition-opacity flex items-center justify-center">
+                              <span className="text-white bg-black/60 backdrop-blur-sm p-2 rounded-full flex items-center justify-center shadow-sm">
+                                <UploadSimple className="w-4 h-4" />
+                              </span>
+                            </div>
                           </div>
-                        </>
-                      ) : (
-                        <div className="w-full h-full bg-muted flex items-center justify-center">
-                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/logo:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="text-white bg-black/60 backdrop-blur-sm p-2 rounded-full flex items-center justify-center shadow-sm">
-                              <UploadSimple className="w-4 h-4" />
-                            </span>
-                          </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
+
+                    {/* Helper Subtext */}
+                    <span className="text-xs text-muted-foreground px-1 mt-0.5">
+                      {t("brandMediaDesc")}
+                    </span>
                   </div>
 
-                  {/* Helper Subtext */}
-                  <span className="text-xs text-muted-foreground px-1 mt-0.5">
-                    {t("brandMediaDesc")}
-                  </span>
+                  {businessState.error && (
+                    <p className="text-sm text-destructive font-medium">
+                      {businessState.error}
+                    </p>
+                  )}
+
+                  <div className="pt-2 w-full mt-auto">
+                    <Button
+                      type="submit"
+                      disabled={isBusinessPending}
+                      variant="outline"
+                      className="w-full font-semibold"
+                    >
+                      {isBusinessPending ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
+                      {t("save")}
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Stripe Settings Column / Panel */}
-                <div className="flex flex-col justify-between gap-4 p-4 sm:p-5 border border-border rounded-[22px] sm:rounded-[26px] bg-muted/20">
+                <div className="h-full flex flex-col justify-between gap-4 p-4 sm:p-5 border border-border rounded-[22px] sm:rounded-[26px] bg-muted/20">
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
-                      <div className="flex items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
                         <h4 className="font-medium text-foreground">
                           {t("stripeSettings")}{" "}
                           <span className="text-destructive">*</span>
@@ -586,24 +606,6 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   </div>
                 </div>
               </div>
-
-              {businessState.error && (
-                <p className="text-sm text-destructive font-medium">
-                  {businessState.error}
-                </p>
-              )}
-
-              <div className="pt-2 w-full">
-                <Button
-                  type="submit"
-                  disabled={isBusinessPending}
-                  variant="outline"
-                  className="w-full font-semibold"
-                >
-                  {isBusinessPending ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
-                  {t("save")}
-                </Button>
-              </div>
             </form>
           </CardContent>
         </Card>
@@ -619,7 +621,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
               </p>
             </CardHeader>
             <CardContent className="flex flex-col gap-6 items-stretch">
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6">
                 <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-lg">
                   <div className="flex flex-col gap-1">
                     <h4 className="font-medium text-foreground">{t("logoutAllDevices")}</h4>

@@ -75,15 +75,17 @@ function DeleteAccountConfirmForm() {
 function InvalidLinkState({ locale }: { locale: string }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center py-8 text-center">
+    <div className="flex flex-col items-center justify-center py-8 text-center text-foreground">
       <X className="w-12 h-12 text-destructive mb-4" />
       <h2 className="text-xl font-semibold">{t("invalidToken" as any)}</h2>
-      <p className="text-muted-foreground mt-2">{t("invalidLinkDesc" as any)}</p>
-      <Link href="/dashboard" className="mt-6">
-        <Button type="button">
-          {t("backToDashboard" as any)}
-        </Button>
-      </Link>
+      <p className="text-muted-foreground mt-2">{t("invalidLinkDeleteAccountDesc" as any)}</p>
+      <div className="mt-6">
+        <Link href="/dashboard">
+          <Button type="button" className="rounded-full">
+            {t("backToDashboard" as any)}
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -95,7 +97,7 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
         <CardTitle className="text-2xl">
           {t("accountDeletedSuccess" as any)}
         </CardTitle>
-        <CardDescription className="text-primary-foreground/80">
+        <CardDescription className="text-muted-foreground">
           {t("accountDeletedDesc" as any)}
         </CardDescription>
       </CardHeader>
@@ -104,7 +106,7 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
           <Link href="/" className="w-full">
             <Button
               type="button"
-              className="w-full gap-2 h-11 text-base bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+              className="w-full gap-2 h-12 rounded-full text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-transform active:scale-[0.98]"
             >
               <ArrowLeft className="w-5 h-5" weight="bold" />
               {t("backHome" as any)}
@@ -126,7 +128,7 @@ function DeleteConfirmFormContent({
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
         <CardTitle className="text-2xl">{t("deleteAccountConfirmTitle" as any)}</CardTitle>
-        <CardDescription className="text-primary-foreground/80">
+        <CardDescription className="text-muted-foreground">
           {t("deleteAccountConfirmDesc" as any)}
         </CardDescription>
       </CardHeader>
@@ -148,7 +150,7 @@ function DeleteConfirmFormContent({
               }
             }}
             variant="destructive"
-            className="w-full gap-2 mt-4 h-11 text-base bg-destructive text-destructive-foreground hover:bg-destructive/90 disabled:opacity-50"
+            className="w-full gap-2 mt-4 h-12 rounded-full text-base bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-transform active:scale-[0.98] disabled:opacity-50"
             disabled={isPending}
           >
             {isPending ? (
@@ -166,12 +168,12 @@ function DeleteConfirmFormContent({
         </form>
       </CardContent>
 
-      <CardFooter className="justify-center pb-6 bg-transparent border-t border-primary-foreground/10 pt-6">
-        <p className="text-sm text-primary-foreground/80">
+      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border pt-6">
+        <p className="text-sm text-muted-foreground">
           {t("changedMind" as any)}{" "}
           <Link
             href="/dashboard"
-            className="font-semibold text-primary-foreground underline-offset-4 hover:underline"
+            className="font-semibold text-foreground underline-offset-4 hover:underline"
           >
             {t("backToDashboard" as any)}
           </Link>
@@ -185,8 +187,8 @@ export default function DeleteAccountConfirmPage() {
   const { t, locale } = useTranslation();
 
   return (
-    <Card className="w-full bg-primary text-primary-foreground border-border/5">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-primary-foreground/10">
+    <Card className="w-full bg-card text-card-foreground border-border shadow-sm rounded-[24px]">
+      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl" as any)} target="_blank" rel="noreferrer">
           <Image
             src="https://www.zakkig.de/full.svg"
@@ -195,12 +197,12 @@ export default function DeleteAccountConfirmPage() {
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity brightness-0 invert"
+            className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
         <LanguageSwitcher
           variant="outline"
-          className="h-10 px-3 bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          className="h-10 px-3 bg-card border-border text-foreground hover:bg-muted hover:text-foreground"
         />
       </div>
 
@@ -208,7 +210,7 @@ export default function DeleteAccountConfirmPage() {
         fallback={
           <CardContent>
             <div className="h-40 flex items-center justify-center">
-              <CircleNotch className="w-8 h-8 animate-spin text-primary-foreground/50" />
+              <CircleNotch className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
           </CardContent>
         }

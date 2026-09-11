@@ -54,19 +54,16 @@ function ChangeEmailConfirmForm() {
     
     if (!email) {
       setFieldError(t("emailRequired" as any));
-      toast.error(t("emailRequired" as any));
       return;
     }
     
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setFieldError(t("emailInvalid" as any));
-      toast.error(t("emailInvalid" as any));
       return;
     }
     
     if (isDisposableEmail(email)) {
       setFieldError(t("disposableEmail" as any));
-      toast.error(t("disposableEmail" as any));
       return;
     }
 
@@ -83,7 +80,7 @@ function ChangeEmailConfirmForm() {
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
         <CardTitle className="text-2xl">{t("newEmailAddress" as any)}</CardTitle>
-        <CardDescription className="text-primary-foreground/80">
+        <CardDescription className="text-muted-foreground">
           {t("newEmailAddressDesc" as any)}
         </CardDescription>
       </CardHeader>
@@ -97,25 +94,30 @@ function ChangeEmailConfirmForm() {
           <input type="hidden" name="token" value={token} />
           
           <div className="flex flex-col gap-2">
-            <label htmlFor="newEmail" className="text-sm font-medium">
+            <label htmlFor="newEmail" className="text-sm font-medium text-foreground">
               {t("email")}
             </label>
             <Input
               id="newEmail"
               name="newEmail"
               type="email"
-              placeholder="name@beispiel.de"
+              placeholder={t("emailPlaceholder")}
               disabled={isPending}
               className={cn(
-                "h-12 border-primary-foreground/20 bg-transparent text-primary-foreground placeholder:text-primary-foreground/50 focus-visible:ring-primary-foreground/30",
-                fieldError ? "border-red-400 focus-visible:ring-red-400" : ""
+                "h-12 border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/20 rounded-xl",
+                fieldError ? "border-destructive focus-visible:ring-destructive" : ""
               )}
             />
+            {fieldError && (
+              <span className="text-sm font-medium text-destructive text-left w-full">
+                {fieldError}
+              </span>
+            )}
           </div>
 
           <Button
             type="submit"
-            className="w-full gap-2 mt-4 h-11 text-base bg-primary-foreground text-primary hover:bg-primary-foreground/90 disabled:opacity-50"
+            className="w-full gap-2 mt-4 h-12 rounded-full text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-transform active:scale-[0.98] disabled:opacity-50"
             disabled={isPending}
           >
             {isPending ? (
@@ -133,12 +135,12 @@ function ChangeEmailConfirmForm() {
         </form>
       </CardContent>
 
-      <CardFooter className="justify-center pb-6 bg-transparent border-t border-primary-foreground/10 pt-6">
-        <p className="text-sm text-primary-foreground/80">
+      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border pt-6">
+        <p className="text-sm text-muted-foreground">
           {t("changedMind" as any)}{" "}
           <Link
             href="/dashboard"
-            className="font-semibold text-primary-foreground underline-offset-4 hover:underline"
+            className="font-semibold text-foreground underline-offset-4 hover:underline"
           >
             {t("backToDashboard" as any)}
           </Link>
@@ -151,15 +153,17 @@ function ChangeEmailConfirmForm() {
 function InvalidLinkState() {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center py-8 text-center text-primary-foreground">
+    <div className="flex flex-col items-center justify-center py-8 text-center text-foreground">
       <X className="w-12 h-12 text-destructive mb-4" />
       <h2 className="text-xl font-semibold">{t("invalidToken" as any)}</h2>
-      <p className="text-primary-foreground/80 mt-2">{t("invalidLinkDesc" as any)}</p>
-      <Link href="/dashboard" className="mt-6">
-        <Button type="button" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
-          {t("backToDashboard" as any)}
-        </Button>
-      </Link>
+      <p className="text-muted-foreground mt-2">{t("invalidLinkEmailChangeDesc" as any)}</p>
+      <div className="mt-6">
+        <Link href="/dashboard">
+          <Button type="button" className="rounded-full">
+            {t("backToDashboard" as any)}
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -168,8 +172,8 @@ export default function ChangeEmailConfirmPage() {
   const { t } = useTranslation();
 
   return (
-    <Card className="w-full bg-primary text-primary-foreground border-border/5">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-primary-foreground/10">
+    <Card className="w-full bg-card text-card-foreground border-border shadow-sm rounded-[24px]">
+      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl" as any)} target="_blank" rel="noreferrer">
           <Image
             src="https://www.zakkig.de/full.svg"
@@ -178,12 +182,12 @@ export default function ChangeEmailConfirmPage() {
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity brightness-0 invert"
+            className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
         <LanguageSwitcher
           variant="outline"
-          className="h-10 px-3 bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          className="h-10 px-3 bg-card border-border text-foreground hover:bg-muted hover:text-foreground"
         />
       </div>
 
@@ -191,7 +195,7 @@ export default function ChangeEmailConfirmPage() {
         fallback={
           <CardContent>
             <div className="h-40 flex items-center justify-center">
-              <CircleNotch className="w-8 h-8 animate-spin text-primary-foreground/50" />
+              <CircleNotch className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
           </CardContent>
         }

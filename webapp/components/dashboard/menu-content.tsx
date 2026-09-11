@@ -64,7 +64,8 @@ import {
 import { ItemWorkspace } from "./menu/item-workspace";
 
 import Image from "next/image";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
+import { Price } from "@/components/ui/price";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import {
   createCategoryAction,
@@ -709,15 +710,7 @@ export function MenuContent({
                     />
                   ))}
                   {categories.length % 2 === 0 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={openNewCategory}
-                      className="w-full h-14 sm:h-16 rounded-2xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
-                    >
-                      <Plus className="h-5 w-5 shrink-0" weight="bold" />
-                      <span>{t("addCategory")}</span>
-                    </Button>
+                    <AddCategoryCardButton onClick={openNewCategory} />
                   )}
                 </div>
 
@@ -742,15 +735,7 @@ export function MenuContent({
                     />
                   ))}
                   {categories.length % 2 === 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={openNewCategory}
-                      className="w-full h-14 sm:h-16 rounded-2xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
-                    >
-                      <Plus className="h-5 w-5 shrink-0" weight="bold" />
-                      <span>{t("addCategory")}</span>
-                    </Button>
+                    <AddCategoryCardButton onClick={openNewCategory} />
                   )}
                 </div>
               </div>
@@ -774,15 +759,7 @@ export function MenuContent({
                   />
                 ))}
 
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={openNewCategory}
-                  className="w-full h-14 sm:h-16 rounded-2xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer"
-                >
-                  <Plus className="h-5 w-5 shrink-0" weight="bold" />
-                  <span>{t("addCategory")}</span>
-                </Button>
+                <AddCategoryCardButton onClick={openNewCategory} />
               </div>
             )}
           </SortableContext>
@@ -817,7 +794,7 @@ export function MenuContent({
                     <div className="text-lg font-semibold text-foreground text-left bg-transparent border-0 p-0 min-w-0 flex-1 break-words">
                       {activeCategory.name}
                     </div>
-                    <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto sm:ml-0 tabular-nums leading-none">
+                    <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto sm:ml-0 font-inter tabular-nums leading-none">
                       {itemsByCategory[activeCategory.$id]?.length || 0}
                     </Badge>
                   </div>
@@ -873,10 +850,10 @@ export function MenuContent({
       >
         <DialogContent
           showCloseButton={false}
-          className="bg-primary text-primary-foreground border-border/20 sm:max-w-md"
+          className="sm:max-w-md"
         >
           <DialogHeader>
-            <DialogTitle className="text-primary-foreground text-lg font-bold">
+            <DialogTitle className="text-lg font-bold">
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryTitle", {
                     name: deleteConfirm?.name || "",
@@ -885,7 +862,7 @@ export function MenuContent({
                     name: deleteConfirm?.name || "",
                   })}
             </DialogTitle>
-            <DialogDescription className="text-primary-foreground/80 text-sm leading-relaxed mt-1">
+            <DialogDescription className="text-sm leading-relaxed mt-1">
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryDesc", {
                     name: deleteConfirm?.name || "",
@@ -899,14 +876,14 @@ export function MenuContent({
             <Button
               variant="outline"
               onClick={() => setDeleteConfirm(null)}
-              className="flex-1 bg-transparent border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground"
+              className="flex-1 rounded-full font-semibold"
             >
               {t("cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={confirmDelete}
-              className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 gap-2 font-semibold"
+              className="flex-1 rounded-full gap-2 font-semibold"
             >
               <Trash className="h-4 w-4 shrink-0" weight="bold" />
               <span>{t("delete")}</span>
@@ -917,6 +894,22 @@ export function MenuContent({
     </div>
   );
 }
+
+function AddCategoryCardButton({ onClick }: { onClick: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      onClick={onClick}
+      className="w-full h-[140px] rounded-xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/5 gap-2 transition-all cursor-pointer active:scale-[0.99]"
+    >
+      <Plus className="h-5 w-5 shrink-0" weight="bold" />
+      <span>{t("addCategory")}</span>
+    </Button>
+  );
+}
+
 // Sortable Category Card
 
 interface SortableCategoryCardProps {
@@ -1034,7 +1027,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
             "ring-2 ring-primary bg-primary/5",
         )}
       >
-        <CardHeader className="flex flex-col @min-[450px]:flex-row @min-[450px]:items-center @min-[450px]:justify-between pb-2 gap-2 @min-[450px]:gap-4 w-full">
+        <CardHeader className="flex flex-col pb-2 gap-2 w-full">
           <div className="flex items-center gap-3 min-w-0 flex-1 w-full">
             <button
               type="button"
@@ -1079,22 +1072,37 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                 </Button>
               </div>
             ) : (
-              <button
-                type="button"
-                className="text-lg font-semibold text-foreground text-left bg-transparent border-0 p-0 cursor-pointer min-w-0 flex-1 break-words"
-                onClick={() => onToggleCollapse(category.$id)}
-              >
-                {category.name}
-              </button>
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <button
+                  type="button"
+                  className="text-lg font-semibold text-foreground text-left bg-transparent border-0 p-0 cursor-pointer min-w-0 break-words hover:text-foreground/80 transition-colors"
+                  onClick={() => onToggleCollapse(category.$id)}
+                >
+                  {category.name}
+                </button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEditingName(true);
+                  }}
+                  className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 transition-colors cursor-pointer"
+                  title="Kategoriename bearbeiten"
+                >
+                  <PencilSimple className="h-4 w-4" />
+                </Button>
+              </div>
             )}
             {!isEditingName && (
-              <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto @min-[450px]:ml-0 tabular-nums leading-none">
+              <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto font-inter tabular-nums leading-none">
                 {categoryItems.length}
               </Badge>
             )}
           </div>
 
-          <div className="flex items-center justify-between @min-[450px]:justify-end gap-1.5 shrink-0 border-t border-border/40 pt-2 @min-[450px]:pt-0 @min-[450px]:border-t-0 w-full @min-[450px]:w-auto">
+          <div className="flex items-center justify-between gap-1.5 shrink-0 border-t border-border/40 pt-2 w-full">
             <Button
               variant="ghost"
               size="icon"
@@ -1110,21 +1118,6 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
             </Button>
 
             <div className="flex items-center gap-1.5 shrink-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  if (isEditingName) {
-                    handleSaveName();
-                  } else {
-                    setIsEditingName(true);
-                  }
-                }}
-                className="rounded-full text-muted-foreground hover:text-foreground shrink-0"
-                title="Kategoriename bearbeiten"
-              >
-                <PencilSimple className="h-4 w-4" />
-              </Button>
               <Button
                 variant="outline"
                 size="default"
@@ -1307,11 +1300,11 @@ const ItemRowView = memo(function ItemRowView({
 
           {/* Row 2: Price on left, Actions on right */}
           <div className="flex items-center justify-between gap-3 pt-2 mt-auto">
-            <span className="text-sm font-bold text-foreground shrink-0">
-              {hasPaidCustomizations(item.customizations)
-                ? t("fromPrice", { price: formatPrice(item.price) })
-                : formatPrice(item.price)}
-            </span>
+            <Price
+              cents={item.price}
+              from={hasPaidCustomizations(item.customizations)}
+              className="text-sm font-bold text-foreground shrink-0"
+            />
 
             <div className="flex items-center gap-1.5 shrink-0">
               <Button

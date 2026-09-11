@@ -31,18 +31,22 @@ export const metadata: Metadata = {
     images: ["/og_image.png"],
   },
 };
+
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-poppins",
+  display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-inter",
+  display: "swap",
 });
 
 const fontMono = Geist_Mono({

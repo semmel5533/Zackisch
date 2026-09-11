@@ -143,3 +143,57 @@ Follow this unified, multi-layered architecture for all features and changes:
   - Return `session.client_secret` to initialize `CheckoutElementsProvider`.
 
 <!-- END:stripe-conventions -->
+
+<!-- BEGIN:design-theme-conventions -->
+
+# UI Theme, Light Surfaces & Numerical Typography
+
+1. **Light Surface & Dialog Rule:**
+   - Dark/black backgrounds must NEVER be overused. The webapp must feel light, airy, and fresh.
+   - All dialogs, modals, action sheets, confirmation alerts, and auth pages must render with a clean light background (`bg-background text-foreground` or `bg-card text-card-foreground`) and standard border (`border-border`).
+   - Dark `#000000` is strictly reserved for deliberate focal accents: the desktop dashboard sidebar (`bg-sidebar`), primary CTA buttons (`bg-primary text-primary-foreground`), and selected badges.
+
+2. **Numerical Typography Rule (Strictly Digits Only in Inter):**
+   - Poppins is the primary font for everything across `webapp` and `website`: all titles, headings, body text, buttons, labels, and badges.
+   - Strictly and exclusively numeric digits (`0-9`) and decimal separators (`.` or `,`) render in **Inter** (`font-inter`, `tabular-nums`) for maximum legibility.
+   - Currency symbols (e.g. `€`), price prefixes (e.g. `ab`, `+`), units, and words MUST remain in **Poppins**.
+   - Use the `<Price cents={...} from={...} prefix={...} />` component for all price displays in the UI rather than wrapping raw formatted strings in `font-inter`.
+   - Never apply `font-inter` to parent containers or badges that contain text.
+
+3. **Apple Design & Fluid Motion:**
+   - Instant feedback on pointerdown (`active:scale-[0.98]` or `active:scale-[0.97]`).
+   - Smooth corner radii hierarchy (`rounded-[20px]`, `rounded-[24px]`, `rounded-full`).
+   - High contrast WCAG AA/AAA compliance.
+
+<!-- END:design-theme-conventions -->
+
+<!-- BEGIN:git-commit-conventions -->
+
+# Git Commit Conventions
+
+All commit messages in this repository strictly follow the developer's personal commit style:
+
+1. **Strictly 100% Lowercase:**
+   - No capital letters anywhere, including the very first word (`changed`, `fixed`, `updated`, etc.).
+
+2. **Past-Tense Action Verbs:**
+   - Always formulate changes in past tense: `changed`, `fixed`, `updated`, `removed`, `added`, `overhauled`, `isolated`, `switched`, `limited`, `forced`, `adjusted`.
+
+3. **Compound Structure Connected by "and":**
+   - Combine multiple related adjustments into a single cohesive running sentence using `and` (e.g. `changed ... and fixed ... and updated ...`).
+
+4. **Explicit Target & Scope Specification:**
+   - Always name the target surface or component: `on webapp`, `on website`, `on website and webapp`, `on customization modal`, `on live orders`, `on article edit dialog`, `on checkout`.
+
+5. **Zero Terminal Punctuation:**
+   - Do NOT end the commit message with a period (`.`) or exclamation mark.
+
+6. **Zero Emojis & No Conventional Commit Prefixes:**
+   - Never use emojis anywhere in commit messages.
+   - Do not use conventional commit prefixes (no `feat:`, `fix:`, `chore:`, `refactor:`).
+
+7. **Pragmatic & Descriptive Human Tone:**
+   - Keep the wording concise, technical, and grounded in concrete code/UI adjustments without AI buzzwords.
+
+<!-- END:git-commit-conventions -->
+

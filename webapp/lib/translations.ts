@@ -250,6 +250,7 @@ export const translations = {
 
     // Menu
     categories: "Kategorien",
+    category: "Kategorie",
     addCategory: "Kategorie hinzufügen",
     editCategory: "Kategorie bearbeiten",
     deleteCategory: "Kategorie löschen",
@@ -301,7 +302,7 @@ export const translations = {
     invalidImageFormat: "Nur Bilder im JPG- oder PNG-Format sind erlaubt.",
     customization: "Zusammenstellung",
     customizationDesc:
-      "Ermöglicht es Kunden, den Artikel schrittweise zusammenzustellen (z.B. Brot, Belag, Soße wählen).",
+      "Ermöglicht es Kunden, den Artikel schrittweise zusammenzustellen.",
     enableCustomization: "Schrittweise Zusammenstellung aktivieren",
     addStep: "Schritt hinzufügen",
     noStepsAdded: "Noch keine Schritte hinzugefügt.",
@@ -327,6 +328,7 @@ export const translations = {
     stepNumber: "Schritt {{number}}",
     deleteStep: "Schritt löschen",
     deleteOption: "Option löschen",
+    option: "Option",
     options: "Optionen",
     noOptions: "Noch keine Optionen hinzugefügt.",
     viewGrid: "Karten-Ansicht",
@@ -387,7 +389,9 @@ export const translations = {
       "Eine E-Mail zur Bestätigung wurde versandt. Der Link ist 30 Minuten gültig. Bitte überprüfe dein Postfach.",
     emailChangedSuccess: "Email-Adresse erfolgreich geändert.",
     newEmailAddress: "Neue Email-Adresse",
-    newEmailAddressDesc: "Bitte gib deine neue Email-Adresse ein. Wir senden dir einen Anmeldecode, um diese zu bestätigen.",
+    newEmailAddressDesc: "Bitte gib deine neue E-Mail-Adresse ein. Wir senden dir einen Bestätigungscode, um diese zu bestätigen.",
+    invalidLinkEmailChangeDesc: "Dieser Link zur Änderung der E-Mail-Adresse ist ungültig oder abgelaufen.",
+    invalidLinkDeleteAccountDesc: "Dieser Link zum Löschen des Kontos ist ungültig oder abgelaufen.",
     requestVerificationCode: "Code anfordern",
     pleaseWait: "Bitte warten...",
     newOtpSent: "Ein neuer Bestätigungscode wurde gesendet.",
@@ -506,6 +510,7 @@ export const translations = {
       "Eine E-Mail zur Bestätigung wurde versandt. Der Link ist 30 Minuten gültig. Bitte überprüfe dein Postfach.",
     otpValidDuration: "Code ist 30 Minuten gültig",
     autoArchiveRemaining: "Archiviert in {time}",
+    from: "ab",
     fromPrice: "ab {price}",
     basePrice: "Grundpreis",
     basePriceDesc:
@@ -808,6 +813,7 @@ export const translations = {
 
     // Menu
     categories: "Categories",
+    category: "Category",
     addCategory: "Add Category",
     editCategory: "Edit Category",
     deleteCategory: "Delete Category",
@@ -858,7 +864,7 @@ export const translations = {
     invalidImageFormat: "Only JPG and PNG images are allowed.",
     customization: "Customization",
     customizationDesc:
-      "Allow customers to build their item step by step (e.g. choose bread, toppings, sauce).",
+      "Allow customers to build their item step by step.",
     enableCustomization: "Enable step-by-step customization",
     addStep: "Add step",
     noStepsAdded: "No steps added yet.",
@@ -884,6 +890,7 @@ export const translations = {
     stepNumber: "Step {{number}}",
     deleteStep: "Delete step",
     deleteOption: "Delete option",
+    option: "Option",
     options: "Options",
     noOptions: "No options added yet.",
     viewGrid: "Grid View",
@@ -944,6 +951,8 @@ export const translations = {
     emailChangedSuccess: "Email address successfully changed.",
     newEmailAddress: "New Email Address",
     newEmailAddressDesc: "Please enter your new email address. We will send you a verification code to confirm it.",
+    invalidLinkEmailChangeDesc: "This link to change your email address is invalid or has expired.",
+    invalidLinkDeleteAccountDesc: "This link to delete your account is invalid or has expired.",
     requestVerificationCode: "Request Code",
     pleaseWait: "Please wait...",
     newOtpSent: "A new confirmation code has been sent.",
@@ -1053,6 +1062,7 @@ export const translations = {
       "A confirmation email has been sent. The link is valid for 30 minutes. Please check your inbox.",
     otpValidDuration: "Code is valid for 30 minutes",
     autoArchiveRemaining: "Archived in {time}",
+    from: "from",
     fromPrice: "from {price}",
     basePrice: "Base price",
     basePriceDesc:

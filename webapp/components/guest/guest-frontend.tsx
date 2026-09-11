@@ -3,13 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Plus, Minus, ShoppingCart, ArrowLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { useCartStore } from "@/store/cart-store";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CartSheet } from "@/components/guest/cart-sheet";
+import { Price } from "@/components/ui/price";
 import { OrderTracker } from "@/components/guest/order-tracker";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import Image from "next/image";
@@ -126,7 +127,7 @@ function GuestOrderSuccess({
         <h1 className="text-3xl font-bold">{t("orderPlaced")}</h1>
         <div>
           <p className="text-muted-foreground mb-2">{t("yourOrderNumber")}</p>
-          <div className="text-6xl font-black tracking-wider text-primary tabular-nums">
+          <div className="text-6xl font-black tracking-wider text-primary font-inter tabular-nums">
             {orderNumber}
           </div>
         </div>
@@ -336,7 +337,7 @@ function GuestMenu({
                           >
                             <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors shrink-0">
                               {totalQuantity > 0 ? (
-                                <span className="font-extrabold text-sm sm:text-base tabular-nums leading-none">
+                                <span className="font-extrabold text-sm sm:text-base font-inter tabular-nums leading-none">
                                   {totalQuantity}
                                 </span>
                               ) : (
@@ -348,11 +349,11 @@ function GuestMenu({
                               {t("addToCart")}
                             </span>
 
-                            <span className="font-bold text-sm sm:text-base tabular-nums shrink-0 mr-3 sm:mr-4 text-primary-foreground">
-                              {hasPaidCustomizations(item.customizations)
-                                ? t("fromPrice", { price: formatPrice(item.price) })
-                                : formatPrice(item.price)}
-                            </span>
+                            <Price
+                              cents={item.price}
+                              from={hasPaidCustomizations(item.customizations)}
+                              className="font-bold text-sm sm:text-base shrink-0 mr-3 sm:mr-4 text-primary-foreground"
+                            />
                           </button>
                         </div>
                       </div>
@@ -460,12 +461,12 @@ function GuestCart({
                         ) : null}
                         <span>{c.optionName}</span>
                         {typeof c.extraPrice === "number" && c.extraPrice > 0 && (
-                          <>
-                            {" "}
-                            <span className="text-muted-foreground/80 font-normal whitespace-nowrap">
-                              (+{formatPrice(c.extraPrice)})
-                            </span>
-                          </>
+                          <Price
+                            cents={c.extraPrice}
+                            prefix="(+"
+                            className="text-muted-foreground/80 font-normal whitespace-nowrap ml-1 text-xs"
+                            currencyClassName="ml-0.5"
+                          />
                         )}
                       </span>
                     ))}
@@ -474,9 +475,10 @@ function GuestCart({
               </div>
 
               <div className="shrink-0 flex flex-col items-end gap-2">
-                <span className="text-sm font-bold text-primary tabular-nums text-right leading-snug">
-                  {formatPrice(item.price * item.quantity)}
-                </span>
+                <Price
+                  cents={item.price * item.quantity}
+                  className="text-sm font-bold text-primary text-right leading-snug"
+                />
 
                 <div className="flex items-center gap-1 bg-muted/80 p-1 h-9 rounded-full border border-border/60 shrink-0">
                   <Button
@@ -487,7 +489,7 @@ function GuestCart({
                   >
                     <Minus weight="bold" className="h-3.5 w-3.5" />
                   </Button>
-                  <span className="text-xs font-bold tabular-nums min-w-[14px] text-center px-0.5">
+                  <span className="text-xs font-bold font-inter tabular-nums min-w-[14px] text-center px-0.5">
                     {item.quantity}
                   </span>
                   <Button
@@ -534,7 +536,7 @@ function LieferandoCartBanner({
           className="group relative w-full h-12 sm:h-13 bg-primary hover:bg-neutral-800 text-primary-foreground rounded-full shadow-md p-1 sm:p-1.5 flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer select-none"
         >
           <div className="h-10 w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors shrink-0">
-            <span className="font-extrabold text-sm sm:text-base tabular-nums leading-none">
+            <span className="font-extrabold text-sm sm:text-base font-inter tabular-nums leading-none">
               {count}
             </span>
           </div>
@@ -543,9 +545,7 @@ function LieferandoCartBanner({
             {t("viewCart")}
           </span>
 
-          <span className="font-bold text-base tabular-nums shrink-0 mr-3 sm:mr-4 text-primary-foreground">
-            {formatPrice(total())}
-          </span>
+          <Price cents={total()} className="font-bold text-base shrink-0 mr-3 sm:mr-4 text-primary-foreground" />
         </button>
       </div>
     </aside>
@@ -680,9 +680,7 @@ export function GuestFrontend({
                       {t("taxNote")}
                     </span>
                   </div>
-                  <span className="text-base sm:text-lg font-bold tabular-nums">
-                    {formatPrice(total())}
-                  </span>
+                  <Price cents={total()} className="text-base sm:text-lg font-bold" />
                 </div>
                 <Button
                   size="lg"

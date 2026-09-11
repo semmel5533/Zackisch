@@ -146,10 +146,10 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl">
+        <CardTitle className="text-2xl font-bold text-foreground">
           {t("passwordChangedSuccess" as any)}
         </CardTitle>
-        <CardDescription className="text-primary-foreground/80">
+        <CardDescription className="text-muted-foreground">
           {t("passwordChangedDesc")}
         </CardDescription>
       </CardHeader>
@@ -158,7 +158,7 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
           <Link href="/sign-in" className="w-full">
             <Button
               type="button"
-              className="w-full gap-2 h-11 text-base bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+              className="w-full gap-2 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 transition-all active:scale-[0.98]"
             >
               <ArrowLeft className="w-5 h-5" weight="bold" />
               {t("signIn")}
@@ -187,8 +187,8 @@ function PasswordResetFormContent({
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl">{t("resetPasswordTitle")}</CardTitle>
-        <CardDescription className="text-primary-foreground/80">
+        <CardTitle className="text-2xl font-bold text-foreground">{t("resetPasswordTitle")}</CardTitle>
+        <CardDescription className="text-muted-foreground">
           {t("resetPasswordSubtitle")}
         </CardDescription>
       </CardHeader>
@@ -202,7 +202,7 @@ function PasswordResetFormContent({
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="password"
-                className={`text-sm font-semibold ${fieldErrors.password ? "text-destructive" : ""}`}
+                className={`text-sm font-semibold ${fieldErrors.password ? "text-destructive" : "text-foreground"}`}
               >
                 {t("newPasswordLabel")}{" "}
                 <span className="text-destructive">*</span>
@@ -216,7 +216,7 @@ function PasswordResetFormContent({
                   value={passwordValue}
                   onChange={(e: any) => setPasswordValue(e.target.value)}
                   maxLength={100}
-                  className={`h-11 border-primary-foreground/20 placeholder:text-primary-foreground/50 text-primary-foreground pr-10 ${fieldErrors.password ? "border-destructive" : ""}`}
+                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground pr-10 rounded-xl ${fieldErrors.password ? "border-destructive" : ""}`}
                 />
                 <button
                   className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
@@ -226,12 +226,12 @@ function PasswordResetFormContent({
                 >
                   {showPassword ? (
                     <EyeSlash
-                      className="w-5 h-5 text-primary-foreground/50"
+                      className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
                       weight="bold"
                     />
                   ) : (
                     <Eye
-                      className="w-5 h-5 text-primary-foreground/50"
+                      className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
                       weight="bold"
                     />
                   )}
@@ -254,8 +254,8 @@ function PasswordResetFormContent({
                   <span
                     className={
                       passwordValue.length >= 8
-                        ? "text-primary-foreground"
-                        : "text-primary-foreground/50"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground"
                     }
                   >
                     {t("passwordReqLength" as any)}
@@ -276,8 +276,8 @@ function PasswordResetFormContent({
                   <span
                     className={
                       /[A-Z]/.test(passwordValue)
-                        ? "text-primary-foreground"
-                        : "text-primary-foreground/50"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground"
                     }
                   >
                     {t("passwordReqUppercase" as any)}
@@ -298,8 +298,8 @@ function PasswordResetFormContent({
                   <span
                     className={
                       /[a-z]/.test(passwordValue)
-                        ? "text-primary-foreground"
-                        : "text-primary-foreground/50"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground"
                     }
                   >
                     {t("passwordReqLowercase" as any)}
@@ -322,8 +322,8 @@ function PasswordResetFormContent({
                     className={
                       /[0-9]/.test(passwordValue) ||
                       /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue)
-                        ? "text-primary-foreground leading-tight"
-                        : "text-primary-foreground/50 leading-tight"
+                        ? "text-foreground font-medium leading-tight"
+                        : "text-muted-foreground leading-tight"
                     }
                   >
                     {t("passwordReqNumberOrSpecial" as any)}
@@ -341,7 +341,7 @@ function PasswordResetFormContent({
             <div className="flex flex-col gap-1.5 mt-2">
               <label
                 htmlFor="confirmPassword"
-                className={`text-sm font-semibold ${fieldErrors.confirmPassword ? "text-destructive" : ""}`}
+                className={`text-sm font-semibold ${fieldErrors.confirmPassword ? "text-destructive" : "text-foreground"}`}
               >
                 {t("confirmPassword")}{" "}
                 <span className="text-destructive">*</span>
@@ -353,7 +353,7 @@ function PasswordResetFormContent({
                   type={showConfirmPassword ? "text" : "password"}
                   autoComplete="new-password"
                   maxLength={100}
-                  className={`h-11 border-primary-foreground/20 placeholder:text-primary-foreground/50 text-primary-foreground pr-10 ${fieldErrors.confirmPassword ? "border-destructive" : ""}`}
+                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground pr-10 rounded-xl ${fieldErrors.confirmPassword ? "border-destructive" : ""}`}
                 />
                 <button
                   className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
@@ -365,12 +365,12 @@ function PasswordResetFormContent({
                 >
                   {showConfirmPassword ? (
                     <EyeSlash
-                      className="w-5 h-5 text-primary-foreground/50"
+                      className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
                       weight="bold"
                     />
                   ) : (
                     <Eye
-                      className="w-5 h-5 text-primary-foreground/50"
+                      className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
                       weight="bold"
                     />
                   )}
@@ -386,7 +386,7 @@ function PasswordResetFormContent({
 
           <Button
             type="submit"
-            className="w-full gap-2 mt-4 h-11 text-base bg-primary-foreground text-primary hover:bg-primary-foreground/90 disabled:bg-primary-foreground/20 disabled:text-primary-foreground/50 disabled:opacity-100"
+            className="w-full gap-2 mt-4 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 transition-all active:scale-[0.98]"
             disabled={isPending}
           >
             {isPending ? (
@@ -401,12 +401,12 @@ function PasswordResetFormContent({
         </form>
       </CardContent>
 
-      <CardFooter className="justify-center pb-6 bg-transparent border-t border-primary-foreground/10">
-        <p className="text-sm text-primary-foreground/80">
+      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border">
+        <p className="text-sm text-muted-foreground">
           {t("rememberedAccount")}{" "}
           <Link
             href="/sign-in"
-            className="font-semibold text-primary-foreground underline-offset-4 hover:underline"
+            className="font-semibold text-foreground underline-offset-4 hover:underline"
           >
             {t("signIn")}
           </Link>
@@ -420,8 +420,8 @@ export default function ResetPasswordConfirmPage() {
   const { t, locale } = useTranslation();
 
   return (
-    <Card className="w-full bg-primary text-primary-foreground border-border/5">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-primary-foreground/10">
+    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
+      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
           <Image
             src="https://www.zakkig.de/full.svg"
@@ -430,12 +430,12 @@ export default function ResetPasswordConfirmPage() {
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity brightness-0 invert"
+            className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
         <LanguageSwitcher
           variant="outline"
-          className="h-10 px-3 bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          className="h-10 px-3"
         />
       </div>
 

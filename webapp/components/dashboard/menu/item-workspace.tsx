@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogCloseButton,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,12 +32,11 @@ import {
 import {
   CircleNotch,
   SlidersHorizontal,
-  Tag,
   Sparkle,
   ImageSquare,
   Info,
 } from "@phosphor-icons/react";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { toast } from "sonner";
 import { ImageUpload } from "./image-upload";
 import { CustomizationBuilder } from "./customization-builder";
@@ -70,6 +70,7 @@ export function ItemWorkspace({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form State
+  const [categoryId, setCategoryId] = useState(selectedCategoryId);
   const categoryIdRef = useRef(selectedCategoryId);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -90,10 +91,12 @@ export function ItemWorkspace({
       setErrors({});
       setIsSubmitting(false);
       if (editingItem) {
-        categoryIdRef.current = editingItem.categoryId;
+        const catId = editingItem.categoryId;
+        setCategoryId(catId);
+        categoryIdRef.current = catId;
         setName(editingItem.name);
         setDescription(editingItem.description || "");
-        setPrice((editingItem.price / 100).toFixed(2));
+        setPrice((Math.round(editingItem.price) / 100).toFixed(2));
         selectedFileRef.current = null;
         removeImageRef.current = false;
 
@@ -106,8 +109,8 @@ export function ItemWorkspace({
               options: (step.options || []).map((opt: any, j: number) => ({
                 ...opt,
                 id: opt.id || `opt_${Date.now()}_${i}_${j}`,
-                extraPrice: opt.extraPrice ?? opt.priceAdjustment ?? 0
-              }))
+                extraPrice: Math.round(Number(opt.extraPrice ?? opt.priceAdjustment ?? 0)),
+              })),
             }));
             setCustomizationSteps(sanitized);
             setEnableCustomizations(true);
@@ -120,8 +123,9 @@ export function ItemWorkspace({
           setEnableCustomizations(false);
         }
       } else {
-        categoryIdRef.current =
-          selectedCategoryId || (categories[0]?.$id ?? "");
+        const initialCat = selectedCategoryId || (categories[0]?.$id ?? "");
+        setCategoryId(initialCat);
+        categoryIdRef.current = initialCat;
         setName("");
         setDescription("");
         setPrice("");
@@ -132,8 +136,6 @@ export function ItemWorkspace({
       }
     }
   }, [open, editingItem, selectedCategoryId, categories]);
-
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -164,7 +166,7 @@ export function ItemWorkspace({
     const formData = new FormData();
 
     formData.append("organizationId", organizationId);
-    formData.append("categoryId", categoryIdRef.current);
+    formData.append("categoryId", categoryId || categoryIdRef.current);
     formData.append("name", name.trim());
     formData.append("description", description);
     formData.append("price", price);
@@ -214,11 +216,12 @@ export function ItemWorkspace({
         }
       }}
     >
-      <DialogContent className="sm:max-w-xl md:max-w-2xl h-[85vh] max-h-[750px] p-0 flex flex-col bg-primary text-primary-foreground border-border/20 overflow-hidden">
-        <DialogHeader className="p-6 pb-4 border-b border-primary-foreground/10 shrink-0">
-          <DialogTitle>
+      <DialogContent className="w-[calc(100%-1.25rem)] sm:w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] sm:h-[90vh] max-h-[820px] p-0 sm:p-0 flex flex-col bg-background text-foreground rounded-[24px] border border-border shadow-2xl overflow-hidden">
+        <DialogHeader className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-border shrink-0 bg-background flex flex-row items-center justify-between">
+          <DialogTitle className="text-lg font-bold">
             {editingItem ? t("editItem") : t("addItem")}
           </DialogTitle>
+          <DialogCloseButton />
         </DialogHeader>
 
         <form
@@ -228,27 +231,22 @@ export function ItemWorkspace({
           className="flex-1 flex flex-col min-h-0 overflow-hidden"
         >
           <ScrollArea className="flex-1 min-h-0 w-full">
-            <div className="p-6 space-y-6">
+            <div className="px-3.5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5">
               {/* SECTION 1: DETAILS */}
-              <div className="space-y-4">
-                <h3 className="text-base font-semibold tracking-tight flex items-center gap-2 text-primary-foreground">
-                  <Tag className="w-5 h-5 text-primary-foreground/70" />
-                  {t("basicInfo")}
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3.5 sm:space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* Left Column (Bild) */}
                   <div className="flex flex-col gap-2 h-full">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm font-semibold text-primary-foreground">
+                      <Label className="text-sm font-semibold text-foreground">
                         {t("imageSection")}
                       </Label>
-                      <span className="text-xs text-primary-foreground/60 font-medium">
+                      <span className="text-xs text-muted-foreground font-medium">
                         {t("itemImageRecommended")}
                       </span>
                     </div>
                     <ImageUpload
-                      className="flex-1"
+                      className="flex-1 min-h-[220px]"
                       existingImageId={editingItem?.imageId}
                       onFileSelect={(file) => {
                         selectedFileRef.current = file;
@@ -263,10 +261,43 @@ export function ItemWorkspace({
 
                   {/* Right Column (Details) */}
                   <div className="space-y-4">
+                    {/* Category Select */}
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-sm font-semibold text-foreground">
+                        {t("category")} <span className="text-destructive">*</span>
+                      </Label>
+                      <Select
+                        value={categoryId}
+                        onValueChange={(val) => {
+                          if (val) setCategoryId(val);
+                        }}
+                        items={categories.map((cat) => ({
+                          label: cat.name,
+                          value: cat.$id,
+                        }))}
+                      >
+                        <SelectTrigger className="w-full bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground rounded-xl h-10 px-3 cursor-pointer transition-colors font-medium">
+                          <SelectValue placeholder={t("category")}>
+                            {(value: string | null) =>
+                              categories.find((c) => c.$id === value)?.name ||
+                              t("category")
+                            }
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat.$id} value={cat.$id}>
+                              {cat.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
                     <div className="flex flex-col gap-1.5">
                       <Label
                         htmlFor="ws-item-name"
-                        className={`text-sm font-semibold ${errors.name ? "text-destructive" : "text-primary-foreground"}`}
+                        className={`text-sm font-semibold ${errors.name ? "text-destructive" : "text-foreground"}`}
                       >
                         {t("itemName")}{" "}
                         <span className="text-destructive">*</span>
@@ -282,7 +313,7 @@ export function ItemWorkspace({
                         onKeyDown={(e) => e.stopPropagation()}
                         placeholder={t("itemNamePlaceholder")}
                         maxLength={100}
-                        className={`bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 ${errors.name ? "border-destructive" : ""}`}
+                        className={`h-10 rounded-xl border-input bg-background text-foreground placeholder:text-muted-foreground ${errors.name ? "border-destructive" : ""}`}
                       />
                       {errors.name && (
                         <span className="text-sm text-destructive">
@@ -294,7 +325,7 @@ export function ItemWorkspace({
                     <div className="flex flex-col gap-1.5">
                       <Label
                         htmlFor="ws-item-desc"
-                        className="text-sm font-semibold text-primary-foreground"
+                        className="text-sm font-semibold text-foreground"
                       >
                         {t("description")}
                       </Label>
@@ -303,16 +334,16 @@ export function ItemWorkspace({
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder={t("itemDescPlaceholder")}
-                        rows={4}
+                        rows={3}
                         maxLength={500}
-                        className="resize-none bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 min-h-[100px]"
+                        className="resize-none rounded-xl border-input bg-background text-foreground placeholder:text-muted-foreground min-h-[88px]"
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
                       <Label
                         htmlFor="ws-item-price"
-                        className={`text-sm font-semibold flex items-center gap-1.5 ${errors.price ? "text-destructive" : "text-primary-foreground"}`}
+                        className={`text-sm font-semibold flex items-center gap-1.5 ${errors.price ? "text-destructive" : "text-foreground"}`}
                       >
                         <span>{t("basePrice")}</span>
                         <span className="text-destructive">*</span>
@@ -323,7 +354,7 @@ export function ItemWorkspace({
                               className="hidden sm:inline-flex items-center"
                             >
                               <Info
-                                className="w-4 h-4 text-primary-foreground/50 hover:text-primary-foreground transition-colors cursor-help"
+                                className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors cursor-help"
                                 weight="fill"
                               />
                             </TooltipTrigger>
@@ -351,9 +382,9 @@ export function ItemWorkspace({
                               }));
                           }}
                           placeholder="0.00"
-                          className={`pr-7 bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 ${errors.price ? "border-destructive" : ""}`}
+                          className={`pr-8 h-10 rounded-xl border-input bg-background text-foreground placeholder:text-muted-foreground font-inter tabular-nums ${errors.price ? "border-destructive" : ""}`}
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-primary-foreground/50 font-medium">
+                        <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">
                           €
                         </span>
                       </div>
@@ -367,42 +398,37 @@ export function ItemWorkspace({
                 </div>
               </div>
 
-              <Separator className="bg-border/20" />
+              <Separator className="bg-border" />
 
               {/* SECTION 2: ZUSAMMENSTELLUNG & PRESETS */}
-              <div className="space-y-5">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-base font-semibold tracking-tight flex items-center gap-2 text-primary-foreground">
-                    <SlidersHorizontal className="w-5 h-5 text-primary-foreground/70" />
-                    {t("customization")}
-                    <TooltipProvider delay={100}>
-                      <Tooltip>
-                        <TooltipTrigger className="hidden sm:inline-flex items-center">
-                          <Info
-                            className="w-4 h-4 text-primary-foreground/50 hover:text-primary-foreground transition-colors cursor-help"
-                            weight="fill"
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent side="right" className="max-w-[250px]">
-                          <p>{t("customizationDesc")}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={enableCustomizations}
-                      onCheckedChange={setEnableCustomizations}
-                      className="data-[checked]:!bg-primary-foreground data-[unchecked]:!bg-primary-foreground/20 [&_[data-slot=switch-thumb]]:data-[checked]:!bg-primary [&_[data-slot=switch-thumb]]:data-[unchecked]:!bg-primary-foreground"
-                    />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-muted/30 border border-border/70">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-background border border-border/80 flex items-center justify-center shrink-0 shadow-2xs">
+                      <SlidersHorizontal className="w-5 h-5 text-foreground" weight="bold" />
+                    </div>
+                    <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                      <span className="text-sm font-semibold text-foreground">
+                        {t("customization")}
+                      </span>
+                      <span className="text-xs text-muted-foreground font-medium line-clamp-2 sm:line-clamp-none">
+                        {t("customizationDesc")}
+                      </span>
+                    </div>
                   </div>
+                  <Switch
+                    checked={enableCustomizations}
+                    onCheckedChange={setEnableCustomizations}
+                    className="shrink-0"
+                  />
                 </div>
 
                 {enableCustomizations && (
-                  <div className="space-y-5 pt-1">
+                  <div className="space-y-4 pt-1">
                     <CustomizationBuilder
                       steps={customizationSteps}
                       onChange={setCustomizationSteps}
+                      itemAvailable={editingItem ? editingItem.available : true}
                     />
                   </div>
                 )}
@@ -411,19 +437,20 @@ export function ItemWorkspace({
           </ScrollArea>
 
           {/* Fixed Footer Action Buttons */}
-          <div className="flex flex-row items-center gap-3 w-full p-6 pt-4 border-t border-primary-foreground/10 shrink-0 bg-primary">
+          <div className="flex flex-row items-center gap-3 w-full px-4 sm:px-6 py-3 sm:py-3.5 border-t border-border shrink-0 bg-background">
             <Button
               type="button"
+              variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
-              className="flex-1 bg-transparent border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground disabled:border-primary-foreground/10 disabled:text-primary-foreground/40 disabled:opacity-100"
+              className="flex-1 rounded-full font-semibold h-11"
             >
               {t("cancel")}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold disabled:bg-primary-foreground/20 disabled:text-primary-foreground/50 disabled:opacity-100"
+              className="flex-1 rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold h-11 active:scale-[0.98] transition-all"
             >
               {isSubmitting ? (
                 <>

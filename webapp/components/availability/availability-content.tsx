@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { CaretDown, CaretUp, SlidersHorizontal } from "@phosphor-icons/react";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
+import { Price } from "@/components/ui/price";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -296,7 +297,7 @@ function CategorySection({
           >
             {category.name}
           </button>
-          <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 tabular-nums leading-none">
+          <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 font-inter tabular-nums leading-none">
             {items.length}
           </Badge>
         </div>
@@ -437,11 +438,11 @@ function ItemCardView({
                 {item.description}
               </p>
             )}
-            <span className="text-sm font-bold text-foreground whitespace-nowrap mt-0.5">
-              {hasPaidCustomizations(item.customizations)
-                ? t("fromPrice", { price: formatPrice(item.price) })
-                : formatPrice(item.price)}
-            </span>
+            <Price
+              cents={item.price}
+              from={hasPaidCustomizations(item.customizations)}
+              className="text-sm font-bold text-foreground mt-0.5"
+            />
           </div>
 
           {/* Main Item Switch & Customization Badge */}
@@ -452,7 +453,7 @@ function ItemCardView({
                 className="text-xs gap-1 border-primary/40 text-primary bg-primary/5 shrink-0"
               >
                 <SlidersHorizontal className="w-3 h-3" weight="bold" />
-                {steps.length}
+                <span className="font-inter tabular-nums">{steps.length}</span>
               </Badge>
             )}
             <Switch
@@ -542,7 +543,7 @@ function ItemCardView({
                               </span>
                               {optPrice > 0 && (
                                 <span className="text-muted-foreground shrink-0 font-medium">
-                                  (+{formatPrice(optPrice)})
+                                  (+<Price cents={optPrice} />)
                                 </span>
                               )}
                             </div>

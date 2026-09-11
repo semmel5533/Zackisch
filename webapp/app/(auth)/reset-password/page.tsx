@@ -62,8 +62,8 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <Card className="w-full bg-primary text-primary-foreground border-none shadow-none sm:border-primary-foreground/10 sm:shadow-sm">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-primary-foreground/10">
+    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
+      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
           <Image
             src="https://www.zakkig.de/full.svg"
@@ -72,21 +72,21 @@ export default function ResetPasswordPage() {
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity brightness-0 invert"
+            className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
         <LanguageSwitcher
           variant="outline"
-          className="h-10 px-3 bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          className="h-10 px-3"
         />
       </div>
       {state.success ? (
         <>
           <CardHeader className="flex-col items-start gap-1 pt-4">
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-2xl font-bold text-foreground">
               {t("resetPasswordLinkSent" as any)}
             </CardTitle>
-            <CardDescription className="text-primary-foreground/80">
+            <CardDescription className="text-muted-foreground">
               {t("resetPasswordSent")}
             </CardDescription>
           </CardHeader>
@@ -95,7 +95,7 @@ export default function ResetPasswordPage() {
               <Link href="/sign-in" className="w-full">
                 <Button
                   type="button"
-                  className="w-full gap-2 h-11 text-base bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                  className="w-full gap-2 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 transition-all active:scale-[0.98]"
                 >
                   <ArrowLeft className="w-5 h-5" weight="bold" />
                   {t("backToSignIn")}
@@ -107,8 +107,8 @@ export default function ResetPasswordPage() {
       ) : (
         <>
           <CardHeader className="flex-col items-start gap-1 pt-4">
-            <CardTitle className="text-2xl">{t("resetPassword")}</CardTitle>
-            <CardDescription className="text-primary-foreground/80">
+            <CardTitle className="text-2xl font-bold text-foreground">{t("resetPassword")}</CardTitle>
+            <CardDescription className="text-muted-foreground">
               {t("resetPasswordDescription")}
             </CardDescription>
           </CardHeader>
@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
               <div className="flex flex-col gap-1.5">
                 <label
                   htmlFor="email"
-                  className={`text-sm font-semibold ${fieldErrors.email ? "text-destructive" : ""}`}
+                  className={`text-sm font-semibold ${fieldErrors.email ? "text-destructive" : "text-foreground"}`}
                 >
                   {t("email")}
                 </label>
@@ -133,7 +133,7 @@ export default function ResetPasswordPage() {
                   placeholder={t("emailPlaceholder")}
                   autoComplete="email"
                   maxLength={100}
-                  className={`h-11 border-primary-foreground/20 placeholder:text-primary-foreground/50 text-primary-foreground ${fieldErrors.email ? "border-destructive" : ""}`}
+                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground rounded-xl ${fieldErrors.email ? "border-destructive" : ""}`}
                 />
                 {fieldErrors.email && (
                   <span className="text-sm text-destructive">
@@ -144,7 +144,7 @@ export default function ResetPasswordPage() {
 
               <Button
                 type="submit"
-                className="w-full gap-2 mt-2 h-11 text-base bg-primary-foreground text-primary hover:bg-primary-foreground/90 disabled:bg-primary-foreground/20 disabled:text-primary-foreground/50 disabled:opacity-100"
+                className="w-full gap-2 mt-2 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 transition-all active:scale-[0.98]"
                 disabled={isPending}
               >
                 {isPending ? (
@@ -169,12 +169,12 @@ export default function ResetPasswordPage() {
 
       {!state.success && (
         <>
-          <CardFooter className="justify-center pb-6 bg-transparent border-t border-primary-foreground/10">
-            <p className="text-sm text-primary-foreground/80">
+          <CardFooter className="justify-center pb-6 bg-transparent border-t border-border">
+            <p className="text-sm text-muted-foreground">
               {t("rememberedAccount")}{" "}
               <Link
                 href="/sign-in"
-                className="font-semibold text-primary-foreground underline-offset-4 hover:underline"
+                className="font-semibold text-foreground underline-offset-4 hover:underline"
               >
                 {t("signIn")}
               </Link>

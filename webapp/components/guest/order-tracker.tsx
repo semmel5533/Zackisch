@@ -30,7 +30,7 @@ export function OrderTracker({
   organization,
   initialOrder,
 }: OrderTrackerProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const liveOrder = useQuery(api.orders.getOrder, {
     id: orderId as Id<"orders">,
@@ -151,7 +151,7 @@ export function OrderTracker({
         <main className="flex-1 p-6 md:p-8 flex flex-col items-center justify-center space-y-8">
           <div className="text-center space-y-2">
             <p className="text-sm font-medium text-muted-foreground">{t("yourOrderNumber")}</p>
-            <div className="text-6xl font-black tracking-wider text-primary tabular-nums">
+            <div className="text-6xl font-black tracking-wider text-primary font-inter tabular-nums">
               {order.orderNumber}
             </div>
           </div>
@@ -174,7 +174,7 @@ export function OrderTracker({
             const remainingTotalSeconds = Math.ceil(remainingMs / 1000);
             const remainingMins = Math.floor(remainingTotalSeconds / 60);
             const remainingSecs = remainingTotalSeconds % 60;
-            const timeFormatted = `${remainingMins}:${remainingSecs.toString().padStart(2, "0")} Min.`;
+            const remainingParts = t("trackingActiveRemaining", { time: "%%" }).split("%%");
 
             return (
               <div className="w-full bg-primary/10 border-2 border-primary/25 rounded-2xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300">
@@ -189,7 +189,14 @@ export function OrderTracker({
                 </p>
                 <div className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full mt-1">
                   <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>{t("trackingActiveRemaining", { time: timeFormatted })}</span>
+                  <span>
+                    {remainingParts[0]}
+                    <span className="font-inter tabular-nums">
+                      {remainingMins}:{remainingSecs.toString().padStart(2, "0")}
+                    </span>{" "}
+                    <span>{locale === "de" ? "Min." : "min."}</span>
+                    {remainingParts[1]}
+                  </span>
                 </div>
               </div>
             );
@@ -224,7 +231,7 @@ export function OrderTracker({
                             ></path>
                           </svg>
                         ) : (
-                          <span className="text-sm font-bold">{index + 1}</span>
+                          <span className="text-sm font-bold font-inter tabular-nums">{index + 1}</span>
                         )}
                       </div>
                       <div

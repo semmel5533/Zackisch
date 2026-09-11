@@ -103,14 +103,16 @@ export function ImageUpload({
     <div className={cn("flex flex-col h-full", className)}>
       <div
         className={cn(
-          "relative rounded-xl border border-dashed transition-colors cursor-pointer overflow-hidden flex-1 flex flex-col",
-          isDragging
-            ? "border-primary-foreground bg-primary-foreground/10"
-            : hasImage
-              ? "border-transparent"
-              : "border-primary-foreground/20 hover:border-primary-foreground/40 bg-black",
+          "relative rounded-2xl transition-all duration-200 overflow-hidden flex-1 flex flex-col group",
+          hasImage
+            ? "border border-border/70 shadow-xs"
+            : isDragging
+              ? "border-2 border-dashed border-primary bg-primary/5 scale-[1.01]"
+              : "border border-dashed border-border/80 hover:border-foreground/30 bg-muted/30 hover:bg-muted/50 cursor-pointer",
         )}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => {
+          if (!hasImage) inputRef.current?.click();
+        }}
         onDragOver={(e) => {
           e.preventDefault();
           setIsDragging(true);
@@ -127,45 +129,55 @@ export function ImageUpload({
         }}
       >
         {hasImage ? (
-          <div className="relative w-full h-full min-h-[200px]">
+          <div className="relative w-full h-full min-h-[220px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview || existingUrl!}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover rounded-lg"
+              className="absolute inset-0 w-full h-full object-cover rounded-2xl"
             />
-            <div className="absolute inset-0 bg-black/40 transition-colors flex items-center justify-center gap-1.5 opacity-0 hover:opacity-100">
-              <span
-                className="text-white bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center shadow-sm cursor-pointer"
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-all duration-200 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  inputRef.current?.click();
+                }}
+                className="px-3.5 py-2 rounded-full bg-background/90 hover:bg-background text-foreground font-medium text-xs flex items-center gap-1.5 shadow-md backdrop-blur-md transition-all active:scale-95 cursor-pointer"
                 title={t("changeImage")}
               >
-                <PencilSimple className="w-3.5 h-3.5" />
-              </span>
+                <PencilSimple className="w-4 h-4" weight="bold" />
+                <span>{t("changeImage")}</span>
+              </button>
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleRemove();
                 }}
-                className="p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm"
+                className="p-2 rounded-full bg-background/90 hover:bg-destructive hover:text-destructive-foreground text-foreground shadow-md backdrop-blur-md transition-all active:scale-95 cursor-pointer"
                 title={t("removeImage")}
               >
-                <Trash className="w-3.5 h-3.5" />
+                <Trash className="w-4 h-4" weight="bold" />
               </button>
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center gap-1.5 p-6 text-center text-primary-foreground/70 min-h-[200px]">
-            <UploadSimple
-              className="w-10 h-10 text-primary-foreground/70 transition-colors"
-              weight={isDragging ? "bold" : "regular"}
-            />
-            <p className="text-sm font-medium text-primary-foreground">
-              {t("dragOrClick")}
-            </p>
-            <p className="text-xs text-primary-foreground/60">
-              {t("itemImageRecommended")} • {t("maxFileSize")}
-            </p>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2 p-6 text-center min-h-[220px]">
+            <div className="w-12 h-12 rounded-2xl bg-muted/60 flex items-center justify-center group-hover:bg-muted transition-colors">
+              <UploadSimple
+                className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors"
+                weight={isDragging ? "bold" : "regular"}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <p className="text-sm font-semibold text-foreground">
+                {t("dragOrClick")}
+              </p>
+              <p className="text-xs text-muted-foreground font-medium">
+                {t("itemImageRecommended")} • {t("maxFileSize")}
+              </p>
+            </div>
           </div>
         )}
         <input

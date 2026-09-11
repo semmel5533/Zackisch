@@ -7,10 +7,11 @@ import {
   GoogleLogo,
   CircleNotch,
 } from "@phosphor-icons/react";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart-store";
 import { createCheckoutSessionAction } from "@/actions/checkout-actions";
 import { Button } from "@/components/ui/button";
+import { Price } from "@/components/ui/price";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -123,9 +124,7 @@ export function CartSheet({
                 {t("taxNote")}
               </span>
             </div>
-            <span className="text-base sm:text-lg font-bold text-foreground tabular-nums text-right">
-              {formatPrice(total())}
-            </span>
+            <Price cents={total()} className="text-base sm:text-lg font-bold text-foreground text-right" />
           </div>
         </SheetHeader>
 

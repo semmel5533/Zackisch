@@ -12,7 +12,7 @@ import {
   Check,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -181,7 +181,7 @@ export function CustomizationBuilder({
   };
 
   return (
-    <Card className="border border-primary-foreground/20 bg-transparent overflow-hidden flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4">
       {steps.length > 0 ? (
         <DndContext
           id="customization-steps-dnd"
@@ -218,8 +218,8 @@ export function CustomizationBuilder({
           </SortableContext>
         </DndContext>
       ) : (
-        <div className="p-4 text-center border border-dashed border-primary-foreground/20 rounded-xl">
-          <p className="text-sm text-primary-foreground/70 font-medium">
+        <div className="p-6 text-center border border-dashed border-border/80 rounded-2xl bg-muted/20">
+          <p className="text-sm text-muted-foreground font-medium">
             {t("noStepsAdded")}
           </p>
         </div>
@@ -229,12 +229,12 @@ export function CustomizationBuilder({
         type="button"
         variant="ghost"
         onClick={addStep}
-        className="w-full border border-dashed border-primary-foreground/40 hover:border-primary-foreground font-semibold text-sm text-primary-foreground hover:text-primary-foreground bg-transparent hover:bg-primary-foreground/15 shrink-0 gap-2 transition-colors"
+        className="w-full h-[50px] rounded-2xl border border-dashed border-border hover:border-foreground/30 bg-card hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.99] flex items-center justify-center cursor-pointer shadow-2xs"
       >
-        <Plus className="w-4 h-4 shrink-0" weight="bold" />
+        <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
         <span>{t("addStep")}</span>
       </Button>
-    </Card>
+    </div>
   );
 }
 
@@ -325,17 +325,18 @@ function SortableStepCard({
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-transparent flex flex-col border border-primary-foreground/20 rounded-xl overflow-hidden"
+      className="bg-card flex flex-col border border-border/80 rounded-2xl overflow-hidden shadow-xs hover:border-border transition-all"
     >
       {/* Step Header */}
       <div
         className={cn(
-          "flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-3 transition-colors cursor-pointer hover:bg-primary-foreground/5 border-b",
-          isExpanded ? "border-primary-foreground/20" : "border-transparent",
+          "flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 p-3 sm:p-4 bg-card cursor-pointer select-none transition-colors border-b border-border/40",
+          !isExpanded && "border-b-0",
         )}
         onClick={() => setIsExpanded(!isExpanded)}
         role="button"
         tabIndex={0}
+        aria-expanded={isExpanded}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -343,17 +344,26 @@ function SortableStepCard({
           }
         }}
       >
-        <div className="flex items-center gap-2 flex-1 min-w-0">
+        {/* Line 1: Drag handle, Caret, Step Name / Rename Input, Pencil */}
+        <div className="flex items-center gap-2 flex-1 min-w-0 w-full">
           <div
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 -m-1 focus-visible:outline-none shrink-0"
+            className="cursor-grab active:cursor-grabbing p-1.5 -m-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none shrink-0"
+            onClick={(e) => e.stopPropagation()}
           >
             <DotsSixVertical
-              className="w-4 h-4 text-primary-foreground/50 shrink-0"
+              className="w-4 h-4 shrink-0"
               weight="bold"
             />
           </div>
+          <CaretDown
+            className={cn(
+              "w-4 h-4 text-muted-foreground transition-transform duration-200 shrink-0",
+              isExpanded ? "rotate-0" : "-rotate-90",
+            )}
+            weight="bold"
+          />
           <div
             role="presentation"
             className="flex items-center gap-2 flex-1 min-w-0"
@@ -361,7 +371,8 @@ function SortableStepCard({
           >
             {isEditingName ? (
               <div
-                className="flex items-center gap-1.5 flex-1 w-full sm:max-w-xs"
+                className="flex items-center gap-1.5 flex-1 w-full"
+                onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
               >
                 <Input
@@ -376,88 +387,126 @@ function SortableStepCard({
                     if (e.key === "Escape") finishEditingName();
                   }}
                   maxLength={100}
-                  className="h-8 text-sm font-medium bg-transparent border-primary-foreground/30 text-primary-foreground px-2 flex-1"
+                  className="h-8 text-sm font-medium bg-background border-input text-foreground px-2.5 rounded-lg flex-1 min-w-0"
                   placeholder={t("stepName")}
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={finishEditingName}
-                  className="h-8 w-8 text-primary-foreground hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    finishEditingName();
+                  }}
+                  className="h-8 w-8 text-foreground hover:text-foreground hover:bg-muted rounded-lg shrink-0 transition-colors"
                   title={t("save")}
                 >
                   <Check
-                    className="w-4 h-4 text-primary-foreground"
+                    className="w-4 h-4 text-foreground"
                     weight="bold"
                   />
                 </Button>
               </div>
             ) : (
               <div className="flex items-center gap-1.5 min-w-0 group flex-1">
-                <span className="font-semibold text-sm truncate text-primary-foreground">
+                <span className="font-semibold text-sm sm:text-base truncate text-foreground">
                   {step.name || t("stepName")}
                 </span>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 opacity-70 sm:opacity-0 group-hover:opacity-100 transition-opacity text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0"
+                  className="h-7 w-7 opacity-70 sm:opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg shrink-0"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditingName(true);
                   }}
+                  title={t("edit")}
                 >
-                  <PencilSimple className="w-4 h-4" />
+                  <PencilSimple className="w-3.5 h-3.5" />
                 </Button>
               </div>
             )}
           </div>
         </div>
 
+        {/* Desktop Controls (sm and above: single row) */}
         <div
-          className="flex items-center justify-between sm:justify-end gap-2.5 shrink-0 w-full sm:w-auto"
+          className="hidden sm:flex items-center gap-2.5 sm:gap-3 shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 font-inter tabular-nums leading-none">
+              {step.options.length}
+            </Badge>
             <Switch
               checked={step.available ?? true}
               disabled={itemAvailable === false}
               onCheckedChange={(checked) => onUpdate({ available: checked })}
-              className="shrink-0 data-[checked]:!bg-primary-foreground data-[unchecked]:!bg-primary-foreground/20 [&_[data-slot=switch-thumb]]:data-[checked]:!bg-primary [&_[data-slot=switch-thumb]]:data-[unchecked]:!bg-primary-foreground"
+              className="shrink-0"
             />
-            <span className="text-xs text-primary-foreground/70 font-medium hidden sm:inline">
-              {step.options.length} {t("options")}
-            </span>
           </div>
 
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
+            size="icon"
             onClick={onRemove}
-            className="gap-1.5 font-medium text-xs bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
+            className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+            title={t("delete")}
           >
-            <Trash className="w-3.5 h-3.5 shrink-0" weight="bold" />
-            <span>{t("delete")}</span>
+            <Trash className="w-4 h-4" weight="bold" />
           </Button>
+        </div>
+
+        {/* Mobile Controls (below sm: clean second row with full space) */}
+        <div
+          className="flex sm:hidden items-center justify-between pt-2 border-t border-border/40 w-full shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+            <Badge className="w-5 h-5 min-w-5 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-[11px] shrink-0 font-inter tabular-nums leading-none">
+              {step.options.length}
+            </Badge>
+            <span>{step.options.length === 1 ? t("option") : t("options")}</span>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <Switch
+              checked={step.available ?? true}
+              disabled={itemAvailable === false}
+              onCheckedChange={(checked) => onUpdate({ available: checked })}
+              className="shrink-0"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onRemove}
+              className="h-7 w-7 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+              title={t("delete")}
+            >
+              <Trash className="w-4 h-4" weight="bold" />
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Step Content */}
       {isExpanded && (
-        <div className="px-3.5 sm:px-4 py-4 flex flex-col gap-4">
+        <div className="p-3 sm:p-4 flex flex-col gap-3.5 bg-muted/15">
           {/* Step Settings - Single 3-column row on all screen sizes */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full">
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor={`step-min-${step.id}`}
-                className="text-xs font-medium text-primary-foreground/70 flex items-center gap-1"
+                className="text-xs font-medium text-muted-foreground flex items-center gap-1"
               >
                 {t("minSelections")}
                 <TooltipProvider delay={200}>
                   <Tooltip>
                     <TooltipTrigger className="hidden sm:inline-flex items-center">
-                      <Info className="w-3.5 h-3.5 text-primary-foreground/40 hover:text-primary-foreground transition-colors cursor-help" />
+                      <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent side="top">
                       <p className="text-xs">{t("minSelectionsDesc" as any)}</p>
@@ -489,19 +538,19 @@ function SortableStepCard({
                     onUpdate({ minSelections: 0 });
                   }
                 }}
-                className="w-full text-center bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 h-9 sm:h-8"
+                className="w-full text-center bg-background border-input text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor={`step-max-${step.id}`}
-                className="text-xs font-medium text-primary-foreground/70 flex items-center gap-1"
+                className="text-xs font-medium text-muted-foreground flex items-center gap-1"
               >
                 {t("maxSelections")}
                 <TooltipProvider delay={200}>
                   <Tooltip>
                     <TooltipTrigger className="hidden sm:inline-flex items-center">
-                      <Info className="w-3.5 h-3.5 text-primary-foreground/40 hover:text-primary-foreground transition-colors cursor-help" />
+                      <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent side="top">
                       <p className="text-xs">{t("maxSelectionsDesc" as any)}</p>
@@ -533,19 +582,19 @@ function SortableStepCard({
                     onUpdate({ maxSelections: 1 });
                   }
                 }}
-                className="w-full text-center bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 h-9 sm:h-8"
+                className="w-full text-center bg-background border-input text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor={`step-inc-${step.id}`}
-                className="text-xs font-medium text-primary-foreground/70 flex items-center gap-1"
+                className="text-xs font-medium text-muted-foreground flex items-center gap-1"
               >
                 {t("includedInPrice")}
                 <TooltipProvider delay={200}>
                   <Tooltip>
                     <TooltipTrigger className="hidden sm:inline-flex items-center">
-                      <Info className="w-3.5 h-3.5 text-primary-foreground/40 hover:text-primary-foreground transition-colors cursor-help" />
+                      <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent side="top">
                       <p className="text-xs">
@@ -574,20 +623,20 @@ function SortableStepCard({
                     onUpdate({ includedCount: 0 });
                   }
                 }}
-                className="w-full text-center bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 h-9 sm:h-8"
+                className="w-full text-center bg-background border-input text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
           </div>
 
-          <Separator className="bg-primary-foreground/20" />
+          <Separator className="bg-border/80" />
 
           {/* Options */}
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-primary-foreground">
+          <div className="flex flex-col gap-2.5">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t("options")}
             </span>
             {step.options.length === 0 ? (
-              <p className="text-sm text-primary-foreground/50 py-3 text-center">
+              <p className="text-sm text-muted-foreground py-3 text-center">
                 {t("noOptions")}
               </p>
             ) : (
@@ -640,10 +689,10 @@ function SortableStepCard({
             <Button
               type="button"
               variant="ghost"
-              className="w-full border border-dashed border-primary-foreground/40 hover:border-primary-foreground font-semibold text-sm text-primary-foreground hover:text-primary-foreground bg-transparent hover:bg-primary-foreground/15 gap-2 transition-colors cursor-pointer"
+              className="w-full h-[46px] rounded-xl border border-dashed border-border hover:border-foreground/30 bg-background hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.99] flex items-center justify-center cursor-pointer shadow-2xs"
               onClick={onAddOption}
             >
-              <Plus className="w-4 h-4 shrink-0" weight="bold" />
+              <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
               <span>{t("addOption")}</span>
             </Button>
           </div>
@@ -686,17 +735,18 @@ function OptionRow({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex flex-col sm:flex-row sm:items-center gap-2.5 p-3 rounded-lg border transition-colors bg-transparent border-primary-foreground/20"
+      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-border/80 bg-background hover:border-foreground/25 hover:bg-muted/20 hover:shadow-xs transition-all duration-150"
     >
-      {/* Line 1 (Mobile): Drag handle + Option Name Input (100% width) */}
-      <div className="flex items-center gap-2 w-full flex-1 min-w-0">
+      {/* Name line (Full width on mobile, flex-1 on desktop) */}
+      <div className="flex items-center gap-2 w-full sm:flex-1 min-w-0">
         <div
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing shrink-0 focus-visible:outline-none p-1"
+          className="cursor-grab active:cursor-grabbing shrink-0 focus-visible:outline-none p-1.5 -m-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+          onClick={(e) => e.stopPropagation()}
         >
           <DotsSixVertical
-            className="w-4 h-4 text-primary-foreground/50"
+            className="w-4 h-4 shrink-0"
             weight="bold"
           />
         </div>
@@ -714,61 +764,61 @@ function OptionRow({
           onMouseDown={(e) => e.stopPropagation()}
           placeholder={t("optionName")}
           maxLength={100}
-          className="h-9 sm:h-8 text-sm bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 flex-1"
+          className="h-9 sm:h-8 text-sm bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground rounded-lg flex-1 min-w-0"
         />
       </div>
 
-      {/* Lines 2 & 3 (Mobile): Price right-aligned in Line 2, Slider left & Delete right in Line 3 */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
-        {/* Line 2 (Mobile): Price Input right-aligned */}
-        <div className="flex justify-end sm:justify-start w-full sm:w-auto">
-          <div className="relative w-full sm:w-28">
-            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-primary-foreground/60 font-semibold select-none pointer-events-none">
-              +
-            </span>
-            <Input
-              type="number"
-              step="0.01"
-              min="0"
-              max="99999"
-              value={
-                option.extraPrice === 0
-                  ? ""
-                  : (option.extraPrice / 100).toFixed(2)
-              }
-              onChange={(e) => {
-                const val = e.target.value;
-                if (val.length > 8) return;
-                onUpdate({
-                  extraPrice: val ? Math.round(parseFloat(val) * 100) : 0,
-                });
-              }}
-              placeholder="0,00"
-              className="h-9 sm:h-8 text-sm pl-6 pr-6 text-right sm:text-left bg-transparent border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 w-full"
-            />
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-primary-foreground/50 select-none pointer-events-none">
-              €
-            </span>
-          </div>
+      {/* Controls line: Price + Switch + Delete (Inline on desktop, single 2nd line on mobile) */}
+      <div className="flex items-center justify-between sm:justify-end gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
+        {/* Price Input */}
+        <div className="relative flex-1 sm:flex-initial sm:w-28">
+          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-semibold select-none pointer-events-none">
+            +
+          </span>
+          <Input
+            type="number"
+            step="0.01"
+            min="0"
+            max="99999"
+            value={
+              option.extraPrice === 0
+                ? ""
+                : (Math.round(option.extraPrice) / 100).toFixed(2)
+            }
+            onChange={(e) => {
+              const val = e.target.value;
+              if (val.length > 8) return;
+              onUpdate({
+                extraPrice: val ? Math.round(parseFloat(val) * 100) : 0,
+              });
+            }}
+            placeholder="0.00"
+            className="h-9 sm:h-8 text-sm pl-6 pr-6 bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground w-full font-inter tabular-nums rounded-lg text-right sm:text-left"
+          />
+          <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium select-none pointer-events-none">
+            €
+          </span>
         </div>
 
-        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto shrink-0">
-          <Switch
-            checked={option.available ?? true}
-            disabled={disabled}
-            onCheckedChange={(checked) => onUpdate({ available: checked })}
-            className="shrink-0 data-[checked]:!bg-primary-foreground data-[unchecked]:!bg-primary-foreground/20 [&_[data-slot=switch-thumb]]:data-[checked]:!bg-primary [&_[data-slot=switch-thumb]]:data-[unchecked]:!bg-primary-foreground"
-          />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onRemove}
-            className="gap-1.5 font-medium text-xs bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
-          >
-            <Trash className="w-3.5 h-3.5 shrink-0" weight="bold" />
-            <span>{t("delete")}</span>
-          </Button>
-        </div>
+        {/* Switch */}
+        <Switch
+          checked={option.available ?? true}
+          disabled={disabled}
+          onCheckedChange={(checked) => onUpdate({ available: checked })}
+          className="shrink-0"
+        />
+
+        {/* Delete Icon Button */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={onRemove}
+          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+          title={t("delete")}
+        >
+          <Trash className="w-4 h-4" weight="bold" />
+        </Button>
       </div>
     </div>
   );

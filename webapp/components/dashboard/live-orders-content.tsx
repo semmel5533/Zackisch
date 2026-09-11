@@ -28,7 +28,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
+import { Price } from "@/components/ui/price";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -102,7 +103,7 @@ export function LiveOrdersContent({
   organizationId,
   isStaffView,
 }: LiveOrdersContentProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [localOrders, setLocalOrders] = useState<Order[]>(orders);
@@ -316,7 +317,7 @@ export function LiveOrdersContent({
         <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 flex-1">
           <span
             className={cn(
-              "font-black tracking-tight tabular-nums text-xs sm:text-sm shrink-0 text-foreground",
+              "font-black tracking-tight font-inter tabular-nums text-xs sm:text-sm shrink-0 text-foreground",
               isSelected && "desktop:text-primary-foreground",
             )}
           >
@@ -328,9 +329,16 @@ export function LiveOrdersContent({
               isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
             )}
           >
-            {order.type === "dine-in" || order.tableNumber
-              ? `${t("table")} ${order.tableNumber || ""}`.trim()
-              : t("pickup")}
+            {order.type === "dine-in" || order.tableNumber ? (
+              <>
+                {t("table")}{" "}
+                <span className="font-inter tabular-nums">
+                  {order.tableNumber || ""}
+                </span>
+              </>
+            ) : (
+              t("pickup")
+            )}
           </span>
         </div>
 
@@ -339,7 +347,7 @@ export function LiveOrdersContent({
           {isCompleted ? (
             <span
               className={cn(
-                "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 shrink-0 tabular-nums border bg-muted text-foreground/80 border-transparent",
+                "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 shrink-0 border bg-muted text-foreground/80 border-transparent",
                 isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
               )}
             >
@@ -350,12 +358,15 @@ export function LiveOrdersContent({
                 )}
                 weight="bold"
               />
-              <span>{remainingMins}m</span>
+              <span>
+                <span className="font-inter tabular-nums">{remainingMins}</span>{" "}
+                <span>{locale === "de" ? "Min." : "min."}</span>
+              </span>
             </span>
-          ) : timeLabel ? (
+          ) : (
             <span
               className={cn(
-                "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 shrink-0 tabular-nums border bg-muted text-foreground/80 border-transparent",
+                "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 shrink-0 border bg-muted text-foreground/80 border-transparent",
                 isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
               )}
             >
@@ -366,22 +377,20 @@ export function LiveOrdersContent({
                 )}
                 weight="bold"
               />
-              <span>{timeLabel}</span>
+              <span className="font-inter tabular-nums">{timeLabel}</span>
             </span>
-          ) : null}
+          )}
         </div>
       </button>
     );
   };
 
   return (
-    <div className="flex-1 min-h-0 h-full flex flex-col space-y-4 print:hidden">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between shrink-0 -mt-[2.4px] sm:-mt-[5.6px]">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-            {t("orders")}
-          </h1>
+    <div className="h-full flex-1 min-h-0 flex flex-col gap-3 sm:gap-4">
+      {/* Top Header */}
+      <div className="flex items-center justify-between shrink-0 print:hidden">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("orders")}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -394,7 +403,7 @@ export function LiveOrdersContent({
               localStorage.setItem("zakkig_kitchen_sound", next ? "1" : "0");
               if (next) playNewOrderSound();
             }}
-            className="h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-4 gap-1.5 sm:gap-2"
+            className="h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-4 gap-1.5 sm:gap-2 rounded-full cursor-pointer active:scale-[0.98] transition-all font-semibold shadow-xs"
           >
             {soundEnabled ? (
               <>
@@ -411,17 +420,16 @@ export function LiveOrdersContent({
         </div>
       </div>
 
-      {/* Main Explorer Screen Layout */}
-      <div className="flex-1 min-h-0 flex flex-col desktop:flex-row gap-3.5 items-stretch overflow-hidden">
-        {/* Left Side: Master Queue Panel (Strict fixed 540px width on tablet & desktop: 264px each column) */}
+      <div className="flex-1 min-h-0 flex flex-col desktop:flex-row gap-3 sm:gap-4 overflow-hidden">
+        {/* Left Side: Master Queue Panel (Strict fixed 540px width on desktop, full width on mobile/tablet) */}
         <div
           className={cn(
             "flex flex-col min-h-0 h-full desktop:w-[540px] desktop:min-w-[540px] desktop:max-w-[540px] shrink-0",
             mobileView === "detail" ? "hidden desktop:flex" : "flex",
           )}
         >
-          {/* Mobile Tab Switcher (< 500px) */}
-          <div className="flex items-center gap-2 mb-2 tablet:hidden">
+          {/* Mobile Status Tabs (< 500px) */}
+          <div className="flex tablet:hidden gap-2 pb-2 shrink-0">
             <Button
               variant={mobileTab === "in_progress" ? "default" : "outline"}
               size="default"
@@ -431,7 +439,7 @@ export function LiveOrdersContent({
               <span>{t("inProgress")}</span>
               <span
                 className={cn(
-                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold tabular-nums leading-none",
+                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold font-inter tabular-nums leading-none",
                   inProgressOrders.length > 9
                     ? "px-1 sm:px-1.5"
                     : "aspect-square p-0",
@@ -452,7 +460,7 @@ export function LiveOrdersContent({
               <span>{t("completed")}</span>
               <span
                 className={cn(
-                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold tabular-nums leading-none",
+                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold font-inter tabular-nums leading-none",
                   completedOrders.length > 9
                     ? "px-1 sm:px-1.5"
                     : "aspect-square p-0",
@@ -503,7 +511,7 @@ export function LiveOrdersContent({
                   </div>
                   <Badge
                     className={cn(
-                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
+                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold font-inter tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
                       inProgressOrders.length > 9
                         ? "px-1"
                         : "aspect-square",
@@ -549,21 +557,16 @@ export function LiveOrdersContent({
                       >
                         <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                       </TooltipTrigger>
-                      <TooltipContent side="bottom" align="start" className="max-w-[260px] p-2.5 text-xs">
-                        <div className="flex flex-col gap-1 text-left">
-                          <p className="font-medium leading-relaxed">
-                            {t("completedSubline")}
-                          </p>
-                          <p className="text-[11px] opacity-80 leading-relaxed">
-                            {t("autoArchiveNotice")}
-                          </p>
-                        </div>
+                      <TooltipContent side="bottom" align="start" className="max-w-[240px] p-2.5 text-xs">
+                        <p className="font-medium leading-relaxed">
+                          {t("completedSubline")}
+                        </p>
                       </TooltipContent>
                     </Tooltip>
                   </div>
                   <Badge
                     className={cn(
-                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
+                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold font-inter tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
                       completedOrders.length > 9
                         ? "px-1"
                         : "aspect-square",
@@ -587,15 +590,15 @@ export function LiveOrdersContent({
           </TooltipProvider>
         </div>
 
-        {/* Right Side: Order Detail Explorer (Ansicht column) */}
+        {/* Right Side: Selected Order Details (Docked on desktop, full screen overlay on mobile) */}
         <div
           className={cn(
             "flex-1 min-w-0 min-h-0 h-full flex flex-col shrink-0",
             mobileView === "list" ? "hidden desktop:flex" : "flex",
           )}
         >
-          {/* Mobile Back Button (< 1100px) */}
-          <div className="flex items-center mb-2 desktop:hidden shrink-0">
+          {/* Mobile/Tablet Back Button (< 1110px) */}
+          <div className="desktop:hidden pb-2 shrink-0">
             <Button
               variant="outline"
               size="default"
@@ -614,65 +617,82 @@ export function LiveOrdersContent({
                 <div className="p-3 sm:p-4 border-b border-border bg-muted/20 shrink-0">
                   <div className="flex items-center justify-between gap-2 sm:gap-2.5 flex-wrap">
                     <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-wrap">
-                      <h2 className="text-xl sm:text-2xl desktop:text-3xl font-black text-foreground tracking-tight tabular-nums shrink-0">
+                      <h2 className="text-lg sm:text-xl desktop:text-2xl font-black text-foreground tracking-tight font-inter tabular-nums shrink-0">
                         {selectedOrder.orderNumber}
                       </h2>
-                    <span className="text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-primary text-primary-foreground border border-transparent shrink-0">
-                      {selectedOrder.status === "completed"
-                        ? t("completed")
-                        : t("inProgress")}
-                    </span>
-                    <span className="text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0">
-                      {selectedOrder.type === "dine-in" || selectedOrder.tableNumber
-                        ? `${t("toTable")} ${selectedOrder.tableNumber || ""}`.trim()
-                        : t("toPickUp")}
-                    </span>
-                  </div>
-
-                  {/* Timestamp Badge */}
-                  <div className="shrink-0 flex items-center ml-auto">
-                    <span className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0 tabular-nums">
-                      <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 opacity-80" weight="bold" />
-                      <span>
+                      <span className="text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-primary text-primary-foreground border border-transparent shrink-0">
                         {selectedOrder.status === "completed"
-                          ? t("trackingMinutes", {
-                              count: getRemainingArchiveMins(selectedOrder, now),
-                            })
-                          : formatDetailOrderTime(selectedOrder, now)}
+                          ? t("completed")
+                          : t("inProgress")}
                       </span>
-                    </span>
+                      <span className="text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0">
+                        {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
+                          <>
+                            {t("toTable")}{" "}
+                            <span className="font-inter tabular-nums">
+                              {selectedOrder.tableNumber || ""}
+                            </span>
+                          </>
+                        ) : (
+                          t("toPickUp")
+                        )}
+                      </span>
+                    </div>
+
+                    {/* Timestamp Badge */}
+                    <div className="shrink-0 flex items-center ml-auto">
+                      <span className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0">
+                        <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 opacity-80" weight="bold" />
+                        <span>
+                          {selectedOrder.status === "completed" ? (
+                            <>
+                              <span className="font-inter tabular-nums">
+                                {getRemainingArchiveMins(selectedOrder, now)}
+                              </span>{" "}
+                              <span>{locale === "de" ? "Min." : "min."}</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="font-inter tabular-nums">
+                                {formatMiniOrderTime(selectedOrder, now)}
+                              </span>{" "}
+                              <span>{locale === "de" ? "Uhr" : ""}</span>
+                            </>
+                          )}
+                        </span>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Items List (Scrollable) */}
-              <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
-                {parseItems(selectedOrder.items).map((item: any, idx: number) => {
-                  const itemKey = `${item.cartItemId || item.id || item.menuItemId || item.name}-${idx}`;
-                  return (
-                    <div
-                      key={itemKey}
-                      className="flex flex-col pb-3 border-b border-border/40 last:border-b-0 last:pb-0"
-                    >
-                      <div className="flex justify-between items-start gap-2.5 sm:gap-3">
-                        <div className="flex items-baseline gap-2 sm:gap-2.5 min-w-0">
-                          <span className="text-lg sm:text-xl font-black text-primary tabular-nums shrink-0">
-                            {item.quantity}×
-                          </span>
-                          <span className="text-sm sm:text-base desktop:text-lg font-bold text-foreground leading-snug break-words">
-                            {item.name}
-                          </span>
+                {/* Items List (Scrollable) */}
+                <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
+                  {parseItems(selectedOrder.items).map((item: any, idx: number) => {
+                    const itemKey = `${item.cartItemId || item.id || item.menuItemId || item.name}-${idx}`;
+                    return (
+                      <div
+                        key={itemKey}
+                        className="flex flex-col pb-3 border-b border-border/40 last:border-b-0 last:pb-0"
+                      >
+                        <div className="flex justify-between items-start gap-2.5 sm:gap-3">
+                          <div className="flex items-baseline gap-2 sm:gap-2.5 min-w-0">
+                            <span className="text-sm sm:text-base font-bold text-primary shrink-0">
+                              <span className="font-inter tabular-nums">{item.quantity}</span>×
+                            </span>
+                            <span className="text-sm sm:text-base font-semibold text-foreground leading-snug break-words">
+                              {item.name}
+                            </span>
+                          </div>
+                          <Price
+                            cents={item.price * item.quantity}
+                            className="text-xs sm:text-sm font-semibold text-foreground shrink-0 ml-2"
+                          />
                         </div>
-                        <span className="text-xs sm:text-sm desktop:text-base font-semibold text-foreground shrink-0 tabular-nums ml-2">
-                          {formatPrice(item.price * item.quantity)}
-                        </span>
-                      </div>
 
-                      {/* Customizations / Toppings */}
-                      {Array.isArray(item.customizations) &&
-                        item.customizations.length > 0 && (
-                          <div className="pl-5 sm:pl-7 pt-1 sm:pt-1.5">
-                            <div className="inline-block max-w-full text-xs sm:text-sm font-medium text-foreground/90 bg-muted/80 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/40 leading-relaxed break-words">
+                        {/* Customizations / Toppings - size preserved per user instruction */}
+                        {Array.isArray(item.customizations) &&
+                          item.customizations.length > 0 && (
+                            <div className="pl-5 sm:pl-7 pt-1 sm:pt-1.5 flex flex-col items-start gap-1 sm:gap-1.5">
                               {item.customizations.map((c: any, cIdx: number) => {
                                 const stepName = c.stepName || c.step;
                                 const label =
@@ -682,10 +702,10 @@ export function LiveOrdersContent({
                                   (typeof c === "string" ? c : "");
                                 if (!label || !String(label).trim()) return null;
                                 return (
-                                  <span key={cIdx} className="inline">
-                                    {cIdx > 0 && (
-                                      <span className="text-muted-foreground/60">, </span>
-                                    )}
+                                  <span
+                                    key={cIdx}
+                                    className="inline-block max-w-full text-xs sm:text-sm font-medium text-foreground/90 bg-muted/80 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border/40 leading-relaxed break-words"
+                                  >
                                     {stepName ? (
                                       <span className="font-bold text-foreground mr-1">
                                         {stepName}:
@@ -694,93 +714,93 @@ export function LiveOrdersContent({
                                     <span>{label}</span>
                                     {typeof c.extraPrice === "number" &&
                                     c.extraPrice > 0 ? (
-                                      <span className="text-muted-foreground whitespace-nowrap ml-1">
-                                        (+{formatPrice(c.extraPrice)})
+                                      <span className="text-muted-foreground whitespace-nowrap ml-1 font-normal">
+                                        (+<Price cents={c.extraPrice} />)
                                       </span>
                                     ) : null}
                                   </span>
                                 );
                               })}
                             </div>
-                          </div>
-                        )}
+                          )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Total & Action Bar (Docked Footer) */}
+                <div className="p-3 sm:p-4 md:p-5 border-t border-border bg-card shrink-0 space-y-3 sm:space-y-4">
+                  {/* Total Sum */}
+                  <div className="flex items-baseline justify-between">
+                    <div className="flex items-baseline gap-1.5 sm:gap-2">
+                      <span className="text-sm sm:text-base font-bold text-foreground tracking-tight">
+                        {t("total")}
+                      </span>
+                      <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                        {t("taxNote")}
+                      </span>
                     </div>
-                  );
-                })}
-              </div>
-
-              {/* Total & Action Bar (Docked Footer) */}
-              <div className="p-3 sm:p-4 md:p-5 border-t border-border bg-card shrink-0 space-y-3 sm:space-y-4">
-                {/* Total Sum */}
-                <div className="flex items-baseline justify-between">
-                  <div className="flex items-baseline gap-1.5 sm:gap-2">
-                    <span className="text-base sm:text-lg desktop:text-xl font-black text-foreground tracking-tight">
-                      {t("total")}
-                    </span>
-                    <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
-                      {t("taxNote")}
-                    </span>
+                    <Price
+                      cents={selectedOrder.total}
+                      className="text-lg sm:text-xl font-black text-foreground"
+                    />
                   </div>
-                  <span className="text-xl sm:text-2xl font-black text-foreground tabular-nums">
-                    {formatPrice(selectedOrder.total)}
-                  </span>
-                </div>
 
-                {/* Touch Action Buttons */}
-                <div className="flex items-center gap-2 sm:gap-3">
-                  {selectedOrder.status === "in_progress" ? (
-                    <>
-                      <Button
-                        size="default"
-                        variant="outline"
-                        className="h-9 sm:h-11 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
-                        onClick={() => setOrderToCancel(selectedOrder.$id)}
-                      >
-                        <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
-                        {t("cancelOrder")}
-                      </Button>
-                      <Button
-                        size="default"
-                        className="flex-1 h-9 sm:h-11 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
-                        onClick={() =>
-                          handleStatusChange(selectedOrder.$id, "completed")
-                        }
-                      >
-                        <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
-                        {t("completeAction")}
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        size="default"
-                        variant="outline"
-                        className="h-9 sm:h-11 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
-                        onClick={() => setOrderToCancel(selectedOrder.$id)}
-                      >
-                        <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
-                        {t("cancelOrder")}
-                      </Button>
-                      <Button
-                        size="default"
-                        className="flex-1 h-9 sm:h-11 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
-                        onClick={() => {
-                          handleStatusChange(selectedOrder.$id, "in_progress");
-                          toast.success(t("inProgress"));
-                        }}
-                      >
-                        <ArrowCounterClockwise
-                          className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0"
-                          weight="bold"
-                        />
-                        {t("reopenOrder")}
-                      </Button>
-                    </>
-                  )}
+                  {/* Touch Action Buttons */}
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    {selectedOrder.status === "in_progress" ? (
+                      <>
+                        <Button
+                          size="default"
+                          variant="outline"
+                          className="h-9 sm:h-10 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
+                          onClick={() => setOrderToCancel(selectedOrder.$id)}
+                        >
+                          <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                          {t("cancelOrder")}
+                        </Button>
+                        <Button
+                          size="default"
+                          className="flex-1 h-9 sm:h-10 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
+                          onClick={() =>
+                            handleStatusChange(selectedOrder.$id, "completed")
+                          }
+                        >
+                          <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                          {t("completeAction")}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          size="default"
+                          variant="outline"
+                          className="h-9 sm:h-10 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
+                          onClick={() => setOrderToCancel(selectedOrder.$id)}
+                        >
+                          <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                          {t("cancelOrder")}
+                        </Button>
+                        <Button
+                          size="default"
+                          className="flex-1 h-9 sm:h-10 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
+                          onClick={() => {
+                            handleStatusChange(selectedOrder.$id, "in_progress");
+                            toast.success(t("inProgress"));
+                          }}
+                        >
+                          <ArrowCounterClockwise
+                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0"
+                            weight="bold"
+                          />
+                          {t("reopenOrder")}
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
+            ) : (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
               <ClipboardText className="w-12 h-12 text-muted-foreground/40 mb-3" />
               <h3 className="text-base font-bold text-foreground mb-1">
@@ -802,17 +822,17 @@ export function LiveOrdersContent({
       >
         <DialogContent
           showCloseButton={false}
-          className="bg-primary text-primary-foreground border-border/20 sm:max-w-md"
+          className="sm:max-w-md"
         >
           <DialogHeader>
-            <DialogTitle className="text-primary-foreground text-lg font-bold">
+            <DialogTitle className="text-lg font-bold">
               {targetOrderToCancel
                 ? t("cancelOrderTitle", {
                     orderNumber: targetOrderToCancel.orderNumber,
                   })
                 : t("cancelOrderTitleFallback")}
             </DialogTitle>
-            <DialogDescription className="text-primary-foreground/80 text-sm leading-relaxed mt-1">
+            <DialogDescription className="text-sm leading-relaxed mt-1">
               {t("cancelOrderWarning")}
             </DialogDescription>
           </DialogHeader>
@@ -820,7 +840,7 @@ export function LiveOrdersContent({
             <Button
               variant="outline"
               onClick={() => setOrderToCancel(null)}
-              className="flex-1 bg-transparent border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground font-semibold"
+              className="flex-1 rounded-full font-semibold"
             >
               {t("abortCancel")}
             </Button>
@@ -833,7 +853,7 @@ export function LiveOrdersContent({
                   toast.success(t("orderCancelledTitle"));
                 }
               }}
-              className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 gap-2 font-semibold"
+              className="flex-1 rounded-full gap-2 font-semibold"
             >
               <ReceiptX className="h-4 w-4 shrink-0" weight="bold" />
               <span>{t("confirmCancelOrder")}</span>

@@ -83,8 +83,8 @@ components:
     rounded: "{rounded.lg}"
     padding: "8px 16px"
   dialog:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.primary-foreground}"
+    backgroundColor: "{colors.background}"
+    textColor: "{colors.foreground}"
     rounded: "{rounded.xl}"
 ---
 
@@ -96,11 +96,12 @@ components:
 
 zakkig represents the intersection between high-performance operational utility and editorial architectural minimalism. Built for high-tempo hospitality environments—from lively bar counters to bustling pizza kitchens and seamless table ordering—the interface delivers instant readability, zero cognitive friction, and unmistakable confidence.
 
-The aesthetic philosophy rejects decorative fluff, low-contrast dark grays, and faux-glassmorphism. Instead, it commits to a bold, uncompromising True Black & White palette (`#000000` / `#ffffff`). Every element has a definitive boundary, purposeful typography, and crisp tactile feedback. All dialogs, sheets, and focused interaction layers invert the visual hierarchy, pulling the user into an immersive, focused cockpit.
+The aesthetic philosophy rejects decorative fluff, low-contrast dark grays, and faux-glassmorphism. Instead, it commits to a crisp, high-contrast palette (`#000000` / `#ffffff`) with clean light surfaces across dialogs, modals, and auth screens. Dark/black backgrounds are intentionally restrained and never overused, ensuring the webapp feels light, fresh, and airy. Every element has a definitive boundary, purposeful typography, and crisp tactile feedback.
 
 **Key Characteristics:**
 - **Absolute Contrast:** Deepest black (`#000000`) and pure white (`#ffffff`) as the core aesthetic engine; no dark gray substitutes (`#171717`, `#18181b`).
-- **Inverted Modal Architecture:** Dialogs, action drawers, and customization modals are strictly dark surfaces with crisp white typography.
+- **Light Surface Architecture:** Dialogs, action drawers, confirmation alerts, and auth pages render on clean light surfaces (`bg-background` / `bg-card`) with crisp borders (`border-border`). Pure black is reserved for focal points: the dashboard sidebar, primary CTAs, and key badges.
+- **Numerical Legibility (Inter for Digits):** All digits, prices, order counts, stats, and tabular data render in the Inter font (`tabular-nums`, `font-inter`) for optimal scanning.
 - **Iconographic Discipline:** Exclusively Phosphor Icons (`@phosphor-icons/react`); absolutely zero emojis across code, UI, or communications.
 - **Operational Speed:** Clear status badges, immediate touch targets, and persistent sticky carts designed for mobile one-handed guest ordering and kitchen glanceability.
 
@@ -109,8 +110,8 @@ The aesthetic philosophy rejects decorative fluff, low-contrast dark grays, and 
 The palette is strictly monochromatic and high-contrast, supported only by muted neutrals for borders and secondary metadata, plus a single semantic destructive red.
 
 ### Primary
-- **Absolute Black** (`#000000` / `oklch(0 0 0)`): The authoritative primary token. Used for primary buttons, inverted dialog containers, dashboard sidebar background, brand headers, and high-impact action badges.
-- **Absolute White** (`#ffffff` / `oklch(1 0 0)`): Primary canvas background, inverted dialog typography, and primary button labels.
+- **Absolute Black** (`#000000` / `oklch(0 0 0)`): The authoritative primary token. Used for primary buttons, dashboard sidebar background, brand headers, and high-impact action badges.
+- **Absolute White** (`#ffffff` / `oklch(1 0 0)`): Primary canvas background, dialog surfaces, and primary button labels.
 
 ### Neutral
 - **Muted Surface** (`#f7f7f7` / `oklch(0.97 0 0)`): Subtle secondary button backgrounds, input backdrops, and card hover fills.
@@ -122,9 +123,9 @@ The palette is strictly monochromatic and high-contrast, supported only by muted
 - **Destructive Red** (`#dc2626` / `oklch(0.577 0.245 27.325)`): Reserved exclusively for irreversible actions (e.g. deleting categories, cancelling orders, deleting accounts).
 
 ### Named Rules
-**The True Black Rule.** Never substitute `#000000` with dark charcoal or off-black hex codes (such as `#171717`, `#18181b`, `#121212`, or `zinc-900`). Primary buttons, dark dialogs, sidebar panels, and email highlights must resolve to pure `#000000`.
+**The True Black Rule.** Never substitute `#000000` with dark charcoal or off-black hex codes (such as `#171717`, `#18181b`, `#121212`, or `zinc-900`). Primary buttons, sidebar panels, and brand highlights must resolve to pure `#000000`.
 
-**The Inverted Dialog Rule.** Every modal, confirmation dialog, and customization sheet across both the guest frontend and merchant dashboard must render on a dark background (`bg-primary text-primary-foreground`) with a dimming overlay (`bg-black/50 backdrop-blur-sm`). No dialog in the application may render with a light background.
+**The Light Surface & Dialog Rule.** Dark/black backgrounds must never be overused. Every modal, confirmation dialog, customization sheet, and auth page across both the guest frontend and merchant dashboard must render on a light background (`bg-background text-foreground` or `bg-card text-card-foreground`) with a subtle dimming backdrop (`bg-black/50 backdrop-blur-xs`) and clean borders (`border-border`). Pure black is reserved for high-impact accents (sidebar, primary CTAs).
 
 ## Typography
 
@@ -144,6 +145,8 @@ The palette is strictly monochromatic and high-contrast, supported only by muted
 
 **The Strict i18n Rule.** Never hardcode text strings in JSX or emails. All user-facing strings must be localized via `next-intl` or centralized translation dictionaries (`t("key")`).
 
+**The Numerical Typography Rule (Strictly Digits Only in Inter).** Poppins is the primary font for everything across `webapp` and `website`. Strictly and exclusively numeric digits (`0-9`) and decimal separators (`.` or `,`) render in **Inter** (`font-inter tabular-nums`) for maximum legibility. Currency symbols (`€`), price prefixes (`ab`, `+`), units, and words remain in Poppins. All price displays must use the `<Price>` component.
+
 ## Layout
 
 - **Spacing Rhythm:** Based on an 8pt spatial grid with a compact base spacing unit (`0.3rem` / `4.8px`). Common paddings: `p-3`, `p-4`, `p-6`.
@@ -158,15 +161,15 @@ The system uses a flat, border-defined architectural spatial model. Surfaces dif
 ### Shadow Vocabulary
 - **Shadow Zero / Flat** (`none`): Standard state for cards, tables, inputs, and inline controls. Separation is established via `border-border`.
 - **Subtle Ambient Lift** (`shadow-xs` / `0 1px 3px rgba(0,0,0,0.05)`): Light floating elevation for interactive menu cards and dropdown menus.
-- **Dialog Modal Lift** (`shadow-2xl` / `0 25px 50px -12px rgba(0,0,0,0.5)`): Inverted modal elevation above the dimmed backdrop overlay.
+- **Dialog Modal Lift** (`shadow-2xl` / `0 25px 50px -12px rgba(0,0,0,0.25)`): Light modal elevation above the dimmed backdrop overlay.
 
 ### Named Rules
-**The Border-Over-Shadow Rule.** Structural containment must always be achieved through a clean 1px border stroke (`border border-border` or `border border-white/15` on dark surfaces) rather than heavy drop shadows.
+**The Border-Over-Shadow Rule.** Structural containment must always be achieved through a clean 1px border stroke (`border border-border`) rather than heavy drop shadows.
 
 ## Shapes
 
 - **Base Radius:** `--radius: 1.5rem` (24px).
-- **Cards & Modals:** `rounded-xl` (16px) to `rounded-2xl` (20px) for container enclosures.
+- **Cards & Modals:** `rounded-2xl` (20px) to `rounded-3xl` (24px) for container enclosures.
 - **Buttons & Inputs:** `rounded-lg` (8px to 12px) for form elements; `rounded-full` for pills and quick-action chips.
 - **Item Image Banner:** Full-width top banner with `overflow-hidden`, perfectly clipped to the container top corners with `object-cover`.
 
@@ -175,19 +178,21 @@ The system uses a flat, border-defined architectural spatial model. Surfaces dif
 ### Buttons
 - **Primary Button:** `bg-black text-white hover:opacity-90 active:scale-[0.98] transition-all rounded-lg font-medium px-4 py-2` (or `rounded-full` for pill CTAs).
 - **Secondary Button:** `bg-secondary text-secondary-foreground hover:bg-muted active:scale-[0.98] rounded-lg px-4 py-2`.
-- **Inverted Action Button (inside Dark Modals):** `bg-white text-black hover:bg-zinc-100 font-semibold rounded-xl px-5 py-3.5`.
-- **Destructive Button:** `bg-destructive/10 text-destructive hover:bg-destructive/20 rounded-lg px-4 py-2`.
+- **Dialog Action Button:** `bg-black text-white hover:bg-neutral-800 font-semibold rounded-full px-5 py-3.5 transition-transform active:scale-[0.98]`.
+- **Destructive Button:** `bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-4 py-2`.
 
-### Inverted Dialogs & Sheets
-- **Container:** `bg-primary text-primary-foreground border border-white/15 rounded-2xl shadow-2xl p-6 max-w-lg`.
+### Light Dialogs & Sheets
+- **Container:** `bg-background text-foreground border border-border rounded-2xl sm:rounded-3xl shadow-2xl p-6 max-w-lg`.
 - **Overlay:** `fixed inset-0 bg-black/50 backdrop-blur-xs`.
-- **Header:** High-contrast white title with close button (`CaretDown` / `X` icon in `16px`, `weight="bold"`).
-- **Footer:** Bottom action bar with border divider `border-white/10`, hosting full-width action buttons with left-aligned label and right-aligned dynamic price.
+- **Header:** High-contrast title with close button (`CaretDown` / `X` icon in `16px`, `weight="bold"`).
+- **Footer:** Bottom action bar with border divider `border-border`, hosting full-width action buttons with left-aligned label and right-aligned dynamic price.
 
-### Floating Cart Banner (Guest Ordering)
-- **Container:** `fixed bottom-4 left-4 right-4 max-w-lg mx-auto bg-black text-white rounded-full p-2 pl-4 pr-3 flex items-center justify-between shadow-xl z-40`.
-- **Item Badge:** Small pill badge beside the cart icon indicating item count.
-- **Title:** Centered "Zum Warenkorb" label between icon and price.
+### Floating Cart Bottom Card (Guest Ordering)
+- **Container Card:** Slides up from the bottom when `itemCount > 0`. Styled as a crisp white bottom card (`bg-background border-t border-border rounded-t-[24px] shadow-[0_-8px_30px_rgba(0,0,0,0.08)]`).
+- **Action Button:** Full-width pill button (`bg-black text-white rounded-full h-12 sm:h-14 px-4 sm:px-5 flex items-center justify-between`) containing:
+  - Left: Circular quantity badge (`w-6 h-6 rounded-full bg-white text-black font-inter tabular-nums font-bold flex items-center justify-center text-xs sm:text-sm`).
+  - Center: "Zum Warenkorb" label.
+  - Right: Formatted total price in Inter font.
 - **Visibility:** Automatically hidden when cart is empty; mounts smoothly when `itemCount > 0`.
 
 ### Menu & Availability Item Cards
@@ -199,14 +204,16 @@ The system uses a flat, border-defined architectural spatial model. Surfaces dif
 - **Canvas:** `#f4f4f5` outer background, `#ffffff` card container (`border-radius: 24px`).
 - **Brand Header:** Center-aligned or left-aligned `https://www.zakkig.de/full.svg` brand logo (`height: 56px`).
 - **Headline & Links:** `#000000` bold typography, underlined links.
-- **Code Box:** `#000000` rounded container (`border-radius: 16px`) with crisp `#ffffff` 48px tracked digits.
+- **Code Box:** `#000000` rounded container (`border-radius: 16px`) with crisp `#ffffff` 48px tracked digits in Inter.
 - **Action Button:** `#000000` rounded button with white text.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** use `#000000` and `#ffffff` as the unambiguous foundation for all primary UI surfaces.
-- **Do** ensure every dialog, modal, and customization bottom sheet uses the inverted dark theme (`bg-black text-white`).
+- **Do** ensure all dialogs, modals, customization sheets, and auth screens render on clean light surfaces (`bg-background` / `bg-card`).
+- **Do** render all numbers, prices, counters, and statistics in Inter (`tabular-nums font-inter`).
+- **Do** wrap the guest floating cart button in a clean bottom card container that slides up from the bottom.
 - **Do** use `@phosphor-icons/react` icons exclusively with standard weights (`regular` or `bold`).
 - **Do** position toast notifications strictly at `top-center`.
 - **Do** keep form error messages left-aligned with `text-destructive text-sm font-medium` without alert boxes or icons.
@@ -216,7 +223,8 @@ The system uses a flat, border-defined architectural spatial model. Surfaces dif
 ### Don't:
 - **Don't** use emojis anywhere in the codebase, UI, comments, or documentation.
 - **Don't** introduce dark charcoal values like `#171717`, `#18181b`, or `zinc-900` for primary black elements.
-- **Don't** render light-themed dialogs or modals anywhere in the application.
+- **Don't** overuse black backgrounds; preserve a light, fresh, airy feel across the entire application.
+- **Don't** render dark inverted dialogs or modals anywhere in the application.
 - **Don't** hardcode language strings directly in JSX or templates; always use `t("key")`.
 - **Don't** use arrow icons next to prices in the floating cart banner.
 - **Don't** add decorative AI comment dividers (`// ──────...──────`) or temporary debug logs.

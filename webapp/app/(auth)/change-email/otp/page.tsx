@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
+  CardFooter,
   CardTitle,
   CardDescription,
   CardContent,
@@ -92,9 +93,9 @@ function ChangeEmailOtpForm() {
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl">{t("verifyLogin" as any)}</CardTitle>
-        <CardDescription className="text-primary-foreground/80">
-          {t("verifyLoginDesc" as any, { email: email || "" })}
+        <CardTitle className="text-2xl font-bold text-foreground">{t("verifyEmail" as any)}</CardTitle>
+        <CardDescription className="text-muted-foreground">
+          {t("verifyEmailDesc" as any, { email: email || "" })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -120,40 +121,41 @@ function ChangeEmailOtpForm() {
                 <InputOTPGroup className="w-full flex gap-2">
                   <InputOTPSlot
                     index={0}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={1}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={2}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={3}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={4}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={5}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
                   />
                 </InputOTPGroup>
               </InputOTP>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-1.5 text-xs text-primary-foreground/75 font-medium -mt-1 mb-1">
+          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground font-medium -mt-1 mb-1">
             <Clock className="w-3.5 h-3.5" />
             <span>{t("otpValidDuration" as any)}</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button
               type="button"
-              className="w-full sm:w-1/2 h-11 bg-transparent border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 disabled:border-primary-foreground/10 disabled:text-primary-foreground/40 disabled:opacity-100"
+              variant="outline"
+              className="w-full sm:w-1/2 h-11 rounded-full font-semibold"
               disabled={countdown > 0}
               onClick={handleResendOtp}
             >
@@ -163,7 +165,7 @@ function ChangeEmailOtpForm() {
             </Button>
             <Button
               type="submit"
-              className="w-full sm:w-1/2 gap-2 h-11 bg-primary-foreground text-primary hover:bg-primary-foreground/90 disabled:bg-primary-foreground/20 disabled:text-primary-foreground/50 disabled:opacity-100"
+              className="w-full sm:w-1/2 gap-2 h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold disabled:opacity-40 transition-all active:scale-[0.98]"
               disabled={isVerifying || otp.length < 6}
             >
               {isVerifying ? (
@@ -181,6 +183,18 @@ function ChangeEmailOtpForm() {
           </div>
         </form>
       </CardContent>
+
+      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border pt-6">
+        <p className="text-sm text-muted-foreground">
+          {t("changedMind" as any)}{" "}
+          <Link
+            href="/dashboard"
+            className="font-semibold text-foreground underline-offset-4 hover:underline"
+          >
+            {t("backToDashboard" as any)}
+          </Link>
+        </p>
+      </CardFooter>
     </>
   );
 }
@@ -189,8 +203,8 @@ export default function ChangeEmailOtpPage() {
   const { t } = useTranslation();
 
   return (
-    <Card className="w-full bg-primary text-primary-foreground border-border/5 shadow-none sm:shadow-sm">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-primary-foreground/10">
+    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
+      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl" as any)} target="_blank" rel="noreferrer">
           <Image
             src="https://www.zakkig.de/full.svg"
@@ -199,12 +213,12 @@ export default function ChangeEmailOtpPage() {
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity brightness-0 invert"
+            className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
         <LanguageSwitcher
           variant="outline"
-          className="h-10 px-3 bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          className="h-10 px-3"
         />
       </div>
 
@@ -212,7 +226,7 @@ export default function ChangeEmailOtpPage() {
         fallback={
           <CardContent>
             <div className="h-40 flex items-center justify-center">
-              <CircleNotch className="w-8 h-8 animate-spin text-primary-foreground/50" />
+              <CircleNotch className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
           </CardContent>
         }

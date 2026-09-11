@@ -53,6 +53,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useTranslation, formatPrice } from "@/lib/i18n";
+import { Price } from "@/components/ui/price";
 import { exportOrdersCSVAction } from "@/actions/order-actions";
 import type { Order, OrderItem } from "@/lib/types";
 
@@ -503,10 +504,10 @@ export function ArchiveContent({
                             </Tooltip>
                           </TooltipProvider>
                         </TableCell>
-                        <TableCell className="font-medium tabular-nums text-sm">
+                        <TableCell className="font-medium font-inter tabular-nums text-sm">
                           {order.orderNumber}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap text-sm">
+                        <TableCell className="whitespace-nowrap text-sm font-inter tabular-nums">
                           <span suppressHydrationWarning>
                             {dateFormatter.format(
                               new Date(order.$createdAt || order._creationTime || Date.now())
@@ -514,9 +515,16 @@ export function ArchiveContent({
                           </span>
                         </TableCell>
                         <TableCell className="text-sm font-medium">
-                          {order.type === "dine-in" || order.tableNumber
-                            ? `${t("toTable")} ${order.tableNumber || ""}`.trim()
-                            : t("toPickUp")}
+                          {order.type === "dine-in" || order.tableNumber ? (
+                            <>
+                              {t("toTable")}{" "}
+                              <span className="font-inter tabular-nums">
+                                {order.tableNumber || ""}
+                              </span>
+                            </>
+                          ) : (
+                            t("toPickUp")
+                          )}
                         </TableCell>
                         <TableCell className="text-sm min-w-[280px]">
                           <div className="flex flex-col gap-2 py-1">
@@ -529,7 +537,7 @@ export function ArchiveContent({
                                 >
                                   <div className="leading-snug">
                                     <span className="font-semibold text-foreground">
-                                      {item.quantity}×
+                                      <span className="font-inter tabular-nums">{item.quantity}</span>×
                                     </span>{" "}
                                     <span className="font-medium text-foreground">
                                       {item.name}
@@ -560,7 +568,7 @@ export function ArchiveContent({
                                               <>
                                                 {" "}
                                                 <span className="text-muted-foreground/80 font-normal whitespace-nowrap">
-                                                  (+{formatPrice(c.extraPrice)})
+                                                  (+<Price cents={c.extraPrice} />)
                                                 </span>
                                               </>
                                             )}
@@ -574,8 +582,8 @@ export function ArchiveContent({
                             })}
                           </div>
                         </TableCell>
-                        <TableCell className="text-right font-medium tabular-nums">
-                          {formatPrice(order.total)}
+                        <TableCell className="text-right font-medium">
+                          <Price cents={order.total} />
                         </TableCell>
                         <TableCell>
                           <Badge
@@ -609,9 +617,9 @@ export function ArchiveContent({
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={
-                  <Button
+                    <Button
                     variant="outline"
-                    className="w-[80px] justify-between"
+                    className="w-[80px] justify-between font-inter tabular-nums"
                   >
                     {itemsPerPage}
                     <CaretDown className="h-4 w-4 opacity-50" />
@@ -622,6 +630,7 @@ export function ArchiveContent({
                 {[10, 20, 50, 100].map((size) => (
                   <DropdownMenuItem
                     key={size}
+                    className="font-inter tabular-nums"
                     onClick={() => {
                       setItemsPerPage(size);
                       setCurrentPage(1);
@@ -670,6 +679,7 @@ export function ArchiveContent({
                                 setCurrentPage(page);
                               }}
                               isActive={currentPage === page}
+                              className="font-inter tabular-nums"
                             >
                               {page}
                             </PaginationLink>

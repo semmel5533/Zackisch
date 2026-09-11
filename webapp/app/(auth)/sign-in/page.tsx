@@ -111,8 +111,8 @@ function OtpForm({ state }: { state: any }) {
   };
 
   return (
-    <Card className="w-full bg-primary text-primary-foreground border-none shadow-none sm:border-primary-foreground/10 sm:shadow-sm">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-primary-foreground/10">
+    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
+      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
           <Image
             src="https://www.zakkig.de/full.svg"
@@ -120,17 +120,17 @@ function OtpForm({ state }: { state: any }) {
             width={120}
             height={40}
             priority
-            className="w-auto h-8 hover:opacity-80 transition-opacity brightness-0 invert"
+            className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
         <LanguageSwitcher
           variant="outline"
-          className="h-10 px-3 bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          className="h-10 px-3"
         />
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl">{t("verifyLogin")}</CardTitle>
-        <CardDescription className="text-primary-foreground/80">
+        <CardTitle className="text-2xl font-bold text-foreground">{t("verifyLogin")}</CardTitle>
+        <CardDescription className="text-muted-foreground">
           {t("verifyLoginDesc", { email: state.email || "" })}
         </CardDescription>
       </CardHeader>
@@ -172,40 +172,41 @@ function OtpForm({ state }: { state: any }) {
                 <InputOTPGroup className="w-full flex gap-2">
                   <InputOTPSlot
                     index={0}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={1}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={2}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={3}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={4}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
                   />
                   <InputOTPSlot
                     index={5}
-                    className="h-14 flex-1 text-2xl rounded-md border-primary-foreground/20 text-primary-foreground"
+                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
                   />
                 </InputOTPGroup>
               </InputOTP>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-1.5 text-xs text-primary-foreground/75 font-medium -mt-1 mb-1">
+          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground font-medium -mt-1 mb-1">
             <Clock className="w-3.5 h-3.5" />
             <span>{t("otpValidDuration")}</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button
               type="button"
-              className={`w-full ${isLockedOut ? "sm:w-full font-semibold bg-primary-foreground text-primary hover:bg-primary-foreground/90" : "sm:w-1/2 bg-transparent border border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 disabled:border-primary-foreground/10 disabled:text-primary-foreground/40 disabled:opacity-100"} h-11 transition-all`}
+              variant={isLockedOut ? "default" : "outline"}
+              className={`w-full ${isLockedOut ? "sm:w-full font-semibold" : "sm:w-1/2 font-semibold"} h-11 rounded-full transition-all`}
               disabled={countdown > 0 && !isLockedOut}
               onClick={handleResendOtp}
             >
@@ -218,7 +219,7 @@ function OtpForm({ state }: { state: any }) {
             {!isLockedOut && (
               <Button
                 type="submit"
-                className="w-full sm:w-1/2 gap-2 h-11 bg-primary-foreground text-primary hover:bg-primary-foreground/90 disabled:bg-primary-foreground/20 disabled:text-primary-foreground/50 disabled:opacity-100"
+                className="w-full sm:w-1/2 gap-2 h-11 rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
                 disabled={isVerifying || otp.length < 6}
               >
                 {isVerifying ? (
@@ -282,8 +283,8 @@ function SignInForm({
   };
 
   return (
-    <Card className="w-full bg-primary text-primary-foreground border-none shadow-none sm:border-primary-foreground/10 sm:shadow-sm">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-primary-foreground/10">
+    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
+      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
           <Image
             src="https://www.zakkig.de/full.svg"
@@ -292,17 +293,17 @@ function SignInForm({
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity brightness-0 invert"
+            className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
         <LanguageSwitcher
           variant="outline"
-          className="h-10 px-3 bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          className="h-10 px-3"
         />
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl">{t("signIn")}</CardTitle>
-        <CardDescription className="text-primary-foreground/80">
+        <CardTitle className="text-2xl font-bold text-foreground">{t("signIn")}</CardTitle>
+        <CardDescription className="text-muted-foreground">
           {t("signInDescription")}
         </CardDescription>
       </CardHeader>
@@ -315,7 +316,7 @@ function SignInForm({
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="email"
-              className={`text-sm font-semibold ${fieldErrors.email ? "text-destructive" : ""}`}
+              className={`text-sm font-semibold ${fieldErrors.email ? "text-destructive" : "text-foreground"}`}
             >
               {t("email")}
             </label>
@@ -326,7 +327,7 @@ function SignInForm({
               placeholder={t("emailPlaceholder")}
               autoComplete="email"
               maxLength={100}
-              className={`h-11 border-primary-foreground/20 placeholder:text-primary-foreground/50 text-primary-foreground ${fieldErrors.email ? "border-destructive" : ""}`}
+              className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.email ? "border-destructive" : ""}`}
             />
             {fieldErrors.email && (
               <span className="text-sm text-destructive">
@@ -339,13 +340,13 @@ function SignInForm({
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className={`text-sm font-semibold ${fieldErrors.password ? "text-destructive" : ""}`}
+                className={`text-sm font-semibold ${fieldErrors.password ? "text-destructive" : "text-foreground"}`}
               >
                 {t("password")}
               </label>
               <Link
                 href="/reset-password"
-                className="text-sm font-medium text-primary-foreground underline-offset-4 hover:underline"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
               >
                 {t("forgotPassword")}
               </Link>
@@ -357,7 +358,7 @@ function SignInForm({
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 maxLength={100}
-                className={`h-11 border-primary-foreground/20 placeholder:text-primary-foreground/50 text-primary-foreground ${fieldErrors.password ? "border-destructive pr-10" : "pr-10"}`}
+                className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.password ? "border-destructive pr-10" : "pr-10"}`}
               />
               <button
                 className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
@@ -367,12 +368,12 @@ function SignInForm({
               >
                 {showPassword ? (
                   <EyeSlash
-                    className="w-5 h-5 text-primary-foreground/50"
+                    className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
                     weight="bold"
                   />
                 ) : (
                   <Eye
-                    className="w-5 h-5 text-primary-foreground/50"
+                    className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
                     weight="bold"
                   />
                 )}
@@ -387,7 +388,7 @@ function SignInForm({
 
           <Button
             type="submit"
-            className="w-full h-11 gap-2 text-base bg-primary-foreground text-primary hover:bg-primary-foreground/90 disabled:bg-primary-foreground/20 disabled:text-primary-foreground/50 disabled:opacity-100"
+            className="w-full h-11 gap-2 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 transition-all active:scale-[0.98]"
             disabled={isPending}
           >
             {isPending ? (
@@ -405,12 +406,12 @@ function SignInForm({
         </form>
       </CardContent>
 
-      <CardFooter className="justify-center pb-6 bg-transparent border-t border-primary-foreground/10">
-        <p className="text-sm text-primary-foreground/80">
+      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border">
+        <p className="text-sm text-muted-foreground">
           {t("noAccount")}{" "}
           <Link
             href="/sign-up"
-            className="font-semibold text-primary-foreground underline-offset-4 hover:underline"
+            className="font-semibold text-foreground underline-offset-4 hover:underline"
           >
             {t("signUp")}
           </Link>

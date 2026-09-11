@@ -40,7 +40,7 @@ function ScaledText({ text, className }: { text: string; className?: string }) {
         textAnchor="middle"
         dominantBaseline="central"
         fill="currentColor"
-        className="font-black uppercase tracking-tighter"
+        className="font-black uppercase tracking-tighter font-inter tabular-nums"
       >
         {text}
       </text>
@@ -76,7 +76,7 @@ function QrFace({
           size={280}
           level="H"
           background="#FFFFFF"
-          dataModulesSettings={{ color: "#000000", style: "square-sm" }}
+          dataModulesSettings={{ color: "#000000", style: "square" }}
           finderPatternOuterSettings={{ color: "#000000", style: "square" }}
           finderPatternInnerSettings={{ color: "#000000", style: "square" }}
           imageSettings={{

@@ -35,7 +35,7 @@ function DialogCloseButton({
           variant="ghost"
           size="icon-sm"
           className={cn(
-            "rounded-full text-current/70 hover:text-current hover:bg-current/10 shrink-0",
+            "rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0",
             className,
           )}
           {...props}
@@ -56,7 +56,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/50 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-black/50 supports-backdrop-filter:backdrop-blur-xs transition-opacity duration-150 ease-out data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className,
       )}
       {...props}
@@ -78,7 +78,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-primary text-primary-foreground border border-primary-foreground/15 p-4 text-sm duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 shadow-2xl",
+          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-[20px] sm:rounded-[24px] bg-background text-foreground border border-border p-5 sm:p-6 text-sm outline-none sm:max-w-sm shadow-2xl transition-all duration-150 ease-out data-[starting-style]:opacity-0 data-[starting-style]:scale-95 data-[ending-style]:opacity-0 data-[ending-style]:scale-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className,
         )}
         {...props}
@@ -90,7 +90,7 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-3 right-3 rounded-full text-current/70 hover:text-current hover:bg-current/10"
+                className="absolute top-4 right-4 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
                 size="icon-sm"
               />
             }
@@ -126,7 +126,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t border-primary-foreground/10 bg-primary-foreground/[0.03] p-4 sm:flex-row sm:justify-end",
+        "-mx-5 sm:-mx-6 -mb-5 sm:-mb-6 flex flex-col-reverse gap-2 rounded-b-[20px] sm:rounded-b-[24px] border-t border-border bg-muted/40 p-4 sm:p-5 sm:flex-row sm:justify-end",
         className,
       )}
       {...props}
@@ -137,7 +137,7 @@ function DialogFooter({
           render={
             <Button
               variant="outline"
-              className="bg-transparent border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground"
+              className="border-border hover:bg-muted text-foreground"
             />
           }
         >
@@ -153,7 +153,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn(
-        "font-heading text-lg leading-none font-bold text-primary-foreground",
+        "font-heading text-lg leading-none font-bold text-foreground",
         className,
       )}
       {...props}
@@ -169,7 +169,7 @@ function DialogDescription({
     <DialogPrimitive.Description
       data-slot="dialog-description"
       className={cn(
-        "text-sm text-primary-foreground/75 *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-primary-foreground",
+        "text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
         className,
       )}
       {...props}

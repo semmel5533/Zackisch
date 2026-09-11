@@ -59,13 +59,13 @@ const ChartInner = dynamic(
               tickLine={false}
               tickMargin={8}
               ticks={xAxisTicks}
-              tick={{ fontSize: 12, fill: "currentColor", opacity: 0.5 }}
+              tick={{ fontSize: 12, fill: "currentColor", opacity: 0.5, fontFamily: "var(--font-inter)" }}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
               width={20}
-              tick={{ fontSize: 12, fill: "currentColor", opacity: 0.5 }}
+              tick={{ fontSize: 12, fill: "currentColor", opacity: 0.5, fontFamily: "var(--font-inter)" }}
             />
             <ChartTooltip
               cursor={false}
