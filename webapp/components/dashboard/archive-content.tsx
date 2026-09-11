@@ -516,12 +516,12 @@ export function ArchiveContent({
                         </TableCell>
                         <TableCell className="text-sm font-medium">
                           {order.type === "dine-in" || order.tableNumber ? (
-                            <>
-                              {t("toTable")}{" "}
+                            <span className="inline-flex items-center gap-1">
+                              <span>{t("toTable")}</span>
                               <span className="font-inter tabular-nums">
                                 {order.tableNumber || ""}
                               </span>
-                            </>
+                            </span>
                           ) : (
                             t("toPickUp")
                           )}

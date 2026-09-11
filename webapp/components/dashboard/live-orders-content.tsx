@@ -325,13 +325,13 @@ export function LiveOrdersContent({
           </span>
           <span
             className={cn(
-              "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md shrink-0 inline-flex items-center border bg-muted text-foreground/80 border-transparent",
+              "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md shrink-0 inline-flex items-center gap-1 border bg-muted text-foreground/80 border-transparent",
               isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
             )}
           >
             {order.type === "dine-in" || order.tableNumber ? (
               <>
-                {t("table")}{" "}
+                <span>{t("table")}</span>
                 <span className="font-inter tabular-nums">
                   {order.tableNumber || ""}
                 </span>
@@ -625,10 +625,10 @@ export function LiveOrdersContent({
                           ? t("completed")
                           : t("inProgress")}
                       </span>
-                      <span className="text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0">
+                      <span className="text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border/40 shrink-0 inline-flex items-center gap-1">
                         {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
                           <>
-                            {t("toTable")}{" "}
+                            <span>{t("toTable")}</span>
                             <span className="font-inter tabular-nums">
                               {selectedOrder.tableNumber || ""}
                             </span>
