@@ -62,18 +62,19 @@ function QrFace({
   withWord: string;
 }) {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-[2px] text-black">
-      <div className="flex w-[78%] flex-col gap-[2px] text-center">
-        <ScaledText text={`${title1} ${title2}`} />
-        <p className="w-full text-right text-base leading-none font-black uppercase">{contextWord}</p>
+    <div className="flex h-full w-full flex-col items-center justify-center text-black">
+      <div className="flex w-[78%] flex-col gap-[3px] text-center">
+        <ScaledText text={title1} />
+        <ScaledText text={title2} />
+        <p className="w-full text-right text-base leading-none font-black uppercase -my-[2.5px]">{contextWord}</p>
         <ScaledText text={contextValue} />
-        <p className="w-full text-left text-base leading-none font-black uppercase">{withWord}</p>
+        <p className="w-full text-left text-base leading-none font-black uppercase -my-[2.5px]">{withWord}</p>
       </div>
 
-      <div className="overflow-hidden rounded-xl bg-white [&_svg]:block [&_svg]:[shape-rendering:crispEdges]">
+      <div className="mt-[3px] overflow-hidden rounded-xl bg-white [&_svg]:block [&_svg]:[shape-rendering:crispEdges]">
         <ReactQRCode
           value={DEMO_URL}
-          size={280}
+          size={270}
           level="H"
           background="#FFFFFF"
           dataModulesSettings={{ color: "#000000", style: "square-sm" }}
@@ -81,8 +82,8 @@ function QrFace({
           finderPatternInnerSettings={{ color: "#000000", style: "square" }}
           imageSettings={{
             src: "https://www.zakkig.de/full_qr.png",
-            height: 50,
-            width: 157,
+            height: 48,
+            width: 151,
             excavate: true,
           }}
         />
