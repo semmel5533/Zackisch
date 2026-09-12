@@ -216,10 +216,7 @@ export default function ChangeEmailOtpPage() {
             className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
-        <RegionLanguageSwitcher
-          variant="outline"
-          className="h-10 px-3"
-        />
+        <RegionLanguageSwitcher variant="outline" />
       </div>
 
       <Suspense

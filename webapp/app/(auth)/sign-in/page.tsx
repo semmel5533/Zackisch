@@ -123,10 +123,7 @@ function OtpForm({ state }: { state: any }) {
             className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
-        <RegionLanguageSwitcher
-          variant="outline"
-          className="h-10 px-3"
-        />
+        <RegionLanguageSwitcher variant="outline" />
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">
         <CardTitle className="text-2xl font-bold text-foreground">{t("verifyLogin")}</CardTitle>
@@ -297,7 +294,7 @@ function SignInForm({
           />
         </Link>
         <div className="flex items-center gap-2">
-          <RegionLanguageSwitcher variant="outline" className="h-10 px-3" />
+          <RegionLanguageSwitcher variant="outline" />
         </div>
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">

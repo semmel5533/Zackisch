@@ -185,10 +185,7 @@ export default function ChangeEmailConfirmPage() {
             className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
-        <RegionLanguageSwitcher
-          variant="outline"
-          className="h-10 px-3 bg-card border-border text-foreground hover:bg-muted hover:text-foreground"
-        />
+        <RegionLanguageSwitcher variant="outline" />
       </div>
 
       <Suspense
