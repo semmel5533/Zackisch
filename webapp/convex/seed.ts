@@ -417,7 +417,7 @@ export const seedDemoProfile = internalMutation({
       .first();
 
     const passwordHashCom =
-      "b8698daec1b11f473b94eb1ef988ee7f:3123a83536bb3dd270582060b81cb5248470b69f8880d1f1a3c3f694c97e5ace34b090173db452a877dc566d793bc31938040504039073f6275be6cc0392bd8f";
+      "b214787761be4824a10ee92a39d0ab1a:d7635764984256caba819516041e2bf4160fe346a6e353401fbbb647954a4f7a804f3936cea239db07a20041ee80d3660ac841fadd9fc88d43e0679f590500f7";
 
     if (!existingAccountCom) {
       await ctx.db.insert("authAccounts", {
