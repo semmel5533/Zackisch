@@ -9,11 +9,6 @@ import { convexServer } from "@/lib/convex/server";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { redirect } from "next/navigation";
-import {
-  sendDeleteAccountEmail,
-  sendChangeEmailLink,
-  sendEmailOtp,
-} from "@/lib/email";
 import { SESSION_COOKIE_NAME, MAX_IMAGE_SIZE_BYTES, isAllowedImageFile } from "@/lib/constants";
 
 export interface SettingsActionState {
@@ -125,24 +120,15 @@ export async function requestAccountDeletionAction() {
     const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     const locale = cookieStore.get("NEXT_LOCALE")?.value || "de";
 
-    const res = await convexServer.mutation(api.users.createAccountDeletionToken, {
+    const res = await convexServer.mutation(api.users.requestAccountDeletionEmail, {
       userId: user._id,
       sessionToken,
-    });
-
-    if (!res.success || !res.token || !res.email) {
-      return { success: false, error: res.error || "Token konnte nicht erstellt werden." };
-    }
-
-    const deleteUrl = `${appUrl}/delete-account?userId=${user._id}&token=${res.token}`;
-    const emailResult = await sendDeleteAccountEmail({
-      to: res.email,
-      deleteUrl,
+      appUrl,
       locale,
     });
 
-    if (!emailResult.success) {
-      return { success: false, error: emailResult.error || "Bestätigungs-E-Mail konnte nicht gesendet werden." };
+    if (!res.success) {
+      return { success: false, error: res.error || "Bestätigungs-E-Mail konnte nicht gesendet werden." };
     }
 
     return { success: true };
@@ -190,24 +176,15 @@ export async function requestEmailChangeAction() {
     const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     const locale = cookieStore.get("NEXT_LOCALE")?.value || "de";
 
-    const res = await convexServer.mutation(api.users.createEmailChangeToken, {
+    const res = await convexServer.mutation(api.users.requestEmailChangeEmail, {
       userId: user._id,
       sessionToken,
-    });
-
-    if (!res.success || !res.token || !res.email) {
-      return { success: false, error: res.error || "Token konnte nicht erstellt werden." };
-    }
-
-    const changeUrl = `${appUrl}/change-email/confirm?userId=${user._id}&token=${res.token}`;
-    const emailResult = await sendChangeEmailLink({
-      to: res.email,
-      changeUrl,
+      appUrl,
       locale,
     });
 
-    if (!emailResult.success) {
-      return { success: false, error: emailResult.error || "Bestätigungs-E-Mail konnte nicht gesendet werden." };
+    if (!res.success) {
+      return { success: false, error: res.error || "Bestätigungs-E-Mail konnte nicht gesendet werden." };
     }
 
     return { success: true };
@@ -233,27 +210,15 @@ export async function sendEmailChangeOtpAction(
     const cookieStore = await cookies();
     const locale = cookieStore.get("NEXT_LOCALE")?.value || "de";
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    const res = await convexServer.mutation(api.users.storeNewEmailOtp, {
+    const res = await convexServer.mutation(api.users.sendEmailChangeOtpWithEmail, {
       userId: userId as Id<"users">,
       token,
       newEmail,
-      otp,
-    });
-
-    if (!res.success) {
-      return { success: false, error: res.error || "Token ist ungültig oder abgelaufen." };
-    }
-
-    const emailRes = await sendEmailOtp({
-      to: newEmail,
-      code: otp,
       locale,
     });
 
-    if (!emailRes.success) {
-      return { success: false, error: emailRes.error || "Fehler beim Senden des Bestätigungscodes." };
+    if (!res.success) {
+      return { success: false, error: res.error || "Fehler beim Senden des Bestätigungscodes." };
     }
 
     return { success: true, email: newEmail, userId, token };

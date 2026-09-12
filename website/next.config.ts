@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    serverActions: {
-      allowedOrigins: ["zakkig.de", "www.zakkig.de"],
-    },
+  output: "export",
+  images: {
+    unoptimized: true,
   },
 };
 

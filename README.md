@@ -233,24 +233,28 @@ Das System setzt auf eine moderne, reaktive Architektur mit **Convex** als All-i
 
 Das Projekt besteht aus zwei komplett unabhängigen Next.js-Applikationen in einem gemeinsamen GitHub-Repository (Monorepo-Ansatz):
 
-- **Frontend Marketing (`website/`):** B2B Landingpage für den Vertrieb (`zakkig.de`).
-- **Frontend SaaS App (`webapp/`):** Admin Dashboard der Wirte, Bestell-UI der Gäste und das Echtzeit Kitchen Board (`app.zakkig.de`).
+- **Frontend Marketing (`website/`):** B2B Landingpage für den Vertrieb (`zakkig.de`), statisch exportiert (`output: "export"`) für Cloudflare Pages (0ms Cold Start, globale Edge CDN).
+- **Frontend SaaS App (`webapp/`):** Admin Dashboard der Wirte, Bestell-UI der Gäste und das Echtzeit Kitchen Board (`app.zakkig.de`), optimiert für Cloudflare Workers via `vinext` (Next.js auf Vite/Workerd-Basis mit 95%+ nativer Kompatibilität).
 
 ### 5.2 Der Technologie Stack
 
-- **Frontend-Framework:** Next.js (React) mit Server-Side Rendering (SSR), Server Actions und Turbopack.
-- **Backend-Plattform:** Convex (Reaktive Echtzeit-Datenbank, serverseitige Mutations/Queries/Actions, File Storage, Crons & HTTP Endpoints).
+- **Frontend-Framework:** Next.js (React) mit Server-Side Rendering (SSR), Server Actions, Turbopack und `vinext` für Cloudflare Workers.
+- **Backend-Plattform:** Convex (Reaktive Echtzeit-Datenbank, serverseitige Mutations/Queries/Actions, File Storage, Crons & HTTP Endpoints). Convex fungiert als alleinige Backend-Autorität für Datenbank, SMTP-Mailversand und Stripe Connect.
+- **Edge-Hygiene:** Das Next.js-Frontend ist 100 % frei von Node-spezifischen Socket- oder TCP-Bibliotheken (Zero-Node-Edge). Alle Drittanbieter-Operationen (SMTP-E-Mails, Stripe API Verifikation) werden strikt über den Convex-Client an Convex Actions delegiert.
 - **UI & Styling:** shadcn/ui kombiniert mit Tailwind CSS.
 - **State Management:** Zustand für persistente Client-Side States & reaktive Convex-Hooks (`useQuery`, `useMutation`).
 - **Lokalisierung:** i18n für ein dynamisches, mehrsprachiges Setup (Deutsch / Englisch).
-- **E-Mail-Infrastruktur:** Hetzner Mailserver (SMTP via `mail.your-server.de`).
-- **Payment:** Stripe Connect mit Destination Charges (1% Plattform-Gebühr) und Stripe Payment Element.
+- **E-Mail-Infrastruktur:** Hetzner Mailserver (SMTP via `mail.your-server.de`, abgewickelt als Node Action in Convex).
+- **Payment:** Stripe Connect mit Destination Charges (1% Plattform-Gebühr) und Stripe Payment Element, gesteuert über Convex Actions.
 
-### 5.3 Domain, E-Mail & CI/CD
+### 5.3 Domain, Hosting & CI/CD
 
+- **Cloudflare:**
+  - **Cloudflare Pages:** Hosting der statisch exportierten Marketing-Website (`website/`) mit 0ms Cold Start.
+  - **Cloudflare Workers (`vinext`):** Hosting der dynamischen Webapp (`webapp/`) mit serverlosem Edge SSR und nativer `proxy.ts`-Unterstützung.
 - **Hetzner:** DNS-Management für `zakkig.de` und SMTP-Hosting.
 - **GitHub Actions:** Vollautomatisierte CI/CD-Pipelines für Checks und Builds.
-- **Security:** Enterprise-Grade DDoS-Protection und globales CDN über Cloudflare / Vercel und Stripe.
+- **Security:** Enterprise-Grade DDoS-Protection und globales CDN über Cloudflare.
 
 ---
 

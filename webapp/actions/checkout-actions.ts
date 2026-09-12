@@ -4,7 +4,6 @@ import { convexServer } from "@/lib/convex/server";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { headers } from "next/headers";
-import Stripe from "stripe";
 
 interface CreateCheckoutSessionParams {
   organizationId: string;
@@ -62,17 +61,6 @@ export async function createCheckoutSessionAction(params: CreateCheckoutSessionP
 
 export const createPaymentIntentAction = createCheckoutSessionAction;
 
-function extractItemsFromMetadata(meta: Record<string, any>): string {
-  if (meta.items) return meta.items;
-  let itemsStr = "";
-  let i = 0;
-  while (meta[`items_${i}`]) {
-    itemsStr += meta[`items_${i}`];
-    i++;
-  }
-  return itemsStr || "[]";
-}
-
 export async function getOrderBySessionAction(identifier: string) {
   if (!identifier) {
     return { error: "Keine Sitzungs-ID angegeben.", order: null };
@@ -93,88 +81,22 @@ export async function getOrderBySessionAction(identifier: string) {
       };
     }
 
-    // Fallback: If webhook hasn't fired yet, verify with Stripe directly
-    if (process.env.STRIPE_SECRET_KEY && identifier) {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-        apiVersion: "2026-07-29.dahlia" as any,
-      });
+    // Fallback: If webhook hasn't fired yet, verify with Stripe directly via Convex Action
+    const orderId = await convexServer.action(api.stripe.verifyPaymentAndCreateOrder, {
+      sessionId: identifier.startsWith("cs_") ? identifier : undefined,
+      paymentIntentId: identifier.startsWith("pi_") ? identifier : undefined,
+    });
 
-      if (identifier.startsWith("cs_")) {
-        const session = await stripe.checkout.sessions.retrieve(identifier);
-        if (session && (session.status === "complete" || session.payment_status === "paid")) {
-          const metadata = session.metadata || {};
-          const organizationId = metadata.organizationId as any;
-
-          if (organizationId) {
-            const total = session.amount_total || parseInt(metadata.total || "0", 10);
-            const currency = (session.currency || metadata.currency || "EUR").toUpperCase();
-            const piId = typeof session.payment_intent === "string" ? session.payment_intent : undefined;
-
-            const itemsJson = extractItemsFromMetadata(metadata);
-            const newOrderRes = await convexServer.mutation(api.orders.createOrder, {
-              organizationId,
-              tableNumber: metadata.tableNumber || undefined,
-              type: (metadata.type as any) || "dine-in",
-              items: itemsJson,
-              total,
-              email: metadata.email || session.customer_details?.email || session.customer_email || "",
-              stripePaymentId: piId || session.id,
-              stripeSessionId: session.id,
-              zakkigFee: Math.round(total * 0.01),
-              stripeFee: 0,
-              netAmount: total - Math.round(total * 0.01),
-              currency,
-            });
-
-            const created = await convexServer.query(api.orders.getOrder, { id: newOrderRes._id });
-            if (created) {
-              return {
-                order: {
-                  ...created,
-                  $id: created._id,
-                  $createdAt: new Date(created._creationTime).toISOString(),
-                },
-              };
-            }
-          }
-        }
-      } else if (identifier.startsWith("pi_")) {
-        const paymentIntent = await stripe.paymentIntents.retrieve(identifier);
-        if (paymentIntent && (paymentIntent.status === "succeeded" || paymentIntent.status === "processing")) {
-          const metadata = paymentIntent.metadata || {};
-          const organizationId = metadata.organizationId as any;
-
-          if (organizationId) {
-            const total = parseInt(metadata.total || String(paymentIntent.amount), 10);
-            const currency = metadata.currency || paymentIntent.currency.toUpperCase();
-
-            const itemsJson = extractItemsFromMetadata(metadata);
-            const newOrderRes = await convexServer.mutation(api.orders.createOrder, {
-              organizationId,
-              tableNumber: metadata.tableNumber || undefined,
-              type: (metadata.type as any) || "dine-in",
-              items: itemsJson,
-              total,
-              email: metadata.email || "",
-              stripePaymentId: paymentIntent.id,
-              zakkigFee: Math.round(total * 0.01),
-              stripeFee: 0,
-              netAmount: total - Math.round(total * 0.01),
-              currency,
-            });
-
-            const created = await convexServer.query(api.orders.getOrder, { id: newOrderRes._id });
-            if (created) {
-              return {
-                order: {
-                  ...created,
-                  $id: created._id,
-                  $createdAt: new Date(created._creationTime).toISOString(),
-                },
-              };
-            }
-          }
-        }
+    if (orderId) {
+      const created = await convexServer.query(api.orders.getOrder, { id: orderId });
+      if (created) {
+        return {
+          order: {
+            ...created,
+            $id: created._id,
+            $createdAt: new Date(created._creationTime).toISOString(),
+          },
+        };
       }
     }
 

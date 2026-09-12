@@ -226,6 +226,107 @@ export const createEmailChangeToken = mutation({
   },
 });
 
+export const requestEmailChangeEmail = mutation({
+  args: {
+    userId: v.id("users"),
+    sessionToken: v.optional(v.string()),
+    appUrl: v.string(),
+    locale: v.optional(v.string()),
+  },
+  returns: v.object({
+    success: v.boolean(),
+    error: v.optional(v.string()),
+  }),
+  handler: async (ctx, args) => {
+    if (!args.sessionToken) {
+      return { success: false, error: "Unauthorized" };
+    }
+    const sessionRecord = await ctx.db
+      .query("verificationCodes")
+      .withIndex("by_identifier", (q) => q.eq("identifier", `session_${args.sessionToken}`))
+      .first();
+    if (!sessionRecord || sessionRecord.code !== args.userId || Date.now() > sessionRecord.expires) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const user = await ctx.db.get(args.userId);
+    if (!user || !user.email) {
+      return { success: false, error: "User not found" };
+    }
+
+    const token = crypto.randomUUID();
+    const expires = Date.now() + 30 * 60 * 1000;
+
+    const existing = await ctx.db
+      .query("verificationCodes")
+      .withIndex("by_identifier", (q) => q.eq("identifier", `email_change_${args.userId}`))
+      .collect();
+    for (const r of existing) {
+      await ctx.db.delete(r._id);
+    }
+
+    await ctx.db.insert("verificationCodes", {
+      identifier: `email_change_${args.userId}`,
+      code: token,
+      expires,
+    });
+
+    const changeUrl = `${args.appUrl}/change-email/confirm?userId=${args.userId}&token=${token}`;
+    await ctx.scheduler.runAfter(0, internal.emails.sendChangeEmailLink, {
+      to: user.email,
+      changeUrl,
+      locale: args.locale,
+    });
+
+    return { success: true };
+  },
+});
+
+export const sendEmailChangeOtpWithEmail = mutation({
+  args: {
+    userId: v.id("users"),
+    token: v.string(),
+    newEmail: v.string(),
+    locale: v.optional(v.string()),
+  },
+  returns: v.object({ success: v.boolean(), error: v.optional(v.string()) }),
+  handler: async (ctx, args) => {
+    const tokenRecord = await ctx.db
+      .query("verificationCodes")
+      .withIndex("by_identifier", (q) => q.eq("identifier", `email_change_${args.userId}`))
+      .first();
+
+    if (!tokenRecord || tokenRecord.code !== args.token || Date.now() > tokenRecord.expires) {
+      return { success: false, error: "Token expired or invalid" };
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = Date.now() + 30 * 60 * 1000;
+
+    const existing = await ctx.db
+      .query("verificationCodes")
+      .withIndex("by_identifier", (q) => q.eq("identifier", `new_email_otp_${args.userId}`))
+      .collect();
+    for (const r of existing) {
+      await ctx.db.delete(r._id);
+    }
+
+    await ctx.db.insert("verificationCodes", {
+      identifier: `new_email_otp_${args.userId}`,
+      code: `${args.newEmail}:::${otp}`,
+      expires,
+    });
+
+    await ctx.scheduler.runAfter(0, internal.emails.sendEmailOtp, {
+      to: args.newEmail,
+      code: otp,
+      locale: args.locale,
+    });
+
+    return { success: true };
+  },
+});
+
 export const storeNewEmailOtp = mutation({
   args: {
     userId: v.id("users"),
@@ -346,6 +447,62 @@ export const createAccountDeletionToken = mutation({
     });
 
     return { success: true, token, email: user.email };
+  },
+});
+
+export const requestAccountDeletionEmail = mutation({
+  args: {
+    userId: v.id("users"),
+    sessionToken: v.optional(v.string()),
+    appUrl: v.string(),
+    locale: v.optional(v.string()),
+  },
+  returns: v.object({
+    success: v.boolean(),
+    error: v.optional(v.string()),
+  }),
+  handler: async (ctx, args) => {
+    if (!args.sessionToken) {
+      return { success: false, error: "Unauthorized" };
+    }
+    const sessionRecord = await ctx.db
+      .query("verificationCodes")
+      .withIndex("by_identifier", (q) => q.eq("identifier", `session_${args.sessionToken}`))
+      .first();
+    if (!sessionRecord || sessionRecord.code !== args.userId || Date.now() > sessionRecord.expires) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const user = await ctx.db.get(args.userId);
+    if (!user || !user.email) {
+      return { success: false, error: "User not found" };
+    }
+
+    const token = crypto.randomUUID();
+    const expires = Date.now() + 30 * 60 * 1000;
+
+    const existing = await ctx.db
+      .query("verificationCodes")
+      .withIndex("by_identifier", (q) => q.eq("identifier", `delete_account_${args.userId}`))
+      .collect();
+    for (const r of existing) {
+      await ctx.db.delete(r._id);
+    }
+
+    await ctx.db.insert("verificationCodes", {
+      identifier: `delete_account_${args.userId}`,
+      code: token,
+      expires,
+    });
+
+    const deleteUrl = `${args.appUrl}/delete-account?userId=${args.userId}&token=${token}`;
+    await ctx.scheduler.runAfter(0, internal.emails.sendDeleteAccountEmail, {
+      to: user.email,
+      deleteUrl,
+      locale: args.locale,
+    });
+
+    return { success: true };
   },
 });
 

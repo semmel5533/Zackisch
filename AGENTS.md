@@ -96,6 +96,10 @@ Follow this unified, multi-layered architecture for all features and changes:
 10. **Container-Width-Based Responsive Layouts:**
    - Dashboard layouts and responsive switches must evaluate against the available content width without the sidebar. Use CSS Container Queries (`@container`, `desktop:*`, `tablet:*`, `@min-[...]`) and `ResizeObserver` on the content container instead of window viewport media queries (`window.innerWidth`, `window.matchMedia`).
 
+11. **Zero-Node-Edge Architecture (Cloudflare Workers & vinext):**
+   - Next.js Server Actions and components must remain 100% free from Node.js-specific TCP/socket libraries (`nodemailer`, raw socket APIs).
+   - All transactional email dispatching and third-party payment provider verification MUST be delegated to Convex backend actions and mutations.
+
 <!-- END:architecture-security-rules -->
 
 <!-- BEGIN:ui-feedback-conventions -->
