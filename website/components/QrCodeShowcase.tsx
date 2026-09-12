@@ -5,14 +5,14 @@ import { ReactQRCode } from "@lglab/react-qr-code";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-const DEMO_URL = "https://app.zakkig.de/";
+const DEMO_URL = "https://app.zakkig.com/";
 
 /**
  * Flip showcase for the "QR-Codes auslegen" step. Front: takeout code,
  * back: table 1 code. The printed faces reproduce the webapp dashboard
  * print card 1:1 (see webapp/components/dashboard/overview-content.tsx):
  * "Menü & Bestellen / an TISCH 1 / MIT [QR]" — only the QR value differs
- * (demo link to app.zakkig.de).
+ * (demo link to app.zakkig.com).
  */
 
 function getInkMetrics(text: string, font: string = "700 100px Inter, sans-serif") {
@@ -228,7 +228,7 @@ function QrFace({
             finderPatternOuterSettings={{ color: "#000000", style: "square" }}
             finderPatternInnerSettings={{ color: "#000000", style: "square" }}
             imageSettings={{
-              src: "https://www.zakkig.de/full_qr.png",
+              src: "https://www.zakkig.com/full_qr.png",
               height: 42,
               width: 133,
               excavate: true,

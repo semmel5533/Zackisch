@@ -1,37 +1,48 @@
-import { Metadata } from "next";
-import { MainPage } from "@/components/MainPage";
-import { translations } from "@/lib/translations";
+"use client";
 
-const t = translations.de;
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { DEFAULT_LOCALE, ALL_LOCALES } from "@/lib/regions";
 
-export const metadata: Metadata = {
-  title: t.metaTitle,
-  description: t.metaDescription,
-  openGraph: {
-    title: t.metaTitle,
-    description: t.metaDescription,
-    locale: "de_DE",
-    alternateLocale: "en_US",
-    siteName: "zakkig",
-    type: "website",
-    images: ["/og_image.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: t.metaTitle,
-    description: t.metaDescription,
-    images: ["/og_image.png"],
-  },
-  alternates: {
-    canonical: "https://www.zakkig.de/",
-    languages: {
-      de: "https://www.zakkig.de/",
-      en: "https://www.zakkig.de/en/",
-      "x-default": "https://www.zakkig.de/",
-    },
-  },
-};
+export default function RootRouterPage() {
+  const router = useRouter();
 
-export default function Page() {
-  return <MainPage />;
+  useEffect(() => {
+    // 1. Check persistent cookie preference
+    const matchCookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("zakkig_locale="));
+    if (matchCookie) {
+      const val = matchCookie.split("=")[1];
+      if (ALL_LOCALES.includes(val)) {
+        router.replace(`/${val}`);
+        return;
+      }
+    }
+
+    // 2. Check localStorage preference
+    try {
+      const stored = localStorage.getItem("zakkig_locale");
+      if (stored && ALL_LOCALES.includes(stored)) {
+        router.replace(`/${stored}`);
+        return;
+      }
+    } catch {
+      // ignore
+    }
+
+    // 3. Detect from browser language
+    const navLang = (navigator.language || "").toLowerCase();
+    if (navLang.startsWith("de")) {
+      router.replace("/de-de");
+    } else {
+      router.replace("/de-en");
+    }
+  }, [router]);
+
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+    </div>
+  );
 }

@@ -389,49 +389,93 @@ export const seedDemoProfile = internalMutation({
     ordersCount: v.number(),
   }),
   handler: async (ctx, args) => {
-    // 1. Ensure user selim@zakkig.de
-    let user = await ctx.db
+    // 1. Ensure primary user selim@zakkig.com (Google Workspace)
+    let userCom = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", "selim@zakkig.com"))
+      .first();
+
+    let userComId = userCom?._id;
+    if (!userComId) {
+      userComId = await ctx.db.insert("users", {
+        name: "Selim Eser",
+        email: "selim@zakkig.com",
+        emailVerificationTime: Date.now(),
+      });
+    } else {
+      await ctx.db.patch(userComId, {
+        name: "Selim Eser",
+        emailVerificationTime: Date.now(),
+      });
+    }
+
+    const existingAccountCom = await ctx.db
+      .query("authAccounts")
+      .withIndex("userIdAndProvider", (q) =>
+        q.eq("userId", userComId!).eq("provider", "password")
+      )
+      .first();
+
+    const passwordHashCom =
+      "b8698daec1b11f473b94eb1ef988ee7f:3123a83536bb3dd270582060b81cb5248470b69f8880d1f1a3c3f694c97e5ace34b090173db452a877dc566d793bc31938040504039073f6275be6cc0392bd8f";
+
+    if (!existingAccountCom) {
+      await ctx.db.insert("authAccounts", {
+        userId: userComId!,
+        provider: "password",
+        providerAccountId: "selim@zakkig.com",
+        secret: passwordHashCom,
+      });
+    } else {
+      await ctx.db.patch(existingAccountCom._id, {
+        secret: passwordHashCom,
+      });
+    }
+
+    // 1b. Ensure secondary/legacy user selim@zakkig.de
+    let userDe = await ctx.db
       .query("users")
       .withIndex("email", (q) => q.eq("email", "selim@zakkig.de"))
       .first();
 
-    let userId = user?._id;
-    if (!userId) {
-      userId = await ctx.db.insert("users", {
+    let userDeId = userDe?._id;
+    if (!userDeId) {
+      userDeId = await ctx.db.insert("users", {
         name: "Selim Eser",
         email: "selim@zakkig.de",
         emailVerificationTime: Date.now(),
       });
     } else {
-      await ctx.db.patch(userId, {
+      await ctx.db.patch(userDeId, {
         name: "Selim Eser",
         emailVerificationTime: Date.now(),
       });
     }
 
-    // Ensure authAccount with password
-    const existingAccount = await ctx.db
+    const existingAccountDe = await ctx.db
       .query("authAccounts")
       .withIndex("userIdAndProvider", (q) =>
-        q.eq("userId", userId!).eq("provider", "password")
+        q.eq("userId", userDeId!).eq("provider", "password")
       )
       .first();
 
-    const passwordHash =
+    const passwordHashDe =
       "b214787761be4824a10ee92a39d0ab1a:d7635764984256caba819516041e2bf4160fe346a6e353401fbbb647954a4f7a804f3936cea239db07a20041ee80d3660ac841fadd9fc88d43e0679f590500f7";
 
-    if (!existingAccount) {
+    if (!existingAccountDe) {
       await ctx.db.insert("authAccounts", {
-        userId: userId!,
+        userId: userDeId!,
         provider: "password",
         providerAccountId: "selim@zakkig.de",
-        secret: passwordHash,
+        secret: passwordHashDe,
       });
     } else {
-      await ctx.db.patch(existingAccount._id, {
-        secret: passwordHash,
+      await ctx.db.patch(existingAccountDe._id, {
+        secret: passwordHashDe,
       });
     }
+
+    const userId = userComId!;
 
     // 2. Ensure session token session_demo_owner_session
     const existingSession = await ctx.db
@@ -452,11 +496,18 @@ export const seedDemoProfile = internalMutation({
       });
     }
 
-    // 3. Find or create Organization for selim@zakkig.de
+    // 3. Find or create Organization for selim@zakkig.com
     let org = await ctx.db
       .query("organizations")
-      .withIndex("by_ownerId", (q) => q.eq("ownerId", userId!))
+      .withIndex("by_ownerId", (q) => q.eq("ownerId", userId))
       .first();
+
+    if (!org) {
+      org = await ctx.db
+        .query("organizations")
+        .withIndex("by_ownerId", (q) => q.eq("ownerId", userDeId!))
+        .first();
+    }
 
     let orgId = org?._id;
 
@@ -467,7 +518,7 @@ export const seedDemoProfile = internalMutation({
       name: "Pizza Hut",
       legalName: "Pizza Hut Deutschland Gastronomie GmbH",
       address: "Kurfürstendamm 212, 10719 Berlin",
-      ownerId: userId!,
+      ownerId: userId,
       logoStorageId,
       bannerStorageId,
       stripeAccountId: "acct_test_pizzahut",

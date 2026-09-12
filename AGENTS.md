@@ -132,6 +132,32 @@ Follow this unified, multi-layered architecture for all features and changes:
 
 <!-- END:guest-ordering-ux-conventions -->
 
+<!-- BEGIN:dialog-conventions -->
+
+# Dialog, Modal & Action Sheet Architecture
+
+All dialogs, modals, and settings sheets across `webapp` and `website` strictly follow a unified Apple-inspired architecture:
+
+1. **Edge-to-Edge Dividers Rule (Komplett durchgezogene Trennlinien):**
+   - Horizontal dividing lines (`border-b` under the dialog header and `border-t` above the dialog footer) must ALWAYS run continuously from the left outer edge to the right outer edge of the dialog frame.
+   - Dividers must NEVER be indented, floating, or cut off inside content padding (no `p-6` with inset borders).
+   - The outer container uses `p-0 sm:p-0 overflow-hidden rounded-[24px] border border-border bg-card shadow-2xl flex flex-col`.
+
+2. **Standardized Header & Typography:**
+   - Every dialog features a dedicated `DialogHeader` (`px-6 py-4 sm:py-5 border-b border-border shrink-0 text-left flex flex-col gap-1`).
+   - Title: `DialogTitle` in `text-xl font-bold tracking-tight text-foreground leading-tight`.
+   - Description: `DialogDescription` in `text-xs text-muted-foreground font-normal leading-relaxed mt-0.5`.
+
+3. **Standardized Footer & Action Buttons:**
+   - Every dialog with actions features a dedicated `DialogFooter` (`px-6 py-4 border-t border-border shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full`).
+   - Secondary / Abbrechen button: strictly `variant="outline"`, full-width responsive (`w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted`).
+   - Primary / Action button: strictly `bg-primary text-primary-foreground font-semibold rounded-full h-11 w-full sm:flex-1 active:scale-[0.98] transition-all` (or `variant="destructive"` for deletions).
+
+4. **Modal Language Switcher Standard:**
+   - Clicking any language switcher (guest menus, order tracker, dashboard sidebar) must NEVER perform an abrupt toggle. It must always open a modal dialog adhering to this exact architecture (header, edge-to-edge dividers, language options with checkmarks, responsive footer buttons).
+
+<!-- END:dialog-conventions -->
+
 <!-- BEGIN:stripe-conventions -->
 
 # Stripe Integration Conventions (Checkout Sessions API + Payment Element)
@@ -200,4 +226,34 @@ All commit messages in this repository strictly follow the developer's personal 
    - Keep the wording concise, technical, and grounded in concrete code/UI adjustments without AI buzzwords.
 
 <!-- END:git-commit-conventions -->
+
+<!-- BEGIN:corporate-stack-rules -->
+
+# Corporate Tech Stack & Infrastructure
+
+The official technology stack, infrastructure providers, and operational architecture for zakkig:
+
+1. **Cloudflare:**
+   - **Domain Registrar & DNS:** Authoritative DNS and registrar for all apex and sub-domains (`zakkig.com`, `app.zakkig.com`).
+   - **Cloudflare Pages:** Hosting and edge delivery for the marketing website (`website`).
+   - **Cloudflare Workers:** Serverless edge runtime and execution environment for the web application (`webapp`).
+
+2. **Google Workspace:**
+   - **Enterprise Email & Identity:** Primary business email domain with Google Workspace (`selim@zakkig.com`).
+   - **SMTP & Transactional Messaging:** Authoritative email infrastructure for notifications, auth verification, and team communication.
+
+3. **Convex:**
+   - **Unified Reactive Backend:** Complete transactional database, real-time sync, background mutation handlers, and scheduled crons.
+   - **Media & File Storage:** Convex Storage for all restaurant logos, hero banners, and menu item photos.
+
+4. **GitHub:**
+   - **Version Control & Repository Hosting:** Monorepo hosting, automated workflows, and continuous deployment triggers.
+
+5. **AI Development Architecture:**
+   - Google AI & ChatGPT for advanced agentic coding, pair programming, and architectural reasoning.
+
+6. **Internationalization & Endonym Convention:**
+   - Countries and regions must ALWAYS be displayed in their primary native language (endonym) across all UI surfaces and dialogs (e.g. Germany is strictly `"Deutschland"`, never translated to "Germany" even when the active UI language is English).
+
+<!-- END:corporate-stack-rules -->
 

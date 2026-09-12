@@ -97,12 +97,14 @@ export const createUserWithHash = internalMutation({
     email: v.string(),
     name: v.string(),
     passwordHash: v.string(),
+    region: v.optional(v.string()),
   },
   returns: v.string(),
   handler: async (ctx, args): Promise<string> => {
     const userId = await ctx.db.insert("users", {
       email: args.email,
       name: args.name,
+      region: args.region || "de",
     });
 
     await ctx.db.insert("authAccounts", {

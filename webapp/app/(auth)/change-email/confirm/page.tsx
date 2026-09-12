@@ -4,7 +4,7 @@ import { useActionState, startTransition, useEffect, Suspense, useState } from "
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { cn } from "@/lib/utils";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import { sendEmailChangeOtpAction } from "@/actions/settings-actions";
@@ -176,7 +176,7 @@ export default function ChangeEmailConfirmPage() {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl" as any)} target="_blank" rel="noreferrer">
           <Image
-            src="https://www.zakkig.de/full.svg"
+            src="https://www.zakkig.com/full.svg"
             alt="zakkig"
             width={120}
             height={40}
@@ -185,7 +185,7 @@ export default function ChangeEmailConfirmPage() {
             className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
-        <LanguageSwitcher
+        <RegionLanguageSwitcher
           variant="outline"
           className="h-10 px-3 bg-card border-border text-foreground hover:bg-muted hover:text-foreground"
         />

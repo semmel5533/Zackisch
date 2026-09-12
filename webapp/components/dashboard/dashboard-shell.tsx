@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTranslation } from "@/lib/i18n";
 import { useLanguageStore } from "@/store/language-store";
 import { useSidebarStore } from "@/store/sidebar-store";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Organization } from "@/lib/types";
 import Image from "next/image";
 import { getImagePreviewUrl } from "@/lib/convex/client";
@@ -129,7 +130,7 @@ export function DashboardShell({
               className="overflow-hidden"
             >
               <Image
-                src="https://www.zakkig.de/full.svg"
+                src="https://www.zakkig.com/full.svg"
                 alt="zakkig logo"
                 width={100}
                 height={24}
@@ -326,9 +327,8 @@ export function DashboardShell({
                 {isExpanded && <span className="ml-1">{t("signOut")}</span>}
               </Button>
             </form>
-            <Button
+            <LanguageSwitcher
               variant="ghost"
-              onClick={() => setLocale(locale === "de" ? "en" : "de")}
               className={cn(
                 "justify-start h-10 overflow-hidden",
                 isExpanded ? "px-3" : "px-2.5 w-full",
@@ -339,7 +339,7 @@ export function DashboardShell({
               {isExpanded && (
                 <span className="ml-1">{locale.toUpperCase()}</span>
               )}
-            </Button>
+            </LanguageSwitcher>
           </div>
         </div>
       </aside>
@@ -349,7 +349,7 @@ export function DashboardShell({
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary-foreground/10 px-4 lg:hidden print:hidden bg-primary text-primary-foreground">
           <Link href={zakkigUrl} target="_blank" rel="noopener noreferrer">
             <Image
-              src="https://www.zakkig.de/full.svg"
+              src="https://www.zakkig.com/full.svg"
               alt="Zakkig"
               width={100}
               height={24}

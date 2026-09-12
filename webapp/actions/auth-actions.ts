@@ -22,7 +22,7 @@ export interface AuthActionState {
   requiresOtp?: boolean;
   userId?: string;
   email?: string;
-  pendingOrgData?: { restaurantName: string; name: string };
+  pendingOrgData?: { restaurantName: string; name: string; region?: string };
 }
 
 export async function resendOtpAction(userId: string, email: string) {
@@ -40,16 +40,13 @@ export async function resendOtpAction(userId: string, email: string) {
   }
 }
 
-export async function checkEmailExistsAction(
-  email: string,
-): Promise<{ exists: boolean }> {
+export async function checkEmailExistsAction(email: string) {
   try {
     const exists = await convexServer.query(api.authQueries.checkEmailExists, {
       email,
     });
     return { exists };
-  } catch (error) {
-    console.error("Failed to check email:", error);
+  } catch {
     return { exists: false };
   }
 }
@@ -94,6 +91,7 @@ export async function signUpAction(
   const confirmPassword = formData.get("confirmPassword") as string;
   const name = formData.get("name") as string;
   const restaurantName = formData.get("restaurantName") as string;
+  const region = (formData.get("region") as string) || "de";
 
   if (!email || !password || !restaurantName) {
     return { error: "missingFields" };
@@ -126,6 +124,7 @@ export async function signUpAction(
       password,
       name,
       locale,
+      region,
     });
 
     if (!res.success || !res.userId) {
@@ -136,7 +135,7 @@ export async function signUpAction(
       requiresOtp: true,
       userId: res.userId,
       email,
-      pendingOrgData: { restaurantName, name },
+      pendingOrgData: { restaurantName, name, region },
     };
   } catch (error: any) {
     return { error: "signUpFailed" };
@@ -152,7 +151,7 @@ export interface VerifyOtpResult {
 export async function verifyOtpAction(
   userId: string,
   otp: string,
-  pendingOrgData?: { restaurantName: string; name: string },
+  pendingOrgData?: { restaurantName: string; name: string; region?: string },
 ): Promise<VerifyOtpResult> {
   if (!otp || otp.length !== 6) {
     return { error: "invalidOtpLength" };
@@ -190,6 +189,7 @@ export async function verifyOtpAction(
       const org = await createOrganization({
         name: pendingOrgData.restaurantName || pendingOrgData.name,
         ownerId: userId,
+        region: pendingOrgData.region || "de",
       });
       orgId = org.$id || org._id;
 

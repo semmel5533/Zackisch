@@ -103,6 +103,7 @@ export async function createOrganization(
     legalName: data.legalName,
     taxId: data.taxId,
     currency: data.currency,
+    region: data.region,
     tables: data.tables,
   });
 

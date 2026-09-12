@@ -138,7 +138,7 @@ export function SessionsOverviewCard({
                         style: "square",
                       }}
                       imageSettings={{
-                        src: "https://www.zakkig.de/full_qr.png",
+                        src: "https://www.zakkig.com/full_qr.png",
                         height: 42,
                         width: 133,
                         excavate: true,
@@ -242,7 +242,7 @@ export function SessionsOverviewCard({
                         style: "square",
                       }}
                       imageSettings={{
-                        src: "https://www.zakkig.de/full_qr.png",
+                        src: "https://www.zakkig.com/full_qr.png",
                         height: 42,
                         width: 133,
                         excavate: true,

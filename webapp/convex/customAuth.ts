@@ -77,6 +77,7 @@ export const signUpWithPassword = action({
     password: v.string(),
     name: v.string(),
     locale: v.optional(v.string()),
+    region: v.optional(v.string()),
   },
   returns: v.object({
     success: v.boolean(),
@@ -104,6 +105,7 @@ export const signUpWithPassword = action({
         email: normalized,
         name: args.name,
         passwordHash,
+        region: args.region || "de",
       }
     );
 

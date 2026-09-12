@@ -14,17 +14,17 @@ export function PrivacySection1() {
       <p>Vertretungsberechtigte Personen: Selim Eser</p>
       <p>
         E-Mail:{" "}
-        <a href="mailto:selim@zakkig.de" className="text-white hover:underline">
-          selim@zakkig.de
+        <a href="mailto:selim@zakkig.com" className="text-white hover:underline">
+          selim@zakkig.com
         </a>
       </p>
       <p>
         Impressum:{" "}
         <a
-          href="https://www.zakkig.de/impressum"
+          href="https://www.zakkig.com/de-de/legal"
           className="text-white hover:underline"
         >
-          https://www.zakkig.de/impressum
+          https://www.zakkig.com/de-de/legal
         </a>
       </p>
 

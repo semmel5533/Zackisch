@@ -22,6 +22,7 @@ export const get = query({
       legalName: v.optional(v.string()),
       taxId: v.optional(v.string()),
       currency: v.optional(v.string()),
+      region: v.optional(v.string()),
       deletionRequested: v.optional(v.boolean()),
       tables: v.optional(v.array(v.string())),
     })
@@ -68,6 +69,7 @@ export const getByOwner = query({
       legalName: v.optional(v.string()),
       taxId: v.optional(v.string()),
       currency: v.optional(v.string()),
+      region: v.optional(v.string()),
       deletionRequested: v.optional(v.boolean()),
       tables: v.optional(v.array(v.string())),
     })
@@ -107,6 +109,7 @@ export const create = mutation({
     legalName: v.optional(v.string()),
     taxId: v.optional(v.string()),
     currency: v.optional(v.string()),
+    region: v.optional(v.string()),
     tables: v.optional(v.array(v.string())),
   },
   returns: v.id("organizations"),
@@ -143,6 +146,7 @@ export const create = mutation({
       legalName: args.legalName,
       taxId: args.taxId,
       currency: args.currency ?? "EUR",
+      region: args.region || "de",
       deletionRequested: false,
       tables: args.tables ?? [],
     });
@@ -167,6 +171,7 @@ export const update = mutation({
     legalName: v.optional(v.string()),
     taxId: v.optional(v.string()),
     currency: v.optional(v.string()),
+    region: v.optional(v.string()),
     deletionRequested: v.optional(v.boolean()),
     tables: v.optional(v.array(v.string())),
   },

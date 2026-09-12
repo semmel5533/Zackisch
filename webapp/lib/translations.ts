@@ -85,6 +85,14 @@ export const translations = {
     changeLanguage: "Sprache ändern",
     german: "Deutsch",
     english: "Englisch",
+    regionSelectorTitle: "Region & Sprache",
+    regionSelectorDescription: "Wähle dein Land und deine bevorzugte Sprache aus.",
+    languageSelectorTitle: "Sprache auswählen",
+    languageSelectorDescription: "Wähle deine bevorzugte Sprache für die Benutzeroberfläche aus.",
+    regionLabel: "Region",
+    languageLabel: "Sprache",
+    saveAndContinue: "Übernehmen",
+    operatingInGermanyNotice: "zakkig ist aktuell in Deutschland aktiv.",
     soundOn: "Ton an",
     soundOff: "Ton aus",
     newOrderReceived: "Neue Bestellung eingegangen",
@@ -527,7 +535,7 @@ export const translations = {
     trackingActiveRemaining: "Tracking-Link aktiv für noch {time}",
     trackingMinutes: "{count} Min.",
     accountDataInfo:
-      "Aus Sicherheitsgründen kann die verknüpfte E-Mail-Adresse nur manuell von uns geändert werden. Bitte sende dazu eine E-Mail von deiner aktuell verknüpften Adresse an selim@zakkig.de mit dem Betreff 'zakkig Konto Email Adresse ändern' und nenne uns in der Nachricht die neue gewünschte E-Mail-Adresse. Die Änderung dauert im Schnitt bis zu 7 Tage.",
+      "Aus Sicherheitsgründen kann die verknüpfte E-Mail-Adresse nur manuell von uns geändert werden. Bitte sende dazu eine E-Mail von deiner aktuell verknüpften Adresse an selim@zakkig.com mit dem Betreff 'zakkig Konto Email Adresse ändern' und nenne uns in der Nachricht die neue gewünschte E-Mail-Adresse. Die Änderung dauert im Schnitt bis zu 7 Tage.",
     invalidToken: "Ungültiger oder abgelaufener Token.",
     notAcceptingOrders:
       "{name} nimmt momentan keine Tisch-Bestellungen über das Smartphone entgegen.",
@@ -554,9 +562,9 @@ export const translations = {
     backHome: "Zurück zur Anmeldung",
     backToDashboard: "Zurück zum Dashboard",
     userFallback: "Benutzer",
-    homepageUrl: "https://zakkig.de",
-    termsUrl: "https://zakkig.de/agb",
-    privacyUrl: "https://zakkig.de/datenschutz",
+    homepageUrl: "https://www.zakkig.com/de-de",
+    termsUrl: "https://www.zakkig.com/de-de/legal",
+    privacyUrl: "https://www.zakkig.com/de-de/privacy",
 
     // Delete Account
     deleteAccountConfirmTitle: "Konto endgültig löschen",
@@ -652,6 +660,14 @@ export const translations = {
     changeLanguage: "Change language",
     german: "German",
     english: "English",
+    regionSelectorTitle: "Region & Language",
+    regionSelectorDescription: "Select your country and preferred language.",
+    languageSelectorTitle: "Select Language",
+    languageSelectorDescription: "Select your preferred language for the interface.",
+    regionLabel: "Region",
+    languageLabel: "Language",
+    saveAndContinue: "Apply",
+    operatingInGermanyNotice: "zakkig is currently active in Germany.",
     soundOn: "Sound on",
     soundOff: "Sound off",
     newOrderReceived: "New order received",
@@ -1080,7 +1096,7 @@ export const translations = {
     trackingActiveRemaining: "Tracking link active for {time}",
     trackingMinutes: "{count} min.",
     accountDataInfo:
-      "For security reasons, the linked email address can only be changed manually by us. Please send an email from your currently linked address to selim@zakkig.de with the subject 'zakkig Change Account Email Address' and specify the new desired email address in the message. The change takes up to 7 days on average.",
+      "For security reasons, the linked email address can only be changed manually by us. Please send an email from your currently linked address to selim@zakkig.com with the subject 'zakkig Change Account Email Address' and specify the new desired email address in the message. The change takes up to 7 days on average.",
     invalidToken: "Invalid or expired token.",
     notAcceptingOrders:
       "{name} is currently not accepting table orders via smartphone.",
@@ -1107,9 +1123,9 @@ export const translations = {
     backHome: "Back to sign in",
     backToDashboard: "Back to Dashboard",
     userFallback: "User",
-    homepageUrl: "https://zakkig.de/en",
-    termsUrl: "https://zakkig.de/en/gtc",
-    privacyUrl: "https://zakkig.de/en/privacy",
+    homepageUrl: "https://www.zakkig.com/de-en",
+    termsUrl: "https://www.zakkig.com/de-en/legal",
+    privacyUrl: "https://www.zakkig.com/de-en/privacy",
 
     // Delete Account
     deleteAccountConfirmTitle: "Permanently delete account",

@@ -103,7 +103,7 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
         finderPatternOuterSettings={{ color: "#000000", style: "square" }}
         finderPatternInnerSettings={{ color: "#000000", style: "square" }}
         imageSettings={{
-          src: "https://www.zakkig.de/full_qr.png",
+          src: "https://www.zakkig.com/full_qr.png",
           height: logoHeight,
           width: logoWidth,
           excavate: true,
@@ -1071,7 +1071,7 @@ export function OverviewContent({
   const baseUrl =
     mounted && typeof window !== "undefined"
       ? window.location.origin
-      : "https://app.zakkig.de";
+      : "https://app.zakkig.com";
 
   return (
     <>

@@ -37,12 +37,21 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.zakkig.de",
       },
+      {
+        protocol: "https",
+        hostname: "zakkig.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.zakkig.com",
+      },
     ],
   },
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",
       allowedOrigins: [
+        "app.zakkig.com",
         "app.zakkig.de",
         "localhost:3000",
         "localhost:3001",

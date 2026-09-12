@@ -6,7 +6,7 @@ import { translations } from "@/lib/translations";
 const t = translations.de;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.zakkig.de"),
+  metadataBase: new URL("https://www.zakkig.com"),
   title: {
     default: t.metaTitle,
     template: "zakkig: %s",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: t.metaTitle,
     description: t.metaDescription,
-    url: "https://www.zakkig.de",
+    url: "https://www.zakkig.com",
     siteName: "zakkig",
     images: ["/og_image.png"],
     locale: "de_DE",

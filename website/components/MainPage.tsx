@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "../lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { QrCodeShowcase } from "./QrCodeShowcase";
+import { Globe } from "@phosphor-icons/react";
+import { RegionLanguageModal } from "./RegionLanguageModal";
 
 export function MainPage() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="w-full">
@@ -256,10 +260,10 @@ export function MainPage() {
                 {t("footerContact")}
               </p>
               <a
-                href="mailto:selim@zakkig.de"
+                href="mailto:selim@zakkig.com"
                 className="text-white hover:underline text-2xl sm:text-4xl md:text-5xl font-normal tracking-tight"
               >
-                selim@zakkig.de
+                selim@zakkig.com
               </a>
             </div>
           </div>
@@ -282,23 +286,44 @@ export function MainPage() {
                 style={{ filter: "brightness(0) invert(1)" }}
               />
             </Button>
-            <div className="flex flex-col items-end gap-1 text-right text-sm md:flex-row md:gap-8 md:text-base tracking-widest">
-              <Link
-                href={t("legalUrl" as any)}
-                className="font-bold uppercase hover:text-white transition-colors duration-200"
+            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4 text-sm md:text-base">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="w-9 h-9 rounded-full border border-zinc-800 hover:border-zinc-700 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer active:scale-[0.98]"
+                aria-label={t("regionSelectorTitle")}
               >
-                {t("legalLink")}
-              </Link>
-              <Link
-                href={t("privacyUrl" as any)}
-                className="font-bold uppercase hover:text-white transition-colors duration-200"
-              >
-                {t("privacyLink")}
-              </Link>
+                <Globe className="w-4 h-4 text-zinc-400" weight="bold" />
+              </button>
+              <div className="flex items-center gap-6 md:gap-8 tracking-widest">
+                <Link
+                  href={t("gtcUrl")}
+                  className="font-bold uppercase hover:text-white transition-colors duration-200"
+                >
+                  {t("gtcLink")}
+                </Link>
+                <Link
+                  href={t("legalUrl")}
+                  className="font-bold uppercase hover:text-white transition-colors duration-200"
+                >
+                  {t("legalLink")}
+                </Link>
+                <Link
+                  href={t("privacyUrl")}
+                  className="font-bold uppercase hover:text-white transition-colors duration-200"
+                >
+                  {t("privacyLink")}
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      <RegionLanguageModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

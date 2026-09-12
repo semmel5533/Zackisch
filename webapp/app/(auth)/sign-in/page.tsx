@@ -3,7 +3,7 @@
 import { useActionState, useState, startTransition, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import {
   signInAction,
   verifyOtpAction,
@@ -115,7 +115,7 @@ function OtpForm({ state }: { state: any }) {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
           <Image
-            src="https://www.zakkig.de/full.svg"
+            src="https://www.zakkig.com/full.svg"
             alt="zakkig"
             width={120}
             height={40}
@@ -123,7 +123,7 @@ function OtpForm({ state }: { state: any }) {
             className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
-        <LanguageSwitcher
+        <RegionLanguageSwitcher
           variant="outline"
           className="h-10 px-3"
         />
@@ -287,7 +287,7 @@ function SignInForm({
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
           <Image
-            src="https://www.zakkig.de/full.svg"
+            src="https://www.zakkig.com/full.svg"
             alt="zakkig"
             width={120}
             height={40}
@@ -296,10 +296,9 @@ function SignInForm({
             className="w-auto h-8 hover:opacity-80 transition-opacity"
           />
         </Link>
-        <LanguageSwitcher
-          variant="outline"
-          className="h-10 px-3"
-        />
+        <div className="flex items-center gap-2">
+          <RegionLanguageSwitcher variant="outline" className="h-10 px-3" />
+        </div>
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">
         <CardTitle className="text-2xl font-bold text-foreground">{t("signIn")}</CardTitle>

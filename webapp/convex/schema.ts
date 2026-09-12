@@ -4,6 +4,10 @@ import { v } from "convex/values";
 
 export default defineSchema({
   ...authTables,
+  users: defineTable({
+    ...authTables.users.validator.fields,
+    region: v.optional(v.string()),
+  }).index("email", ["email"]),
 
   organizations: defineTable({
     name: v.string(),
@@ -18,6 +22,7 @@ export default defineSchema({
     legalName: v.optional(v.string()),
     taxId: v.optional(v.string()),
     currency: v.optional(v.string()),
+    region: v.optional(v.string()),
     deletionRequested: v.optional(v.boolean()),
     tables: v.optional(v.array(v.string())),
   }).index("by_ownerId", ["ownerId"]),

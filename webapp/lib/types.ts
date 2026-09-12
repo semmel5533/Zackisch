@@ -32,6 +32,7 @@ export interface Organization extends ConvexDocument {
   legalName?: string;
   taxId?: string;
   currency?: string;
+  region?: string;
   deletionRequested?: boolean;
   tables?: string[];
 }
@@ -47,6 +48,7 @@ export interface CreateOrganizationData {
   legalName?: string;
   taxId?: string;
   currency?: string;
+  region?: string;
   tables?: string[];
 }
 

@@ -97,8 +97,8 @@ export const sendEmailOtp = internalAction({
       : "If you did not request this email, you can safely ignore it.";
 
     const footerText = isDe
-      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
-      : 'This email was automatically sent by <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a>.<br/>Please do not reply to this email.';
+      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
+      : 'This email was automatically sent by <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a>.<br/>Please do not reply to this email.';
 
     const html = `<!DOCTYPE html>
 <html>
@@ -113,8 +113,8 @@ export const sendEmailOtp = internalAction({
 <div style="font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
-      <a href="https://www.zakkig.de" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.de/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+      <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
@@ -168,8 +168,8 @@ export const sendPasswordResetEmail = internalAction({
       ? "Falls du diese Anfrage nicht gestellt hast, kannst du diese E-Mail einfach ignorieren."
       : "If you didn't request a password reset, you can safely ignore this email.";
     const footerText = isDe
-      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
-      : 'This email was automatically sent by <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a>.<br/>Please do not reply to this email.';
+      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
+      : 'This email was automatically sent by <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a>.<br/>Please do not reply to this email.';
 
     const html = `<!DOCTYPE html>
 <html>
@@ -184,8 +184,8 @@ export const sendPasswordResetEmail = internalAction({
 <div style="font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
-      <a href="https://www.zakkig.de" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.de/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+      <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
@@ -241,8 +241,8 @@ export const sendDeleteAccountEmail = internalAction({
       ? "Falls du diese Löschung nicht angefragt hast, kannst du diese E-Mail einfach ignorieren."
       : "If you didn't request this deletion, you can safely ignore this email.";
     const footerText = isDe
-      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
-      : 'This email was automatically sent by <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a>.<br/>Please do not reply to this email.';
+      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
+      : 'This email was automatically sent by <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a>.<br/>Please do not reply to this email.';
 
     const html = `<!DOCTYPE html>
 <html>
@@ -257,8 +257,8 @@ export const sendDeleteAccountEmail = internalAction({
 <div style="font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
-      <a href="https://www.zakkig.de" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.de/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+      <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
@@ -314,8 +314,8 @@ export const sendChangeEmailLink = internalAction({
       ? "Falls du diese Änderung nicht angefragt hast, kannst du diese E-Mail einfach ignorieren."
       : "If you didn't request this change, you can safely ignore this email.";
     const footerText = isDe
-      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
-      : 'This email was automatically sent by <a href="https://www.zakkig.de" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.de</a>.<br/>Please do not reply to this email.';
+      ? 'Diese E-Mail wurde automatisch von <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
+      : 'This email was automatically sent by <a href="https://www.zakkig.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zakkig.com</a>.<br/>Please do not reply to this email.';
 
     const html = `<!DOCTYPE html>
 <html>
@@ -330,8 +330,8 @@ export const sendChangeEmailLink = internalAction({
 <div style="font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
-      <a href="https://www.zakkig.de" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.de/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+      <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
