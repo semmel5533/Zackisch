@@ -41,10 +41,12 @@ export function Header() {
         </nav>
       </header>
 
-      <RegionLanguageModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <RegionLanguageModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
 }

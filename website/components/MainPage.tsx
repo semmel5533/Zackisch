@@ -286,22 +286,8 @@ export function MainPage() {
                 style={{ filter: "brightness(0) invert(1)" }}
               />
             </Button>
-            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4 text-sm md:text-base">
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="w-9 h-9 rounded-full border border-zinc-800 hover:border-zinc-700 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer active:scale-[0.98]"
-                aria-label={t("regionSelectorTitle")}
-              >
-                <Globe className="w-4 h-4 text-zinc-400" weight="bold" />
-              </button>
+            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4 sm:gap-6 text-sm md:text-base">
               <div className="flex items-center gap-6 md:gap-8 tracking-widest">
-                <Link
-                  href={t("gtcUrl")}
-                  className="font-bold uppercase hover:text-white transition-colors duration-200"
-                >
-                  {t("gtcLink")}
-                </Link>
                 <Link
                   href={t("legalUrl")}
                   className="font-bold uppercase hover:text-white transition-colors duration-200"
@@ -314,16 +300,32 @@ export function MainPage() {
                 >
                   {t("privacyLink")}
                 </Link>
+                <Link
+                  href={t("gtcUrl")}
+                  className="font-bold uppercase hover:text-white transition-colors duration-200"
+                >
+                  {t("gtcLink")}
+                </Link>
               </div>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="w-9 h-9 rounded-full border border-zinc-800 hover:border-zinc-700 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer active:scale-[0.98]"
+                aria-label={t("regionSelectorTitle")}
+              >
+                <Globe className="w-4 h-4 text-zinc-400" weight="bold" />
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      <RegionLanguageModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <RegionLanguageModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

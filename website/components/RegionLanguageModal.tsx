@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Globe, X, Check } from "@phosphor-icons/react";
 import { REGIONS, parseLocale, ALL_LOCALES } from "@/lib/regions";
@@ -35,13 +35,24 @@ export function RegionLanguageModal({
 }: RegionLanguageModalProps) {
   const pathname = usePathname() || "";
   const router = useRouter();
-  const { t, locale: currentLang, regionCode: currentRegionCode } = useTranslation();
+  const { t } = useTranslation();
 
-  const [selectedRegion, setSelectedRegion] = useState(currentRegionCode);
-  const [selectedLocale, setSelectedLocale] = useState(() => {
-    const { locale } = parseLocale(pathname);
-    return locale;
-  });
+  const getActiveRoute = () => {
+    const activePath = (typeof window !== "undefined" ? window.location.pathname : "") || pathname;
+    return parseLocale(activePath);
+  };
+
+  const [selectedRegion, setSelectedRegion] = useState(() => getActiveRoute().regionCode);
+  const [selectedLocale, setSelectedLocale] = useState(() => getActiveRoute().locale);
+
+  // Synchronize draft selection with active URL whenever the dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      const active = getActiveRoute();
+      setSelectedRegion(active.regionCode);
+      setSelectedLocale(active.locale);
+    }
+  }, [isOpen, pathname]);
 
   if (!isOpen) return null;
 
