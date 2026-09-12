@@ -83,13 +83,13 @@ export default async function GtcPage({
             </div>
             <p>
               Legal Notice:{" "}
-              <Link href={`/${locale}/legal`} className="text-white hover:underline">
-                https://www.zakkig.com/{locale}/legal
+              <Link href={`/${locale}/legal-notice`} className="text-white hover:underline">
+                https://www.zakkig.com/{locale}/legal-notice
               </Link>
               <br />
               Privacy Policy:{" "}
-              <Link href={`/${locale}/privacy`} className="text-white hover:underline">
-                https://www.zakkig.com/{locale}/privacy
+              <Link href={`/${locale}/privacy-policy`} className="text-white hover:underline">
+                https://www.zakkig.com/{locale}/privacy-policy
               </Link>
             </p>
           </article>
@@ -109,13 +109,13 @@ export default async function GtcPage({
             </div>
             <p>
               Impressum:{" "}
-              <Link href={`/${locale}/legal`} className="text-white hover:underline">
-                https://www.zakkig.com/{locale}/legal
+              <Link href={`/${locale}/legal-notice`} className="text-white hover:underline">
+                https://www.zakkig.com/{locale}/legal-notice
               </Link>
               <br />
               Datenschutzerklärung:{" "}
-              <Link href={`/${locale}/privacy`} className="text-white hover:underline">
-                https://www.zakkig.com/{locale}/privacy
+              <Link href={`/${locale}/privacy-policy`} className="text-white hover:underline">
+                https://www.zakkig.com/{locale}/privacy-policy
               </Link>
             </p>
           </article>

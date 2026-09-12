@@ -14,15 +14,21 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de" />
   </url>
   <url>
-    <loc>https://www.zakkig.com/de-de/legal</loc>
+    <loc>https://www.zakkig.com/de-de/legal-notice</loc>
   </url>
   <url>
-    <loc>https://www.zakkig.com/de-de/privacy</loc>
+    <loc>https://www.zakkig.com/de-de/privacy-policy</loc>
   </url>
   <url>
-    <loc>https://www.zakkig.com/de-en/legal</loc>
+    <loc>https://www.zakkig.com/de-de/gtc</loc>
   </url>
   <url>
-    <loc>https://www.zakkig.com/de-en/privacy</loc>
+    <loc>https://www.zakkig.com/de-en/legal-notice</loc>
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-en/privacy-policy</loc>
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-en/gtc</loc>
   </url>
 </urlset>

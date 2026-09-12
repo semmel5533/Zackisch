@@ -67,12 +67,12 @@ export function RegionLanguageModal({
       // ignore
     }
 
-    // Determine target URL: preserve subpath if on legal/privacy/gtc
+    // Determine target URL: preserve subpath if on legal-notice/privacy-policy/gtc
     let targetPath = `/${selectedLocale}`;
-    if (pathname.includes("/legal")) {
-      targetPath = `/${selectedLocale}/legal`;
-    } else if (pathname.includes("/privacy")) {
-      targetPath = `/${selectedLocale}/privacy`;
+    if (pathname.includes("/legal-notice") || pathname.includes("/legal")) {
+      targetPath = `/${selectedLocale}/legal-notice`;
+    } else if (pathname.includes("/privacy-policy") || pathname.includes("/privacy")) {
+      targetPath = `/${selectedLocale}/privacy-policy`;
     } else if (pathname.includes("/gtc")) {
       targetPath = `/${selectedLocale}/gtc`;
     }

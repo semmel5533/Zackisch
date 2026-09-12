@@ -21,10 +21,10 @@ export function PrivacySection1() {
       <p>
         Legal Notice:{" "}
         <a
-          href="https://www.zakkig.com/de-en/legal"
+          href="https://www.zakkig.com/de-en/legal-notice"
           className="text-white hover:underline"
         >
-          https://www.zakkig.com/de-en/legal
+          https://www.zakkig.com/de-en/legal-notice
         </a>
       </p>
 

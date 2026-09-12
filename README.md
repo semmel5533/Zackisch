@@ -287,7 +287,7 @@ Das Projekt besteht aus zwei komplett unabhängigen Next.js-Applikationen in ein
 - **Payment Infrastruktur:**
   - Stripe Connect (Destination Charges mit 1% Plattformgebühr, Checkout Sessions API mit Payment Element).
 - **Lokalisierung & Regionen (Model B):**
-  - Next-intl mit strikter URL-Lokalisierung (z. B. `/de-de`, `/de-en`, `/de-de/legal`, `/de-de/privacy`, `/de-de/gtc`).
+  - Next-intl mit strikter URL-Lokalisierung (z. B. `/de-de`, `/de-en`, `/de-de/legal-notice`, `/de-de/privacy-policy`, `/de-de/gtc`).
   - Länder und Regionen werden im UI ausnahmslos in ihrer primären Landessprache (Endonym, z. B. "Deutschland") dargestellt.
 - **Security:**
   - Enterprise-Grade DDoS-Protection, DNSSEC, TLS 1.3 und globales CDN über Cloudflare.
@@ -300,8 +300,8 @@ Die Marketingseite wird als SEO-optimierter One-Pager gehostet, ergänzt durch s
 
 ### 6.1 Routing & Model B Lokalisierung
 
-- **Standard (Deutschland - Deutsch):** `/de-de` (One-Pager), `/de-de/legal` (Impressum), `/de-de/privacy` (Datenschutz), `/de-de/gtc` (AGB).
-- **Englisch (Deutschland - Englisch):** `/de-en` (One-Pager), `/de-en/legal`, `/de-en/privacy`, `/de-en/gtc`.
+- **Standard (Deutschland - Deutsch):** `/de-de` (One-Pager), `/de-de/legal-notice` (Impressum), `/de-de/privacy-policy` (Datenschutzerklärung), `/de-de/gtc` (AGB).
+- **Englisch (Deutschland - Englisch):** `/de-en` (One-Pager), `/de-en/legal-notice` (Legal Notice), `/de-en/privacy-policy` (Privacy Policy), `/de-en/gtc` (GTC).
 - **Root-Redirect:** `/` leitet automatisch serverseitig auf `/de-de` weiter.
 - **Navigation & Header:** Minimalistischer Header mit Firmen-Logo und weißem Globe-Button zur Region- und Sprachauswahl. Die Seite verzichtet bewusst auf störende Anchor-Links in der Kopfzeile und führt geradlinig vom Hero-Bereich über die Problemstellung und die interaktive QR-Code-Showcase bis zur Registrierung und den Footer-Rechtslinks.
 

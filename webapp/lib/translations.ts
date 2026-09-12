@@ -563,8 +563,8 @@ export const translations = {
     backToDashboard: "Zurück zum Dashboard",
     userFallback: "Benutzer",
     homepageUrl: "https://www.zakkig.com/de-de",
-    termsUrl: "https://www.zakkig.com/de-de/legal",
-    privacyUrl: "https://www.zakkig.com/de-de/privacy",
+    termsUrl: "https://www.zakkig.com/de-de/gtc",
+    privacyUrl: "https://www.zakkig.com/de-de/privacy-policy",
 
     // Delete Account
     deleteAccountConfirmTitle: "Konto endgültig löschen",
@@ -1124,8 +1124,8 @@ export const translations = {
     backToDashboard: "Back to Dashboard",
     userFallback: "User",
     homepageUrl: "https://www.zakkig.com/de-en",
-    termsUrl: "https://www.zakkig.com/de-en/legal",
-    privacyUrl: "https://www.zakkig.com/de-en/privacy",
+    termsUrl: "https://www.zakkig.com/de-en/gtc",
+    privacyUrl: "https://www.zakkig.com/de-en/privacy-policy",
 
     // Delete Account
     deleteAccountConfirmTitle: "Permanently delete account",

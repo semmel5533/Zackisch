@@ -274,8 +274,8 @@ function SignUpForm({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Regional legal links
-  const regionalTermsUrl = `https://www.zakkig.com/${region}-${locale}/legal`;
-  const regionalPrivacyUrl = `https://www.zakkig.com/${region}-${locale}/privacy`;
+  const regionalTermsUrl = `https://www.zakkig.com/${region}-${locale}/gtc`;
+  const regionalPrivacyUrl = `https://www.zakkig.com/${region}-${locale}/privacy-policy`;
 
   // Wizard State
   const [step, setStep] = useState(1);

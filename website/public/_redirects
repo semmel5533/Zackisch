@@ -1,0 +1,9 @@
+# Cloudflare Pages 301 Redirects for Legal and Privacy
+/:locale/legal /:locale/legal-notice 301
+/:locale/privacy /:locale/privacy-policy 301
+/legal /de-de/legal-notice 301
+/privacy /de-de/privacy-policy 301
+/impressum /de-de/legal-notice 301
+/datenschutz /de-de/privacy-policy 301
+/agb /de-de/gtc 301
+/terms /de-de/gtc 301
