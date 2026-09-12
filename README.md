@@ -22,9 +22,9 @@ Der bewusste Fokus liegt auf maximaler Simplizität: zakkig ist ein reines Add-O
 
 - **Die Zielgruppe:** zakkig richtet sich primär an Gastronomien, die ohnehin bereits klassische Kartenzahlung unterstützen.
 - **Keine Grundgebühren:** zakkig verdient nur dann mit, wenn der Wirt auch wirklich echten Umsatz generiert.
-- **Payment Infrastruktur (Stripe Connect):** Wir nutzen Stripe Connect als Zahlungsabwickler, um rechtlich und sicherheitstechnisch auf dem höchsten Standard zu agieren und niemals sensible Bankdaten der Gastronomen zwischenspeichern zu müssen.
-  - **Onboarding & KYC:** Beim Setup verknüpfen die Gastronomen einen eigenen Stripe-Connect-Account via OAuth. Die komplette Identitätsprüfung (KYC) und Speicherung der Auszahlungsdaten liegt zu 100 % bei Stripe.
-  - **Kostenstruktur & Split Payments (Pay-as-you-go):** Stripe arbeitet nach einem strikten Pay-as-you-go-Modell ohne monatliche Fixkosten. Die Zahlungen fließen direkt über Stripe. Bei jeder Transaktion behält Stripe seine regulären Transaktionskosten ein. Zusätzlich ziehen wir über die Stripe-API (`application_fee_amount`) vollautomatisch unsere **zakkig-Plattformgebühr (1 % vom Umsatz)** ab. Der Wirt trägt diese Gebührenkombination (wie beim klassischen EC-Terminal) und erhält die Restsumme direkt auf sein Bankkonto.
+- **Payment Infrastruktur (Stripe Connect Express & Checkout Sessions):** Wir nutzen Stripe Connect Express als Zahlungsabwickler, um rechtlich und sicherheitstechnisch auf dem höchsten Standard zu agieren und niemals sensible Bankdaten der Gastronomen zwischenspeichern zu müssen.
+  - **Onboarding & KYC:** Beim Setup starten die Gastronomen über Stripe-gehostete Onboarding-Links (`accountLinks.create`) direkt in die Identitätsprüfung (KYC). Die komplette Legitimationsprüfung und Speicherung der Bank- und Auszahlungsdaten liegt zu 100 % bei Stripe. Nach Abschluss kehrt der Nutzer auf `/dashboard/{organizationId}/settings/stripe-return` zurück.
+  - **Kostenstruktur & Split Payments (Pay-as-you-go):** Stripe arbeitet nach einem strikten Pay-as-you-go-Modell ohne monatliche Fixkosten. Die Zahlungsabwicklung läuft über die Stripe Checkout Sessions API (`ui_mode: "elements"`) mit dem eingebetteten Stripe Payment Element und Destination Charges. Bei jeder Transaktion behält Stripe seine regulären Transaktionskosten ein. Zusätzlich ziehen wir über die Stripe-API (`application_fee_amount`) vollautomatisch unsere **zakkig-Plattformgebühr (1 % vom Brutto-Umsatz)** ab. Der Wirt trägt diese Gebührenkombination (wie beim klassischen EC-Terminal) und erhält die Restsumme direkt auf sein Bankkonto ausgezahlt.
   - **Methoden:** Wir integrieren hochkonvertierende Methoden wie Apple Pay, Google Pay und Standard-Kartenzahlung. Teure Kreditkarten (wie American Express) können über die API gezielt ausgesperrt werden, um die Margen der Wirte zu schützen.
 - **Finanzamt & TSE Konformität:** Jede digitale Bestellung wird vom Wirt als Gesamtsumme unter dem Namen zakkig in seine Hauptkasse eingetippt. Dadurch wird alles sofort vom gesetzlichen Sicherheitsbaustein (TSE) signiert. Am Monatsende reicht der Export einer Zusammenfassung für den Steuerberater.
 
@@ -36,33 +36,39 @@ Das System ist extrem fokussiert und verzichtet bewusst auf unnötige Extras. Al
 
 ### 2.1 Routing & Zugriffskonzept
 
-**Authentifizierung (Offen für Registrierung/Login)**
+**Authentifizierung & Account (Offen bzw. Token-basiert)**
 
-- `app.zakkig.com/sign-in`
-- `app.zakkig.com/sign-up`
-- `app.zakkig.com/reset-password`
+- `app.zakkig.com/sign-in` (Login via Passwort & 2FA E-Mail-OTP)
+- `app.zakkig.com/sign-up` (Registrierung Restaurant & Inhaber)
+- `app.zakkig.com/reset-password` (Passwort-Reset via E-Mail-Link)
+- `app.zakkig.com/delete-account` (Zweistufige Account-Löschungsbestätigung via signiertem E-Mail-Token)
 
 **Dashboard (Geschützt)**
 Erfordert eine gültige Session (E-Mail, Passwort, HttpOnly Cookie).
 
+- `app.zakkig.com/` (Automatischer Redirect zum primären Dashboard bzw. `/sign-in`)
+- `app.zakkig.com/dashboard` (Automatischer Redirect zum primären Betrieb)
 - `app.zakkig.com/dashboard/{organizationId}/overview`
 - `app.zakkig.com/dashboard/{organizationId}/live-orders`
 - `app.zakkig.com/dashboard/{organizationId}/archive`
 - `app.zakkig.com/dashboard/{organizationId}/menu`
 - `app.zakkig.com/dashboard/{organizationId}/settings`
+- `app.zakkig.com/dashboard/{organizationId}/settings/stripe-return` (Rückkehr von der Stripe Express Onboarding-Seite)
 
 **Staff Devices (Geschützt)**
 Einmaliges Pairing über das Dashboard erzeugt eine dauerhafte Session. Keine Passwort-Eingabe im Küchenalltag.
 
 - `app.zakkig.com/orders/{organizationId}` (Kitchen Board)
-- `app.zakkig.com/availability/{organizationId}` (Verfügbarkeits-Steuerung)
+- `app.zakkig.com/availability/{organizationId}` (86-Verfügbarkeits-Steuerung)
 
 **Gast-Routen (Öffentlich, Keine Session)**
 Zugriff ausschließlich über Parameter, ohne Registrierung.
 
 - `app.zakkig.com/to-go/{organizationId}` (To-Go Menü)
-- `app.zakkig.com/to-go/{organizationId}?order={orderId}` (To-Go Status-Tracker)
-- `app.zakkig.com/to-stay/{organizationId}?table={tableNumber}` (To-Stay Menü am Tisch)
+- `app.zakkig.com/to-go/{organizationId}?order={orderId}` (To-Go Status-Tracker mit 10-Minuten-Countdown)
+- `app.zakkig.com/to-go/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung & automatische Weiterleitung zum Live-Tracker)
+- `app.zakkig.com/to-stay/{organizationId}?table={tableNumber}` (To-Stay Menü am Tisch, Tischnummer max. 4 Zeichen)
+- `app.zakkig.com/to-stay/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung am Tisch)
 
 ### 2.2 Core Features: Dashboard (SaaS Admin)
 
@@ -75,7 +81,7 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
 - **Live-Bestellungen (`/live-orders`):** Echtzeit-Ansicht der aktiven Bestellungen (In Bearbeitung, Abgeschlossen, Storniert). Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar (1 Spalte Mobile unter 500px, 2 Spalten zwischen 500px und 1100px, 3 Spalten ab 1100px). Beim Ein- und Ausklappen der Sidebar passt sich das Board somit automatisch an.
 - **Archiv (`/archive`):** Detaillierte Historien-Tabelle aller vergangenen Bestellungen mit Filter-/Suchfunktionen und dem DATEV CSV-Export für den Steuerberater. Die Sortierung erfolgt millisekundengenau absteigend (neueste Bestellungen oben), während die Anzeige im Interface sauber auf die Minute formatiert ist.
 - **Menu (`/menu`):** Zentrale Verwaltung der Speisekarte, Getränke, Kategorien, Preise und Bilder.
-- **Settings (`/settings`):** Verwaltung von Account- und Betriebsdaten (z. B. Logo-Upload im Full-Width Layout auf Desktop) und Stripe-Details. Die Kontolöschung erfolgt über einen zweistufigen Verifizierungsprozess: Eine serverseitige Mutation (`deleteAccount`) generiert einen temporären Token und sendet eine Bestätigungs-E-Mail über den eigenen SMTP-Server. Erst nach Klick auf den E-Mail-Link wird das Konto restlos gelöscht.
+- **Settings (`/settings`):** Verwaltung von Account- und Betriebsdaten (z. B. Logo- und Banner-Uploads im Full-Width Layout auf Desktop) und Stripe-Details. Die Kontolöschung erfolgt über einen zweistufigen Verifizierungsprozess: Eine Server Action (`requestAccountDeletionAction`) generiert über Convex einen temporären Token (30 Minuten TTL) und sendet eine Bestätigungs-E-Mail über Google Workspace SMTP. Erst nach Klick auf den Bestätigungslink (`/delete-account?userId=...&token=...`) und erneuter Freigabe wird das gesamte Konto samt Betrieb, Menü, Bildern und Bestellungen kaskadierend restlos gelöscht.
 
 ### 2.3 Core Features: Kitchen Board View
 
@@ -90,11 +96,11 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
   - **Schwebender Warenkorb-Banner:** Sobald Artikel in den Warenkorb gelegt werden, ploppt unten ein dezenter schwebender Pill-Banner auf (Artikelanzahl, Zwischensumme, "Zum Warenkorb"). Beim Leeren des Warenkorbs blendet sich der Banner automatisch wieder aus.
   - **Fokussierte Warenkorb-Seite:** Beim Klick auf den Banner wechselt die Ansicht in den Warenkorb – das Restaurant-Hero-Banner wird ausgeblendet und ein Zurück-Pfeil oben links führt jederzeit zurück zum Menü.
 - **Warenkorb (Client State):** Wird lokal via `Zustand` verwaltet. Mengenänderungen (+ / -) sind direkt möglich. Bei einem Page-Reload wird der Warenkorb resettet.
-- **Checkout:** Abfrage der E-Mail-Adresse (Pflicht für digitalen Beleg), Auswahl der Zahlungsmethode (Apple Pay, Google Pay, Karte) und sofortige Bezahlung. Der Bon wird per E-Mail gesendet.
+- **Checkout:** Abfrage der E-Mail-Adresse (Pflicht für digitalen Beleg), Integration über die Stripe Checkout Sessions API (`ui_mode: "elements"`) mit dem eingebetteten Stripe Payment Element (Apple Pay, Google Pay, Kartenzahlung) und serverseitiger Validierung der Artikelpreise und Verfügbarkeiten in Convex. Nach erfolgreicher Zahlung wird der digitale Bon per E-Mail gesendet.
 - **Bestellnummern (Rolling 001 - 999):** Die für Gäste, Gastronomen und Küche sichtbare Bestellnummer rotiert fortlaufend streng aufsteigend im dreistelligen Format von `001` bis `999` und beginnt danach automatisch wieder bei `001` (abgesichert gegen historische Seed-Verschiebungen und Rollover). Intern wird jede Bestellung zusätzlich durch eine eindeutige Dokumenten-ID sowie die Stripe-Payment-ID identifiziert.
 - **Nach der Bestellung:**
-  - **To-Stay:** Anzeige der Bestellnummer auf dem Screen. Gast wartet am Tisch. (Page-Reload resettet den State für eine potenzielle neue Bestellung).
-  - **To-Go:** Automatische Weiterleitung auf den Order-Tracker mit Live-Status und Anzeige der 3-stelligen Abholnummer. Der Link bleibt nach Bestellabschluss (Abholbereit) 10 Minuten lang mit einem Live-Restzeit-Countdown aktiv ("Tracking-Link aktiv für noch X:XX Min."), danach wird er ungültig und schaltet auf den sauberen Ablauf-Screen um.
+  - **To-Stay:** Weiterleitung auf `/to-stay/{organizationId}/success`, Anzeige der Bestellnummer auf dem Screen. Gast wartet am Tisch.
+  - **To-Go:** Weiterleitung auf `/to-go/{organizationId}/success` und automatische Weiterleitung auf den Order-Tracker mit Live-Status und Anzeige der 3-stelligen Abholnummer. Der Link bleibt nach Bestellabschluss (Abholbereit) 10 Minuten lang mit einem Live-Restzeit-Countdown aktiv ("Tracking-Link aktiv für noch X:XX Min."), danach schaltet er auf den Ablauf-Screen um.
 
 ### 2.5 Lifecycle & Ablaufzeiten (Sicherheitsstandard & Auto-Cleanup)
 
@@ -223,6 +229,27 @@ Als technisches Fundament für das Interface nutzen wir **shadcn/ui** in Kombina
 }
 ```
 
+### 4.3 Numerische Typografie (Strikte Inter-Regel für Ziffern)
+
+- **Poppins** ist die primäre Schriftart für das gesamte Interface: alle Titel, Zwischenüberschriften, Fließtexte, Buttons, Labels und Badges.
+- **Inter (`font-inter`, `tabular-nums`):** Ausschließlich und strikt die numerischen Ziffern (`0-9`) und Dezimaltrennzeichen (`.` oder `,`) rendern in Inter mit Tabellenziffern für maximale Lesbarkeit.
+- Währungssymbole (`€`), Preis-Präfixe (`ab`, `+`), Einheiten und Wörter verbleiben ausnahmslos in **Poppins**.
+- Zur konsistenten Umsetzung im gesamten UI wird die dedizierte Komponente `<Price cents={...} from={...} prefix={...} />` verwendet.
+
+### 4.4 Dialog-, Modal- & Action-Sheet-Architektur
+
+Alle Dialoge und Modals (z. B. Region- & Sprachauswahl, Artikelbearbeitung, Tischverwaltung) folgen einer einheitlichen Apple-inspirierten Architektur:
+- **Durchgezogene Trennlinien (Edge-to-Edge Dividers):** Die horizontalen Trennlinien (`border-b` unter dem Header und `border-t` über dem Footer) laufen zu 100 % von der linken bis zur rechten Außenkante durch – niemals eingerückt oder durch Inset-Padding abgeschnitten.
+- **Standardisierter Dialog-Container:** `rounded-[24px] border border-border bg-card shadow-2xl overflow-hidden p-0 flex flex-col`.
+- **Header & Typografie:** `px-6 py-4 sm:py-5 border-b border-border shrink-0 text-left flex flex-col gap-1` mit `DialogTitle` (`text-xl font-bold tracking-tight`) und `DialogDescription` (`text-xs text-muted-foreground mt-0.5`).
+- **Footer & Responsive Buttons:** `px-6 py-4 border-t border-border shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full`. Sekundär-Button ("Abbrechen") in `variant="outline"` und Primär-Button in `bg-primary text-primary-foreground` mit voller responsiver Breite (`flex-1 w-full sm:w-auto`).
+- **Modaler Language Switcher Standard:** Jeder Sprach- oder Regionswechsel (im Dashboard, auf der Landingpage oder in der Gast-Ansicht) öffnet einen modalen Dialog gemäß dieser Architektur.
+
+### 4.5 Iconografie & Zero-Emoji-Doktrin
+
+- **Zero Emojis:** Keinerlei Emojis im gesamten Projekt (weder im Quelltext, JSX, Commit-Messages noch in der Dokumentation).
+- **Phosphor Icons:** Sämtliche Icons stammen einheitlich aus `@phosphor-icons/react` mit konsistentem Weight (`bold` bzw. `regular`).
+
 ---
 
 ## TEIL 5: TECHNISCHE IMPLEMENTIERUNG (Zero-Ops Architektur)
@@ -276,8 +303,7 @@ Die Marketingseite wird als SEO-optimierter One-Pager gehostet, ergänzt durch s
 - **Standard (Deutschland - Deutsch):** `/de-de` (One-Pager), `/de-de/legal` (Impressum), `/de-de/privacy` (Datenschutz), `/de-de/gtc` (AGB).
 - **Englisch (Deutschland - Englisch):** `/de-en` (One-Pager), `/de-en/legal`, `/de-en/privacy`, `/de-en/gtc`.
 - **Root-Redirect:** `/` leitet automatisch serverseitig auf `/de-de` weiter.
-- **Region & Sprache Switcher:** Öffnet einen barrierefreien Apple-Style Dialog mit durchgezogenen Trennlinien und Länderauswahl mit Flaggen-Icons.
-- **Navigation:** Lokalisierte Anchor-Links (z. B. `#loesung` vs. `#solution`).
+- **Navigation & Header:** Minimalistischer Header mit Firmen-Logo und weißem Globe-Button zur Region- und Sprachauswahl. Die Seite verzichtet bewusst auf störende Anchor-Links in der Kopfzeile und führt geradlinig vom Hero-Bereich über die Problemstellung und die interaktive QR-Code-Showcase bis zur Registrierung und den Footer-Rechtslinks.
 
 ### 6.2 Globale SEO Meta-Daten
 
@@ -301,14 +327,24 @@ Jedes Teilprojekt besitzt eine eigene `.env` und `.env.example` Datei im jeweili
 ### 7.2 Datenbank-Schema & Convex Functions
 
 Das gesamte Datenbank-Schema ist typsicher in `webapp/convex/schema.ts` definiert:
-- Tabellen: `users`, `sessions`, `organizations`, `categories`, `items`, `orders`, `kitchenTokens`, `availabilityTokens`, `emailTokens`, `counters`.
-- Für die lokale Entwicklung läuft `npx convex dev` parallel zum Next.js Dev-Server.
+- **`users`, `authAccounts`, `authSessions`, `authVerificationCodes`:** Benutzerverwaltung und Sitzungen über `@convex-dev/auth`.
+- **`organizations`:** Restaurant-Stammdaten, Branding (Logo & Banner), Stripe Connect Status, Tisch-Arrays (`tables`) sowie To-Go & To-Stay Aktivierungsschalter.
+- **`menuCategories`:** Speisekarten-Kategorien mit automatischer Sortierung (`sortOrder`).
+- **`menuItems`:** Gerichte & Getränke mit centgenauen Preisen, MwSt.-Sätzen (`taxRate`), Bild-Storage-IDs, Verfügbarkeits-Status und strukturierter `customizations`-Konfiguration.
+- **`orders`:** Bestellungen mit fortlaufend rotierender dreistelliger Bestellnummer (`001`–`999`), Status (`in_progress`, `completed`, `cancelled`), Gebührenaufschlüsselung (`zakkigFee`, `stripeFee`, `netAmount`) und Tisch-/Abhol-Zuordnung.
+- **`orderSessions`:** Pairing-Tokens für Kitchen Board Tablets (gespeichert in sicheren HttpOnly-Cookies).
+- **`availabilitySessions`:** Pairing-Tokens für Kassen-/Staff-Terminals zur 86-Verfügbarkeitssteuerung.
+- **`verificationCodes`:** Kryptografische Einmalcodes (OTPs) für Registrierung, Login, Passwort-Reset und Sicherheitsaktionen mit 30-Minuten-TTL und Brute-Force-Lockout nach 5 Versuchen.
+
+Für die lokale Entwicklung läuft `npx convex dev` parallel zum Next.js Dev-Server.
 
 ### 7.3 Authentifizierung & Server-Side Rendering (SSR)
 
 Für Next.js Server Components und Server Actions wird der serverseitige Convex-Client verwendet (`webapp/lib/convex/auth.ts`):
-- `getUser()` liest das sichere `HttpOnly`-Session-Cookie (`zakkig_session`) aus und validiert die Session in Convex.
-- `getAuthenticatedConvexClient()` instanziiert einen serverseitigen Client für Backend-Operationen.
+- `getUser()`: Liest das sichere `HttpOnly`-Session-Cookie (`zakkig_session`) aus und validiert die Session in Convex.
+- `getAuthenticatedConvexClient()`: Instanziiert einen serverseitigen Client für Backend-Operationen.
+- `requireOwner(organizationId)`: Erzwingt strikte Mandanten-Isolation (Anti-IDOR) auf Inhaberebene in jeder Server Action.
+- `requireKitchenOrOwner(organizationId)` & `requireStaffOrOwner(organizationId)`: Autorisierung von Tablet-Terminals und Service-Endpoints.
 
 ### 7.4 E-Mail & SMTP
 

@@ -336,7 +336,7 @@ The system uses a flat, border-defined architectural spatial model. Surfaces dif
 
 ### Email Templates
 - **Canvas:** `#f4f4f5` outer background, `#ffffff` card container (`border-radius: 24px`).
-- **Brand Header:** Center-aligned or left-aligned `https://www.zakkig.de/full.svg` brand logo (`height: 56px`).
+- **Brand Header:** Center-aligned or left-aligned `https://www.zakkig.com/full.svg` brand logo (`height: 56px`).
 - **Headline & Links:** `#000000` bold typography, underlined links.
 - **Code Box:** `#000000` rounded container (`border-radius: 16px`) with crisp `#ffffff` 48px tracked digits in Inter.
 - **Action Button:** `#000000` rounded button with white text.

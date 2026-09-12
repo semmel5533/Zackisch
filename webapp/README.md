@@ -117,35 +117,35 @@ Logos, Restaurant-Banner und Speisekarten-Bilder werden im nativen Convex File S
 
 ```
 webapp/
-├── actions/             # Next.js Server Actions (Auth, Menu, Orders, Settings, Stripe)
+├── actions/             # Next.js Server Actions (Auth, Availability, Checkout, Menu, Orders, Settings, Stripe)
 ├── app/
-│   ├── (auth)/          # Login, Registrierung, Passwort-Reset
-│   ├── (dashboard)/     # Hauptdashboard (Übersicht, Live-Bestellungen, Menü, Einstellungen, Archiv)
+│   ├── (auth)/          # Login, Registrierung, Passwort-Reset, Account-Löschung
+│   ├── (dashboard)/     # Hauptdashboard (Übersicht, Live-Bestellungen, Menü, Einstellungen, Archiv, Stripe-Return)
 │   ├── availability/    # Terminal für Verfügbarkeiten (Ausverkauft-Schalter)
 │   ├── orders/          # Separates Küchen-Terminal (Kitchen Board)
-│   ├── to-go/           # Gast-Bestellung zum Abholen & Tracking
-│   └── to-stay/         # Gast-Bestellung am Tisch & Tracking
-├── components/          # React-Komponenten (Dashboard, Guest UI, Terminals, UI-Primitives)
+│   ├── to-go/           # Gast-Bestellung zum Abholen, Checkout & Live-Tracking
+│   └── to-stay/         # Gast-Bestellung am Tisch, Checkout & Bestätigung
+├── components/          # React-Komponenten (Dashboard, Guest UI, Terminals, UI-Primitives, Dialogs)
 ├── convex/              # Convex Backend
 │   ├── schema.ts        # Typsicheres Datenbank-Schema
 │   ├── auth.ts          # Convex Auth Konfiguration
 │   ├── authQueries.ts   # Interne Queries & Mutationen für Authentifizierung
 │   ├── customAuth.ts    # Node Actions für Registrierung, Login & OTP
-│   ├── emails.ts        # E-Mail-Versand (SMTP & Resend)
+│   ├── emails.ts        # E-Mail-Versand (Google Workspace SMTP via Nodemailer)
 │   ├── http.ts          # HTTP-Router (Stripe Webhook)
 │   ├── menu.ts          # Speisekarten-Logik
-│   ├── orders.ts        # Bestellungen & rollierende Nummern
+│   ├── orders.ts        # Bestellungen & rollierende Nummern (001-999)
 │   ├── organizations.ts # Restaurant-Verwaltung & Kaskadenlöschung
 │   ├── sessions.ts      # Terminal-Token-Verwaltung
 │   ├── storage.ts       # Datei-Upload & Löschung
-│   ├── stripe.ts        # Stripe Connect & PaymentIntents
+│   ├── stripe.ts        # Stripe Connect & Checkout Sessions (Payment Element)
 │   └── users.ts         # Benutzerprofil & Kontolöschung
 ├── lib/
-│   ├── convex/          # Server- & Client-Helfer für Convex
-│   ├── constants.ts     # Globale Konstanten & Timer
+│   ├── convex/          # Server- & Client-Helfer für Convex (getUser, requireOwner, Client)
+│   ├── constants.ts     # Globale Konstanten & Timer (TTL, Limits)
 │   ├── i18n.ts          # Lokalisierung (next-intl)
 │   └── types.ts         # TypeScript Interfaces
-└── proxy.ts             # Proxy für Session- & Auth-Prüfungen
+└── proxy.ts             # Proxy für Session- & Auth-Prüfungen (Next.js 16+)
 ```
 
 ---
