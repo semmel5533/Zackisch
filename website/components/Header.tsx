@@ -36,7 +36,7 @@ export function Header() {
             className="w-10 h-10 rounded-full bg-white hover:bg-zinc-100 text-black flex items-center justify-center transition-all active:scale-[0.98] shadow-sm cursor-pointer border-0"
             aria-label="Select Region and Language"
           >
-            <Globe className="w-5 h-5 text-black" weight="bold" />
+            <Globe className="w-5 h-5 text-black" weight="regular" />
           </button>
         </nav>
       </header>

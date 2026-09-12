@@ -294,7 +294,7 @@ export function MainPage() {
             >
               <Globe className="w-4 h-4 text-zinc-400" weight="bold" />
             </button>
-            <div className="order-3 col-span-2 sm:order-2 sm:col-span-1 sm:ml-auto flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-5 sm:gap-6 md:gap-8 tracking-widest text-sm md:text-base">
+            <div className="order-3 col-span-2 sm:order-2 sm:col-span-1 sm:ml-auto flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-end gap-5 sm:gap-6 md:gap-8 tracking-widest text-sm md:text-base text-left">
               <Link
                 href={t("legalUrl")}
                 className="font-bold uppercase hover:text-white transition-colors duration-200"
