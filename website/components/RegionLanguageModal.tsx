@@ -82,7 +82,7 @@ export function RegionLanguageModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -91,9 +91,9 @@ export function RegionLanguageModal({
       />
 
       {/* Dialog Surface */}
-      <div role="dialog" aria-modal="true" className="relative w-full max-w-lg bg-white text-zinc-900 rounded-[24px] border border-zinc-200 shadow-2xl overflow-hidden p-0 z-10 animate-in fade-in zoom-in-95 duration-150 flex flex-col">
+      <div role="dialog" aria-modal="true" className="relative w-full max-w-md sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] bg-white text-zinc-900 rounded-[20px] sm:rounded-[24px] border border-zinc-200 shadow-2xl overflow-hidden p-0 z-10 animate-in fade-in zoom-in-95 duration-150 flex flex-col">
         {/* Header with edge-to-edge dividing line */}
-        <div className="px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1">
+        <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1">
           <h2 className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
             {t("regionSelectorTitle")}
           </h2>
@@ -103,7 +103,7 @@ export function RegionLanguageModal({
         </div>
 
         {/* Content */}
-        <div className="px-6 py-5 space-y-5 flex-1 overflow-y-auto">
+        <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 flex-1 overflow-y-auto">
           {/* Region Section */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2.5">
@@ -172,7 +172,7 @@ export function RegionLanguageModal({
         </div>
 
         {/* Footer actions with edge-to-edge dividing line */}
-        <div className="px-6 py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full">
+        <div className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
           <Button
             type="button"
             variant="outline"

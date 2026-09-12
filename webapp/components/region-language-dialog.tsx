@@ -93,10 +93,10 @@ export function RegionLanguageSwitcher({
       <Dialog open={isOpen} onOpenChange={(open) => (open ? openModal() : closeModal())}>
         <DialogContent
           showCloseButton={false}
-          className="w-[calc(100%-2rem)] sm:w-full max-w-md p-0 sm:p-0 flex flex-col bg-card text-card-foreground rounded-[24px] border border-border shadow-2xl overflow-hidden gap-0"
+          className="w-[calc(100%-2rem)] sm:w-full max-w-md max-h-[calc(100dvh-2rem)] sm:max-h-[85vh] p-0 sm:p-0 flex flex-col bg-card text-card-foreground rounded-[20px] sm:rounded-[24px] border border-border shadow-2xl overflow-hidden gap-0"
         >
           {/* Header with edge-to-edge dividing line */}
-          <DialogHeader className="px-6 py-4 sm:py-5 border-b border-border shrink-0 bg-card text-left flex flex-col gap-1">
+          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-border shrink-0 bg-card text-left flex flex-col gap-1">
             <DialogTitle className="text-xl font-bold tracking-tight text-foreground leading-tight">
               {t("regionSelectorTitle")}
             </DialogTitle>
@@ -106,7 +106,7 @@ export function RegionLanguageSwitcher({
           </DialogHeader>
 
           {/* Content */}
-          <div className="px-6 py-5 space-y-5 flex-1 overflow-y-auto">
+          <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 flex-1 overflow-y-auto">
             {/* Region Section */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2.5">
@@ -174,7 +174,7 @@ export function RegionLanguageSwitcher({
           </div>
 
           {/* Footer with edge-to-edge dividing line */}
-          <div className="px-6 py-4 border-t border-border shrink-0 bg-card flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full">
+          <div className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-border shrink-0 bg-card flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               type="button"
               variant="outline"

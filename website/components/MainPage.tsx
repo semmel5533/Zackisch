@@ -269,12 +269,12 @@ export function MainPage() {
           </div>
 
           {/* Legal Footer Links */}
-          <div className="flex items-end justify-between gap-4 text-sm text-zinc-500 font-light md:items-center">
+          <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-between gap-y-8 gap-x-4 sm:gap-6 text-sm text-zinc-500 font-light md:text-base">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center cursor-pointer hover:opacity-80 transition-opacity duration-200 bg-transparent hover:bg-transparent min-w-0 w-auto h-auto min-h-0 p-0"
+              className="order-1 justify-self-start self-center sm:order-1 flex items-center cursor-pointer hover:opacity-80 transition-opacity duration-200 bg-transparent hover:bg-transparent min-w-0 w-auto h-auto min-h-0 p-0"
               aria-label={t("scrollToTopLabel")}
             >
               <Image
@@ -286,35 +286,33 @@ export function MainPage() {
                 style={{ filter: "brightness(0) invert(1)" }}
               />
             </Button>
-            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4 sm:gap-6 text-sm md:text-base">
-              <div className="flex items-center gap-6 md:gap-8 tracking-widest">
-                <Link
-                  href={t("legalUrl")}
-                  className="font-bold uppercase hover:text-white transition-colors duration-200"
-                >
-                  {t("legalLink")}
-                </Link>
-                <Link
-                  href={t("privacyUrl")}
-                  className="font-bold uppercase hover:text-white transition-colors duration-200"
-                >
-                  {t("privacyLink")}
-                </Link>
-                <Link
-                  href={t("gtcUrl")}
-                  className="font-bold uppercase hover:text-white transition-colors duration-200"
-                >
-                  {t("gtcLink")}
-                </Link>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="w-9 h-9 rounded-full border border-zinc-800 hover:border-zinc-700 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer active:scale-[0.98]"
-                aria-label={t("regionSelectorTitle")}
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="order-2 justify-self-end self-center sm:order-3 w-9 h-9 rounded-full border border-zinc-800 hover:border-zinc-700 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer active:scale-[0.98]"
+              aria-label={t("regionSelectorTitle")}
+            >
+              <Globe className="w-4 h-4 text-zinc-400" weight="bold" />
+            </button>
+            <div className="order-3 col-span-2 sm:order-2 sm:col-span-1 sm:ml-auto flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-5 sm:gap-6 md:gap-8 tracking-widest text-sm md:text-base">
+              <Link
+                href={t("legalUrl")}
+                className="font-bold uppercase hover:text-white transition-colors duration-200"
               >
-                <Globe className="w-4 h-4 text-zinc-400" weight="bold" />
-              </button>
+                {t("legalLink")}
+              </Link>
+              <Link
+                href={t("privacyUrl")}
+                className="font-bold uppercase hover:text-white transition-colors duration-200"
+              >
+                {t("privacyLink")}
+              </Link>
+              <Link
+                href={t("gtcUrl")}
+                className="font-bold uppercase hover:text-white transition-colors duration-200"
+              >
+                {t("gtcLink")}
+              </Link>
             </div>
           </div>
         </div>
