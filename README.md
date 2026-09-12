@@ -30,39 +30,39 @@ Der bewusste Fokus liegt auf maximaler Simplizität: zakkig ist ein reines Add-O
 
 ---
 
-## TEIL 2: ANFORDERUNGSKATALOG & FEATURES (Web-App: app.zakkig.de)
+## TEIL 2: ANFORDERUNGSKATALOG & FEATURES (Web-App: app.zakkig.com)
 
-Das System ist extrem fokussiert und verzichtet bewusst auf unnötige Extras. Alles dreht sich um den perfekten digitalen Bestellablauf. Die App ist konsequent mehrsprachig (i18n) ausgelegt. Standardmäßig ist Deutsch aktiv, Englisch wird voll unterstützt. Ein Language-Switcher befindet sich in der Navigations-Sidebar.
+Das System ist extrem fokussiert und verzichtet bewusst auf unnötige Extras. Alles dreht sich um den perfekten digitalen Bestellablauf. Die App ist konsequent mehrsprachig (i18n) ausgelegt. Standardmäßig ist Deutsch aktiv, Englisch wird voll unterstützt. Ein modalbasierter Language- und Region-Switcher befindet sich in der Navigations-Sidebar bzw. im Header.
 
 ### 2.1 Routing & Zugriffskonzept
 
 **Authentifizierung (Offen für Registrierung/Login)**
 
-- `app.zakkig.de/sign-in`
-- `app.zakkig.de/sign-up`
-- `app.zakkig.de/reset-password`
+- `app.zakkig.com/sign-in`
+- `app.zakkig.com/sign-up`
+- `app.zakkig.com/reset-password`
 
 **Dashboard (Geschützt)**
 Erfordert eine gültige Session (E-Mail, Passwort, HttpOnly Cookie).
 
-- `app.zakkig.de/dashboard/{organizationId}/overview`
-- `app.zakkig.de/dashboard/{organizationId}/live-orders`
-- `app.zakkig.de/dashboard/{organizationId}/archive`
-- `app.zakkig.de/dashboard/{organizationId}/menu`
-- `app.zakkig.de/dashboard/{organizationId}/settings`
+- `app.zakkig.com/dashboard/{organizationId}/overview`
+- `app.zakkig.com/dashboard/{organizationId}/live-orders`
+- `app.zakkig.com/dashboard/{organizationId}/archive`
+- `app.zakkig.com/dashboard/{organizationId}/menu`
+- `app.zakkig.com/dashboard/{organizationId}/settings`
 
 **Staff Devices (Geschützt)**
 Einmaliges Pairing über das Dashboard erzeugt eine dauerhafte Session. Keine Passwort-Eingabe im Küchenalltag.
 
-- `app.zakkig.de/orders/{organizationId}` (Kitchen Board)
-- `app.zakkig.de/availability/{organizationId}` (Verfügbarkeits-Steuerung)
+- `app.zakkig.com/orders/{organizationId}` (Kitchen Board)
+- `app.zakkig.com/availability/{organizationId}` (Verfügbarkeits-Steuerung)
 
 **Gast-Routen (Öffentlich, Keine Session)**
 Zugriff ausschließlich über Parameter, ohne Registrierung.
 
-- `app.zakkig.de/to-go/{organizationId}` (To-Go Menü)
-- `app.zakkig.de/to-go/{organizationId}?order={orderId}` (To-Go Status-Tracker)
-- `app.zakkig.de/to-stay/{organizationId}?table={tableNumber}` (To-Stay Menü am Tisch)
+- `app.zakkig.com/to-go/{organizationId}` (To-Go Menü)
+- `app.zakkig.com/to-go/{organizationId}?order={orderId}` (To-Go Status-Tracker)
+- `app.zakkig.com/to-stay/{organizationId}?table={tableNumber}` (To-Stay Menü am Tisch)
 
 ### 2.2 Core Features: Dashboard (SaaS Admin)
 
@@ -227,45 +227,56 @@ Als technisches Fundament für das Interface nutzen wir **shadcn/ui** in Kombina
 
 ## TEIL 5: TECHNISCHE IMPLEMENTIERUNG (Zero-Ops Architektur)
 
-Das System setzt auf eine moderne, reaktive Architektur mit **Convex** als All-in-One Backend-Plattform und **GitHub** für das Code- und Repository-Management.
+Das System setzt auf eine moderne, reaktive Architektur mit **Convex** als All-in-One Backend-Plattform, **Cloudflare** für Edge-Hosting & DNS, **Google Workspace** für Enterprise-Mails sowie **GitHub** für das Code- und Repository-Management.
 
 ### 5.1 Architektur Übersicht & Repository (GitHub)
 
 Das Projekt besteht aus zwei komplett unabhängigen Next.js-Applikationen in einem gemeinsamen GitHub-Repository (Monorepo-Ansatz):
 
-- **Frontend Marketing (`website/`):** B2B Landingpage für den Vertrieb (`zakkig.de`), statisch exportiert (`output: "export"`) für Cloudflare Pages (0ms Cold Start, globale Edge CDN).
-- **Frontend SaaS App (`webapp/`):** Admin Dashboard der Wirte, Bestell-UI der Gäste und das Echtzeit Kitchen Board (`app.zakkig.de`), optimiert für Cloudflare Workers via `vinext` (Next.js auf Vite/Workerd-Basis mit 95%+ nativer Kompatibilität).
+- **Frontend Marketing (`website/`):** B2B Landingpage für den Vertrieb (`zakkig.com`), statisch exportiert (`output: "export"`) für Cloudflare Pages (0ms Cold Start, globale Edge CDN).
+- **Frontend SaaS App (`webapp/`):** Admin Dashboard der Wirte, Bestell-UI der Gäste und das Echtzeit Kitchen Board (`app.zakkig.com`), optimiert für Cloudflare Workers via `vinext` (Next.js auf Vite/Workerd-Basis mit 95%+ nativer Kompatibilität).
 
-### 5.2 Der Technologie Stack
-
-- **Frontend-Framework:** Next.js (React) mit Server-Side Rendering (SSR), Server Actions, Turbopack und `vinext` für Cloudflare Workers.
-- **Backend-Plattform:** Convex (Reaktive Echtzeit-Datenbank, serverseitige Mutations/Queries/Actions, File Storage, Crons & HTTP Endpoints). Convex fungiert als alleinige Backend-Autorität für Datenbank, SMTP-Mailversand und Stripe Connect.
-- **Edge-Hygiene:** Das Next.js-Frontend ist 100 % frei von Node-spezifischen Socket- oder TCP-Bibliotheken (Zero-Node-Edge). Alle Drittanbieter-Operationen (SMTP-E-Mails, Stripe API Verifikation) werden strikt über den Convex-Client an Convex Actions delegiert.
-- **UI & Styling:** shadcn/ui kombiniert mit Tailwind CSS.
-- **State Management:** Zustand für persistente Client-Side States & reaktive Convex-Hooks (`useQuery`, `useMutation`).
-- **Lokalisierung:** i18n für ein dynamisches, mehrsprachiges Setup (Deutsch / Englisch).
-- **E-Mail-Infrastruktur:** Hetzner Mailserver (SMTP via `mail.your-server.de`, abgewickelt als Node Action in Convex).
-- **Payment:** Stripe Connect mit Destination Charges (1% Plattform-Gebühr) und Stripe Payment Element, gesteuert über Convex Actions.
-
-### 5.3 Domain, Hosting & CI/CD
+### 5.2 Der Corporate Tech Stack & Systemarchitektur
 
 - **Cloudflare:**
-  - **Cloudflare Pages:** Hosting der statisch exportierten Marketing-Website (`website/`) mit 0ms Cold Start.
-  - **Cloudflare Workers (`vinext`):** Hosting der dynamischen Webapp (`webapp/`) mit serverlosem Edge SSR und nativer `proxy.ts`-Unterstützung.
-- **Hetzner:** DNS-Management für `zakkig.de` und SMTP-Hosting.
-- **GitHub Actions:** Vollautomatisierte CI/CD-Pipelines für Checks und Builds.
-- **Security:** Enterprise-Grade DDoS-Protection und globales CDN über Cloudflare.
+  - **Domain Registrar & DNS:** Autoritativer DNS-Server und Registrar für alle Apex- und Sub-Domains (`zakkig.com`, `app.zakkig.com`).
+  - **Cloudflare Pages:** Hosting und globales Edge CDN für die statisch exportierte Marketing-Website (`website/`) mit 0ms Cold Start.
+  - **Cloudflare Workers (`vinext`):** Serverlose Edge-Runtime für die dynamische Webapp (`webapp/`) mit serverlosem SSR und nativer `proxy.ts`-Unterstützung.
+- **Google Workspace:**
+  - **Enterprise Email & Identity:** Offizielle Unternehmens-E-Mail-Domain (`selim@zakkig.com`) auf Google Workspace.
+  - **SMTP & Transactional Messaging:** Autoritativer E-Mail-Dienst für Auth-Einmalcodes (OTP), Token-Bestätigungen und Kundenbenachrichtigungen.
+- **Convex:**
+  - **Reaktives All-in-One Backend:** Transaktionale Echtzeit-Datenbank, serverseitige Mutationen, Queries, Crons und Scheduler.
+  - **Media & File Storage:** Nativer Dateispeicher für Restaurant-Logos, Hero-Banner und Speisekarten-Fotos.
+  - **Backend Authority:** Alle externen Netzwerkaufrufe (Google Workspace SMTP, Stripe Connect API) sind in Convex Node Actions gekapselt.
+- **GitHub:**
+  - **Version Control & Repository:** Monorepo-Hosting, Versionskontrolle und CI/CD-Deployment-Trigger.
+- **AI Development Architecture:**
+  - Google AI & ChatGPT für agentenbasiertes Coding, Pair Programming und architektonische Systemgestaltung.
+- **Frontend & UI:**
+  - Next.js (App Router, Server Actions, Server Components, Turbopack) und Tailwind CSS v4.
+  - **Design System:** Apple-inspirierte Ästhetik, Monochrom Light Theme, shadcn/ui, Phosphor Icons (`@phosphor-icons/react`), durchgezogene Trennlinien (Edge-to-Edge Dividers) bei Dialogen und Modals.
+  - **Typografie:** Poppins als primäre UI-Schriftart, Ziffern und Beträge strikt in Inter (`font-inter`, `tabular-nums`) via `<Price />`.
+- **Payment Infrastruktur:**
+  - Stripe Connect (Destination Charges mit 1% Plattformgebühr, Checkout Sessions API mit Payment Element).
+- **Lokalisierung & Regionen (Model B):**
+  - Next-intl mit strikter URL-Lokalisierung (z. B. `/de-de`, `/de-en`, `/de-de/legal`, `/de-de/privacy`, `/de-de/gtc`).
+  - Länder und Regionen werden im UI ausnahmslos in ihrer primären Landessprache (Endonym, z. B. "Deutschland") dargestellt.
+- **Security:**
+  - Enterprise-Grade DDoS-Protection, DNSSEC, TLS 1.3 und globales CDN über Cloudflare.
 
 ---
 
-## TEIL 6: B2B LANDINGPAGE (zakkig.de)
+## TEIL 6: B2B LANDINGPAGE (zakkig.com)
 
-Die Marketingseite wird als SEO-optimierter One-Pager gehostet, ergänzt durch separate rechtliche Unterseiten. Sie wird vollständig zweisprachig umgesetzt.
+Die Marketingseite wird als SEO-optimierter One-Pager gehostet, ergänzt durch separate rechtliche Unterseiten. Sie setzt auf das zukunftssichere Model B für Regionen und Sprachen.
 
-### 6.1 Routing & Lokalisierung
+### 6.1 Routing & Model B Lokalisierung
 
-- **Deutsch (Standard):** `/` (One-Pager), `/impressum`, `/datenschutz`, plus 404-Fallback.
-- **Englisch:** `/en/` (One-Pager), `/en/legal`, `/en/privacy`, plus englisches 404-Fallback.
+- **Standard (Deutschland - Deutsch):** `/de-de` (One-Pager), `/de-de/legal` (Impressum), `/de-de/privacy` (Datenschutz), `/de-de/gtc` (AGB).
+- **Englisch (Deutschland - Englisch):** `/de-en` (One-Pager), `/de-en/legal`, `/de-en/privacy`, `/de-en/gtc`.
+- **Root-Redirect:** `/` leitet automatisch serverseitig auf `/de-de` weiter.
+- **Region & Sprache Switcher:** Öffnet einen barrierefreien Apple-Style Dialog mit durchgezogenen Trennlinien und Länderauswahl mit Flaggen-Icons.
 - **Navigation:** Lokalisierte Anchor-Links (z. B. `#loesung` vs. `#solution`).
 
 ### 6.2 Globale SEO Meta-Daten
@@ -282,10 +293,10 @@ Dieser Abschnitt richtet sich an Entwickler und enthält technische Details zur 
 ### 7.1 Umgebungsvariablen & Ports
 
 Jedes Teilprojekt besitzt eine eigene `.env` und `.env.example` Datei im jeweiligen Verzeichnis (`webapp/` und `website/`).
-- **Webapp (`webapp/.env`):** Enthält Konfigurationen für Convex (`NEXT_PUBLIC_CONVEX_URL`, `CONVEX_DEPLOYMENT`), Stripe Keys, SMTP Provider Einstellungen und Session-Geheimnisse.
+- **Webapp (`webapp/.env`):** Enthält Konfigurationen für Convex (`NEXT_PUBLIC_CONVEX_URL`, `CONVEX_DEPLOYMENT`), Stripe Keys, SMTP Provider Einstellungen (`selim@zakkig.com`) und Session-Geheimnisse.
 - **Port-Management:**
-  - Im **Development-Modus** läuft die Marketingseite auf Port 3000 (`next dev --port 3000`) und die Webapp auf Port 3001 (`next dev --port 3001`).
-  - Im **Production-Modus** starten beide Anwendungen über den Standard-Befehl `next start` (Standard-Port 3000).
+  - Im **Development-Modus** läuft die Webapp standardmäßig auf Port 3000 (`next dev`) und die Marketingseite auf Port 3001 (`next dev --port 3001`).
+  - Im **Production-Modus** starten beide Anwendungen optimiert für Cloudflare Workers (`webapp/`) bzw. Cloudflare Pages (`website/`).
 
 ### 7.2 Datenbank-Schema & Convex Functions
 
@@ -301,4 +312,4 @@ Für Next.js Server Components und Server Actions wird der serverseitige Convex-
 
 ### 7.4 E-Mail & SMTP
 
-Der native SMTP-Service über Hetzner (`mail.your-server.de`) versendet alle ausgehenden transaktionalen Mails (Zwei-Faktor Einmalcodes für Registrierung und Login, Kontolöschungs-Tokens und digitale Quittungen).
+Der native SMTP-Service über Google Workspace (`selim@zakkig.com`) versendet alle ausgehenden transaktionalen Mails (Zwei-Faktor Einmalcodes für Registrierung und Login, Kontolöschungs-Tokens und digitale Quittungen) abgesichert über Convex Node Actions.

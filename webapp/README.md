@@ -8,13 +8,14 @@ Dieses Verzeichnis enthält die Haupt-Applikation von Zakkig (das Gastronomen-Da
 
 - **Framework:** Next.js (App Router, Server Actions, Server Components, Turbopack) & `vinext` für Cloudflare Workers
 - **Backend Platform:** Convex (Reaktive Echtzeit-Datenbank, serverseitige Mutations/Queries/Actions, File Storage, Crons & HTTP Endpoints)
+- **Corporate Infrastructure:** Cloudflare (Domain Registrar, DNS, Pages & Workers)
 - **Edge-Architektur:** Strikte Zero-Node-Edge-Architektur. Das Next.js-Frontend läuft auf V8 Edge Runtimes (Cloudflare Workers) ohne Node-Sockets; alle E-Mail- (SMTP) und Zahlungs-Abwicklungen (Stripe) laufen exklusiv auf Convex
 - **Authentifizierung:** Convex Auth & SSR Session Management mit HttpOnly-Cookies und E-Mail-OTP
-- **E-Mail-Versand:** Hetzner Mailserver (SMTP via `mail.your-server.de`, abgewickelt als Convex Node Action)
-- **Zahlungsabwicklung:** Stripe Connect (Destination Charges mit 1% Plattform-Gebühr, Embedded Payment Element)
-- **UI & Styling:** Tailwind CSS, Shadcn UI, Phosphor Icons
+- **E-Mail-Versand:** Google Workspace (SMTP via `smtp.gmail.com`, `selim@zakkig.com`, abgewickelt als Convex Node Action)
+- **Zahlungsabwicklung:** Stripe Connect (Destination Charges mit 1% Plattform-Gebühr, Checkout Sessions API & Payment Element)
+- **UI & Styling:** Tailwind CSS, Shadcn UI, Phosphor Icons, Apple-inspirierte Edge-to-Edge Dividers
 - **State Management:** Zustand & reaktive Convex Hooks (`useQuery`, `useMutation`)
-- **Internationalisierung (i18n):** next-intl (Deutsch & Englisch)
+- **Internationalisierung (i18n):** next-intl (Model B Regionen- & Sprachstruktur, Endonyme für Länderbezeichnungen)
 
 ---
 
@@ -33,9 +34,9 @@ Die Applikation nutzt ein striktes **Server-Side Rendering (SSR) Authentifizieru
 Der Versand von Transaktions-E-Mails (Anmeldecodes, Passwort-Resets, Bestätigungen für E-Mail-Änderungen und Account-Löschungen) ist zu 100 % in `convex/emails.ts` implementiert und läuft über den Convex-Scheduler (`ctx.scheduler.runAfter(0, internal.emails....)`).
 
 - **Keine Node-Abhängigkeiten in Next.js:** Das Frontend ruft ausschließlich Convex-Mutationen auf (`requestAccountDeletionEmail`, `requestEmailChangeEmail`, `sendEmailChangeOtpWithEmail`), wodurch die Webapp frei von `nodemailer` oder TCP-Sockets bleibt.
-- **Primärer Versandweg:** Hetzner SMTP (`mail.your-server.de`, Port 587) mit TLS-Verschlüsselung.
+- **Primärer Versandweg:** Google Workspace SMTP (`smtp.gmail.com`, Port 587) mit TLS-Verschlüsselung.
 - **Absender-Konfiguration:**
-  - **Absender-E-Mail:** `noreply@zakkig.de`
+  - **Absender-E-Mail:** `selim@zakkig.com`
   - **Absender-Name (Deutsch):** `Selim von zakkig`
   - **Absender-Name (Englisch):** `Selim at zakkig`
 - **Verschlüsselung:** TLS/STARTTLS über Port 587.
