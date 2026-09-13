@@ -35,7 +35,7 @@ function DialogCloseButton({
           variant="ghost"
           size="icon-sm"
           className={cn(
-            "rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0",
+            "rounded-full text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 shrink-0",
             className,
           )}
           {...props}
@@ -78,7 +78,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 flex flex-col w-full max-w-[calc(100%-1.5rem)] sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] -translate-x-1/2 -translate-y-1/2 rounded-[20px] sm:rounded-[24px] bg-card text-card-foreground border border-border shadow-2xl overflow-hidden p-0 text-sm outline-none transition-all duration-150 ease-out data-[starting-style]:opacity-0 data-[starting-style]:scale-95 data-[ending-style]:opacity-0 data-[ending-style]:scale-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "fixed top-1/2 left-1/2 z-50 flex flex-col w-full max-w-[calc(100%-1.5rem)] sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] -translate-x-1/2 -translate-y-1/2 rounded-[20px] sm:rounded-[24px] bg-white text-zinc-900 border border-zinc-200 shadow-2xl overflow-hidden p-0 text-sm outline-none transition-all duration-150 ease-out data-[starting-style]:opacity-0 data-[starting-style]:scale-95 data-[ending-style]:opacity-0 data-[ending-style]:scale-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className,
         )}
         {...props}
@@ -90,7 +90,7 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-4 right-4 sm:top-5 sm:right-6 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer z-20"
+                className="absolute top-4 right-4 sm:top-5 sm:right-6 rounded-full text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 cursor-pointer z-20"
                 size="icon-sm"
               />
             }
@@ -109,7 +109,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="dialog-header"
       className={cn(
-        "px-5 sm:px-6 py-4 sm:py-5 border-b border-border bg-card shrink-0 text-left flex flex-col gap-1",
+        "px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1",
         className,
       )}
       {...props}
@@ -142,7 +142,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "px-5 sm:px-6 py-3.5 sm:py-4 border-t border-border bg-card shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full",
+        "px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full",
         className,
       )}
       {...props}
@@ -153,7 +153,7 @@ function DialogFooter({
           render={
             <Button
               variant="outline"
-              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
             />
           }
         >
@@ -169,7 +169,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn(
-        "text-xl font-bold tracking-tight text-foreground leading-tight",
+        "text-xl font-bold tracking-tight text-zinc-900 leading-tight",
         className,
       )}
       {...props}
@@ -185,7 +185,7 @@ function DialogDescription({
     <DialogPrimitive.Description
       data-slot="dialog-description"
       className={cn(
-        "text-xs text-muted-foreground font-normal leading-relaxed mt-0.5",
+        "text-xs text-zinc-500 font-normal leading-relaxed mt-0.5",
         className,
       )}
       {...props}

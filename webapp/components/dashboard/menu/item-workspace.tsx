@@ -401,7 +401,7 @@ export function ItemWorkspace({
                 </div>
               </div>
 
-              <Separator className="bg-border" />
+              <Separator className="bg-zinc-100" />
 
               {/* SECTION 2: ZUSAMMENSTELLUNG & PRESETS */}
               <div className="space-y-4">
@@ -446,14 +446,14 @@ export function ItemWorkspace({
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
-              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
             >
               {t("cancel")}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full sm:flex-1 rounded-full h-11 bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold active:scale-[0.98] transition-all cursor-pointer"
+              className="w-full sm:flex-1 h-11 rounded-full bg-black text-white hover:bg-zinc-800 font-semibold active:scale-[0.98] transition-all cursor-pointer"
             >
               {isSubmitting ? (
                 <>

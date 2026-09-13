@@ -1021,7 +1021,7 @@ function QrCodeGeneratorCard({
               type="button"
               variant="outline"
               onClick={() => setDeleteTablesDialogOpen(false)}
-              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
             >
               {t("cancel")}
             </Button>

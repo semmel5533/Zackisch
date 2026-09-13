@@ -227,9 +227,9 @@ export function CustomizationModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-[500px] sm:max-w-[500px] md:max-w-[500px] lg:max-w-[500px] bottom-0 top-auto translate-y-0 left-1/2 -translate-x-1/2 sm:bottom-0 sm:top-auto sm:translate-y-0 sm:left-1/2 sm:-translate-x-1/2 rounded-none sm:rounded-none rounded-t-[24px] sm:rounded-t-[24px] rounded-b-none sm:rounded-b-none border-t border-border border-b-0 border-x-0 min-[501px]:border-x h-[92vh] h-[92dvh] max-h-[92dvh] flex flex-col p-0 sm:p-0 gap-0 sm:gap-0 overflow-hidden bg-background text-foreground shadow-2xl">
+      <DialogContent className="w-full max-w-[500px] sm:max-w-[500px] md:max-w-[500px] lg:max-w-[500px] bottom-0 top-auto translate-y-0 left-1/2 -translate-x-1/2 sm:bottom-0 sm:top-auto sm:translate-y-0 sm:left-1/2 sm:-translate-x-1/2 rounded-none sm:rounded-none rounded-t-[24px] sm:rounded-t-[24px] rounded-b-none sm:rounded-b-none border-t border-zinc-200 border-b-0 border-x-0 min-[501px]:border-x h-[92vh] h-[92dvh] max-h-[92dvh] flex flex-col p-0 sm:p-0 gap-0 sm:gap-0 overflow-hidden bg-background text-foreground shadow-2xl">
         {/* Fixed Header */}
-        <DialogHeader className="p-5 pb-3.5 border-b border-border shrink-0 bg-background space-y-1.5 text-left relative z-30">
+        <DialogHeader className="p-5 pb-3.5 border-b border-zinc-100 shrink-0 bg-background space-y-1.5 text-left relative z-30">
           <div className="flex items-start justify-between gap-3">
             <DialogTitle className="text-xl font-bold min-w-0 flex-1 text-foreground break-words leading-snug">
               {item.name}
@@ -403,7 +403,7 @@ export function CustomizationModal({
         {/* Fixed Footer */}
         <div
           className={cn(
-            "p-4 border-t border-border shrink-0 bg-background transition-shadow duration-200",
+            "p-4 border-t border-zinc-100 shrink-0 bg-background transition-shadow duration-200",
             showFooterShadow && "shadow-[0_-4px_16px_rgba(0,0,0,0.06)]"
           )}
         >

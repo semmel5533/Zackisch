@@ -139,19 +139,19 @@ Follow this unified, multi-layered architecture for all features and changes:
 All dialogs, modals, and settings sheets across `webapp` and `website` strictly follow a unified Apple-inspired architecture:
 
 1. **Edge-to-Edge Dividers Rule (Komplett durchgezogene Trennlinien):**
-   - Horizontal dividing lines (`border-b` under the dialog header and `border-t` above the dialog footer) must ALWAYS run continuously from the left outer edge to the right outer edge of the dialog frame.
-   - Dividers must NEVER be indented, floating, or cut off inside content padding (no `p-6` with inset borders).
-   - The outer container uses `p-0 sm:p-0 overflow-hidden rounded-[24px] border border-border bg-card shadow-2xl flex flex-col`.
+   - Horizontal dividing lines (`border-b border-zinc-100` under the dialog header and `border-t border-zinc-100` above the dialog footer) must ALWAYS run continuously from the left outer edge to the right outer edge of the dialog frame.
+   - Dividers must NEVER be indented, floating, or cut off inside content padding (no `p-6` with inset borders). They must use `border-zinc-100` for a delicate, crisp, ultra-clean Apple finish matching the website modal.
+   - The outer container uses `p-0 sm:p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col`.
 
 2. **Standardized Header & Typography:**
-   - Every dialog features a dedicated `DialogHeader` (`px-6 py-4 sm:py-5 border-b border-border shrink-0 text-left flex flex-col gap-1`).
-   - Title: `DialogTitle` in `text-xl font-bold tracking-tight text-foreground leading-tight`.
-   - Description: `DialogDescription` in `text-xs text-muted-foreground font-normal leading-relaxed mt-0.5`.
+   - Every dialog features a dedicated `DialogHeader` (`px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1`).
+   - Title: `DialogTitle` in `text-xl font-bold tracking-tight text-zinc-900 leading-tight`.
+   - Description: `DialogDescription` in `text-xs text-zinc-500 font-normal leading-relaxed mt-0.5`.
 
 3. **Standardized Footer & Action Buttons:**
-   - Every dialog with actions features a dedicated `DialogFooter` (`px-6 py-4 border-t border-border shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full`).
-   - Secondary / Abbrechen button: strictly `variant="outline"`, full-width responsive (`w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted`).
-   - Primary / Action button: strictly `bg-primary text-primary-foreground font-semibold rounded-full h-11 w-full sm:flex-1 active:scale-[0.98] transition-all` (or `variant="destructive"` for deletions).
+   - Every dialog with actions features a dedicated `DialogFooter` (`px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full`).
+   - Secondary / Abbrechen button: strictly `variant="outline"`, full-width responsive (`w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer`).
+   - Primary / Action button: strictly `bg-black text-white hover:bg-zinc-800 font-semibold rounded-full h-11 w-full sm:flex-1 active:scale-[0.98] transition-all cursor-pointer` (or `variant="destructive"` for deletions).
 
 4. **Modal Language Switcher Standard:**
    - Clicking any language switcher (guest menus, order tracker, dashboard sidebar) must NEVER perform an abrupt toggle. It must always open a modal dialog adhering to this exact architecture (header, edge-to-edge dividers, language options with checkmarks, responsive footer buttons).

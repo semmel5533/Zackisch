@@ -119,7 +119,7 @@ export function SessionsOverviewCard({
                     href={getLink("orders", orderToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl overflow-hidden border border-border"
+                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-6 border border-zinc-200"
                   >
                     <ReactQRCode
                       value={getLink("orders", orderToken)}
@@ -150,9 +150,9 @@ export function SessionsOverviewCard({
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted/60 p-3.5 rounded-2xl w-full border border-border">
+                  <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 p-3.5 rounded-2xl w-full border border-zinc-200">
                     <WarningCircle
-                      className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
+                      className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
                       weight="fill"
                     />
                     <span>{t("staffQrWarning")}</span>
@@ -223,7 +223,7 @@ export function SessionsOverviewCard({
                     href={getLink("availability", availabilityToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl overflow-hidden border border-border"
+                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-6 border border-zinc-200"
                   >
                     <ReactQRCode
                       value={getLink("availability", availabilityToken)}
@@ -254,9 +254,9 @@ export function SessionsOverviewCard({
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted/60 p-3.5 rounded-2xl w-full border border-border">
+                  <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 p-3.5 rounded-2xl w-full border border-zinc-200">
                     <WarningCircle
-                      className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
+                      className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
                       weight="fill"
                     />
                     <span>{t("staffQrWarning")}</span>
@@ -310,7 +310,7 @@ export function SessionsOverviewCard({
               type="button"
               variant="outline"
               onClick={() => setRegenerateAvailabilityOpen(false)}
-              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
             >
               {t("cancel")}
             </Button>
@@ -341,7 +341,7 @@ export function SessionsOverviewCard({
               type="button"
               variant="outline"
               onClick={() => setRegenerateOrderOpen(false)}
-              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
             >
               {t("cancel")}
             </Button>

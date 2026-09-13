@@ -122,19 +122,19 @@ export function RegionLanguageSwitcher({
             aria-modal="true"
             aria-labelledby="region-dialog-title"
             aria-describedby="region-dialog-description"
-            className="relative w-full max-w-md sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] bg-card text-card-foreground rounded-[20px] sm:rounded-[24px] border border-border shadow-2xl overflow-hidden p-0 z-10 animate-in fade-in zoom-in-95 duration-150 flex flex-col"
+            className="relative w-full max-w-md sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] bg-white text-zinc-900 rounded-[20px] sm:rounded-[24px] border border-zinc-200 shadow-2xl overflow-hidden p-0 z-10 animate-in fade-in zoom-in-95 duration-150 flex flex-col"
           >
             {/* Header with edge-to-edge dividing line */}
-            <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-border bg-card shrink-0 text-left flex flex-col gap-1">
+            <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1">
               <h2
                 id="region-dialog-title"
-                className="text-xl font-bold tracking-tight text-foreground leading-tight"
+                className="text-xl font-bold tracking-tight text-zinc-900 leading-tight"
               >
                 {t("regionSelectorTitle")}
               </h2>
               <p
                 id="region-dialog-description"
-                className="text-xs text-muted-foreground font-normal leading-relaxed mt-0.5"
+                className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5"
               >
                 {t("regionSelectorDescription")}
               </p>
@@ -144,7 +144,7 @@ export function RegionLanguageSwitcher({
             <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 flex-1 overflow-y-auto">
               {/* Region Section */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2.5">
                   {t("regionLabel")}
                 </label>
                 <div className="space-y-2">
@@ -158,8 +158,8 @@ export function RegionLanguageSwitcher({
                         className={cn(
                           "w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border text-left transition-all cursor-pointer",
                           isSelected
-                            ? "border-foreground bg-muted/60 font-semibold text-foreground"
-                            : "border-border hover:border-muted-foreground/40 text-foreground bg-background",
+                            ? "border-black bg-zinc-50 font-semibold text-black"
+                            : "border-zinc-200 hover:border-zinc-300 text-zinc-700 bg-white",
                         )}
                       >
                         <div className="flex items-center gap-3">
@@ -169,7 +169,7 @@ export function RegionLanguageSwitcher({
                           </span>
                         </div>
                         {isSelected && (
-                          <Check className="w-4 h-4 text-foreground shrink-0" weight="bold" />
+                          <Check className="w-4 h-4 text-black shrink-0" weight="bold" />
                         )}
                       </button>
                     );
@@ -179,7 +179,7 @@ export function RegionLanguageSwitcher({
 
               {/* Language Section */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2.5">
                   {t("languageLabel")}
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -193,13 +193,13 @@ export function RegionLanguageSwitcher({
                         className={cn(
                           "flex items-center justify-between px-4 py-3 rounded-2xl border text-left transition-all cursor-pointer",
                           isSelected
-                            ? "border-foreground bg-muted/60 font-semibold text-foreground"
-                            : "border-border hover:border-muted-foreground/40 text-foreground bg-background",
+                            ? "border-black bg-zinc-50 font-semibold text-black"
+                            : "border-zinc-200 hover:border-zinc-300 text-zinc-700 bg-white",
                         )}
                       >
                         <span className="text-sm font-medium">{lang.label}</span>
                         {isSelected && (
-                          <Check className="w-4 h-4 text-foreground shrink-0" weight="bold" />
+                          <Check className="w-4 h-4 text-black shrink-0" weight="bold" />
                         )}
                       </button>
                     );
@@ -209,19 +209,19 @@ export function RegionLanguageSwitcher({
             </div>
 
             {/* Footer with edge-to-edge dividing line */}
-            <div className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-border bg-card shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
+            <div className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
               <Button
                 type="button"
                 variant="outline"
                 onClick={closeModal}
-                className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+                className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
               >
                 {t("cancel")}
               </Button>
               <Button
                 type="button"
                 onClick={handleApply}
-                className="w-full sm:flex-1 rounded-full h-11 bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full sm:flex-1 h-11 rounded-full bg-black text-white hover:bg-zinc-800 font-semibold active:scale-[0.98] transition-all cursor-pointer"
               >
                 {t("saveAndContinue")}
               </Button>
