@@ -63,7 +63,7 @@ Convex synchronisiert Änderungen automatisch und ohne manuelle WebSocket-Verwal
 
 - **Kitchen Board (`/dashboard/[orgId]/live-orders` & `/orders/[orgId]`):** Nutzt reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions. Sobald ein Gast bezahlt oder der Status geändert wird, aktualisieren sich alle Displays blitzschnell. Responsive Layout-Umschaltungen (1 Spalte unter 500px, 2 Spalten zwischen 500px und 1100px, 3 Spalten ab 1100px) basieren auf CSS Container Queries (`@container`) und berechnen den verfügbaren Platz exklusiv anhand der Inhaltsbreite ohne Sidebar.
 - **Verfügbarkeits-Board (`/availability/[orgId]`):** Kassenpersonal kann Speisen oder Optionen sekundenschnell als ausverkauft schalten (`toggleMenuItemAvailability`). Gäste und Terminals sehen dies sofort im UI.
-- **Gast-Bestellverfolgung (`/to-go` & `/to-stay` Tracker):** Der Gast sieht den aktuellen Zubereitungs-Status seiner Bestellung in Echtzeit über `useQuery(api.orders.getOrder)`.
+- **Gast-Bestellverfolgung (`/pickup` & `/table` Tracker):** Der Gast sieht den aktuellen Zubereitungs-Status seiner Bestellung in Echtzeit über `useQuery(api.orders.getOrder)`.
 
 ---
 
@@ -106,7 +106,7 @@ Logos, Restaurant-Banner und Speisekarten-Bilder werden im nativen Convex File S
    - Beim Bearbeiten, Löschen oder Umschalten der Verfügbarkeit von Speisen (`updateMenuItemAction`, `deleteMenuItemAction`, `toggleMenuItemAvailability`) wird geprüft, dass der Artikel zur autorisierten Organisation gehört.
    - Beim Aktualisieren des Bestellstatus auf dem Küchenboard (`updateOrderStatusAction`) wird geprüft, dass die Bestellung der autorisierten Organisation zugeordnet ist.
 3. **Zero Data Leakage an Gast-Schnittstellen:**
-   - Auf öffentlichen Gast-Seiten (`/to-go/[orgId]`, `/to-stay/[orgId]`) werden sensible Betreiberdaten (`stripeAccountId`, `taxId`, `ownerId`) vor der Serialisierung in den React Server Component Payload unkenntlich gemacht bzw. genullt.
+   - Auf öffentlichen Gast-Seiten (`/pickup/[orgId]`, `/table/[orgId]`) werden sensible Betreiberdaten (`stripeAccountId`, `taxId`, `ownerId`) vor der Serialisierung in den React Server Component Payload unkenntlich gemacht bzw. genullt.
    - Bei der Bestellverfolgung werden Plattform- und Zahlungsgebühren (`zakkigFee`, `stripeFee`, `netAmount`, `stripePaymentId`) serverseitig auf 0 gesetzt, sodass Gäste ausschließlich für sie relevante Bestelldaten einsehen können.
 4. **Serverseitige Preis- und Integritätsprüfung:**
    - Gast-Warenkörbe werden im Checkout niemals ungeprüft akzeptiert. Die Convex Action `createCheckoutSession` liest alle Artikelpreise direkt aus der Datenbank und rechnet die Gesamtsumme centgenau nach.
@@ -123,8 +123,8 @@ webapp/
 │   ├── (dashboard)/     # Hauptdashboard (Übersicht, Live-Bestellungen, Menü, Einstellungen, Archiv, Stripe-Return)
 │   ├── availability/    # Terminal für Verfügbarkeiten (Ausverkauft-Schalter)
 │   ├── orders/          # Separates Küchen-Terminal (Kitchen Board)
-│   ├── to-go/           # Gast-Bestellung zum Abholen, Checkout & Live-Tracking
-│   └── to-stay/         # Gast-Bestellung am Tisch, Checkout & Bestätigung
+│   ├── pickup/          # Gast-Bestellung zum Abholen, Checkout & Live-Tracking
+│   └── table/           # Gast-Bestellung am Tisch, Checkout & Bestätigung
 ├── components/          # React-Komponenten (Dashboard, Guest UI, Terminals, UI-Primitives, Dialogs)
 ├── convex/              # Convex Backend
 │   ├── schema.ts        # Typsicheres Datenbank-Schema

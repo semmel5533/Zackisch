@@ -327,7 +327,7 @@ export const createCheckoutSession = action({
       const isMockAccountId = !org.stripeAccountId || org.stripeAccountId.startsWith("acct_test_");
 
       const origin = args.origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-      const returnUrl = `${origin}/${args.type === "dine-in" ? "to-stay" : "to-go"}/${args.organizationId}/success?session_id={CHECKOUT_SESSION_ID}`;
+      const returnUrl = `${origin}/${args.type === "dine-in" ? "table" : "pickup"}/${args.organizationId}/success?session_id={CHECKOUT_SESSION_ID}`;
 
       const sessionParams: Stripe.Checkout.SessionCreateParams = {
         ui_mode: "elements",

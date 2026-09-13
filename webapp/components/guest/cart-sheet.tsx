@@ -218,7 +218,7 @@ export function CartSheet({
                   },
                 }}
               >
-                <CheckoutForm returnUrl={`${window.location.origin}/${type === "dine-in" ? "to-stay" : "to-go"}/${organization.$id}/success`} />
+                <CheckoutForm returnUrl={`${window.location.origin}/${type === "dine-in" ? "table" : "pickup"}/${organization.$id}/success`} />
               </CheckoutElementsProvider>
             </div>
           )}

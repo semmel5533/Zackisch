@@ -161,8 +161,8 @@ export async function reorderItemsAction(
     });
     await updateItemSortOrders(updates);
     revalidatePath(`/dashboard/${organizationId}/menu`);
-    revalidatePath(`/to-go/${organizationId}`);
-    revalidatePath(`/to-stay/${organizationId}`);
+    revalidatePath(`/pickup/${organizationId}`);
+    revalidatePath(`/table/${organizationId}`);
     revalidatePath(`/availability/${organizationId}`);
     return { success: true };
   } catch (error: unknown) {
@@ -361,8 +361,8 @@ export async function updateMenuItemAction(
     });
 
     revalidatePath(`/dashboard/${organizationId}/menu`);
-    revalidatePath(`/to-go/${organizationId}`);
-    revalidatePath(`/to-stay/${organizationId}`);
+    revalidatePath(`/pickup/${organizationId}`);
+    revalidatePath(`/table/${organizationId}`);
     revalidatePath(`/availability/${organizationId}`);
     return { success: true };
   } catch (error: unknown) {

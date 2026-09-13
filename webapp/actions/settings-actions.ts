@@ -95,8 +95,8 @@ export async function updateBusinessAction(
 
     revalidatePath(`/dashboard/${organizationId}/settings`);
     revalidatePath(`/dashboard/${organizationId}/overview`);
-    revalidatePath(`/to-go/${organizationId}`);
-    revalidatePath(`/to-stay/${organizationId}`);
+    revalidatePath(`/pickup/${organizationId}`);
+    revalidatePath(`/table/${organizationId}`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -262,14 +262,14 @@ export async function confirmEmailChangeOtpAction(
 
 export async function toggleFeatureAction(
   organizationId: string,
-  feature: "to-go" | "to-stay",
+  feature: "pickup" | "table" | "to-go" | "to-stay",
   value: boolean,
 ): Promise<SettingsActionState> {
   try {
     await requireOwner(organizationId);
 
     const updateData =
-      feature === "to-go"
+      feature === "pickup" || feature === "to-go"
         ? { isToGoEnabled: value }
         : { isToStayEnabled: value };
 

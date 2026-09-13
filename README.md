@@ -64,11 +64,11 @@ Einmaliges Pairing über das Dashboard erzeugt eine dauerhafte Session. Keine Pa
 **Gast-Routen (Öffentlich, Keine Session)**
 Zugriff ausschließlich über Parameter, ohne Registrierung.
 
-- `app.zakkig.com/to-go/{organizationId}` (To-Go Menü)
-- `app.zakkig.com/to-go/{organizationId}?order={orderId}` (To-Go Status-Tracker mit 10-Minuten-Countdown)
-- `app.zakkig.com/to-go/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung & automatische Weiterleitung zum Live-Tracker)
-- `app.zakkig.com/to-stay/{organizationId}?table={tableNumber}` (To-Stay Menü am Tisch, Tischnummer max. 4 Zeichen)
-- `app.zakkig.com/to-stay/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung am Tisch)
+- `app.zakkig.com/pickup/{organizationId}` (Abhol-Menü / Pickup)
+- `app.zakkig.com/pickup/{organizationId}?order={orderId}` (Pickup Status-Tracker mit 10-Minuten-Countdown)
+- `app.zakkig.com/pickup/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung & automatische Weiterleitung zum Live-Tracker)
+- `app.zakkig.com/table/{organizationId}?table={tableNumber}` (Tisch-Menü / Table am Tisch, Tischnummer max. 4 Zeichen)
+- `app.zakkig.com/table/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung am Tisch)
 
 ### 2.2 Core Features: Dashboard (SaaS Admin)
 
@@ -99,8 +99,8 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
 - **Checkout:** Abfrage der E-Mail-Adresse (Pflicht für digitalen Beleg), Integration über die Stripe Checkout Sessions API (`ui_mode: "elements"`) mit dem eingebetteten Stripe Payment Element (Apple Pay, Google Pay, Kartenzahlung) und serverseitiger Validierung der Artikelpreise und Verfügbarkeiten in Convex. Nach erfolgreicher Zahlung wird der digitale Bon per E-Mail gesendet.
 - **Bestellnummern (Rolling 001 - 999):** Die für Gäste, Gastronomen und Küche sichtbare Bestellnummer rotiert fortlaufend streng aufsteigend im dreistelligen Format von `001` bis `999` und beginnt danach automatisch wieder bei `001` (abgesichert gegen historische Seed-Verschiebungen und Rollover). Intern wird jede Bestellung zusätzlich durch eine eindeutige Dokumenten-ID sowie die Stripe-Payment-ID identifiziert.
 - **Nach der Bestellung:**
-  - **To-Stay:** Weiterleitung auf `/to-stay/{organizationId}/success`, Anzeige der Bestellnummer auf dem Screen. Gast wartet am Tisch.
-  - **To-Go:** Weiterleitung auf `/to-go/{organizationId}/success` und automatische Weiterleitung auf den Order-Tracker mit Live-Status und Anzeige der 3-stelligen Abholnummer. Der Link bleibt nach Bestellabschluss (Abholbereit) 10 Minuten lang mit einem Live-Restzeit-Countdown aktiv ("Tracking-Link aktiv für noch X:XX Min."), danach schaltet er auf den Ablauf-Screen um.
+  - **Table:** Weiterleitung auf `/table/{organizationId}/success`, Anzeige der Bestellnummer auf dem Screen. Gast wartet am Tisch.
+  - **Pickup:** Weiterleitung auf `/pickup/{organizationId}/success` und automatische Weiterleitung auf den Order-Tracker mit Live-Status und Anzeige der 3-stelligen Abholnummer. Der Link bleibt nach Bestellabschluss (Abholbereit) 10 Minuten lang mit einem Live-Restzeit-Countdown aktiv ("Tracking-Link aktiv für noch X:XX Min."), danach schaltet er auf den Ablauf-Screen um.
 
 ### 2.5 Lifecycle & Ablaufzeiten (Sicherheitsstandard & Auto-Cleanup)
 

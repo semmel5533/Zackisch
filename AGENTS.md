@@ -66,7 +66,7 @@ Follow this unified, multi-layered architecture for all features and changes:
    - Dashboard layouts must strictly verify ownership (`if (org.ownerId !== user._id && org.ownerId !== user.$id) redirect("/sign-in")`).
 
 3. **Zero Data Leakage (Guest Boundary & DOM Hygiene):**
-   - When passing data to public guest pages (`to-go`, `to-stay`), NEVER expose sensitive merchant or platform accounting data (`stripeAccountId`, `taxId`, `ownerId`, `zakkigFee`, `stripeFee`, `netAmount`). Always sanitize or zero out before serializing into RSC payloads or query responses.
+   - When passing data to public guest pages (`pickup`, `table`), NEVER expose sensitive merchant or platform accounting data (`stripeAccountId`, `taxId`, `ownerId`, `zakkigFee`, `stripeFee`, `netAmount`). Always sanitize or zero out before serializing into RSC payloads or query responses.
 
 4. **Server-Side Price & Integrity Enforcement:**
    - NEVER trust client-supplied prices, item names, or order totals.
@@ -124,7 +124,7 @@ Follow this unified, multi-layered architecture for all features and changes:
 # Guest Ordering UX Conventions
 
 1. **Clean Initial State:**
-   - Public guest ordering pages (`to-go`, `to-stay`) must have no bottom navigation tabs when the cart is empty.
+   - Public guest ordering pages (`pickup`, `table`) must have no bottom navigation tabs when the cart is empty.
 2. **Floating Bottom Cart Banner:**
    - A floating cart banner appears fixed at the bottom only when `itemCount > 0`. It displays the count badge, "Zum Warenkorb", total price, and arrow. It must automatically hide when the cart is emptied.
 3. **Focused Cart View:**

@@ -82,7 +82,7 @@ function GuestHeader({
             <div className="shrink-0 flex items-center justify-end">
               <LanguageSwitcher
                 variant="default"
-                className="h-9 text-xs font-semibold tracking-wide uppercase bg-primary text-primary-foreground flex items-center justify-center gap-1.5 px-3.5 rounded-full border border-primary-foreground/20 hover:bg-neutral-800 hover:text-primary-foreground shrink-0 shadow-sm transition-colors cursor-pointer"
+                className="w-10 h-10 p-0 bg-primary text-primary-foreground flex items-center justify-center rounded-full border border-primary-foreground/20 hover:bg-neutral-800 hover:text-primary-foreground shrink-0 shadow-sm transition-colors cursor-pointer"
               />
             </div>
           </div>
@@ -402,8 +402,7 @@ function CartHeader({
 
         <LanguageSwitcher
           variant="default"
-          size="lg"
-          className="h-9 px-3.5 text-xs font-bold tracking-wide uppercase bg-primary text-primary-foreground rounded-full hover:bg-neutral-800 hover:text-primary-foreground shadow-sm transition-colors cursor-pointer border-0 shrink-0"
+          className="w-10 h-10 p-0 bg-primary text-primary-foreground flex items-center justify-center rounded-full hover:bg-neutral-800 hover:text-primary-foreground shadow-sm transition-colors cursor-pointer border-0 shrink-0"
         />
       </div>
     </header>
@@ -728,7 +727,7 @@ export function GuestFrontend({
           setCheckoutOpen(false);
           useCartStore.getState().clearCart();
           if (type === "takeaway") {
-            router.push(`/to-go/${organization.$id}?order=${orderId}`);
+            router.push(`/pickup/${organization.$id}?order=${orderId}`);
           } else {
             setDineInSuccess({ orderNumber });
           }

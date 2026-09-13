@@ -50,9 +50,9 @@ export function PaymentSuccessPoller({
       toast.success(t("orderPlaced" as any));
 
       if (type === "takeaway") {
-        router.replace(`/to-go/${organizationId}?order=${order._id}`);
+        router.replace(`/pickup/${organizationId}?order=${order._id}`);
       } else {
-        router.replace(`/to-stay/${organizationId}?table=${order.tableNumber || ""}`);
+        router.replace(`/table/${organizationId}?table=${order.tableNumber || ""}`);
       }
     }
   }, [order, organizationId, type, router, clearCart, t]);
@@ -63,7 +63,7 @@ export function PaymentSuccessPoller({
       if (!order) {
         setTimedOut(true);
         toast.error(t("error"));
-        router.replace(`/${type === "takeaway" ? "to-go" : "to-stay"}/${organizationId}`);
+        router.replace(`/${type === "takeaway" ? "pickup" : "table"}/${organizationId}`);
       }
     }, 45000);
 

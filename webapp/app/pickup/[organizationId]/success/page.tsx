@@ -12,7 +12,7 @@ export async function generateMetadata() {
   };
 }
 
-export default async function ToStaySuccessPage({
+export default async function PickupSuccessPage({
   params,
   searchParams,
 }: {
@@ -23,7 +23,7 @@ export default async function ToStaySuccessPage({
   const { payment_intent, session_id } = await searchParams;
 
   if (!payment_intent && !session_id) {
-    redirect(`/to-stay/${organizationId}`);
+    redirect(`/pickup/${organizationId}`);
   }
 
   return (
@@ -31,7 +31,7 @@ export default async function ToStaySuccessPage({
       sessionId={session_id}
       paymentIntentId={payment_intent}
       organizationId={organizationId}
-      type="dine-in"
+      type="takeaway"
     />
   );
 }

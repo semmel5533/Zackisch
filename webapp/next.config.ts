@@ -60,6 +60,20 @@ const nextConfig: NextConfig = {
       ],
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/to-go/:path*",
+        destination: "/pickup/:path*",
+        permanent: true,
+      },
+      {
+        source: "/to-stay/:path*",
+        destination: "/table/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

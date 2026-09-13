@@ -531,7 +531,7 @@ function QrCodeGeneratorCard({
   baseUrl: string;
 }) {
   const { t } = useTranslation();
-  const [qrType, setQrType] = useState<"to-go" | "to-stay">("to-go");
+  const [qrType, setQrType] = useState<"pickup" | "table">("pickup");
   const [selectedTables, setSelectedTables] = useState<string[]>([]);
   const [newTableInput, setNewTableInput] = useState("");
   const [isAddingTable, setIsAddingTable] = useState(false);
@@ -589,10 +589,10 @@ function QrCodeGeneratorCard({
   };
 
   const handleToggleFeature = async (
-    type: "to-go" | "to-stay",
+    type: "pickup" | "table",
     checked: boolean,
   ) => {
-    if (type === "to-go") {
+    if (type === "pickup") {
       const prev = isToGoEnabled;
       setIsToGoEnabled(checked);
       const result = await toggleFeatureAction(organization.$id, type, checked);
@@ -678,11 +678,11 @@ function QrCodeGeneratorCard({
   };
 
   const qrUrl =
-    qrType === "to-go"
-      ? `${baseUrl}/to-go/${organization.$id}`
-      : `${baseUrl}/to-stay/${organization.$id}?table=${encodeURIComponent(selectedTables[0] || "1")}`;
+    qrType === "pickup"
+      ? `${baseUrl}/pickup/${organization.$id}`
+      : `${baseUrl}/table/${organization.$id}?table=${encodeURIComponent(selectedTables[0] || "1")}`;
 
-  const isActive = qrType === "to-go" ? isToGoEnabled : isToStayEnabled;
+  const isActive = qrType === "pickup" ? isToGoEnabled : isToStayEnabled;
 
   return (
     <>
@@ -697,11 +697,11 @@ function QrCodeGeneratorCard({
               <Button
                 onClick={handlePrint}
                 variant="default"
-                disabled={qrType === "to-stay" && selectedTables.length === 0}
+                disabled={qrType === "table" && selectedTables.length === 0}
                 className="w-auto bg-primary text-secondary shadow-sm shrink-0"
               >
                 <Printer className="mr-2 h-4 w-4" />
-                {qrType === "to-go"
+                {qrType === "pickup"
                   ? t("printQrCode")
                   : selectedTables.length > 1
                     ? t("printMultipleCodes").replace(
@@ -717,7 +717,7 @@ function QrCodeGeneratorCard({
             <div
               className={cn(
                 "flex flex-col items-center w-[280px] gap-0 transition-all duration-200",
-                qrType === "to-stay" && selectedTables.length === 0
+                qrType === "table" && selectedTables.length === 0
                   ? "opacity-50 grayscale"
                   : "",
               )}
@@ -732,13 +732,13 @@ function QrCodeGeneratorCard({
                   className="text-foreground"
                 />
                 <InkConnectorText
-                  text={qrType === "to-stay" ? t("qrCodeAt") : t("qrCodeFor")}
+                  text={qrType === "table" ? t("qrCodeAt") : t("qrCodeFor")}
                   fontSize={24}
                   className="text-foreground"
                 />
                 <InkScaledText
                   text={
-                    qrType === "to-stay"
+                    qrType === "table"
                       ? `${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`
                       : t("pickup")
                   }
@@ -773,16 +773,16 @@ function QrCodeGeneratorCard({
                       variant="default"
                       className="w-auto bg-primary text-secondary shrink-0"
                     >
-                      {qrType === "to-go" ? t("toGo") : t("toStay")}
+                      {qrType === "pickup" ? t("toGo") : t("toStay")}
                       <CaretDown className="ml-2 h-4 w-4 shrink-0" />
                     </Button>
                   }
                 />
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setQrType("to-go")}>
+                  <DropdownMenuItem onClick={() => setQrType("pickup")}>
                     {t("toGo")}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setQrType("to-stay")}>
+                  <DropdownMenuItem onClick={() => setQrType("table")}>
                     {t("toStay")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -792,7 +792,7 @@ function QrCodeGeneratorCard({
             {/* Description & Feature Toggle Switch Row */}
             <div className="flex items-center justify-between gap-4 w-full">
               <p className="text-sm text-muted-foreground text-balance leading-relaxed flex-1">
-                {qrType === "to-go"
+                {qrType === "pickup"
                   ? t("qrCodeAdminDescToGo")
                   : t("qrCodeAdminDescToStay")}
               </p>
@@ -810,7 +810,7 @@ function QrCodeGeneratorCard({
           </CardHeader>
 
           <CardContent className="flex-1 flex flex-col min-h-0">
-            {qrType === "to-stay" && (
+            {qrType === "table" && (
               <div className="flex-1 min-w-0 w-full flex flex-col gap-4 h-full min-h-0">
                 <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
                   <Button
@@ -931,9 +931,9 @@ function QrCodeGeneratorCard({
       </div>
 
       <div className="fixed -left-[9999px] top-0 opacity-0 pointer-events-none print:static print:opacity-100 print:pointer-events-auto print:grid print:grid-cols-2 print:gap-y-4 print:gap-x-4 bg-white print:content-start">
-        {qrType === "to-stay" ? (
+        {qrType === "table" ? (
           selectedTables.map((tNum) => {
-            const tableQrUrl = `${baseUrl}/to-stay/${organization.$id}?table=${encodeURIComponent(tNum)}`;
+            const tableQrUrl = `${baseUrl}/table/${organization.$id}?table=${encodeURIComponent(tNum)}`;
             return (
               <div
                 key={tNum}

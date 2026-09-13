@@ -39,7 +39,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ToGoPage({
+export default async function PickupPage({
   params,
   searchParams,
 }: {

@@ -94,7 +94,7 @@ export function OrderTracker({
         <Button
           variant="outline"
           className="font-semibold"
-          onClick={() => (window.location.href = `/to-go/${organization.$id}`)}
+          onClick={() => (window.location.href = `/pickup/${organization.$id}`)}
         >
           {t("orderAgain" as any)}
         </Button>
@@ -141,7 +141,7 @@ export function OrderTracker({
           {organization.name}
         </h1>
         <LanguageSwitcher
-          className="h-9 px-2 text-primary-foreground hover:text-primary-foreground hover:bg-primary-foreground/10 rounded-full"
+          className="w-10 h-10 p-0 flex items-center justify-center text-primary-foreground hover:text-primary-foreground hover:bg-primary-foreground/10 rounded-full shrink-0"
           variant="ghost"
         />
       </header>
@@ -255,7 +255,7 @@ export function OrderTracker({
               variant="outline"
               className="w-full h-12 text-base font-semibold"
               onClick={() =>
-                (window.location.href = `/to-go/${organization.$id}`)
+                (window.location.href = `/pickup/${organization.$id}`)
               }
             >
               {t("orderAgain" as any)}

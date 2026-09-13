@@ -12,7 +12,7 @@ export async function generateMetadata() {
   };
 }
 
-export default async function ToGoSuccessPage({
+export default async function TableSuccessPage({
   params,
   searchParams,
 }: {
@@ -23,7 +23,7 @@ export default async function ToGoSuccessPage({
   const { payment_intent, session_id } = await searchParams;
 
   if (!payment_intent && !session_id) {
-    redirect(`/to-go/${organizationId}`);
+    redirect(`/table/${organizationId}`);
   }
 
   return (
@@ -31,7 +31,7 @@ export default async function ToGoSuccessPage({
       sessionId={session_id}
       paymentIntentId={payment_intent}
       organizationId={organizationId}
-      type="takeaway"
+      type="dine-in"
     />
   );
 }

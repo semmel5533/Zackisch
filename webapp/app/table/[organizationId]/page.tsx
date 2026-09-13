@@ -43,7 +43,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ToStayPage({
+export default async function TablePage({
   params,
   searchParams,
 }: {

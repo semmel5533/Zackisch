@@ -75,17 +75,17 @@ export function LanguageSwitcher({
         type="button"
         variant={variant}
         size={size}
-        className={cn("gap-2 cursor-pointer", className)}
+        className={cn(
+          "w-10 h-10 rounded-full p-0 flex items-center justify-center transition-all active:scale-[0.98] cursor-pointer shrink-0",
+          className,
+        )}
         onClick={openModal}
         aria-label={t("languageSelectorTitle")}
       >
         {children ? (
           children
         ) : (
-          <>
-            <Globe weight="regular" className={size === "sm" ? "w-4 h-4" : "w-4.5 h-4.5"} />
-            <span suppressHydrationWarning>{locale.toUpperCase()}</span>
-          </>
+          <Globe weight="regular" className={size === "sm" ? "w-4 h-4" : "w-5 h-5"} />
         )}
       </Button>
 

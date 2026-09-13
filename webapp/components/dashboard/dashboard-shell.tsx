@@ -329,17 +329,8 @@ export function DashboardShell({
             </form>
             <LanguageSwitcher
               variant="ghost"
-              className={cn(
-                "justify-start h-10 overflow-hidden",
-                isExpanded ? "px-3" : "px-2.5 w-full",
-                "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
-              )}
-            >
-              <Globe className="h-5 w-5 shrink-0" />
-              {isExpanded && (
-                <span className="ml-1">{locale.toUpperCase()}</span>
-              )}
-            </LanguageSwitcher>
+              className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground shrink-0"
+            />
           </div>
         </div>
       </aside>

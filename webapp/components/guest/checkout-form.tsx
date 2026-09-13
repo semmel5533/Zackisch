@@ -29,7 +29,7 @@ export function CheckoutForm({ returnUrl }: { returnUrl: string }) {
         setIsProcessing(false);
       } else if (confirmResult.type === "success") {
         const sessionId = confirmResult.session.id;
-        const baseReturnUrl = returnUrl || `${window.location.origin}/to-go/success`;
+        const baseReturnUrl = returnUrl || `${window.location.origin}/pickup/success`;
         const separator = baseReturnUrl.includes("?") ? "&" : "?";
         window.location.href = `${baseReturnUrl}${separator}session_id=${sessionId}`;
       }
