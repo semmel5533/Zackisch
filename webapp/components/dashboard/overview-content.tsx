@@ -831,7 +831,7 @@ function QrCodeGeneratorCard({
                       }
                     }}
                     className={cn(
-                      "gap-2 font-medium text-sm transition-colors w-full",
+                      "gap-2 font-semibold text-sm transition-colors w-full",
                       selectedTables.length > 0 ? "sm:flex-1" : "",
                     )}
                   >
@@ -842,7 +842,7 @@ function QrCodeGeneratorCard({
                     <Button
                       variant="outline"
                       onClick={handleRemoveSelectedTables}
-                      className="gap-2 text-sm font-medium border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0"
+                      className="gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0"
                     >
                       <Trash className="h-4 w-4 shrink-0" weight="bold" />
                       <span>

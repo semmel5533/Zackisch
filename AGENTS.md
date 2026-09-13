@@ -195,6 +195,10 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
    - Smooth corner radii hierarchy (`rounded-[20px]`, `rounded-[24px]`, `rounded-full`).
    - High contrast WCAG AA/AAA compliance.
 
+4. **Pill Buttons & Select Controls Standard:**
+   - All action buttons, select triggers (`SelectTrigger`), dropdown items, and search/filter bars across dashboard views strictly use unified Apple pill geometry (`h-11 rounded-full font-semibold`, compact `h-9 rounded-full font-semibold`).
+   - Dropdown menus use `rounded-2xl` container cards with `rounded-xl` selectable items.
+
 <!-- END:design-theme-conventions -->
 
 <!-- BEGIN:git-commit-conventions -->

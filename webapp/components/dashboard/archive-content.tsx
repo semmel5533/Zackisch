@@ -300,7 +300,7 @@ export function ArchiveContent({
                   setCurrentPage(1);
                 }}
                 maxLength={100}
-                className="pl-9 pr-9 bg-background"
+                className="pl-9 pr-9 bg-background h-11 rounded-full"
               />
               {searchQuery && (
                 <button
@@ -331,7 +331,7 @@ export function ArchiveContent({
                       selectedStatuses.length === 0 ? (
                         <span>{t("filters")}</span>
                       ) : (
-                        <span className="text-primary-foreground font-medium">
+                        <span className="text-primary-foreground font-semibold">
                           {selectedTypes.length + selectedStatuses.length}{" "}
                           {t("filters")}
                         </span>
@@ -619,7 +619,7 @@ export function ArchiveContent({
                 render={
                     <Button
                     variant="outline"
-                    className="w-[80px] justify-between font-inter tabular-nums"
+                    className="w-[84px] justify-between font-inter tabular-nums font-semibold"
                   >
                     {itemsPerPage}
                     <CaretDown className="h-4 w-4 opacity-50" />

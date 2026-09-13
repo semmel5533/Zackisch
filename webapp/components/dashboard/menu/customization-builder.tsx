@@ -229,7 +229,7 @@ export function CustomizationBuilder({
         type="button"
         variant="ghost"
         onClick={addStep}
-        className="w-full h-[50px] rounded-2xl border border-dashed border-border hover:border-foreground/30 bg-card hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.99] flex items-center justify-center cursor-pointer shadow-2xs"
+        className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-card hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.98] flex items-center justify-center cursor-pointer shadow-2xs"
       >
         <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
         <span>{t("addStep")}</span>
@@ -689,7 +689,7 @@ function SortableStepCard({
             <Button
               type="button"
               variant="ghost"
-              className="w-full h-[46px] rounded-xl border border-dashed border-border hover:border-foreground/30 bg-background hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.99] flex items-center justify-center cursor-pointer shadow-2xs"
+              className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-background hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.98] flex items-center justify-center cursor-pointer shadow-2xs"
               onClick={onAddOption}
             >
               <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />

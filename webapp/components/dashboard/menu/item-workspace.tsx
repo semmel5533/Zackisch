@@ -279,7 +279,7 @@ export function ItemWorkspace({
                           value: cat.$id,
                         }))}
                       >
-                        <SelectTrigger className="w-full bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground rounded-xl h-10 px-3 cursor-pointer transition-colors font-medium">
+                        <SelectTrigger className="w-full bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground rounded-full h-11 px-4 cursor-pointer transition-all font-semibold active:scale-[0.98]">
                           <SelectValue placeholder={t("category")}>
                             {(value: string | null) =>
                               categories.find((c) => c.$id === value)?.name ||

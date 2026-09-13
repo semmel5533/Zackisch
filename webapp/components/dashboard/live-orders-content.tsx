@@ -431,16 +431,16 @@ export function LiveOrdersContent({
               localStorage.setItem("zakkig_kitchen_sound", next ? "1" : "0");
               if (next) playNewOrderSound();
             }}
-            className="h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-4 gap-1.5 sm:gap-2 rounded-full cursor-pointer active:scale-[0.98] transition-all font-semibold shadow-xs"
+            className="h-11 text-sm px-5 gap-2 rounded-full cursor-pointer active:scale-[0.98] transition-all font-semibold shadow-xs"
           >
             {soundEnabled ? (
               <>
-                <SpeakerHigh className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-foreground" weight="fill" />
+                <SpeakerHigh className="w-4 h-4 text-primary-foreground" weight="fill" />
                 <span>{t("soundOn")}</span>
               </>
             ) : (
               <>
-                <SpeakerSlash className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-foreground/70" />
+                <SpeakerSlash className="w-4 h-4 text-primary-foreground/70" />
                 <span>{t("soundOff")}</span>
               </>
             )}
@@ -462,14 +462,14 @@ export function LiveOrdersContent({
               variant={mobileTab === "in_progress" ? "default" : "outline"}
               size="default"
               onClick={() => setMobileTab("in_progress")}
-              className="flex-1 font-semibold gap-1.5 sm:gap-2 h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-3"
+              className="flex-1 font-semibold gap-2 h-11 text-sm px-4 rounded-full"
             >
               <span>{t("inProgress")}</span>
               <span
                 className={cn(
-                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold font-inter tabular-nums leading-none",
+                  "h-5 min-w-5 rounded-full flex items-center justify-center text-xs font-bold font-inter tabular-nums leading-none",
                   inProgressOrders.length > 9
-                    ? "px-1 sm:px-1.5"
+                    ? "px-1.5"
                     : "aspect-square p-0",
                   mobileTab === "in_progress"
                     ? "bg-primary-foreground text-primary"
@@ -483,14 +483,14 @@ export function LiveOrdersContent({
               variant={mobileTab === "completed" ? "default" : "outline"}
               size="default"
               onClick={() => setMobileTab("completed")}
-              className="flex-1 font-semibold gap-1.5 sm:gap-2 h-8 sm:h-9 text-xs sm:text-sm px-2.5 sm:px-3"
+              className="flex-1 font-semibold gap-2 h-11 text-sm px-4 rounded-full"
             >
               <span>{t("completed")}</span>
               <span
                 className={cn(
-                  "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold font-inter tabular-nums leading-none",
+                  "h-5 min-w-5 rounded-full flex items-center justify-center text-xs font-bold font-inter tabular-nums leading-none",
                   completedOrders.length > 9
-                    ? "px-1 sm:px-1.5"
+                    ? "px-1.5"
                     : "aspect-square p-0",
                   mobileTab === "completed"
                     ? "bg-primary-foreground text-primary"
@@ -812,20 +812,20 @@ export function LiveOrdersContent({
                         <Button
                           size="default"
                           variant="outline"
-                          className="h-9 sm:h-10 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
+                          className="h-11 text-sm font-semibold px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
                           onClick={() => setOrderToCancel(selectedOrder.$id)}
                         >
-                          <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                          <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                           {t("cancelOrder")}
                         </Button>
                         <Button
                           size="default"
-                          className="flex-1 h-9 sm:h-10 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
+                          className="flex-1 h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full active:scale-[0.98] transition-all cursor-pointer"
                           onClick={() =>
                             handleStatusChange(selectedOrder.$id, "completed")
                           }
                         >
-                          <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                          <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                           {t("completeAction")}
                         </Button>
                       </>
@@ -834,22 +834,22 @@ export function LiveOrdersContent({
                         <Button
                           size="default"
                           variant="outline"
-                          className="h-9 sm:h-10 text-xs sm:text-sm font-semibold px-3 sm:px-6 rounded-lg sm:rounded-xl border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
+                          className="h-11 text-sm font-semibold px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
                           onClick={() => setOrderToCancel(selectedOrder.$id)}
                         >
-                          <ReceiptX className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0" weight="bold" />
+                          <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                           {t("cancelOrder")}
                         </Button>
                         <Button
                           size="default"
-                          className="flex-1 h-9 sm:h-10 text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg sm:rounded-xl"
+                          className="flex-1 h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full active:scale-[0.98] transition-all cursor-pointer"
                           onClick={() => {
                             handleStatusChange(selectedOrder.$id, "in_progress");
                             toast.success(t("inProgress"));
                           }}
                         >
                           <ArrowCounterClockwise
-                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 shrink-0"
+                            className="w-4 h-4 mr-2 shrink-0"
                             weight="bold"
                           />
                           {t("reopenOrder")}
