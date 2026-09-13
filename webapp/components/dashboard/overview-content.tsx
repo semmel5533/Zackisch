@@ -393,7 +393,6 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   const filtered = filterOrdersByPeriod(orders, period);
   const totalOrders = filtered.length;
   const totalRevenue = filtered.reduce((sum, o: any) => sum + o.total, 0);
-  const netRevenue = totalRevenue * 0.975;
 
   const chartConfig = {
     orders: {
@@ -418,7 +417,7 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
         if (dataMap.has(key)) {
           const entry = dataMap.get(key)!;
           entry.orders++;
-          entry.revenue += (o.total * 0.975) / 100;
+          entry.revenue += o.total / 100;
         }
       });
     } else {
@@ -434,7 +433,7 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
         if (dataMap.has(key)) {
           const entry = dataMap.get(key)!;
           entry.orders++;
-          entry.revenue += (o.total * 0.975) / 100;
+          entry.revenue += o.total / 100;
         }
       });
     }
@@ -504,9 +503,9 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
               </div>
             </div>
             <div className="flex flex-col">
-              <Price cents={Math.round(netRevenue)} className="text-3xl font-bold" />
+              <Price cents={totalRevenue} className="text-3xl font-bold" />
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                {t("netRevenue")}
+                {t("revenue")}
               </div>
             </div>
           </div>

@@ -74,7 +74,7 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
 
 - **Overview (`/dashboard/{organizationId}/overview`):**
   - **Kopfbereich:** Anzeige von Betriebsdaten (Logo, Ladenname, Standort).
-  - **Statistik-Kacheln:** Zwei Hauptkacheln (Anzahl der Bestellungen & Netto-Umsatz abzüglich aller Gebühren). Zeitraum umschaltbar (24 Stunden, 30 Tage, 90 Tage) inklusive Graphen.
+  - **Statistik-Kacheln:** Zwei Hauptkacheln (Anzahl der Bestellungen & Umsatz). Zeitraum umschaltbar (24 Stunden, 30 Tage, 90 Tage) inklusive Graphen.
   - **Quick-Links:** Navigation zu den weiteren Dashboard-Seiten.
   - **Kitchen-Session Management:** Ansicht zum Erstellen und Verwalten von Kitchen-Sessions inkl. kopierbarem Pairing-Link.
   - **QR-Code Generator:** Erstellung von QR-Codes für To-Go und To-Stay (inkl. sichtbarer Tischnummer über dem Code, streng auf maximal 4 Zeichen limitiert). Generierte QR-Codes sind als PDF für den Druck herunterladbar.

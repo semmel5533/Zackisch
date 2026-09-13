@@ -99,7 +99,8 @@ export const translations = {
 
     // Overview
     totalOrders: "Bestellungen",
-    netRevenue: "Netto-Umsatz",
+    revenue: "Umsatz",
+    netRevenue: "Umsatz",
     last24h: "Letzte 24 Stunden",
     last30d: "Letzte 30 Tage",
     last90d: "Letzte 90 Tage",
@@ -674,7 +675,8 @@ export const translations = {
 
     // Overview
     totalOrders: "Orders",
-    netRevenue: "Net Revenue",
+    revenue: "Revenue",
+    netRevenue: "Revenue",
     last24h: "Last 24 hours",
     last30d: "Last 30 days",
     last90d: "Last 90 days",
