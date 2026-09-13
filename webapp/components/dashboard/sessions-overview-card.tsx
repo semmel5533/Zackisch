@@ -107,19 +107,19 @@ export function SessionsOverviewCard({
               >
                 <QrCode className="h-4 w-4" />
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[420px]">
+              <DialogContent className="sm:max-w-[380px]">
                 <DialogHeader className="flex flex-row items-center justify-between">
                   <DialogTitle>
                     {t("liveOrderSessions")}
                   </DialogTitle>
                   <DialogCloseButton />
                 </DialogHeader>
-                <DialogBody className="flex flex-col items-center gap-4">
+                <DialogBody className="flex flex-col items-center gap-3.5 overflow-hidden py-4 px-5 sm:px-6">
                   <a
                     href={getLink("orders", orderToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-6 border border-zinc-200"
+                    className="w-full max-w-[280px] aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-5 border border-zinc-200"
                   >
                     <ReactQRCode
                       value={getLink("orders", orderToken)}
@@ -150,7 +150,7 @@ export function SessionsOverviewCard({
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 p-3.5 rounded-2xl w-full border border-zinc-200">
+                  <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full max-w-[280px] border border-zinc-200">
                     <WarningCircle
                       className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
                       weight="fill"
@@ -211,19 +211,19 @@ export function SessionsOverviewCard({
               >
                 <QrCode className="h-4 w-4" />
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[420px]">
+              <DialogContent className="sm:max-w-[380px]">
                 <DialogHeader className="flex flex-row items-center justify-between">
                   <DialogTitle>
                     {t("availabilitySessions")}
                   </DialogTitle>
                   <DialogCloseButton />
                 </DialogHeader>
-                <DialogBody className="flex flex-col items-center gap-4">
+                <DialogBody className="flex flex-col items-center gap-3.5 overflow-hidden py-4 px-5 sm:px-6">
                   <a
                     href={getLink("availability", availabilityToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-6 border border-zinc-200"
+                    className="w-full max-w-[280px] aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-5 border border-zinc-200"
                   >
                     <ReactQRCode
                       value={getLink("availability", availabilityToken)}
@@ -254,7 +254,7 @@ export function SessionsOverviewCard({
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 p-3.5 rounded-2xl w-full border border-zinc-200">
+                  <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full max-w-[280px] border border-zinc-200">
                     <WarningCircle
                       className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
                       weight="fill"
