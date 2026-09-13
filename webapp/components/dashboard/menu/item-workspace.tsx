@@ -216,9 +216,9 @@ export function ItemWorkspace({
         }
       }}
     >
-      <DialogContent className="w-[calc(100%-1.25rem)] sm:w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] sm:h-[90vh] max-h-[820px] p-0 sm:p-0 flex flex-col bg-background text-foreground rounded-[24px] border border-border shadow-2xl overflow-hidden">
-        <DialogHeader className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-border shrink-0 bg-background flex flex-row items-center justify-between">
-          <DialogTitle className="text-lg font-bold">
+      <DialogContent className="w-[calc(100%-1.25rem)] sm:w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] sm:h-[90vh] max-h-[820px]">
+        <DialogHeader className="flex flex-row items-center justify-between">
+          <DialogTitle>
             {editingItem ? t("editItem") : t("addItem")}
           </DialogTitle>
           <DialogCloseButton />
@@ -440,20 +440,20 @@ export function ItemWorkspace({
           </ScrollArea>
 
           {/* Fixed Footer Action Buttons */}
-          <div className="flex flex-row items-center gap-3 w-full px-4 sm:px-6 py-3 sm:py-3.5 border-t border-border shrink-0 bg-background">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
-              className="flex-1 rounded-full font-semibold h-11"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
             >
               {t("cancel")}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold h-11 active:scale-[0.98] transition-all"
+              className="w-full sm:flex-1 rounded-full h-11 bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold active:scale-[0.98] transition-all cursor-pointer"
             >
               {isSubmitting ? (
                 <>
@@ -467,7 +467,7 @@ export function ItemWorkspace({
                 t("save")
               )}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

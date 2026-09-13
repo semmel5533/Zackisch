@@ -13,8 +13,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -105,19 +107,19 @@ export function SessionsOverviewCard({
               >
                 <QrCode className="h-4 w-4" />
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[400px] p-5 sm:p-6 gap-4">
-                <DialogHeader className="p-0 flex flex-row items-center justify-between">
-                  <DialogTitle className="text-lg font-bold">
+              <DialogContent className="sm:max-w-[420px]">
+                <DialogHeader className="flex flex-row items-center justify-between">
+                  <DialogTitle>
                     {t("liveOrderSessions")}
                   </DialogTitle>
                   <DialogCloseButton />
                 </DialogHeader>
-                <div className="flex flex-col items-center w-full gap-4">
+                <DialogBody className="flex flex-col items-center gap-4">
                   <a
                     href={getLink("orders", orderToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group"
+                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl overflow-hidden border border-border"
                   >
                     <ReactQRCode
                       value={getLink("orders", orderToken)}
@@ -148,14 +150,14 @@ export function SessionsOverviewCard({
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted p-3.5 rounded-xl w-full border border-border">
+                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted/60 p-3.5 rounded-2xl w-full border border-border">
                     <WarningCircle
                       className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
                       weight="fill"
                     />
                     <span>{t("staffQrWarning")}</span>
                   </div>
-                </div>
+                </DialogBody>
               </DialogContent>
             </Dialog>
           </div>
@@ -209,19 +211,19 @@ export function SessionsOverviewCard({
               >
                 <QrCode className="h-4 w-4" />
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[400px] p-5 sm:p-6 gap-4">
-                <DialogHeader className="p-0 flex flex-row items-center justify-between">
-                  <DialogTitle className="text-lg font-bold">
+              <DialogContent className="sm:max-w-[420px]">
+                <DialogHeader className="flex flex-row items-center justify-between">
+                  <DialogTitle>
                     {t("availabilitySessions")}
                   </DialogTitle>
                   <DialogCloseButton />
                 </DialogHeader>
-                <div className="flex flex-col items-center w-full gap-4">
+                <DialogBody className="flex flex-col items-center gap-4">
                   <a
                     href={getLink("availability", availabilityToken)}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group"
+                    className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl overflow-hidden border border-border"
                   >
                     <ReactQRCode
                       value={getLink("availability", availabilityToken)}
@@ -252,14 +254,14 @@ export function SessionsOverviewCard({
                       }}
                     />
                   </a>
-                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted p-3.5 rounded-xl w-full border border-border">
+                  <div className="flex items-start gap-2.5 text-xs text-left text-muted-foreground font-medium bg-muted/60 p-3.5 rounded-2xl w-full border border-border">
                     <WarningCircle
                       className="w-4 h-4 shrink-0 mt-0.5 text-foreground"
                       weight="fill"
                     />
                     <span>{t("staffQrWarning")}</span>
                   </div>
-                </div>
+                </DialogBody>
               </DialogContent>
             </Dialog>
           </div>
@@ -296,59 +298,63 @@ export function SessionsOverviewCard({
         open={regenerateAvailabilityOpen}
         onOpenChange={setRegenerateAvailabilityOpen}
       >
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("regenerateAvailabilityTitle")}</DialogTitle>
-            <DialogDescription className="mt-1">
+            <DialogDescription>
               {t("regenerateAvailabilityDesc")}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex w-full gap-3 mt-2">
+          <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setRegenerateAvailabilityOpen(false)}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
             >
               {t("cancel")}
             </Button>
             <Button
+              type="button"
               variant="destructive"
               onClick={confirmRegenerateAvailability}
               disabled={isPending}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 font-semibold cursor-pointer active:scale-[0.98] transition-all"
             >
               {t("regenerateConfirm")}
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Regenerate Order Confirmation Dialog */}
       <Dialog open={regenerateOrderOpen} onOpenChange={setRegenerateOrderOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("regenerateOrderTitle")}</DialogTitle>
-            <DialogDescription className="mt-1">
+            <DialogDescription>
               {t("regenerateOrderDesc")}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex w-full gap-3 mt-2">
+          <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setRegenerateOrderOpen(false)}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
             >
               {t("cancel")}
             </Button>
             <Button
+              type="button"
               variant="destructive"
               onClick={confirmRegenerateOrder}
               disabled={isPending}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 font-semibold cursor-pointer active:scale-[0.98] transition-all"
             >
               {t("regenerateConfirm")}
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </Fragment>

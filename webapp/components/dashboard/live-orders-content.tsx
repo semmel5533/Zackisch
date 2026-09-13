@@ -28,6 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { useTranslation } from "@/lib/i18n";
 import { Price } from "@/components/ui/price";
@@ -878,31 +879,30 @@ export function LiveOrdersContent({
         open={!!orderToCancel}
         onOpenChange={(open) => !open && setOrderToCancel(null)}
       >
-        <DialogContent
-          showCloseButton={false}
-          className="sm:max-w-md"
-        >
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold">
+            <DialogTitle>
               {targetOrderToCancel
                 ? t("cancelOrderTitle", {
                     orderNumber: targetOrderToCancel.orderNumber,
                   })
                 : t("cancelOrderTitleFallback")}
             </DialogTitle>
-            <DialogDescription className="text-sm leading-relaxed mt-1">
+            <DialogDescription>
               {t("cancelOrderWarning")}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex w-full gap-3 mt-3">
+          <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setOrderToCancel(null)}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
             >
               {t("abortCancel")}
             </Button>
             <Button
+              type="button"
               variant="destructive"
               onClick={() => {
                 if (orderToCancel) {
@@ -911,12 +911,12 @@ export function LiveOrdersContent({
                   toast.success(t("orderCancelledTitle"));
                 }
               }}
-              className="flex-1 rounded-full gap-2 font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 gap-2 font-semibold cursor-pointer active:scale-[0.98] transition-all"
             >
               <ReceiptX className="h-4 w-4 shrink-0" weight="bold" />
               <span>{t("confirmCancelOrder")}</span>
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

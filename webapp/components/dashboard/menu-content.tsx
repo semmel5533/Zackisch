@@ -60,6 +60,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { ItemWorkspace } from "./menu/item-workspace";
 
@@ -848,12 +849,9 @@ export function MenuContent({
         open={!!deleteConfirm}
         onOpenChange={(open) => !open && setDeleteConfirm(null)}
       >
-        <DialogContent
-          showCloseButton={false}
-          className="sm:max-w-md"
-        >
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold">
+            <DialogTitle>
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryTitle", {
                     name: deleteConfirm?.name || "",
@@ -862,7 +860,7 @@ export function MenuContent({
                     name: deleteConfirm?.name || "",
                   })}
             </DialogTitle>
-            <DialogDescription className="text-sm leading-relaxed mt-1">
+            <DialogDescription>
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryDesc", {
                     name: deleteConfirm?.name || "",
@@ -872,23 +870,25 @@ export function MenuContent({
                   })}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex w-full gap-3 mt-3">
+          <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setDeleteConfirm(null)}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
             >
               {t("cancel")}
             </Button>
             <Button
+              type="button"
               variant="destructive"
               onClick={confirmDelete}
-              className="flex-1 rounded-full gap-2 font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 gap-2 font-semibold cursor-pointer active:scale-[0.98] transition-all"
             >
               <Trash className="h-4 w-4 shrink-0" weight="bold" />
               <span>{t("delete")}</span>
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

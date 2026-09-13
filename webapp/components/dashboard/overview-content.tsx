@@ -1003,35 +1003,37 @@ function QrCodeGeneratorCard({
         open={deleteTablesDialogOpen}
         onOpenChange={setDeleteTablesDialogOpen}
       >
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
               {selectedTables.length === 1
                 ? t("deleteTableTitle")
                 : t("deleteTablesTitle")}
             </DialogTitle>
-            <DialogDescription className="mt-1">
+            <DialogDescription>
               {selectedTables.length === 1
                 ? t("deleteTableDesc")
                 : t("deleteTablesDesc")}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex w-full gap-3 mt-2">
+          <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setDeleteTablesDialogOpen(false)}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
             >
               {t("cancel")}
             </Button>
             <Button
+              type="button"
               variant="destructive"
               onClick={confirmRemoveTables}
-              className="flex-1 rounded-full font-semibold"
+              className="w-full sm:flex-1 rounded-full h-11 font-semibold cursor-pointer active:scale-[0.98] transition-all"
             >
               {t("delete")}
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
