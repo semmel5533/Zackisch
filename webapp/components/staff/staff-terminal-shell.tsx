@@ -209,13 +209,14 @@ export function StaffTerminalShell({
                   <Button
                     key={item.id}
                     variant="ghost"
+                    size="default"
                     className={cn(
-                      "w-full h-10 transition-colors relative overflow-visible cursor-pointer",
+                      "w-full h-11 transition-colors relative overflow-visible rounded-full font-semibold cursor-pointer",
                       isExpanded
-                        ? "justify-start pl-[13px] pr-2.5"
-                        : "justify-center px-0",
+                        ? "justify-start px-4"
+                        : "justify-center px-0 w-11 h-11 mx-auto",
                       isActive
-                        ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary"
+                        ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary shadow-xs"
                         : "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
                     )}
                     aria-label={!isExpanded ? item.label : undefined}
@@ -246,14 +247,14 @@ export function StaffTerminalShell({
                     </div>
                     {isExpanded && (
                       <>
-                        <span className="ml-2 flex-1 text-left truncate font-medium">
+                        <span className="ml-2.5 flex-1 text-left truncate">
                           {item.label}
                         </span>
                         {item.id === "current-orders" &&
                           activeOrdersCount > 0 && (
                             <span
                               className={cn(
-                                "w-5 h-5 min-w-5 aspect-square rounded-full p-0 flex items-center justify-center text-[11px] font-black shrink-0 font-inter tabular-nums leading-none shadow-xs",
+                                "h-5 min-w-5 px-1.5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 font-inter tabular-nums leading-none shadow-xs",
                                 isActive
                                   ? "bg-primary text-primary-foreground"
                                   : "bg-primary-foreground text-primary",

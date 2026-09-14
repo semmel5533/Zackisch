@@ -169,8 +169,10 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
         {/* Business & Stripe Settings */}
         <Card className="w-full flex flex-col">
           <CardHeader className="flex-col items-start pb-4">
-            <h3 className="text-lg font-semibold">{t("businessSettings")}</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {t("businessSettings")}
+            </h3>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               {t("businessSettingsDescription" as any)}
             </p>
           </CardHeader>
@@ -310,7 +312,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 <div className="flex flex-col justify-between gap-4">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <label className="text-sm font-medium">{t("brandMedia")}</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("brandMedia")}</label>
                       <span className="text-xs text-muted-foreground">{t("bannerRecommended")}</span>
                     </div>
 
@@ -493,8 +495,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                     <Button
                       type="submit"
                       disabled={isBusinessPending}
-                      variant="outline"
-                      className="w-full font-semibold"
+                      className="w-full h-11 rounded-full font-semibold bg-black text-white hover:bg-zinc-800 cursor-pointer active:scale-[0.98] transition-all shadow-xs"
                     >
                       {isBusinessPending ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
                       {t("save")}
@@ -507,7 +508,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <h4 className="font-medium text-foreground">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                           {t("stripeSettings")}{" "}
                           <span className="text-destructive">*</span>
                         </h4>
@@ -582,7 +583,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           setIsStripeLoading(false);
                         }
                       }}
-                      className="w-full font-semibold"
+                      className="w-full h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98] transition-all"
                     >
                       {isStripeLoading ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
                       {organization.stripeOnboardingComplete
@@ -597,7 +598,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="text-xs text-muted-foreground hover:text-foreground"
+                        className="text-xs text-muted-foreground hover:text-foreground h-9 rounded-full cursor-pointer"
                         disabled={isStripeLoading}
                         onClick={async () => {
                           setIsStripeLoading(true);
@@ -626,19 +627,19 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
         {/* Danger Zone */}
         <Card className="w-full flex flex-col border-destructive/50 border">
             <CardHeader className="flex-col items-start pb-4">
-              <h3 className="text-lg font-semibold text-destructive">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-destructive">
                 {t("dangerZone" as any)}
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {t("dangerZoneDescription" as any)}
               </p>
             </CardHeader>
             <CardContent className="flex flex-col gap-6 items-stretch">
               <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6">
-                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-lg">
+                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
                   <div className="flex flex-col gap-1">
-                    <h4 className="font-medium text-foreground">{t("logoutAllDevices")}</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-semibold text-foreground text-sm">{t("logoutAllDevices")}</h4>
+                    <p className="text-xs text-muted-foreground">
                       {t("logoutAllDevicesDescription")}
                     </p>
                   </div>
@@ -654,7 +655,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         setIsLoggingOutAll(false);
                       }
                     }}
-                    className="w-full mt-auto font-semibold"
+                    className="w-full mt-auto h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98] transition-all"
                   >
                     {isLoggingOutAll ? (
                       <SpinnerGap className="mr-2 animate-spin" weight="bold" />
@@ -663,10 +664,10 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   </Button>
                 </div>
 
-                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-lg">
+                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
                   <div className="flex flex-col gap-1">
-                    <h4 className="font-medium text-foreground">{t("changeEmailAddress" as any)}</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-semibold text-foreground text-sm">{t("changeEmailAddress" as any)}</h4>
+                    <p className="text-xs text-muted-foreground">
                       {t("changeEmailDescription" as any)}
                     </p>
                   </div>
@@ -686,7 +687,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         setIsEmailChanging(false);
                       }
                     }}
-                    className="w-full mt-auto font-semibold"
+                    className="w-full mt-auto h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98] transition-all"
                   >
                     {isEmailChanging ? (
                       <SpinnerGap className="mr-2 animate-spin" weight="bold" />
@@ -696,10 +697,10 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 </div>
               </div>
 
-              <div className="w-full flex flex-col justify-between gap-4 p-4 border border-border rounded-lg">
+              <div className="w-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
                 <div className="flex flex-col gap-1">
-                  <h4 className="font-medium text-foreground">{t("deleteAccount")}</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <h4 className="font-semibold text-foreground text-sm">{t("deleteAccount")}</h4>
+                  <p className="text-xs text-muted-foreground">
                     {t("deleteAccountDescription")}
                   </p>
                 </div>
@@ -719,7 +720,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                       setIsDeleting(false);
                     }
                   }}
-                  className="w-full mt-auto font-semibold border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
+                  className="w-full mt-auto h-11 rounded-full font-semibold border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors cursor-pointer active:scale-[0.98]"
                 >
                   {isDeleting ? (
                     <SpinnerGap className="mr-2 animate-spin" weight="bold" />

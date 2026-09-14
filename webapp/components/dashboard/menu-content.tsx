@@ -849,9 +849,9 @@ export function MenuContent({
         open={!!deleteConfirm}
         onOpenChange={(open) => !open && setDeleteConfirm(null)}
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1">
+            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryTitle", {
                     name: deleteConfirm?.name || "",
@@ -860,7 +860,7 @@ export function MenuContent({
                     name: deleteConfirm?.name || "",
                   })}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryDesc", {
                     name: deleteConfirm?.name || "",
@@ -870,7 +870,7 @@ export function MenuContent({
                   })}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               type="button"
               variant="outline"

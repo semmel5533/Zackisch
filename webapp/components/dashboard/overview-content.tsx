@@ -466,17 +466,17 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   return (
     <Card className="h-full flex flex-col print:hidden">
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-        <h3 className="text-lg font-semibold">{t("statistics")}</h3>
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("statistics")}</h3>
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <Button variant="default">
+              <Button variant="default" className="h-11 rounded-full font-semibold px-4 cursor-pointer active:scale-[0.98]">
                 {period === "24h"
                   ? t("last24h")
                   : period === "30d"
                     ? t("last30d")
                     : t("last90d")}
-                <CaretDown className="ml-1" />
+                <CaretDown className="ml-1 h-4 w-4" weight="bold" />
               </Button>
             }
           />
@@ -687,7 +687,7 @@ function QrCodeGeneratorCard({
     <>
       <Card className="h-full flex flex-col bg-white print:hidden @container">
         <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-          <h3 className="text-lg font-semibold whitespace-nowrap">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap">
             {t("qrManagement")}
           </h3>
 
@@ -706,10 +706,10 @@ function QrCodeGeneratorCard({
                 render={
                   <Button
                     variant="default"
-                    className="w-auto bg-primary text-secondary shrink-0"
+                    className="w-auto h-11 rounded-full font-semibold px-4 bg-primary text-secondary shrink-0 cursor-pointer active:scale-[0.98]"
                   >
                     {qrType === "pickup" ? t("toGo") : t("toStay")}
-                    <CaretDown className="ml-2 h-4 w-4 shrink-0" />
+                    <CaretDown className="ml-2 h-4 w-4 shrink-0" weight="bold" />
                   </Button>
                 }
               />
@@ -756,7 +756,7 @@ function QrCodeGeneratorCard({
                         }
                       }}
                       className={cn(
-                        "gap-2 font-semibold text-sm transition-colors w-full",
+                        "h-11 rounded-full gap-2 font-semibold text-sm transition-colors w-full cursor-pointer active:scale-[0.98]",
                         selectedTables.length > 0 ? "sm:flex-1" : "",
                       )}
                     >
@@ -767,7 +767,7 @@ function QrCodeGeneratorCard({
                       <Button
                         variant="outline"
                         onClick={handleRemoveSelectedTables}
-                        className="gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0"
+                        className="h-11 rounded-full gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0 cursor-pointer active:scale-[0.98]"
                       >
                         <Trash className="h-4 w-4 shrink-0" weight="bold" />
                         <span>
@@ -838,7 +838,7 @@ function QrCodeGeneratorCard({
                                 type="button"
                                 variant="ghost"
                                 onClick={() => setIsAddingTable(true)}
-                                className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-xl"
+                                className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-full cursor-pointer active:scale-[0.98]"
                               >
                                 <Plus className="h-4 w-4 shrink-0" weight="bold" />
                                 <span className="truncate">{t("addTableFull")}</span>
@@ -852,8 +852,8 @@ function QrCodeGeneratorCard({
                 </div>
               ) : (
                 <div className="flex-1 min-w-0 w-full flex flex-col justify-between gap-4 h-full min-h-0">
-                  <div className="p-4 rounded-xl border border-border/80 bg-neutral-50 flex flex-col gap-2.5">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <div className="p-4 rounded-2xl border border-border/80 bg-neutral-50 flex flex-col gap-2.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       {t("copyLink")}
                     </span>
                     <div className="flex items-center gap-2">
@@ -868,7 +868,7 @@ function QrCodeGeneratorCard({
                           navigator.clipboard.writeText(qrUrl);
                           toast.success(t("linkCopied"));
                         }}
-                        className="h-8 px-2.5 rounded-lg text-xs font-semibold cursor-pointer shrink-0"
+                        className="h-9 px-3 rounded-full text-xs font-semibold cursor-pointer shrink-0 active:scale-[0.98]"
                       >
                         <Copy className="h-3.5 w-3.5 mr-1" />
                         <span>{t("copyLink")}</span>
@@ -886,7 +886,7 @@ function QrCodeGeneratorCard({
                   onClick={handlePrint}
                   variant="default"
                   disabled={qrType === "table" && selectedTables.length === 0}
-                  className="w-auto bg-primary text-secondary shrink-0 shadow-sm"
+                  className="w-auto h-11 rounded-full font-semibold px-5 bg-primary text-secondary shrink-0 shadow-sm cursor-pointer active:scale-[0.98] transition-all"
                 >
                   <Printer className="mr-2 h-4 w-4" />
                   {qrType === "pickup"
@@ -1022,20 +1022,20 @@ function QrCodeGeneratorCard({
         open={deleteTablesDialogOpen}
         onOpenChange={setDeleteTablesDialogOpen}
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1">
+            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
               {selectedTables.length === 1
                 ? t("deleteTableTitle")
                 : t("deleteTablesTitle")}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
               {selectedTables.length === 1
                 ? t("deleteTableDesc")
                 : t("deleteTablesDesc")}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               type="button"
               variant="outline"

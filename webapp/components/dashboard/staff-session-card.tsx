@@ -71,7 +71,7 @@ export function StaffSessionCard({
             <div className="p-2 rounded-full bg-primary/5 text-primary shrink-0">
               <UsersThree className="w-5 h-5" weight="bold" />
             </div>
-            <h3 className="text-lg font-semibold leading-tight tracking-tight">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground leading-tight">
               {t("staffSession")}
             </h3>
           </div>
@@ -174,14 +174,16 @@ export function StaffSessionCard({
         open={regenerateStaffOpen}
         onOpenChange={setRegenerateStaffOpen}
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>{t("regenerateStaffTitle")}</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1">
+            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
+              {t("regenerateStaffTitle")}
+            </DialogTitle>
+            <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
               {t("regenerateStaffDesc")}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               type="button"
               variant="outline"

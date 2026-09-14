@@ -195,16 +195,20 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
    - High contrast WCAG AA/AAA compliance.
 
 4. **Pill Buttons & Select Controls Standard:**
-   - All action buttons, select triggers (`SelectTrigger`), dropdown triggers, and search/filter bars across dashboard views strictly use unified Apple pill geometry (`h-11 rounded-full font-semibold`, compact `h-9 rounded-full font-semibold`).
+   - All action buttons, select triggers (`SelectTrigger`), dropdown triggers, sidebar navigation links, and order tickets across dashboard and staff views strictly use unified Apple pill geometry (`h-11 rounded-full font-semibold px-4` or `px-5`, compact `h-9 rounded-full font-semibold px-3.5`).
 
 5. **Concentric Corner Radius & Nested Geometry Standard:**
    - Whenever an inner element sits inside an outer container with uniform padding $P$, the outer radius $R_{\text{outer}}$ and inner radius $R_{\text{inner}}$ MUST strictly follow the concentric border radius formula:
      $$R_{\text{outer}} = R_{\text{inner}} + P \quad \Longleftrightarrow \quad R_{\text{inner}} = \max(0, R_{\text{outer}} - P)$$
    - Standard Tailwind tokens like `rounded-2xl` evaluate to `43.2px` in this project due to `--radius: 1.5rem`. NEVER use `rounded-2xl` for dropdown or select popups, as it produces distorted, bulbous spherical corners.
    - For all Dropdown and Select menus:
-     - Outer container card: strictly `rounded-[16px]` with `p-1.5` (6px padding)
-     - Inner selectable items: strictly `rounded-[10px]` ($16\text{px} - 6\text{px} = 10\text{px}$)
+     - Outer container card: strictly `rounded-[20px]` with `p-2` (8px padding)
+     - Inner selectable items: strictly `rounded-[12px]` ($20\text{px} - 8\text{px} = 12\text{px}$) with `px-3.5 py-2.5 font-semibold`
      - This guarantees mathematically exact concentric curvature with uniform visual margins around all corners.
+
+6. **Uppercase Tracked Typography Standard:**
+   - Section block titles, card categorization headers, queue column headers, and metadata headers across the webapp (e.g. `BETRIEBSDATEN`, `LOGO & BANNER`, `ZAHLUNGSANBIETER`, `GEFAHRENZONE`, `IN BEARBEITUNG`, `ABHOLBEREIT`, `STATISTIK`, `QR-CODE VERWALTUNG`, `LINK KOPIEREN`, `SITZUNGEN`, `ARTIKELDETAILS`, `BILD & VORSCHAU`, `PRESETS & ANPASSUNGEN`) strictly render with `text-xs font-bold uppercase tracking-wider text-muted-foreground` (or `text-destructive` for danger zones).
+   - Always use `t('key')` with CSS `uppercase tracking-wider` for clean, consistent internationalization.
 
 <!-- END:design-theme-conventions -->
 

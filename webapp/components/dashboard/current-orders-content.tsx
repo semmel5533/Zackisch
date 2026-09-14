@@ -308,13 +308,13 @@ export function CurrentOrdersContent({
           setMobileView("detail");
         }}
         className={cn(
-          "w-full h-10 sm:h-11 text-left rounded-lg transition-colors relative flex items-center justify-between gap-1 sm:gap-1.5 select-none bg-card text-foreground border border-border/60 hover:bg-muted/50 hover:border-border px-2 sm:px-2.5",
+          "w-full h-11 text-left rounded-full transition-all relative flex items-center justify-between gap-2 select-none bg-card text-foreground border border-border hover:bg-muted/50 hover:border-foreground/20 px-3.5 sm:px-4 font-semibold cursor-pointer active:scale-[0.98]",
           isSelected &&
-            "desktop:bg-primary desktop:text-primary-foreground desktop:border-2 desktop:border-primary desktop:shadow-xs desktop:px-[9px] desktop:hover:bg-primary desktop:hover:border-primary",
+            "desktop:bg-primary desktop:text-primary-foreground desktop:border-primary desktop:shadow-xs desktop:hover:bg-primary desktop:hover:border-primary",
         )}
       >
         {/* Left: Number and Type */}
-        <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
           <span
             className={cn(
               "font-black tracking-tight font-inter tabular-nums text-xs sm:text-sm shrink-0 text-foreground",
@@ -325,7 +325,7 @@ export function CurrentOrdersContent({
           </span>
           <span
             className={cn(
-              "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md shrink-0 inline-flex items-center gap-1 border bg-muted text-foreground/80 border-transparent",
+              "text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 inline-flex items-center gap-1 border bg-muted text-foreground/80 border-transparent",
               isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
             )}
           >
@@ -346,7 +346,7 @@ export function CurrentOrdersContent({
         <div className="shrink-0 flex items-center pl-1">
           <span
             className={cn(
-              "text-[11px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 shrink-0 border bg-muted text-foreground/80 border-transparent",
+              "text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1 shrink-0 border bg-muted text-foreground/80 border-transparent",
               isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
             )}
           >
@@ -466,7 +466,7 @@ export function CurrentOrdersContent({
                 {/* Header: Edge-to-Edge Divider */}
                 <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-xs sm:text-sm font-bold text-foreground truncate">
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground truncate">
                       {t("inProgress")}
                     </span>
                     <Tooltip
@@ -521,7 +521,7 @@ export function CurrentOrdersContent({
                 {/* Header: Edge-to-Edge Divider */}
                 <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-xs sm:text-sm font-bold text-foreground truncate">
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground truncate">
                       {t("ready")}
                     </span>
                     <Tooltip
@@ -804,29 +804,30 @@ export function CurrentOrdersContent({
         </div>
       </div>
 
+
       {/* Cancel Order Confirmation Dialog */}
       <Dialog
         open={!!orderToCancel}
         onOpenChange={(open) => !open && setOrderToCancel(null)}
       >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[24px] border border-border bg-card text-card-foreground shadow-2xl flex flex-col">
-          <DialogHeader className="px-6 py-5 border-b border-border bg-card shrink-0 text-left flex flex-row items-center justify-between">
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
             <div>
-              <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+              <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
                 {targetOrderToCancel
                   ? t("cancelOrderTitle", {
                       orderNumber: targetOrderToCancel.orderNumber,
                     })
                   : t("cancelOrderTitleFallback")}
               </DialogTitle>
-              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+              <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
                 {t("orderCancelledDesc")}
               </DialogDescription>
             </div>
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-6 space-y-4 text-sm text-foreground/90">
+          <div className="p-5 sm:p-6 space-y-4 text-sm text-zinc-900">
             <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3 text-destructive">
               <Warning className="w-5 h-5 shrink-0 mt-0.5" weight="bold" />
               <p className="text-xs font-semibold leading-relaxed">
@@ -835,10 +836,10 @@ export function CurrentOrdersContent({
             </div>
           </div>
 
-          <DialogFooter className="px-6 py-4 border-t border-border bg-card shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full">
+          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               variant="outline"
-              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              className="w-full sm:flex-1 rounded-full h-11 border-zinc-200 font-semibold text-zinc-700 hover:bg-zinc-50 cursor-pointer"
               onClick={() => setOrderToCancel(null)}
             >
               {t("abortCancel")}
@@ -865,13 +866,13 @@ export function CurrentOrdersContent({
         open={!!orderToComplete}
         onOpenChange={(open) => !open && setOrderToComplete(null)}
       >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[24px] border border-border bg-card text-card-foreground shadow-2xl flex flex-col">
-          <DialogHeader className="px-6 py-5 border-b border-border bg-card shrink-0 text-left flex flex-row items-center justify-between">
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
             <div>
-              <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+              <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
                 {t("completeOrderTitle")}
               </DialogTitle>
-              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+              <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
                 {targetOrderToComplete
                   ? `#${targetOrderToComplete.orderNumber}`
                   : ""}
@@ -880,22 +881,22 @@ export function CurrentOrdersContent({
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-6 space-y-4 text-sm text-foreground/90">
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <div className="p-5 sm:p-6 space-y-4 text-sm text-zinc-900">
+            <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
               {t("completeOrderDesc")}
             </p>
           </div>
 
-          <DialogFooter className="px-6 py-4 border-t border-border bg-card shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full">
+          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               variant="outline"
-              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              className="w-full sm:flex-1 rounded-full h-11 border-zinc-200 font-semibold text-zinc-700 hover:bg-zinc-50 cursor-pointer"
               onClick={() => setOrderToComplete(null)}
             >
               {t("cancel")}
             </Button>
             <Button
-              className="w-full sm:flex-1 rounded-full h-11 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer active:scale-[0.98] transition-all"
+              className="w-full sm:flex-1 rounded-full h-11 font-semibold bg-black text-white hover:bg-zinc-800 cursor-pointer active:scale-[0.98] transition-all"
               onClick={async () => {
                 if (orderToComplete) {
                   await handleStatusChange(orderToComplete, "completed");
