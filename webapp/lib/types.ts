@@ -147,7 +147,7 @@ export interface Order extends ConvexDocument {
   type: "dine-in" | "takeaway";
   items: string; // JSON serialized OrderItem[]
   total: number; // in cents
-  status: "in_progress" | "completed" | "cancelled";
+  status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled";
   completedAt?: number;
   createdAt?: number;
   email: string;

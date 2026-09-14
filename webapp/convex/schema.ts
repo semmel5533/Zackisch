@@ -57,7 +57,12 @@ export default defineSchema({
     type: v.union(v.literal("dine-in"), v.literal("takeaway")),
     items: v.string(), // JSON stringified OrderItem[]
     total: v.number(), // in cents
-    status: v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled")),
+    status: v.union(
+      v.literal("in_progress"),
+      v.literal("ready_for_pickup"),
+      v.literal("completed"),
+      v.literal("cancelled")
+    ),
     completedAt: v.optional(v.number()),
     createdAt: v.optional(v.number()),
     email: v.string(),

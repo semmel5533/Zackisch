@@ -49,8 +49,8 @@ Erfordert eine gültige Session (E-Mail, Passwort, HttpOnly Cookie).
 - `app.zakkig.com/` (Automatischer Redirect zum primären Dashboard bzw. `/sign-in`)
 - `app.zakkig.com/dashboard` (Automatischer Redirect zum primären Betrieb)
 - `app.zakkig.com/dashboard/{organizationId}/overview`
-- `app.zakkig.com/dashboard/{organizationId}/live-orders`
-- `app.zakkig.com/dashboard/{organizationId}/archive`
+- `app.zakkig.com/dashboard/{organizationId}/current-orders` (Aktuelle Bestellungen)
+- `app.zakkig.com/dashboard/{organizationId}/all-orders` (Alle Bestellungen)
 - `app.zakkig.com/dashboard/{organizationId}/menu`
 - `app.zakkig.com/dashboard/{organizationId}/settings`
 - `app.zakkig.com/dashboard/{organizationId}/settings/stripe-return` (Rückkehr von der Stripe Express Onboarding-Seite)
@@ -58,14 +58,14 @@ Erfordert eine gültige Session (E-Mail, Passwort, HttpOnly Cookie).
 **Staff Devices (Geschützt)**
 Einmaliges Pairing über das Dashboard erzeugt eine dauerhafte Session. Keine Passwort-Eingabe im Küchenalltag.
 
-- `app.zakkig.com/orders/{organizationId}` (Kitchen Board)
+- `app.zakkig.com/orders/{organizationId}` (Küchen-Terminal / Current Orders Fullscreen)
 - `app.zakkig.com/availability/{organizationId}` (86-Verfügbarkeits-Steuerung)
 
 **Gast-Routen (Öffentlich, Keine Session)**
 Zugriff ausschließlich über Parameter, ohne Registrierung.
 
 - `app.zakkig.com/pickup/{organizationId}` (Abhol-Menü / Pickup)
-- `app.zakkig.com/pickup/{organizationId}?order={orderId}` (Pickup Status-Tracker mit 10-Minuten-Countdown)
+- `app.zakkig.com/pickup/{organizationId}?order={orderId}` (Pickup Status-Tracker mit 3 Phasen & 10-Minuten-Countdown)
 - `app.zakkig.com/pickup/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung & automatische Weiterleitung zum Live-Tracker)
 - `app.zakkig.com/table/{organizationId}?table={tableNumber}` (Tisch-Menü / Table am Tisch, Tischnummer max. 4 Zeichen)
 - `app.zakkig.com/table/{organizationId}/success?session_id={CHECKOUT_SESSION_ID}` (Checkout-Bestätigung am Tisch)
@@ -78,16 +78,16 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
   - **Quick-Links:** Navigation zu den weiteren Dashboard-Seiten.
   - **Kitchen-Session Management:** Ansicht zum Erstellen und Verwalten von Kitchen-Sessions inkl. kopierbarem Pairing-Link.
   - **QR-Code Generator:** Erstellung von QR-Codes für To-Go und To-Stay (inkl. sichtbarer Tischnummer über dem Code, streng auf maximal 4 Zeichen limitiert). Generierte QR-Codes sind als PDF für den Druck herunterladbar.
-- **Live-Bestellungen (`/live-orders`):** Echtzeit-Ansicht der aktiven Bestellungen (In Bearbeitung, Abgeschlossen, Storniert). Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar (1 Spalte Mobile unter 500px, 2 Spalten zwischen 500px und 1100px, 3 Spalten ab 1100px). Beim Ein- und Ausklappen der Sidebar passt sich das Board somit automatisch an.
-- **Archiv (`/archive`):** Detaillierte Historien-Tabelle aller vergangenen Bestellungen mit Filter-/Suchfunktionen und dem DATEV CSV-Export für den Steuerberater. Die Sortierung erfolgt millisekundengenau absteigend (neueste Bestellungen oben), während die Anzeige im Interface sauber auf die Minute formatiert ist.
+- **Aktuelle Bestellungen (`/current-orders`):** Echtzeit-Ansicht der aktiven Bestellungen mit den Spalten "In Bearbeitung" und "Abholbereit". Eingehende Bestellungen starten in Bearbeitung (FIFO) und werden per "Bereitstellen"-Button nach "Abholbereit" verschoben. Dort schließt der Wirt die Bestellung per "Abschließen"-Button final ab, woraufhin sie sofort aus den aktuellen Bestellungen verschwindet. Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar.
+- **Alle Bestellungen (`/all-orders`):** Detaillierte Historien-Tabelle aller Bestellungen (In Bearbeitung, Abholbereit, Abgeschlossen, Storniert) mit Status- und Typ-Filtern, Volltextsuche und dem DATEV CSV-Export für den Steuerberater. Aktive Bestellungen ("In Bearbeitung" & "Abholbereit") können über eine dedizierte Aktions-Spalte mit Bestätigungsmodal storniert werden; abgeschlossene Bestellungen sind unwiderruflich abgeschlossen und können nicht mehr storniert werden.
 - **Menu (`/menu`):** Zentrale Verwaltung der Speisekarte, Getränke, Kategorien, Preise und Bilder.
 - **Settings (`/settings`):** Verwaltung von Account- und Betriebsdaten (z. B. Logo- und Banner-Uploads im Full-Width Layout auf Desktop) und Stripe-Details. Die Kontolöschung erfolgt über einen zweistufigen Verifizierungsprozess: Eine Server Action (`requestAccountDeletionAction`) generiert über Convex einen temporären Token (30 Minuten TTL) und sendet eine Bestätigungs-E-Mail über Google Workspace SMTP. Erst nach Klick auf den Bestätigungslink (`/delete-account?userId=...&token=...`) und erneuter Freigabe wird das gesamte Konto samt Betrieb, Menü, Bildern und Bestellungen kaskadierend restlos gelöscht.
 
 ### 2.3 Core Features: Kitchen Board View
 
-- **Aufbau:** Ansicht mit den Status "In Bearbeitung", "Abgeschlossen" und "Storniert". Aktualisiert sich reaktiv in Echtzeit.
-- **Ablauf:** Eingehende Bestellungen erscheinen als Kacheln in historischer Reihenfolge (FIFO-Prinzip: älteste offene Bestellung stets oben; bei Abgeschlossen steht die demnächst ablaufende Bestellung oben). Bei neuen Bestellungen werden exakte Eingangs-Uhrzeiten angezeigt. Ein Klick markiert die Bestellung als abgeschlossen und verschiebt sie.
-- **Cleanup & Auto-Archivierung:** Abgeschlossene Kacheln bleiben für 30 Minuten auf dem Kitchen Board sichtbar und zeigen einen Live-Timer an (z. B. "30m", "5m"). Anschließend werden sie automatisch ausgeblendet und sind im Archiv auffindbar.
+- **Aufbau:** Kiosk-Fullscreen-Board mit den Spalten "In Bearbeitung" und "Abholbereit". Aktualisiert sich reaktiv in Echtzeit.
+- **Ablauf:** Eingehende Bestellungen erscheinen in der Spalte "In Bearbeitung" (FIFO: älteste offene Bestellung stets oben) mit genauen Eingangs-Uhrzeiten. Der Klick auf "Bereitstellen" verschiebt die Bestellung in "Abholbereit". Dort schließt der Klick auf "Abschließen" die Bestellung ab, woraufhin sie sofort aus dem Board entfernt wird.
+- **Manuelle Kontrolle:** Kein unkontrolliertes Auto-Archivieren mehr – das Küchenteam behält die volle Kontrolle über den genauen Zeitpunkt der Bereitstellung und des Abschlusses.
 
 ### 2.4 Core Features: Gast-Frontend (To-Stay & To-Go)
 
@@ -112,8 +112,7 @@ Das Gesamtsystem erzwingt standardisierte Ablaufzeiten für maximale Datensparsa
 | **Brute-Force Lockout (OTP)** | 5 Fehlversuche | Sofortige Löschung des Codes | Verhindert systematisches Durchprobieren von Einmalcodes |
 | **Unverifizierte Accounts** | 30 Minuten | Vollständige Bereinigung via Convex Scheduler | Gibt die E-Mail-Adresse wieder frei, verhindert Ghost-Accounts |
 | **Passwort-Reset Link** | 30 Minuten | Token wird ungültig, Neuanforderung erforderlich | Schutz vor missbräuchlicher Passwortänderung über alte Links |
-| **Account-Löschung & E-Mail-Änderung** | 30 Minuten | Signierter Bestätigungslink verfällt | Schutz vor verspäteter Token-Ausnutzung |
-| **Kitchen Board Auto-Archivierung** | 30 Minuten | Bestellung wird automatisch ins Archiv verschoben | Hält die Küchenansicht aufgeräumt und fokussiert |
+| **Küchen-Board & Bestell-Lifecycle** | Manuell / Direkt | Bestellungen werden nach Bereitstellung manuell abgeschlossen und sofort ins Archiv überführt | Verhindert unkontrolliertes Auto-Archivieren während des Betriebs |
 | **Takeaway Live-Tracker (Gast)** | 10 Minuten | Tracker schaltet auf Abschluss-Screen um | Datenschutz und Vermeidung verwaister Live-Links |
 | **Terminal Pairing-Tokens** | Dauerhaft (Widerrufbar) | HttpOnly SameSite=lax Cookie (`order_session_*`) | Sicherer Tablet-Betrieb ohne XSS-Gefährdung |
 

@@ -7,9 +7,8 @@ export const SESSION_COOKIE_NAME = "zakkig_session";
 // Order Statuses
 export const ORDER_STATUS = {
   IN_PROGRESS: "in_progress",
-  PENDING: "pending",
-  PREPARING: "preparing",
-  READY: "ready",
+  READY_FOR_PICKUP: "ready_for_pickup",
+  READY: "ready_for_pickup",
   COMPLETED: "completed",
   CANCELLED: "cancelled",
 } as const;
@@ -27,8 +26,6 @@ export const AUTH_TOKEN_EXPIRY_MS = AUTH_TOKEN_EXPIRY_MINUTES * 60 * 1000; // 30
 export const TRACKING_EXPIRY_MINUTES = 10;
 export const TRACKING_EXPIRY_MS = TRACKING_EXPIRY_MINUTES * 60 * 1000; // 10 minutes
 
-export const KITCHEN_CLEANUP_MINUTES = 30;
-export const KITCHEN_CLEANUP_TIMEOUT = KITCHEN_CLEANUP_MINUTES * 60 * 1000; // 30 minutes
 
 // File Upload Limits
 export const MAX_IMAGE_SIZE_MB = 10;

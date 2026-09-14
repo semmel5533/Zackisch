@@ -12,7 +12,12 @@ export const getLiveOrders = query({
       type: v.union(v.literal("dine-in"), v.literal("takeaway")),
       items: v.string(),
       total: v.number(),
-      status: v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled")),
+      status: v.union(
+        v.literal("in_progress"),
+        v.literal("ready_for_pickup"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      ),
       completedAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
@@ -34,21 +39,15 @@ export const getLiveOrders = query({
       .order("desc")
       .collect();
 
-    const recentCompleted = await ctx.db
+    const readyForPickup = await ctx.db
       .query("orders")
       .withIndex("by_organizationId_and_status", (q) =>
-        q.eq("organizationId", args.organizationId).eq("status", "completed")
+        q.eq("organizationId", args.organizationId).eq("status", "ready_for_pickup")
       )
       .order("desc")
-      .take(50);
+      .collect();
 
-    const thirtyMinutesAgo = Date.now() - 30 * 60 * 1000;
-    const activeCompleted = recentCompleted.filter((o) => {
-      const timestamp = o.completedAt || o._creationTime;
-      return timestamp > thirtyMinutesAgo;
-    });
-
-    return [...inProgress, ...activeCompleted];
+    return [...inProgress, ...readyForPickup];
   },
 });
 
@@ -56,7 +55,12 @@ export const getOrders = query({
   args: {
     organizationId: v.id("organizations"),
     status: v.optional(
-      v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled"))
+      v.union(
+        v.literal("in_progress"),
+        v.literal("ready_for_pickup"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      )
     ),
   },
   returns: v.array(
@@ -68,7 +72,12 @@ export const getOrders = query({
       type: v.union(v.literal("dine-in"), v.literal("takeaway")),
       items: v.string(),
       total: v.number(),
-      status: v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled")),
+      status: v.union(
+        v.literal("in_progress"),
+        v.literal("ready_for_pickup"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      ),
       completedAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
@@ -114,7 +123,12 @@ export const getOrder = query({
       type: v.union(v.literal("dine-in"), v.literal("takeaway")),
       items: v.string(),
       total: v.number(),
-      status: v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled")),
+      status: v.union(
+        v.literal("in_progress"),
+        v.literal("ready_for_pickup"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      ),
       completedAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
@@ -151,7 +165,12 @@ export const getOrderByPaymentIntent = query({
       type: v.union(v.literal("dine-in"), v.literal("takeaway")),
       items: v.string(),
       total: v.number(),
-      status: v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled")),
+      status: v.union(
+        v.literal("in_progress"),
+        v.literal("ready_for_pickup"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      ),
       completedAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
@@ -374,12 +393,25 @@ export const createPaidOrderFromWebhook = internalMutation({
 export const updateStatus = mutation({
   args: {
     id: v.id("orders"),
-    status: v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled")),
+    status: v.union(
+      v.literal("in_progress"),
+      v.literal("ready_for_pickup"),
+      v.literal("completed"),
+      v.literal("cancelled")
+    ),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    const order = await ctx.db.get(args.id);
+    if (!order) return null;
+
+    // Defense-in-depth: Completed orders can NEVER be cancelled
+    if (args.status === "cancelled" && order.status === "completed") {
+      throw new Error("Abgeschlossene Bestellungen können nicht mehr storniert werden.");
+    }
+
     const patchData: {
-      status: "in_progress" | "completed" | "cancelled";
+      status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled";
       completedAt?: number;
     } = { status: args.status };
     if (args.status === "completed") {
@@ -408,7 +440,12 @@ export const patchOrder = internalMutation({
     orderNumber: v.optional(v.string()),
     items: v.optional(v.string()),
     status: v.optional(
-      v.union(v.literal("in_progress"), v.literal("completed"), v.literal("cancelled"))
+      v.union(
+        v.literal("in_progress"),
+        v.literal("ready_for_pickup"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      )
     ),
     completedAt: v.optional(v.number()),
   },

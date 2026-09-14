@@ -1117,7 +1117,7 @@ export function OverviewContent({
               </div>
             </Link>
             <Link
-              href={`/dashboard/${organization.$id}/live-orders`}
+              href={`/dashboard/${organization.$id}/current-orders`}
               className="flex items-start gap-3 p-4 bg-background border rounded-xl hover:bg-muted/50 transition-colors shadow-sm h-full"
             >
               <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
@@ -1125,7 +1125,7 @@ export function OverviewContent({
               </div>
               <div className="flex flex-col gap-1.5">
                 <span className="font-semibold text-lg leading-none">
-                  {t("orders")}
+                  {t("currentOrders")}
                 </span>
                 <span className="text-sm text-muted-foreground leading-relaxed text-balance">
                   {t("quickOrdersDesc")}
@@ -1133,7 +1133,7 @@ export function OverviewContent({
               </div>
             </Link>
             <Link
-              href={`/dashboard/${organization.$id}/archive`}
+              href={`/dashboard/${organization.$id}/all-orders`}
               className="flex items-start gap-3 p-4 bg-background border rounded-xl hover:bg-muted/50 transition-colors shadow-sm h-full"
             >
               <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
@@ -1141,7 +1141,7 @@ export function OverviewContent({
               </div>
               <div className="flex flex-col gap-1.5">
                 <span className="font-semibold text-lg leading-none">
-                  {t("archive")}
+                  {t("allOrders")}
                 </span>
                 <span className="text-sm text-muted-foreground leading-relaxed text-balance">
                   {t("quickArchiveDesc")}

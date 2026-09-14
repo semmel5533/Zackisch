@@ -80,8 +80,7 @@ Follow this unified, multi-layered architecture for all features and changes:
 6. **Standardized Lifecycles & Timeouts (TTL):**
    - **Auth, OTPs & Security Links:** Strictly 30 minutes (`30 * 60 * 1000` ms).
    - **Brute-Force Lockout:** OTP codes must track failed attempts and permanently delete the code after 5 failures.
-   - **Unverified Accounts:** Delete unverified registrations automatically after 30 minutes via the Convex scheduler.
-   - **Kitchen Board Auto-Archive:** 30 minutes for completed orders.
+   - **Kitchen Board Lifecycle:** Explicit manual completion (orders start in progress, advance to ready for pickup, and transition to completed, removing them immediately from current orders).
    - **Guest Takeaway Tracker:** 10 minutes active countdown once ready for pickup.
 
 7. **Terminal Session Persistence:**

@@ -6,10 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useTranslation } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { CheckCircle, CookingPot, X, Clock } from "@phosphor-icons/react";
+import { CheckCircle, CookingPot, X, Clock, Check } from "@phosphor-icons/react";
 import { playOrderReadySound, initAudioContext } from "@/lib/audio";
 import { TRACKING_EXPIRY_MS } from "@/lib/constants";
 import type { Organization, Order } from "@/lib/types";
@@ -22,6 +23,7 @@ interface OrderTrackerProps {
 
 const statusSteps = [
   { id: "in_progress", labelKey: "inProgress" },
+  { id: "ready_for_pickup", labelKey: "readyForPickup" },
   { id: "completed", labelKey: "completed" },
 ];
 
@@ -55,9 +57,9 @@ export function OrderTracker({
 
   useEffect(() => {
     if (
-      order?.status === "completed" &&
+      order?.status === "ready_for_pickup" &&
       prevStatusRef.current &&
-      prevStatusRef.current !== "completed"
+      prevStatusRef.current !== "ready_for_pickup"
     ) {
       playOrderReadySound();
     }
@@ -131,7 +133,12 @@ export function OrderTracker({
     );
   }
 
-  const currentStepIndex = order.status === "completed" ? 1 : 0;
+  const currentStepIndex =
+    order.status === "completed"
+      ? 2
+      : order.status === "ready_for_pickup"
+      ? 1
+      : 0;
 
   return (
     <div className="flex flex-col min-h-screen bg-primary overflow-x-clip">
@@ -170,6 +177,20 @@ export function OrderTracker({
             </div>
           )}
 
+          {order.status === "ready_for_pickup" && (
+            <div className="w-full bg-primary/10 border-2 border-primary/25 rounded-2xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300">
+              <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto">
+                <CheckCircle className="w-7 h-7" weight="fill" />
+              </div>
+              <h2 className="text-xl font-bold text-primary">
+                {t("orderReadyForPickup")}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {t("orderReadyDesc")}
+              </p>
+            </div>
+          )}
+
           {order.status === "completed" && (() => {
             const remainingTotalSeconds = Math.ceil(remainingMs / 1000);
             const remainingMins = Math.floor(remainingTotalSeconds / 60);
@@ -177,21 +198,21 @@ export function OrderTracker({
             const remainingParts = t("trackingActiveRemaining", { time: "%%" }).split("%%");
 
             return (
-              <div className="w-full bg-primary/10 border-2 border-primary/25 rounded-2xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300">
-                <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto">
+              <div className="w-full bg-muted/30 border border-border/80 rounded-2xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300">
+                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
                   <CheckCircle className="w-7 h-7" weight="fill" />
                 </div>
-                <h2 className="text-xl font-bold text-primary">
-                  {t("orderReadyForPickup" as any)}
+                <h2 className="text-xl font-bold text-foreground">
+                  {t("orderPickedUp")}
                 </h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t("orderReadyDesc" as any)}
+                  {t("orderPickedUpDesc")}
                 </p>
-                <div className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full mt-1">
+                <div className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground bg-muted/60 px-3 py-1.5 rounded-full mt-1">
                   <Clock className="w-3.5 h-3.5 shrink-0" />
                   <span>
                     {remainingParts[0]}
-                    <span className="font-inter tabular-nums">
+                    <span className="font-inter tabular-nums font-bold text-foreground">
                       {remainingMins}:{remainingSecs.toString().padStart(2, "0")}
                     </span>{" "}
                     <span>{locale === "de" ? "Min." : "min."}</span>
@@ -208,8 +229,8 @@ export function OrderTracker({
 
               <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted before:to-transparent">
                 {statusSteps.map((step, index) => {
-                  const isCompleted = index <= currentStepIndex;
-                  const isCurrent = index === currentStepIndex;
+                  const isDone = index < currentStepIndex || (order.status === "completed" && index === 2);
+                  const isCurrent = index === currentStepIndex && order.status !== "completed";
 
                   return (
                     <div
@@ -217,28 +238,38 @@ export function OrderTracker({
                       className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
                     >
                       <div
-                        className={`flex items-center justify-center w-10 h-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm z-10 ${isCompleted ? "border-primary text-primary" : "border-muted text-muted-foreground bg-background"} ${isCurrent ? "!bg-primary text-primary-foreground border-primary" : ""}`}
+                        className={cn(
+                          "flex items-center justify-center w-10 h-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm z-10 font-inter tabular-nums transition-colors",
+                          isDone
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : isCurrent
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-muted text-muted-foreground bg-background",
+                        )}
                       >
-                        {isCompleted && !isCurrent ? (
-                          <svg
-                            className="w-5 h-5 fill-current"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                              fillRule="evenodd"
-                            ></path>
-                          </svg>
+                        {isDone ? (
+                          <Check className="w-5 h-5" weight="bold" />
                         ) : (
-                          <span className="text-sm font-bold font-inter tabular-nums">{index + 1}</span>
+                          <span className="text-sm font-bold">{index + 1}</span>
                         )}
                       </div>
                       <div
-                        className={`w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl shadow-sm border ${isCurrent ? "border-primary/50 bg-primary/5" : "bg-background"}`}
+                        className={cn(
+                          "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl shadow-sm border transition-colors",
+                          isCurrent || (order.status === "completed" && index === 2)
+                            ? "border-primary/50 bg-primary/5"
+                            : "bg-background",
+                        )}
                       >
                         <h3
-                          className={`font-bold ${isCurrent ? "text-primary" : isCompleted ? "" : "text-muted-foreground"}`}
+                          className={cn(
+                            "font-bold text-sm sm:text-base",
+                            isCurrent || (order.status === "completed" && index === 2)
+                              ? "text-primary"
+                              : isDone
+                              ? "text-foreground"
+                              : "text-muted-foreground",
+                          )}
                         >
                           {t(step.labelKey as any)}
                         </h3>
@@ -253,7 +284,7 @@ export function OrderTracker({
           {order.status === "completed" && (
             <Button
               variant="outline"
-              className="w-full h-12 text-base font-semibold"
+              className="w-full h-11 rounded-full text-base font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
               onClick={() =>
                 (window.location.href = `/pickup/${organization.$id}`)
               }

@@ -112,7 +112,7 @@ export async function placeOrderAction(
 
 export async function updateOrderStatusAction(
   orderId: string,
-  status: "in_progress" | "completed" | "cancelled",
+  status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
   organizationId: string,
 ) {
   try {
@@ -123,9 +123,16 @@ export async function updateOrderStatusAction(
       return { error: "Bestellung nicht gefunden oder unberechtigt." };
     }
 
+    // Defense-in-depth: Completed orders can never be cancelled
+    if (status === "cancelled" && order.status === "completed") {
+      return { error: "Abgeschlossene Bestellungen können nicht mehr storniert werden." };
+    }
+
     await updateOrderStatus(orderId, status);
+    revalidatePath(`/dashboard/${organizationId}/current-orders`);
+    revalidatePath(`/dashboard/${organizationId}/all-orders`);
     revalidatePath(`/dashboard/${organizationId}/live-orders`);
-    revalidatePath(`/dashboard/${organizationId}/orders`);
+    revalidatePath(`/dashboard/${organizationId}/archive`);
     revalidatePath(`/orders/${organizationId}`);
     return { success: true };
   } catch (error: unknown) {

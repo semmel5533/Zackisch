@@ -72,6 +72,16 @@ const nextConfig: NextConfig = {
         destination: "/table/:path*",
         permanent: true,
       },
+      {
+        source: "/dashboard/:organizationId/live-orders",
+        destination: "/dashboard/:organizationId/current-orders",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/:organizationId/archive",
+        destination: "/dashboard/:organizationId/all-orders",
+        permanent: true,
+      },
     ];
   },
 };

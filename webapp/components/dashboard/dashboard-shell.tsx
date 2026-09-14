@@ -56,7 +56,9 @@ export function DashboardShell({
       : "skip"
   );
   const activeOrdersCount =
-    liveOrders?.filter((o: any) => o.status === "in_progress").length ?? 0;
+    liveOrders?.filter(
+      (o: any) => o.status === "in_progress" || o.status === "ready_for_pickup",
+    ).length ?? 0;
 
   const zakkigUrl = t("homepageUrl");
 
@@ -72,13 +74,13 @@ export function DashboardShell({
       icon: ForkKnife,
     },
     {
-      label: t("orders"),
-      href: `/dashboard/${organization?.$id ?? "new"}/live-orders`,
+      label: t("currentOrders"),
+      href: `/dashboard/${organization?.$id ?? "new"}/current-orders`,
       icon: ClipboardText,
     },
     {
-      label: t("archive"),
-      href: `/dashboard/${organization?.$id ?? "new"}/archive`,
+      label: t("allOrders"),
+      href: `/dashboard/${organization?.$id ?? "new"}/all-orders`,
       icon: Archive,
     },
     {
@@ -195,7 +197,7 @@ export function DashboardShell({
                         className="h-5 w-5 shrink-0"
                       />
                       {!isExpanded &&
-                        item.href.includes("live-orders") &&
+                        item.href.includes("current-orders") &&
                         activeOrdersCount > 0 && (
                           <span
                             className={cn(
@@ -212,7 +214,7 @@ export function DashboardShell({
                     {isExpanded && (
                       <>
                         <span className="ml-2 flex-1 text-left truncate">{item.label}</span>
-                        {item.href.includes("live-orders") && activeOrdersCount > 0 && (
+                        {item.href.includes("current-orders") && activeOrdersCount > 0 && (
                           <span
                             className={cn(
                               "w-5 h-5 min-w-5 aspect-square rounded-full p-0 flex items-center justify-center text-[11px] font-black shrink-0 font-inter tabular-nums leading-none shadow-xs",

@@ -289,7 +289,7 @@ export async function updateItemSortOrders(
 
 export async function getOrders(
   organizationId: string,
-  status?: "in_progress" | "completed" | "cancelled",
+  status?: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
 ): Promise<Order[]> {
   const docs = await convexServer.query(api.orders.getOrders, {
     organizationId: organizationId as Id<"organizations">,
@@ -337,7 +337,7 @@ export async function createOrder(data: CreateOrderData): Promise<Order> {
 
 export async function updateOrderStatus(
   orderId: string,
-  status: "in_progress" | "completed" | "cancelled",
+  status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
 ) {
   return await convexServer.mutation(api.orders.updateStatus, {
     id: orderId as Id<"orders">,

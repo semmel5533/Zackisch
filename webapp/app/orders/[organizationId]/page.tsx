@@ -4,7 +4,7 @@ import {
   getOrderSessions,
 } from "@/lib/convex/database";
 import { getUser } from "@/lib/convex/auth";
-import { LiveOrdersContent } from "@/components/dashboard/live-orders-content";
+import { CurrentOrdersContent } from "@/components/dashboard/current-orders-content";
 import { cookies } from "next/headers";
 import { LocalizedText } from "@/components/ui/localized-text";
 import { translations, Locale } from "@/lib/translations";
@@ -75,7 +75,7 @@ export default async function KitchenBoardPage({
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-background @container">
       <main className="flex-1 min-h-0 overflow-hidden p-3 sm:p-4 md:p-5 flex flex-col">
-        <LiveOrdersContent
+        <CurrentOrdersContent
           organizationId={organizationId}
           orders={structuredClone(initialOrders)}
           isStaffView={true}

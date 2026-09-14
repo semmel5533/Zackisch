@@ -1,37 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import {
-  MagnifyingGlass,
-  DownloadSimple,
-  CaretUpDown,
-  CaretDown,
-  CaretUp,
-  X,
-  Funnel,
-} from "@phosphor-icons/react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { useState, useMemo } from "react";
 import {
   Table,
-  TableHeader,
   TableBody,
-  TableHead,
-  TableRow,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuCheckboxItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+  DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
@@ -39,43 +37,45 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { useTranslation, formatPrice } from "@/lib/i18n";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogCloseButton,
+} from "@/components/ui/dialog";
+import {
+  Funnel,
+  CaretDown,
+  CaretUp,
+  CaretUpDown,
+  DownloadSimple,
+  MagnifyingGlass,
+  X,
+  Warning,
+  ReceiptX,
+} from "@phosphor-icons/react";
 import { Price } from "@/components/ui/price";
-import { exportOrdersCSVAction } from "@/actions/order-actions";
-import type { Order, OrderItem } from "@/lib/types";
+import { useTranslation } from "@/lib/i18n";
+import { exportOrdersCSVAction, updateOrderStatusAction } from "@/actions/order-actions";
+import { toast } from "sonner";
+import type { Order } from "@/lib/types";
 
-interface ArchiveContentProps {
+interface AllOrdersContentProps {
   orders: Order[];
   organizationId: string;
 }
 
-function parseItems(itemsJson: string): OrderItem[] {
-  try {
-    return JSON.parse(itemsJson);
-  } catch {
-    return [];
+function getItemCustomizations(item: any) {
+  if (Array.isArray(item.customizations) && item.customizations.length > 0) {
+    return item.customizations;
   }
-}
-
-function getItemCustomizations(item: OrderItem): any[] {
-  if (Array.isArray(item.customizations)) return item.customizations;
-  if (typeof (item as any).customizations === "string") {
+  if (typeof item.customizations === "string") {
     try {
-      const parsed = JSON.parse((item as any).customizations);
-      return Array.isArray(parsed) ? parsed : [];
+      const parsed = JSON.parse(item.customizations);
+      if (Array.isArray(parsed)) return parsed;
     } catch {
       return [];
     }
@@ -93,6 +93,7 @@ const statusVariants: Record<
   "default" | "secondary" | "destructive" | "outline"
 > = {
   in_progress: "secondary",
+  ready_for_pickup: "default",
   completed: "outline",
   cancelled: "destructive",
 };
@@ -105,16 +106,17 @@ const dateFormatter = new Intl.DateTimeFormat("de-DE", {
   minute: "2-digit",
 });
 
-export function ArchiveContent({
-  orders,
+export function AllOrdersContent({
+  orders: initialOrders,
   organizationId,
-}: ArchiveContentProps) {
+}: AllOrdersContentProps) {
   const { t } = useTranslation();
 
+  const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [orderToCancel, setOrderToCancel] = useState<Order | null>(null);
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "$createdAt",
@@ -164,68 +166,70 @@ export function ArchiveContent({
   }
 
   // 3. Sort
-  processedOrders.sort((a, b) => {
-    if (!sortConfig) return 0;
-
-    let aVal: any = a[sortConfig.key as keyof Order];
-    let bVal: any = b[sortConfig.key as keyof Order];
-
-    if (sortConfig.key === "$createdAt") {
-      const aTime =
-        a.createdAt ||
-        (a.$createdAt ? new Date(a.$createdAt).getTime() : 0) ||
-        a._creationTime ||
-        0;
-      const bTime =
-        b.createdAt ||
-        (b.$createdAt ? new Date(b.$createdAt).getTime() : 0) ||
-        b._creationTime ||
-        0;
-
-      if (aTime !== bTime) {
-        return sortConfig.direction === "asc" ? aTime - bTime : bTime - aTime;
+  if (sortConfig !== null) {
+    processedOrders.sort((a, b) => {
+      if (sortConfig.key === "$createdAt") {
+        const timeA = a.createdAt || a._creationTime || (a.$createdAt ? new Date(a.$createdAt).getTime() : 0);
+        const timeB = b.createdAt || b._creationTime || (b.$createdAt ? new Date(b.$createdAt).getTime() : 0);
+        if (timeA < timeB) return sortConfig.direction === "asc" ? -1 : 1;
+        if (timeA > timeB) return sortConfig.direction === "asc" ? 1 : -1;
+        return 0;
       }
 
-      const aNum = parseInt(a.orderNumber, 10) || 0;
-      const bNum = parseInt(b.orderNumber, 10) || 0;
-      return sortConfig.direction === "asc" ? aNum - bNum : bNum - aNum;
-    }
+      let aValue: any = a[sortConfig.key as keyof Order];
+      let bValue: any = b[sortConfig.key as keyof Order];
 
-    if (sortConfig.key === "items") {
-      aVal = parseItems(a.items).length;
-      bVal = parseItems(b.items).length;
-    }
-    if (sortConfig.key === "total") {
-      aVal = Number(aVal);
-      bVal = Number(bVal);
-    }
+      if (sortConfig.key === "items") {
+        try {
+          const aItems = typeof a.items === "string" ? JSON.parse(a.items) : a.items;
+          const bItems = typeof b.items === "string" ? JSON.parse(b.items) : b.items;
+          aValue = Array.isArray(aItems) ? aItems.length : 0;
+          bValue = Array.isArray(bItems) ? bItems.length : 0;
+        } catch {
+          aValue = 0;
+          bValue = 0;
+        }
+      }
 
-    if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-    if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
-    return 0;
-  });
+      if (aValue === undefined && bValue === undefined) return 0;
+      if (aValue === undefined) return sortConfig.direction === "asc" ? 1 : -1;
+      if (bValue === undefined) return sortConfig.direction === "asc" ? -1 : 1;
+
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        return sortConfig.direction === "asc"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  }
 
   // 4. Pagination
-  const totalPages = Math.ceil(processedOrders.length / itemsPerPage) || 1;
-  const paginatedOrders = processedOrders.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+  const totalItems = processedOrders.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedOrders = processedOrders.slice(startIndex, startIndex + itemsPerPage);
+
+  function formatPrice(cents: number) {
+    return (cents / 100).toLocaleString("de-DE", {
+      style: "currency",
+      currency: "EUR",
+    });
+  }
 
   const handleSort = (key: keyof Order | "items") => {
     let direction: "asc" | "desc" = "asc";
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === "asc"
-    ) {
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
     }
     setSortConfig({ key, direction });
   };
 
-  const renderSortIcon = (key: string) => {
-    if (sortConfig?.key !== key)
+  const renderSortIcon = (key: keyof Order | "items") => {
+    if (!sortConfig || sortConfig.key !== key)
       return (
         <CaretUpDown className="ml-1.5 h-4 w-4 text-muted-foreground shrink-0" />
       );
@@ -239,6 +243,7 @@ export function ArchiveContent({
   function getStatusLabel(status: string) {
     const labels: Record<string, string> = {
       in_progress: t("inProgress"),
+      ready_for_pickup: t("ready"),
       completed: t("completed"),
       cancelled: t("cancelledOrder"),
     };
@@ -263,6 +268,25 @@ export function ArchiveContent({
     setCurrentPage(1);
   }
 
+  async function handleCancelOrder(order: Order) {
+    if (order.status === "completed") {
+      toast.error(t("cannotCancelCompleted"));
+      setOrderToCancel(null);
+      return;
+    }
+
+    const res = await updateOrderStatusAction(order.$id, "cancelled", organizationId);
+    if (res?.error) {
+      toast.error(res.error);
+    } else {
+      setOrders((prev) =>
+        prev.map((o) => (o.$id === order.$id ? { ...o, status: "cancelled" } : o)),
+      );
+      toast.success(t("cancelledOrder"));
+    }
+    setOrderToCancel(null);
+  }
+
   async function handleExportCSV() {
     const result = await exportOrdersCSVAction(organizationId);
     if (result.csv) {
@@ -280,7 +304,7 @@ export function ArchiveContent({
     <div className="flex-1 space-y-4 @container">
       <div className="sticky top-0 z-30 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("archive")}</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("allOrders")}</h1>
         </div>
       </div>
 
@@ -309,7 +333,7 @@ export function ArchiveContent({
                     setSearchQuery("");
                     setCurrentPage(1);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none cursor-pointer"
                   title={t("clearSearch")}
                 >
                   <X className="w-4 h-4" />
@@ -323,7 +347,7 @@ export function ArchiveContent({
                 render={
                   <Button
                     variant="default"
-                    className="justify-between shrink-0 min-w-[110px]"
+                    className="justify-between shrink-0 min-w-[110px] h-11 rounded-full font-semibold"
                   >
                     <div className="flex items-center gap-2">
                       <Funnel className="h-4 w-4 mr-2" />
@@ -371,6 +395,14 @@ export function ArchiveContent({
                     {t("inProgress")}
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
+                    checked={selectedStatuses.includes("ready_for_pickup")}
+                    onCheckedChange={(c) =>
+                      handleStatusToggle("ready_for_pickup", c)
+                    }
+                  >
+                    {t("ready")}
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
                     checked={selectedStatuses.includes("completed")}
                     onCheckedChange={(c) => handleStatusToggle("completed", c)}
                   >
@@ -390,7 +422,7 @@ export function ArchiveContent({
           <Button
             variant="default"
             onClick={handleExportCSV}
-            className="w-full @min-[700px]:w-auto shrink-0"
+            className="w-full @min-[700px]:w-auto shrink-0 h-11 rounded-full font-semibold"
           >
             <DownloadSimple className="mr-2 h-4 w-4" weight="bold" />
             {t("exportCSV")}
@@ -399,7 +431,7 @@ export function ArchiveContent({
 
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
-            <Table aria-label="Orders archive">
+            <Table aria-label="Orders list">
               <TableHeader>
                 <TableRow>
                   <TableHead
@@ -439,7 +471,7 @@ export function ArchiveContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors min-w-[200px]"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
                     onClick={() => handleSort("items")}
                   >
                     <div className="flex items-center">
@@ -465,38 +497,48 @@ export function ArchiveContent({
                       {renderSortIcon("status")}
                     </div>
                   </TableHead>
+                  <TableHead className="text-right whitespace-nowrap pr-4">
+                    {t("actions")}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedOrders.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      className="text-center text-muted-foreground py-12"
-                      colSpan={7}
+                      colSpan={8}
+                      className="text-center py-8 text-muted-foreground"
                     >
-                      {t("noArchiveOrders")}
+                      {t("noAllOrders")}
                     </TableCell>
                   </TableRow>
                 ) : (
                   paginatedOrders.map((order) => {
-                    const items = parseItems(order.items);
-                    const shortId =
-                      order.$id.length > 8
-                        ? "..." + order.$id.slice(-8)
-                        : order.$id;
+                    let items: any[] = [];
+                    try {
+                      items =
+                        typeof order.items === "string"
+                          ? JSON.parse(order.items)
+                          : order.items;
+                      if (!Array.isArray(items)) items = [];
+                    } catch {
+                      items = [];
+                    }
+
                     const isCancelled = order.status === "cancelled";
+                    const isCancellable =
+                      order.status === "in_progress" || order.status === "ready_for_pickup";
 
                     return (
-                      <TableRow key={order.$id} className="hover:bg-muted/30">
-                        <TableCell className="font-mono text-xs text-muted-foreground">
+                      <TableRow
+                        key={order.$id}
+                        className={isCancelled ? "opacity-60 bg-muted/20" : ""}
+                      >
+                        <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap">
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger
-                                render={
-                                  <span className="cursor-help border-b border-dotted border-muted-foreground/50" />
-                                }
-                              >
-                                {shortId}
+                              <TooltipTrigger className="cursor-help hover:text-foreground transition-colors">
+                                {order.$id.slice(-6)}
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>{order.$id}</p>
@@ -601,6 +643,23 @@ export function ArchiveContent({
                             {getStatusLabel(order.status)}
                           </Badge>
                         </TableCell>
+                        <TableCell className="text-right whitespace-nowrap pr-4">
+                          {isCancellable ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setOrderToCancel(order)}
+                              className="h-9 px-3 rounded-full text-xs font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors cursor-pointer"
+                            >
+                              <ReceiptX className="w-3.5 h-3.5 mr-1.5 shrink-0" weight="bold" />
+                              {t("cancelOrder")}
+                            </Button>
+                          ) : (
+                            <span className="text-muted-foreground text-xs select-none pr-3">
+                              —
+                            </span>
+                          )}
+                        </TableCell>
                       </TableRow>
                     );
                   })
@@ -617,7 +676,7 @@ export function ArchiveContent({
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={
-                    <Button
+                  <Button
                     variant="outline"
                     className="w-[84px] justify-between font-inter tabular-nums font-semibold"
                   >
@@ -649,20 +708,16 @@ export function ArchiveContent({
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      text={t("previousPage")}
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentPage((p) => Math.max(1, p - 1));
-                      }}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(1, prev - 1))
+                      }
                       className={
                         currentPage === 1
                           ? "pointer-events-none opacity-50"
-                          : ""
+                          : "cursor-pointer"
                       }
                     />
                   </PaginationItem>
-
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                     (page) => {
                       if (
@@ -673,47 +728,37 @@ export function ArchiveContent({
                         return (
                           <PaginationItem key={page}>
                             <PaginationLink
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setCurrentPage(page);
-                              }}
+                              onClick={() => setCurrentPage(page)}
                               isActive={currentPage === page}
-                              className="font-inter tabular-nums"
+                              className="cursor-pointer"
                             >
                               {page}
                             </PaginationLink>
                           </PaginationItem>
                         );
                       }
-
                       if (
                         page === currentPage - 2 ||
                         page === currentPage + 2
                       ) {
                         return (
-                          <PaginationItem key={`ellipsis-${page}`}>
-                            <PaginationEllipsis />
+                          <PaginationItem key={page}>
+                            <span className="px-2">...</span>
                           </PaginationItem>
                         );
                       }
-
                       return null;
                     },
                   )}
-
                   <PaginationItem>
                     <PaginationNext
-                      text={t("nextPage")}
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentPage((p) => Math.min(totalPages, p + 1));
-                      }}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                      }
                       className={
                         currentPage === totalPages
                           ? "pointer-events-none opacity-50"
-                          : ""
+                          : "cursor-pointer"
                       }
                     />
                   </PaginationItem>
@@ -721,10 +766,62 @@ export function ArchiveContent({
               </Pagination>
             </div>
           )}
-          {/* Spacer for right alignment balancing */}
-          <div className="hidden @min-[700px]:block @min-[700px]:w-[150px]"></div>
         </div>
       </div>
+
+      {/* Cancel Order Confirmation Dialog */}
+      <Dialog
+        open={!!orderToCancel}
+        onOpenChange={(open) => !open && setOrderToCancel(null)}
+      >
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[24px] border border-border bg-card text-card-foreground shadow-2xl flex flex-col">
+          <DialogHeader className="px-6 py-5 border-b border-border bg-card shrink-0 text-left flex flex-row items-center justify-between">
+            <div>
+              <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+                {orderToCancel
+                  ? t("cancelOrderTitle", {
+                      orderNumber: orderToCancel.orderNumber,
+                    })
+                  : t("cancelOrderTitleFallback")}
+              </DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+                {t("orderCancelledDesc")}
+              </DialogDescription>
+            </div>
+            <DialogCloseButton />
+          </DialogHeader>
+
+          <div className="p-6 space-y-4 text-sm text-foreground/90">
+            <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3 text-destructive">
+              <Warning className="w-5 h-5 shrink-0 mt-0.5" weight="bold" />
+              <p className="text-xs font-semibold leading-relaxed">
+                {t("cancelOrderWarning")}
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="px-6 py-4 border-t border-border bg-card shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full">
+            <Button
+              variant="outline"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              onClick={() => setOrderToCancel(null)}
+            >
+              {t("abortCancel")}
+            </Button>
+            <Button
+              variant="destructive"
+              className="w-full sm:flex-1 rounded-full h-11 font-semibold cursor-pointer active:scale-[0.98] transition-all"
+              onClick={() => {
+                if (orderToCancel) {
+                  handleCancelOrder(orderToCancel);
+                }
+              }}
+            >
+              {t("confirmCancelOrder")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
