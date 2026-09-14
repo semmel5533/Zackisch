@@ -154,7 +154,7 @@ export function CartSheet({
                 />
               </div>
 
-              <Separator />
+              <Separator className="bg-zinc-100" />
 
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-foreground">
