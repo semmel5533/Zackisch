@@ -788,54 +788,13 @@ export function MenuContent({
                 />
               </div>
             ) : activeCategory ? (
-              <Card className="opacity-95 shadow-2xl scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background">
-                <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 gap-2 sm:gap-4 w-full">
-                  <div className="flex items-center gap-3 min-w-0 flex-1 w-full">
-                    <button
-                      type="button"
-                      className="cursor-grabbing p-1 rounded text-muted-foreground transition-colors touch-none shrink-0"
-                      aria-label={t("reorder")}
-                      title={t("reorder")}
-                    >
-                      <DotsSixVertical className="h-5 w-5" weight="bold" />
-                    </button>
-                    <div className="text-lg font-semibold text-foreground text-left bg-transparent border-0 p-0 min-w-0 flex-1 break-words">
-                      {activeCategory.name}
-                    </div>
-                    <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto sm:ml-0 font-inter tabular-nums leading-none">
-                      {itemsByCategory[activeCategory.$id]?.length || 0}
-                    </Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between sm:justify-end gap-1.5 shrink-0 pointer-events-none border-t border-border/40 pt-2 sm:pt-0 sm:border-t-0 w-full sm:w-auto">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full text-muted-foreground shrink-0"
-                    >
-                      <CaretDown className="h-4 w-4" weight="bold" />
-                    </Button>
-
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-full text-muted-foreground shrink-0"
-                      >
-                        <PencilSimple className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="default"
-                        className="gap-2 font-medium border-border text-foreground shrink-0 opacity-50"
-                      >
-                        <Trash className="h-4 w-4 shrink-0" weight="bold" />
-                        <span>{t("delete")}</span>
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
+              <CategoryCardOverlay
+                category={activeCategory}
+                categoryItems={
+                  itemsByCategory[activeCategory.$id] || EMPTY_ITEMS
+                }
+                isCollapsed={collapsedCategories[activeCategory.$id] ?? true}
+              />
             ) : null}
           </DragOverlay>
         </DndContext>
@@ -1408,3 +1367,115 @@ const SortableItemRow = memo(function SortableItemRow(
     />
   );
 });
+
+interface CategoryCardOverlayProps {
+  category: MenuCategory;
+  categoryItems: MenuItem[];
+  isCollapsed: boolean;
+}
+
+function CategoryCardOverlay({
+  category,
+  categoryItems,
+  isCollapsed,
+}: CategoryCardOverlayProps) {
+  const { t } = useTranslation();
+
+  return (
+    <Card className="w-full opacity-95 shadow-2xl scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background @container pointer-events-none">
+      <CardHeader className="flex flex-col pb-2 gap-2 w-full">
+        <div className="flex items-center gap-3 min-w-0 flex-1 w-full">
+          <button
+            type="button"
+            className="cursor-grabbing p-1 rounded text-muted-foreground transition-colors touch-none shrink-0"
+            title={t("reorderCategories" as any)}
+          >
+            <DotsSixVertical className="h-5 w-5" weight="bold" />
+          </button>
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <span className="text-lg font-semibold text-foreground text-left bg-transparent border-0 p-0 min-w-0 break-words">
+              {category.name}
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 rounded-lg text-muted-foreground shrink-0"
+              title="Kategoriename bearbeiten"
+            >
+              <PencilSimple className="h-4 w-4" />
+            </Button>
+          </div>
+          <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto font-inter tabular-nums leading-none">
+            {categoryItems.length}
+          </Badge>
+        </div>
+
+        <div className="flex items-center justify-between gap-1.5 shrink-0 border-t border-border/40 pt-2 w-full">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-muted-foreground shrink-0"
+            title={isCollapsed ? "Aufklappen" : "Einklappen"}
+          >
+            {isCollapsed ? (
+              <CaretDown className="h-4 w-4" weight="bold" />
+            ) : (
+              <CaretUp className="h-4 w-4" weight="bold" />
+            )}
+          </Button>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Button
+              variant="outline"
+              size="default"
+              className="gap-2 font-medium border-border text-foreground shrink-0"
+              title={t("delete")}
+            >
+              <Trash className="h-4 w-4 shrink-0" weight="bold" />
+              <span>{t("delete")}</span>
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+
+      {!isCollapsed && (
+        <CardContent className="pt-2 flex flex-col gap-3">
+          <div className="flex items-center justify-between px-1.5 pt-1">
+            <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+              {t("items")}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 @min-[1500px]:grid-cols-2 gap-2.5 min-h-[60px] p-1.5 transition-colors rounded-lg">
+            {categoryItems.length === 0 ? (
+              <div className="col-span-full py-6 text-center flex flex-col items-center justify-center gap-1 border border-dashed rounded-lg bg-muted/10">
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t("noItems")}
+                </p>
+              </div>
+            ) : (
+              categoryItems.map((item) => (
+                <ItemRowView
+                  key={item.$id}
+                  item={item}
+                  onEdit={() => {}}
+                  onDelete={() => {}}
+                  onToggleAvailability={() => {}}
+                />
+              ))
+            )}
+          </div>
+
+          <Button
+            type="button"
+            variant="ghost"
+            className="w-full border border-dashed border-muted-foreground/40 font-semibold text-sm text-muted-foreground gap-2"
+          >
+            <Plus className="h-4 w-4 shrink-0" weight="bold" />
+            <span>{t("addItem")}</span>
+          </Button>
+        </CardContent>
+      )}
+    </Card>
+  );
+}
