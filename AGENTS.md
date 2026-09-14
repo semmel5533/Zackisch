@@ -195,8 +195,16 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
    - High contrast WCAG AA/AAA compliance.
 
 4. **Pill Buttons & Select Controls Standard:**
-   - All action buttons, select triggers (`SelectTrigger`), dropdown items, and search/filter bars across dashboard views strictly use unified Apple pill geometry (`h-11 rounded-full font-semibold`, compact `h-9 rounded-full font-semibold`).
-   - Dropdown menus use `rounded-2xl` container cards with `rounded-xl` selectable items.
+   - All action buttons, select triggers (`SelectTrigger`), dropdown triggers, and search/filter bars across dashboard views strictly use unified Apple pill geometry (`h-11 rounded-full font-semibold`, compact `h-9 rounded-full font-semibold`).
+
+5. **Concentric Corner Radius & Nested Geometry Standard:**
+   - Whenever an inner element sits inside an outer container with uniform padding $P$, the outer radius $R_{\text{outer}}$ and inner radius $R_{\text{inner}}$ MUST strictly follow the concentric border radius formula:
+     $$R_{\text{outer}} = R_{\text{inner}} + P \quad \Longleftrightarrow \quad R_{\text{inner}} = \max(0, R_{\text{outer}} - P)$$
+   - Standard Tailwind tokens like `rounded-2xl` evaluate to `43.2px` in this project due to `--radius: 1.5rem`. NEVER use `rounded-2xl` for dropdown or select popups, as it produces distorted, bulbous spherical corners.
+   - For all Dropdown and Select menus:
+     - Outer container card: strictly `rounded-[16px]` with `p-1.5` (6px padding)
+     - Inner selectable items: strictly `rounded-[10px]` ($16\text{px} - 6\text{px} = 10\text{px}$)
+     - This guarantees mathematically exact concentric curvature with uniform visual margins around all corners.
 
 <!-- END:design-theme-conventions -->
 

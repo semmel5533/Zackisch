@@ -685,249 +685,269 @@ function QrCodeGeneratorCard({
 
   return (
     <>
-      <div className="grid grid-cols-1 @min-[768px]:grid-cols-2 gap-4 h-full print:hidden">
-        {/* Left Card: QR Code Preview */}
-        <Card className="h-full flex flex-col bg-white">
-          <CardHeader className="flex flex-col gap-3 pb-4 shrink-0">
-            <div className="flex items-center justify-between gap-4 w-full">
-              <h3 className="text-lg font-semibold text-foreground">
-                {t("qrPreview")}
-              </h3>
-              <Button
-                onClick={handlePrint}
-                variant="default"
-                disabled={qrType === "table" && selectedTables.length === 0}
-                className="w-auto bg-primary text-secondary shadow-sm shrink-0"
-              >
-                <Printer className="mr-2 h-4 w-4" />
-                {qrType === "pickup"
-                  ? t("printQrCode")
-                  : selectedTables.length > 1
-                    ? t("printMultipleCodes").replace(
-                        "{{count}}",
-                        selectedTables.length.toString(),
-                      )
-                    : t("printQrCode")}
-              </Button>
-            </div>
-          </CardHeader>
+      <Card className="h-full flex flex-col bg-white print:hidden @container">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
+          <h3 className="text-lg font-semibold whitespace-nowrap">
+            {t("qrManagement")}
+          </h3>
 
-          <CardContent className="flex-1 flex flex-col items-center justify-center p-0 pb-4 min-h-0">
-            <div
-              className={cn(
-                "flex flex-col items-center w-[280px] gap-0 transition-all duration-200",
-                qrType === "table" && selectedTables.length === 0
-                  ? "opacity-50 grayscale"
-                  : "",
-              )}
-            >
-              <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
-                <InkScaledText
-                  text={t("qrCodeTitleLine1")}
-                  className="text-foreground"
-                />
-                <InkScaledText
-                  text={t("qrCodeTitleLine2")}
-                  className="text-foreground"
-                />
-                <InkConnectorText
-                  text={qrType === "table" ? t("qrCodeAt") : t("qrCodeFor")}
-                  fontSize={24}
-                  className="text-foreground"
-                />
-                <InkScaledText
-                  text={
-                    qrType === "table"
-                      ? `${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`
-                      : t("pickup")
-                  }
-                  className="text-foreground"
-                />
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={isActive}
+              onCheckedChange={(checked) =>
+                handleToggleFeature(qrType, checked)
+              }
+              disabled={isPending}
+              aria-label={qrType === "pickup" ? t("toGo") : t("toStay")}
+            />
 
-                <a
-                  href={qrUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full mt-[2px] relative bg-white flex items-center justify-center cursor-pointer hover:opacity-95 transition-opacity"
-                  title={t("openQrLink")}
-                >
-                  <StyledQRCode value={qrUrl} size={235} />
-                </a>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    variant="default"
+                    className="w-auto bg-primary text-secondary shrink-0"
+                  >
+                    {qrType === "pickup" ? t("toGo") : t("toStay")}
+                    <CaretDown className="ml-2 h-4 w-4 shrink-0" />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setQrType("pickup")}>
+                  {t("toGo")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setQrType("table")}>
+                  {t("toStay")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </CardHeader>
 
-        {/* Right Card: QR Code Management */}
-        <Card className="h-full flex flex-col">
-          <CardHeader className="flex flex-col gap-3 pb-4 shrink-0">
-            {/* Title & Mode Selection Dropdown Row */}
-            <div className="flex items-center justify-between gap-2 w-full">
-              <h3 className="text-lg font-semibold whitespace-nowrap">{t("qrManagement")}</h3>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  render={
-                    <Button
-                      variant="default"
-                      className="w-auto bg-primary text-secondary shrink-0"
-                    >
-                      {qrType === "pickup" ? t("toGo") : t("toStay")}
-                      <CaretDown className="ml-2 h-4 w-4 shrink-0" />
-                    </Button>
-                  }
-                />
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setQrType("pickup")}>
-                    {t("toGo")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setQrType("table")}>
-                    {t("toStay")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Description & Feature Toggle Switch Row */}
-            <div className="flex items-center justify-between gap-4 w-full">
-              <p className="text-sm text-muted-foreground text-balance leading-relaxed flex-1">
+        <CardContent className="p-6 pt-4 flex-1 flex flex-col min-h-0">
+          <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 gap-6 flex-1 min-h-0 items-start">
+            {/* Left Column: QR-Verwaltung */}
+            <div className="flex flex-col gap-4 h-full min-h-0 min-w-0">
+              <p className="text-sm text-muted-foreground text-balance leading-relaxed">
                 {qrType === "pickup"
                   ? t("qrCodeAdminDescToGo")
                   : t("qrCodeAdminDescToStay")}
               </p>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <Switch
-                  checked={isActive}
-                  onCheckedChange={(checked) =>
-                    handleToggleFeature(qrType, checked)
-                  }
-                  disabled={isPending}
-                />
+              {qrType === "table" ? (
+                <div className="flex-1 min-w-0 w-full flex flex-col gap-4 h-full min-h-0">
+                  <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+                    <Button
+                      type="button"
+                      variant={
+                        selectedTables.length === tables.length &&
+                        selectedTables.length > 0
+                          ? "default"
+                          : "outline"
+                      }
+                      disabled={tables.length === 0}
+                      onClick={() => {
+                        if (tables.length === 0) return;
+                        if (selectedTables.length === tables.length) {
+                          setSelectedTables([]);
+                        } else {
+                          setSelectedTables(tables);
+                        }
+                      }}
+                      className={cn(
+                        "gap-2 font-semibold text-sm transition-colors w-full",
+                        selectedTables.length > 0 ? "sm:flex-1" : "",
+                      )}
+                    >
+                      <span>{t("selectAll")}</span>
+                    </Button>
+
+                    {selectedTables.length > 0 && (
+                      <Button
+                        variant="outline"
+                        onClick={handleRemoveSelectedTables}
+                        className="gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0"
+                      >
+                        <Trash className="h-4 w-4 shrink-0" weight="bold" />
+                        <span>
+                          {selectedTables.length} {t("delete")}
+                        </span>
+                      </Button>
+                    )}
+                  </div>
+
+                  <ScrollArea className="w-full h-[255px]">
+                    <DndContext
+                      id="tables-dnd-context"
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleDragEnd}
+                    >
+                      <SortableContext
+                        items={tables}
+                        strategy={rectSortingStrategy}
+                      >
+                        {tables.length === 0 && !isAddingTable && (
+                          <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border border-dashed rounded-xl mb-3">
+                            <p className="mb-4">{t("noTablesAdded")}</p>
+                          </div>
+                        )}
+                        <div className="grid grid-cols-2 gap-3 pb-3">
+                          {(() => {
+                            const selectedTablesSet = new Set(selectedTables);
+                            return tables.map((tNum) => (
+                              <SortableTableItem
+                                key={tNum}
+                                tNum={tNum}
+                                isSelected={selectedTablesSet.has(tNum)}
+                                onToggle={() => toggleTableSelection(tNum)}
+                              />
+                            ));
+                          })()}
+                          <div className="col-span-1">
+                            {isAddingTable ? (
+                              <Input
+                                autoFocus
+                                placeholder={t("tableNr")}
+                                value={newTableInput}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val.length <= 4) setNewTableInput(val);
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    handleAddTable(newTableInput);
+                                  } else if (e.key === "Escape") {
+                                    setIsAddingTable(false);
+                                    setNewTableInput("");
+                                  }
+                                }}
+                                onBlur={() => {
+                                  if (newTableInput) {
+                                    handleAddTable(newTableInput);
+                                  } else {
+                                    setIsAddingTable(false);
+                                  }
+                                }}
+                                maxLength={4}
+                                className="w-full h-11 text-center text-sm font-medium border border-dashed border-primary rounded-xl focus-visible:ring-0"
+                              />
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => setIsAddingTable(true)}
+                                className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-xl"
+                              >
+                                <Plus className="h-4 w-4 shrink-0" weight="bold" />
+                                <span className="truncate">{t("addTableFull")}</span>
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </SortableContext>
+                    </DndContext>
+                  </ScrollArea>
+                </div>
+              ) : (
+                <div className="flex-1 min-w-0 w-full flex flex-col justify-between gap-4 h-full min-h-0">
+                  <div className="p-4 rounded-xl border border-border/80 bg-neutral-50 flex flex-col gap-2.5">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      {t("copyLink")}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono truncate text-foreground/80 flex-1">
+                        {qrUrl}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          navigator.clipboard.writeText(qrUrl);
+                          toast.success(t("linkCopied"));
+                        }}
+                        className="h-8 px-2.5 rounded-lg text-xs font-semibold cursor-pointer shrink-0"
+                      >
+                        <Copy className="h-3.5 w-3.5 mr-1" />
+                        <span>{t("copyLink")}</span>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right Column: QR Code Preview + Print Button */}
+            <div className="flex flex-col items-center justify-between gap-3 h-full min-h-0 w-full">
+              <div className="w-full flex justify-center sm:justify-end">
+                <Button
+                  onClick={handlePrint}
+                  variant="default"
+                  disabled={qrType === "table" && selectedTables.length === 0}
+                  className="w-auto bg-primary text-secondary shrink-0 shadow-sm"
+                >
+                  <Printer className="mr-2 h-4 w-4" />
+                  {qrType === "pickup"
+                    ? t("printQrCode")
+                    : selectedTables.length > 1
+                      ? t("printMultipleCodes").replace(
+                          "{{count}}",
+                          selectedTables.length.toString(),
+                        )
+                      : t("printQrCode")}
+                </Button>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
+                <div
+                  className={cn(
+                    "flex flex-col items-center w-full max-w-[240px] gap-0 transition-all duration-200",
+                    qrType === "table" && selectedTables.length === 0
+                      ? "opacity-50 grayscale"
+                      : "",
+                  )}
+                >
+                  <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
+                    <InkScaledText
+                      text={t("qrCodeTitleLine1")}
+                      className="text-foreground"
+                    />
+                    <InkScaledText
+                      text={t("qrCodeTitleLine2")}
+                      className="text-foreground"
+                    />
+                    <InkConnectorText
+                      text={qrType === "table" ? t("qrCodeAt") : t("qrCodeFor")}
+                      fontSize={22}
+                      className="text-foreground"
+                    />
+                    <InkScaledText
+                      text={
+                        qrType === "table"
+                          ? `${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`
+                          : t("pickup")
+                      }
+                      className="text-foreground"
+                    />
+
+                    <a
+                      href={qrUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full mt-[2px] relative bg-white flex items-center justify-center cursor-pointer hover:opacity-95 transition-opacity"
+                      title={t("openQrLink")}
+                    >
+                      <StyledQRCode value={qrUrl} size={195} />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
-          </CardHeader>
-
-          <CardContent className="flex-1 flex flex-col min-h-0">
-            {qrType === "table" && (
-              <div className="flex-1 min-w-0 w-full flex flex-col gap-4 h-full min-h-0">
-                <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
-                  <Button
-                    type="button"
-                    variant={
-                      selectedTables.length === tables.length &&
-                      selectedTables.length > 0
-                        ? "default"
-                        : "outline"
-                    }
-                    disabled={tables.length === 0}
-                    onClick={() => {
-                      if (tables.length === 0) return;
-                      if (selectedTables.length === tables.length) {
-                        setSelectedTables([]);
-                      } else {
-                        setSelectedTables(tables);
-                      }
-                    }}
-                    className={cn(
-                      "gap-2 font-semibold text-sm transition-colors w-full",
-                      selectedTables.length > 0 ? "sm:flex-1" : "",
-                    )}
-                  >
-                    <span>{t("selectAll")}</span>
-                  </Button>
-
-                  {selectedTables.length > 0 && (
-                    <Button
-                      variant="outline"
-                      onClick={handleRemoveSelectedTables}
-                      className="gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0"
-                    >
-                      <Trash className="h-4 w-4 shrink-0" weight="bold" />
-                      <span>
-                        {selectedTables.length} {t("delete")}
-                      </span>
-                    </Button>
-                  )}
-                </div>
-
-                <ScrollArea className="w-full h-[255px]">
-                  <DndContext
-                    id="tables-dnd-context"
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <SortableContext
-                      items={tables}
-                      strategy={rectSortingStrategy}
-                    >
-                      {tables.length === 0 && !isAddingTable && (
-                        <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border border-dashed rounded-xl mb-3">
-                          <p className="mb-4">{t("noTablesAdded")}</p>
-                        </div>
-                      )}
-                      <div className="grid grid-cols-2 gap-3 pb-3">
-                        {(() => {
-                          const selectedTablesSet = new Set(selectedTables);
-                          return tables.map((tNum) => (
-                            <SortableTableItem
-                              key={tNum}
-                              tNum={tNum}
-                              isSelected={selectedTablesSet.has(tNum)}
-                              onToggle={() => toggleTableSelection(tNum)}
-                            />
-                          ));
-                        })()}
-                        <div className="col-span-1">
-                          {isAddingTable ? (
-                            <Input
-                              autoFocus
-                              placeholder={t("tableNr")}
-                              value={newTableInput}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                if (val.length <= 4) setNewTableInput(val);
-                              }}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  handleAddTable(newTableInput);
-                                } else if (e.key === "Escape") {
-                                  setIsAddingTable(false);
-                                  setNewTableInput("");
-                                }
-                              }}
-                              onBlur={() => {
-                                if (newTableInput) {
-                                  handleAddTable(newTableInput);
-                                } else {
-                                  setIsAddingTable(false);
-                                }
-                              }}
-                              maxLength={4}
-                              className="w-full h-11 text-center text-sm font-medium border border-dashed border-primary rounded-xl focus-visible:ring-0"
-                            />
-                          ) : (
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              onClick={() => setIsAddingTable(true)}
-                              className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-xl"
-                            >
-                              <Plus className="h-4 w-4 shrink-0" weight="bold" />
-                              <span className="truncate">{t("addTableFull")}</span>
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </SortableContext>
-                  </DndContext>
-                </ScrollArea>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="fixed -left-[9999px] top-0 opacity-0 pointer-events-none print:static print:opacity-100 print:pointer-events-auto print:grid print:grid-cols-2 print:gap-y-4 print:gap-x-4 bg-white print:content-start">
         {qrType === "table" ? (
