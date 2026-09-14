@@ -21,7 +21,7 @@ import {
   Info,
   WarningCircle,
   ArrowDown,
-  ArrowCounterClockwise,
+  ArrowLeft,
 } from "@phosphor-icons/react";
 import {
   Tooltip,
@@ -299,7 +299,7 @@ export function CurrentOrdersContent({
         (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
     const clockTime = formatOrderTime(timestamp);
 
-    return (
+    const cardButton = (
       <button
         key={order.$id}
         type="button"
@@ -331,7 +331,7 @@ export function CurrentOrdersContent({
           >
             {order.type === "dine-in" || order.tableNumber ? (
               <>
-                <span>{t("table")}</span>
+                <span>{t("table")}</span>{" "}
                 <span className="font-inter tabular-nums">
                   {order.tableNumber || ""}
                 </span>
@@ -362,6 +362,33 @@ export function CurrentOrdersContent({
         </div>
       </button>
     );
+
+    if (isReady && isSelected) {
+      return (
+        <div key={order.$id} className="flex items-center gap-2 w-full animate-in fade-in duration-150">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={async (e) => {
+              e.stopPropagation();
+              await handleStatusChange(order.$id, "in_progress");
+              toast.info(t("backToInProgressSuccess"));
+            }}
+            className="h-11 w-11 p-0 rounded-full border border-border bg-card hover:bg-muted text-foreground flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.95] transition-all shadow-xs"
+            title={t("backToInProgress")}
+            aria-label={t("backToInProgress")}
+          >
+            <ArrowLeft className="w-5 h-5 shrink-0" weight="bold" />
+          </Button>
+          <div className="flex-1 min-w-0">
+            {cardButton}
+          </div>
+        </div>
+      );
+    }
+
+    return cardButton;
   };
 
   return (
@@ -403,7 +430,7 @@ export function CurrentOrdersContent({
         {/* Left Side: Master Queue Panel */}
         <div
           className={cn(
-            "flex flex-col min-h-0 h-full desktop:w-[540px] desktop:min-w-[540px] desktop:max-w-[540px] shrink-0",
+            "flex flex-col min-h-0 h-full desktop:w-[580px] desktop:min-w-[580px] desktop:max-w-[580px] shrink-0",
             mobileView === "detail" ? "hidden desktop:flex" : "flex",
           )}
         >
@@ -455,7 +482,7 @@ export function CurrentOrdersContent({
 
           {/* Dual Columns Side-by-Side */}
           <TooltipProvider delay={100}>
-            <div className="flex-1 min-h-0 grid grid-cols-1 tablet:grid-cols-2 gap-3 h-full w-full">
+            <div className="flex-1 min-h-0 grid grid-cols-1 tablet:grid-cols-2 current-orders-queue-grid gap-3 h-full w-full">
               {/* Column 1: In Bearbeitung */}
               <div
                 className={cn(
@@ -659,7 +686,7 @@ export function CurrentOrdersContent({
                             </div>
 
                             {customizations.length > 0 && (
-                              <div className="flex flex-wrap gap-1.5 mt-1.5 pl-5">
+                              <div className="flex flex-col items-start gap-1.5 mt-1.5 pl-5">
                                 {customizations.map((c: any, cIdx: number) => {
                                   const stepName = c.stepName || c.step;
                                   const optName =
@@ -764,18 +791,6 @@ export function CurrentOrdersContent({
                       >
                         <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                         {t("cancelOrder")}
-                      </Button>
-                      <Button
-                        size="default"
-                        variant="outline"
-                        className="h-11 text-sm font-semibold px-4 sm:px-5 rounded-full border-border text-foreground hover:bg-muted transition-colors shrink-0 cursor-pointer"
-                        onClick={async () => {
-                          await handleStatusChange(selectedOrder.$id, "in_progress");
-                          toast.info(t("backToInProgressSuccess"));
-                        }}
-                      >
-                        <ArrowCounterClockwise className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-                        {t("backToInProgress")}
                       </Button>
                       <Button
                         size="default"

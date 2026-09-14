@@ -182,3 +182,9 @@ input[type="tel"] {
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+@container (width >= 1110px) {
+  .current-orders-queue-grid {
+    grid-template-columns: 255px 1fr !important;
+  }
+}
