@@ -210,11 +210,6 @@ export function AvailabilityContent({
 
       {/* Categories Grid utilizing horizontal space */}
       <div className="flex flex-col gap-6 w-full">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-            {t("categories")}
-          </h3>
-        </div>
         {categories.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border border-dashed rounded-xl">
             <p>{t("menuEmpty")}</p>
