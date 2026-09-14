@@ -210,6 +210,11 @@ export function AvailabilityContent({
 
       {/* Categories Grid utilizing horizontal space */}
       <div className="flex flex-col gap-6 w-full">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
+            {t("categories")}
+          </h3>
+        </div>
         {categories.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border border-dashed rounded-xl">
             <p>{t("menuEmpty")}</p>
@@ -478,13 +483,15 @@ function ItemCardView({
           <button
             type="button"
             onClick={() => setShowOptions(!showOptions)}
-            className="flex items-center justify-between w-full text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors py-1"
+            className="flex items-center justify-between w-full py-1 hover:text-foreground transition-colors group cursor-pointer"
           >
-            <span>{t("customization")}</span>
+            <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+              {t("customization")}
+            </span>
             {showOptions ? (
-              <CaretUp className="h-3.5 w-3.5" weight="bold" />
+              <CaretUp className="h-3.5 w-3.5 text-foreground" weight="bold" />
             ) : (
-              <CaretDown className="h-3.5 w-3.5" weight="bold" />
+              <CaretDown className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" weight="bold" />
             )}
           </button>
 

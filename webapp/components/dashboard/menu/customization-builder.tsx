@@ -500,7 +500,7 @@ function SortableStepCard({
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor={`step-min-${step.id}`}
-                className="text-xs font-medium text-muted-foreground flex items-center gap-1"
+                className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("minSelections")}
                 <TooltipProvider delay={200}>
@@ -544,7 +544,7 @@ function SortableStepCard({
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor={`step-max-${step.id}`}
-                className="text-xs font-medium text-muted-foreground flex items-center gap-1"
+                className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("maxSelections")}
                 <TooltipProvider delay={200}>
@@ -588,7 +588,7 @@ function SortableStepCard({
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor={`step-inc-${step.id}`}
-                className="text-xs font-medium text-muted-foreground flex items-center gap-1"
+                className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("includedInPrice")}
                 <TooltipProvider delay={200}>

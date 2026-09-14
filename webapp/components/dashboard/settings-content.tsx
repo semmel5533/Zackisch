@@ -237,7 +237,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="business-name"
-                    className="text-sm font-medium"
+                    className="text-sm font-semibold text-foreground"
                   >
                     {t("restaurantName")} <span className="text-destructive">*</span>
                   </label>
@@ -250,7 +250,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="business-user-name" className="text-sm font-medium">
+                  <label htmlFor="business-user-name" className="text-sm font-semibold text-foreground">
                     {t("name")} <span className="text-destructive">*</span>
                   </label>
                   <Input
@@ -264,7 +264,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="business-address"
-                    className="text-sm font-medium"
+                    className="text-sm font-semibold text-foreground"
                   >
                     {t("address")}
                   </label>
@@ -280,7 +280,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="business-email" className="text-sm font-medium">
+                  <label htmlFor="business-email" className="text-sm font-semibold text-foreground">
                     {t("email")}{" "}
                     <span className="text-destructive">*</span>
                   </label>
@@ -638,7 +638,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
               <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6">
                 <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
                   <div className="flex flex-col gap-1">
-                    <h4 className="font-semibold text-foreground text-sm">{t("logoutAllDevices")}</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">{t("logoutAllDevices")}</h4>
                     <p className="text-xs text-muted-foreground">
                       {t("logoutAllDevicesDescription")}
                     </p>
@@ -666,7 +666,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
 
                 <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
                   <div className="flex flex-col gap-1">
-                    <h4 className="font-semibold text-foreground text-sm">{t("changeEmailAddress" as any)}</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">{t("changeEmailAddress" as any)}</h4>
                     <p className="text-xs text-muted-foreground">
                       {t("changeEmailDescription" as any)}
                     </p>
@@ -699,7 +699,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
 
               <div className="w-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
                 <div className="flex flex-col gap-1">
-                  <h4 className="font-semibold text-foreground text-sm">{t("deleteAccount")}</h4>
+                  <h4 className="text-sm font-bold uppercase tracking-wider text-destructive">{t("deleteAccount")}</h4>
                   <p className="text-xs text-muted-foreground">
                     {t("deleteAccountDescription")}
                   </p>

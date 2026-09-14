@@ -594,7 +594,7 @@ export function CurrentOrdersContent({
                     <span className="text-xl sm:text-2xl font-black tracking-tight font-inter tabular-nums text-foreground">
                       {selectedOrder.orderNumber}
                     </span>
-                    <span className="text-xs sm:text-sm font-semibold text-muted-foreground">
+                    <span className="text-xs sm:text-sm font-semibold text-foreground">
                       {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
                         <>
                           <span>{t("toTable")}</span>{" "}
@@ -620,6 +620,11 @@ export function CurrentOrdersContent({
 
               {/* Items List Body */}
               <div className="relative flex-1 min-h-0 overflow-hidden flex flex-col">
+                <div className="px-4 sm:px-5 py-2.5 bg-muted/10 border-b border-border/40 shrink-0">
+                  <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+                    {t("orderDetail")}
+                  </span>
+                </div>
                 <div
                   ref={itemsContainerRef}
                   onScroll={checkScroll}

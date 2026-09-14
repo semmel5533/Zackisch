@@ -684,6 +684,12 @@ export function MenuContent({
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
         >
+          <div className="flex items-center justify-between pb-1">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
+              {t("categories")}
+            </h3>
+          </div>
+
           <SortableContext
             items={categories.map((c) => c.$id)}
             strategy={rectSortingStrategy}
@@ -1134,6 +1140,11 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
 
         {!isCollapsed && (
           <CardContent className="pt-2 flex flex-col gap-3">
+            <div className="flex items-center justify-between px-1.5 pt-1">
+              <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+                {t("items")}
+              </span>
+            </div>
             <SortableContext
               items={categoryItems.map((i) => i.$id)}
               strategy={rectSortingStrategy}

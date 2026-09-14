@@ -98,6 +98,7 @@ export const translations = {
     soundOn: "Ton an",
     soundOff: "Ton aus",
     newOrderReceived: "Neue Bestellung eingegangen",
+    order: "Bestellung",
 
     // Overview
     totalOrders: "Bestellungen",
@@ -303,6 +304,7 @@ export const translations = {
     newOption: "Neue Option",
     addItem: "Artikel hinzufügen",
     editItem: "Artikel bearbeiten",
+    itemDetails: "Artikeldetails",
     deleteItem: "Artikel löschen",
     itemName: "Artikelname",
     validationItemName: "Bitte gib einen Artikelnamen ein.",
@@ -707,6 +709,7 @@ export const translations = {
     soundOn: "Sound on",
     soundOff: "Sound off",
     newOrderReceived: "New order received",
+    order: "Order",
 
     // Overview
     totalOrders: "Orders",
@@ -908,6 +911,7 @@ export const translations = {
     newOption: "New Option",
     addItem: "Add Item",
     editItem: "Edit Item",
+    itemDetails: "Item Details",
     deleteItem: "Delete Item",
     itemName: "Item name",
     validationItemName: "Please enter an item name.",

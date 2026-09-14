@@ -261,6 +261,12 @@ export function ItemWorkspace({
 
                   {/* Right Column (Details) */}
                   <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+                        {t("itemDetails")}
+                      </span>
+                    </div>
+
                     {/* Category Select */}
                     <div className="flex flex-col gap-1.5">
                       <Label className="text-sm font-semibold text-foreground">
