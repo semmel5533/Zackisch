@@ -149,6 +149,7 @@ export interface Order extends ConvexDocument {
   total: number; // in cents
   status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled";
   completedAt?: number;
+  readyAt?: number;
   createdAt?: number;
   email: string;
   orderNumber: string;

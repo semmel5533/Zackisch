@@ -63,17 +63,14 @@ function getItemCustomizations(item: any) {
   return [];
 }
 
-function formatMiniOrderTime(order: Order, now: number): string {
-  const time =
-    order.createdAt ||
-    order._creationTime ||
-    (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
-  if (!time) return "0m";
-  const diffMs = Math.max(0, now - time);
-  const diffMins = Math.floor(diffMs / (1000 * 60));
-  if (diffMins < 60) return `${diffMins}m`;
-  const diffHours = Math.floor(diffMins / 60);
-  return `${diffHours}h ${diffMins % 60}m`;
+function formatOrderTime(timestamp?: number): string {
+  if (!timestamp) return "";
+  const date = new Date(timestamp);
+  return date.toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 }
 
 export function CurrentOrdersContent({
@@ -85,7 +82,6 @@ export function CurrentOrdersContent({
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [localOrders, setLocalOrders] = useState<Order[]>(orders);
-  const [now, setNow] = useState<number>(Date.now());
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<string | null>(null);
   const [orderToComplete, setOrderToComplete] = useState<string | null>(null);
@@ -139,10 +135,6 @@ export function CurrentOrdersContent({
         cleanUrl.pathname + (cleanUrl.search ? cleanUrl.search : ""),
       );
     }
-    const interval = setInterval(() => {
-      setNow(Date.now());
-    }, 10000);
-    return () => clearInterval(interval);
   }, []);
 
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -264,7 +256,6 @@ export function CurrentOrdersContent({
     newStatus: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
   ) {
     const timestamp = Date.now();
-    setNow(timestamp);
 
     // If completing or cancelling the currently selected order, pick the next available order
     if ((newStatus === "completed" || newStatus === "cancelled") && selectedOrderId === orderId) {
@@ -283,6 +274,7 @@ export function CurrentOrdersContent({
           ? {
               ...o,
               status: newStatus,
+              readyAt: newStatus === "ready_for_pickup" ? timestamp : o.readyAt,
               $updatedAt: new Date(timestamp).toISOString(),
             }
           : o,
@@ -297,7 +289,15 @@ export function CurrentOrdersContent({
 
   const renderMiniCard = (order: Order, isReady: boolean) => {
     const isSelected = selectedOrderId === order.$id;
-    const timeLabel = formatMiniOrderTime(order, now);
+    const timestamp = isReady
+      ? order.readyAt ||
+        (order.$updatedAt ? new Date(order.$updatedAt).getTime() : 0) ||
+        order.createdAt ||
+        order._creationTime
+      : order.createdAt ||
+        order._creationTime ||
+        (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
+    const clockTime = formatOrderTime(timestamp);
 
     return (
       <button
@@ -357,7 +357,7 @@ export function CurrentOrdersContent({
               )}
               weight="bold"
             />
-            <span className="font-inter tabular-nums">{timeLabel}</span>
+            <span className="font-inter tabular-nums">{clockTime}</span>
           </span>
         </div>
       </button>
@@ -579,42 +579,46 @@ export function CurrentOrdersContent({
           {selectedOrder ? (
             <div className="flex-1 min-h-0 bg-card rounded-xl border border-border flex flex-col overflow-hidden shadow-xs">
               {/* Header: Edge-to-Edge Divider */}
-              <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between gap-2 sm:gap-3">
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                   {/* Mobile Back Button */}
                   <Button
                     variant="outline"
                     size="sm"
-                    className="desktop:hidden h-8 px-2.5 text-xs font-semibold rounded-full"
+                    className="desktop:hidden h-8 px-2.5 text-xs font-semibold rounded-full shrink-0"
                     onClick={() => setMobileView("list")}
                   >
                     {t("backToList")}
                   </Button>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl sm:text-2xl font-black tracking-tight font-inter tabular-nums text-foreground">
-                      {selectedOrder.orderNumber}
-                    </span>
-                    <span className="text-xs sm:text-sm font-semibold text-foreground">
-                      {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
-                        <>
-                          <span>{t("toTable")}</span>{" "}
-                          <span className="font-inter tabular-nums font-bold text-foreground">
-                            {selectedOrder.tableNumber || ""}
-                          </span>
-                        </>
-                      ) : (
-                        t("toPickUp")
-                      )}
-                    </span>
-                  </div>
+                  <span className="text-xl sm:text-2xl font-black tracking-tight font-inter tabular-nums text-foreground shrink-0">
+                    {selectedOrder.orderNumber}
+                  </span>
+                  {/* Status Badge directly next to order number */}
+                  <Badge
+                    variant="outline"
+                    className="h-7 px-3 rounded-full text-xs font-bold uppercase tracking-wider text-foreground border-border bg-card shrink-0"
+                  >
+                    {selectedOrder.status === "ready_for_pickup"
+                      ? t("ready")
+                      : t("inProgress")}
+                  </Badge>
                 </div>
 
-                {/* Status Badge */}
+                {/* Right-aligned Badge: Table or Pickup */}
                 <Badge
-                  variant={selectedOrder.status === "ready_for_pickup" ? "default" : "secondary"}
-                  className="font-semibold text-xs rounded-full px-3 py-0.5"
+                  variant="outline"
+                  className="h-7 px-3 rounded-full text-xs font-bold uppercase tracking-wider text-foreground border-border bg-card shrink-0"
                 >
-                  {selectedOrder.status === "ready_for_pickup" ? t("ready") : t("inProgress")}
+                  {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
+                    <>
+                      <span>{t("table")}</span>{" "}
+                      <span className="font-inter tabular-nums">
+                        {selectedOrder.tableNumber || ""}
+                      </span>
+                    </>
+                  ) : (
+                    t("pickup")
+                  )}
                 </Badge>
               </div>
 
@@ -717,18 +721,9 @@ export function CurrentOrdersContent({
               {/* Detail Footer: Edge-to-Edge Divider & Action Buttons */}
               <div className="p-3.5 sm:p-4 border-t border-border bg-muted/20 shrink-0 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Clock className="w-3.5 h-3.5 shrink-0" />
-                    <span>
-                      {selectedOrder.status === "ready_for_pickup"
-                        ? t("readyAgo", {
-                            time: formatMiniOrderTime(selectedOrder, now),
-                          })
-                        : t("orderPlacedAt", {
-                            time: formatMiniOrderTime(selectedOrder, now),
-                          })}
-                    </span>
-                  </div>
+                  <span className="text-sm font-semibold text-muted-foreground">
+                    {t("totalInclVat")}
+                  </span>
                   <Price
                     cents={selectedOrder.total}
                     className="text-lg sm:text-xl font-black text-foreground"

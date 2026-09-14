@@ -19,6 +19,7 @@ export const getLiveOrders = query({
         v.literal("cancelled")
       ),
       completedAt: v.optional(v.number()),
+      readyAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
       orderNumber: v.string(),
@@ -79,6 +80,7 @@ export const getOrders = query({
         v.literal("cancelled")
       ),
       completedAt: v.optional(v.number()),
+      readyAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
       orderNumber: v.string(),
@@ -130,6 +132,7 @@ export const getOrder = query({
         v.literal("cancelled")
       ),
       completedAt: v.optional(v.number()),
+      readyAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
       orderNumber: v.string(),
@@ -172,6 +175,7 @@ export const getOrderByPaymentIntent = query({
         v.literal("cancelled")
       ),
       completedAt: v.optional(v.number()),
+      readyAt: v.optional(v.number()),
       createdAt: v.optional(v.number()),
       email: v.string(),
       orderNumber: v.string(),
@@ -413,7 +417,11 @@ export const updateStatus = mutation({
     const patchData: {
       status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled";
       completedAt?: number;
+      readyAt?: number;
     } = { status: args.status };
+    if (args.status === "ready_for_pickup") {
+      patchData.readyAt = Date.now();
+    }
     if (args.status === "completed") {
       patchData.completedAt = Date.now();
     }
@@ -448,14 +456,21 @@ export const patchOrder = internalMutation({
       )
     ),
     completedAt: v.optional(v.number()),
+    readyAt: v.optional(v.number()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     const patch: any = {};
     if (args.orderNumber !== undefined) patch.orderNumber = args.orderNumber;
     if (args.items !== undefined) patch.items = args.items;
-    if (args.status !== undefined) patch.status = args.status;
+    if (args.status !== undefined) {
+      patch.status = args.status;
+      if (args.status === "ready_for_pickup" && args.readyAt === undefined) {
+        patch.readyAt = Date.now();
+      }
+    }
     if (args.completedAt !== undefined) patch.completedAt = args.completedAt;
+    if (args.readyAt !== undefined) patch.readyAt = args.readyAt;
     await ctx.db.patch(args.id, patch);
     return null;
   },

@@ -64,6 +64,7 @@ export default defineSchema({
       v.literal("cancelled")
     ),
     completedAt: v.optional(v.number()),
+    readyAt: v.optional(v.number()),
     createdAt: v.optional(v.number()),
     email: v.string(),
     orderNumber: v.string(), // 3-digit rolling number e.g. "001"
