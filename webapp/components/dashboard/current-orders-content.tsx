@@ -367,7 +367,7 @@ export function CurrentOrdersContent({
   return (
     <div className="h-full flex-1 min-h-0 flex flex-col gap-3 sm:gap-4 pt-[22px]">
       {/* Top Header */}
-      <div className="flex items-center justify-between shrink-0 print:hidden -mt-[2.4px] sm:-mt-[5.6px]">
+      <div className="flex items-center justify-between shrink-0 print:hidden sm:-mt-[10.4px]">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("orders")}</h1>
         </div>
