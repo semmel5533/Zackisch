@@ -170,7 +170,7 @@ export function DashboardShell({
         </div>
 
         <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-2">
-          <div className="px-3">
+          <div className="px-2.5">
             <nav className="flex flex-col gap-1">
               {navItems.map((item) => {
                 const isActive = pathname === item.href;
@@ -180,8 +180,8 @@ export function DashboardShell({
                     variant="ghost"
                     size="default"
                     className={cn(
-                      "w-full h-11 transition-colors relative overflow-visible rounded-full font-semibold",
-                      isExpanded ? "justify-start px-4" : "justify-center px-0 w-11 h-11 mx-auto",
+                      "h-11 transition-colors relative overflow-visible rounded-full font-semibold p-0 justify-start",
+                      isExpanded ? "w-full" : "w-11 mx-auto",
                       isActive
                         ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary shadow-xs"
                         : "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
@@ -192,17 +192,17 @@ export function DashboardShell({
                       router.push(item.href);
                     }}
                   >
-                    <div className="relative flex items-center justify-center shrink-0">
+                    <div className="relative w-11 h-11 flex items-center justify-center shrink-0">
                       <item.icon
                         weight={isActive ? "fill" : "regular"}
-                        className="h-5 w-5 shrink-0"
+                        className="size-5 shrink-0"
                       />
                       {!isExpanded &&
                         item.href.includes("current-orders") &&
                         activeOrdersCount > 0 && (
                           <span
                             className={cn(
-                              "absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full shadow-sm",
+                              "absolute top-2.5 right-2.5 h-2.5 w-2.5 rounded-full shadow-sm",
                               isActive
                                 ? "bg-primary ring-2 ring-primary-foreground"
                                 : "bg-primary-foreground ring-2 ring-primary"
@@ -214,11 +214,11 @@ export function DashboardShell({
                     </div>
                     {isExpanded && (
                       <>
-                        <span className="ml-2.5 flex-1 text-left truncate">{item.label}</span>
+                        <span className="flex-1 text-left truncate">{item.label}</span>
                         {item.href.includes("current-orders") && activeOrdersCount > 0 && (
                           <span
                             className={cn(
-                              "h-5 min-w-5 px-1.5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 font-inter tabular-nums leading-none shadow-xs",
+                              "mr-2.5 h-5 min-w-5 px-1.5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 font-inter tabular-nums leading-none shadow-xs",
                               isActive
                                 ? "bg-primary text-primary-foreground"
                                 : "bg-primary-foreground text-primary"
