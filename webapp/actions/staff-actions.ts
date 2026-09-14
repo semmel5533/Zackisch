@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import {
   createStaffSession,
   deleteStaffSession,
@@ -26,4 +28,12 @@ export async function generateStaffSessionAction(organizationId: string) {
       error: "Personal-Sitzung konnte nicht neu generiert werden.",
     };
   }
+}
+
+export async function signOutStaffAction(organizationId: string) {
+  const cookieStore = await cookies();
+  cookieStore.delete(`staff_session_${organizationId}`);
+  cookieStore.delete(`order_session_${organizationId}`);
+  cookieStore.delete(`availability_session_${organizationId}`);
+  redirect("/sign-in");
 }

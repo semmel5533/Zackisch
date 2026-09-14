@@ -1,19 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import {
   ClipboardText,
   Archive,
   SlidersHorizontal,
   CaretLeft,
   CaretRight,
-  Globe,
-  UsersThree,
+  X,
+  List,
+  SignOut,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTranslation } from "@/lib/i18n";
+import { useSidebarStore } from "@/store/sidebar-store";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Organization, Order, MenuCategory, MenuItem } from "@/lib/types";
 import { getImagePreviewUrl } from "@/lib/convex/client";
@@ -23,6 +26,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { CurrentOrdersContent } from "@/components/dashboard/current-orders-content";
 import { AllOrdersContent } from "@/components/dashboard/all-orders-content";
 import { AvailabilityContent } from "@/components/availability/availability-content";
+import { signOutStaffAction } from "@/actions/staff-actions";
 
 interface StaffTerminalShellProps {
   organization: Organization;
@@ -42,10 +46,11 @@ export function StaffTerminalShell({
   token,
 }: StaffTerminalShellProps) {
   const { t } = useTranslation();
+  const { isExpanded, toggleSidebar } = useSidebarStore();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "current-orders" | "all-orders" | "availability"
   >(initialTab);
-  const [isExpanded, setIsExpanded] = useState(true);
 
   // Read initial tab from URL if present
   useEffect(() => {
@@ -89,289 +94,331 @@ export function StaffTerminalShell({
       (o: any) => o.status === "in_progress" || o.status === "ready_for_pickup",
     ).length ?? 0;
 
-  const logoUrl = organization.logoFileId
-    ? getImagePreviewUrl(organization.logoFileId)
-    : organization.logoUrl || null;
+  const zakkigUrl = t("homepageUrl");
 
   const navItems = [
     {
       id: "current-orders" as const,
       label: t("currentOrders"),
       icon: ClipboardText,
-      badge: activeOrdersCount > 0 ? activeOrdersCount : null,
     },
     {
       id: "all-orders" as const,
       label: t("allOrders"),
       icon: Archive,
-      badge: null,
     },
     {
       id: "availability" as const,
       label: t("availability"),
       icon: SlidersHorizontal,
-      badge: null,
     },
   ];
 
+  const handleSignOut = async () => {
+    await signOutStaffAction(organization.$id || organization._id);
+  };
+
   return (
-    <div className="flex h-screen h-dvh w-full bg-background overflow-hidden">
-      {/* Desktop & Landscape Tablet Sidebar */}
+    <div className="flex h-screen w-full bg-primary overflow-hidden print:h-auto print:overflow-visible print:block">
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <button
+          type="button"
+          aria-label="Close sidebar"
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden block w-full h-full cursor-default border-none p-0"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
       <aside
         className={cn(
-          "hidden lg:flex flex-col border-r border-primary-foreground/10 bg-primary text-primary-foreground select-none shrink-0 transition-all duration-300 relative z-30",
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-l border-primary-foreground/10 bg-primary text-primary-foreground lg:relative print:hidden",
           isExpanded ? "w-64" : "w-16",
+          "max-lg:w-64", // Always wide on mobile
+          isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
-        {/* Sidebar Header: Organization Branding */}
+        {/* Sidebar Header */}
         <div
           className={cn(
             "flex h-16 items-center border-b border-primary-foreground/10 shrink-0",
-            isExpanded ? "justify-between px-4" : "justify-center px-2",
+            isExpanded
+              ? "justify-between px-4"
+              : "lg:justify-center lg:px-2 justify-between px-4",
           )}
         >
-          {isExpanded ? (
-            <div className="flex items-center gap-3 min-w-0">
-              <Avatar className="h-9 w-9 rounded-xl border border-primary-foreground/15 shrink-0 bg-white/10">
-                {logoUrl ? (
-                  <AvatarImage
-                    src={logoUrl}
-                    alt={organization.name}
-                    className="object-cover"
-                  />
-                ) : null}
-                <AvatarFallback className="bg-primary-foreground/10 text-primary-foreground font-bold text-xs rounded-xl">
-                  {organization.name.slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col min-w-0">
-                <span className="font-bold text-sm leading-tight text-primary-foreground truncate">
-                  {organization.name}
-                </span>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-primary-foreground/70 bg-white/10 px-1.5 py-0.2 rounded-md border border-white/10">
-                    {t("staff")}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <Avatar className="h-9 w-9 rounded-xl border border-primary-foreground/15 bg-white/10">
-              {logoUrl ? (
-                <AvatarImage
-                  src={logoUrl}
-                  alt={organization.name}
-                  className="object-cover"
-                />
-              ) : null}
-              <AvatarFallback className="bg-primary-foreground/10 text-primary-foreground font-bold text-xs rounded-xl">
-                {organization.name.slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          )}
-        </div>
+          {/* Logo on desktop when expanded OR on mobile in drawer */}
+          <div
+            className={cn(
+              isExpanded ? "flex" : "lg:hidden flex",
+              "flex-1",
+            )}
+          >
+            <Link
+              href={zakkigUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="overflow-hidden"
+            >
+              <Image
+                src="https://www.zakkig.com/full.svg"
+                alt="zakkig logo"
+                width={100}
+                height={24}
+                priority
+                loading="eager"
+                className="h-6 w-auto brightness-0 invert"
+              />
+            </Link>
+          </div>
 
-        {/* Navigation Tabs */}
-        <nav className="flex-1 space-y-1.5 p-3 overflow-y-auto">
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-            const Icon = item.icon;
-
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleTabChange(item.id)}
-                className={cn(
-                  "w-full flex items-center rounded-full transition-all duration-150 cursor-pointer",
-                  isExpanded
-                    ? "px-3.5 py-2.5 gap-3 justify-between"
-                    : "h-11 w-full justify-center p-0",
-                  isActive
-                    ? "bg-white text-black font-bold shadow-xs hover:bg-white"
-                    : "text-primary-foreground/75 font-semibold hover:bg-white/10 hover:text-primary-foreground",
-                )}
-                title={!isExpanded ? item.label : undefined}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <Icon
-                    className={cn(
-                      "h-5 w-5 shrink-0",
-                      isActive ? "text-black" : "text-primary-foreground/80",
-                    )}
-                    weight={isActive ? "bold" : "regular"}
-                  />
-                  {isExpanded && (
-                    <span className="text-sm truncate leading-none">
-                      {item.label}
-                    </span>
-                  )}
-                </div>
-
-                {/* Badge for active orders */}
-                {item.badge !== null && item.badge > 0 && (
-                  <span
-                    className={cn(
-                      "rounded-full font-inter font-bold tabular-nums shrink-0",
-                      isExpanded
-                        ? "px-2 py-0.5 text-xs"
-                        : "absolute top-1.5 right-1.5 h-4 min-w-4 px-1 text-[10px] flex items-center justify-center",
-                      isActive
-                        ? "bg-black text-white"
-                        : "bg-destructive text-destructive-foreground",
-                    )}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Sidebar Footer: Language Switcher & Collapse Button */}
-        <div
-          className={cn(
-            "p-3 border-t border-primary-foreground/10 flex items-center gap-2",
-            isExpanded ? "justify-between" : "flex-col justify-center",
-          )}
-        >
-          <LanguageSwitcher
-            variant="ghost"
-            className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground shrink-0 cursor-pointer"
-          />
-
+          {/* Desktop Toggle Button */}
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 rounded-full h-9 w-9 shrink-0 cursor-pointer"
-            aria-label={isExpanded ? "Sidebar einklappen" : "Sidebar ausklappen"}
+            onClick={toggleSidebar}
+            className="hidden lg:flex shrink-0 h-9 w-9 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 cursor-pointer"
           >
             {isExpanded ? (
-              <CaretLeft className="h-4 w-4" weight="bold" />
+              <CaretLeft weight="bold" />
             ) : (
-              <CaretRight className="h-4 w-4" weight="bold" />
+              <CaretRight weight="bold" />
             )}
           </Button>
+
+          {/* Mobile Close Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMobileOpen(false)}
+            className="lg:hidden shrink-0 h-9 w-9 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 cursor-pointer"
+            aria-label="Close sidebar"
+          >
+            <X weight="bold" className="h-5 w-5" />
+          </Button>
+        </div>
+
+        {/* Sidebar Navigation */}
+        <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-2">
+          <div className="px-3">
+            <nav className="flex flex-col gap-1">
+              {navItems.map((item) => {
+                const isActive = activeTab === item.id;
+                return (
+                  <Button
+                    key={item.id}
+                    variant="ghost"
+                    className={cn(
+                      "w-full h-10 transition-colors relative overflow-visible cursor-pointer",
+                      isExpanded
+                        ? "justify-start pl-[13px] pr-2.5"
+                        : "justify-center px-0",
+                      isActive
+                        ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary"
+                        : "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
+                    )}
+                    aria-label={!isExpanded ? item.label : undefined}
+                    onClick={() => {
+                      setIsMobileOpen(false);
+                      handleTabChange(item.id);
+                    }}
+                  >
+                    <div className="relative flex items-center justify-center shrink-0">
+                      <item.icon
+                        weight={isActive ? "fill" : "regular"}
+                        className="h-5 w-5 shrink-0"
+                      />
+                      {!isExpanded &&
+                        item.id === "current-orders" &&
+                        activeOrdersCount > 0 && (
+                          <span
+                            className={cn(
+                              "absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full shadow-sm",
+                              isActive
+                                ? "bg-primary ring-2 ring-primary-foreground"
+                                : "bg-primary-foreground ring-2 ring-primary",
+                            )}
+                          >
+                            <span className="sr-only">{activeOrdersCount}</span>
+                          </span>
+                        )}
+                    </div>
+                    {isExpanded && (
+                      <>
+                        <span className="ml-2 flex-1 text-left truncate font-medium">
+                          {item.label}
+                        </span>
+                        {item.id === "current-orders" &&
+                          activeOrdersCount > 0 && (
+                            <span
+                              className={cn(
+                                "w-5 h-5 min-w-5 aspect-square rounded-full p-0 flex items-center justify-center text-[11px] font-black shrink-0 font-inter tabular-nums leading-none shadow-xs",
+                                isActive
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-primary-foreground text-primary",
+                              )}
+                            >
+                              {activeOrdersCount}
+                            </span>
+                          )}
+                      </>
+                    )}
+                  </Button>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+
+        {/* Sidebar Footer */}
+        <div
+          className={cn(
+            "border-t border-primary-foreground/10 flex flex-col gap-4 shrink-0",
+            isExpanded ? "p-4" : "p-3 py-4",
+          )}
+        >
+          {isExpanded ? (
+            <div className="flex flex-col gap-2">
+              {/* Mini Lieferando-style Banner Card with bottom-left logo */}
+              <div className="relative w-full aspect-[2.3/1] rounded-[16px] overflow-hidden bg-black border border-white/15 shadow-sm">
+                {organization?.bannerFileId ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={getImagePreviewUrl(organization.bannerFileId)}
+                    alt={organization?.name ?? "Banner"}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-black" />
+                )}
+
+                {/* Bottom-left logo box */}
+                <div className="absolute bottom-2 left-2 z-10 w-10 h-10 rounded-[8px] bg-neutral-900 flex items-center justify-center overflow-hidden border border-white/20 shrink-0">
+                  {organization?.logoFileId ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={getImagePreviewUrl(organization.logoFileId)}
+                      alt={organization?.name ?? "Logo"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-neutral-900" />
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col flex-1 overflow-hidden px-0.5">
+                <span className="truncate font-semibold text-sm leading-tight text-primary-foreground">
+                  {organization?.name ?? "Zakkig"}
+                </span>
+                {organization?.address && (
+                  <span className="text-xs text-primary-foreground/70 whitespace-pre-wrap leading-tight mt-1">
+                    {organization.address}
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div
+              className="flex items-center justify-center"
+              title={organization?.name ?? "Restaurant"}
+            >
+              <div className="w-10 h-10 rounded-[10px] bg-black flex items-center justify-center overflow-hidden border border-white/20 shrink-0">
+                {organization?.logoFileId ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={getImagePreviewUrl(organization.logoFileId)}
+                    alt={organization?.name ?? "Logo"}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-neutral-900" />
+                )}
+              </div>
+            </div>
+          )}
+
+          <div
+            className={cn(
+              "flex items-center gap-2",
+              !isExpanded ? "flex-col" : "justify-between",
+            )}
+          >
+            <form action={handleSignOut} className={cn(!isExpanded && "w-full")}>
+              <Button
+                type="submit"
+                variant="ghost"
+                className={cn(
+                  "justify-start h-10 overflow-hidden cursor-pointer",
+                  isExpanded ? "px-3" : "px-2.5 w-full",
+                  "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
+                )}
+              >
+                <SignOut className="h-5 w-5 shrink-0" />
+                {isExpanded && <span className="ml-1">{t("signOut")}</span>}
+              </Button>
+            </form>
+            <LanguageSwitcher
+              variant="ghost"
+              className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground shrink-0 cursor-pointer"
+            />
+          </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
-        {/* Mobile & Tablet Header (< 1024px) */}
-        <header className="lg:hidden flex h-14 items-center justify-between border-b border-border bg-card px-4 shrink-0 z-20">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <Avatar className="h-8 w-8 rounded-lg border border-border shrink-0 bg-muted">
-              {logoUrl ? (
-                <AvatarImage
-                  src={logoUrl}
-                  alt={organization.name}
-                  className="object-cover"
-                />
-              ) : null}
-              <AvatarFallback className="bg-muted text-foreground font-bold text-xs">
-                {organization.name.slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="font-bold text-sm text-foreground truncate">
-                {organization.name}
-              </span>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md border border-border shrink-0">
-                {t("staff")}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher
-              variant="outline"
-              className="h-9 px-3 rounded-full text-xs font-semibold cursor-pointer"
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background lg:rounded-l-[1.5rem] shadow-sm print:overflow-visible print:block print:bg-white print:shadow-none @container">
+        {/* Mobile Header (lg:hidden) */}
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary-foreground/10 px-4 lg:hidden print:hidden bg-primary text-primary-foreground">
+          <Link href={zakkigUrl} target="_blank" rel="noopener noreferrer">
+            <Image
+              src="https://www.zakkig.com/full.svg"
+              alt="Zakkig"
+              width={100}
+              height={24}
+              priority
+              loading="eager"
+              className="h-6 w-auto brightness-0 invert"
             />
-          </div>
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMobileOpen(true)}
+            className="text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground cursor-pointer"
+            aria-label="Open menu"
+          >
+            <List weight="bold" className="h-6 w-6" />
+          </Button>
         </header>
 
-        {/* Active Tab View */}
-        <main
-          className={cn(
-            "flex-1 min-h-0 overflow-hidden flex flex-col",
-            "pb-16 lg:pb-0", // Space for mobile bottom tab bar
-          )}
-        >
+        {/* Content View */}
+        <main className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 pt-0 lg:pt-0 print:overflow-visible print:p-0 print:block">
           {activeTab === "current-orders" && (
-            <div className="flex-1 min-h-0 overflow-hidden p-3 sm:p-4 md:p-5 flex flex-col @container">
-              <CurrentOrdersContent
-                organizationId={organization.$id}
-                orders={structuredClone(initialOrders)}
-                isStaffView={true}
-              />
-            </div>
+            <CurrentOrdersContent
+              organizationId={organization.$id}
+              orders={structuredClone(initialOrders)}
+              isStaffView={true}
+            />
           )}
 
           {activeTab === "all-orders" && (
-            <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 @container">
-              <AllOrdersContent
-                organizationId={organization.$id}
-                orders={structuredClone(initialOrders)}
-                hideExport={true}
-              />
-            </div>
+            <AllOrdersContent
+              organizationId={organization.$id}
+              orders={structuredClone(initialOrders)}
+              hideExport={true}
+            />
           )}
 
           {activeTab === "availability" && (
-            <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 pb-6 pt-0 @container">
-              <AvailabilityContent
-                organizationId={organization.$id}
-                categories={structuredClone(categories)}
-                items={structuredClone(items)}
-              />
-            </div>
+            <AvailabilityContent
+              organizationId={organization.$id}
+              categories={structuredClone(categories)}
+              items={structuredClone(items)}
+            />
           )}
         </main>
-
-        {/* Mobile & Tablet Bottom Tab Bar (iOS Style) (< 1024px) */}
-        <nav
-          aria-label="Mobile Navigation"
-          className="lg:hidden fixed bottom-0 inset-x-0 h-16 bg-background/95 backdrop-blur-md border-t border-border z-40 flex items-center justify-around px-2"
-        >
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-            const Icon = item.icon;
-
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleTabChange(item.id)}
-                className={cn(
-                  "flex flex-col items-center justify-center flex-1 h-full py-1 gap-1 relative cursor-pointer transition-colors",
-                  isActive
-                    ? "text-foreground font-bold"
-                    : "text-muted-foreground font-medium hover:text-foreground",
-                )}
-              >
-                <div className="relative">
-                  <Icon
-                    className={cn(
-                      "h-5 w-5 transition-transform",
-                      isActive ? "scale-110" : "scale-100",
-                    )}
-                    weight={isActive ? "bold" : "regular"}
-                  />
-                  {item.badge !== null && item.badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2.5 h-4 min-w-4 px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-inter font-bold tabular-nums flex items-center justify-center shadow-xs">
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-                <span className="text-[11px] leading-none truncate max-w-[90px]">
-                  {item.label}
-                </span>
-              </button>
-            );
-          })}
-        </nav>
       </div>
     </div>
   );
