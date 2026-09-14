@@ -716,9 +716,14 @@ export function CurrentOrdersContent({
               {/* Detail Footer: Edge-to-Edge Divider & Action Buttons */}
               <div className="p-3.5 sm:p-4 border-t border-border bg-muted/20 shrink-0 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-base font-bold uppercase tracking-wider text-foreground">
-                    {t("total")}
-                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-base font-bold uppercase tracking-wider text-foreground">
+                      {t("total")}
+                    </span>
+                    <span className="text-xs font-normal text-muted-foreground">
+                      {t("taxNote")}
+                    </span>
+                  </div>
                   <Price
                     cents={selectedOrder.total}
                     className="text-xl sm:text-2xl font-black text-foreground"
