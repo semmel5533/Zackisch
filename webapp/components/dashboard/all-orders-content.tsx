@@ -54,7 +54,7 @@ import {
   DownloadSimple,
   MagnifyingGlass,
   X,
-  Warning,
+  WarningCircle,
   ReceiptX,
 } from "@phosphor-icons/react";
 import { Price } from "@/components/ui/price";
@@ -447,7 +447,7 @@ export function AllOrdersContent({
               <TableHeader>
                 <TableRow>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap pl-4 sm:pl-6"
                     onClick={() => handleSort("$id")}
                   >
                     <div className="flex items-center">
@@ -483,7 +483,7 @@ export function AllOrdersContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors min-w-[200px] max-w-[340px]"
                     onClick={() => handleSort("items")}
                   >
                     <div className="flex items-center">
@@ -509,7 +509,7 @@ export function AllOrdersContent({
                       {renderSortIcon("status")}
                     </div>
                   </TableHead>
-                  <TableHead className="text-right whitespace-nowrap pr-4">
+                  <TableHead className="text-right whitespace-nowrap pr-4 sm:pr-6 w-[160px] min-w-[160px]">
                     {t("actions")}
                   </TableHead>
                 </TableRow>
@@ -546,7 +546,7 @@ export function AllOrdersContent({
                         key={order.$id}
                         className={isCancelled ? "opacity-60 bg-muted/20" : ""}
                       >
-                        <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                        <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap pl-4 sm:pl-6">
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger className="cursor-help hover:text-foreground transition-colors">
@@ -580,7 +580,7 @@ export function AllOrdersContent({
                             t("toPickUp")
                           )}
                         </TableCell>
-                        <TableCell className="text-sm min-w-[280px]">
+                        <TableCell className="text-sm min-w-[200px] max-w-[340px]">
                           <div className="flex flex-col gap-2 py-1">
                             {items.map((item: any, index: number) => {
                               const customizations = getItemCustomizations(item);
@@ -655,15 +655,15 @@ export function AllOrdersContent({
                             {getStatusLabel(order.status)}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right whitespace-nowrap pr-4">
+                        <TableCell className="text-right whitespace-nowrap pr-4 sm:pr-6 w-[160px] min-w-[160px]">
                           {isCancellable ? (
                             <Button
                               variant="outline"
-                              size="sm"
+                              size="default"
                               onClick={() => setOrderToCancel(order)}
-                              className="h-9 px-3 rounded-full text-xs font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors cursor-pointer"
+                              className="h-11 px-5 rounded-full text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors cursor-pointer"
                             >
-                              <ReceiptX className="w-3.5 h-3.5 mr-1.5 shrink-0" weight="bold" />
+                              <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                               {t("cancelOrder")}
                             </Button>
                           ) : (
@@ -690,7 +690,7 @@ export function AllOrdersContent({
                 render={
                   <Button
                     variant="outline"
-                    className="w-[84px] justify-between font-inter tabular-nums font-semibold"
+                    className="h-11 rounded-full px-4 w-[90px] justify-between font-inter tabular-nums font-semibold"
                   >
                     {itemsPerPage}
                     <CaretDown className="h-4 w-4 opacity-50" />
@@ -788,27 +788,23 @@ export function AllOrdersContent({
       >
         <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
-            <div>
-              <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
-                {orderToCancel
-                  ? t("cancelOrderTitle", {
-                      orderNumber: orderToCancel.orderNumber,
-                    })
-                  : t("cancelOrderTitleFallback")}
-              </DialogTitle>
-              <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
-                {t("orderCancelledDesc")}
-              </DialogDescription>
-            </div>
+            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
+              {orderToCancel
+                ? t("cancelOrderTitle", {
+                    orderNumber: orderToCancel.orderNumber,
+                  })
+                : t("cancelOrderTitleFallback")}
+            </DialogTitle>
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-5 sm:p-6 space-y-4 text-sm text-zinc-900">
-            <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3 text-destructive">
-              <Warning className="w-5 h-5 shrink-0 mt-0.5" weight="bold" />
-              <p className="text-xs font-semibold leading-relaxed">
-                {t("cancelOrderWarning")}
-              </p>
+          <div className="p-5 sm:p-6 text-sm text-zinc-900">
+            <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full border border-zinc-200">
+              <WarningCircle
+                className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
+                weight="fill"
+              />
+              <span>{t("cancelOrderWarning")}</span>
             </div>
           </div>
 

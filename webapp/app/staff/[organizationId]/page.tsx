@@ -18,7 +18,7 @@ export async function generateMetadata() {
   const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "de";
   const dict = translations[locale] || translations.de;
   return {
-    title: dict.staffTerminal || "Personal-Terminal",
+    title: dict.staffSession,
   };
 }
 

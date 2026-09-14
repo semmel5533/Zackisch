@@ -19,7 +19,7 @@ import {
   Check,
   ClipboardText,
   Info,
-  Warning,
+  WarningCircle,
   ArrowDown,
   ArrowCounterClockwise,
 } from "@phosphor-icons/react";
@@ -812,27 +812,23 @@ export function CurrentOrdersContent({
       >
         <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
-            <div>
-              <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
-                {targetOrderToCancel
-                  ? t("cancelOrderTitle", {
-                      orderNumber: targetOrderToCancel.orderNumber,
-                    })
-                  : t("cancelOrderTitleFallback")}
-              </DialogTitle>
-              <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
-                {t("orderCancelledDesc")}
-              </DialogDescription>
-            </div>
+            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
+              {targetOrderToCancel
+                ? t("cancelOrderTitle", {
+                    orderNumber: targetOrderToCancel.orderNumber,
+                  })
+                : t("cancelOrderTitleFallback")}
+            </DialogTitle>
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-5 sm:p-6 space-y-4 text-sm text-zinc-900">
-            <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3 text-destructive">
-              <Warning className="w-5 h-5 shrink-0 mt-0.5" weight="bold" />
-              <p className="text-xs font-semibold leading-relaxed">
-                {t("cancelOrderWarning")}
-              </p>
+          <div className="p-5 sm:p-6 text-sm text-zinc-900">
+            <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full border border-zinc-200">
+              <WarningCircle
+                className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
+                weight="fill"
+              />
+              <span>{t("cancelOrderWarning")}</span>
             </div>
           </div>
 
