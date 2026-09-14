@@ -363,9 +363,15 @@ export function CurrentOrdersContent({
       </button>
     );
 
-    if (isReady && isSelected) {
+    if (isReady) {
       return (
-        <div key={order.$id} className="flex items-center gap-2 w-full animate-in fade-in duration-150">
+        <div
+          key={order.$id}
+          className={cn(
+            "flex items-center w-full animate-in fade-in duration-150",
+            isSelected ? "gap-2" : "gap-2 desktop:gap-0",
+          )}
+        >
           <Button
             type="button"
             variant="outline"
@@ -375,7 +381,10 @@ export function CurrentOrdersContent({
               await handleStatusChange(order.$id, "in_progress");
               toast.info(t("backToInProgressSuccess"));
             }}
-            className="h-11 w-11 p-0 rounded-full border border-border bg-card hover:bg-muted text-foreground flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.95] transition-all shadow-xs"
+            className={cn(
+              "h-11 w-11 p-0 rounded-full border border-border bg-card hover:bg-muted text-foreground flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.95] transition-all shadow-xs",
+              !isSelected && "desktop:hidden",
+            )}
             title={t("backToInProgress")}
             aria-label={t("backToInProgress")}
           >
