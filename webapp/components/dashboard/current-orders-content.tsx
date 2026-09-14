@@ -599,24 +599,28 @@ export function CurrentOrdersContent({
         {/* Right Side: Order Detail Card View */}
         <div
           className={cn(
-            "flex-1 min-h-0 h-full flex flex-col",
+            "flex-1 min-h-0 h-full flex flex-col gap-3 desktop:gap-0",
             mobileView === "list" ? "hidden desktop:flex" : "flex",
           )}
         >
+          {/* Mobile Back Button (above order card) */}
+          <div className="desktop:hidden shrink-0">
+            <Button
+              variant="outline"
+              size="default"
+              className="h-11 px-4 sm:px-5 text-sm font-semibold rounded-full border-border bg-card hover:bg-muted text-foreground flex items-center gap-2 cursor-pointer active:scale-[0.98] transition-all shadow-xs"
+              onClick={() => setMobileView("list")}
+            >
+              <ArrowLeft className="w-4 h-4 shrink-0" weight="bold" />
+              <span>{t("backToList")}</span>
+            </Button>
+          </div>
+
           {selectedOrder ? (
             <div className="flex-1 min-h-0 bg-card rounded-xl border border-border flex flex-col overflow-hidden shadow-xs">
               {/* Header: Edge-to-Edge Divider */}
               <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between gap-2 sm:gap-3">
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  {/* Mobile Back Button */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="desktop:hidden h-8 px-2.5 text-xs font-semibold rounded-full shrink-0"
-                    onClick={() => setMobileView("list")}
-                  >
-                    {t("backToList")}
-                  </Button>
                   <span className="text-xl sm:text-2xl font-black tracking-tight font-inter tabular-nums text-foreground shrink-0">
                     {selectedOrder.orderNumber}
                   </span>
