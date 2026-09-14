@@ -92,7 +92,7 @@ export function StaffSessionCard({
                   href={getLink(staffToken)}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full max-w-[280px] aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-5 border border-zinc-200"
+                  className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-5 border border-zinc-200"
                 >
                   <ReactQRCode
                     value={getLink(staffToken)}
@@ -123,7 +123,7 @@ export function StaffSessionCard({
                     }}
                   />
                 </a>
-                <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full max-w-[280px] border border-zinc-200">
+                <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full border border-zinc-200">
                   <WarningCircle
                     className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
                     weight="fill"
@@ -134,10 +134,6 @@ export function StaffSessionCard({
             </DialogContent>
           </Dialog>
         </div>
-
-        <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-          {t("staffSessionDesc")}
-        </p>
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col justify-end gap-3 pt-4">
