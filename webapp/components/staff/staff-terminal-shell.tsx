@@ -11,7 +11,6 @@ import {
   CaretRight,
   X,
   List,
-  SignOut,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,6 @@ import { Id } from "@/convex/_generated/dataModel";
 import { CurrentOrdersContent } from "@/components/dashboard/current-orders-content";
 import { AllOrdersContent } from "@/components/dashboard/all-orders-content";
 import { AvailabilityContent } from "@/components/availability/availability-content";
-import { signOutStaffAction } from "@/actions/staff-actions";
 
 interface StaffTerminalShellProps {
   organization: Organization;
@@ -113,10 +111,6 @@ export function StaffTerminalShell({
       icon: SlidersHorizontal,
     },
   ];
-
-  const handleSignOut = async () => {
-    await signOutStaffAction(organization.$id || organization._id);
-  };
 
   return (
     <div className="flex h-screen w-full bg-primary overflow-hidden print:h-auto print:overflow-visible print:block">
@@ -340,24 +334,10 @@ export function StaffTerminalShell({
 
           <div
             className={cn(
-              "flex items-center gap-2",
-              !isExpanded ? "flex-col" : "justify-between",
+              "flex items-center",
+              !isExpanded ? "justify-center" : "justify-start",
             )}
           >
-            <form action={handleSignOut} className={cn(!isExpanded && "w-full")}>
-              <Button
-                type="submit"
-                variant="ghost"
-                className={cn(
-                  "justify-start h-10 overflow-hidden cursor-pointer",
-                  isExpanded ? "px-3" : "px-2.5 w-full",
-                  "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
-                )}
-              >
-                <SignOut className="h-5 w-5 shrink-0" />
-                {isExpanded && <span className="ml-1">{t("signOut")}</span>}
-              </Button>
-            </form>
             <LanguageSwitcher
               variant="ghost"
               className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground shrink-0 cursor-pointer"
