@@ -35,5 +35,20 @@ export async function signOutStaffAction(organizationId: string) {
   cookieStore.delete(`staff_session_${organizationId}`);
   cookieStore.delete(`order_session_${organizationId}`);
   cookieStore.delete(`availability_session_${organizationId}`);
-  redirect("/sign-in");
+  cookieStore.set(`staff_session_${organizationId}`, "", {
+    path: "/",
+    maxAge: 0,
+    expires: new Date(0),
+  });
+  cookieStore.set(`order_session_${organizationId}`, "", {
+    path: "/",
+    maxAge: 0,
+    expires: new Date(0),
+  });
+  cookieStore.set(`availability_session_${organizationId}`, "", {
+    path: "/",
+    maxAge: 0,
+    expires: new Date(0),
+  });
+  redirect("https://www.zakkig.com");
 }
