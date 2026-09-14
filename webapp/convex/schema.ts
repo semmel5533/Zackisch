@@ -95,6 +95,14 @@ export default defineSchema({
     .index("by_organizationId", ["organizationId"])
     .index("by_token", ["token"]),
 
+  staffSessions: defineTable({
+    organizationId: v.id("organizations"),
+    token: v.string(),
+    expiresAt: v.optional(v.string()),
+  })
+    .index("by_organizationId", ["organizationId"])
+    .index("by_token", ["token"]),
+
   verificationCodes: defineTable({
     identifier: v.string(),
     code: v.string(),

@@ -10,6 +10,7 @@ import type {
   Order,
   OrderSession,
   AvailabilitySession,
+  StaffSession,
   CreateOrganizationData,
   CreateMenuCategoryData,
   CreateMenuItemData,
@@ -410,5 +411,39 @@ export async function createAvailabilitySession(
 export async function deleteAvailabilitySession(id: string) {
   return await convexServer.mutation(api.sessions.deleteAvailabilitySession, {
     id: id as Id<"availabilitySessions">,
+  });
+}
+
+// Staff Sessions
+
+export async function getStaffSessions(
+  organizationId: string,
+): Promise<StaffSession[]> {
+  const docs = await convexServer.query(api.sessions.getStaffSessions, {
+    organizationId: organizationId as Id<"organizations">,
+  });
+  return docs.map(toSession);
+}
+
+export async function createStaffSession(
+  organizationId: string,
+  _ownerId?: string,
+): Promise<StaffSession> {
+  const res = await convexServer.mutation(api.sessions.createStaffSession, {
+    organizationId: organizationId as Id<"organizations">,
+  });
+  return {
+    _id: res._id,
+    $id: res._id,
+    _creationTime: Date.now(),
+    organizationId,
+    token: res.token,
+    expiresAt: null,
+  };
+}
+
+export async function deleteStaffSession(id: string) {
+  return await convexServer.mutation(api.sessions.deleteStaffSession, {
+    id: id as Id<"staffSessions">,
   });
 }

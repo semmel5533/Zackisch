@@ -66,6 +66,7 @@ import type { Order } from "@/lib/types";
 interface AllOrdersContentProps {
   orders: Order[];
   organizationId: string;
+  hideExport?: boolean;
 }
 
 function getItemCustomizations(item: any) {
@@ -109,6 +110,7 @@ const dateFormatter = new Intl.DateTimeFormat("de-DE", {
 export function AllOrdersContent({
   orders: initialOrders,
   organizationId,
+  hideExport = false,
 }: AllOrdersContentProps) {
   const { t } = useTranslation();
 
@@ -419,14 +421,16 @@ export function AllOrdersContent({
             </DropdownMenu>
           </div>
 
-          <Button
-            variant="default"
-            onClick={handleExportCSV}
-            className="w-full @min-[700px]:w-auto shrink-0 h-11 rounded-full font-semibold"
-          >
-            <DownloadSimple className="mr-2 h-4 w-4" weight="bold" />
-            {t("exportCSV")}
-          </Button>
+          {!hideExport && (
+            <Button
+              variant="default"
+              onClick={handleExportCSV}
+              className="w-full @min-[700px]:w-auto shrink-0 h-11 rounded-full font-semibold"
+            >
+              <DownloadSimple className="mr-2 h-4 w-4" weight="bold" />
+              {t("exportCSV")}
+            </Button>
+          )}
         </div>
 
         <Card className="overflow-hidden">

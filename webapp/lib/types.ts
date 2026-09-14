@@ -189,6 +189,14 @@ export interface AvailabilitySession extends ConvexDocument {
   expiresAt?: string | null;
 }
 
+// Staff Sessions
+
+export interface StaffSession extends ConvexDocument {
+  organizationId: string;
+  token: string;
+  expiresAt?: string | null;
+}
+
 // Cart (Client State)
 
 export interface CartItem {

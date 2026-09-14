@@ -52,7 +52,7 @@ Alle Tabellen sind typsicher über Convex definiert:
 3. **`menuCategories`:** Speisekarten-Kategorien mit Sortier-Index (`by_organizationId_and_sortOrder`).
 4. **`menuItems`:** Gerichte & Getränke mit Preisen in Cent, Bild-Storage-ID, MwSt.-Satz, Verfügbarkeits-Status und JSON-konfigurierten `customizations` (z.B. Größen, Teig, Toppings).
 5. **`orders`:** Bestellungen mit fortlaufend aufsteigender, rollierender dreistelliger Bestellnummer (`001`–`999`, mit Rollover-Absicherung), Bestelltyp (`takeaway` / `dine-in`), Tischnummer (strikt auf max. 4 Zeichen begrenzt), Status (`in_progress`, `ready_for_pickup`, `completed`, `cancelled`), Gesamtsumme und Gebührenaufschlüsselung.
-6. **`orderSessions` & `availabilitySessions`:** Autorisierungs-Token für separate Tablet-Terminals.
+6. **`staffSessions`:** Autorisierungs-Token für die kombinierte Personal-Sitzung (`/staff/[orgId]`) mit Rollen- und Rechteprüfung sowie Abwärtskompatibilität zu Legacy-Sitzungen (`orderSessions`, `availabilitySessions`).
 7. **`verificationCodes`:** Temporäre Prüfcodes für Login-OTPs, Passwort-Resets und Stammdaten-Änderungen.
 
 ---
@@ -61,8 +61,11 @@ Alle Tabellen sind typsicher über Convex definiert:
 
 Convex synchronisiert Änderungen automatisch und ohne manuelle WebSocket-Verwaltung an alle aktiven Clients:
 
-- **Kitchen Board (`/dashboard/[orgId]/current-orders` & `/orders/[orgId]`):** Nutzt reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions mit zwei Spalten ("In Bearbeitung" und "Abholbereit"). Sobald ein Gast bezahlt oder der Status geändert wird, aktualisieren sich alle Displays blitzschnell. Responsive Layout-Umschaltungen (1 Spalte unter 500px, 2 Spalten zwischen 500px und 1100px, 3 Spalten ab 1100px) basieren auf CSS Container Queries (`@container`) und berechnen den verfügbaren Platz exklusiv anhand der Inhaltsbreite ohne Sidebar.
-- **Verfügbarkeits-Board (`/availability/[orgId]`):** Kassenpersonal kann Speisen oder Optionen sekundenschnell als ausverkauft schalten (`toggleMenuItemAvailability`). Gäste und Terminals sehen dies sofort im UI.
+- **Personal-Terminal (`/staff/[orgId]`):** Vereinte Terminal-Oberfläche (`StaffTerminalShell`) für Service- und Küchenpersonal mit 3 Tabs:
+  - **Aktuelle Bestellungen:** Reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions mit "In Bearbeitung" und "Abholbereit", Audio-Glockenton bei Bestelleingang, "Bereitstellen", Reversions-Möglichkeit ("Zurück in Bearbeitung") und Sicherheits-Bestätigungsdialog für "Abschließen".
+  - **Alle Bestellungen:** Vollständige Bestellhistorie mit Status- und Typfiltern, Stornierung aktiver Bestellungen, bewusst ohne DATEV-Export.
+  - **Verfügbarkeit:** Sekundenschnelles Ein- und Ausschalten von Speisen, Optionen und Kategorien (`toggleMenuItemAvailability`).
+  - **Responsive Layouts:** Desktop und Tablets nutzen eine einklappbare Seitenleiste; mobile Geräte (<1024px) wechseln auf eine native Touch-Tab-Leiste am unteren Bildschirmrand.
 - **Gast-Bestellverfolgung (`/pickup` & `/table` Tracker):** Der Gast sieht den aktuellen Zubereitungs-Status seiner Bestellung in Echtzeit über `useQuery(api.orders.getOrder)`.
 
 ---
@@ -80,7 +83,7 @@ Um höchste Sicherheit, Speicher-Hygiene und eine transparente Nutzererfahrung z
 | **Account-Löschung & E-Mail-Änderung** | 30 Minuten | Signierter Bestätigungslink verfällt | Schutz vor verspäteter Token-Ausnutzung |
 | **Küchen-Board & Bestell-Lifecycle** | Manuell / Direkt | Bestellungen werden nach Bereitstellung manuell abgeschlossen und sofort ins Archiv ("Alle Bestellungen") überführt | Volle Kontrolle für das Küchenteam ohne unerwünschte automatische Archivierung |
 | **Takeaway Live-Tracker (Gast)** | 10 Minuten | Tracker schaltet auf Abschluss-Screen um (`TRACKING_EXPIRY_MINUTES = 10`) | Datenschutz und Vermeidung verwaister Live-Links |
-| **Terminal Pairing-Tokens** | Dauerhaft (Widerrufbar) | Gespeichert in sicheren HttpOnly SameSite=lax Cookies (`order_session_*`) | Sicherer Tablet-Betrieb ohne XSS-Gefährdung |
+| **Terminal & Personal-Sitzung Tokens** | Dauerhaft (Widerrufbar) | Gespeichert in sicheren HttpOnly SameSite=lax Cookies (`staff_session_*`, `order_session_*`) | Sicherer Tablet- und Smartphone-Betrieb ohne XSS-Gefährdung |
 
 ---
 
@@ -121,11 +124,12 @@ webapp/
 ├── app/
 │   ├── (auth)/          # Login, Registrierung, Passwort-Reset, Account-Löschung
 │   ├── (dashboard)/     # Hauptdashboard (Übersicht, Aktuelle Bestellungen, Menü, Einstellungen, Alle Bestellungen, Stripe-Return)
-│   ├── availability/    # Terminal für Verfügbarkeiten (Ausverkauft-Schalter)
-│   ├── orders/          # Separates Küchen-Terminal (Kitchen Board)
+│   ├── staff/           # Kombiniertes Personal-Terminal (Aktuelle Bestellungen, Alle Bestellungen, Verfügbarkeit)
+│   ├── availability/    # Legacy-Redirect auf /staff/[orgId]?tab=availability
+│   ├── orders/          # Legacy-Redirect auf /staff/[orgId]
 │   ├── pickup/          # Gast-Bestellung zum Abholen, Checkout & Live-Tracking
 │   └── table/           # Gast-Bestellung am Tisch, Checkout & Bestätigung
-├── components/          # React-Komponenten (Dashboard, Guest UI, Terminals, UI-Primitives, Dialogs)
+├── components/          # React-Komponenten (Dashboard, Guest UI, Staff-Terminal, UI-Primitives, Dialogs)
 ├── convex/              # Convex Backend
 │   ├── schema.ts        # Typsicheres Datenbank-Schema
 │   ├── auth.ts          # Convex Auth Konfiguration

@@ -89,6 +89,19 @@ export async function requireKitchenOrOwner(organizationId: string) {
   }
 
   const cookieStore = await cookies();
+
+  // Check combined staff session first
+  const staffCookieToken = cookieStore.get(`staff_session_${organizationId}`)?.value;
+  if (staffCookieToken) {
+    const staffSessions = await convexServer.query(api.sessions.getStaffSessions, {
+      organizationId: organizationId as any,
+    });
+    if (staffSessions.some((s: any) => s.token === staffCookieToken)) {
+      return { type: "kitchen" as const };
+    }
+  }
+
+  // Legacy order session check
   const cookieName = `order_session_${organizationId}`;
   const cookieToken = cookieStore.get(cookieName)?.value;
 
@@ -101,7 +114,7 @@ export async function requireKitchenOrOwner(organizationId: string) {
     }
   }
 
-  throw new Error("Nicht autorisiert: Keine gültige Küchen-Sitzung.");
+  throw new Error("Nicht autorisiert: Keine gültige Küchen- oder Personal-Sitzung.");
 }
 
 export async function requireStaffOrOwner(organizationId: string) {
@@ -118,6 +131,19 @@ export async function requireStaffOrOwner(organizationId: string) {
   }
 
   const cookieStore = await cookies();
+
+  // Check combined staff session first
+  const staffCookieToken = cookieStore.get(`staff_session_${organizationId}`)?.value;
+  if (staffCookieToken) {
+    const staffSessions = await convexServer.query(api.sessions.getStaffSessions, {
+      organizationId: organizationId as any,
+    });
+    if (staffSessions.some((s: any) => s.token === staffCookieToken)) {
+      return { type: "staff" as const };
+    }
+  }
+
+  // Legacy availability session check
   const cookieName = `availability_session_${organizationId}`;
   const cookieToken = cookieStore.get(cookieName)?.value;
 
@@ -130,6 +156,6 @@ export async function requireStaffOrOwner(organizationId: string) {
     }
   }
 
-  throw new Error("Nicht autorisiert: Keine gültige Mitarbeiter-Sitzung.");
+  throw new Error("Nicht autorisiert: Keine gültige Mitarbeiter- oder Personal-Sitzung.");
 }
 

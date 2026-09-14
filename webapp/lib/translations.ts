@@ -119,6 +119,21 @@ export const translations = {
     availabilitySessions: "Verfügbarkeit-Sitzung",
     availabilitySessionsDesc:
       "Öffne den Link auf einem Tablet oder Smartphone. Damit können Mitarbeiter die Verfügbarkeit von Artikeln (z.B. wenn etwas ausverkauft ist) schnell anpassen.",
+    staffSession: "Personal-Sitzung",
+    staffSessionDesc:
+      "Kombinierte Terminal-Sitzung für das Küchen- und Servicepersonal mit Schnellzugriff auf Aktuelle Bestellungen, Alle Bestellungen und Verfügbarkeiten.",
+    regenerateStaffTitle: "Personal-Sitzung neu generieren?",
+    regenerateStaffDesc:
+      "Der aktuelle Zugangslink wird sofort ungültig. Alle Geräte, die den alten Link verwenden, verlieren den Zugriff und müssen den neuen Link erneut scannen oder öffnen.",
+    regeneratedStaff: "Neuer Personal-Sitzungslink generiert.",
+    backToInProgress: "Zurück in Bearbeitung",
+    backToInProgressSuccess: "Bestellung zurück in Bearbeitung verschoben.",
+    completeOrderTitle: "Bestellung abschließen?",
+    completeOrderDesc:
+      "Möchtest du diese Bestellung wirklich abschließen? Sie wird sofort vom Board der aktuellen Bestellungen entfernt und als abgeschlossen archiviert. Dies kann nicht rückgängig gemacht werden.",
+    completeConfirm: "Abschließen",
+    staff: "Personal",
+    staffTerminal: "Personal-Terminal",
     staffQrWarning:
       "Dieser QR-Code ist ausschließlich für das Personal bestimmt und darf nicht an Kunden verteilt werden.",
     createSession: "Neu generieren",
@@ -711,6 +726,21 @@ export const translations = {
     availabilitySessions: "Availability Session",
     availabilitySessionsDesc:
       "Open the link on a tablet or smartphone. This allows staff to quickly toggle item availability (e.g. when sold out).",
+    staffSession: "Staff Session",
+    staffSessionDesc:
+      "Combined terminal session for kitchen and service staff with fast access to Current Orders, All Orders, and Availability.",
+    regenerateStaffTitle: "Regenerate Staff Session link?",
+    regenerateStaffDesc:
+      "The current link will be invalidated immediately. All devices using the old link will lose access and will need to scan or open the new link again.",
+    regeneratedStaff: "New Staff Session link generated.",
+    backToInProgress: "Back to In Progress",
+    backToInProgressSuccess: "Order moved back to in progress.",
+    completeOrderTitle: "Complete order?",
+    completeOrderDesc:
+      "Are you sure you want to complete this order? It will be removed from the current orders board immediately and archived as completed. This cannot be undone.",
+    completeConfirm: "Complete",
+    staff: "Staff",
+    staffTerminal: "Staff Terminal",
     staffQrWarning:
       "This QR code is strictly for staff use and must not be distributed to customers.",
     createSession: "Regenerate",

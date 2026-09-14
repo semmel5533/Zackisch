@@ -21,6 +21,7 @@ import {
   Info,
   Warning,
   ArrowDown,
+  ArrowCounterClockwise,
 } from "@phosphor-icons/react";
 import {
   Tooltip,
@@ -87,6 +88,7 @@ export function CurrentOrdersContent({
   const [now, setNow] = useState<number>(Date.now());
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<string | null>(null);
+  const [orderToComplete, setOrderToComplete] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<"in_progress" | "ready_for_pickup">("in_progress");
   const [mobileView, setMobileView] = useState<"list" | "detail">("list");
   const [inProgressTooltipOpen, setInProgressTooltipOpen] = useState(false);
@@ -255,6 +257,7 @@ export function CurrentOrdersContent({
 
   const selectedOrder = localOrders.find((o) => o.$id === selectedOrderId) || null;
   const targetOrderToCancel = localOrders.find((o) => o.$id === orderToCancel);
+  const targetOrderToComplete = localOrders.find((o) => o.$id === orderToComplete);
 
   async function handleStatusChange(
     orderId: string,
@@ -756,7 +759,7 @@ export function CurrentOrdersContent({
                       <Button
                         size="default"
                         variant="outline"
-                        className="h-11 text-sm font-semibold px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
+                        className="h-11 text-sm font-semibold px-4 sm:px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
                         onClick={() => setOrderToCancel(selectedOrder.$id)}
                       >
                         <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
@@ -764,11 +767,20 @@ export function CurrentOrdersContent({
                       </Button>
                       <Button
                         size="default"
-                        className="flex-1 h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full active:scale-[0.98] transition-all cursor-pointer"
-                        onClick={() => {
-                          handleStatusChange(selectedOrder.$id, "completed");
-                          toast.success(t("completed"));
+                        variant="outline"
+                        className="h-11 text-sm font-semibold px-4 sm:px-5 rounded-full border-border text-foreground hover:bg-muted transition-colors shrink-0 cursor-pointer"
+                        onClick={async () => {
+                          await handleStatusChange(selectedOrder.$id, "in_progress");
+                          toast.info(t("backToInProgressSuccess"));
                         }}
+                      >
+                        <ArrowCounterClockwise className="w-4 h-4 mr-2 shrink-0" weight="bold" />
+                        {t("backToInProgress")}
+                      </Button>
+                      <Button
+                        size="default"
+                        className="flex-1 h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full active:scale-[0.98] transition-all cursor-pointer"
+                        onClick={() => setOrderToComplete(selectedOrder.$id)}
                       >
                         <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                         {t("complete")}
@@ -843,6 +855,57 @@ export function CurrentOrdersContent({
               }}
             >
               {t("confirmCancelOrder")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Complete Order Confirmation Dialog */}
+      <Dialog
+        open={!!orderToComplete}
+        onOpenChange={(open) => !open && setOrderToComplete(null)}
+      >
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[24px] border border-border bg-card text-card-foreground shadow-2xl flex flex-col">
+          <DialogHeader className="px-6 py-5 border-b border-border bg-card shrink-0 text-left flex flex-row items-center justify-between">
+            <div>
+              <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+                {t("completeOrderTitle")}
+              </DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+                {targetOrderToComplete
+                  ? `#${targetOrderToComplete.orderNumber}`
+                  : ""}
+              </DialogDescription>
+            </div>
+            <DialogCloseButton />
+          </DialogHeader>
+
+          <div className="p-6 space-y-4 text-sm text-foreground/90">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              {t("completeOrderDesc")}
+            </p>
+          </div>
+
+          <DialogFooter className="px-6 py-4 border-t border-border bg-card shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 w-full">
+            <Button
+              variant="outline"
+              className="w-full sm:flex-1 rounded-full h-11 border-border font-semibold text-foreground hover:bg-muted cursor-pointer"
+              onClick={() => setOrderToComplete(null)}
+            >
+              {t("cancel")}
+            </Button>
+            <Button
+              className="w-full sm:flex-1 rounded-full h-11 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer active:scale-[0.98] transition-all"
+              onClick={async () => {
+                if (orderToComplete) {
+                  await handleStatusChange(orderToComplete, "completed");
+                  setOrderToComplete(null);
+                  toast.success(t("completed"));
+                }
+              }}
+            >
+              <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
+              {t("completeConfirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

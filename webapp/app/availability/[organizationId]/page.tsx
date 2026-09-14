@@ -1,23 +1,4 @@
-import {
-  getMenuCategories,
-  getMenuItems,
-  getOrganization,
-  getAvailabilitySessions,
-} from "@/lib/convex/database";
-import { getUser } from "@/lib/convex/auth";
-import { AvailabilityContent } from "@/components/availability/availability-content";
-import { cookies } from "next/headers";
-import { LocalizedText } from "@/components/ui/localized-text";
-import { translations, Locale } from "@/lib/translations";
-
-export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "de";
-  const dict = translations[locale] || translations.de;
-  return {
-    title: dict.availability,
-  };
-}
+import { redirect } from "next/navigation";
 
 export default async function AvailabilityPage({
   params,
@@ -26,63 +7,12 @@ export default async function AvailabilityPage({
   params: Promise<{ organizationId: string }>;
   searchParams: Promise<{ token?: string }>;
 }) {
-  const [{ organizationId }, { token }] = await Promise.all([params, searchParams]);
-  const cookieStore = await cookies();
-  const cookieName = `availability_session_${organizationId}`;
-  const cookieToken = cookieStore.get(cookieName)?.value;
-
-  const [organization, sessions, categories, items, user] = await Promise.all([
-    getOrganization(organizationId),
-    getAvailabilitySessions(organizationId),
-    getMenuCategories(organizationId),
-    getMenuItems(organizationId),
-    getUser(),
+  const [{ organizationId }, { token }] = await Promise.all([
+    params,
+    searchParams,
   ]);
-
-  if (!organization) {
-    return (
-      <div className="p-8 text-center">
-        <LocalizedText tKey="orgNotFound" />
-      </div>
-    );
-  }
-
-  // Allow if owner is logged in
-  const isOwner = Boolean(user && (user._id === organization.ownerId || user.$id === organization.ownerId));
-
-  // Verification via query token or session cookie
-  const tokenToVerify = token || cookieToken;
-  const isValidSession = isOwner || Boolean(tokenToVerify && sessions.some((s) => s.token === tokenToVerify));
-
-  if (!isValidSession) {
-    if (!tokenToVerify && !isOwner) {
-      return (
-        <LocalizedText
-          tKey="noToken"
-          className="p-8 text-center text-destructive font-bold"
-          as="div"
-        />
-      );
-    }
-
-    return (
-      <LocalizedText
-        tKey="invalidToken"
-        className="p-8 text-center text-destructive font-bold"
-        as="div"
-      />
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-screen h-dvh overflow-hidden bg-background">
-      <main className="flex-1 min-h-0 px-4 sm:px-6 pb-4 sm:pb-6 pt-0 overflow-y-auto @container">
-        <AvailabilityContent
-          categories={structuredClone(categories)}
-          items={structuredClone(items)}
-          organizationId={organizationId}
-        />
-      </main>
-    </div>
+  redirect(
+    `/staff/${organizationId}?tab=availability${token ? `&token=${encodeURIComponent(token)}` : ""}`,
   );
 }
+

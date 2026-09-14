@@ -56,10 +56,11 @@ Erfordert eine gültige Session (E-Mail, Passwort, HttpOnly Cookie).
 - `app.zakkig.com/dashboard/{organizationId}/settings/stripe-return` (Rückkehr von der Stripe Express Onboarding-Seite)
 
 **Staff Devices (Geschützt)**
-Einmaliges Pairing über das Dashboard erzeugt eine dauerhafte Session. Keine Passwort-Eingabe im Küchenalltag.
+Einmaliges Pairing über das Dashboard erzeugt eine dauerhafte Personal-Sitzung. Keine Passwort-Eingabe im Arbeitsalltag.
 
-- `app.zakkig.com/orders/{organizationId}` (Küchen-Terminal / Current Orders Fullscreen)
-- `app.zakkig.com/availability/{organizationId}` (86-Verfügbarkeits-Steuerung)
+- `app.zakkig.com/staff/{organizationId}` (Personal-Terminal: Kombinierte Ansicht mit Sidebar & mobiler Tab-Bar für Aktuelle Bestellungen, Alle Bestellungen ohne DATEV-Export und Verfügbarkeit)
+- `app.zakkig.com/orders/{organizationId}` (Legacy-Redirect auf das Personal-Terminal)
+- `app.zakkig.com/availability/{organizationId}` (Legacy-Redirect auf das Personal-Terminal mit aktivem Verfügbarkeits-Tab)
 
 **Gast-Routen (Öffentlich, Keine Session)**
 Zugriff ausschließlich über Parameter, ohne Registrierung.
@@ -76,18 +77,21 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
   - **Kopfbereich:** Anzeige von Betriebsdaten (Logo, Ladenname, Standort).
   - **Statistik-Kacheln:** Zwei Hauptkacheln (Anzahl der Bestellungen & Umsatz). Zeitraum umschaltbar (24 Stunden, 30 Tage, 90 Tage) inklusive Graphen.
   - **Quick-Links:** Navigation zu den weiteren Dashboard-Seiten.
-  - **Kitchen-Session Management:** Ansicht zum Erstellen und Verwalten von Kitchen-Sessions inkl. kopierbarem Pairing-Link.
+  - **Personal-Sitzung Management:** Zentrale Vollbreiten-Kachel zum Erstellen, Verwalten, Kopieren und QR-Code-Pairing der kombinierten Personal-Sitzung (Staff Session), die Aktuelle Bestellungen, Alle Bestellungen und Verfügbarkeit in einem Terminal vereint.
   - **QR-Code Generator:** Erstellung von QR-Codes für To-Go und To-Stay (inkl. sichtbarer Tischnummer über dem Code, streng auf maximal 4 Zeichen limitiert). Generierte QR-Codes sind als PDF für den Druck herunterladbar.
-- **Aktuelle Bestellungen (`/current-orders`):** Echtzeit-Ansicht der aktiven Bestellungen mit den Spalten "In Bearbeitung" und "Abholbereit". Eingehende Bestellungen starten in Bearbeitung (FIFO) und werden per "Bereitstellen"-Button nach "Abholbereit" verschoben. Dort schließt der Wirt die Bestellung per "Abschließen"-Button final ab, woraufhin sie sofort aus den aktuellen Bestellungen verschwindet. Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar.
+- **Aktuelle Bestellungen (`/current-orders`):** Echtzeit-Ansicht der aktiven Bestellungen mit den Spalten "In Bearbeitung" und "Abholbereit". Eingehende Bestellungen starten in Bearbeitung (FIFO) und werden per "Bereitstellen"-Button nach "Abholbereit" verschoben. Bestellungen in "Abholbereit" können bei Bedarf per "Zurück in Bearbeitung"-Button wieder zurückverschoben werden. Der Klick auf "Abschließen" öffnet ein Sicherheits-Bestätigungsmodal; nach Bestätigung verschwindet die Bestellung sofort aus den aktuellen Bestellungen. Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar.
 - **Alle Bestellungen (`/all-orders`):** Detaillierte Historien-Tabelle aller Bestellungen (In Bearbeitung, Abholbereit, Abgeschlossen, Storniert) mit Status- und Typ-Filtern, Volltextsuche und dem DATEV CSV-Export für den Steuerberater. Aktive Bestellungen ("In Bearbeitung" & "Abholbereit") können über eine dedizierte Aktions-Spalte mit Bestätigungsmodal storniert werden; abgeschlossene Bestellungen sind unwiderruflich abgeschlossen und können nicht mehr storniert werden.
 - **Menu (`/menu`):** Zentrale Verwaltung der Speisekarte, Getränke, Kategorien, Preise und Bilder.
 - **Settings (`/settings`):** Verwaltung von Account- und Betriebsdaten (z. B. Logo- und Banner-Uploads im Full-Width Layout auf Desktop) und Stripe-Details. Die Kontolöschung erfolgt über einen zweistufigen Verifizierungsprozess: Eine Server Action (`requestAccountDeletionAction`) generiert über Convex einen temporären Token (30 Minuten TTL) und sendet eine Bestätigungs-E-Mail über Google Workspace SMTP. Erst nach Klick auf den Bestätigungslink (`/delete-account?userId=...&token=...`) und erneuter Freigabe wird das gesamte Konto samt Betrieb, Menü, Bildern und Bestellungen kaskadierend restlos gelöscht.
 
-### 2.3 Core Features: Kitchen Board View
+### 2.3 Core Features: Personal-Terminal & Kitchen Board
 
-- **Aufbau:** Kiosk-Fullscreen-Board mit den Spalten "In Bearbeitung" und "Abholbereit". Aktualisiert sich reaktiv in Echtzeit.
-- **Ablauf:** Eingehende Bestellungen erscheinen in der Spalte "In Bearbeitung" (FIFO: älteste offene Bestellung stets oben) mit genauen Eingangs-Uhrzeiten. Der Klick auf "Bereitstellen" verschiebt die Bestellung in "Abholbereit". Dort schließt der Klick auf "Abschließen" die Bestellung ab, woraufhin sie sofort aus dem Board entfernt wird.
-- **Manuelle Kontrolle:** Kein unkontrolliertes Auto-Archivieren mehr – das Küchenteam behält die volle Kontrolle über den genauen Zeitpunkt der Bereitstellung und des Abschlusses.
+- **Aufbau & Shell:** Dedizierte Terminal-Shell (`/staff/{organizationId}`) für Küchen- und Servicepersonal mit persistenter Session. Auf Desktop und Tablets steht eine einklappbare linke Sidebar zur Verfügung; auf mobilen Geräten schaltet das Terminal automatisch auf eine iOS-optimierte Bottom-Navigation-Leiste um.
+- **Tabs:**
+  - **Tab 1: Aktuelle Bestellungen:** Echzeit-Board mit "In Bearbeitung" und "Abholbereit", akustischer Benachrichtigung bei neuen Bestellungen und Live-Badge.
+  - **Tab 2: Alle Bestellungen:** Detaillierte Bestellhistorie und Stornierungsmöglichkeiten für aktive Bestellungen, bewusst ohne DATEV-Export für das Servicepersonal.
+  - **Tab 3: Verfügbarkeit:** Sekundenschnelles Ein- und Ausschalten von Speisen, Getränken und Kategorien (86-List).
+- **Ablauf & Sicherheit:** Eingehende Bestellungen erscheinen in der Spalte "In Bearbeitung" (FIFO). "Bereitstellen" verschiebt nach "Abholbereit". Versehentlich bereitgestellte Bestellungen können per "Zurück in Bearbeitung" retourniert werden. "Abschließen" fordert eine explizite Bestätigung im Apple-Dialog an, bevor die Bestellung final archiviert wird.
 
 ### 2.4 Core Features: Gast-Frontend (To-Stay & To-Go)
 
@@ -113,8 +117,7 @@ Das Gesamtsystem erzwingt standardisierte Ablaufzeiten für maximale Datensparsa
 | **Unverifizierte Accounts** | 30 Minuten | Vollständige Bereinigung via Convex Scheduler | Gibt die E-Mail-Adresse wieder frei, verhindert Ghost-Accounts |
 | **Passwort-Reset Link** | 30 Minuten | Token wird ungültig, Neuanforderung erforderlich | Schutz vor missbräuchlicher Passwortänderung über alte Links |
 | **Küchen-Board & Bestell-Lifecycle** | Manuell / Direkt | Bestellungen werden nach Bereitstellung manuell abgeschlossen und sofort ins Archiv überführt | Verhindert unkontrolliertes Auto-Archivieren während des Betriebs |
-| **Takeaway Live-Tracker (Gast)** | 10 Minuten | Tracker schaltet auf Abschluss-Screen um | Datenschutz und Vermeidung verwaister Live-Links |
-| **Terminal Pairing-Tokens** | Dauerhaft (Widerrufbar) | HttpOnly SameSite=lax Cookie (`order_session_*`) | Sicherer Tablet-Betrieb ohne XSS-Gefährdung |
+| **Terminal & Personal-Sitzung Tokens** | Dauerhaft (Widerrufbar) | HttpOnly SameSite=lax Cookie (`staff_session_*`, `order_session_*`) | Sicherer Tablet- und Smartphone-Betrieb ohne XSS-Gefährdung |
 
 ### 2.6 Dateispeicher & Upload-Limits (Defense-in-Depth)
 

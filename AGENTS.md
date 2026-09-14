@@ -84,7 +84,7 @@ Follow this unified, multi-layered architecture for all features and changes:
    - **Guest Takeaway Tracker:** 10 minutes active countdown once ready for pickup.
 
 7. **Terminal Session Persistence:**
-   - Terminal pairing tokens from URLs (`?token=...`) must be persisted via secure, HttpOnly, SameSite=lax cookies (`order_session_[orgId]`, `availability_session_[orgId]`). Never store pairing tokens in unencrypted client `localStorage`.
+   - Terminal pairing tokens from URLs (`?token=...`) must be persisted via secure, HttpOnly, SameSite=lax cookies (`staff_session_[orgId]`, `order_session_[orgId]`, `availability_session_[orgId]`). Never store pairing tokens in unencrypted client `localStorage`.
 
 8. **Table Name & Number Boundary (Max 4 Characters):**
    - Table names and numbers must strictly never exceed 4 characters (`<= 4`). Enforce both client-side (`maxLength={4}`, input clamping) and server-side across all Server Actions (`settings-actions`, `checkout-actions`, `order-actions`) and Convex mutations (`organizations`, `orders`, `stripe`).

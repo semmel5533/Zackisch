@@ -1,14 +1,12 @@
 import {
   getOrganization,
   getOrders,
-  getAvailabilitySessions,
-  getOrderSessions,
-  createAvailabilitySession,
-  createOrderSession,
+  getStaffSessions,
+  createStaffSession,
 } from "@/lib/convex/database";
 import { getUser } from "@/lib/convex/auth";
 import { OverviewContent } from "@/components/dashboard/overview-content";
-import { SessionsOverviewCard } from "@/components/dashboard/sessions-overview-card";
+import { StaffSessionCard } from "@/components/dashboard/staff-session-card";
 import { headers, cookies } from "next/headers";
 import { translations, Locale } from "@/lib/translations";
 
@@ -27,29 +25,22 @@ export default async function OverviewPage({
   params: Promise<{ organizationId: string }>;
 }) {
   const { organizationId } = await params;
-  const [organization, orders, availabilitySessions, orderSessions] =
-    await Promise.all([
-      getOrganization(organizationId),
-      getOrders(organizationId),
-      getAvailabilitySessions(organizationId),
-      getOrderSessions(organizationId),
-    ]);
+  const [organization, orders, staffSessions] = await Promise.all([
+    getOrganization(organizationId),
+    getOrders(organizationId),
+    getStaffSessions(organizationId),
+  ]);
 
   if (!organization) return null;
 
-  let availabilityToken = availabilitySessions[0]?.token;
-  let orderToken = orderSessions[0]?.token;
+  let staffToken = staffSessions[0]?.token;
 
-  if (!availabilityToken) {
-    const newSession = await createAvailabilitySession(organizationId);
-    availabilityToken = newSession.token;
-  }
-  if (!orderToken) {
-    const newSession = await createOrderSession(
+  if (!staffToken) {
+    const newSession = await createStaffSession(
       organizationId,
       organization.ownerId,
     );
-    orderToken = newSession.token;
+    staffToken = newSession.token;
   }
 
   const headersList = await headers();
@@ -57,17 +48,14 @@ export default async function OverviewPage({
   const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
   const baseUrl = `${protocol}://${host}`;
 
-  if (!organization) return null;
-
   return (
     <OverviewContent
       organization={structuredClone(organization)}
       orders={structuredClone(orders)}
     >
-      {availabilityToken && orderToken && (
-        <SessionsOverviewCard
-          availabilityToken={availabilityToken}
-          orderToken={orderToken}
+      {staffToken && (
+        <StaffSessionCard
+          staffToken={staffToken}
           organizationId={organizationId}
           baseUrl={baseUrl}
         />
