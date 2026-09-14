@@ -134,6 +134,7 @@ export const translations = {
     completeConfirm: "Abschließen",
     staff: "Personal",
     staffTerminal: "Personal-Terminal",
+    scan: "Scannen",
     staffQrWarning:
       "Dieser QR-Code ist ausschließlich für das Personal bestimmt und darf nicht an Kunden verteilt werden.",
     createSession: "Neu generieren",
@@ -741,6 +742,7 @@ export const translations = {
     completeConfirm: "Complete",
     staff: "Staff",
     staffTerminal: "Staff Terminal",
+    scan: "Scan",
     staffQrWarning:
       "This QR code is strictly for staff use and must not be distributed to customers.",
     createSession: "Regenerate",

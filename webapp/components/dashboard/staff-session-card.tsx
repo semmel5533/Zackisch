@@ -6,7 +6,6 @@ import {
   ArrowsClockwise,
   QrCode,
   WarningCircle,
-  UsersThree,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
@@ -66,27 +65,22 @@ export function StaffSessionCard({
   return (
     <Card className="@min-[700px]:col-span-2 h-full flex flex-col @container bg-card border-border shadow-xs">
       <CardHeader className="flex flex-col gap-1 pb-2">
-        <div className="flex items-start justify-between gap-4 w-full">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-full bg-primary/5 text-primary shrink-0">
-              <UsersThree className="w-5 h-5" weight="bold" />
-            </div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground leading-tight">
-              {t("staffSession")}
-            </h3>
-          </div>
+        <div className="flex items-center justify-between gap-4 w-full">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground leading-tight">
+            {t("staffSession")}
+          </h3>
 
           <Dialog open={staffQrOpen} onOpenChange={setStaffQrOpen}>
             <DialogTrigger
               render={
                 <Button
                   variant="default"
-                  size="icon"
-                  className="shrink-0 rounded-full h-8 w-8 active:scale-[0.97] transition-all cursor-pointer"
+                  className="shrink-0 cursor-pointer active:scale-[0.98]"
                 />
               }
             >
-              <QrCode className="h-4 w-4" />
+              <QrCode className="h-4 w-4" weight="bold" />
+              <span>{t("scan")}</span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[380px]">
               <DialogHeader className="flex flex-row items-center justify-between">
