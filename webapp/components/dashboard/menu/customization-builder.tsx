@@ -632,7 +632,7 @@ function SortableStepCard({
 
           {/* Options */}
           <div className="flex flex-col gap-2.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className="text-sm font-bold uppercase tracking-wider text-foreground">
               {t("options")}
             </span>
             {step.options.length === 0 ? (

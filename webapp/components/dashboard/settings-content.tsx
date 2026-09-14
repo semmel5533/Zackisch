@@ -169,7 +169,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
         {/* Business & Stripe Settings */}
         <Card className="w-full flex flex-col">
           <CardHeader className="flex-col items-start pb-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
               {t("businessSettings")}
             </h3>
             <p className="text-xs sm:text-sm text-muted-foreground">
@@ -312,7 +312,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 <div className="flex flex-col justify-between gap-4">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("brandMedia")}</label>
+                      <label className="text-sm font-bold uppercase tracking-wider text-foreground">{t("brandMedia")}</label>
                       <span className="text-xs text-muted-foreground">{t("bannerRecommended")}</span>
                     </div>
 
@@ -508,7 +508,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">
                           {t("stripeSettings")}{" "}
                           <span className="text-destructive">*</span>
                         </h4>
@@ -627,7 +627,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
         {/* Danger Zone */}
         <Card className="w-full flex flex-col border-destructive/50 border">
             <CardHeader className="flex-col items-start pb-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-destructive">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-destructive">
                 {t("dangerZone" as any)}
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground">

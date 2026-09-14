@@ -465,7 +465,7 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   return (
     <Card className="h-full flex flex-col print:hidden">
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("statistics")}</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">{t("statistics")}</h3>
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
@@ -686,7 +686,7 @@ function QrCodeGeneratorCard({
     <>
       <Card className="h-full flex flex-col bg-white print:hidden @container">
         <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground whitespace-nowrap">
             {t("qrManagement")}
           </h3>
 

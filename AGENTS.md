@@ -207,7 +207,7 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
      - This guarantees mathematically exact concentric curvature with uniform visual margins around all corners.
 
 6. **Uppercase Tracked Typography Standard:**
-   - Section block titles, card categorization headers, queue column headers, and metadata headers across the webapp (e.g. `BETRIEBSDATEN`, `LOGO & BANNER`, `ZAHLUNGSANBIETER`, `GEFAHRENZONE`, `IN BEARBEITUNG`, `ABHOLBEREIT`, `STATISTIK`, `QR-CODE VERWALTUNG`, `LINK KOPIEREN`, `SITZUNGEN`, `ARTIKELDETAILS`, `BILD & VORSCHAU`, `PRESETS & ANPASSUNGEN`) strictly render with `text-xs font-bold uppercase tracking-wider text-muted-foreground` (or `text-destructive` for danger zones).
+   - Section block titles, card categorization headers, queue column headers, and metadata headers across the webapp and modals (e.g. `BETRIEBSDATEN`, `LOGO & BANNER`, `ZAHLUNGSANBIETER`, `GEFAHRENZONE`, `IN BEARBEITUNG`, `ABHOLBEREIT`, `STATISTIK`, `QR-CODE VERWALTUNG`, `SITZUNGEN`, `ARTIKELDETAILS`, `BILD & VORSCHAU`, `PRESETS & ANPASSUNGEN`, `REGION`, `SPRACHE`) strictly render with `text-sm font-bold uppercase tracking-wider text-foreground` (or `text-zinc-900` on Apple light modal dialogs, and `text-destructive` for danger zones).
    - Always use `t('key')` with CSS `uppercase tracking-wider` for clean, consistent internationalization.
 
 <!-- END:design-theme-conventions -->

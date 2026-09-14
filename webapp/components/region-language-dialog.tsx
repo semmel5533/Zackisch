@@ -144,7 +144,7 @@ export function RegionLanguageSwitcher({
             <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 flex-1 overflow-y-auto">
               {/* Region Section */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2.5">
+                <label className="block text-sm font-bold uppercase tracking-wider text-zinc-900 mb-2.5">
                   {t("regionLabel")}
                 </label>
                 <div className="space-y-2">
@@ -179,7 +179,7 @@ export function RegionLanguageSwitcher({
 
               {/* Language Section */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2.5">
+                <label className="block text-sm font-bold uppercase tracking-wider text-zinc-900 mb-2.5">
                   {t("languageLabel")}
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">

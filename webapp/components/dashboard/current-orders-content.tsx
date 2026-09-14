@@ -466,7 +466,7 @@ export function CurrentOrdersContent({
                 {/* Header: Edge-to-Edge Divider */}
                 <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground truncate">
+                    <span className="text-sm font-bold uppercase tracking-wider text-foreground truncate">
                       {t("inProgress")}
                     </span>
                     <Tooltip
@@ -521,7 +521,7 @@ export function CurrentOrdersContent({
                 {/* Header: Edge-to-Edge Divider */}
                 <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground truncate">
+                    <span className="text-sm font-bold uppercase tracking-wider text-foreground truncate">
                       {t("ready")}
                     </span>
                     <Tooltip
