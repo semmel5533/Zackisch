@@ -10,7 +10,6 @@ import {
   useId,
 } from "react";
 import {
-  Copy,
   Plus,
   Trash,
   LinkSimple,
@@ -726,189 +725,199 @@ function QrCodeGeneratorCard({
         </CardHeader>
 
         <CardContent className="p-6 pt-4 flex-1 flex flex-col min-h-0">
-          <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 gap-6 flex-1 min-h-0 items-start">
-            {/* Left Column: QR-Verwaltung */}
-            <div className="flex flex-col gap-4 h-full min-h-0 min-w-0">
-              <p className="text-sm text-muted-foreground text-balance leading-relaxed">
-                {qrType === "pickup"
-                  ? t("qrCodeAdminDescToGo")
-                  : t("qrCodeAdminDescToStay")}
-              </p>
-
-              {qrType === "table" ? (
-                <div className="flex-1 min-w-0 w-full flex flex-col gap-4 h-full min-h-0">
-                  <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
-                    <Button
-                      type="button"
-                      variant={
-                        selectedTables.length === tables.length &&
-                        selectedTables.length > 0
-                          ? "default"
-                          : "outline"
+          {qrType === "table" ? (
+            <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 gap-6 flex-1 min-h-0 items-start">
+              {/* Left Column: Table Management */}
+              <div className="flex-1 min-w-0 w-full flex flex-col gap-4 h-full min-h-0">
+                <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+                  <Button
+                    type="button"
+                    variant={
+                      selectedTables.length === tables.length &&
+                      selectedTables.length > 0
+                        ? "default"
+                        : "outline"
+                    }
+                    disabled={tables.length === 0}
+                    onClick={() => {
+                      if (tables.length === 0) return;
+                      if (selectedTables.length === tables.length) {
+                        setSelectedTables([]);
+                      } else {
+                        setSelectedTables(tables);
                       }
-                      disabled={tables.length === 0}
-                      onClick={() => {
-                        if (tables.length === 0) return;
-                        if (selectedTables.length === tables.length) {
-                          setSelectedTables([]);
-                        } else {
-                          setSelectedTables(tables);
-                        }
-                      }}
-                      className={cn(
-                        "h-11 rounded-full gap-2 font-semibold text-sm transition-colors w-full cursor-pointer active:scale-[0.98]",
-                        selectedTables.length > 0 ? "sm:flex-1" : "",
-                      )}
-                    >
-                      <span>{t("selectAll")}</span>
-                    </Button>
-
-                    {selectedTables.length > 0 && (
-                      <Button
-                        variant="outline"
-                        onClick={handleRemoveSelectedTables}
-                        className="h-11 rounded-full gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0 cursor-pointer active:scale-[0.98]"
-                      >
-                        <Trash className="h-4 w-4 shrink-0" weight="bold" />
-                        <span>
-                          {selectedTables.length} {t("delete")}
-                        </span>
-                      </Button>
+                    }}
+                    className={cn(
+                      "h-11 rounded-full gap-2 font-semibold text-sm transition-colors w-full cursor-pointer active:scale-[0.98]",
+                      selectedTables.length > 0 ? "sm:flex-1" : "",
                     )}
-                  </div>
+                  >
+                    <span>{t("selectAll")}</span>
+                  </Button>
 
-                  <ScrollArea className="w-full h-[255px]">
-                    <DndContext
-                      id="tables-dnd-context"
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragEnd={handleDragEnd}
+                  {selectedTables.length > 0 && (
+                    <Button
+                      variant="outline"
+                      onClick={handleRemoveSelectedTables}
+                      className="h-11 rounded-full gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0 cursor-pointer active:scale-[0.98]"
                     >
-                      <SortableContext
-                        items={tables}
-                        strategy={rectSortingStrategy}
-                      >
-                        {tables.length === 0 && !isAddingTable && (
-                          <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border border-dashed rounded-xl mb-3">
-                            <p className="mb-4">{t("noTablesAdded")}</p>
-                          </div>
-                        )}
-                        <div className="grid grid-cols-2 gap-3 pb-3">
-                          {(() => {
-                            const selectedTablesSet = new Set(selectedTables);
-                            return tables.map((tNum) => (
-                              <SortableTableItem
-                                key={tNum}
-                                tNum={tNum}
-                                isSelected={selectedTablesSet.has(tNum)}
-                                onToggle={() => toggleTableSelection(tNum)}
-                              />
-                            ));
-                          })()}
-                          <div className="col-span-1">
-                            {isAddingTable ? (
-                              <Input
-                                autoFocus
-                                placeholder={t("tableNr")}
-                                value={newTableInput}
-                                onChange={(e) => {
-                                  const val = e.target.value;
-                                  if (val.length <= 4) setNewTableInput(val);
-                                }}
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter") {
-                                    handleAddTable(newTableInput);
-                                  } else if (e.key === "Escape") {
-                                    setIsAddingTable(false);
-                                    setNewTableInput("");
-                                  }
-                                }}
-                                onBlur={() => {
-                                  if (newTableInput) {
-                                    handleAddTable(newTableInput);
-                                  } else {
-                                    setIsAddingTable(false);
-                                  }
-                                }}
-                                maxLength={4}
-                                className="w-full h-11 text-center text-sm font-medium border border-dashed border-primary rounded-xl focus-visible:ring-0"
-                              />
-                            ) : (
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                onClick={() => setIsAddingTable(true)}
-                                className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-full cursor-pointer active:scale-[0.98]"
-                              >
-                                <Plus className="h-4 w-4 shrink-0" weight="bold" />
-                                <span className="truncate">{t("addTableFull")}</span>
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </SortableContext>
-                    </DndContext>
-                  </ScrollArea>
-                </div>
-              ) : (
-                <div className="flex-1 min-w-0 w-full flex flex-col justify-between gap-4 h-full min-h-0">
-                  <div className="p-4 rounded-2xl border border-border/80 bg-neutral-50 flex flex-col gap-2.5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      {t("copyLink")}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono truncate text-foreground/80 flex-1">
-                        {qrUrl}
+                      <Trash className="h-4 w-4 shrink-0" weight="bold" />
+                      <span>
+                        {selectedTables.length} {t("delete")}
                       </span>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          navigator.clipboard.writeText(qrUrl);
-                          toast.success(t("linkCopied"));
-                        }}
-                        className="h-9 px-3 rounded-full text-xs font-semibold cursor-pointer shrink-0 active:scale-[0.98]"
-                      >
-                        <Copy className="h-3.5 w-3.5 mr-1" />
-                        <span>{t("copyLink")}</span>
-                      </Button>
-                    </div>
-                  </div>
+                    </Button>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Right Column: QR Code Preview + Print Button */}
-            <div className="flex flex-col items-center justify-between gap-3 h-full min-h-0 w-full">
-              <div className="w-full flex justify-center sm:justify-end">
-                <Button
-                  onClick={handlePrint}
-                  variant="default"
-                  disabled={qrType === "table" && selectedTables.length === 0}
-                  className="w-auto h-11 rounded-full font-semibold px-5 bg-primary text-secondary shrink-0 shadow-sm cursor-pointer active:scale-[0.98] transition-all"
-                >
-                  <Printer className="mr-2 h-4 w-4" />
-                  {qrType === "pickup"
-                    ? t("printQrCode")
-                    : selectedTables.length > 1
+                <ScrollArea className="w-full h-[285px]">
+                  <DndContext
+                    id="tables-dnd-context"
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                  >
+                    <SortableContext
+                      items={tables}
+                      strategy={rectSortingStrategy}
+                    >
+                      {tables.length === 0 && !isAddingTable && (
+                        <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border border-dashed rounded-xl mb-3">
+                          <p className="mb-4">{t("noTablesAdded")}</p>
+                        </div>
+                      )}
+                      <div className="grid grid-cols-2 gap-3 pb-3">
+                        {(() => {
+                          const selectedTablesSet = new Set(selectedTables);
+                          return tables.map((tNum) => (
+                            <SortableTableItem
+                              key={tNum}
+                              tNum={tNum}
+                              isSelected={selectedTablesSet.has(tNum)}
+                              onToggle={() => toggleTableSelection(tNum)}
+                            />
+                          ));
+                        })()}
+                        <div className="col-span-1">
+                          {isAddingTable ? (
+                            <Input
+                              autoFocus
+                              placeholder={t("tableNr")}
+                              value={newTableInput}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val.length <= 4) setNewTableInput(val);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  handleAddTable(newTableInput);
+                                } else if (e.key === "Escape") {
+                                  setIsAddingTable(false);
+                                  setNewTableInput("");
+                                }
+                              }}
+                              onBlur={() => {
+                                if (newTableInput) {
+                                  handleAddTable(newTableInput);
+                                } else {
+                                  setIsAddingTable(false);
+                                }
+                              }}
+                              maxLength={4}
+                              className="w-full h-11 text-center text-sm font-medium border border-dashed border-primary rounded-xl focus-visible:ring-0"
+                            />
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => setIsAddingTable(true)}
+                              className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-full cursor-pointer active:scale-[0.98]"
+                            >
+                              <Plus className="h-4 w-4 shrink-0" weight="bold" />
+                              <span className="truncate">{t("addTableFull")}</span>
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </SortableContext>
+                  </DndContext>
+                </ScrollArea>
+              </div>
+
+              {/* Right Column: QR Code Preview + Centered Print Button */}
+              <div className="flex flex-col items-center justify-between gap-3 h-full min-h-0 w-full">
+                <div className="w-full flex justify-center items-center">
+                  <Button
+                    onClick={handlePrint}
+                    variant="default"
+                    disabled={selectedTables.length === 0}
+                    className="w-auto h-11 rounded-full font-semibold px-5 bg-primary text-secondary shrink-0 shadow-sm cursor-pointer active:scale-[0.98] transition-all"
+                  >
+                    <Printer className="mr-2 h-4 w-4" />
+                    {selectedTables.length > 1
                       ? t("printMultipleCodes").replace(
                           "{{count}}",
                           selectedTables.length.toString(),
                         )
                       : t("printQrCode")}
+                  </Button>
+                </div>
+
+                <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
+                  <div
+                    className={cn(
+                      "flex flex-col items-center w-full max-w-[240px] gap-0 transition-all duration-200",
+                      selectedTables.length === 0 ? "opacity-50 grayscale" : "",
+                    )}
+                  >
+                    <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
+                      <InkScaledText
+                        text={t("qrCodeTitleLine1")}
+                        className="text-foreground"
+                      />
+                      <InkScaledText
+                        text={t("qrCodeTitleLine2")}
+                        className="text-foreground"
+                      />
+                      <InkConnectorText
+                        text={t("qrCodeAt")}
+                        fontSize={22}
+                        className="text-foreground"
+                      />
+                      <InkScaledText
+                        text={`${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`}
+                        className="text-foreground"
+                      />
+
+                      <a
+                        href={qrUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full mt-[2px] relative bg-white flex items-center justify-center cursor-pointer hover:opacity-95 transition-opacity"
+                        title={t("openQrLink")}
+                      >
+                        <StyledQRCode value={qrUrl} size={195} />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Pickup Mode: Centered QR Code Preview + Centered Print Button */
+            <div className="flex flex-col items-center justify-center gap-3 flex-1 min-h-0 w-full my-auto">
+              <div className="w-full flex justify-center items-center">
+                <Button
+                  onClick={handlePrint}
+                  variant="default"
+                  className="w-auto h-11 rounded-full font-semibold px-5 bg-primary text-secondary shrink-0 shadow-sm cursor-pointer active:scale-[0.98] transition-all"
+                >
+                  <Printer className="mr-2 h-4 w-4" />
+                  {t("printQrCode")}
                 </Button>
               </div>
 
               <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
-                <div
-                  className={cn(
-                    "flex flex-col items-center w-full max-w-[240px] gap-0 transition-all duration-200",
-                    qrType === "table" && selectedTables.length === 0
-                      ? "opacity-50 grayscale"
-                      : "",
-                  )}
-                >
+                <div className="flex flex-col items-center w-full max-w-[240px] gap-0 transition-all duration-200">
                   <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
                     <InkScaledText
                       text={t("qrCodeTitleLine1")}
@@ -919,16 +928,12 @@ function QrCodeGeneratorCard({
                       className="text-foreground"
                     />
                     <InkConnectorText
-                      text={qrType === "table" ? t("qrCodeAt") : t("qrCodeFor")}
+                      text={t("qrCodeFor")}
                       fontSize={22}
                       className="text-foreground"
                     />
                     <InkScaledText
-                      text={
-                        qrType === "table"
-                          ? `${t("table")} ${selectedTables.length > 0 ? selectedTables[0] : "?"}`
-                          : t("pickup")
-                      }
+                      text={t("pickup")}
                       className="text-foreground"
                     />
 
@@ -945,7 +950,7 @@ function QrCodeGeneratorCard({
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
