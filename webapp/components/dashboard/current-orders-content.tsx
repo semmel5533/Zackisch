@@ -624,11 +624,6 @@ export function CurrentOrdersContent({
 
               {/* Items List Body */}
               <div className="relative flex-1 min-h-0 overflow-hidden flex flex-col">
-                <div className="px-4 sm:px-5 py-2.5 bg-muted/10 border-b border-border/40 shrink-0">
-                  <span className="text-sm font-bold uppercase tracking-wider text-foreground">
-                    {t("orderDetail")}
-                  </span>
-                </div>
                 <div
                   ref={itemsContainerRef}
                   onScroll={checkScroll}
@@ -721,12 +716,12 @@ export function CurrentOrdersContent({
               {/* Detail Footer: Edge-to-Edge Divider & Action Buttons */}
               <div className="p-3.5 sm:p-4 border-t border-border bg-muted/20 shrink-0 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-muted-foreground">
-                    {t("totalInclVat")}
+                  <span className="text-base font-bold uppercase tracking-wider text-foreground">
+                    {t("total")}
                   </span>
                   <Price
                     cents={selectedOrder.total}
-                    className="text-lg sm:text-xl font-black text-foreground"
+                    className="text-xl sm:text-2xl font-black text-foreground"
                   />
                 </div>
 
