@@ -23,7 +23,9 @@ export async function generateMetadata({
   const canonicalUrl = `https://www.zakkig.com/${locale}`;
 
   return {
-    title: t.metaTitle,
+    title: {
+      absolute: t.metaTitle,
+    },
     description: t.metaDescription,
     openGraph: {
       title: t.metaTitle,

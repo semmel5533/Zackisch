@@ -433,8 +433,8 @@ export const translations = {
     changeEmailButton: "Email ändern",
     changeEmailRequestSent:
       "Eine E-Mail zur Bestätigung wurde versandt. Der Link ist 30 Minuten gültig. Bitte überprüfe dein Postfach.",
-    emailChangedSuccess: "Email-Adresse erfolgreich geändert.",
-    newEmailAddress: "Neue Email-Adresse",
+    emailChangedSuccess: "E-Mail-Adresse erfolgreich geändert.",
+    newEmailAddress: "Neue E-Mail-Adresse",
     newEmailAddressDesc: "Bitte gib deine neue E-Mail-Adresse ein. Wir senden dir einen Bestätigungscode, um diese zu bestätigen.",
     invalidLinkEmailChangeDesc: "Dieser Link zur Änderung der E-Mail-Adresse ist ungültig oder abgelaufen.",
     invalidLinkDeleteAccountDesc: "Dieser Link zum Löschen des Kontos ist ungültig oder abgelaufen.",
