@@ -100,6 +100,7 @@ export const sendNewEmailOtp = mutation({
       to: args.newEmail,
       code: otp,
       locale: args.locale,
+      type: "email_change",
     });
 
     return { success: true };
@@ -321,6 +322,7 @@ export const sendEmailChangeOtpWithEmail = mutation({
       to: args.newEmail,
       code: otp,
       locale: args.locale,
+      type: "email_change",
     });
 
     return { success: true };

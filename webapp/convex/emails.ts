@@ -79,16 +79,24 @@ export const sendEmailOtp = internalAction({
     to: v.string(),
     code: v.string(),
     locale: v.optional(v.string()),
+    type: v.optional(v.string()),
   },
   returns: v.boolean(),
   handler: async (_ctx, args) => {
     const isDe = args.locale !== "en";
-    const subject = isDe ? "Anmeldecode für zakkig" : "Sign-in code for zakkig";
+    const isEmailChange = args.type === "email_change";
+    const subject = isEmailChange
+      ? (isDe ? "Email-Adresse ändern für zakkig" : "Change email address for zakkig")
+      : (isDe ? "Anmeldecode für zakkig" : "Sign-in code for zakkig");
 
-    const title = isDe ? "Anmeldecode für zakkig" : "Sign-in code for zakkig";
-    const intro = isDe
-      ? "Verwende den folgenden Code, um deine Anmeldung zu bestätigen. Der Code ist 30 Minuten gültig."
-      : "Use the following code to confirm your sign-in. The code is valid for 30 minutes.";
+    const title = subject;
+    const intro = isEmailChange
+      ? (isDe
+          ? "Verwende den folgenden Code, um die Änderung deiner Email-Adresse zu bestätigen. Der Code ist 30 Minuten gültig."
+          : "Use the following code to confirm your email address change. The code is valid for 30 minutes.")
+      : (isDe
+          ? "Verwende den folgenden Code, um deine Anmeldung zu bestätigen. Der Code ist 30 Minuten gültig."
+          : "Use the following code to confirm your sign-in. The code is valid for 30 minutes.");
     const hint1 = isDe
       ? "Bitte gib diesen Code in dem geöffneten Browserfenster ein, um fortzufahren. Teile diesen Code niemals mit anderen Personen."
       : "Please enter this code in the open browser window to proceed. Never share this code with anyone.";
