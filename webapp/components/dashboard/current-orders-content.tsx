@@ -344,7 +344,6 @@ export function CurrentOrdersContent({
               onClick={async (e) => {
                 e.stopPropagation();
                 await handleStatusChange(order.$id, "in_progress");
-                toast.info(t("backToInProgressSuccess"));
               }}
               className={cn(
                 "w-7 h-7 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer active:scale-90",
@@ -915,23 +914,20 @@ export function CurrentOrdersContent({
       >
         <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
-            <div>
-              <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
-                {t("completeOrderTitle")}
-              </DialogTitle>
-              <DialogDescription className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
-                {targetOrderToComplete
-                  ? `#${targetOrderToComplete.orderNumber}`
-                  : ""}
-              </DialogDescription>
-            </div>
+            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
+              {targetOrderToComplete
+                ? t("completeOrderTitle", {
+                    orderNumber: targetOrderToComplete.orderNumber,
+                  })
+                : t("completeOrderTitleFallback")}
+            </DialogTitle>
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-5 sm:p-6 space-y-4 text-sm text-zinc-900">
-            <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+          <div className="p-5 sm:p-6 text-sm text-zinc-900">
+            <DialogDescription className="text-xs sm:text-sm text-zinc-600 font-normal leading-relaxed">
               {t("completeOrderDesc")}
-            </p>
+            </DialogDescription>
           </div>
 
           <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">

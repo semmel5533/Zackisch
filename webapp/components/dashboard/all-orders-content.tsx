@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -434,14 +434,6 @@ export function AllOrdersContent({
         </div>
 
         <Card className="overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4 sm:px-6 pt-4 sm:pt-5 shrink-0 border-b border-border/40">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-              {t("allOrders")}
-            </h3>
-            <span className="text-xs text-muted-foreground font-semibold font-inter tabular-nums">
-              {totalItems} {totalItems === 1 ? t("order") : t("totalOrders")}
-            </span>
-          </CardHeader>
           <div className="overflow-x-auto">
             <Table aria-label="Orders list">
               <TableHeader>
