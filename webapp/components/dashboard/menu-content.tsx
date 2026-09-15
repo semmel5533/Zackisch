@@ -685,11 +685,6 @@ export function MenuContent({
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
         >
-          <div className="flex items-center justify-between pb-1">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-              {t("categories")}
-            </h3>
-          </div>
 
           <SortableContext
             items={categories.map((c) => c.$id)}
