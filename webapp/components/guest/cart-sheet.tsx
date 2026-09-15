@@ -117,7 +117,7 @@ export function CartSheet({
           </SheetTitle>
           <div className="flex items-baseline justify-between mt-1.5 w-full">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-base sm:text-lg font-bold text-foreground">
+              <span className="text-base font-bold uppercase tracking-wider text-foreground">
                 {t("total")}
               </span>
               <span className="text-xs text-muted-foreground font-normal">

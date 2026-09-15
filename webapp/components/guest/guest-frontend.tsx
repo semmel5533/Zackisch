@@ -672,7 +672,7 @@ export function GuestFrontend({
               >
                 <div className="flex items-baseline justify-between">
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-base sm:text-lg font-bold">
+                    <span className="text-base font-bold uppercase tracking-wider text-foreground">
                       {t("total")}
                     </span>
                     <span className="text-xs text-muted-foreground font-normal">
