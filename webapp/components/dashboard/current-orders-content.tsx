@@ -732,18 +732,21 @@ export function CurrentOrdersContent({
                                   return (
                                     <span
                                       key={cIdx}
-                                      className="inline-flex items-center text-xs text-muted-foreground bg-muted/60 border border-border/60 px-2 py-0.5 rounded-md"
+                                      className="inline-block max-w-full text-xs leading-relaxed text-muted-foreground bg-muted/60 border border-border/60 px-2.5 py-1 rounded-md break-words"
                                     >
                                       {stepName ? (
-                                        <span className="font-medium text-foreground/80 mr-1">
-                                          {stepName}:
+                                        <span className="font-semibold text-foreground/90">
+                                          {stepName}:{" "}
                                         </span>
                                       ) : null}
-                                      <span>{optName}</span>
+                                      <span className="text-foreground/80">{optName}</span>
                                       {typeof c.extraPrice === "number" && c.extraPrice > 0 && (
-                                        <span className="text-muted-foreground/80 ml-1">
-                                          (+<Price cents={c.extraPrice} />)
-                                        </span>
+                                        <>
+                                          {" "}
+                                          <span className="text-muted-foreground/80 font-normal whitespace-nowrap">
+                                            (+<Price cents={c.extraPrice} />)
+                                          </span>
+                                        </>
                                       )}
                                     </span>
                                   );
