@@ -243,11 +243,26 @@ export function CurrentOrdersContent({
     }
   }, [localOrders, selectedOrderId, inProgressOrders, readyOrders]);
 
+  const selectedOrder = useMemo(() => {
+    return localOrders.find((o) => o.$id === selectedOrderId) || null;
+  }, [localOrders, selectedOrderId]);
+
   if (!mounted) {
     return null;
   }
 
-  const selectedOrder = localOrders.find((o) => o.$id === selectedOrderId) || null;
+  const isSelectedReady = selectedOrder?.status === "ready_for_pickup";
+  const selectedOrderTimestamp = selectedOrder
+    ? isSelectedReady
+      ? selectedOrder.readyAt ||
+        (selectedOrder.$updatedAt ? new Date(selectedOrder.$updatedAt).getTime() : 0) ||
+        selectedOrder._creationTime ||
+        (selectedOrder.$createdAt ? new Date(selectedOrder.$createdAt).getTime() : 0)
+      : selectedOrder.createdAt ||
+        selectedOrder._creationTime ||
+        (selectedOrder.$createdAt ? new Date(selectedOrder.$createdAt).getTime() : 0)
+    : 0;
+  const selectedOrderTime = formatOrderTime(selectedOrderTimestamp);
   const targetOrderToCancel = localOrders.find((o) => o.$id === orderToCancel);
   const targetOrderToComplete = localOrders.find((o) => o.$id === orderToComplete);
 
@@ -299,13 +314,21 @@ export function CurrentOrdersContent({
         (order.$createdAt ? new Date(order.$createdAt).getTime() : 0);
     const clockTime = formatOrderTime(timestamp);
 
-    const cardButton = (
-      <button
+    return (
+      <div
         key={order.$id}
-        type="button"
+        role="button"
+        tabIndex={0}
         onClick={() => {
           setSelectedOrderId(order.$id);
           setMobileView("detail");
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setSelectedOrderId(order.$id);
+            setMobileView("detail");
+          }
         }}
         className={cn(
           "w-full h-11 text-left rounded-full transition-all relative flex items-center justify-between gap-2 select-none bg-card text-foreground border border-border hover:bg-muted/50 hover:border-foreground/20 px-3.5 sm:px-4 font-semibold cursor-pointer active:scale-[0.98]",
@@ -313,8 +336,30 @@ export function CurrentOrdersContent({
             "desktop:bg-primary desktop:text-primary-foreground desktop:border-primary desktop:shadow-xs desktop:hover:bg-primary desktop:hover:border-primary",
         )}
       >
-        {/* Left: Number and Type */}
+        {/* Left: Optional Back-to-Progress Arrow, Number and Type */}
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+          {isReady && (
+            <button
+              type="button"
+              onClick={async (e) => {
+                e.stopPropagation();
+                await handleStatusChange(order.$id, "in_progress");
+                toast.info(t("backToInProgressSuccess"));
+              }}
+              className={cn(
+                "w-7 h-7 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer active:scale-90",
+                isSelected
+                  ? "hover:bg-white/20 text-white"
+                  : "hover:bg-muted text-foreground border border-border/60 bg-muted/30",
+                !isSelected && "desktop:hidden",
+              )}
+              title={t("backToInProgress")}
+              aria-label={t("backToInProgress")}
+            >
+              <ArrowLeft className="w-3.5 h-3.5 shrink-0" weight="bold" />
+            </button>
+          )}
+
           <span
             className={cn(
               "font-black tracking-tight font-inter tabular-nums text-xs sm:text-sm shrink-0 text-foreground",
@@ -360,44 +405,8 @@ export function CurrentOrdersContent({
             <span className="font-inter tabular-nums">{clockTime}</span>
           </span>
         </div>
-      </button>
+      </div>
     );
-
-    if (isReady) {
-      return (
-        <div
-          key={order.$id}
-          className={cn(
-            "flex items-center w-full animate-in fade-in duration-150",
-            isSelected ? "gap-2" : "gap-2 desktop:gap-0",
-          )}
-        >
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onClick={async (e) => {
-              e.stopPropagation();
-              await handleStatusChange(order.$id, "in_progress");
-              toast.info(t("backToInProgressSuccess"));
-            }}
-            className={cn(
-              "h-11 w-11 p-0 rounded-full border border-border bg-card hover:bg-muted text-foreground flex items-center justify-center shrink-0 cursor-pointer active:scale-[0.95] transition-all shadow-xs",
-              !isSelected && "desktop:hidden",
-            )}
-            title={t("backToInProgress")}
-            aria-label={t("backToInProgress")}
-          >
-            <ArrowLeft className="w-5 h-5 shrink-0" weight="bold" />
-          </Button>
-          <div className="flex-1 min-w-0">
-            {cardButton}
-          </div>
-        </div>
-      );
-    }
-
-    return cardButton;
   };
 
   return (
@@ -628,15 +637,15 @@ export function CurrentOrdersContent({
           {selectedOrder ? (
             <div className="flex-1 min-h-0 bg-card rounded-xl border border-border flex flex-col overflow-hidden shadow-xs">
               {/* Header: Edge-to-Edge Divider */}
-              <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between gap-2 sm:gap-3">
-                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20 shrink-0 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                   <span className="text-xl sm:text-2xl font-black tracking-tight font-inter tabular-nums text-foreground shrink-0">
                     {selectedOrder.orderNumber}
                   </span>
                   {/* Status Badge directly next to order number */}
                   <Badge
                     variant="outline"
-                    className="h-7 px-3 rounded-full text-xs font-bold uppercase tracking-wider text-foreground border-border bg-card shrink-0"
+                    className="h-7 px-2.5 sm:px-3 rounded-full text-xs font-bold uppercase tracking-wider text-foreground border-border bg-card shrink-0"
                   >
                     {selectedOrder.status === "ready_for_pickup"
                       ? t("ready")
@@ -644,22 +653,33 @@ export function CurrentOrdersContent({
                   </Badge>
                 </div>
 
-                {/* Right-aligned Badge: Table or Pickup */}
-                <Badge
-                  variant="outline"
-                  className="h-7 px-3 rounded-full text-xs font-bold uppercase tracking-wider text-foreground border-border bg-card shrink-0"
-                >
-                  {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
-                    <>
-                      <span>{t("table")}</span>{" "}
-                      <span className="font-inter tabular-nums">
-                        {selectedOrder.tableNumber || ""}
-                      </span>
-                    </>
-                  ) : (
-                    t("pickup")
+                {/* Right-aligned Badges: Table or Pickup, and Time */}
+                <div className="flex items-center gap-2 ml-auto sm:ml-0 shrink-0">
+                  <Badge
+                    variant="outline"
+                    className="h-7 px-3 rounded-full text-xs font-bold uppercase tracking-wider text-foreground border-border bg-card shrink-0"
+                  >
+                    {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
+                      <>
+                        <span>{t("table")}</span>{" "}
+                        <span className="font-inter tabular-nums">
+                          {selectedOrder.tableNumber || ""}
+                        </span>
+                      </>
+                    ) : (
+                      t("pickup")
+                    )}
+                  </Badge>
+                  {selectedOrderTime && (
+                    <Badge
+                      variant="outline"
+                      className="h-7 px-3 rounded-full text-xs font-semibold text-foreground border-border bg-card shrink-0 inline-flex items-center gap-1.5"
+                    >
+                      <Clock className="w-3.5 h-3.5 text-foreground/80 shrink-0" weight="bold" />
+                      <span className="font-inter tabular-nums">{selectedOrderTime}</span>
+                    </Badge>
                   )}
-                </Badge>
+                </div>
               </div>
 
               {/* Items List Body */}

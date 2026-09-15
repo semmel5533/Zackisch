@@ -253,9 +253,9 @@ The official technology stack, infrastructure providers, and operational archite
    - **Cloudflare Pages:** Hosting and edge delivery for the marketing website (`website`).
    - **Cloudflare Workers:** Serverless edge runtime and execution environment for the web application (`webapp`).
 
-2. **Google Workspace:**
-   - **Enterprise Email & Identity:** Primary business email domain with Google Workspace (`selim@zakkig.com`).
-   - **SMTP & Transactional Messaging:** Authoritative email infrastructure for notifications, auth verification, and team communication.
+2. **Microsoft 365:**
+   - **Enterprise Email & Identity:** Primary business email domain with Microsoft 365 Business Basic (`selim@zakkig.com`).
+   - **SMTP & Transactional Messaging:** Authoritative email infrastructure for notifications, auth verification, and team communication (`smtp.office365.com` via port 587 STARTTLS).
 
 3. **Convex:**
    - **Unified Reactive Backend:** Complete transactional database, real-time sync, background mutation handlers, and scheduled crons.
