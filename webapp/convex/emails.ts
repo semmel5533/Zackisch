@@ -83,9 +83,9 @@ export const sendEmailOtp = internalAction({
   returns: v.boolean(),
   handler: async (_ctx, args) => {
     const isDe = args.locale !== "en";
-    const subject = isDe ? "Dein Anmeldecode" : "Your sign-in code";
+    const subject = isDe ? "Anmeldecode für zakkig" : "Sign-in code for zakkig";
 
-    const title = isDe ? "Dein Anmeldecode" : "Your sign-in code";
+    const title = isDe ? "Anmeldecode für zakkig" : "Sign-in code for zakkig";
     const intro = isDe
       ? "Verwende den folgenden Code, um deine Anmeldung zu bestätigen. Der Code ist 30 Minuten gültig."
       : "Use the following code to confirm your sign-in. The code is valid for 30 minutes.";
@@ -156,7 +156,7 @@ export const sendPasswordResetEmail = internalAction({
   returns: v.boolean(),
   handler: async (_ctx, args) => {
     const isDe = args.locale !== "en";
-    const subject = isDe ? "Passwort zurücksetzen" : "Reset your password";
+    const subject = isDe ? "Passwort zurücksetzen für zakkig" : "Reset password for zakkig";
     const greeting = isDe
       ? `Hallo${args.userName ? " " + args.userName : ""}, klicke auf die folgende Schaltfläche, um dein Passwort vom Konto zurückzusetzen. Dieser Link ist 30 Minuten gültig.`
       : `Hello${args.userName ? " " + args.userName : ""}, click the button below to reset your account password. This link is valid for 30 minutes.`;
@@ -229,7 +229,7 @@ export const sendDeleteAccountEmail = internalAction({
   returns: v.boolean(),
   handler: async (_ctx, args) => {
     const isDe = args.locale !== "en";
-    const subject = isDe ? "Konto löschen bestätigen" : "Confirm account deletion";
+    const subject = isDe ? "Konto löschen für zakkig" : "Delete account for zakkig";
     const intro = isDe
       ? "Bitte klicke auf die folgende Schaltfläche, um dein Konto bei zakkig endgültig zu löschen. Dieser Link ist 30 Minuten gültig."
       : "Please click the button below to permanently delete your zakkig account. This link is valid for 30 minutes.";
@@ -302,7 +302,7 @@ export const sendChangeEmailLink = internalAction({
   returns: v.boolean(),
   handler: async (_ctx, args) => {
     const isDe = args.locale !== "en";
-    const subject = isDe ? "Email-Adresse ändern bestätigen" : "Confirm email change";
+    const subject = isDe ? "Email-Adresse ändern für zakkig" : "Change email address for zakkig";
     const intro = isDe
       ? "Bitte klicke auf die folgende Schaltfläche, um die Änderung deiner Email-Adresse bei zakkig zu bestätigen. Dieser Link ist 30 Minuten gültig."
       : "Please click the button below to confirm the change of your zakkig email address. This link is valid for 30 minutes.";
