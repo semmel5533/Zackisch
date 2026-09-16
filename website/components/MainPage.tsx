@@ -199,7 +199,7 @@ export function MainPage() {
                     alt={t("portraitAlt")}
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="object-cover object-top grayscale"
+                    className="object-cover object-top"
                     priority
                   />
                 </div>
@@ -215,7 +215,7 @@ export function MainPage() {
                     alt={t("marsLogoAlt")}
                     width={200}
                     height={64}
-                    className="h-16 w-auto object-contain block filter grayscale brightness-50 hover:grayscale-0 hover:brightness-100 transition-all duration-300"
+                    className="h-16 w-auto object-contain block hover:opacity-80 transition-opacity duration-200"
                   />
                 </a>
               </div>
