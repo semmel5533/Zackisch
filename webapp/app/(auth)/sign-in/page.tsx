@@ -31,8 +31,8 @@ import {
   SignIn,
   CircleNotch,
   PaperPlaneRight,
-  Clock,
 } from "@phosphor-icons/react";
+import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
 import { toast } from "sonner";
 
 export default function SignInPage() {
@@ -62,6 +62,8 @@ function OtpForm({ state }: { state: any }) {
   const [countdown, setCountdown] = useState(60);
   const [isLockedOut, setIsLockedOut] = useState(false);
   const [attemptsRemaining, setAttemptsRemaining] = useState<number | null>(null);
+  const [otpExpiresAt, setOtpExpiresAt] = useState(() => Date.now() + 30 * 60 * 1000);
+  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -71,7 +73,7 @@ function OtpForm({ state }: { state: any }) {
   }, [countdown]);
 
   const submitOtp = async (code: string) => {
-    if (!state.userId || isLockedOut) return;
+    if (!state.userId || isLockedOut || isExpired) return;
     setIsVerifying(true);
     const res = await verifyOtpAction(state.userId, code);
     setIsVerifying(false);
@@ -99,13 +101,15 @@ function OtpForm({ state }: { state: any }) {
   };
 
   const handleResendOtp = async () => {
-    if ((countdown > 0 && !isLockedOut) || !state.userId || !state.email) return;
+    if ((countdown > 0 && !isLockedOut && !isExpired) || !state.userId || !state.email) return;
     setIsLockedOut(false);
     setAttemptsRemaining(null);
     setCountdown(60);
     setOtp("");
     const res = await resendOtpAction(state.userId, state.email);
     if (res?.success) {
+      setOtpExpiresAt(Date.now() + 30 * 60 * 1000);
+      setIsExpired(false);
       toast.success(t("codeSent"));
     }
   };
@@ -157,14 +161,14 @@ function OtpForm({ state }: { state: any }) {
                 maxLength={6}
                 value={otp}
                 onChange={(val) => {
-                  if (isLockedOut) return;
+                  if (isLockedOut || isExpired) return;
                   setOtp(val);
                   if (val.length === 6) {
                     submitOtp(val);
                   }
                 }}
-                disabled={isVerifying || isLockedOut}
-                autoFocus={!isLockedOut}
+                disabled={isVerifying || isLockedOut || isExpired}
+                autoFocus={!isLockedOut && !isExpired}
               >
                 <InputOTPGroup className="w-full flex gap-2">
                   <InputOTPSlot
@@ -195,25 +199,22 @@ function OtpForm({ state }: { state: any }) {
               </InputOTP>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground font-medium -mt-1 mb-1">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{t("otpValidDuration")}</span>
-          </div>
+          <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button
               type="button"
-              variant={isLockedOut ? "default" : "outline"}
-              className={`w-full ${isLockedOut ? "sm:w-full font-semibold" : "sm:w-1/2 font-semibold"} h-11 rounded-full transition-all`}
-              disabled={countdown > 0 && !isLockedOut}
+              variant={isLockedOut || isExpired ? "default" : "outline"}
+              className={`w-full ${isLockedOut || isExpired ? "sm:w-full font-semibold" : "sm:w-1/2 font-semibold"} h-11 rounded-full transition-all`}
+              disabled={countdown > 0 && !isLockedOut && !isExpired}
               onClick={handleResendOtp}
             >
-              {isLockedOut
+              {isLockedOut || isExpired
                 ? t("requestNewCodeNow")
                 : countdown > 0
                   ? t("resendIn").replace("{time}", countdown.toString())
                   : t("resendCode")}
             </Button>
-            {!isLockedOut && (
+            {!isLockedOut && !isExpired && (
               <Button
                 type="submit"
                 className="w-full sm:w-1/2 gap-2 h-11 rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"

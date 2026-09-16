@@ -24,8 +24,8 @@ import { useTranslation } from "@/lib/i18n";
 import {
   CircleNotch,
   PaperPlaneRight,
-  Clock,
 } from "@phosphor-icons/react";
+import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
 import { toast } from "sonner";
 
 function ChangeEmailOtpForm() {
@@ -39,6 +39,8 @@ function ChangeEmailOtpForm() {
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [countdown, setCountdown] = useState(60);
+  const [otpExpiresAt, setOtpExpiresAt] = useState(() => Date.now() + 30 * 60 * 1000);
+  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -48,7 +50,7 @@ function ChangeEmailOtpForm() {
   }, [countdown]);
 
   const submitOtp = async (code: string) => {
-    if (!userId || !token || !email) return;
+    if (!userId || !token || !email || isExpired) return;
     setIsVerifying(true);
     
     const formData = new FormData();
@@ -74,8 +76,9 @@ function ChangeEmailOtpForm() {
   };
 
   const handleResendOtp = async () => {
-    if (countdown > 0 || !userId || !token || !email) return;
+    if ((countdown > 0 && !isExpired) || !userId || !token || !email) return;
     setCountdown(60);
+    setOtp("");
     
     const formData = new FormData();
     formData.append("userId", userId);
@@ -86,6 +89,8 @@ function ChangeEmailOtpForm() {
     if (res?.error) {
       toast.error(res.error);
     } else {
+      setOtpExpiresAt(Date.now() + 30 * 60 * 1000);
+      setIsExpired(false);
       toast.success(t("newOtpSent" as any));
     }
   };
@@ -110,13 +115,14 @@ function ChangeEmailOtpForm() {
                 maxLength={6}
                 value={otp}
                 onChange={(val) => {
+                  if (isExpired) return;
                   setOtp(val);
                   if (val.length === 6) {
                     submitOtp(val);
                   }
                 }}
-                disabled={isVerifying}
-                autoFocus
+                disabled={isVerifying || isExpired}
+                autoFocus={!isExpired}
               >
                 <InputOTPGroup className="w-full flex gap-2">
                   <InputOTPSlot
@@ -147,39 +153,40 @@ function ChangeEmailOtpForm() {
               </InputOTP>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground font-medium -mt-1 mb-1">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{t("otpValidDuration" as any)}</span>
-          </div>
+          <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button
               type="button"
-              variant="outline"
-              className="w-full sm:w-1/2 h-11 rounded-full font-semibold"
-              disabled={countdown > 0}
+              variant={isExpired ? "default" : "outline"}
+              className={`w-full ${isExpired ? "sm:w-full font-semibold" : "sm:w-1/2 font-semibold"} h-11 rounded-full font-semibold`}
+              disabled={countdown > 0 && !isExpired}
               onClick={handleResendOtp}
             >
-              {countdown > 0
-                ? t("resendIn" as any).replace("{time}", countdown.toString())
-                : t("resendCode" as any)}
+              {isExpired
+                ? t("requestNewCodeNow" as any)
+                : countdown > 0
+                  ? t("resendIn" as any).replace("{time}", countdown.toString())
+                  : t("resendCode" as any)}
             </Button>
-            <Button
-              type="submit"
-              className="w-full sm:w-1/2 gap-2 h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold disabled:opacity-40 transition-all active:scale-[0.98]"
-              disabled={isVerifying || otp.length < 6}
-            >
-              {isVerifying ? (
-                <>
-                  <CircleNotch className="w-5 h-5 animate-spin" weight="bold" />
-                  {t("verifying" as any)}
-                </>
-              ) : (
-                <>
-                  <PaperPlaneRight className="w-5 h-5" weight="bold" />
-                  {t("confirm" as any)}
-                </>
-              )}
-            </Button>
+            {!isExpired && (
+              <Button
+                type="submit"
+                className="w-full sm:w-1/2 gap-2 h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold disabled:opacity-40 transition-all active:scale-[0.98]"
+                disabled={isVerifying || otp.length < 6}
+              >
+                {isVerifying ? (
+                  <>
+                    <CircleNotch className="w-5 h-5 animate-spin" weight="bold" />
+                    {t("verifying" as any)}
+                  </>
+                ) : (
+                  <>
+                    <PaperPlaneRight className="w-5 h-5" weight="bold" />
+                    {t("confirm" as any)}
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </form>
       </CardContent>

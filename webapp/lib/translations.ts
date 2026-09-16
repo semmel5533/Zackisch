@@ -555,7 +555,10 @@ export const translations = {
     reorder: "Reihenfolge ändern",
     deletionRequestSent:
       "Eine E-Mail zur Bestätigung wurde versandt. Der Link ist 30 Minuten gültig. Bitte überprüfe dein Postfach.",
-    otpValidDuration: "Code ist 30 Minuten gültig",
+    otpValidDuration: "Der Code ist noch 30 Minuten gültig",
+    otpRemainingMinutes: "Der Code ist noch {minutes} Minuten gültig",
+    otpRemainingOneMinute: "Der Code ist noch 1 Minute gültig",
+    otpCodeExpired: "Der Code ist abgelaufen. Bitte fordere einen neuen Code an.",
     autoArchiveRemaining: "Archiviert in {time}",
     from: "ab",
     fromPrice: "ab {price}",
@@ -1153,7 +1156,10 @@ export const translations = {
     reorder: "Change order",
     deletionRequestSent:
       "A confirmation email has been sent. The link is valid for 30 minutes. Please check your inbox.",
-    otpValidDuration: "Code is valid for 30 minutes",
+    otpValidDuration: "The code is valid for another 30 minutes",
+    otpRemainingMinutes: "The code is valid for another {minutes} minutes",
+    otpRemainingOneMinute: "The code is valid for another 1 minute",
+    otpCodeExpired: "The code has expired. Please request a new code.",
     autoArchiveRemaining: "Archived in {time}",
     from: "from",
     fromPrice: "from {price}",
