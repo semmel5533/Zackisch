@@ -199,7 +199,7 @@ export function MainPage() {
                     alt={t("portraitAlt")}
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="object-cover object-top"
+                    className="object-cover object-top grayscale"
                     priority
                   />
                 </div>

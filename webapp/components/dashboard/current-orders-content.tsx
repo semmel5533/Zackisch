@@ -346,11 +346,10 @@ export function CurrentOrdersContent({
                 await handleStatusChange(order.$id, "in_progress");
               }}
               className={cn(
-                "w-7 h-7 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer active:scale-90",
+                "w-7 h-7 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer active:scale-90 text-foreground border border-border/60 bg-muted/30 hover:bg-muted",
                 isSelected
-                  ? "hover:bg-white/20 text-white"
-                  : "hover:bg-muted text-foreground border border-border/60 bg-muted/30",
-                !isSelected && "desktop:hidden",
+                  ? "desktop:hover:bg-white/20 desktop:text-white desktop:border-transparent desktop:bg-transparent"
+                  : "desktop:hidden",
               )}
               title={t("backToInProgress")}
               aria-label={t("backToInProgress")}
