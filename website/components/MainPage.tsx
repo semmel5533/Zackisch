@@ -52,7 +52,7 @@ export function MainPage() {
             <div className="lg:col-span-5 flex justify-center lg:justify-start self-stretch">
               <div className="relative w-full aspect-[3/4] lg:aspect-auto lg:h-full max-w-md lg:max-w-none rounded-[2rem] overflow-hidden min-h-[460px] sm:min-h-[540px] lg:min-h-[580px]">
                 <Image
-                  src="/waiting_line.png"
+                  src="/waiting_line.jpg"
                   alt={t("waitingLineImageAlt")}
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
