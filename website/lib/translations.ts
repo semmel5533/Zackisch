@@ -59,7 +59,7 @@ export const translations = {
     trustText:
       "Offiziell unterstützt durch das MARS – Center for Entrepreneurship der TH Mannheim.",
     waitingLineImageAlt: "Wartezeiten in der Gastronomie",
-    portraitPlaceholderText: "[ Portrait: Selim ]",
+    portraitAlt: "Selim Eser – Gründer von zakkig",
     marsLogoAlt: "MARS Center for Entrepreneurship Logo",
     scrollToTopLabel: "Nach oben scrollen",
     footerTitle: "Bereit für weniger Wartezeit?",
@@ -142,7 +142,7 @@ export const translations = {
     trustText:
       "Officially supported by the MARS – Center for Entrepreneurship at TH Mannheim.",
     waitingLineImageAlt: "Waiting times in gastronomy",
-    portraitPlaceholderText: "[ Portrait: Selim ]",
+    portraitAlt: "Selim Eser – Founder of zakkig",
     marsLogoAlt: "MARS Center for Entrepreneurship Logo",
     scrollToTopLabel: "Scroll to top",
     footerTitle: "Ready for shorter waits?",

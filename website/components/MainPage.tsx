@@ -193,8 +193,15 @@ export function MainPage() {
             {/* Left side: Photo Placeholder & MARS Logo */}
             <div className="lg:col-span-5 flex justify-center lg:justify-start">
               <div className="w-full max-w-md lg:max-w-none flex flex-col items-center gap-6">
-                <div className="aspect-[3/4] w-full bg-zinc-100 flex flex-col items-center justify-center text-zinc-400 font-light text-sm rounded-[2rem] min-h-[460px] sm:min-h-[540px] lg:min-h-[580px]">
-                  <span>{t("portraitPlaceholderText")}</span>
+                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] min-h-[460px] sm:min-h-[540px] lg:min-h-[580px] bg-zinc-100 shadow-sm border border-zinc-100">
+                  <Image
+                    src="/selim.jpg"
+                    alt={t("portraitAlt")}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover object-top"
+                    priority
+                  />
                 </div>
                 {/* Trust Badge - MARS Logo */}
                 <a

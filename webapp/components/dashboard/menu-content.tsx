@@ -1100,11 +1100,6 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
 
         {!isCollapsed && (
           <CardContent className="pt-2 flex flex-col gap-3">
-            <div className="flex items-center justify-between px-1.5 pt-1">
-              <span className="text-sm font-bold uppercase tracking-wider text-foreground">
-                {t("items")}
-              </span>
-            </div>
             <SortableContext
               items={categoryItems.map((i) => i.$id)}
               strategy={rectSortingStrategy}
@@ -1436,11 +1431,6 @@ function CategoryCardOverlay({
 
       {!isCollapsed && (
         <CardContent className="pt-2 flex flex-col gap-3">
-          <div className="flex items-center justify-between px-1.5 pt-1">
-            <span className="text-sm font-bold uppercase tracking-wider text-foreground">
-              {t("items")}
-            </span>
-          </div>
           <div className="grid grid-cols-1 @min-[1500px]:grid-cols-2 gap-2.5 min-h-[60px] p-1.5 transition-colors rounded-lg">
             {categoryItems.length === 0 ? (
               <div className="col-span-full py-6 text-center flex flex-col items-center justify-center gap-1 border border-dashed rounded-lg bg-muted/10">

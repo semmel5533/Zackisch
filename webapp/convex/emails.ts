@@ -144,9 +144,10 @@ export const sendEmailOtp = internalAction({
     border-radius: 14px !important;
     margin-bottom: 24px !important;
   }
-  .otp-digit {
+  .otp-code {
     font-size: 32px !important;
-    line-height: 1 !important;
+    letter-spacing: 16px !important;
+    padding-left: 16px !important;
   }
   .email-footer {
     padding: 20px 20px !important;
@@ -160,8 +161,10 @@ export const sendEmailOtp = internalAction({
   .otp-box {
     padding: 16px 8px !important;
   }
-  .otp-digit {
-    font-size: 28px !important;
+  .otp-code {
+    font-size: 26px !important;
+    letter-spacing: 10px !important;
+    padding-left: 10px !important;
   }
 }
 </style>
@@ -177,12 +180,8 @@ export const sendEmailOtp = internalAction({
     <div class="email-body" style="padding: 40px;">
       <h1 class="email-title" style="margin: 0 0 12px; font-size: 24px; font-weight: 800; color: #000000; letter-spacing: -0.5px;">${title}</h1>
       <p class="email-intro" style="margin: 0 0 32px; font-size: 15px; color: #71717a; line-height: 1.6;">${intro}</p>
-      <div class="otp-box" style="background-color: #000000; border-radius: 16px; padding: 24px 20px; text-align: center; margin-bottom: 28px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse; margin: 0 auto;">
-          <tr>
-            ${args.code.split("").map((digit) => `<td class="otp-digit" align="center" style="width: 16.666%; font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 48px; font-weight: 800; color: #ffffff; line-height: 1.1; text-align: center;">${digit}</td>`).join("")}
-          </tr>
-        </table>
+      <div class="otp-box" style="background-color: #000000; border-radius: 16px; padding: 24px 16px; text-align: center; margin-bottom: 28px;">
+        <p class="otp-code" style="margin: 0; font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 44px; font-weight: 800; letter-spacing: 24px; padding-left: 24px; color: #ffffff; white-space: nowrap; line-height: 1.2; user-select: all; -webkit-user-select: all;">${args.code}</p>
       </div>
       <p style="margin: 0 0 8px; font-size: 14px; color: #71717a; line-height: 1.6;">${hint1}</p>
       <p style="margin: 0; font-size: 14px; color: #71717a; line-height: 1.6;">${hint2}</p>
