@@ -114,28 +114,65 @@ export const sendEmailOtp = internalAction({
 <head>
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@700;800&display=swap');
+
+@media only screen and (max-width: 480px) {
+  .email-wrapper {
+    padding: 24px 12px !important;
+  }
+  .email-card {
+    border-radius: 20px !important;
+  }
+  .email-header {
+    padding: 24px 24px 20px !important;
+  }
+  .email-body {
+    padding: 28px 20px !important;
+  }
+  .email-title {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+  }
+  .email-intro {
+    font-size: 14px !important;
+    margin-bottom: 24px !important;
+  }
+  .otp-box {
+    padding: 20px 12px !important;
+    border-radius: 14px !important;
+    margin-bottom: 24px !important;
+  }
+  .otp-code {
+    font-size: 28px !important;
+    letter-spacing: 8px !important;
+    padding-left: 8px !important;
+  }
+  .email-footer {
+    padding: 20px 20px !important;
+  }
+}
 </style>
 </head>
 <body style="margin: 0; padding: 0;">
-<div style="font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
-  <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
-    <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
+<div class="email-wrapper" style="font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
+  <div class="email-card" style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
+    <div class="email-header" style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
       <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
         <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
       </a>
     </div>
-    <div style="padding: 40px;">
-      <h1 style="margin: 0 0 12px; font-size: 24px; font-weight: 800; color: #000000; letter-spacing: -0.5px;">${title}</h1>
-      <p style="margin: 0 0 32px; font-size: 15px; color: #71717a; line-height: 1.6;">${intro}</p>
-      <div style="background-color: #000000; border-radius: 16px; padding: 32px 24px; text-align: center; margin-bottom: 32px;">
-        <p style="margin: 0; font-size: 48px; font-weight: 800; letter-spacing: 16px; color: #ffffff; padding-left: 16px;">${args.code}</p>
+    <div class="email-body" style="padding: 40px;">
+      <h1 class="email-title" style="margin: 0 0 12px; font-size: 24px; font-weight: 800; color: #000000; letter-spacing: -0.5px;">${title}</h1>
+      <p class="email-intro" style="margin: 0 0 32px; font-size: 15px; color: #71717a; line-height: 1.6;">${intro}</p>
+      <div class="otp-box" style="background-color: #000000; border-radius: 16px; padding: 24px 16px; text-align: center; margin-bottom: 28px;">
+        <p class="otp-code" style="margin: 0; font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: 10px; color: #ffffff; padding-left: 10px; white-space: nowrap; line-height: 1.2;">${args.code}</p>
       </div>
       <p style="margin: 0 0 8px; font-size: 14px; color: #71717a; line-height: 1.6;">${hint1}</p>
       <p style="margin: 0; font-size: 14px; color: #71717a; line-height: 1.6;">${hint2}</p>
     </div>
-    <div style="padding: 24px 40px; border-top: 1px solid #f4f4f5; background-color: #fafafa;">
+    <div class="email-footer" style="padding: 24px 40px; border-top: 1px solid #f4f4f5; background-color: #fafafa;">
       <p style="margin: 0; font-size: 13px; color: #a1a1aa; line-height: 1.6; text-align: center;">
         ${footerText}
       </p>
