@@ -79,10 +79,10 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
   - **Quick-Links:** Navigation zu den weiteren Dashboard-Seiten.
   - **Personal-Sitzung Management:** Zentrale Vollbreiten-Kachel zum Erstellen, Verwalten, Kopieren und QR-Code-Pairing der kombinierten Personal-Sitzung (Staff Session), die Aktuelle Bestellungen, Alle Bestellungen und Verfügbarkeit in einem Terminal vereint.
   - **QR-Code Generator:** Erstellung von QR-Codes für To-Go und To-Stay (inkl. sichtbarer Tischnummer über dem Code, streng auf maximal 4 Zeichen limitiert). Generierte QR-Codes sind als PDF für den Druck herunterladbar.
-- **Aktuelle Bestellungen (`/current-orders`):** Echtzeit-Ansicht der aktiven Bestellungen mit den Spalten "In Bearbeitung" und "Abholbereit". Eingehende Bestellungen starten in Bearbeitung (FIFO) und werden per "Bereitstellen"-Button nach "Abholbereit" verschoben. Bestellungen in "Abholbereit" können bei Bedarf per "Zurück in Bearbeitung"-Button wieder zurückverschoben werden. Der Klick auf "Abschließen" öffnet ein Sicherheits-Bestätigungsmodal; nach Bestätigung verschwindet die Bestellung sofort aus den aktuellen Bestellungen. Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar.
-- **Alle Bestellungen (`/all-orders`):** Detaillierte Historien-Tabelle aller Bestellungen (In Bearbeitung, Abholbereit, Abgeschlossen, Storniert) mit Status- und Typ-Filtern, Volltextsuche und dem DATEV CSV-Export für den Steuerberater. Aktive Bestellungen ("In Bearbeitung" & "Abholbereit") können über eine dedizierte Aktions-Spalte mit Bestätigungsmodal storniert werden; abgeschlossene Bestellungen sind unwiderruflich abgeschlossen und können nicht mehr storniert werden.
-- **Menu (`/menu`):** Zentrale Verwaltung der Speisekarte, Getränke, Kategorien, Preise und Bilder.
-- **Settings (`/settings`):** Verwaltung von Account- und Betriebsdaten (z. B. Logo- und Banner-Uploads im Full-Width Layout auf Desktop) und Stripe-Details. Die Kontolöschung erfolgt über einen zweistufigen Verifizierungsprozess: Eine Server Action (`requestAccountDeletionAction`) generiert über Convex einen temporären Token (30 Minuten TTL) und sendet eine Bestätigungs-E-Mail über Google Workspace SMTP. Erst nach Klick auf den Bestätigungslink (`/delete-account?userId=...&token=...`) und erneuter Freigabe wird das gesamte Konto samt Betrieb, Menü, Bildern und Bestellungen kaskadierend restlos gelöscht.
+- **Aktuelle Bestellungen (`/current-orders`):** Echtzeit-Ansicht der aktiven Bestellungen mit den Spalten "In Bearbeitung" und "Abholbereit". Eingehende Bestellungen starten in Bearbeitung (FIFO) und werden per "Bereitstellen"-Button nach "Abholbereit" verschoben. Bestellungen in "Abholbereit" können bei Bedarf per "Zurück in Bearbeitung"-Button wieder zurückverschoben werden (bewusst ohne Toast-Meldung, um redundantes Feedback bei untergeordneten Aktionen zu vermeiden). Der Klick auf "Abschließen" öffnet ein standardisiertes Apple-Sicherheits-Bestätigungsmodal ("Bestellung \"[Nummer]\" abschließen?"); nach Bestätigung verschwindet die Bestellung sofort aus den aktuellen Bestellungen und ist dauerhaft unter "Alle Bestellungen" archiviert. Das responsive Layout orientiert sich via CSS Container Queries (`@container`) exklusiv an der Inhaltsbreite ohne Sidebar.
+- **Alle Bestellungen (`/all-orders`):** Detaillierte Historien-Tabelle aller Bestellungen (In Bearbeitung, Abholbereit, Abgeschlossen, Storniert) mit Status- und Typ-Filtern, Volltextsuche und dem DATEV CSV-Export für den Steuerberater. Die Tabelle verzichtet auf redundante Kopfzeilentitel für maximale vertikale Übersicht und Raumausnutzung. Aktive Bestellungen ("In Bearbeitung" & "Abholbereit") können über eine dedizierte Aktions-Spalte mit Bestätigungsmodal storniert werden; abgeschlossene Bestellungen sind unwiderruflich abgeschlossen und können nicht mehr storniert werden.
+- **Menu (`/menu`):** Zentrale Verwaltung der Speisekarte, Getränke, Kategorien, Preise und Bilder (ohne redundante "KATEGORIEN"-Überschrift für einen sauberen, fokussierten Header).
+- **Settings (`/settings`):** Verwaltung von Account- und Betriebsdaten (z. B. Logo- und Banner-Uploads im Full-Width Layout auf Desktop mit dauerhaft sichtbaren frosted Edit- und Lösch-Buttons) und Stripe-Details. Die Kontolöschung erfolgt über einen zweistufigen Verifizierungsprozess: Eine Server Action (`requestAccountDeletionAction`) generiert über Convex einen temporären Token (30 Minuten TTL) und sendet eine Bestätigungs-E-Mail über Microsoft 365 SMTP. Erst nach Klick auf den Bestätigungslink (`/delete-account?userId=...&token=...`) und erneuter Freigabe wird das gesamte Konto samt Betrieb, Menü, Bildern und Bestellungen kaskadierend restlos gelöscht.
 
 ### 2.3 Core Features: Personal-Terminal & Kitchen Board
 
@@ -98,9 +98,9 @@ Zugriff ausschließlich über Parameter, ohne Registrierung.
 - **Layout & Guest Flow (Lieferando-Style):**
   - **Initialzustand:** Sauberes Menü ohne störende Navigations-Tabs am unteren Bildschirmrand, wenn der Warenkorb leer ist.
   - **Schwebender Warenkorb-Banner:** Sobald Artikel in den Warenkorb gelegt werden, ploppt unten ein dezenter schwebender Pill-Banner auf (Artikelanzahl, Zwischensumme, "Zum Warenkorb"). Beim Leeren des Warenkorbs blendet sich der Banner automatisch wieder aus.
-  - **Fokussierte Warenkorb-Seite:** Beim Klick auf den Banner wechselt die Ansicht in den Warenkorb – das Restaurant-Hero-Banner wird ausgeblendet und ein Zurück-Pfeil oben links führt jederzeit zurück zum Menü.
+  - **Fokussierte Warenkorb-Seite:** Beim Klick auf den Banner wechselt die Ansicht in den Warenkorb – das Restaurant-Hero-Banner wird ausgeblendet und ein Zurück-Pfeil oben links führt jederzeit zurück zum Menü. Die Gesamtsumme wird in konsistenter Tracked-Uppercase-Typografie ("SUMME") inklusive genauer Steuerausweisung dargestellt.
 - **Warenkorb (Client State):** Wird lokal via `Zustand` verwaltet. Mengenänderungen (+ / -) sind direkt möglich. Bei einem Page-Reload wird der Warenkorb resettet.
-- **Checkout:** Abfrage der E-Mail-Adresse (Pflicht für digitalen Beleg), Integration über die Stripe Checkout Sessions API (`ui_mode: "elements"`) mit dem eingebetteten Stripe Payment Element (Apple Pay, Google Pay, Kartenzahlung) und serverseitiger Validierung der Artikelpreise und Verfügbarkeiten in Convex. Nach erfolgreicher Zahlung wird der digitale Bon per E-Mail gesendet.
+- **Checkout:** Abfrage der E-Mail-Adresse (Pflicht für digitalen Beleg) im Bezahl-Dialog mit klarer "SUMME"-Ausweisung, Integration über die Stripe Checkout Sessions API (`ui_mode: "elements"`) mit dem eingebetteten Stripe Payment Element (Apple Pay, Google Pay, Kartenzahlung) und serverseitiger Validierung der Artikelpreise und Verfügbarkeiten in Convex. Nach erfolgreicher Zahlung wird der digitale Bon per E-Mail gesendet.
 - **Bestellnummern (Rolling 001 - 999):** Die für Gäste, Gastronomen und Küche sichtbare Bestellnummer rotiert fortlaufend streng aufsteigend im dreistelligen Format von `001` bis `999` und beginnt danach automatisch wieder bei `001` (abgesichert gegen historische Seed-Verschiebungen und Rollover). Intern wird jede Bestellung zusätzlich durch eine eindeutige Dokumenten-ID sowie die Stripe-Payment-ID identifiziert.
 - **Nach der Bestellung:**
   - **Table:** Weiterleitung auf `/table/{organizationId}/success`, Anzeige der Bestellnummer auf dem Screen. Gast wartet am Tisch.
@@ -112,7 +112,7 @@ Das Gesamtsystem erzwingt standardisierte Ablaufzeiten für maximale Datensparsa
 
 | Komponente / Vorgang | Gültigkeit / Timeout | Verhalten nach Ablauf | Sicherheitsfunktion |
 | :--- | :--- | :--- | :--- |
-| **Auth OTP (Login & Registrierung)** | 30 Minuten | Code verfällt und wird serverseitig abgelehnt | Schutz vor Replay- und Brute-Force-Angriffen |
+| **Auth OTP (Login, Registrierung & E-Mail-Änderung)** | 30 Minuten | Dynamischer Live-Countdown (`<OtpValidityTimer />`: "Der Code ist noch 30 Minuten gültig" bis "1 Minute gültig", Ziffern in Inter `tabular-nums`). Nach Ablauf erscheint ein destruktiver Inline-Hinweis ("Der Code ist abgelaufen. Bitte fordere einen neuen Code an.") und der Primärbutton wechselt vollflächig auf "Neuen Code anfordern". Serverseitig wird der abgelaufene Code endgültig abgewiesen. | Schutz vor Replay- und Brute-Force-Angriffen |
 | **Brute-Force Lockout (OTP)** | 5 Fehlversuche | Sofortige Löschung des Codes | Verhindert systematisches Durchprobieren von Einmalcodes |
 | **Unverifizierte Accounts** | 30 Minuten | Vollständige Bereinigung via Convex Scheduler | Gibt die E-Mail-Adresse wieder frei, verhindert Ghost-Accounts |
 | **Passwort-Reset Link** | 30 Minuten | Token wird ungültig, Neuanforderung erforderlich | Schutz vor missbräuchlicher Passwortänderung über alte Links |
@@ -252,11 +252,28 @@ Alle Dialoge und Modals (z. B. Region- & Sprachauswahl, Artikelbearbeitung, Tisc
 - **Zero Emojis:** Keinerlei Emojis im gesamten Projekt (weder im Quelltext, JSX, Commit-Messages noch in der Dokumentation).
 - **Phosphor Icons:** Sämtliche Icons stammen einheitlich aus `@phosphor-icons/react` mit konsistentem Weight (`bold` bzw. `regular`).
 
+### 4.6 Pill-Buttons & Controls-Standard
+
+- Alle Aktions-Buttons, Select-Trigger (`SelectTrigger`), Dropdown-Trigger, Sidebar-Navigationslinks und Bestell-Tickets im Dashboard und Personal-Terminal folgen der Apple-Pill-Geometrie (`h-11 rounded-full font-semibold px-4` bzw. `px-5`, kompakt `h-9 rounded-full font-semibold px-3.5`).
+
+### 4.7 Konzentrische Eckenradien (Concentric Radius Formula)
+
+- Befindet sich ein Element in einem Container mit Innenabstand $P$, gilt strikt die konzentrische Formel:
+  $$R_{\text{inner}} = \max(0, R_{\text{outer}} - P)$$
+- Für alle Dropdown- und Select-Menüs:
+  - Äußere Popup-Karte: strikt `rounded-[20px]` mit `p-2` (8px Padding)
+  - Innere auswählbare Einträge: strikt `rounded-[12px]` ($20\text{px} - 8\text{px} = 12\text{px}$) mit `px-3.5 py-2.5 font-semibold`
+  - Dies garantiert eine mathematisch exakte Rundung ohne verzerrte Ecken.
+
+### 4.8 Uppercase Tracked Typography Standard
+
+- Alle Abschnitts-Überschriften, Kachel-Kategorien, Spaltenköpfe und Metadaten-Labels (`BETRIEBSDATEN`, `LOGO & BANNER`, `ZAHLUNGSANBIETER`, `GEFAHRENZONE`, `IN BEARBEITUNG`, `ABHOLBEREIT`, `STATISTIK`, `QR-CODE VERWALTUNG`, `SITZUNGEN`, `ARTIKELDETAILS`, `BILD & VORSCHAU`, `PRESETS & ANPASSUNGEN`, `REGION`, `SPRACHE`, `SUMME`) rendern einheitlich mit `text-xs font-bold uppercase tracking-wider text-muted-foreground` (bzw. `text-foreground` auf hellen Dialogen und `text-destructive` in Gefahrenzonen).
+
 ---
 
 ## TEIL 5: TECHNISCHE IMPLEMENTIERUNG (Zero-Ops Architektur)
 
-Das System setzt auf eine moderne, reaktive Architektur mit **Convex** als All-in-One Backend-Plattform, **Cloudflare** für Edge-Hosting & DNS, **Google Workspace** für Enterprise-Mails sowie **GitHub** für das Code- und Repository-Management.
+Das System setzt auf eine moderne, reaktive Architektur mit **Convex** als All-in-One Backend-Plattform, **Cloudflare** für Edge-Hosting & DNS, **Microsoft 365** für Enterprise-Mails sowie **GitHub** für das Code- und Repository-Management.
 
 ### 5.1 Architektur Übersicht & Repository (GitHub)
 
@@ -271,13 +288,16 @@ Das Projekt besteht aus zwei komplett unabhängigen Next.js-Applikationen in ein
   - **Domain Registrar & DNS:** Autoritativer DNS-Server und Registrar für alle Apex- und Sub-Domains (`zakkig.com`, `app.zakkig.com`).
   - **Cloudflare Pages:** Hosting und globales Edge CDN für die statisch exportierte Marketing-Website (`website/`) mit 0ms Cold Start.
   - **Cloudflare Workers (`vinext`):** Serverlose Edge-Runtime für die dynamische Webapp (`webapp/`) mit serverlosem SSR und nativer `proxy.ts`-Unterstützung.
-- **Google Workspace:**
-  - **Enterprise Email & Identity:** Offizielle Unternehmens-E-Mail-Domain (`selim@zakkig.com`) auf Google Workspace.
-  - **SMTP & Transactional Messaging:** Autoritativer E-Mail-Dienst für Auth-Einmalcodes (OTP), Token-Bestätigungen und Kundenbenachrichtigungen.
+- **Microsoft 365:**
+  - **Enterprise Email & Identity:** Offizielle Unternehmens-E-Mail-Domain (`selim@zakkig.com`) mit Microsoft 365 Business Basic.
+  - **SMTP & Transactional Messaging:** Autoritativer E-Mail-Dienst für Auth-Einmalcodes (OTP), Token-Bestätigungen und Kundenbenachrichtigungen (`smtp.office365.com` über Port 587 STARTTLS).
+  - **Absender-Identität:** `Selim von zakkig` (Deutsch) bzw. `Selim at zakkig` (Englisch) mit `selim@zakkig.com`.
+  - **Standardisierte Betreffzeilen:** `Anmeldecode für zakkig`, `Passwort zurücksetzen für zakkig`, `Email-Adresse ändern für zakkig`.
+  - **Responsives E-Mail-Design:** Der dunkle Code-Container passt sich responsiv an kleinere Bildschirmbreiten mobiler E-Mail-Clients an, sodass der Einmalcode auch auf Smartphones stets einzeilig bleibt.
 - **Convex:**
   - **Reaktives All-in-One Backend:** Transaktionale Echtzeit-Datenbank, serverseitige Mutationen, Queries, Crons und Scheduler.
   - **Media & File Storage:** Nativer Dateispeicher für Restaurant-Logos, Hero-Banner und Speisekarten-Fotos.
-  - **Backend Authority:** Alle externen Netzwerkaufrufe (Google Workspace SMTP, Stripe Connect API) sind in Convex Node Actions gekapselt.
+  - **Backend Authority:** Alle externen Netzwerkaufrufe (Microsoft 365 SMTP, Stripe Connect API) sind in Convex Node Actions gekapselt.
 - **GitHub:**
   - **Version Control & Repository:** Monorepo-Hosting, Versionskontrolle und CI/CD-Deployment-Trigger.
 - **AI Development Architecture:**
@@ -349,5 +369,5 @@ Für Next.js Server Components und Server Actions wird der serverseitige Convex-
 - `requireKitchenOrOwner(organizationId)` & `requireStaffOrOwner(organizationId)`: Autorisierung von Tablet-Terminals und Service-Endpoints.
 
 ### 7.4 E-Mail & SMTP
-
-Der native SMTP-Service über Google Workspace (`selim@zakkig.com`) versendet alle ausgehenden transaktionalen Mails (Zwei-Faktor Einmalcodes für Registrierung und Login, Kontolöschungs-Tokens und digitale Quittungen) abgesichert über Convex Node Actions.
+ 
+Der native SMTP-Service über Microsoft 365 (`smtp.office365.com`, Port 587 STARTTLS, `selim@zakkig.com`) versendet alle ausgehenden transaktionalen Mails (Zwei-Faktor Einmalcodes für Registrierung und Login, Kontolöschungs-Tokens und digitale Quittungen) abgesichert über Convex Node Actions.

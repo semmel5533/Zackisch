@@ -246,19 +246,30 @@ The system uses a flat, border-defined architectural spatial model. Surfaces dif
 
 ## 7. Component Catalog & Implementation Standards
 
-### Buttons
+### Buttons & Controls
+- **Apple Pill Geometry Standard:**
+  All action buttons, select triggers (`SelectTrigger`), dropdown triggers, sidebar navigation links, and order tickets across dashboard and staff views strictly use unified Apple pill geometry (`h-11 rounded-full font-semibold px-4` or `px-5`, compact `h-9 rounded-full font-semibold px-3.5`).
+- **Concentric Corner Radius & Nested Geometry Standard:**
+  Whenever an inner element sits inside an outer container with uniform padding $P$, the outer radius $R_{\text{outer}}$ and inner radius $R_{\text{inner}}$ MUST strictly follow the concentric border radius formula:
+  $$R_{\text{outer}} = R_{\text{inner}} + P \quad \Longleftrightarrow \quad R_{\text{inner}} = \max(0, R_{\text{outer}} - P)$$
+  Standard Tailwind tokens like `rounded-2xl` evaluate to `43.2px` in this project due to `--radius: 1.5rem`. NEVER use `rounded-2xl` for dropdown or select popups, as it produces distorted spherical corners.
+  - Outer container card: strictly `rounded-[20px]` with `p-2` (8px padding)
+  - Inner selectable items: strictly `rounded-[12px]` ($20\text{px} - 8\text{px} = 12\text{px}$) with `px-3.5 py-2.5 font-semibold`
 - **Primary Action Button:**
   ```tsx
-  className="bg-primary hover:bg-neutral-800 text-primary-foreground rounded-full font-bold h-12 px-5 flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer select-none"
+  className="bg-primary hover:bg-neutral-800 text-primary-foreground rounded-full font-bold h-11 sm:h-12 px-5 flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer select-none"
   ```
 - **Secondary Button:**
   ```tsx
-  className="bg-secondary text-secondary-foreground hover:bg-muted active:scale-[0.98] rounded-lg px-4 py-2 transition-colors cursor-pointer"
+  className="bg-secondary text-secondary-foreground hover:bg-muted active:scale-[0.98] rounded-full h-11 px-4 font-semibold transition-colors cursor-pointer"
   ```
 - **Destructive Button:**
   ```tsx
-  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-4 py-2 font-medium active:scale-[0.98] transition-colors cursor-pointer"
+  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full h-11 px-4 font-semibold active:scale-[0.98] transition-colors cursor-pointer"
   ```
+
+### Uppercase Tracked Typography Standard
+Section block titles, card categorization headers, queue column headers, and metadata headers across the webapp and modals (e.g. `BETRIEBSDATEN`, `LOGO & BANNER`, `ZAHLUNGSANBIETER`, `GEFAHRENZONE`, `IN BEARBEITUNG`, `ABHOLBEREIT`, `STATISTIK`, `QR-CODE VERWALTUNG`, `SITZUNGEN`, `ARTIKELDETAILS`, `BILD & VORSCHAU`, `PRESETS & ANPASSUNGEN`, `REGION`, `SPRACHE`, `SUMME`) strictly render with `text-xs font-bold uppercase tracking-wider text-muted-foreground` (or `text-zinc-900` / `text-foreground` on Apple light modal dialogs, and `text-destructive` for danger zones).
 
 ### Light Dialogs & Sheets
 - **Backdrop Overlay:** `fixed inset-0 bg-black/50 backdrop-blur-xs`
@@ -334,11 +345,26 @@ The system uses a flat, border-defined architectural spatial model. Surfaces dif
 - **Sold-out State:** Deactivated or unavailable items automatically transition to `grayscale opacity-75` with line-through text.
 - **Guest Ordering Action Button:** Large full-width pill button (`rounded-full h-11 sm:h-12 w-full px-4 sm:px-5 flex items-center justify-between`) uniting the add action with the price. The left side holds the `<Plus>` icon, *"Hinzufügen"* label, and quantity badge; the right side displays the formatted price via `<Price />` (including dynamic *"ab"* prefix for customizable items).
 
+### OTP Validity Live Countdown Timer (`<OtpValidityTimer />`)
+- **Initial Presentation:** `<Clock className="w-3.5 h-3.5 shrink-0" />` with `text-xs text-muted-foreground font-medium` ("Der Code ist noch 30 Minuten gültig" / "The code is valid for another 30 minutes").
+- **Numerical Precision:** Strictly digits in Inter (`font-inter tabular-nums`), surrounding words in Poppins.
+- **Dynamic Live Decrement:** Updates every second; decrements cleanly minute by minute (e.g. 29 Minuten, down to "Der Code ist noch 1 Minute gültig").
+- **Expired State Handling:**
+  - Inline destructive notice: `text-xs text-destructive font-medium` ("Der Code ist abgelaufen. Bitte fordere einen neuen Code an.") strictly without warning/error icons.
+  - Form disabling: locks OTP inputs and submit actions.
+  - Action transformation: switches secondary resend action to a full-width, high-contrast primary pill button "Neuen Code anfordern".
+
+### Focused Cart & Checkout View Typography
+- **Upper Tracked Summary:** Subtotal and total summary labels in the guest cart sheet and checkout payment modal strictly render in tracked uppercase `SUMME` (`t("sumTotal")`) alongside the tax disclaimer ("inkl. MwSt.").
+- **Header Cleanliness:** Redundant "KATEGORIEN" headers on the menu page and "Alle Bestellungen" table titles on dashboard archive views are suppressed.
+
 ### Email Templates
 - **Canvas:** `#f4f4f5` outer background, `#ffffff` card container (`border-radius: 24px`).
+- **Sender Identity:** `Selim von zakkig` (DE) / `Selim at zakkig` (EN) via Microsoft 365 (`selim@zakkig.com`).
+- **Standardized Subjects:** `Anmeldecode für zakkig`, `Passwort zurücksetzen für zakkig`, `Email-Adresse ändern für zakkig`.
 - **Brand Header:** Center-aligned or left-aligned `https://www.zakkig.com/full.svg` brand logo (`height: 56px`).
 - **Headline & Links:** `#000000` bold typography, underlined links.
-- **Code Box:** `#000000` rounded container (`border-radius: 16px`) with crisp `#ffffff` 48px tracked digits in Inter.
+- **Responsive Code Box:** `#000000` rounded container (`border-radius: 16px`) with crisp `#ffffff` 48px tracked digits in Inter; container padding and letter-spacing scale fluidly on narrow mobile viewports to prevent wrapping across multiple lines.
 - **Action Button:** `#000000` rounded button with white text.
 
 ---

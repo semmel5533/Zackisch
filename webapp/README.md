@@ -11,7 +11,7 @@ Dieses Verzeichnis enthält die Haupt-Applikation von Zakkig (das Gastronomen-Da
 - **Corporate Infrastructure:** Cloudflare (Domain Registrar, DNS, Pages & Workers)
 - **Edge-Architektur:** Strikte Zero-Node-Edge-Architektur. Das Next.js-Frontend läuft auf V8 Edge Runtimes (Cloudflare Workers) ohne Node-Sockets; alle E-Mail- (SMTP) und Zahlungs-Abwicklungen (Stripe) laufen exklusiv auf Convex
 - **Authentifizierung:** Convex Auth & SSR Session Management mit HttpOnly-Cookies und E-Mail-OTP
-- **E-Mail-Versand:** Google Workspace (SMTP via `smtp.gmail.com`, `selim@zakkig.com`, abgewickelt als Convex Node Action)
+- **E-Mail-Versand:** Microsoft 365 (SMTP via `smtp.office365.com`, Port 587 STARTTLS, `selim@zakkig.com`, abgewickelt als Convex Node Action)
 - **Zahlungsabwicklung:** Stripe Connect (Destination Charges mit 1% Plattform-Gebühr, Checkout Sessions API & Payment Element)
 - **UI & Styling:** Tailwind CSS, Shadcn UI, Phosphor Icons, Apple-inspirierte Edge-to-Edge Dividers
 - **State Management:** Zustand & reaktive Convex Hooks (`useQuery`, `useMutation`)
@@ -34,12 +34,16 @@ Die Applikation nutzt ein striktes **Server-Side Rendering (SSR) Authentifizieru
 Der Versand von Transaktions-E-Mails (Anmeldecodes, Passwort-Resets, Bestätigungen für E-Mail-Änderungen und Account-Löschungen) ist zu 100 % in `convex/emails.ts` implementiert und läuft über den Convex-Scheduler (`ctx.scheduler.runAfter(0, internal.emails....)`).
 
 - **Keine Node-Abhängigkeiten in Next.js:** Das Frontend ruft ausschließlich Convex-Mutationen auf (`requestAccountDeletionEmail`, `requestEmailChangeEmail`, `sendEmailChangeOtpWithEmail`), wodurch die Webapp frei von `nodemailer` oder TCP-Sockets bleibt.
-- **Primärer Versandweg:** Google Workspace SMTP (`smtp.gmail.com`, Port 587) mit TLS-Verschlüsselung.
+- **Primärer Versandweg:** Microsoft 365 SMTP (`smtp.office365.com`, Port 587 STARTTLS) mit TLS-Verschlüsselung.
 - **Absender-Konfiguration:**
   - **Absender-E-Mail:** `selim@zakkig.com`
   - **Absender-Name (Deutsch):** `Selim von zakkig`
   - **Absender-Name (Englisch):** `Selim at zakkig`
-- **Verschlüsselung:** TLS/STARTTLS über Port 587.
+- **Standardisierte Betreffzeilen:**
+  - `Anmeldecode für zakkig` (EN: `Sign-in code for zakkig`)
+  - `Passwort zurücksetzen für zakkig` (EN: `Reset password for zakkig`)
+  - `Email-Adresse ändern für zakkig` (EN: `Change email address for zakkig`)
+- **Responsiver E-Mail-Container:** Skaliert auf kleinen Bildschirmbreiten innerhalb mobiler E-Mail-Clients mit reduzierter Polsterung und Schriftgröße, sodass der Code stets sauber einzeilig bleibt.
 
 ---
 
@@ -62,8 +66,8 @@ Alle Tabellen sind typsicher über Convex definiert:
 Convex synchronisiert Änderungen automatisch und ohne manuelle WebSocket-Verwaltung an alle aktiven Clients:
 
 - **Personal-Terminal (`/staff/[orgId]`):** Vereinte Terminal-Oberfläche (`StaffTerminalShell`) für Service- und Küchenpersonal mit 3 Tabs:
-  - **Aktuelle Bestellungen:** Reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions mit "In Bearbeitung" und "Abholbereit", Audio-Glockenton bei Bestelleingang, "Bereitstellen", Reversions-Möglichkeit ("Zurück in Bearbeitung") und Sicherheits-Bestätigungsdialog für "Abschließen".
-  - **Alle Bestellungen:** Vollständige Bestellhistorie mit Status- und Typfiltern, Stornierung aktiver Bestellungen, bewusst ohne DATEV-Export.
+  - **Aktuelle Bestellungen:** Reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions mit "In Bearbeitung" und "Abholbereit", Audio-Glockenton bei Bestelleingang, "Bereitstellen", Reversions-Möglichkeit ("Zurück in Bearbeitung" ohne redundante Toast-Benachrichtigung) und Apple-Sicherheits-Bestätigungsdialog für "Abschließen" ("Bestellung \"[Nummer]\" abschließen?").
+  - **Alle Bestellungen:** Vollständige Bestellhistorie mit Status- und Typfiltern, Stornierung aktiver Bestellungen, bewusst ohne DATEV-Export und ohne redundanten Tabellentitel.
   - **Verfügbarkeit:** Sekundenschnelles Ein- und Ausschalten von Speisen, Optionen und Kategorien (`toggleMenuItemAvailability`).
   - **Responsive Layouts:** Desktop und Tablets nutzen eine einklappbare Seitenleiste; mobile Geräte (<1024px) wechseln auf eine native Touch-Tab-Leiste am unteren Bildschirmrand.
 - **Gast-Bestellverfolgung (`/pickup` & `/table` Tracker):** Der Gast sieht den aktuellen Zubereitungs-Status seiner Bestellung in Echtzeit über `useQuery(api.orders.getOrder)`.
@@ -76,7 +80,7 @@ Um höchste Sicherheit, Speicher-Hygiene und eine transparente Nutzererfahrung z
 
 | Komponente / Vorgang | Gültigkeit / Timeout | Verhalten nach Ablauf | Sicherheitsfunktion |
 | :--- | :--- | :--- | :--- |
-| **Auth OTP (Login & Registrierung)** | 30 Minuten | Code verfällt und wird serverseitig abgelehnt | Schutz vor Replay- und Brute-Force-Angriffen |
+| **Auth OTP (Login, Registrierung & E-Mail-Änderung)** | 30 Minuten | Dynamischer Live-Countdown (`<OtpValidityTimer />`: "Der Code ist noch 30 Minuten gültig" bis "1 Minute gültig", Ziffern in Inter `tabular-nums`). Nach Ablauf erscheint ein destruktiver Inline-Hinweis ("Der Code ist abgelaufen. Bitte fordere einen neuen Code an.") und der Primärbutton wechselt vollflächig auf "Neuen Code anfordern". Serverseitig wird der Code nach 30 Minuten endgültig abgelehnt. | Schutz vor Replay- und Brute-Force-Angriffen |
 | **Brute-Force Lockout (OTP)** | 5 Fehlversuche | Sofortige Löschung des Codes | Verhindert systematisches Durchprobieren von Einmalcodes |
 | **Unverifizierte Accounts** | 30 Minuten | Vollständige Bereinigung via Convex Scheduler (`cleanupUnverifiedUser`) | Gibt die E-Mail-Adresse wieder frei, verhindert Ghost-Accounts |
 | **Passwort-Reset Link** | 30 Minuten | Token wird ungültig, Neuanforderung erforderlich | Schutz vor missbräuchlicher Passwortänderung über alte Links |
@@ -135,7 +139,7 @@ webapp/
 │   ├── auth.ts          # Convex Auth Konfiguration
 │   ├── authQueries.ts   # Interne Queries & Mutationen für Authentifizierung
 │   ├── customAuth.ts    # Node Actions für Registrierung, Login & OTP
-│   ├── emails.ts        # E-Mail-Versand (Google Workspace SMTP via Nodemailer)
+│   ├── emails.ts        # E-Mail-Versand (Microsoft 365 SMTP via Nodemailer)
 │   ├── http.ts          # HTTP-Router (Stripe Webhook)
 │   ├── menu.ts          # Speisekarten-Logik
 │   ├── orders.ts        # Bestellungen & rollierende Nummern (001-999)
