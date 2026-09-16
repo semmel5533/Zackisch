@@ -80,7 +80,7 @@ Um höchste Sicherheit, Speicher-Hygiene und eine transparente Nutzererfahrung z
 
 | Komponente / Vorgang | Gültigkeit / Timeout | Verhalten nach Ablauf | Sicherheitsfunktion |
 | :--- | :--- | :--- | :--- |
-| **Auth OTP (Login, Registrierung & E-Mail-Änderung)** | 30 Minuten | Dynamischer Live-Countdown (`<OtpValidityTimer />`: "Der Code ist noch 30 Minuten gültig" bis "1 Minute gültig", Ziffern in Inter `tabular-nums`). Nach Ablauf erscheint ein destruktiver Inline-Hinweis ("Der Code ist abgelaufen. Bitte fordere einen neuen Code an.") und der Primärbutton wechselt vollflächig auf "Neuen Code anfordern". Serverseitig wird der Code nach 30 Minuten endgültig abgelehnt. | Schutz vor Replay- und Brute-Force-Angriffen |
+| **Auth OTP (Login, Registrierung & E-Mail-Änderung)** | 30 Minuten | Dynamischer Live-Countdown (`<OtpValidityTimer />`: "Code noch für 30 Minuten gültig" bis "1 Minute gültig", Ziffern in Inter `tabular-nums`). Nach Ablauf erscheint ein destruktiver Inline-Hinweis ("Code abgelaufen. Bitte neuen Code anfordern.") und der Primärbutton wechselt vollflächig auf "Neuen Code anfordern". Serverseitig wird der Code nach 30 Minuten endgültig abgelehnt. | Schutz vor Replay- und Brute-Force-Angriffen |
 | **Brute-Force Lockout (OTP)** | 5 Fehlversuche | Sofortige Löschung des Codes | Verhindert systematisches Durchprobieren von Einmalcodes |
 | **Unverifizierte Accounts** | 30 Minuten | Vollständige Bereinigung via Convex Scheduler (`cleanupUnverifiedUser`) | Gibt die E-Mail-Adresse wieder frei, verhindert Ghost-Accounts |
 | **Passwort-Reset Link** | 30 Minuten | Token wird ungültig, Neuanforderung erforderlich | Schutz vor missbräuchlicher Passwortänderung über alte Links |

@@ -346,11 +346,11 @@ Section block titles, card categorization headers, queue column headers, and met
 - **Guest Ordering Action Button:** Large full-width pill button (`rounded-full h-11 sm:h-12 w-full px-4 sm:px-5 flex items-center justify-between`) uniting the add action with the price. The left side holds the `<Plus>` icon, *"Hinzufügen"* label, and quantity badge; the right side displays the formatted price via `<Price />` (including dynamic *"ab"* prefix for customizable items).
 
 ### OTP Validity Live Countdown Timer (`<OtpValidityTimer />`)
-- **Initial Presentation:** `<Clock className="w-3.5 h-3.5 shrink-0" />` with `text-xs text-muted-foreground font-medium` ("Der Code ist noch 30 Minuten gültig" / "The code is valid for another 30 minutes").
+- **Initial Presentation:** `<Clock className="w-3.5 h-3.5 shrink-0" />` with `text-xs text-muted-foreground font-medium` ("Code noch für 30 Minuten gültig" / "Code valid for another 30 minutes").
 - **Numerical Precision:** Strictly digits in Inter (`font-inter tabular-nums`), surrounding words in Poppins.
-- **Dynamic Live Decrement:** Updates every second; decrements cleanly minute by minute (e.g. 29 Minuten, down to "Der Code ist noch 1 Minute gültig").
+- **Dynamic Live Decrement:** Updates every second; decrements cleanly minute by minute (e.g. 29 Minuten, down to "Code noch für 1 Minute gültig").
 - **Expired State Handling:**
-  - Inline destructive notice: `text-xs text-destructive font-medium` ("Der Code ist abgelaufen. Bitte fordere einen neuen Code an.") strictly without warning/error icons.
+  - Inline destructive notice: `text-xs text-destructive font-medium` ("Code abgelaufen. Bitte neuen Code anfordern.") strictly without warning/error icons.
   - Form disabling: locks OTP inputs and submit actions.
   - Action transformation: switches secondary resend action to a full-width, high-contrast primary pill button "Neuen Code anfordern".
 
