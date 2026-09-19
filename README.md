@@ -280,7 +280,7 @@ Das System setzt auf eine moderne, reaktive Architektur mit **Convex** als All-i
 Das Projekt besteht aus zwei komplett unabhängigen Next.js-Applikationen in einem gemeinsamen GitHub-Repository (Monorepo-Ansatz):
 
 - **Frontend Marketing (`website/`):** B2B Landingpage für den Vertrieb (`zakkig.com`), statisch exportiert (`output: "export"`) für Cloudflare Pages (0ms Cold Start, globale Edge CDN).
-- **Frontend SaaS App (`webapp/`):** Admin Dashboard der Wirte, Bestell-UI der Gäste und das Echtzeit Kitchen Board (`app.zakkig.com`), optimiert für Cloudflare Workers via `vinext` (Next.js auf Vite/Workerd-Basis mit 95%+ nativer Kompatibilität).
+- **Frontend SaaS App (`webapp/`):** Admin Dashboard der Wirte, Bestell-UI der Gäste und das Echtzeit Kitchen Board (`app.zakkig.com`), mit einem versionierten Build für Cloudflare Workers via `vinext`.
 
 ### 5.2 Der Corporate Tech Stack & Systemarchitektur
 

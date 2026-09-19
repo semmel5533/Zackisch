@@ -7,8 +7,6 @@ import {
   getOrganizationByOwner,
   createAvailabilitySession,
   createOrderSession,
-  getOrderSessions,
-  getAvailabilitySessions,
 } from "@/lib/convex/database";
 import { getUser } from "@/lib/convex/auth";
 import { convexServer } from "@/lib/convex/server";
@@ -243,7 +241,9 @@ export async function resetPasswordAction(
   try {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
     if (!appUrl) {
-      throw new Error("Missing required environment variable: NEXT_PUBLIC_APP_URL is not set");
+      throw new Error(
+        "Missing required environment variable: NEXT_PUBLIC_APP_URL is not set",
+      );
     }
     const cookieStore = await cookies();
     const locale = cookieStore.get("NEXT_LOCALE")?.value || "de";
@@ -321,13 +321,13 @@ export async function verifyTerminalSessionAction(
   if (!token) return { isValid: false };
 
   try {
-    if (type === "orders") {
-      const sessions = await getOrderSessions(organizationId);
-      return { isValid: sessions.some((s) => s.token === token) };
-    } else {
-      const sessions = await getAvailabilitySessions(organizationId);
-      return { isValid: sessions.some((s) => s.token === token) };
-    }
+    return {
+      isValid: await convexServer.query(api.sessions.verifyTerminalSession, {
+        organizationId: organizationId as any,
+        token,
+        type,
+      }),
+    };
   } catch (e) {
     return { isValid: false };
   }

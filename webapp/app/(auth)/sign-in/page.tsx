@@ -61,8 +61,12 @@ function OtpForm({ state }: { state: any }) {
   const [isVerifying, setIsVerifying] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const [isLockedOut, setIsLockedOut] = useState(false);
-  const [attemptsRemaining, setAttemptsRemaining] = useState<number | null>(null);
-  const [otpExpiresAt, setOtpExpiresAt] = useState(() => Date.now() + 30 * 60 * 1000);
+  const [attemptsRemaining, setAttemptsRemaining] = useState<number | null>(
+    null,
+  );
+  const [otpExpiresAt, setOtpExpiresAt] = useState(
+    () => Date.now() + 30 * 60 * 1000,
+  );
   const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
@@ -101,7 +105,12 @@ function OtpForm({ state }: { state: any }) {
   };
 
   const handleResendOtp = async () => {
-    if ((countdown > 0 && !isLockedOut && !isExpired) || !state.userId || !state.email) return;
+    if (
+      (countdown > 0 && !isLockedOut && !isExpired) ||
+      !state.userId ||
+      !state.email
+    )
+      return;
     setIsLockedOut(false);
     setAttemptsRemaining(null);
     setCountdown(60);
@@ -130,7 +139,9 @@ function OtpForm({ state }: { state: any }) {
         <RegionLanguageSwitcher variant="outline" />
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold text-foreground">{t("verifyLogin")}</CardTitle>
+        <CardTitle className="text-2xl font-bold text-foreground">
+          {t("verifyLogin")}
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           {t("verifyLoginDesc", { email: state.email || "" })}
         </CardDescription>
@@ -147,13 +158,15 @@ function OtpForm({ state }: { state: any }) {
             </p>
           )}
 
-          {!isLockedOut && attemptsRemaining !== null && attemptsRemaining < 5 && (
-            <p className="w-full text-left text-sm font-medium text-destructive">
-              {attemptsRemaining === 1
-                ? t("otpRemainingAttemptsOne")
-                : t("otpRemainingAttempts").replace("{count}", String(attemptsRemaining))}
-            </p>
-          )}
+          {!isLockedOut &&
+            attemptsRemaining !== null &&
+            attemptsRemaining < 5 && (
+              <p className="w-full text-left text-sm font-medium text-destructive">
+                {attemptsRemaining === 1
+                  ? t("otpRemainingAttemptsOne")
+                  : t("otpRemainingAttempts", { count: attemptsRemaining })}
+              </p>
+            )}
 
           <div className="flex flex-col items-center justify-center py-2 w-full">
             <div className="w-full">
@@ -211,7 +224,7 @@ function OtpForm({ state }: { state: any }) {
               {isLockedOut || isExpired
                 ? t("requestNewCodeNow")
                 : countdown > 0
-                  ? t("resendIn").replace("{time}", countdown.toString())
+                  ? t("resendIn", { time: countdown })
                   : t("resendCode")}
             </Button>
             {!isLockedOut && !isExpired && (
@@ -222,7 +235,10 @@ function OtpForm({ state }: { state: any }) {
               >
                 {isVerifying ? (
                   <>
-                    <CircleNotch className="w-5 h-5 animate-spin" weight="bold" />
+                    <CircleNotch
+                      className="w-5 h-5 animate-spin"
+                      weight="bold"
+                    />
                     {t("verifying")}
                   </>
                 ) : (
@@ -299,7 +315,9 @@ function SignInForm({
         </div>
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold text-foreground">{t("signIn")}</CardTitle>
+        <CardTitle className="text-2xl font-bold text-foreground">
+          {t("signIn")}
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           {t("signInDescription")}
         </CardDescription>

@@ -113,7 +113,10 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
   );
 }
 
-function getInkMetrics(text: string, font: string = "700 100px Inter, sans-serif") {
+function getInkMetrics(
+  text: string,
+  font: string = "700 100px Inter, sans-serif",
+) {
   if (typeof document === "undefined") {
     const estWidth = Math.max(text.length * 50, 200);
     return {
@@ -249,7 +252,9 @@ function InkConnectorText({
   const patternId = `wave-${rawId.replace(/:/g, "")}`;
 
   return (
-    <div className={cn("flex items-center w-full gap-2 leading-none", className)}>
+    <div
+      className={cn("flex items-center w-full gap-2 leading-none", className)}
+    >
       <svg
         className="flex-1 h-[8px] overflow-hidden text-current scale-x-[-1]"
         style={{ minWidth: 16 }}
@@ -310,8 +315,7 @@ function filterOrdersByPeriod(orders: Order[], period: TimePeriod): Order[] {
   };
   return orders.filter(
     (o) =>
-      now -
-        new Date(o.$createdAt || o._creationTime || Date.now()).getTime() <
+      now - new Date(o.$createdAt || o._creationTime || Date.now()).getTime() <
       ms[period],
   );
 }
@@ -466,11 +470,16 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   return (
     <Card className="h-full flex flex-col print:hidden">
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">{t("statistics")}</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
+          {t("statistics")}
+        </h3>
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <Button variant="default" className="h-11 rounded-full font-semibold px-4 cursor-pointer active:scale-[0.98]">
+              <Button
+                variant="default"
+                className="h-11 rounded-full font-semibold px-4 cursor-pointer active:scale-[0.98]"
+              >
                 {period === "24h"
                   ? t("last24h")
                   : period === "30d"
@@ -497,7 +506,9 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
         <div className="flex flex-col flex-1 min-h-0">
           <div className="flex flex-wrap gap-12 shrink-0">
             <div className="flex flex-col">
-              <div className="text-3xl font-bold font-inter tabular-nums">{totalOrders}</div>
+              <div className="text-3xl font-bold font-inter tabular-nums">
+                {totalOrders}
+              </div>
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 {t("sales")}
               </div>
@@ -709,7 +720,10 @@ function QrCodeGeneratorCard({
                     className="w-auto h-11 rounded-full font-semibold px-4 bg-primary text-secondary shrink-0 cursor-pointer active:scale-[0.98]"
                   >
                     {qrType === "pickup" ? t("toGo") : t("toStay")}
-                    <CaretDown className="ml-2 h-4 w-4 shrink-0" weight="bold" />
+                    <CaretDown
+                      className="ml-2 h-4 w-4 shrink-0"
+                      weight="bold"
+                    />
                   </Button>
                 }
               />
@@ -833,8 +847,13 @@ function QrCodeGeneratorCard({
                               onClick={() => setIsAddingTable(true)}
                               className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-full cursor-pointer active:scale-[0.98]"
                             >
-                              <Plus className="h-4 w-4 shrink-0" weight="bold" />
-                              <span className="truncate">{t("addTableFull")}</span>
+                              <Plus
+                                className="h-4 w-4 shrink-0"
+                                weight="bold"
+                              />
+                              <span className="truncate">
+                                {t("addTableFull")}
+                              </span>
                             </Button>
                           )}
                         </div>
@@ -855,10 +874,9 @@ function QrCodeGeneratorCard({
                   >
                     <Printer className="mr-2 h-4 w-4" />
                     {selectedTables.length > 1
-                      ? t("printMultipleCodes").replace(
-                          "{{count}}",
-                          selectedTables.length.toString(),
-                        )
+                      ? t("printMultipleCodes", {
+                          count: selectedTables.length,
+                        })
                       : t("printQrCode")}
                   </Button>
                 </div>
@@ -1012,7 +1030,10 @@ function QrCodeGeneratorCard({
                     fontSize={21}
                     className="text-foreground"
                   />
-                  <InkScaledText text={t("pickup")} className="text-foreground" />
+                  <InkScaledText
+                    text={t("pickup")}
+                    className="text-foreground"
+                  />
 
                   <div className="w-full mt-[2px] relative bg-white flex items-center justify-center">
                     <StyledQRCode value={qrUrl} size={193} />

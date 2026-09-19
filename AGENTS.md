@@ -57,8 +57,8 @@ Follow this unified, multi-layered architecture for all features and changes:
 
 1. **Strict Layering & Entry Points:**
    - **Client Components** must NEVER call mutating Convex functions directly. All mutations MUST run through Next.js Server Actions (`webapp/actions/`).
-   - **Server Actions** are the authoritative boundary: validate input types, verify authorization, sanitize errors, and call Convex via `convexServer`.
-   - **Convex Functions** enforce defense-in-depth: validate string lengths, bounds, and business invariants directly in mutation handlers.
+   - **Server Actions** validate the request boundary: validate input types, verify authorization, sanitize errors, and call Convex via `convexServer`.
+   - **Convex Functions** enforce authorization and defense-in-depth: validate the caller session, tenant ownership, string lengths, bounds, and business invariants directly in mutation handlers. Menu and session management use `convex/permissions.ts`; never treat a caller-supplied organization ID as authorization.
 
 2. **Tenant Isolation & Authorization (Anti-IDOR):**
    - Every Server Action that modifies or accesses organization data MUST call `await requireOwner(organizationId)`. Never trust client-supplied `organizationId` without checking `org.ownerId === user._id`.
@@ -70,7 +70,7 @@ Follow this unified, multi-layered architecture for all features and changes:
 
 4. **Server-Side Price & Integrity Enforcement:**
    - NEVER trust client-supplied prices, item names, or order totals.
-   - `createPaymentIntent` must query the database, check that each item exists, is available (`available !== false`), satisfies minimum price, and recalculates `calculatedTotal === args.total` to the exact cent.
+   - `createCheckoutSession` and `createPaymentIntent` must use `priceCheckout` to validate every item and selected option, recalculate stored base prices and option surcharges including free selections, and match the total to the exact cent. Payment metadata must contain canonical names and prices.
 
 5. **Convex Public API Surface Minimization:**
    - Functions not called directly by the browser MUST be declared as `internalMutation`, `internalQuery`, or `internalAction` (e.g. file deletion, database seeds, webhook order processing).

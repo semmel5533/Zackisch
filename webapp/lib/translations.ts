@@ -88,9 +88,11 @@ export const translations = {
     german: "Deutsch",
     english: "Englisch",
     regionSelectorTitle: "Region & Sprache",
-    regionSelectorDescription: "Wähle dein Land und deine bevorzugte Sprache aus.",
+    regionSelectorDescription:
+      "Wähle dein Land und deine bevorzugte Sprache aus.",
     languageSelectorTitle: "Sprache auswählen",
-    languageSelectorDescription: "Wähle deine bevorzugte Sprache für die Benutzeroberfläche aus.",
+    languageSelectorDescription:
+      "Wähle deine bevorzugte Sprache für die Benutzeroberfläche aus.",
     regionLabel: "Region",
     languageLabel: "Sprache",
     saveAndContinue: "Übernehmen",
@@ -224,8 +226,7 @@ export const translations = {
       "Alle aktiven Bestellungen, die zurzeit zubereitet werden.",
     readySubline:
       "Fertig zubereitete Bestellungen, die zur Abholung bereitstehen.",
-    completedSubline:
-      "Fertige Bestellungen zum Abholen oder Tischservice.",
+    completedSubline: "Fertige Bestellungen zum Abholen oder Tischservice.",
     completeAction: "Abschließen",
     cancelOrder: "Stornieren",
     cancelOrderTitle: 'Bestellung "{orderNumber}" wirklich stornieren?',
@@ -241,7 +242,8 @@ export const translations = {
     orderCancelledDesc:
       "Diese Bestellung wurde storniert. Falls du bereits online oder vor Ort bezahlt hast, wende dich bitte für eine Rückerstattung direkt an das Personal.",
     orderPickedUp: "Bestellung abgeholt",
-    orderPickedUpDesc: "Guten Appetit! Deine Bestellung wurde erfolgreich abgeholt.",
+    orderPickedUpDesc:
+      "Guten Appetit! Deine Bestellung wurde erfolgreich abgeholt.",
     toPickUp: "zum Abholen",
     toTable: "an Tisch",
     moreItemsBelow: "Weitere Artikel unten",
@@ -255,7 +257,8 @@ export const translations = {
     table: "Tisch",
     tableNr: "Tisch Nr.",
     reopenOrder: "Wieder öffnen",
-    reopenOrderDesc: "Möchtest du diese Bestellung wirklich wieder in Bearbeitung setzen?",
+    reopenOrderDesc:
+      "Möchtest du diese Bestellung wirklich wieder in Bearbeitung setzen?",
     selectOrderPrompt: "Wähle eine Bestellung aus, um Details anzuzeigen.",
     noActiveOrders: "Keine aktiven Bestellungen vorhanden.",
     orderDetail: "Bestelldetails",
@@ -290,7 +293,7 @@ export const translations = {
       "Bist du sicher, dass du den ausgewählten Tisch unwiderruflich aus deiner QR-Code-Verwaltung entfernen möchtest?",
     activate: "Aktivieren",
     deactivate: "Deaktivieren",
-    printMultipleCodes: "{{count}} drucken",
+    printMultipleCodes: "{count} drucken",
     qrCodeWith: "mit",
     openQrLink: "Link in neuem Tab öffnen",
 
@@ -333,7 +336,7 @@ export const translations = {
     confirmDeleteDescription:
       "Diese Aktion kann nicht rückgängig gemacht werden.",
 
-    itemCount: "{{count}} Artikel",
+    itemCount: "{count} Artikel",
     basicInfo: "Grundinfos",
     imageSection: "Produktbild",
     itemImageRecommended: "800 × 600 px empfohlen",
@@ -372,7 +375,7 @@ export const translations = {
     extraPrice: "Aufpreis",
     noExtraCharge: "Kein Aufpreis",
     included: "Inklusive",
-    stepNumber: "Schritt {{number}}",
+    stepNumber: "Schritt {number}",
     deleteStep: "Schritt löschen",
     deleteOption: "Option löschen",
     option: "Option",
@@ -408,7 +411,8 @@ export const translations = {
     bannerRecommended: "1200 × 500 px empfohlen",
     logoRecommended: "Quadratisch empfohlen",
     brandMedia: "Logo & Banner",
-    brandMediaDesc: "Gestalte deinen Auftritt auf den Bestellseiten. Klicke auf das Banner oder Logo, um Bilder im Format JPG oder PNG hochzuladen (max. 10 MB).",
+    brandMediaDesc:
+      "Gestalte deinen Auftritt auf den Bestellseiten. Klicke auf das Banner oder Logo, um Bilder im Format JPG oder PNG hochzuladen (max. 10 MB).",
     stripeConnected: "Stripe verbunden",
     stripeNotConnected: "Stripe nicht verbunden",
     stripeOnboardingIncomplete: "Onboarding unvollständig",
@@ -436,15 +440,20 @@ export const translations = {
       "Eine E-Mail zur Bestätigung wurde versandt. Der Link ist 30 Minuten gültig. Bitte überprüfe dein Postfach.",
     emailChangedSuccess: "E-Mail-Adresse erfolgreich geändert.",
     newEmailAddress: "Neue E-Mail-Adresse",
-    newEmailAddressDesc: "Bitte gib deine neue E-Mail-Adresse ein. Wir senden dir einen Bestätigungscode, um diese zu bestätigen.",
-    invalidLinkEmailChangeDesc: "Dieser Link zur Änderung der E-Mail-Adresse ist ungültig oder abgelaufen.",
-    invalidLinkDeleteAccountDesc: "Dieser Link zum Löschen des Kontos ist ungültig oder abgelaufen.",
+    newEmailAddressDesc:
+      "Bitte gib deine neue E-Mail-Adresse ein. Wir senden dir einen Bestätigungscode, um diese zu bestätigen.",
+    invalidLinkEmailChangeDesc:
+      "Dieser Link zur Änderung der E-Mail-Adresse ist ungültig oder abgelaufen.",
+    invalidLinkDeleteAccountDesc:
+      "Dieser Link zum Löschen des Kontos ist ungültig oder abgelaufen.",
     requestVerificationCode: "Code anfordern",
     pleaseWait: "Bitte warten...",
     newOtpSent: "Ein neuer Bestätigungscode wurde gesendet.",
-    emailChangeConfirmSent: "Ein Bestätigungscode wurde an die neue Email-Adresse gesendet.",
+    emailChangeConfirmSent:
+      "Ein Bestätigungscode wurde an die neue Email-Adresse gesendet.",
     logoutAllDevices: "Alle Geräte abmelden",
-    logoutAllDevicesDescription: "Melde dich von allen Geräten ab, die aktuell mit diesem Konto verbunden sind.",
+    logoutAllDevicesDescription:
+      "Melde dich von allen Geräten ab, die aktuell mit diesem Konto verbunden sind.",
     deleteAccount: "Konto löschen",
     deleteAccountDescription:
       "Es wird dir eine E-Mail mit einem Bestätigungslink geschickt, der 30 Minuten gültig ist, über den du dein Konto unwiderruflich löschen kannst.",
@@ -490,7 +499,8 @@ export const translations = {
     redirectingToPayment: "Weiterleitung zur Zahlung...",
     processingPayment: "Zahlung wird verarbeitet...",
     onlineOrderingUnavailable: "Online-Bestellung derzeit nicht verfügbar",
-    onlineOrderingUnavailableDesc: "Dieser Betrieb hat noch keine Online-Zahlungen eingerichtet.",
+    onlineOrderingUnavailableDesc:
+      "Dieser Betrieb hat noch keine Online-Zahlungen eingerichtet.",
     paymentFailed: "Zahlung fehlgeschlagen",
     buyingFrom: "Du kaufst bei:",
     paymentDisclaimer:
@@ -609,10 +619,12 @@ export const translations = {
 
     // Delete Account
     deleteAccountConfirmTitle: "Konto endgültig löschen",
-    deleteAccountConfirmDesc: "Klicke auf die Schaltfläche unten, um dein Konto und alle dazugehörigen betriebsbezogenen Daten unwiderruflich zu löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+    deleteAccountConfirmDesc:
+      "Klicke auf die Schaltfläche unten, um dein Konto und alle dazugehörigen betriebsbezogenen Daten unwiderruflich zu löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
     deleteAccountConfirmButton: "Konto unwiderruflich löschen",
     accountDeletedSuccess: "Konto erfolgreich gelöscht.",
-    accountDeletedDesc: "Dein Konto und alle zugehörigen Daten wurden unwiderruflich gelöscht.",
+    accountDeletedDesc:
+      "Dein Konto und alle zugehörigen Daten wurden unwiderruflich gelöscht.",
     deletingAccount: "Wird gelöscht...",
     paymentSuccessful: "Zahlung erfolgreich",
     authentication: "Authentifizierung",
@@ -706,7 +718,8 @@ export const translations = {
     regionSelectorTitle: "Region & Language",
     regionSelectorDescription: "Select your country and preferred language.",
     languageSelectorTitle: "Select Language",
-    languageSelectorDescription: "Select your preferred language for the interface.",
+    languageSelectorDescription:
+      "Select your preferred language for the interface.",
     regionLabel: "Region",
     languageLabel: "Language",
     saveAndContinue: "Apply",
@@ -837,16 +850,14 @@ export const translations = {
     inProgressDesc: "Your order is being freshly prepared in the kitchen.",
     inProgressSubline: "All active orders currently being prepared.",
     readySubline: "Orders prepared and ready for pickup.",
-    completedSubline:
-      "Finished orders for pickup or table service.",
+    completedSubline: "Finished orders for pickup or table service.",
     completeAction: "Complete",
     cancelOrder: "Cancel",
     cancelOrderTitle: 'Really cancel order "{orderNumber}"?',
     cancelOrderTitleFallback: "Really cancel order?",
     cancelOrderWarning:
       "This order has likely already been paid for! Please ensure that a refund is issued to the customer immediately.",
-    cannotCancelCompleted:
-      "Completed orders can no longer be cancelled.",
+    cannotCancelCompleted: "Completed orders can no longer be cancelled.",
     confirmCancelOrder: "Cancel order",
     abortCancel: "Abort",
     cancelledOrder: "Cancelled",
@@ -854,7 +865,8 @@ export const translations = {
     orderCancelledDesc:
       "This order has been cancelled. If you have already paid online or on-site, please contact the staff directly for a refund.",
     orderPickedUp: "Order picked up",
-    orderPickedUpDesc: "Enjoy your meal! Your order has been successfully picked up.",
+    orderPickedUpDesc:
+      "Enjoy your meal! Your order has been successfully picked up.",
     toPickUp: "to go",
     toTable: "to table",
     moreItemsBelow: "More items below",
@@ -868,7 +880,8 @@ export const translations = {
     table: "Table",
     tableNr: "Table No.",
     reopenOrder: "Reopen",
-    reopenOrderDesc: "Do you really want to move this order back to in progress?",
+    reopenOrderDesc:
+      "Do you really want to move this order back to in progress?",
     selectOrderPrompt: "Select an order to view details.",
     noActiveOrders: "No active orders available.",
     orderDetail: "Order details",
@@ -902,7 +915,7 @@ export const translations = {
       "Are you sure you want to permanently remove the selected table from your QR code management?",
     activate: "Activate",
     deactivate: "Deactivate",
-    printMultipleCodes: "Print {{count}}",
+    printMultipleCodes: "Print {count}",
     qrCodeWith: "with",
     openQrLink: "Open link in new tab",
 
@@ -944,7 +957,7 @@ export const translations = {
     confirmDelete: "Really delete?",
     confirmDeleteDescription: "This action cannot be undone.",
 
-    itemCount: "{{count}} items",
+    itemCount: "{count} items",
     basicInfo: "Basic info",
     imageSection: "Product image",
     itemImageRecommended: "800 × 600 px recommended",
@@ -959,8 +972,7 @@ export const translations = {
     imageTooLarge: "The image must not exceed 10 MB.",
     invalidImageFormat: "Only JPG and PNG images are allowed.",
     customization: "Customization",
-    customizationDesc:
-      "Allow customers to build their item step by step.",
+    customizationDesc: "Allow customers to build their item step by step.",
     enableCustomization: "Enable step-by-step customization",
     addStep: "Add step",
     noStepsAdded: "No steps added yet.",
@@ -983,7 +995,7 @@ export const translations = {
     extraPrice: "Extra price",
     noExtraCharge: "No extra charge",
     included: "Included",
-    stepNumber: "Step {{number}}",
+    stepNumber: "Step {number}",
     deleteStep: "Delete step",
     deleteOption: "Delete option",
     option: "Option",
@@ -1018,7 +1030,8 @@ export const translations = {
     bannerRecommended: "1200 × 500 px recommended",
     logoRecommended: "Square recommended",
     brandMedia: "Logo & Banner",
-    brandMediaDesc: "Customize your appearance on the ordering pages. Click on the banner or logo to upload images in JPG or PNG format (max. 10 MB).",
+    brandMediaDesc:
+      "Customize your appearance on the ordering pages. Click on the banner or logo to upload images in JPG or PNG format (max. 10 MB).",
     stripeConnected: "Stripe connected",
     stripeNotConnected: "Stripe not connected",
     stripeOnboardingIncomplete: "Onboarding incomplete",
@@ -1046,15 +1059,20 @@ export const translations = {
       "A confirmation email has been sent. The link is valid for 30 minutes. Please check your inbox.",
     emailChangedSuccess: "Email address successfully changed.",
     newEmailAddress: "New Email Address",
-    newEmailAddressDesc: "Please enter your new email address. We will send you a verification code to confirm it.",
-    invalidLinkEmailChangeDesc: "This link to change your email address is invalid or has expired.",
-    invalidLinkDeleteAccountDesc: "This link to delete your account is invalid or has expired.",
+    newEmailAddressDesc:
+      "Please enter your new email address. We will send you a verification code to confirm it.",
+    invalidLinkEmailChangeDesc:
+      "This link to change your email address is invalid or has expired.",
+    invalidLinkDeleteAccountDesc:
+      "This link to delete your account is invalid or has expired.",
     requestVerificationCode: "Request Code",
     pleaseWait: "Please wait...",
     newOtpSent: "A new confirmation code has been sent.",
-    emailChangeConfirmSent: "A confirmation code has been sent to the new email address.",
+    emailChangeConfirmSent:
+      "A confirmation code has been sent to the new email address.",
     logoutAllDevices: "Log out all devices",
-    logoutAllDevicesDescription: "Sign out from all devices currently connected to this account.",
+    logoutAllDevicesDescription:
+      "Sign out from all devices currently connected to this account.",
     deleteAccount: "Delete Account",
     deleteAccountDescription:
       "You will receive an email with a confirmation link valid for 30 minutes to permanently delete your account.",
@@ -1100,7 +1118,7 @@ export const translations = {
     paymentDisclaimer:
       "The technical order and payment processing is handled by zakkig as an intermediary.",
     agreeToTerms: "I agree to the GTC and Privacy Policy.",
-    agreeToTermsPrefix: "By clicking \"Continue to Payment\", you agree to the ",
+    agreeToTermsPrefix: 'By clicking "Continue to Payment", you agree to the ',
     termsGtc: "GTC",
     agreeToTermsMiddle: " and ",
     agreeToTermsSuffix: ".",
@@ -1210,10 +1228,12 @@ export const translations = {
 
     // Delete Account
     deleteAccountConfirmTitle: "Permanently delete account",
-    deleteAccountConfirmDesc: "Click the button below to permanently delete your account and all associated business data. This action cannot be undone.",
+    deleteAccountConfirmDesc:
+      "Click the button below to permanently delete your account and all associated business data. This action cannot be undone.",
     deleteAccountConfirmButton: "Permanently delete account",
     accountDeletedSuccess: "Account successfully deleted.",
-    accountDeletedDesc: "Your account and all associated data have been permanently deleted.",
+    accountDeletedDesc:
+      "Your account and all associated data have been permanently deleted.",
     deletingAccount: "Deleting...",
     paymentSuccessful: "Payment successful",
     authentication: "Authentication",

@@ -5,6 +5,7 @@ import { internal, api } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 import Stripe from "stripe";
+import { priceCheckout } from "./checkoutPricing";
 
 function getStripeClient(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -25,7 +26,9 @@ export const connectStripe = action({
   }),
   handler: async (ctx, args) => {
     try {
-      const org = await ctx.runQuery(api.organizations.get, { id: args.organizationId });
+      const org = await ctx.runQuery(api.organizations.get, {
+        id: args.organizationId,
+      });
       if (!org) throw new Error("Organization not found");
 
       const stripe = getStripeClient();
@@ -72,10 +75,16 @@ export const getStripeAccountStatus = action({
   }),
   handler: async (
     ctx,
-    args
-  ): Promise<{ isConnected: boolean; isOnboardingComplete: boolean; error?: string }> => {
+    args,
+  ): Promise<{
+    isConnected: boolean;
+    isOnboardingComplete: boolean;
+    error?: string;
+  }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, { id: args.organizationId });
+      const org: any = await ctx.runQuery(api.organizations.get, {
+        id: args.organizationId,
+      });
       if (!org || !org.stripeAccountId) {
         return { isConnected: false, isOnboardingComplete: false };
       }
@@ -85,9 +94,9 @@ export const getStripeAccountStatus = action({
 
       const isComplete = Boolean(
         account.details_submitted ||
-          account.charges_enabled ||
-          account.capabilities?.transfers === "active" ||
-          account.capabilities?.card_payments === "active"
+        account.charges_enabled ||
+        account.capabilities?.transfers === "active" ||
+        account.capabilities?.card_payments === "active",
       );
 
       if (isComplete !== org.stripeOnboardingComplete) {
@@ -103,7 +112,11 @@ export const getStripeAccountStatus = action({
       };
     } catch (e: any) {
       console.error("getStripeAccountStatus error:", e);
-      return { isConnected: false, isOnboardingComplete: false, error: e.message };
+      return {
+        isConnected: false,
+        isOnboardingComplete: false,
+        error: e.message,
+      };
     }
   },
 });
@@ -117,20 +130,25 @@ export const createStripeDashboardLink = action({
     url: v.optional(v.string()),
     error: v.optional(v.string()),
   }),
-  handler: async (
-    ctx,
-    args
-  ): Promise<{ url?: string; error?: string }> => {
+  handler: async (ctx, args): Promise<{ url?: string; error?: string }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, { id: args.organizationId });
-      if (!org || !org.stripeAccountId) throw new Error("No Stripe account connected");
+      const org: any = await ctx.runQuery(api.organizations.get, {
+        id: args.organizationId,
+      });
+      if (!org || !org.stripeAccountId)
+        throw new Error("No Stripe account connected");
 
       const stripe = getStripeClient();
       try {
-        const loginLink = await stripe.accounts.createLoginLink(org.stripeAccountId);
+        const loginLink = await stripe.accounts.createLoginLink(
+          org.stripeAccountId,
+        );
         return { url: loginLink.url };
       } catch (loginErr: any) {
-        console.warn("createLoginLink threw, fallback to account link:", loginErr?.message);
+        console.warn(
+          "createLoginLink threw, fallback to account link:",
+          loginErr?.message,
+        );
         const accountLink = await stripe.accountLinks.create({
           account: org.stripeAccountId,
           refresh_url: `${args.origin}/dashboard/${args.organizationId}/settings`,
@@ -155,10 +173,12 @@ export const completeTestStripeOnboarding = action({
   }),
   handler: async (
     ctx,
-    args
+    args,
   ): Promise<{ success: boolean; accountId?: string; error?: string }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, { id: args.organizationId });
+      const org: any = await ctx.runQuery(api.organizations.get, {
+        id: args.organizationId,
+      });
       if (!org) throw new Error("Organization not found");
 
       const stripe = getStripeClient();
@@ -200,7 +220,10 @@ export const completeTestStripeOnboarding = action({
   },
 });
 
-function packItemsIntoMetadata(items: string, metadata: Record<string, string>) {
+function packItemsIntoMetadata(
+  items: string,
+  metadata: Record<string, string>,
+) {
   if (items.length <= 500) {
     metadata.items = items;
   } else {
@@ -242,12 +265,19 @@ export const createCheckoutSession = action({
   }),
   handler: async (ctx, args) => {
     try {
-      const org = await ctx.runQuery(api.organizations.get, { id: args.organizationId });
+      const org = await ctx.runQuery(api.organizations.get, {
+        id: args.organizationId,
+      });
       if (!org) return { error: "Organization not found" };
-      if (!org.stripeAccountId) return { error: "Restaurant is not connected to Stripe" };
+      if (!org.stripeAccountId)
+        return { error: "Restaurant is not connected to Stripe" };
 
       // 1. Validate total
-      if (!Number.isInteger(args.total) || args.total <= 0 || args.total > 1000000) {
+      if (
+        !Number.isInteger(args.total) ||
+        args.total <= 0 ||
+        args.total > 1000000
+      ) {
         return { error: "Ungültiger Gesamtbetrag." };
       }
 
@@ -262,52 +292,13 @@ export const createCheckoutSession = action({
         return { error: "Ungültige Tischnummer." };
       }
 
-      // 4. Validate items JSON & verify prices / availability against DB
-      let parsedItems: any[];
-      try {
-        parsedItems = JSON.parse(args.items);
-      } catch {
-        return { error: "Ungültiges Artikel-Format." };
-      }
-
-      if (!Array.isArray(parsedItems) || parsedItems.length === 0 || parsedItems.length > 100) {
-        return { error: "Der Warenkorb muss zwischen 1 und 100 Artikel enthalten." };
-      }
-
-      const menuItems: any[] = await ctx.runQuery(api.menu.getItems, { organizationId: args.organizationId });
-      const menuMap = new Map(menuItems.map((m: any) => [m._id, m]));
-
-      let calculatedTotal = 0;
-      for (const item of parsedItems) {
-        const qty = Number(item.quantity);
-        const price = Number(item.price);
-
-        if (!Number.isInteger(qty) || qty <= 0 || qty > 50) {
-          return { error: "Ungültige Artikelanzahl." };
-        }
-        if (!Number.isInteger(price) || price < 0) {
-          return { error: "Ungültiger Artikelpreis." };
-        }
-
-        if (item.menuItemId && menuMap.has(item.menuItemId)) {
-          const dbItem = menuMap.get(item.menuItemId);
-          if (dbItem.available === false) {
-            return { error: `"${dbItem.name}" ist zurzeit leider nicht verfügbar.` };
-          }
-          if (price < dbItem.price) {
-            return { error: `Ungültiger Preis für "${dbItem.name}".` };
-          }
-        }
-
-        calculatedTotal += price * qty;
-      }
-
-      if (Math.round(calculatedTotal) !== Math.round(args.total)) {
-        return { error: "Gesamtbetrag stimmt nicht mit den ausgewählten Artikeln überein." };
-      }
+      const menuItems = await ctx.runQuery(api.menu.getItems, {
+        organizationId: args.organizationId,
+      });
+      const pricedItems = priceCheckout(args.items, menuItems, args.total);
 
       const stripe = getStripeClient();
-      const curr = (args.currency || org.currency || "eur").toLowerCase();
+      const curr = (org.currency || "eur").toLowerCase();
 
       // Platform margin: 1%
       const platformMargin = Math.round(args.total * 0.01);
@@ -321,12 +312,17 @@ export const createCheckoutSession = action({
         total: String(Math.round(args.total)),
         currency: curr.toUpperCase(),
       };
-      packItemsIntoMetadata(args.items, metadata);
+      packItemsIntoMetadata(JSON.stringify(pricedItems), metadata);
 
-      const isTestSecret = process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
-      const isMockAccountId = !org.stripeAccountId || org.stripeAccountId.startsWith("acct_test_");
+      const isTestSecret =
+        process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
+      const isMockAccountId =
+        !org.stripeAccountId || org.stripeAccountId.startsWith("acct_test_");
 
-      const origin = args.origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const origin =
+        args.origin ||
+        process.env.NEXT_PUBLIC_APP_URL ||
+        "http://localhost:3000";
       const returnUrl = `${origin}/${args.type === "dine-in" ? "table" : "pickup"}/${args.organizationId}/success?session_id={CHECKOUT_SESSION_ID}`;
 
       const sessionParams: Stripe.Checkout.SessionCreateParams = {
@@ -410,12 +406,19 @@ export const createPaymentIntent = action({
   }),
   handler: async (ctx, args) => {
     try {
-      const org = await ctx.runQuery(api.organizations.get, { id: args.organizationId });
+      const org = await ctx.runQuery(api.organizations.get, {
+        id: args.organizationId,
+      });
       if (!org) return { error: "Organization not found" };
-      if (!org.stripeAccountId) return { error: "Restaurant is not connected to Stripe" };
+      if (!org.stripeAccountId)
+        return { error: "Restaurant is not connected to Stripe" };
 
       // 1. Validate total
-      if (!Number.isInteger(args.total) || args.total <= 0 || args.total > 1000000) {
+      if (
+        !Number.isInteger(args.total) ||
+        args.total <= 0 ||
+        args.total > 1000000
+      ) {
         return { error: "Ungültiger Gesamtbetrag." };
       }
 
@@ -430,52 +433,13 @@ export const createPaymentIntent = action({
         return { error: "Ungültige Tischnummer." };
       }
 
-      // 4. Validate items JSON & verify prices / availability against DB
-      let parsedItems: any[];
-      try {
-        parsedItems = JSON.parse(args.items);
-      } catch {
-        return { error: "Ungültiges Artikel-Format." };
-      }
-
-      if (!Array.isArray(parsedItems) || parsedItems.length === 0 || parsedItems.length > 100) {
-        return { error: "Der Warenkorb muss zwischen 1 und 100 Artikel enthalten." };
-      }
-
-      const menuItems: any[] = await ctx.runQuery(api.menu.getItems, { organizationId: args.organizationId });
-      const menuMap = new Map(menuItems.map((m: any) => [m._id, m]));
-
-      let calculatedTotal = 0;
-      for (const item of parsedItems) {
-        const qty = Number(item.quantity);
-        const price = Number(item.price);
-
-        if (!Number.isInteger(qty) || qty <= 0 || qty > 50) {
-          return { error: "Ungültige Artikelanzahl." };
-        }
-        if (!Number.isInteger(price) || price < 0) {
-          return { error: "Ungültiger Artikelpreis." };
-        }
-
-        if (item.menuItemId && menuMap.has(item.menuItemId)) {
-          const dbItem = menuMap.get(item.menuItemId);
-          if (dbItem.available === false) {
-            return { error: `"${dbItem.name}" ist zurzeit leider nicht verfügbar.` };
-          }
-          if (price < dbItem.price) {
-            return { error: `Ungültiger Preis für "${dbItem.name}".` };
-          }
-        }
-
-        calculatedTotal += price * qty;
-      }
-
-      if (Math.round(calculatedTotal) !== Math.round(args.total)) {
-        return { error: "Gesamtbetrag stimmt nicht mit den ausgewählten Artikeln überein." };
-      }
+      const menuItems = await ctx.runQuery(api.menu.getItems, {
+        organizationId: args.organizationId,
+      });
+      const pricedItems = priceCheckout(args.items, menuItems, args.total);
 
       const stripe = getStripeClient();
-      const curr = (args.currency || org.currency || "eur").toLowerCase();
+      const curr = (org.currency || "eur").toLowerCase();
 
       // Platform margin: 1%
       const platformMargin = Math.round(args.total * 0.01);
@@ -489,10 +453,12 @@ export const createPaymentIntent = action({
         total: String(Math.round(args.total)),
         currency: curr.toUpperCase(),
       };
-      packItemsIntoMetadata(args.items, metadata);
+      packItemsIntoMetadata(JSON.stringify(pricedItems), metadata);
 
-      const isTestSecret = process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
-      const isMockAccountId = !org.stripeAccountId || org.stripeAccountId.startsWith("acct_test_");
+      const isTestSecret =
+        process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
+      const isMockAccountId =
+        !org.stripeAccountId || org.stripeAccountId.startsWith("acct_test_");
 
       const paymentIntentParams: any = {
         amount: Math.round(args.total),
@@ -521,7 +487,8 @@ export const createPaymentIntent = action({
           isTestSecret
         ) {
           delete paymentIntentParams.transfer_data;
-          paymentIntent = await stripe.paymentIntents.create(paymentIntentParams);
+          paymentIntent =
+            await stripe.paymentIntents.create(paymentIntentParams);
         } else {
           throw err;
         }
@@ -549,13 +516,16 @@ export const verifyPaymentAndCreateOrder = action({
       const stripe = getStripeClient();
 
       if (args.sessionId) {
-        const existing: any = await ctx.runQuery(api.orders.getOrderByPaymentIntent, {
-          stripePaymentId: args.sessionId,
-        });
+        const existing: any = await ctx.runQuery(
+          api.orders.getOrderByPaymentIntent,
+          {
+            stripePaymentId: args.sessionId,
+          },
+        );
         if (existing) return existing._id;
 
         const session = await stripe.checkout.sessions.retrieve(args.sessionId);
-        if (session.status !== "complete" && session.payment_status !== "paid") {
+        if (session.payment_status !== "paid") {
           return null;
         }
 
@@ -563,7 +533,10 @@ export const verifyPaymentAndCreateOrder = action({
         if (!meta || !meta.organizationId) return null;
 
         const items = extractItemsFromMetadata(meta);
-        const piId = typeof session.payment_intent === "string" ? session.payment_intent : undefined;
+        const piId =
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : undefined;
 
         const orderId = await ctx.runMutation(
           internal.orders.createPaidOrderFromWebhook,
@@ -573,20 +546,31 @@ export const verifyPaymentAndCreateOrder = action({
             type: (meta.type as any) || "takeaway",
             items,
             total: session.amount_total || parseInt(meta.total || "0", 10),
-            email: meta.email || session.customer_details?.email || session.customer_email || "",
+            email:
+              meta.email ||
+              session.customer_details?.email ||
+              session.customer_email ||
+              "",
             stripePaymentId: piId || session.id,
             stripeSessionId: session.id,
-            currency: (session.currency || meta.currency || "EUR").toUpperCase(),
-          }
+            currency: (
+              session.currency ||
+              meta.currency ||
+              "EUR"
+            ).toUpperCase(),
+          },
         );
 
         return orderId;
       }
 
       if (args.paymentIntentId) {
-        const existing: any = await ctx.runQuery(api.orders.getOrderByPaymentIntent, {
-          stripePaymentId: args.paymentIntentId,
-        });
+        const existing: any = await ctx.runQuery(
+          api.orders.getOrderByPaymentIntent,
+          {
+            stripePaymentId: args.paymentIntentId,
+          },
+        );
         if (existing) return existing._id;
 
         const pi = await stripe.paymentIntents.retrieve(args.paymentIntentId);
@@ -610,7 +594,7 @@ export const verifyPaymentAndCreateOrder = action({
             email: meta.email || pi.receipt_email || "",
             stripePaymentId: pi.id,
             currency: pi.currency.toUpperCase(),
-          }
+          },
         );
 
         return orderId;

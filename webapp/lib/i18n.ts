@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { createTranslator } from "next-intl";
 import { useLanguageStore } from "@/store/language-store";
 import { translations, Locale, TranslationKeys } from "./translations";
 
@@ -14,22 +15,12 @@ export function useTranslation() {
     setLocale(storeLocale);
   }, [storeLocale]);
 
-  const t = useCallback(
-    (key: TranslationKeys, params?: Record<string, string | number>): string => {
-      const dict = translations[locale] || translations.de;
-      let text: string =
-        (dict as Record<string, string>)[key] ||
-        (key as string);
-      if (params) {
-        Object.entries(params).forEach(([paramKey, paramValue]) => {
-          text = text.replace(
-            new RegExp(`\\{${paramKey}\\}`, "g"),
-            String(paramValue),
-          );
-        });
-      }
-      return text;
-    },
+  const t = useMemo(
+    () =>
+      createTranslator({
+        locale,
+        messages: translations[locale] as Record<TranslationKeys, string>,
+      }),
     [locale],
   );
 

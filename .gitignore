@@ -15,6 +15,7 @@ coverage
 
 # next.js
 .next/
+.vinext/
 out/
 
 # production
@@ -40,6 +41,8 @@ yarn-error.log*
 
 # vercel
 .vercel
+.wrangler/
+.dev.vars*
 
 # typescript
 *.tsbuildinfo

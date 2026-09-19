@@ -1,4 +1,5 @@
 import { query, mutation } from "./_generated/server";
+import { isOwner, requireOwner, verifyTerminal } from "./permissions";
 import { v } from "convex/values";
 
 export const getCategories = query({
@@ -10,13 +11,13 @@ export const getCategories = query({
       organizationId: v.id("organizations"),
       name: v.string(),
       sortOrder: v.number(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     return await ctx.db
       .query("menuCategories")
       .withIndex("by_organizationId_and_sortOrder", (q) =>
-        q.eq("organizationId", args.organizationId)
+        q.eq("organizationId", args.organizationId),
       )
       .collect();
   },
@@ -39,13 +40,13 @@ export const getItems = query({
       sortOrder: v.number(),
       taxRate: v.number(),
       customizations: v.string(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     const items = await ctx.db
       .query("menuItems")
       .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+        q.eq("organizationId", args.organizationId),
       )
       .collect();
 
@@ -61,7 +62,7 @@ export const getItems = query({
           ...item,
           imageUrl,
         };
-      })
+      }),
     );
   },
 });
@@ -83,13 +84,13 @@ export const getAvailableItems = query({
       sortOrder: v.number(),
       taxRate: v.number(),
       customizations: v.string(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     const items = await ctx.db
       .query("menuItems")
       .withIndex("by_organizationId_and_available", (q) =>
-        q.eq("organizationId", args.organizationId).eq("available", true)
+        q.eq("organizationId", args.organizationId).eq("available", true),
       )
       .collect();
 
@@ -105,7 +106,7 @@ export const getAvailableItems = query({
           ...item,
           imageUrl,
         };
-      })
+      }),
     );
   },
 });
@@ -128,7 +129,7 @@ export const getItem = query({
       sortOrder: v.number(),
       taxRate: v.number(),
       customizations: v.string(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     const item = await ctx.db.get(args.id);
@@ -147,12 +148,14 @@ export const getItem = query({
 
 export const createCategory = mutation({
   args: {
+    sessionToken: v.optional(v.string()),
     organizationId: v.id("organizations"),
     name: v.string(),
     sortOrder: v.number(),
   },
   returns: v.id("menuCategories"),
   handler: async (ctx, args) => {
+    await requireOwner(ctx, args.organizationId, args.sessionToken);
     const trimmed = args.name.trim();
     if (trimmed.length === 0 || trimmed.length > 100) {
       throw new Error("Invalid category name");
@@ -167,13 +170,19 @@ export const createCategory = mutation({
 
 export const updateCategory = mutation({
   args: {
+    sessionToken: v.optional(v.string()),
     id: v.id("menuCategories"),
     name: v.optional(v.string()),
     sortOrder: v.optional(v.number()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const { id, ...patch } = args;
+    await requireOwner(
+      ctx,
+      (await ctx.db.get(args.id))!.organizationId,
+      args.sessionToken,
+    );
+    const { id, sessionToken, ...patch } = args;
     if (patch.name !== undefined) {
       const trimmed = patch.name.trim();
       if (trimmed.length === 0 || trimmed.length > 100) {
@@ -187,9 +196,14 @@ export const updateCategory = mutation({
 });
 
 export const deleteCategory = mutation({
-  args: { id: v.id("menuCategories") },
+  args: { sessionToken: v.optional(v.string()), id: v.id("menuCategories") },
   returns: v.null(),
   handler: async (ctx, args) => {
+    await requireOwner(
+      ctx,
+      (await ctx.db.get(args.id))!.organizationId,
+      args.sessionToken,
+    );
     // Cascade delete items in this category
     const items = await ctx.db
       .query("menuItems")
@@ -210,6 +224,7 @@ export const deleteCategory = mutation({
 
 export const createItem = mutation({
   args: {
+    sessionToken: v.optional(v.string()),
     organizationId: v.id("organizations"),
     categoryId: v.id("menuCategories"),
     name: v.string(),
@@ -223,6 +238,7 @@ export const createItem = mutation({
   },
   returns: v.id("menuItems"),
   handler: async (ctx, args) => {
+    await requireOwner(ctx, args.organizationId, args.sessionToken);
     const trimmed = args.name.trim();
     if (trimmed.length === 0 || trimmed.length > 100) {
       throw new Error("Invalid item name");
@@ -233,8 +249,12 @@ export const createItem = mutation({
     if (args.description && args.description.length > 1000) {
       throw new Error("Description too long");
     }
+    const { sessionToken, ...data } = args;
+    const category = await ctx.db.get(args.categoryId);
+    if (category?.organizationId !== args.organizationId)
+      throw new Error("Invalid category");
     const itemData = {
-      ...args,
+      ...data,
       name: trimmed,
       imageStorageId: args.imageStorageId || undefined,
     };
@@ -244,6 +264,8 @@ export const createItem = mutation({
 
 export const updateItem = mutation({
   args: {
+    sessionToken: v.optional(v.string()),
+    terminalToken: v.optional(v.string()),
     id: v.id("menuItems"),
     categoryId: v.optional(v.id("menuCategories")),
     name: v.optional(v.string()),
@@ -258,7 +280,48 @@ export const updateItem = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const { id, clearImage, ...patch } = args;
+    const { id, clearImage, sessionToken, terminalToken, ...patch } = args;
+    const current = await ctx.db.get(id);
+    if (!current) throw new Error("Item not found");
+    if (!(await isOwner(ctx, current.organizationId, sessionToken))) {
+      if (
+        !terminalToken ||
+        !(await verifyTerminal(
+          ctx,
+          current.organizationId,
+          terminalToken,
+          "availability",
+        ))
+      )
+        throw new Error("Unauthorized");
+      if (
+        clearImage !== undefined ||
+        Object.entries(patch).some(
+          ([key, value]) =>
+            value !== undefined &&
+            key !== "available" &&
+            key !== "customizations",
+        )
+      )
+        throw new Error("Unauthorized");
+      if (patch.customizations !== undefined) {
+        const withoutAvailability = (value: string) =>
+          JSON.stringify(JSON.parse(value), (key, val) =>
+            key === "available" ? undefined : val,
+          );
+        if (
+          withoutAvailability(patch.customizations) !==
+          withoutAvailability(current.customizations)
+        )
+          throw new Error("Unauthorized");
+      }
+    }
+    if (
+      patch.categoryId &&
+      (await ctx.db.get(patch.categoryId))?.organizationId !==
+        current.organizationId
+    )
+      throw new Error("Invalid category");
     if (patch.name !== undefined) {
       const trimmed = patch.name.trim();
       if (trimmed.length === 0 || trimmed.length > 100) {
@@ -266,7 +329,10 @@ export const updateItem = mutation({
       }
       patch.name = trimmed;
     }
-    if (patch.price !== undefined && (patch.price < 0 || patch.price > 10000000)) {
+    if (
+      patch.price !== undefined &&
+      (patch.price < 0 || patch.price > 10000000)
+    ) {
       throw new Error("Invalid price");
     }
     if (patch.description !== undefined && patch.description.length > 1000) {
@@ -278,7 +344,11 @@ export const updateItem = mutation({
     if (clearImage && existing.imageStorageId) {
       await ctx.storage.delete(existing.imageStorageId);
       patch.imageStorageId = undefined;
-    } else if (args.imageStorageId && existing.imageStorageId && existing.imageStorageId !== args.imageStorageId) {
+    } else if (
+      args.imageStorageId &&
+      existing.imageStorageId &&
+      existing.imageStorageId !== args.imageStorageId
+    ) {
       await ctx.storage.delete(existing.imageStorageId);
     }
 
@@ -292,9 +362,14 @@ export const updateItem = mutation({
 });
 
 export const deleteItem = mutation({
-  args: { id: v.id("menuItems") },
+  args: { sessionToken: v.optional(v.string()), id: v.id("menuItems") },
   returns: v.null(),
   handler: async (ctx, args) => {
+    await requireOwner(
+      ctx,
+      (await ctx.db.get(args.id))!.organizationId,
+      args.sessionToken,
+    );
     const item = await ctx.db.get(args.id);
     if (!item) return null;
 
@@ -308,16 +383,20 @@ export const deleteItem = mutation({
 
 export const updateCategorySortOrders = mutation({
   args: {
+    sessionToken: v.optional(v.string()),
     updates: v.array(
       v.object({
         id: v.id("menuCategories"),
         sortOrder: v.number(),
-      })
+      }),
     ),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     for (const update of args.updates) {
+      const current = await ctx.db.get(update.id);
+      if (!current) throw new Error("Record not found");
+      await requireOwner(ctx, current.organizationId, args.sessionToken);
       await ctx.db.patch(update.id, { sortOrder: update.sortOrder });
     }
     return null;
@@ -326,21 +405,33 @@ export const updateCategorySortOrders = mutation({
 
 export const updateItemSortOrders = mutation({
   args: {
+    sessionToken: v.optional(v.string()),
     updates: v.array(
       v.object({
         id: v.id("menuItems"),
         sortOrder: v.number(),
         categoryId: v.optional(v.id("menuCategories")),
-      })
+      }),
     ),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     for (const update of args.updates) {
-      const patch: { sortOrder: number; categoryId?: typeof update.categoryId } = {
+      const current = await ctx.db.get(update.id);
+      if (!current) throw new Error("Record not found");
+      await requireOwner(ctx, current.organizationId, args.sessionToken);
+      const patch: {
+        sortOrder: number;
+        categoryId?: typeof update.categoryId;
+      } = {
         sortOrder: update.sortOrder,
       };
       if (update.categoryId) {
+        if (
+          (await ctx.db.get(update.categoryId))?.organizationId !==
+          current.organizationId
+        )
+          throw new Error("Invalid category");
         patch.categoryId = update.categoryId;
       }
       await ctx.db.patch(update.id, patch);

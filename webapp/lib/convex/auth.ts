@@ -1,3 +1,4 @@
+import { ConvexHttpClient } from "convex/browser";
 import { convexServer } from "./server";
 import { api } from "@/convex/_generated/api";
 import { cookies } from "next/headers";
@@ -25,8 +26,9 @@ export async function getUser() {
     // Fallback to Convex Auth Nextjs JWT token
     const token = await convexAuthNextjsToken();
     if (token) {
-      convexServer.setAuth(token);
-      const user = await convexServer.query(api.users.currentUser, {});
+      const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+      client.setAuth(token);
+      const user = await client.query(api.users.currentUser, {});
       if (user) {
         return {
           ...user,
@@ -44,7 +46,7 @@ export async function getUser() {
 
 export async function getAuthenticatedConvexClient() {
   const token = await convexAuthNextjsToken();
-  const client = convexServer;
+  const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
   if (token) {
     client.setAuth(token);
   }
@@ -69,93 +71,53 @@ export async function requireOwner(organizationId: string) {
   const userId = String(user._id || user.$id);
 
   if (ownerId !== userId) {
-    throw new Error("Nicht autorisiert: Du bist nicht der Inhaber dieses Betriebs.");
+    throw new Error(
+      "Nicht autorisiert: Du bist nicht der Inhaber dieses Betriebs.",
+    );
   }
 
   return { user, org };
 }
 
-export async function requireKitchenOrOwner(organizationId: string) {
+export async function getOwnerCredentials() {
+  return { sessionToken: (await cookies()).get(SESSION_COOKIE_NAME)?.value };
+}
+
+async function requireTerminalOrOwner(
+  organizationId: string,
+  type: "orders" | "availability",
+) {
   const user = await getUser();
   if (user) {
     const org = await convexServer.query(api.organizations.get, {
       id: organizationId as any,
     });
-    const ownerId = org ? String(org.ownerId) : "";
-    const userId = String(user._id || user.$id);
-    if (ownerId === userId) {
-      return { type: "owner" as const, user, org };
-    }
+    if (org?.ownerId === user._id) return { type: "owner" as const, user, org };
   }
-
   const cookieStore = await cookies();
-
-  // Check combined staff session first
-  const staffCookieToken = cookieStore.get(`staff_session_${organizationId}`)?.value;
-  if (staffCookieToken) {
-    const staffSessions = await convexServer.query(api.sessions.getStaffSessions, {
-      organizationId: organizationId as any,
-    });
-    if (staffSessions.some((s: any) => s.token === staffCookieToken)) {
-      return { type: "kitchen" as const };
+  for (const name of [
+    `staff_session_${organizationId}`,
+    `${type === "orders" ? "order" : "availability"}_session_${organizationId}`,
+  ]) {
+    const token = cookieStore.get(name)?.value;
+    if (
+      token &&
+      (await convexServer.query(api.sessions.verifyTerminalSession, {
+        organizationId: organizationId as any,
+        token,
+        type,
+      }))
+    ) {
+      return { type: "staff" as const };
     }
   }
+  throw new Error("Nicht autorisiert: Keine gültige Personal-Sitzung.");
+}
 
-  // Legacy order session check
-  const cookieName = `order_session_${organizationId}`;
-  const cookieToken = cookieStore.get(cookieName)?.value;
-
-  if (cookieToken) {
-    const sessions = await convexServer.query(api.sessions.getOrderSessions, {
-      organizationId: organizationId as any,
-    });
-    if (sessions.some((s: any) => s.token === cookieToken)) {
-      return { type: "kitchen" as const };
-    }
-  }
-
-  throw new Error("Nicht autorisiert: Keine gültige Küchen- oder Personal-Sitzung.");
+export async function requireKitchenOrOwner(organizationId: string) {
+  return requireTerminalOrOwner(organizationId, "orders");
 }
 
 export async function requireStaffOrOwner(organizationId: string) {
-  const user = await getUser();
-  if (user) {
-    const org = await convexServer.query(api.organizations.get, {
-      id: organizationId as any,
-    });
-    const ownerId = org ? String(org.ownerId) : "";
-    const userId = String(user._id || user.$id);
-    if (ownerId === userId) {
-      return { type: "owner" as const, user, org };
-    }
-  }
-
-  const cookieStore = await cookies();
-
-  // Check combined staff session first
-  const staffCookieToken = cookieStore.get(`staff_session_${organizationId}`)?.value;
-  if (staffCookieToken) {
-    const staffSessions = await convexServer.query(api.sessions.getStaffSessions, {
-      organizationId: organizationId as any,
-    });
-    if (staffSessions.some((s: any) => s.token === staffCookieToken)) {
-      return { type: "staff" as const };
-    }
-  }
-
-  // Legacy availability session check
-  const cookieName = `availability_session_${organizationId}`;
-  const cookieToken = cookieStore.get(cookieName)?.value;
-
-  if (cookieToken) {
-    const sessions = await convexServer.query(api.sessions.getAvailabilitySessions, {
-      organizationId: organizationId as any,
-    });
-    if (sessions.some((s: any) => s.token === cookieToken)) {
-      return { type: "staff" as const };
-    }
-  }
-
-  throw new Error("Nicht autorisiert: Keine gültige Mitarbeiter- oder Personal-Sitzung.");
+  return requireTerminalOrOwner(organizationId, "availability");
 }
-

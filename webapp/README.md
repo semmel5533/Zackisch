@@ -186,3 +186,20 @@ npx @vinext/cloudflare deploy
 ```bash
 npx convex deploy --preview-name webapp
 ```
+
+
+## Lokale Prüfung und Cloudflare Build
+
+Nach `npm ci` laufen `npm run typecheck`, `npm test` und `npm run build` für die lokale Next.js-Variante. Für Cloudflare ist `npm run build:cloudflare` vorgesehen. `vite.config.ts` verbindet vinext mit dem Cloudflare-Plugin. `wrangler.jsonc` legt den Worker-Einstieg und die statischen Assets fest. `npm run dev:cloudflare` startet die Anwendung lokal in der Worker-Umgebung. `npm run check:cloudflare` prüft nur die Deployment-Konfiguration und veröffentlicht nichts; dieser Befehl ersetzt keinen Build.
+
+`npm run deploy:cloudflare` baut und veröffentlicht den Worker. Vor der ersten Veröffentlichung müssen Cloudflare-Konto, Domain und die umgebungsspezifischen Variablen eingerichtet sein. `NEXT_PUBLIC_CONVEX_URL` wird beim Build und zur Laufzeit benötigt. Die URL muss zum jeweiligen Convex-Deployment passen. Die öffentlichen Variablen werden beim Build eingesetzt. Servervariablen und Zugangsdaten gehören in die jeweilige Umgebung, nicht in das Repository. Stripe- und SMTP-Zugangsdaten bleiben im Convex-Backend. Das Backend muss mit `npx convex deploy` vor der dazugehörigen Frontend-Version aktualisiert werden.
+
+## Übersetzungen und Backendprüfungen
+
+Beide Oberflächen verarbeiten ihre zentralen Sprachdateien mit `createTranslator` aus next-intl. `useTranslation` behält die vorhandene Sprachauswahl bei und delegiert Textformatierung und Platzhalter an next-intl. Parameter werden mit `t("key", { count })` übergeben, nicht nachträglich per String-Ersetzung eingesetzt.
+
+Menüänderungen und die Verwaltung der Geräte-Sitzungen prüfen die Inhabersitzung direkt im Convex-Backend. Der Next.js-Server gibt dafür das HttpOnly-Sitzungstoken weiter. Authentifizierte Convex-Clients werden pro Aufruf erstellt, damit kein JWT zwischen Anfragen geteilt wird. Personalgeräte prüfen ausschließlich ihr eigenes Token. Ablaufdatum und Betriebszugehörigkeit werden im Backend kontrolliert. Änderungen durch Personal sind auf Verfügbarkeiten beschränkt; Preise, Kategorien und andere Artikeldaten bleiben dem Inhaber vorbehalten.
+
+Beide Zahlungswege verwenden dieselbe Preisprüfung. Artikel, Mengen und Auswahloptionen werden mit der gespeicherten Speisekarte abgeglichen. Kostenlose enthaltene Optionen und Aufpreise werden serverseitig berechnet. Die Zahlungsmetadaten enthalten die geprüften Namen und Preise. Eine abgeschlossene Checkout-Oberfläche genügt nicht zur Bestellanlage: Der Zahlungsstatus muss bezahlt sein.
+
+`npm test` prüft direkte Backendaufrufe und die Preisberechnung mit isolierten Testdaten. Die Tests schreiben nicht in ein echtes Convex-Deployment und erzeugen keine Stripe-Zahlungen. Sie ersetzen nicht die Abnahme der vollständigen Abläufe in der vorgesehenen Testumgebung.

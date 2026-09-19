@@ -1,12 +1,11 @@
 import {
   getOrders,
   getOrganization,
-  getStaffSessions,
-  getOrderSessions,
-  getAvailabilitySessions,
   getMenuCategories,
   getMenuItems,
 } from "@/lib/convex/database";
+import { convexServer } from "@/lib/convex/server";
+import { api } from "@/convex/_generated/api";
 import { getUser } from "@/lib/convex/auth";
 import { StaffTerminalShell } from "@/components/staff/staff-terminal-shell";
 import { cookies } from "next/headers";
@@ -40,23 +39,8 @@ export default async function StaffTerminalPage({
     cookieStore.get(`order_session_${organizationId}`)?.value ||
     cookieStore.get(`availability_session_${organizationId}`)?.value;
 
-  const [
-    organization,
-    sessions,
-    legacyOrderSessions,
-    legacyAvailSessions,
-    initialOrders,
-    categories,
-    items,
-    user,
-  ] = await Promise.all([
+  const [organization, user] = await Promise.all([
     getOrganization(organizationId),
-    getStaffSessions(organizationId),
-    getOrderSessions(organizationId),
-    getAvailabilitySessions(organizationId),
-    getOrders(organizationId),
-    getMenuCategories(organizationId),
-    getMenuItems(organizationId),
     getUser(),
   ]);
 
@@ -71,26 +55,19 @@ export default async function StaffTerminalPage({
   // Allow if owner is logged in
   const isOwner = Boolean(
     user &&
-      (user._id === organization.ownerId || user.$id === organization.ownerId),
+    (user._id === organization.ownerId || user.$id === organization.ownerId),
   );
 
   // Verification via query token or persistent session cookie
   const tokenToVerify = token || cookieToken;
-  const isStaffSessionValid = Boolean(
-    tokenToVerify && sessions.some((s) => s.token === tokenToVerify),
-  );
-  const isLegacyOrderValid = Boolean(
-    tokenToVerify && legacyOrderSessions.some((s) => s.token === tokenToVerify),
-  );
-  const isLegacyAvailValid = Boolean(
-    tokenToVerify && legacyAvailSessions.some((s) => s.token === tokenToVerify),
-  );
-
-  const isValidSession =
-    isOwner ||
-    isStaffSessionValid ||
-    isLegacyOrderValid ||
-    isLegacyAvailValid;
+  const isStaffSessionValid = tokenToVerify
+    ? await convexServer.query(api.sessions.verifyTerminalSession, {
+        organizationId: organizationId as any,
+        token: tokenToVerify,
+        type: "staff",
+      })
+    : false;
+  const isValidSession = isOwner || isStaffSessionValid;
 
   if (!isValidSession) {
     if (!tokenToVerify && !isOwner) {
@@ -112,25 +89,14 @@ export default async function StaffTerminalPage({
     );
   }
 
-  // Persist session token into cookie if passed in URL
-  if (token && (isStaffSessionValid || isLegacyOrderValid || isLegacyAvailValid)) {
-    try {
-      cookieStore.set(cookieName, token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 365 * 24 * 60 * 60, // 1 year permanent terminal pairing
-      });
-    } catch {
-      // Ignore in read-only cookie contexts
-    }
-  }
+  const [initialOrders, categories, items] = await Promise.all([
+    getOrders(organizationId),
+    getMenuCategories(organizationId),
+    getMenuItems(organizationId),
+  ]);
 
   const validTab: "current-orders" | "all-orders" | "availability" =
-    tab === "all-orders" || tab === "availability"
-      ? tab
-      : "current-orders";
+    tab === "all-orders" || tab === "availability" ? tab : "current-orders";
 
   return (
     <StaffTerminalShell

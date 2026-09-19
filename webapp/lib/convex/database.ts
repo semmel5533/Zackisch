@@ -1,6 +1,7 @@
 import "server-only";
 
-import { convexServer } from "./server";
+import { getAuthenticatedConvexClient, getOwnerCredentials } from "./auth";
+import { cookies } from "next/headers";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import type {
@@ -76,7 +77,9 @@ function toStorageId(id?: string | null): Id<"_storage"> | undefined {
 export async function getOrganizationByOwner(
   ownerId: string,
 ): Promise<Organization | null> {
-  const doc = await convexServer.query(api.organizations.getByOwner, { ownerId });
+  const doc = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.organizations.getByOwner, { ownerId });
   return doc ? toOrg(doc) : null;
 }
 
@@ -84,7 +87,9 @@ export async function getOrganization(
   id: string,
 ): Promise<Organization | null> {
   try {
-    const doc = await convexServer.query(api.organizations.get, {
+    const doc = await (
+      await getAuthenticatedConvexClient()
+    ).query(api.organizations.get, {
       id: id as Id<"organizations">,
     });
     return doc ? toOrg(doc) : null;
@@ -96,7 +101,9 @@ export async function getOrganization(
 export async function createOrganization(
   data: CreateOrganizationData,
 ): Promise<Organization> {
-  const id = await convexServer.mutation(api.organizations.create, {
+  const id = await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.organizations.create, {
     name: data.name,
     ownerId: data.ownerId,
     address: data.address,
@@ -108,7 +115,9 @@ export async function createOrganization(
     tables: data.tables,
   });
 
-  const created = await convexServer.query(api.organizations.get, { id });
+  const created = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.organizations.get, { id });
   return toOrg(created!);
 }
 
@@ -116,7 +125,9 @@ export async function updateOrganization(
   id: string,
   data: Partial<Organization> & { clearLogo?: boolean; clearBanner?: boolean },
 ) {
-  return await convexServer.mutation(api.organizations.update, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.organizations.update, {
     id: id as Id<"organizations">,
     name: data.name,
     address: data.address,
@@ -141,7 +152,9 @@ export async function updateOrganization(
 export async function getMenuCategories(
   organizationId: string,
 ): Promise<MenuCategory[]> {
-  const docs = await convexServer.query(api.menu.getCategories, {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.menu.getCategories, {
     organizationId: organizationId as Id<"organizations">,
   });
   return docs.map(toCat);
@@ -150,7 +163,10 @@ export async function getMenuCategories(
 export async function createMenuCategory(
   data: CreateMenuCategoryData,
 ): Promise<MenuCategory> {
-  const id = await convexServer.mutation(api.menu.createCategory, {
+  const id = await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.createCategory, {
+    ...(await getOwnerCredentials()),
     organizationId: data.organizationId as Id<"organizations">,
     name: data.name,
     sortOrder: data.sortOrder ?? 0,
@@ -170,7 +186,10 @@ export async function updateMenuCategory(
   id: string,
   data: { name?: string; sortOrder?: number },
 ) {
-  return await convexServer.mutation(api.menu.updateCategory, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.updateCategory, {
+    ...(await getOwnerCredentials()),
     id: id as Id<"menuCategories">,
     name: data.name,
     sortOrder: data.sortOrder,
@@ -178,7 +197,10 @@ export async function updateMenuCategory(
 }
 
 export async function deleteMenuCategory(id: string) {
-  return await convexServer.mutation(api.menu.deleteCategory, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.deleteCategory, {
+    ...(await getOwnerCredentials()),
     id: id as Id<"menuCategories">,
   });
 }
@@ -186,7 +208,10 @@ export async function deleteMenuCategory(id: string) {
 export async function updateCategorySortOrders(
   updates: { id: string; sortOrder: number }[],
 ) {
-  return await convexServer.mutation(api.menu.updateCategorySortOrders, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.updateCategorySortOrders, {
+    ...(await getOwnerCredentials()),
     updates: updates.map((u) => ({
       id: u.id as Id<"menuCategories">,
       sortOrder: u.sortOrder,
@@ -199,7 +224,9 @@ export async function updateCategorySortOrders(
 export async function getMenuItems(
   organizationId: string,
 ): Promise<MenuItem[]> {
-  const docs = await convexServer.query(api.menu.getItems, {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.menu.getItems, {
     organizationId: organizationId as Id<"organizations">,
   });
   return docs
@@ -209,7 +236,9 @@ export async function getMenuItems(
 
 export async function getMenuItem(id: string): Promise<MenuItem | null> {
   try {
-    const doc = await convexServer.query(api.menu.getItem, {
+    const doc = await (
+      await getAuthenticatedConvexClient()
+    ).query(api.menu.getItem, {
       id: id as Id<"menuItems">,
     });
     return doc ? toItem(doc) : null;
@@ -221,7 +250,9 @@ export async function getMenuItem(id: string): Promise<MenuItem | null> {
 export async function getAvailableMenuItems(
   organizationId: string,
 ): Promise<MenuItem[]> {
-  const docs = await convexServer.query(api.menu.getAvailableItems, {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.menu.getAvailableItems, {
     organizationId: organizationId as Id<"organizations">,
   });
   return docs
@@ -232,7 +263,10 @@ export async function getAvailableMenuItems(
 export async function createMenuItem(
   data: CreateMenuItemData,
 ): Promise<MenuItem> {
-  const id = await convexServer.mutation(api.menu.createItem, {
+  const id = await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.createItem, {
+    ...(await getOwnerCredentials()),
     organizationId: data.organizationId as Id<"organizations">,
     categoryId: data.categoryId as Id<"menuCategories">,
     name: data.name,
@@ -245,7 +279,9 @@ export async function createMenuItem(
     customizations: data.customizations ?? "[]",
   });
 
-  const doc = await convexServer.query(api.menu.getItem, { id });
+  const doc = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.menu.getItem, { id });
   return toItem(doc!);
 }
 
@@ -253,7 +289,17 @@ export async function updateMenuItem(
   id: string,
   data: Partial<CreateMenuItemData> & { clearImage?: boolean },
 ) {
-  return await convexServer.mutation(api.menu.updateItem, {
+  const item = await getMenuItem(id);
+  const cookieStore = await cookies();
+  const organizationId = item?.organizationId;
+  const terminalToken =
+    cookieStore.get(`staff_session_${organizationId}`)?.value ||
+    cookieStore.get(`availability_session_${organizationId}`)?.value;
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.updateItem, {
+    ...(await getOwnerCredentials()),
+    terminalToken,
     id: id as Id<"menuItems">,
     categoryId: data.categoryId as Id<"menuCategories"> | undefined,
     name: data.name,
@@ -269,7 +315,10 @@ export async function updateMenuItem(
 }
 
 export async function deleteMenuItem(id: string) {
-  return await convexServer.mutation(api.menu.deleteItem, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.deleteItem, {
+    ...(await getOwnerCredentials()),
     id: id as Id<"menuItems">,
   });
 }
@@ -277,7 +326,10 @@ export async function deleteMenuItem(id: string) {
 export async function updateItemSortOrders(
   updates: { id: string; sortOrder: number; categoryId?: string }[],
 ) {
-  return await convexServer.mutation(api.menu.updateItemSortOrders, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.menu.updateItemSortOrders, {
+    ...(await getOwnerCredentials()),
     updates: updates.map((u) => ({
       id: u.id as Id<"menuItems">,
       sortOrder: u.sortOrder,
@@ -292,7 +344,9 @@ export async function getOrders(
   organizationId: string,
   status?: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
 ): Promise<Order[]> {
-  const docs = await convexServer.query(api.orders.getOrders, {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.orders.getOrders, {
     organizationId: organizationId as Id<"organizations">,
     status,
   });
@@ -301,7 +355,9 @@ export async function getOrders(
 
 export async function getOrder(id: string): Promise<Order | null> {
   try {
-    const doc = await convexServer.query(api.orders.getOrder, {
+    const doc = await (
+      await getAuthenticatedConvexClient()
+    ).query(api.orders.getOrder, {
       id: id as Id<"orders">,
     });
     return doc ? toOrder(doc) : null;
@@ -310,15 +366,21 @@ export async function getOrder(id: string): Promise<Order | null> {
   }
 }
 
-export async function getOrderByPaymentIntent(stripePaymentId: string): Promise<Order | null> {
-  const doc = await convexServer.query(api.orders.getOrderByPaymentIntent, {
+export async function getOrderByPaymentIntent(
+  stripePaymentId: string,
+): Promise<Order | null> {
+  const doc = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.orders.getOrderByPaymentIntent, {
     stripePaymentId,
   });
   return doc ? toOrder(doc) : null;
 }
 
 export async function createOrder(data: CreateOrderData): Promise<Order> {
-  const res = await convexServer.mutation(api.orders.createOrder, {
+  const res = await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.orders.createOrder, {
     organizationId: data.organizationId as Id<"organizations">,
     tableNumber: data.tableNumber,
     type: data.type,
@@ -332,7 +394,9 @@ export async function createOrder(data: CreateOrderData): Promise<Order> {
     currency: data.currency,
   });
 
-  const doc = await convexServer.query(api.orders.getOrder, { id: res._id });
+  const doc = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.orders.getOrder, { id: res._id });
   return toOrder(doc!);
 }
 
@@ -340,7 +404,9 @@ export async function updateOrderStatus(
   orderId: string,
   status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
 ) {
-  return await convexServer.mutation(api.orders.updateStatus, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.orders.updateStatus, {
     id: orderId as Id<"orders">,
     status,
   });
@@ -351,7 +417,10 @@ export async function updateOrderStatus(
 export async function getOrderSessions(
   organizationId: string,
 ): Promise<OrderSession[]> {
-  const docs = await convexServer.query(api.sessions.getOrderSessions, {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.sessions.getOrderSessions, {
+    ...(await getOwnerCredentials()),
     organizationId: organizationId as Id<"organizations">,
   });
   return docs.map(toSession);
@@ -361,7 +430,10 @@ export async function createOrderSession(
   organizationId: string,
   _userId: string,
 ): Promise<OrderSession> {
-  const res = await convexServer.mutation(api.sessions.createOrderSession, {
+  const res = await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.sessions.createOrderSession, {
+    ...(await getOwnerCredentials()),
     organizationId: organizationId as Id<"organizations">,
   });
   return {
@@ -375,7 +447,10 @@ export async function createOrderSession(
 }
 
 export async function deleteOrderSession(id: string): Promise<void> {
-  await convexServer.mutation(api.sessions.deleteOrderSession, {
+  await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.sessions.deleteOrderSession, {
+    ...(await getOwnerCredentials()),
     id: id as Id<"orderSessions">,
   });
 }
@@ -385,7 +460,10 @@ export async function deleteOrderSession(id: string): Promise<void> {
 export async function getAvailabilitySessions(
   organizationId: string,
 ): Promise<AvailabilitySession[]> {
-  const docs = await convexServer.query(api.sessions.getAvailabilitySessions, {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.sessions.getAvailabilitySessions, {
+    ...(await getOwnerCredentials()),
     organizationId: organizationId as Id<"organizations">,
   });
   return docs.map(toSession);
@@ -395,7 +473,10 @@ export async function createAvailabilitySession(
   organizationId: string,
   _ownerId?: string,
 ): Promise<AvailabilitySession> {
-  const res = await convexServer.mutation(api.sessions.createAvailabilitySession, {
+  const res = await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.sessions.createAvailabilitySession, {
+    ...(await getOwnerCredentials()),
     organizationId: organizationId as Id<"organizations">,
   });
   return {
@@ -409,7 +490,10 @@ export async function createAvailabilitySession(
 }
 
 export async function deleteAvailabilitySession(id: string) {
-  return await convexServer.mutation(api.sessions.deleteAvailabilitySession, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.sessions.deleteAvailabilitySession, {
+    ...(await getOwnerCredentials()),
     id: id as Id<"availabilitySessions">,
   });
 }
@@ -419,7 +503,10 @@ export async function deleteAvailabilitySession(id: string) {
 export async function getStaffSessions(
   organizationId: string,
 ): Promise<StaffSession[]> {
-  const docs = await convexServer.query(api.sessions.getStaffSessions, {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.sessions.getStaffSessions, {
+    ...(await getOwnerCredentials()),
     organizationId: organizationId as Id<"organizations">,
   });
   return docs.map(toSession);
@@ -429,7 +516,10 @@ export async function createStaffSession(
   organizationId: string,
   _ownerId?: string,
 ): Promise<StaffSession> {
-  const res = await convexServer.mutation(api.sessions.createStaffSession, {
+  const res = await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.sessions.createStaffSession, {
+    ...(await getOwnerCredentials()),
     organizationId: organizationId as Id<"organizations">,
   });
   return {
@@ -443,7 +533,10 @@ export async function createStaffSession(
 }
 
 export async function deleteStaffSession(id: string) {
-  return await convexServer.mutation(api.sessions.deleteStaffSession, {
+  return await (
+    await getAuthenticatedConvexClient()
+  ).mutation(api.sessions.deleteStaffSession, {
+    ...(await getOwnerCredentials()),
     id: id as Id<"staffSessions">,
   });
 }

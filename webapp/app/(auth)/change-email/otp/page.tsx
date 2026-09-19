@@ -5,7 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
-import { confirmEmailChangeOtpAction, sendEmailChangeOtpAction } from "@/actions/settings-actions";
+import {
+  confirmEmailChangeOtpAction,
+  sendEmailChangeOtpAction,
+} from "@/actions/settings-actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,10 +24,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useTranslation } from "@/lib/i18n";
-import {
-  CircleNotch,
-  PaperPlaneRight,
-} from "@phosphor-icons/react";
+import { CircleNotch, PaperPlaneRight } from "@phosphor-icons/react";
 import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
 import { toast } from "sonner";
 
@@ -39,7 +39,9 @@ function ChangeEmailOtpForm() {
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [countdown, setCountdown] = useState(60);
-  const [otpExpiresAt, setOtpExpiresAt] = useState(() => Date.now() + 30 * 60 * 1000);
+  const [otpExpiresAt, setOtpExpiresAt] = useState(
+    () => Date.now() + 30 * 60 * 1000,
+  );
   const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ function ChangeEmailOtpForm() {
   const submitOtp = async (code: string) => {
     if (!userId || !token || !email || isExpired) return;
     setIsVerifying(true);
-    
+
     const formData = new FormData();
     formData.append("userId", userId);
     formData.append("token", token);
@@ -61,7 +63,7 @@ function ChangeEmailOtpForm() {
 
     const res = await confirmEmailChangeOtpAction({}, formData);
     setIsVerifying(false);
-    
+
     if (res?.error) {
       toast.error(res.error);
     } else if (res?.success) {
@@ -79,12 +81,12 @@ function ChangeEmailOtpForm() {
     if ((countdown > 0 && !isExpired) || !userId || !token || !email) return;
     setCountdown(60);
     setOtp("");
-    
+
     const formData = new FormData();
     formData.append("userId", userId);
     formData.append("token", token);
     formData.append("newEmail", email);
-    
+
     const res = await sendEmailChangeOtpAction({}, formData);
     if (res?.error) {
       toast.error(res.error);
@@ -98,7 +100,9 @@ function ChangeEmailOtpForm() {
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold text-foreground">{t("verifyEmail" as any)}</CardTitle>
+        <CardTitle className="text-2xl font-bold text-foreground">
+          {t("verifyEmail" as any)}
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           {t("verifyEmailDesc" as any, { email: email || "" })}
         </CardDescription>
@@ -165,7 +169,7 @@ function ChangeEmailOtpForm() {
               {isExpired
                 ? t("requestNewCodeNow" as any)
                 : countdown > 0
-                  ? t("resendIn" as any).replace("{time}", countdown.toString())
+                  ? t("resendIn", { time: countdown })
                   : t("resendCode" as any)}
             </Button>
             {!isExpired && (
@@ -176,7 +180,10 @@ function ChangeEmailOtpForm() {
               >
                 {isVerifying ? (
                   <>
-                    <CircleNotch className="w-5 h-5 animate-spin" weight="bold" />
+                    <CircleNotch
+                      className="w-5 h-5 animate-spin"
+                      weight="bold"
+                    />
                     {t("verifying" as any)}
                   </>
                 ) : (
