@@ -11,13 +11,15 @@ export function ProductDemo({
     <div
       className={`product-device ${tablet ? "device-tablet" : "device-phone"}`}
     >
-      <img
-        src={`/product/${locale}-${screen.toLowerCase()}.webp`}
-        alt={t(`flow${screen}Text`)}
-        width={tablet ? 1200 : 390}
-        height={tablet ? 800 : 844}
-        loading="lazy"
-      />
+      <div className="device-screen">
+        <img
+          src={`/product/${locale}-${screen.toLowerCase()}.webp`}
+          alt={t(`flow${screen}Text`)}
+          width={tablet ? 1200 : 390}
+          height={tablet ? 720 : 740}
+          loading="lazy"
+        />
+      </div>
     </div>
   );
 }

@@ -20,7 +20,7 @@ export function MainPage() {
     <main id="content" className="marketing">
       <section className="hero page-width">
         <h1 className="hero-title">
-          <span>{t("heroFirst")}</span>
+          <span className="hero-word">{t("heroFirst")}</span>
           <span>{t("heroLast")}</span>
         </h1>
         <div className="hero-qr">
@@ -29,14 +29,12 @@ export function MainPage() {
         <div className="hero-copy">
           <p>{t("heroSummary")}</p>
           <RegisterCta />
-          <p className="caption">{t("heroNote")}</p>
         </div>
       </section>
 
       <section id="ablauf" className="section page-width flow-section">
         <div className="section-heading">
           <h2>{t("flowTitle")}</h2>
-          <p className="caption">{t("demoLabel")}</p>
         </div>
         <div className="flow-grid">
           {(["Scan", "Pay", "Kitchen"] as const).map((step, index) => (
@@ -65,10 +63,9 @@ export function MainPage() {
           <p className="section-copy">{t("benefitService")}</p>
         </div>
         <div className="benefit-evidence">
-          <p className="caption">{t("benefitContext")}</p>
+          <p className="caption">{t("benefitPrefix")}</p>
           <p className="benefit-stat">{numericText(t("benefitNumber"))}</p>
           <h3>{t("benefitMetric")}</h3>
-          <p className="evidence-note">{t("benefitEvidence")}</p>
           <a
             href={t("benefitSourceUrl")}
             target="_blank"
@@ -148,7 +145,7 @@ export function MainPage() {
           </div>
           <div className="contact-row">
             <div>
-              <p className="caption">{t("contactLabel")}</p>
+              <h3 className="contact-label">{t("contactLabel")}</h3>
               <a className="contact-link" href={t("contactUrl")}>
                 {t("contactEmail")}
               </a>

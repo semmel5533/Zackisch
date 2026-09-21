@@ -20,11 +20,11 @@ Menu management, printable QR codes, live kitchen orders and transaction exports
 
 ## Brand Commitments
 
-Predominantly white, black type and controls, Poppins text and Inter digits. Consistent spacing, restrained copy and actual product imagery. One physical detail: a QR sheet attached with tape. Existing squirrel mascot in the closing section. No invented metrics, testimonials or decorative SaaS cards.
+Predominantly white with black setup and footer sections, black type and controls, Poppins text and Inter digits. Consistent spacing, restrained copy and actual product imagery. One physical detail: a QR sheet attached with tape. Existing squirrel mascot in the closing section. No invented metrics, testimonials or decorative SaaS cards.
 
 ## Evidence on Hand
 
-The approved direction combines the fifth concept's QR hero with the first concept's header, sections and footer. The latest instruction replaces the stand with taped paper. Product images come from actual webapp components with isolated demo data. MARS support is linked to https://launchtomars.de/startup/zakkig/. Contact: selim@zakkig.com.
+The current hero places “Das Bestellsystem.” left of the taped QR and summary/CTA to its right. A wavy underline marks the first word. The QR uses individually width-fitted print lines. Setup/footer invert to black with white text and logos. Product images come from actual webapp components with four menu categories, food/drink photos and one prefilled cart item. Compact device frames reserve space for camera and home indicator. MARS support is linked to https://launchtomars.de/startup/zakkig/. Contact: selim@zakkig.com.
 
 ## Open Decisions
 

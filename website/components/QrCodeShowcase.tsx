@@ -1,4 +1,5 @@
 "use client";
+import { QrPrintText } from "./QrPrintText";
 import { ReactQRCode } from "@lglab/react-qr-code";
 import { useTranslation } from "@/lib/i18n";
 
@@ -7,11 +8,8 @@ export function QrCodeShowcase() {
   return (
     <div className="qr-paper" role="img" aria-label={t("qrDemoLabel")}>
       <div className="qr-print" aria-hidden="true">
-        <div className="qr-print-title">
-          {t("qrPrintTitle1")}
-          <br />
-          {t("qrPrintTitle2")}
-        </div>
+        <QrPrintText text={t("qrPrintTitle1")} />
+        <QrPrintText text={t("qrPrintTitle2")} />
         <div className="qr-print-connector">
           <svg viewBox="0 0 72 8">
             <path
@@ -31,20 +29,7 @@ export function QrCodeShowcase() {
             />
           </svg>
         </div>
-        <div className="qr-print-table">
-          {t("qrPrintTable")
-            .split(/(\d+)/)
-            .map((part, i) => (
-              <span
-                key={i}
-                className={
-                  /^\d+$/.test(part) ? "font-inter tabular-nums" : undefined
-                }
-              >
-                {part}
-              </span>
-            ))}
-        </div>
+        <QrPrintText text={t("qrPrintTable")} />
         <div className="qr-print-code">
           <ReactQRCode
             value={t("qrDemoUrl")}

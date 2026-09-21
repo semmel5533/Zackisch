@@ -1,10 +1,9 @@
 export const landingTranslations = {
   de: {
-    heroFirst: "Ein Scan.",
-    heroLast: "Alles drin.",
+    heroFirst: "Das",
+    heroLast: "Bestellsystem.",
     heroSummary:
       "Deine Speisekarte. Die Bestellung. Die Bezahlung. Direkt auf dem Handy deiner Gäste.",
-    heroNote: "Keine Monatsgebühr. Kein App-Download.",
     navFlow: "So funktioniert’s",
     navPricing: "Kosten",
     navFaq: "FAQ",
@@ -17,7 +16,6 @@ export const landingTranslations = {
     menuLabel: "Navigation öffnen",
     closeMenu: "Navigation schließen",
     flowTitle: "So einfach funktioniert’s.",
-    demoLabel: "Beispielansichten mit Demodaten",
     flowScan: "Scannen & auswählen",
     flowScanText: "Die Speisekarte öffnet sich direkt im Browser.",
     flowPay: "Bestellen & bezahlen",
@@ -25,14 +23,11 @@ export const landingTranslations = {
     flowKitchen: "Zubereiten",
     flowKitchenText: "Die Bestellung erscheint auf deinem Küchen-Tablet.",
     benefitTitle: "Mehr Zeit für Gäste.\nMehr Raum für Umsatz.",
-    benefitService:
-      "Deine Gäste bestellen und bezahlen selbst. Dein Team hat mehr Zeit für aufmerksamen Service – und dafür, dass Gäste gerne wiederkommen.",
-    benefitContext: "Potenzial digitaler Bestellungen",
-    benefitNumber: "Bis zu 30 %",
+    benefitService: "Dein Team hat mehr Zeit für den Service.",
+    benefitPrefix: "Kann bis zu",
+    benefitNumber: "30%",
     benefitMetric: "mehr Umsatz im Branchenbeispiel",
-    benefitEvidence:
-      "Microsoft berichtet über me&u. Kein gemessenes Ergebnis von zakkig und keine Umsatzgarantie.",
-    benefitSource: "Branchenbeispiel bei Microsoft lesen",
+    benefitSource: "Quelle: me&u · kein zakkig-Messergebnis",
     benefitSourceUrl:
       "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
     feePromise:
@@ -47,8 +42,7 @@ export const landingTranslations = {
     feeNumber: "2",
     feeUnit: "%",
     feeLabel: "zakkig-Gebühr pro Bestellung",
-    feeNote:
-      "Zzgl. Zahlungsanbietergebühren. Diese variieren je nach Zahlungsart und Anbieter.",
+    feeNote: "Zzgl. Zahlungsanbietergebühren.",
     feeNoSetup: "Keine Einrichtungskosten",
     feeNoMonthly: "Keine Monatsgebühr",
     faqTitle: "Noch Fragen?",
@@ -65,7 +59,7 @@ export const landingTranslations = {
     faqCostsAnswer:
       "Die Registrierung ist kostenlos. Es gibt keine Einrichtungs- oder Monatsgebühr. Pro Bestellung berechnet zakkig 2 % zzgl. der variablen Gebühren des Zahlungsanbieters.",
     closingTitle: "Na dann.\nMachen wir’s zakkig.",
-    contactLabel: "Direkt mit Selim sprechen",
+    contactLabel: "Noch Fragen?",
     contactEmail: "selim@zakkig.com",
     contactUrl: "mailto:selim@zakkig.com",
     supportedBy:
@@ -79,11 +73,10 @@ export const landingTranslations = {
     footerNavigation: "Rechtliche Informationen",
   },
   en: {
-    heroFirst: "One scan.",
-    heroLast: "All set.",
+    heroFirst: "Your",
+    heroLast: "ordering system.",
     heroSummary:
       "Your menu. The order. The payment. Right on your guests’ phones.",
-    heroNote: "No monthly fee. No app download.",
     navFlow: "How it works",
     navPricing: "Pricing",
     navFaq: "FAQ",
@@ -96,7 +89,6 @@ export const landingTranslations = {
     menuLabel: "Open navigation",
     closeMenu: "Close navigation",
     flowTitle: "It’s that simple.",
-    demoLabel: "Example screens with demo data",
     flowScan: "Scan & choose",
     flowScanText: "The menu opens right in the browser.",
     flowPay: "Order & pay",
@@ -104,14 +96,11 @@ export const landingTranslations = {
     flowKitchen: "Prepare",
     flowKitchenText: "The order appears on your kitchen tablet.",
     benefitTitle: "More time for guests.\nMore room for revenue.",
-    benefitService:
-      "Guests order and pay themselves. Your team has more time for attentive service – and giving guests a reason to come back.",
-    benefitContext: "The potential of digital ordering",
-    benefitNumber: "Up to 30%",
+    benefitService: "Your team has more time for service.",
+    benefitPrefix: "Could generate up to",
+    benefitNumber: "30%",
     benefitMetric: "more revenue in an industry example",
-    benefitEvidence:
-      "Microsoft reports on me&u. This is not a measured zakkig result or a revenue guarantee.",
-    benefitSource: "Read the industry example at Microsoft",
+    benefitSource: "Source: me&u · not a measured zakkig result",
     benefitSourceUrl:
       "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
     feePromise:
@@ -126,8 +115,7 @@ export const landingTranslations = {
     feeNumber: "2",
     feeUnit: "%",
     feeLabel: "zakkig fee per order",
-    feeNote:
-      "Plus payment provider fees, which vary by payment method and provider.",
+    feeNote: "Plus payment provider fees.",
     feeNoSetup: "No setup costs",
     feeNoMonthly: "No monthly fee",
     faqTitle: "Any questions?",
@@ -144,7 +132,7 @@ export const landingTranslations = {
     faqCostsAnswer:
       "Registration is free. There are no setup or monthly fees. zakkig charges 2% per order, plus the payment provider’s variable fees.",
     closingTitle: "Let’s get\nzakkig.",
-    contactLabel: "Talk directly to Selim",
+    contactLabel: "Any questions?",
     contactEmail: "selim@zakkig.com",
     contactUrl: "mailto:selim@zakkig.com",
     supportedBy:

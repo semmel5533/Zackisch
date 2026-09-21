@@ -439,25 +439,25 @@ The website is a light, editorial surface for restaurant operators. Its primary 
 
 ### Composition and tokens
 
-- Canvas: white; soft sections and footer `#f7f7f5`; text black; secondary text `#595959`; hairlines `#e6e6e6`.
+- Canvas: white; setup section and footer black with white text, white logos and #bdbdbd secondary text. Light-surface text is black with #595959 secondary text and #e6e6e6 hairlines.
 - Content: maximum 1200px, centered. Side gutters scale from 24px to 64px. Section padding scales from 72px to 128px.
 - Spacing rhythm: 4, 8, 12, 16, 24, 32, 40, 48, 64px. Use close spacing within a group and large spacing between groups.
-- Poppins is the text family. Hero: 46–88px, 600, line-height 1.08. Section heading: 32–52px, 600, line-height 1.17. Subheading: 18px. Body: 14–17px. Supporting captions: 12px. Tracking never below -0.04em; Inter is reserved for numeric digits and decimal separators.
+- Poppins is the text family. Hero: 34–52px, 600, line-height 1.18; the first word has a thin wavy underline. Section heading: 32–52px, 600, line-height 1.17. Subheading: 18px. Body: 14–17px. Supporting captions: 12px. Tracking never below -0.04em; Inter is reserved for numeric digits and decimal separators.
 - Primary controls: black/white pill, minimum 48px height, 14px semibold. Secondary controls: 44px, thin border. Pointer-down scale 0.98. Keyboard focus: visible 2px black outline with 5px offset.
 - Native locale dialog: white, 24px outer radius, 24px padding, edge-to-edge header/footer dividers. Options use explicit 12px radii. The dialog traps focus, closes on Escape and applies draft language only through the primary action.
 
 ### Visual signature and product imagery
 
-The hero QR is a slightly rotated paper sheet held by two restrained translucent tape strips. It is the only physical visual effect. QR modules, finders and centered logo follow the existing product QR settings; the example links to the app entry, not a real restaurant table. No animated background, rotating QR showcase, card grid or decorative scroll effects.
+QR print lines scale individually to identical ink widths after fonts load, matching the webapp print layout while retaining Poppins words and Inter digits. The hero QR is a slightly rotated paper sheet held by two restrained translucent tape strips. It is the only physical visual effect. QR modules, finders and centered logo follow the existing product QR settings; the example links to the app entry, not a real restaurant table. No animated background, rotating QR showcase, card grid or decorative scroll effects.
 
-The ordering flow uses actual `GuestFrontend`, `CartSheet` and `CurrentOrdersContent` renders with isolated demo data. Images are localized for German and English, served as WebP and labelled as examples. Two portrait phone frames and one landscape tablet describe scan, checkout and kitchen. Never replace their interfaces with imagined dashboards. The squirrel is the existing brand SVG used once in the closing section.
+The ordering flow uses actual `GuestFrontend`, `CartSheet` and `CurrentOrdersContent` renders with isolated demo data. Images are localized for German and English, served as WebP with localized accessible descriptions. Two compact portrait phone frames (390:780) with a reserved camera area and one landscape tablet (1.65:1) describe scan, checkout and kitchen. Never replace their interfaces with imagined dashboards. The squirrel is the existing brand SVG used once in the closing section.
 
 ### Responsive contract
 
-- Above 900px: split hero headline flanks the paper QR. At desktop widths the flow has two phone columns and a wider tablet column.
-- 601–900px: headline above the QR, two phone columns, tablet beneath; reduced text-column spacing.
+- Above 900px: headline left, paper QR center, summary and registration CTA right. At desktop widths the flow has two phone columns and a wider tablet column.
+- 601–900px: headline across the top, QR left and copy right; two phone columns, tablet beneath.
 - Up to 600px: single-column page, compact header and disclosure navigation; sequential phone/tablet flow, stacked pricing and FAQ, independent contact and footer controls.
-- At 320px the header uses smaller horizontal gaps. All primary actions remain at least 44px high. No horizontal document overflow.
+- Above 1100px the header shows the full region/language label; below it keeps the globe button. The disclosure navigation activates at 720px. Login includes an external arrow. At 320px the header uses 16px side gutters and smaller horizontal gaps. All primary actions remain at least 44px high. No horizontal document overflow.
 - Reduced-motion preference disables smooth scrolling and transitions. Content is visible without entrance animation.
 
 ### Content rules

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Globe, List, X } from "@phosphor-icons/react";
+import { ArrowUpRight, Globe, List, X } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegionLanguageModal } from "./RegionLanguageModal";
 
@@ -47,14 +47,16 @@ export function Header() {
         </nav>
         <div className="header-actions">
           <button
-            className="icon-control"
+            className="icon-control header-region"
             aria-label={t("regionSelectorTitle")}
             onClick={() => setIsModalOpen(true)}
           >
             <Globe size={21} aria-hidden="true" />
+            <span>{t("regionDisplay")}</span>
           </button>
           <a href={t("signInUrl")} className="button-outline">
             {t("signIn")}
+            <ArrowUpRight size={16} aria-hidden="true" />
           </a>
           <button
             className="icon-control menu-toggle"

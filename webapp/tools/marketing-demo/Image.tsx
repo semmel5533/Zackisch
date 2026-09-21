@@ -7,5 +7,15 @@ export default function Image({
   fill?: boolean;
   priority?: boolean;
 }) {
-  return <img {...props} />;
+  return (
+    <img
+      {...props}
+      style={{
+        ...props.style,
+        ...(fill
+          ? { position: "absolute", inset: 0, width: "100%", height: "100%" }
+          : {}),
+      }}
+    />
+  );
 }
