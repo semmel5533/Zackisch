@@ -99,34 +99,40 @@ export function Header() {
             })}
           </div>
           <div className="mobile-nav-actions">
-            <a href={t("signInUrl")} className="button-primary">
-              {t("signIn")}
-              <ArrowUpRight size={16} aria-hidden="true" />
+            <a
+              href={t("signInUrl")}
+              className="w-full inline-flex items-center justify-center gap-2.5 h-11 px-5 rounded-full text-sm font-semibold transition-all active:scale-[0.98] shrink-0 bg-black text-white hover:bg-zinc-800 border border-black"
+            >
+              <span>{t("signIn")}</span>
+              <ArrowUpRight size={16} className="shrink-0" aria-hidden="true" />
             </a>
             <button
-              className="button-outline mobile-region-button"
+              className="w-full inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-sm font-semibold border border-[var(--site-line)] hover:bg-[var(--site-soft)] transition-all active:scale-[0.98] shrink-0"
               aria-label={t("regionSelectorTitle")}
               onClick={() => {
                 setMenuOpen(false);
                 setIsModalOpen(true);
               }}
             >
-              <Globe size={18} aria-hidden="true" />
+              <Globe size={18} className="shrink-0" aria-hidden="true" />
               <span>{t("regionDisplay")}</span>
             </button>
           </div>
         </nav>
         <div className="header-actions">
-          <a href={t("signInUrl")} className="button-primary desktop-only">
-            {t("signIn")}
-            <ArrowUpRight size={16} aria-hidden="true" />
+          <a
+            href={t("signInUrl")}
+            className="inline-flex items-center justify-center gap-2.5 h-11 px-5 rounded-full text-sm font-semibold transition-all active:scale-[0.98] shrink-0 bg-black text-white hover:bg-zinc-800 border border-black desktop-only"
+          >
+            <span>{t("signIn")}</span>
+            <ArrowUpRight size={16} className="shrink-0" aria-hidden="true" />
           </a>
           <button
-            className="button-outline header-region desktop-only"
+            className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full text-sm font-semibold border border-[var(--site-line)] hover:bg-[var(--site-soft)] transition-all active:scale-[0.98] shrink-0 header-region desktop-only"
             aria-label={t("regionSelectorTitle")}
             onClick={() => setIsModalOpen(true)}
           >
-            <Globe size={18} aria-hidden="true" />
+            <Globe size={18} className="shrink-0" aria-hidden="true" />
             <span className="link-label">{t("regionDisplay")}</span>
           </button>
           <button

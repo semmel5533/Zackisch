@@ -71,7 +71,7 @@ export function SiteFooter({
             <h2>{t("closingTitle")}</h2>
           </div>
           <div className="footer-closing-cta flex items-center">
-            <RegisterCta />
+            <RegisterCta variant="inverse" />
           </div>
           <div className="footer-contact flex flex-col items-end text-right justify-self-end gap-2 pt-2 max-md:pt-0">
             <h3 className="contact-label text-2xl font-medium m-0 leading-[1.1]">{t("contactLabel")}</h3>

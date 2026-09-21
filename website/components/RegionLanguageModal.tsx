@@ -124,13 +124,17 @@ export function RegionLanguageModal({
             </div>
           </fieldset>
         </div>
-        <footer className="region-dialog-footer">
-          <button type="button" className="button-outline" onClick={onClose}>
+        <footer className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
+          <button
+            type="button"
+            className="w-full sm:flex-1 h-11 rounded-full border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer transition-all active:scale-[0.98] text-sm"
+            onClick={onClose}
+          >
             {t("cancel")}
           </button>
           <button
             type="button"
-            className="button-primary"
+            className="w-full sm:flex-1 h-11 rounded-full bg-black text-white hover:bg-zinc-800 font-semibold cursor-pointer transition-all active:scale-[0.98] text-sm"
             onClick={handleApply}
           >
             {t("saveAndContinue")}
