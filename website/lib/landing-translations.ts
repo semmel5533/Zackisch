@@ -37,8 +37,8 @@ export const landingTranslations = {
       "Du zahlst nur für Bestellungen über zakkig. Ohne Bestellungen bleibt die Nutzung kostenlos.",
     setupTitle: "Kinderleicht einrichten.",
     setupFirst: "Menü anlegen",
-    setupSecond: "QR-Codes auslegen",
-    setupThird: "Personalsitzung öffnen",
+    setupSecond: "QR-Codes ausdrucken und anbringen",
+    setupThird: "Tablet vorbereiten und Personalsitzung öffnen",
     setupNote:
       "Ein Tablet, Internet und dein Angebot. Mehr brauchst du zum Start nicht.",
     feeTitle: "Nur wenn bestellt wird.",
@@ -140,8 +140,8 @@ export const landingTranslations = {
       "You only pay for orders placed through zakkig. Without orders, it’s free to use.",
     setupTitle: "Effortless setup.",
     setupFirst: "Add your menu",
-    setupSecond: "Put out your QR codes",
-    setupThird: "Open staff session",
+    setupSecond: "Print and place QR codes",
+    setupThird: "Prepare tablet and open staff session",
     setupNote:
       "A tablet, internet and your menu. That’s all you need to get started.",
     feeTitle: "Only when orders come in.",
