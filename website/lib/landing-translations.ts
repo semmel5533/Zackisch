@@ -92,7 +92,7 @@ export const landingTranslations = {
     contactLabel: "Interesse?",
     contactEmail: "selim@zakkig.com",
     contactUrl: "mailto:selim@zakkig.com",
-    supportedBy: "Unterstützt von",
+    supportedBy: "Unterstützt durch",
     marsUrl: "https://launchtomars.de/startup/zakkig/",
     regionDisplay: "Deutschland · Deutsch",
     qrDemoUrl: "https://app.zakkig.com/",
