@@ -657,7 +657,6 @@ h2[id] {
   color: var(--site-muted);
 }
 .site-footer {
-  padding-top: 72px;
   position: relative;
   overflow: hidden;
 }

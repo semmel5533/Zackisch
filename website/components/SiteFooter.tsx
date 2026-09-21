@@ -18,11 +18,11 @@ export function SiteFooter({
   if (variant === "minimal") {
     return (
       <>
-        <footer className="site-footer">
-          <div className="page-width flex flex-col md:flex-row items-center md:items-end justify-between gap-6 pt-10 md:pt-14">
-            <div className="footer-mascot justify-self-start flex items-end mt-8 md:mt-16 mb-[-110px] order-2 md:order-1">
+        <footer className="site-footer pt-6 sm:pt-8">
+          <div className="page-width flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
+            <div className="footer-mascot justify-self-start flex items-end mb-[-110px] order-2 md:order-1">
               <img
-                className="closing-mascot w-[clamp(260px,24vw,360px)] h-auto object-contain block"
+                className="closing-mascot w-[clamp(240px,22vw,320px)] h-auto object-contain block"
                 src="/icon.svg"
                 alt=""
                 aria-hidden="true"
@@ -30,7 +30,7 @@ export function SiteFooter({
                 height="420"
               />
             </div>
-            <div className="footer-bottom flex flex-col items-end self-end gap-3 py-7 max-md:pt-4 max-md:pb-0 order-1 md:order-2">
+            <div className="footer-bottom flex flex-col items-end self-end gap-3 pb-7 max-md:pt-4 max-md:pb-0 order-1 md:order-2">
               <nav
                 className="flex gap-6 max-md:gap-5 text-[13px] font-bold uppercase tracking-[0.08em] max-md:w-full max-md:justify-end max-md:flex-nowrap"
                 aria-label={t("footerNavigation")}
@@ -65,7 +65,7 @@ export function SiteFooter({
 
   return (
     <>
-      <footer className="site-footer">
+      <footer className="site-footer pt-16 sm:pt-20">
         <div className="page-width footer-container">
           <div className="footer-closing-title text-left">
             <h2>{t("closingTitle")}</h2>
