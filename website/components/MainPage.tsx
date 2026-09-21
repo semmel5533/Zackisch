@@ -52,17 +52,21 @@ export function MainPage() {
               className={`flex flex-col items-center w-full ${
                 step === "Kitchen"
                   ? "col-span-full max-w-[800px] mx-auto"
-                  : "max-w-[340px] justify-self-center"
+                  : step === "Scan"
+                    ? "max-w-[230px] justify-self-center md:justify-self-start"
+                    : "max-w-[230px] justify-self-center md:justify-self-end"
               }`}
               key={step}
             >
               <ProductDemo screen={step} />
               <div
-                className={`flex items-start gap-4 mt-6 md:mt-8 w-fit ${
-                  step === "Kitchen" ? "max-w-[520px]" : "max-w-[320px]"
-                } mx-auto`}
+                className={`flex items-start gap-3 mt-6 md:mt-8 shrink-0 ${
+                  step === "Kitchen"
+                    ? "w-fit max-w-[520px] mx-auto"
+                    : "w-[255px]"
+                }`}
               >
-                <span className="step-number" aria-hidden="true">
+                <span className="step-number shrink-0" aria-hidden="true">
                   {index + 1}
                 </span>
                 <div className="flex flex-col items-start text-left">

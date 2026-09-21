@@ -1519,12 +1519,6 @@ h2[id] {
     font-size: clamp(24px, 6.4vw, 44px);
     line-height: 1.1;
   }
-  .hero-left::after {
-    content: ",";
-  }
-  .hero-right::after {
-    content: ".";
-  }
   .hero-qr {
     margin-block: 8px;
   }
