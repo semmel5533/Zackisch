@@ -1,9 +1,9 @@
 export const landingTranslations = {
   de: {
-    heroLeft: "Ein Scan.",
-    heroRight: "Alles drin.",
-    heroFirst: "Ein Scan.",
-    heroLast: "Alles drin.",
+    heroLeft: "Ein Scan",
+    heroRight: "Alles drin",
+    heroFirst: "Ein Scan",
+    heroLast: "Alles drin",
     heroSummary:
       "Deine Speisekarte. Die Bestellung. Die Bezahlung. Direkt auf dem Handy deiner Kunden.",
     navFlow: "So funktioniert’s",
@@ -102,10 +102,10 @@ export const landingTranslations = {
     footerNavigation: "Rechtliche Informationen",
   },
   en: {
-    heroLeft: "One scan.",
-    heroRight: "All inside.",
-    heroFirst: "One scan.",
-    heroLast: "All inside.",
+    heroLeft: "One scan",
+    heroRight: "All inside",
+    heroFirst: "One scan",
+    heroLast: "All inside",
     heroSummary:
       "Your menu. The order. The payment. Right on your customers’ phones.",
     navFlow: "How it works",
