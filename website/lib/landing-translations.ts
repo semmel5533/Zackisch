@@ -22,7 +22,7 @@ export const landingTranslations = {
     flowScanText: "Die Speisekarte öffnet sich direkt im Browser.",
     flowPay: "Bestellen & bezahlen",
     flowPayText: "Deine Kunden bestellen selbst. Am Tisch oder zum Abholen.",
-    flowKitchen: "Zubereiten",
+    flowKitchen: "Vorbereiten",
     flowKitchenText: "Die Bestellung erscheint auf deinem Personal-Tablet.",
     benefitTitle: "Mehr Zeit für Kunden.\nMehr Raum für Umsatz.",
     benefitService:

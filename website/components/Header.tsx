@@ -61,29 +61,48 @@ export function Header() {
           aria-label={t("mainNavigation")}
           className={`header-nav ${menuOpen ? "is-open" : ""}`}
         >
-          {(
-            [
-              ["flowUrl", "navFlow"],
-              ["pricingUrl", "navPricing"],
-              ["faqUrl", "navFaq"],
-            ] as const
-          ).map(([url, label]) => (
-            <Link
-              onClick={(e) => handleNavClick(e, url)}
-              key={url}
-              href={t(url)}
+          <div className="header-nav-links">
+            {(
+              [
+                ["flowUrl", "navFlow"],
+                ["pricingUrl", "navPricing"],
+                ["faqUrl", "navFaq"],
+              ] as const
+            ).map(([url, label]) => (
+              <Link
+                onClick={(e) => handleNavClick(e, url)}
+                key={url}
+                href={t(url)}
+              >
+                <span className="link-label">{t(label)}</span>
+              </Link>
+            ))}
+          </div>
+          <div className="mobile-nav-actions">
+            <a href={t("signInUrl")} className="button-primary">
+              {t("signIn")}
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+            <button
+              className="button-outline mobile-region-button"
+              aria-label={t("regionSelectorTitle")}
+              onClick={() => {
+                setMenuOpen(false);
+                setIsModalOpen(true);
+              }}
             >
-              <span className="link-label">{t(label)}</span>
-            </Link>
-          ))}
+              <Globe size={18} aria-hidden="true" />
+              <span>{t("regionDisplay")}</span>
+            </button>
+          </div>
         </nav>
         <div className="header-actions">
-          <a href={t("signInUrl")} className="button-primary">
+          <a href={t("signInUrl")} className="button-primary desktop-only">
             {t("signIn")}
             <ArrowUpRight size={16} aria-hidden="true" />
           </a>
           <button
-            className="button-outline header-region"
+            className="button-outline header-region desktop-only"
             aria-label={t("regionSelectorTitle")}
             onClick={() => setIsModalOpen(true)}
           >
