@@ -121,26 +121,27 @@ export function MainPage() {
         <div className="flex flex-col items-center text-center justify-center">
           <h2 id="kosten">{t("feeTitle")}</h2>
           <p className="section-copy">{t("feePromise")}</p>
-          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mt-7">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-black/15 bg-black/[0.04] text-black font-semibold text-sm tracking-tight shadow-xs">
-              <Check size={16} weight="bold" className="text-black shrink-0" aria-hidden="true" />
-              {t("feeNoSetup")}
-            </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-black/15 bg-black/[0.04] text-black font-semibold text-sm tracking-tight shadow-xs">
-              <Check size={16} weight="bold" className="text-black shrink-0" aria-hidden="true" />
-              {t("feeNoMonthly")}
-            </span>
-          </div>
         </div>
         <div className="flex flex-col items-center justify-center text-center self-center">
-          <div className="flex items-baseline justify-center gap-1.5 text-4xl sm:text-5xl font-semibold tracking-tight text-black mb-3">
-            <span className="font-inter tabular-nums">{t("feeNumber")}</span>
-            <span>{t("feeUnit")}</span>
+          <div className="flex flex-col items-center text-center gap-1.5 sm:gap-2">
+            <p className="text-2xl sm:text-3xl font-semibold tracking-tight text-black">
+              {t("feeNoSetup")}
+            </p>
+            <p className="text-2xl sm:text-3xl font-semibold tracking-tight text-black">
+              {t("feeNoMonthly")}
+            </p>
           </div>
-          <h3 className="text-base font-semibold text-black">{t("feeLabel")}</h3>
-          <p className="text-xs text-[var(--site-muted)] mt-1.5 max-w-[32ch] text-center mx-auto">
-            {t("feeNote")}
-          </p>
+          <div className="mt-5 sm:mt-6 flex flex-col items-center text-center">
+            <p className="text-base sm:text-lg font-medium text-black">
+              <span className="font-inter tabular-nums">{t("feeNumber")}</span>
+              <span>{t("feeUnit")}</span>
+              {" "}
+              <span>{t("feeLabel")}</span>
+            </p>
+            <p className="text-xs text-[var(--site-muted)] mt-1.5 text-center">
+              {t("feeNote")}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -161,8 +162,10 @@ export function MainPage() {
 
       <footer className="site-footer">
         <div className="page-width footer-container">
-          <div className="footer-closing">
+          <div className="footer-closing-title">
             <h2>{t("closingTitle")}</h2>
+          </div>
+          <div className="footer-closing-cta">
             <RegisterCta />
           </div>
           <div className="footer-contact">
