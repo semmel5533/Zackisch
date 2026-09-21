@@ -93,7 +93,7 @@ export function RegionLanguageModal({
             <legend>{t("regionLabel")}</legend>
             <div className="region-option selected">
               <span>{region.nativeName}</span>
-              <Check size={18} aria-hidden="true" />
+              <Check size={16} weight="bold" aria-hidden="true" />
             </div>
           </fieldset>
           <fieldset>
@@ -113,7 +113,7 @@ export function RegionLanguageModal({
                   />
                   <span>{loc.label}</span>
                   {selectedLocale === loc.code && (
-                    <Check size={18} aria-hidden="true" />
+                    <Check size={16} weight="bold" aria-hidden="true" />
                   )}
                 </label>
               ))}

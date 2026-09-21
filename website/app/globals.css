@@ -1038,62 +1038,122 @@ h2[id] {
   padding: 0;
   width: min(480px, calc(100% - 32px));
   max-height: calc(100dvh - 32px);
-  border: 1px solid var(--site-line);
+  border: 1px solid #e4e4e7;
   border-radius: 24px;
   background: #fff;
-  color: #000;
-  overflow: auto;
+  color: #18181b;
+  overflow: hidden;
+  box-shadow:
+    0 24px 48px -12px rgba(0, 0, 0, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 200ms ease,
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    overlay 200ms ease allow-discrete,
+    display 200ms ease allow-discrete;
+}
+.region-dialog[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+@starting-style {
+  .region-dialog[open] {
+    opacity: 0;
+    transform: scale(0.96);
+  }
 }
 .region-dialog::backdrop {
-  background: #0006;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition:
+    opacity 200ms ease,
+    overlay 200ms ease allow-discrete,
+    display 200ms ease allow-discrete;
+}
+.region-dialog[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  .region-dialog[open]::backdrop {
+    opacity: 0;
+  }
 }
 .region-dialog-inner {
   display: flex;
   flex-direction: column;
 }
 .region-dialog-header {
-  padding: 24px;
-  border-bottom: 1px solid #f1f1f1;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f4f4f5;
+  background: #fff;
 }
 .region-dialog-header h2 {
   font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: #18181b;
 }
 .region-dialog-header p {
   font-size: 13px;
-  color: var(--site-muted);
-  line-height: 1.6;
+  color: #71717a;
+  line-height: 1.5;
   margin-top: 4px;
 }
 .region-dialog-body {
   padding: 24px;
   display: grid;
-  gap: 24px;
+  gap: 20px;
+}
+.region-dialog fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
 }
 .region-dialog legend {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #71717a;
+  margin-bottom: 8px;
 }
 .region-option {
   display: flex;
   min-height: 48px;
   gap: 12px;
   padding: 12px 16px;
-  border: 1px solid var(--site-line);
-  border-radius: 12px;
+  border: 1px solid #e4e4e7;
+  border-radius: 14px;
   align-items: center;
   justify-content: space-between;
   font-size: 14px;
+  font-weight: 500;
+  color: #27272a;
+  background: #fff;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.region-option:not(label) {
+  cursor: default;
+}
+.region-option:hover:not(.selected) {
+  border-color: #d4d4d8;
+  background: #fafafa;
 }
 .region-option.selected {
   border-color: #000;
-  background: var(--site-soft);
+  background: #f4f4f5;
+  color: #000;
+  font-weight: 600;
 }
 .region-option:has(input:focus-visible) {
   outline: 2px solid #000;
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 .region-option input {
   position: absolute;
@@ -1104,7 +1164,7 @@ h2[id] {
 .language-options {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 .language-options label {
   cursor: pointer;
@@ -1113,12 +1173,39 @@ h2[id] {
   display: flex;
   gap: 12px;
   padding: 16px 24px;
-  border-top: 1px solid #f1f1f1;
+  border-top: 1px solid #f4f4f5;
+  background: #fff;
 }
 .region-dialog-footer button {
   flex: 1;
+  height: 44px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
 }
-@media (max-width: 400px) {
+.region-dialog-footer .button-outline {
+  border: 1px solid #e4e4e7;
+  background: #fff;
+  color: #27272a;
+}
+.region-dialog-footer .button-outline:hover {
+  background: #f4f4f5;
+  border-color: #d4d4d8;
+}
+.region-dialog-footer .button-primary {
+  background: #000;
+  color: #fff;
+  border: none;
+}
+.region-dialog-footer .button-primary:hover {
+  background: #27272a;
+}
+.region-dialog-footer .button-primary:active {
+  transform: scale(0.98);
+}
+@media (max-width: 440px) {
   .region-dialog-footer {
     flex-direction: column-reverse;
   }
