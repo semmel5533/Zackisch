@@ -1,4 +1,5 @@
 "use client";
+import { WaveLine } from "./WaveLine";
 import { QrPrintText } from "./QrPrintText";
 import { ReactQRCode } from "@lglab/react-qr-code";
 import { useTranslation } from "@/lib/i18n";
@@ -11,23 +12,9 @@ export function QrCodeShowcase() {
         <QrPrintText text={t("qrPrintTitle1")} />
         <QrPrintText text={t("qrPrintTitle2")} />
         <div className="qr-print-connector">
-          <svg viewBox="0 0 72 8">
-            <path
-              d="M0 4Q3 0 6 4T12 4T18 4T24 4T30 4T36 4T42 4T48 4T54 4T60 4T66 4T72 4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
+          <WaveLine />
           {t("qrPrintAt")}
-          <svg viewBox="0 0 72 8">
-            <path
-              d="M0 4Q3 0 6 4T12 4T18 4T24 4T30 4T36 4T42 4T48 4T54 4T60 4T66 4T72 4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
+          <WaveLine />
         </div>
         <QrPrintText text={t("qrPrintTable")} />
         <div className="qr-print-code">

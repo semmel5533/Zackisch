@@ -19,8 +19,8 @@ const labels = {
     drinkDescription: "Frische Zitrone, Rosmarin und Eis",
     dessert: "Panna cotta",
     drinks: "Getränke",
-    dish: "Burrata & Tomaten",
-    description: "Burrata, reife Tomaten, Basilikum und Sauerteigbrot",
+    dish: "Pizza Margherita",
+    description: "Tomatensauce, Mozzarella und frisches Basilikum",
     second: "Pasta al Limone",
     secondDescription: "Zitrone, Parmesan und frischer Pfeffer",
   },
@@ -32,8 +32,8 @@ const labels = {
     drinkDescription: "Fresh lemon, rosemary and ice",
     dessert: "Panna cotta",
     drinks: "Drinks",
-    dish: "Burrata & tomatoes",
-    description: "Burrata, ripe tomatoes, basil and sourdough",
+    dish: "Pizza Margherita",
+    description: "Tomato sauce, mozzarella and fresh basil",
     second: "Pasta al Limone",
     secondDescription: "Lemon, Parmesan and fresh pepper",
   },
@@ -68,11 +68,11 @@ const categories: MenuCategory[] = [
 const items: MenuItem[] = [
   {
     ...base,
-    _id: "burrata",
-    $id: "burrata",
+    _id: "pizza",
+    $id: "pizza",
     categoryId: "food",
     name: labels.dish,
-    imageId: "/burrata.webp",
+    imageId: "/pizza.webp",
     description: labels.description,
     price: 1250,
     available: true,
@@ -139,8 +139,8 @@ items.push(
 useCartStore.setState({
   items: [
     {
-      id: "burrata",
-      menuItemId: "burrata",
+      id: "pizza",
+      menuItemId: "pizza",
       name: labels.dish,
       price: 1250,
       quantity: 1,

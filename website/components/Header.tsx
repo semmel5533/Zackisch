@@ -41,7 +41,7 @@ export function Header() {
             ] as const
           ).map(([url, label]) => (
             <Link onClick={() => setMenuOpen(false)} key={url} href={t(url)}>
-              {t(label)}
+              <span className="link-label">{t(label)}</span>
             </Link>
           ))}
         </nav>
@@ -52,7 +52,7 @@ export function Header() {
             onClick={() => setIsModalOpen(true)}
           >
             <Globe size={21} aria-hidden="true" />
-            <span>{t("regionDisplay")}</span>
+            <span className="link-label">{t("regionDisplay")}</span>
           </button>
           <a href={t("signInUrl")} className="button-outline">
             {t("signIn")}

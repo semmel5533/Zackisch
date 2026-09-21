@@ -23,11 +23,12 @@ export const landingTranslations = {
     flowKitchen: "Zubereiten",
     flowKitchenText: "Die Bestellung erscheint auf deinem Küchen-Tablet.",
     benefitTitle: "Mehr Zeit für Gäste.\nMehr Raum für Umsatz.",
-    benefitService: "Dein Team hat mehr Zeit für den Service.",
-    benefitPrefix: "Kann bis zu",
+    benefitService:
+      "Deine Gäste bestellen und bezahlen selbst. Dein Team hat mehr Zeit für den Service – und dafür, dass Gäste gerne wiederkommen.",
+    benefitPrefix: "Bis zu",
     benefitNumber: "30%",
     benefitMetric: "mehr Umsatz im Branchenbeispiel",
-    benefitSource: "Quelle: me&u · kein zakkig-Messergebnis",
+    benefitSource: "Quelle: me&u",
     benefitSourceUrl:
       "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
     feePromise:
@@ -35,14 +36,14 @@ export const landingTranslations = {
     setupTitle: "Du machst Gastronomie.\nWir machen den Bestellweg.",
     setupFirst: "Speisekarte anlegen",
     setupSecond: "QR-Codes auslegen",
-    setupThird: "Küchenansicht öffnen",
+    setupThird: "Personalsitzung öffnen",
     setupNote:
       "Ein Tablet, Internet und dein Angebot. Mehr brauchst du zum Start nicht.",
     feeTitle: "Nur wenn bestellt wird.",
     feeNumber: "2",
     feeUnit: "%",
     feeLabel: "zakkig-Gebühr pro Bestellung",
-    feeNote: "Zzgl. Zahlungsanbietergebühren.",
+    feeNote: "zzgl. Zahlungsanbietergebühren.",
     feeNoSetup: "Keine Einrichtungskosten",
     feeNoMonthly: "Keine Monatsgebühr",
     faqTitle: "Noch Fragen?",
@@ -52,14 +53,41 @@ export const landingTranslations = {
     faqDevices: "Welche Geräte brauche ich?",
     faqDevicesAnswer:
       "Ein normales Tablet mit Browser und eine stabile Internetverbindung für die Küche. Deine Gäste nutzen ihr eigenes Handy.",
+    faqPickup: "Kann ich auch Bestellungen zum Abholen anbieten?",
+    faqPickupAnswer:
+      "Ja. Du kannst Bestellungen am Tisch, zum Abholen oder beides anbieten. Abholbestellungen erscheinen ebenfalls in deiner Küchenansicht.",
+    faqMenu: "Kann ich meine Speisekarte selbst ändern?",
+    faqMenuAnswer:
+      "Ja. Du verwaltest Kategorien, Gerichte, Bilder und Preise in deinem Dashboard. Deine Gäste sehen die aktuelle Speisekarte über denselben QR-Code.",
+    faqUnavailable: "Was mache ich, wenn ein Gericht ausverkauft ist?",
+    faqUnavailableAnswer:
+      "Du kannst Artikel als nicht verfügbar markieren und später wieder freigeben. So bestellen Gäste nur das, was du gerade anbieten kannst.",
+    faqOptions: "Sind Extras und Auswahlmöglichkeiten möglich?",
+    faqOptionsAnswer:
+      "Ja. Du kannst Auswahlmöglichkeiten und Extras mit eigenen Aufpreisen anlegen. Deine Gäste wählen sie direkt beim Bestellen.",
+    faqPayment: "Welche Zahlungsarten stehen meinen Gästen zur Verfügung?",
+    faqPaymentAnswer:
+      "Gäste können direkt über Apple Pay, Google Pay, Kreditkarte und weitere gängige Online-Zahlungsmethoden bezahlen. Die Abwicklung läuft sicher über Stripe.",
+    faqTips: "Können Gäste Trinkgeld geben?",
+    faqTipsAnswer:
+      "Ja. Deine Gäste können beim Bezahlen ganz einfach ein Trinkgeld mit vorgegebenen Beträgen oder einem freien Wunschbetrag hinzufügen.",
+    faqStart: "Was brauche ich, um Bestellungen anzunehmen?",
+    faqStartAnswer:
+      "Lege dein Konto und deine Speisekarte an, richte den Zahlungsanbieter ein und verteile deine QR-Codes. Öffne anschließend die Personalsitzung auf deinem Tablet.",
     faqPos: "Wie funktioniert das mit meiner Kasse?",
     faqPosAnswer:
       "Bestellungen überträgst du manuell als unbaren Umsatz in dein Kassensystem. Deine Transaktionen kannst du exportieren.",
+    faqPayout: "Wann und wie erhalte ich meine Auszahlungen?",
+    faqPayoutAnswer:
+      "Deine Einnahmen werden über dein verknüpftes Stripe-Konto automatisch und regelmäßig auf dein Bankkonto überwiesen.",
+    faqContract: "Gibt es eine Vertragslaufzeit oder Kündigungsfrist?",
+    faqContractAnswer:
+      "Nein. Es gibt keine Mindestvertragslaufzeit und keine Bindung. Du kannst zakkig jederzeit nutzen, pausieren oder beenden.",
     faqCosts: "Was kostet zakkig?",
     faqCostsAnswer:
       "Die Registrierung ist kostenlos. Es gibt keine Einrichtungs- oder Monatsgebühr. Pro Bestellung berechnet zakkig 2 % zzgl. der variablen Gebühren des Zahlungsanbieters.",
     closingTitle: "Na dann.\nMachen wir’s zakkig.",
-    contactLabel: "Noch Fragen?",
+    contactLabel: "Interesse?",
     contactEmail: "selim@zakkig.com",
     contactUrl: "mailto:selim@zakkig.com",
     supportedBy:
@@ -89,6 +117,7 @@ export const landingTranslations = {
     menuLabel: "Open navigation",
     closeMenu: "Close navigation",
     flowTitle: "It’s that simple.",
+    demoLabel: "Example screens with demo data",
     flowScan: "Scan & choose",
     flowScanText: "The menu opens right in the browser.",
     flowPay: "Order & pay",
@@ -96,11 +125,12 @@ export const landingTranslations = {
     flowKitchen: "Prepare",
     flowKitchenText: "The order appears on your kitchen tablet.",
     benefitTitle: "More time for guests.\nMore room for revenue.",
-    benefitService: "Your team has more time for service.",
-    benefitPrefix: "Could generate up to",
+    benefitService:
+      "Guests order and pay themselves. Your team has more time for service – and giving guests a reason to come back.",
+    benefitPrefix: "Up to",
     benefitNumber: "30%",
     benefitMetric: "more revenue in an industry example",
-    benefitSource: "Source: me&u · not a measured zakkig result",
+    benefitSource: "Source: me&u",
     benefitSourceUrl:
       "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
     feePromise:
@@ -108,7 +138,7 @@ export const landingTranslations = {
     setupTitle: "You do hospitality.\nWe take care of ordering.",
     setupFirst: "Add your menu",
     setupSecond: "Put out your QR codes",
-    setupThird: "Open the kitchen view",
+    setupThird: "Open staff session",
     setupNote:
       "A tablet, internet and your menu. That’s all you need to get started.",
     feeTitle: "Only when orders come in.",
@@ -125,14 +155,41 @@ export const landingTranslations = {
     faqDevices: "What devices do I need?",
     faqDevicesAnswer:
       "A regular tablet with a browser and a stable internet connection for your kitchen. Guests use their own phones.",
+    faqPickup: "Can I also offer pickup orders?",
+    faqPickupAnswer:
+      "Yes. You can offer table ordering, pickup or both. Pickup orders also appear in your kitchen view.",
+    faqMenu: "Can I update the menu myself?",
+    faqMenuAnswer:
+      "Yes. Manage categories, dishes, photos and prices in your dashboard. Guests see the current menu through the same QR code.",
+    faqUnavailable: "What if a dish sells out?",
+    faqUnavailableAnswer:
+      "You can mark items as unavailable and enable them again later, so guests only order what you can currently offer.",
+    faqOptions: "Can guests choose extras and options?",
+    faqOptionsAnswer:
+      "Yes. You can set up options and extras with their own surcharges. Guests select them when ordering.",
+    faqPayment: "What payment methods can my guests use?",
+    faqPaymentAnswer:
+      "Guests can pay directly using Apple Pay, Google Pay, credit card and other popular online payment methods. Payments are processed securely via Stripe.",
+    faqTips: "Can guests leave a tip?",
+    faqTipsAnswer:
+      "Yes. When paying, guests can easily add a tip using preset amounts or a custom amount.",
+    faqStart: "What do I need to start taking orders?",
+    faqStartAnswer:
+      "Create your account and menu, set up your payment provider and put out your QR codes. Then open the staff session on your tablet.",
     faqPos: "How does this work with my till?",
     faqPosAnswer:
       "You manually enter orders into your till as cashless sales. You can export your transactions.",
+    faqPayout: "When and how do I receive payouts?",
+    faqPayoutAnswer:
+      "Your revenue is automatically and regularly transferred to your bank account via your connected Stripe account.",
+    faqContract: "Is there a contract term or cancellation period?",
+    faqContractAnswer:
+      "No. There is no minimum contract term and no commitment. You can use, pause or stop using zakkig at any time.",
     faqCosts: "How much does zakkig cost?",
     faqCostsAnswer:
       "Registration is free. There are no setup or monthly fees. zakkig charges 2% per order, plus the payment provider’s variable fees.",
     closingTitle: "Let’s get\nzakkig.",
-    contactLabel: "Any questions?",
+    contactLabel: "Interested?",
     contactEmail: "selim@zakkig.com",
     contactUrl: "mailto:selim@zakkig.com",
     supportedBy:

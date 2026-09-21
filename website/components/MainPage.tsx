@@ -8,19 +8,37 @@ import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { QrCodeShowcase } from "./QrCodeShowcase";
 import { RegionLanguageModal } from "./RegionLanguageModal";
+import { WaveLine } from "./WaveLine";
 import { ProductDemo } from "./ProductDemo";
 
 export function MainPage() {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const steps = ["setupFirst", "setupSecond", "setupThird"] as const;
-  const questions = ["faqApp", "faqDevices", "faqPos", "faqCosts"] as const;
+  const questions = [
+    "faqApp",
+    "faqDevices",
+    "faqPickup",
+    "faqMenu",
+    "faqUnavailable",
+    "faqOptions",
+    "faqPayment",
+    "faqTips",
+    "faqStart",
+    "faqPos",
+    "faqPayout",
+    "faqContract",
+    "faqCosts",
+  ] as const;
 
   return (
     <main id="content" className="marketing">
       <section className="hero page-width">
         <h1 className="hero-title">
-          <span className="hero-word">{t("heroFirst")}</span>
+          <span className="hero-word">
+            {t("heroFirst")}
+            <WaveLine repeat />
+          </span>
           <span>{t("heroLast")}</span>
         </h1>
         <div className="hero-qr">
@@ -147,7 +165,7 @@ export function MainPage() {
             <div>
               <h3 className="contact-label">{t("contactLabel")}</h3>
               <a className="contact-link" href={t("contactUrl")}>
-                {t("contactEmail")}
+                <span className="link-label">{t("contactEmail")}</span>
               </a>
             </div>
             <a
@@ -172,7 +190,7 @@ export function MainPage() {
             <nav aria-label={t("footerNavigation")}>
               {(["legal", "privacy", "gtc"] as const).map((key) => (
                 <Link key={key} href={t(`${key}Url`)}>
-                  {t(`${key}Link`)}
+                  <span className="link-label">{t(`${key}Link`)}</span>
                 </Link>
               ))}
             </nav>
@@ -181,7 +199,7 @@ export function MainPage() {
               onClick={() => setIsModalOpen(true)}
             >
               <Globe size={20} aria-hidden="true" />
-              {t("regionDisplay")}
+              <span className="link-label">{t("regionDisplay")}</span>
             </button>
           </div>
         </div>
