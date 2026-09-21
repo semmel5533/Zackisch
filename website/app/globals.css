@@ -401,31 +401,29 @@ html {
 .qr-toggle-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: none;
-  padding: 4px 8px;
-  color: #000;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  color: #18181b;
   cursor: pointer;
-  transition: transform 150ms;
+  transition: background 150ms, color 150ms, border-color 150ms, transform 150ms;
 }
-.qr-toggle-button .link-label {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
-  background-position: left bottom;
-  background-size: 0% 2px;
-  padding-bottom: 3px;
-  transition: background-size 200ms ease-out;
-}
-.qr-toggle-button:is(:hover, :focus-visible) .link-label {
-  background-size: 100% 2px;
+.qr-toggle-button:hover {
+  background: #e4e4e7;
+  color: #000;
+  border-color: #d4d4d8;
 }
 .qr-toggle-button:active {
-  transform: scale(0.97);
+  transform: scale(0.92);
+}
+.qr-toggle-button svg {
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.qr-toggle-button.is-flipped svg {
+  transform: rotate(180deg);
 }
 .qr-paper {
   position: relative;
@@ -839,6 +837,24 @@ h2[id] {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+.region-control:hover {
+  opacity: 0.8;
+}
+.region-control span {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+.region-control svg {
+  display: block;
+  flex-shrink: 0;
 }
 @media (max-width: 1100px) {
   .flow-grid {

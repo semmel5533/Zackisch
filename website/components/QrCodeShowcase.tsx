@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ArrowsLeftRight } from "@phosphor-icons/react";
+import { ArrowsClockwise } from "@phosphor-icons/react";
 import { WaveLine } from "./WaveLine";
 import { QrPrintText } from "./QrPrintText";
 import { ReactQRCode } from "@lglab/react-qr-code";
@@ -10,9 +10,11 @@ export function QrCodeShowcase() {
   const { t } = useTranslation();
   const [isTable, setIsTable] = useState(false);
   const [isFading, setIsFading] = useState(false);
+  const [isRotated, setIsRotated] = useState(false);
 
   const handleToggle = () => {
     setIsFading(true);
+    setIsRotated((prev) => !prev);
     setTimeout(() => {
       setIsTable((prev) => !prev);
       setIsFading(false);
@@ -24,12 +26,12 @@ export function QrCodeShowcase() {
       <div className="qr-toggle-bar">
         <button
           type="button"
-          className="qr-toggle-button"
+          className={`qr-toggle-button ${isRotated ? "is-flipped" : ""}`}
           onClick={handleToggle}
           aria-label={t(isTable ? "qrToggleTable" : "qrTogglePickup")}
+          title={t(isTable ? "qrToggleTable" : "qrTogglePickup")}
         >
-          <ArrowsLeftRight size={13} weight="bold" aria-hidden="true" />
-          <span className="link-label">{t(isTable ? "qrToggleTable" : "qrTogglePickup")}</span>
+          <ArrowsClockwise size={18} weight="bold" aria-hidden="true" />
         </button>
       </div>
       <div className="qr-paper" role="img" aria-label={t("qrDemoLabel")}>

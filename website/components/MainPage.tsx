@@ -188,7 +188,7 @@ export function MainPage() {
               onClick={() => setIsModalOpen(true)}
             >
               <Globe size={20} aria-hidden="true" />
-              <span className="link-label">{t("regionDisplay")}</span>
+              <span>{t("regionDisplay")}</span>
             </button>
           </div>
         </div>
