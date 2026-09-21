@@ -1,5 +1,6 @@
 "use node";
 
+import { platformFee } from "../lib/platform-fee";
 import { action } from "./_generated/server";
 import { internal, api } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
@@ -300,8 +301,8 @@ export const createCheckoutSession = action({
       const stripe = getStripeClient();
       const curr = (org.currency || "eur").toLowerCase();
 
-      // Platform margin: 1%
-      const platformMargin = Math.round(args.total * 0.01);
+      // Platform margin: 2%
+      const platformMargin = platformFee(args.total);
       const transferAmount = Math.round(args.total - platformMargin);
 
       const metadata: Record<string, string> = {
@@ -441,8 +442,8 @@ export const createPaymentIntent = action({
       const stripe = getStripeClient();
       const curr = (org.currency || "eur").toLowerCase();
 
-      // Platform margin: 1%
-      const platformMargin = Math.round(args.total * 0.01);
+      // Platform margin: 2%
+      const platformMargin = platformFee(args.total);
       const transferAmount = Math.round(args.total - platformMargin);
 
       const metadata: Record<string, string> = {

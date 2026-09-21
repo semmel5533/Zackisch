@@ -12,7 +12,7 @@ Dieses Verzeichnis enthält die Haupt-Applikation von Zakkig (das Gastronomen-Da
 - **Edge-Architektur:** Strikte Zero-Node-Edge-Architektur. Das Next.js-Frontend läuft auf V8 Edge Runtimes (Cloudflare Workers) ohne Node-Sockets; alle E-Mail- (SMTP) und Zahlungs-Abwicklungen (Stripe) laufen exklusiv auf Convex
 - **Authentifizierung:** Convex Auth & SSR Session Management mit HttpOnly-Cookies und E-Mail-OTP
 - **E-Mail-Versand:** Microsoft 365 (SMTP via `smtp.office365.com`, Port 587 STARTTLS, `selim@zakkig.com`, abgewickelt als Convex Node Action)
-- **Zahlungsabwicklung:** Stripe Connect (Destination Charges mit 1% Plattform-Gebühr, Checkout Sessions API & Payment Element)
+- **Zahlungsabwicklung:** Stripe Connect (Destination Charges mit 2% Plattform-Gebühr, Checkout Sessions API & Payment Element)
 - **UI & Styling:** Tailwind CSS, Shadcn UI, Phosphor Icons, Apple-inspirierte Edge-to-Edge Dividers
 - **State Management:** Zustand & reaktive Convex Hooks (`useQuery`, `useMutation`)
 - **Internationalisierung (i18n):** next-intl (Model B Regionen- & Sprachstruktur, Endonyme für Länderbezeichnungen)

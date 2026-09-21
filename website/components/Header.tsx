@@ -1,51 +1,74 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Globe } from "@phosphor-icons/react";
-import { parseLocale } from "@/lib/regions";
+import { Globe, List, X } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n";
 import { RegionLanguageModal } from "./RegionLanguageModal";
 
 export function Header() {
-  const pathname = usePathname() || "";
+  const { t, locale } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const { regionCode, lang, locale } = parseLocale(pathname);
-  const isEn = lang === "en";
-
-  const homeTarget = `/${locale}`;
-
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
   return (
     <>
-      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-8 md:px-10 max-w-7xl mx-auto">
-        <Link href={homeTarget} className="flex items-center">
+      <a className="skip-link" href="#content">
+        {t("skipContent")}
+      </a>
+      <header className="site-header page-width">
+        <Link href={t("homeUrl")} className="brand">
           <img
             src="/full.svg"
-            alt="zakkig Logo"
-            className="h-9 md:h-10 w-auto block"
-            loading="eager"
+            width="122"
+            height="40"
+            alt={t("logoAlt")}
             fetchPriority="high"
-            style={{ filter: "brightness(0) invert(1)" }}
           />
         </Link>
-        <nav className="flex items-center">
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="w-10 h-10 rounded-full bg-white hover:bg-zinc-100 text-black flex items-center justify-center transition-all active:scale-[0.98] shadow-sm cursor-pointer border-0"
-            aria-label="Select Region and Language"
-          >
-            <Globe className="w-5 h-5 text-black" weight="regular" />
-          </button>
+        <nav
+          id="main-navigation"
+          aria-label={t("mainNavigation")}
+          className={`header-nav ${menuOpen ? "is-open" : ""}`}
+        >
+          {(
+            [
+              ["flowUrl", "navFlow"],
+              ["pricingUrl", "navPricing"],
+              ["faqUrl", "navFaq"],
+            ] as const
+          ).map(([url, label]) => (
+            <Link onClick={() => setMenuOpen(false)} key={url} href={t(url)}>
+              {t(label)}
+            </Link>
+          ))}
         </nav>
+        <div className="header-actions">
+          <button
+            className="icon-control"
+            aria-label={t("regionSelectorTitle")}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <Globe size={21} aria-hidden="true" />
+          </button>
+          <a href={t("signInUrl")} className="button-outline">
+            {t("signIn")}
+          </a>
+          <button
+            className="icon-control menu-toggle"
+            aria-expanded={menuOpen}
+            aria-controls="main-navigation"
+            aria-label={t(menuOpen ? "closeMenu" : "menuLabel")}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={22} /> : <List size={22} />}
+          </button>
+        </div>
       </header>
-
       {isModalOpen && (
-        <RegionLanguageModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
+        <RegionLanguageModal isOpen onClose={() => setIsModalOpen(false)} />
       )}
     </>
   );

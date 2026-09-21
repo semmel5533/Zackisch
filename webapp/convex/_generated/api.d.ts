@@ -10,12 +10,14 @@
 
 import type * as auth from "../auth.js";
 import type * as authQueries from "../authQueries.js";
+import type * as checkoutPricing from "../checkoutPricing.js";
 import type * as customAuth from "../customAuth.js";
 import type * as emails from "../emails.js";
 import type * as http from "../http.js";
 import type * as menu from "../menu.js";
 import type * as orders from "../orders.js";
 import type * as organizations from "../organizations.js";
+import type * as permissions from "../permissions.js";
 import type * as seed from "../seed.js";
 import type * as sessions from "../sessions.js";
 import type * as storage from "../storage.js";
@@ -31,12 +33,14 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   authQueries: typeof authQueries;
+  checkoutPricing: typeof checkoutPricing;
   customAuth: typeof customAuth;
   emails: typeof emails;
   http: typeof http;
   menu: typeof menu;
   orders: typeof orders;
   organizations: typeof organizations;
+  permissions: typeof permissions;
   seed: typeof seed;
   sessions: typeof sessions;
   storage: typeof storage;

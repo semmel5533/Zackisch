@@ -15,7 +15,7 @@ Der bewusste Fokus liegt auf maximaler Simplizität: zakkig ist ein reines Add-O
 ### 1.2 Die Nutzererfahrung (UX) & Bring Your Own Device
 
 - **Für den Gast (Bring Your Own Device):** zakkig setzt auf das absolute BYOD-Prinzip. Der Gast nutzt ausschließlich sein eigenes Smartphone. Er scannt lediglich einen QR-Code am Tisch oder am Tresen, wählt sein Essen aus der digitalen Speisekarte und bezahlt sofort. Niemand muss dafür eine App herunterladen oder sich registrieren.
-- **Für den Wirt:** Kein Umstellungsstress, kein Risiko, keine teuren Sondergeräte. Fällt das WLAN vor Ort einmal aus, bestellen die Gäste klassisch beim Kellner. Da zakkig in stressigen Stoßzeiten lautlos rund ein Viertel aller Bestellungen übernimmt, hilft es perfekt gegen den heutigen Personalmangel. Zudem geht kein Umsatz verloren, weil Gäste nicht mehr lange auf das Bestellen eines zweiten Getränks warten müssen.
+- **Für den Wirt:** Kein Umstellungsstress, kein Risiko, keine teuren Sondergeräte. Fällt das WLAN vor Ort einmal aus, bestellen die Gäste klassisch beim Kellner. Gäste können selbstständig bestellen; das entlastet das Personal im Bestellablauf. Zudem geht kein Umsatz verloren, weil Gäste nicht mehr lange auf das Bestellen eines zweiten Getränks warten müssen.
 - **Für die Küche und den Service:** Die zentrale Drehscheibe ist das Kitchen Board. Hierfür wird keine teure Spezialhardware benötigt, ein simples und günstiges Standard-Tablet genügt völlig. Die Küche markiert Speisen per Fingertipp als fertig. Die Kellner sehen beim Vorbeigehen sofort, was zu welchem Tisch gebracht werden muss, und haken es nach dem Servieren dort direkt ab.
 
 ### 1.3 Geschäftsmodell, Payment & Zielgruppe
@@ -24,7 +24,7 @@ Der bewusste Fokus liegt auf maximaler Simplizität: zakkig ist ein reines Add-O
 - **Keine Grundgebühren:** zakkig verdient nur dann mit, wenn der Wirt auch wirklich echten Umsatz generiert.
 - **Payment Infrastruktur (Stripe Connect Express & Checkout Sessions):** Wir nutzen Stripe Connect Express als Zahlungsabwickler, um rechtlich und sicherheitstechnisch auf dem höchsten Standard zu agieren und niemals sensible Bankdaten der Gastronomen zwischenspeichern zu müssen.
   - **Onboarding & KYC:** Beim Setup starten die Gastronomen über Stripe-gehostete Onboarding-Links (`accountLinks.create`) direkt in die Identitätsprüfung (KYC). Die komplette Legitimationsprüfung und Speicherung der Bank- und Auszahlungsdaten liegt zu 100 % bei Stripe. Nach Abschluss kehrt der Nutzer auf `/dashboard/{organizationId}/settings/stripe-return` zurück.
-  - **Kostenstruktur & Split Payments (Pay-as-you-go):** Stripe arbeitet nach einem strikten Pay-as-you-go-Modell ohne monatliche Fixkosten. Die Zahlungsabwicklung läuft über die Stripe Checkout Sessions API (`ui_mode: "elements"`) mit dem eingebetteten Stripe Payment Element und Destination Charges. Bei jeder Transaktion behält Stripe seine regulären Transaktionskosten ein. Zusätzlich ziehen wir über die Stripe-API (`application_fee_amount`) vollautomatisch unsere **zakkig-Plattformgebühr (1 % vom Brutto-Umsatz)** ab. Der Wirt trägt diese Gebührenkombination (wie beim klassischen EC-Terminal) und erhält die Restsumme direkt auf sein Bankkonto ausgezahlt.
+  - **Kostenstruktur & Split Payments (Pay-as-you-go):** Stripe arbeitet nach einem strikten Pay-as-you-go-Modell ohne monatliche Fixkosten. Die Zahlungsabwicklung läuft über die Stripe Checkout Sessions API (`ui_mode: "elements"`) mit dem eingebetteten Stripe Payment Element und Destination Charges. Bei jeder Transaktion behält Stripe seine regulären Transaktionskosten ein. Zusätzlich ziehen wir über den um die Plattformgebühr reduzierten Stripe-Transfer (`transfer_data.amount`) vollautomatisch unsere **zakkig-Plattformgebühr (2 % vom Brutto-Umsatz)** ab. Der Wirt trägt diese Gebührenkombination (wie beim klassischen EC-Terminal) und erhält die Restsumme direkt auf sein Bankkonto ausgezahlt.
   - **Methoden:** Wir integrieren hochkonvertierende Methoden wie Apple Pay, Google Pay und Standard-Kartenzahlung. Teure Kreditkarten (wie American Express) können über die API gezielt ausgesperrt werden, um die Margen der Wirte zu schützen.
 - **Finanzamt & TSE Konformität:** Jede digitale Bestellung wird vom Wirt als Gesamtsumme unter dem Namen zakkig in seine Hauptkasse eingetippt. Dadurch wird alles sofort vom gesetzlichen Sicherheitsbaustein (TSE) signiert. Am Monatsende reicht der Export einer Zusammenfassung für den Steuerberater.
 
@@ -150,7 +150,7 @@ zakkig fungiert rechtlich als reiner **Bestell- und Zahlungsvermittler**. Der Ka
 
 ### 3.4 B2B Abrechnung & DATEV
 
-- **Die B2B-Rechnung:** Wirte erhalten monatlich eine PDF-Rechnung über die einbehaltene zakkig-Plattformgebühr (1 %). Da der Betrag durch Stripe Direct Charges bereits in Echtzeit einbehalten wurde, trägt die Rechnung den Pflicht-Vermerk: "Der Rechnungsbetrag wurde bereits im Rahmen der laufenden Online-Transaktionen einbehalten... Der offene Betrag ist ausgeglichen."
+- **Die B2B-Rechnung:** Wirte erhalten monatlich eine PDF-Rechnung über die einbehaltene zakkig-Plattformgebühr (2 %). Da der Betrag durch Stripe Destination Charges bereits in Echtzeit einbehalten wurde, trägt die Rechnung den Pflicht-Vermerk: "Der Rechnungsbetrag wurde bereits im Rahmen der laufenden Online-Transaktionen einbehalten... Der offene Betrag ist ausgeglichen."
 - **Der DATEV CSV-Export:** Die Dashboard-Tabelle exportiert eine Datei für den Steuerberater mit exakten Spalten für Belegdatum, Bestell-ID, Brutto-Umsatz, S_H-Kennzeichen, Währung, zakkig-Gebühr, Stripe-Gebühr und Netto-Geldeingang.
 
 ### 3.5 Sicherheit, KYC & Betrugsprävention
@@ -307,7 +307,7 @@ Das Projekt besteht aus zwei komplett unabhängigen Next.js-Applikationen in ein
   - **Design System:** Apple-inspirierte Ästhetik, Monochrom Light Theme, shadcn/ui, Phosphor Icons (`@phosphor-icons/react`), durchgezogene Trennlinien (Edge-to-Edge Dividers) bei Dialogen und Modals.
   - **Typografie:** Poppins als primäre UI-Schriftart, Ziffern und Beträge strikt in Inter (`font-inter`, `tabular-nums`) via `<Price />`.
 - **Payment Infrastruktur:**
-  - Stripe Connect (Destination Charges mit 1% Plattformgebühr, Checkout Sessions API mit Payment Element).
+  - Stripe Connect (Destination Charges mit 2% Plattformgebühr, Checkout Sessions API mit Payment Element).
 - **Lokalisierung & Regionen (Model B):**
   - Next-intl mit strikter URL-Lokalisierung (z. B. `/de-de`, `/de-en`, `/de-de/legal-notice`, `/de-de/privacy-policy`, `/de-de/gtc`).
   - Länder und Regionen werden im UI ausnahmslos in ihrer primären Landessprache (Endonym, z. B. "Deutschland") dargestellt.
@@ -324,13 +324,19 @@ Die Marketingseite wird als SEO-optimierter One-Pager gehostet, ergänzt durch s
 
 - **Standard (Deutschland - Deutsch):** `/de-de` (One-Pager), `/de-de/legal-notice` (Impressum), `/de-de/privacy-policy` (Datenschutzerklärung), `/de-de/gtc` (AGB).
 - **Englisch (Deutschland - Englisch):** `/de-en` (One-Pager), `/de-en/legal-notice` (Legal Notice), `/de-en/privacy-policy` (Privacy Policy), `/de-en/gtc` (GTC).
-- **Root-Redirect:** `/` leitet automatisch serverseitig auf `/de-de` weiter.
-- **Navigation & Header:** Minimalistischer Header mit Firmen-Logo und weißem Globe-Button zur Region- und Sprachauswahl. Die Seite verzichtet bewusst auf störende Anchor-Links in der Kopfzeile und führt geradlinig vom Hero-Bereich über die Problemstellung und die interaktive QR-Code-Showcase bis zur Registrierung und den Footer-Rechtslinks.
+- **Root-Redirect:** Die statisch exportierte Root-Seite wählt clientseitig zuerst die gespeicherte Region-/Sprachpräferenz (Cookie, dann localStorage), danach die Browsersprache.
+- **Navigation & Header:** Schwarzes Logo auf Weiß, Sprunglinks zu Ablauf, Kosten und FAQ, Anmeldung sowie Region-/Sprachdialog. Mobil öffnet ein Menü die Sprunglinks.
+- **Seitenaufbau:** Angeklebter Papier-QR im Hero, echte lokalisierte Webapp-Aufnahmen mit Demodaten in Handy-/Tablet-Rahmen, drei Einrichtungsschritte, transparente Gebühren, FAQ und heller Footer mit Eichhörnchen, Kontakt und MARS-Unterstützung.
+- **Gebühren:** 2 % zakkig-Gebühr pro Bestellung zzgl. variabler Zahlungsanbietergebühren. Keine Einrichtungskosten und keine Monatsgebühr. Die serverseitige Berechnung verwendet webapp/lib/platform-fee.ts; Exporte verwenden die historisch gespeicherten Gebühren.
+- **Lokalisierung:** Texte und Ziele liegen in website/lib/translations.ts, landing-translations.ts, legal-translations.ts und den Datenschutz-Nachrichten. Die Ausgabe erfolgt über next-intl. Regionennamen bleiben Endonyme.
+- **Region-/Sprachdialog:** Nativer modaler Dialog mit Fokusbindung, Escape, explizitem Übernehmen und unveränderten Model-B-URLs. Der Wechsel erhält die aktuelle rechtliche Unterseite.
+- **Rechtliche Inhalte:** Die bestehende Datenschutzerklärung bleibt inhaltlich erhalten. Die AGB-Seite enthält weiterhin den vorhandenen Hinweis auf ausstehende juristische Finalisierung.
+- **Design und Pflege:** Marketing-Tokens und Breakpoints stehen in DESIGN.md. website/README.md dokumentiert Produktaufnahmen, Entwicklung und Prüfung.
 
 ### 6.2 Globale SEO Meta-Daten
 
-- **Meta Title:** Lass Kunden selbst bestellen und bezahlen
-- **Meta Description:** Egal ob zum Mitnehmen oder am Tisch, biete deinen Kunden eine digitale Möglichkeit zum Bestellen und Bezahlen. Sie scannen einfach einen QR-Code mit dem eigenen Handy, während dein Personal sich Wichtigerem widmen kann.
+- **Meta Title:** zakkig: Bestellen und bezahlen per QR-Code
+- **Meta Description:** Lokalisierte Beschreibung des Bestellablaufs mit transparentem Hinweis auf 2 % Plattformgebühr und zusätzliche Zahlungsanbietergebühren.
 
 ---
 
@@ -343,7 +349,7 @@ Dieser Abschnitt richtet sich an Entwickler und enthält technische Details zur 
 Jedes Teilprojekt besitzt eine eigene `.env` und `.env.example` Datei im jeweiligen Verzeichnis (`webapp/` und `website/`).
 - **Webapp (`webapp/.env`):** Enthält Konfigurationen für Convex (`NEXT_PUBLIC_CONVEX_URL`, `CONVEX_DEPLOYMENT`), Stripe Keys, SMTP Provider Einstellungen (`selim@zakkig.com`) und Session-Geheimnisse.
 - **Port-Management:**
-  - Im **Development-Modus** läuft die Webapp standardmäßig auf Port 3000 (`next dev`) und die Marketingseite auf Port 3001 (`next dev --port 3001`).
+  - Im **Development-Modus** läuft die Marketingseite auf Port 3000 (`next dev --port 3000`). Die Webapp kann parallel mit `npm run dev -- --port 3001` gestartet werden.
   - Im **Production-Modus** starten beide Anwendungen optimiert für Cloudflare Workers (`webapp/`) bzw. Cloudflare Pages (`website/`).
 
 ### 7.2 Datenbank-Schema & Convex Functions

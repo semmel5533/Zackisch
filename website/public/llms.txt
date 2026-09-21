@@ -13,7 +13,7 @@ Das übergeordnete Ziel des Projekts ist es, eine nahtlose, app-lose Lösung fü
 
 Das Projekt ist als hochperformantes Monorepo aufgebaut:
 - **Cloudflare:** Domain Registrar & DNS, Cloudflare Pages (Marketing-Website) und Cloudflare Workers (Webapp)
-- **Google Workspace:** Enterprise-E-Mail und autoritative SMTP-Infrastruktur (`selim@zakkig.com`)
+- **Microsoft 365:** Enterprise-E-Mail und autoritative SMTP-Infrastruktur (`selim@zakkig.com`)
 - **Backend & Realtime-Datenbank:** Convex (reaktives All-in-One-Backend, Hintergrund-Mutationen, Scheduler/Crons, Dateispeicher)
 - **Zahlungsabwicklung:** Stripe Connect mit Checkout Sessions API und dynamic Payment Elements
 - **Frontend & Frameworks:** Next.js (App Router), React, TypeScript, Tailwind CSS v4, shadcn/ui
@@ -28,3 +28,6 @@ Das Projekt ist als hochperformantes Monorepo aufgebaut:
 - Legal Notice (EN): https://www.zakkig.com/de-en/legal-notice
 - Privacy Policy (EN): https://www.zakkig.com/de-en/privacy-policy
 - GTC (EN): https://www.zakkig.com/de-en/gtc
+## Gebühren und Kontakt
+
+Keine Einrichtungskosten, keine Monatsgebühr. 2 % zakkig-Gebühr pro Bestellung zzgl. variabler Zahlungsanbietergebühren. Kontakt: selim@zakkig.com. Unterstützt von MARS, dem Gründungszentrum der Technischen Hochschule Mannheim: https://launchtomars.de/startup/zakkig/

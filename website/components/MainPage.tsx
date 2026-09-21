@@ -1,336 +1,197 @@
 "use client";
 
+import { numericText } from "@/lib/numeric-text";
 import { useState } from "react";
 import Link from "next/link";
-import { useTranslation } from "../lib/i18n";
+import { Globe, Plus } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { QrCodeShowcase } from "./QrCodeShowcase";
-import { Globe } from "@phosphor-icons/react";
 import { RegionLanguageModal } from "./RegionLanguageModal";
+import { ProductDemo } from "./ProductDemo";
 
 export function MainPage() {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const steps = ["setupFirst", "setupSecond", "setupThird"] as const;
+  const questions = ["faqApp", "faqDevices", "faqPos", "faqCosts"] as const;
 
   return (
-    <div className="w-full">
-      {/* 1. HERO SECTION (Dark Mode - Black Background) */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center bg-black overflow-hidden">
-        {/* Ambient Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster="/hero_video_poster.png"
-          className="absolute inset-0 w-full h-full object-cover z-0 opacity-50 pointer-events-none"
-        >
-          <source src="/hero_video.mp4" type="video/mp4" />
-        </video>
-
-        {/* Fallback overlay in case video is missing */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-0 pointer-events-none" />
-
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 pt-32 pb-24 flex flex-col items-start justify-center text-left">
-          <h1 className="text-5xl sm:text-7xl md:text-8xl font-semibold tracking-tighter leading-[1.03] max-w-[16ch] mb-8 text-white">
-            {t("heroTitle")}
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-zinc-400 font-light max-w-[54ch] leading-relaxed mb-12">
-            {t("heroSubline")}
-          </p>
+    <main id="content" className="marketing">
+      <section className="hero page-width">
+        <h1 className="hero-title">
+          <span>{t("heroFirst")}</span>
+          <span>{t("heroLast")}</span>
+        </h1>
+        <div className="hero-qr">
+          <QrCodeShowcase />
+        </div>
+        <div className="hero-copy">
+          <p>{t("heroSummary")}</p>
           <RegisterCta />
+          <p className="caption">{t("heroNote")}</p>
         </div>
       </section>
 
-      {/* 2. PAIN POINTS SECTION (Light Mode - White Background) */}
-      <section className="bg-white text-black py-24 md:py-36">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left side: Waiting Line Image */}
-            <div className="lg:col-span-5 flex justify-center lg:justify-start self-stretch">
-              <div className="relative w-full aspect-[3/4] lg:aspect-auto lg:h-full max-w-md lg:max-w-none rounded-[2rem] overflow-hidden min-h-[460px] sm:min-h-[540px] lg:min-h-[580px]">
-                <Image
-                  src="/waiting_line.jpg"
-                  alt={t("waitingLineImageAlt")}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover object-center"
-                  priority
-                />
+      <section id="ablauf" className="section page-width flow-section">
+        <div className="section-heading">
+          <h2>{t("flowTitle")}</h2>
+          <p className="caption">{t("demoLabel")}</p>
+        </div>
+        <div className="flow-grid">
+          {(["Scan", "Pay", "Kitchen"] as const).map((step, index) => (
+            <article
+              className={`flow-step flow-${step.toLowerCase()}`}
+              key={step}
+            >
+              <ProductDemo screen={step} />
+              <div className="flow-caption">
+                <span className="step-number" aria-hidden="true">
+                  {index + 1}
+                </span>
+                <div>
+                  <h3>{t(`flow${step}`)}</h3>
+                  <p>{t(`flow${step}Text`)}</p>
+                </div>
               </div>
-            </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
-            {/* Right side: text starts at column 7 */}
-            <div className="lg:col-start-7 lg:col-span-6 flex flex-col items-start text-left">
-              <h2 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tighter leading-tight mb-8">
-                {t("painTitle")
-                  .split("\n")
-                  .map((line) => (
-                    <span key={line} className="block">
-                      {line}
-                    </span>
-                  ))}
-              </h2>
-              <p className="text-base sm:text-lg md:text-xl text-zinc-600 font-light leading-relaxed max-w-[52ch]">
-                {t("painText")}
-              </p>
-            </div>
+      <section className="section page-width benefits-section">
+        <div>
+          <h2>{t("benefitTitle")}</h2>
+          <p className="section-copy">{t("benefitService")}</p>
+        </div>
+        <div className="benefit-evidence">
+          <p className="caption">{t("benefitContext")}</p>
+          <p className="benefit-stat">{numericText(t("benefitNumber"))}</p>
+          <h3>{t("benefitMetric")}</h3>
+          <p className="evidence-note">{t("benefitEvidence")}</p>
+          <a
+            href={t("benefitSourceUrl")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("benefitSource")}
+          </a>
+        </div>
+      </section>
+
+      <section className="section setup-section">
+        <div className="page-width setup-grid">
+          <div>
+            <h2>{t("setupTitle")}</h2>
+            <p className="section-copy">{t("setupNote")}</p>
+          </div>
+          <ol className="setup-list">
+            {steps.map((step, index) => (
+              <li key={step}>
+                <span className="step-number">{index + 1}</span>
+                <h3>{t(step)}</h3>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section id="kosten" className="section page-width pricing-section">
+        <div>
+          <h2>{t("feeTitle")}</h2>
+          <p className="section-copy">{t("feePromise")}</p>
+          <div className="fee-promises">
+            <p>{t("feeNoSetup")}</p>
+            <p>{t("feeNoMonthly")}</p>
           </div>
         </div>
+        <div className="fee">
+          <div className="fee-value">
+            <span className="font-inter tabular-nums">{t("feeNumber")}</span>
+            <span>{t("feeUnit")}</span>
+          </div>
+          <h3>{t("feeLabel")}</h3>
+          <p>{t("feeNote")}</p>
+        </div>
       </section>
 
-      {/* 3. DIE LÖSUNG SECTION (Dark Mode - Black Background) */}
-      <section className="bg-black text-white py-24 md:py-36">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          {/* Headline & Intro Text */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 mb-24 md:mb-32">
+      <section id="faq" className="section page-width faq-section">
+        <h2>{t("faqTitle")}</h2>
+        <div className="faq-list">
+          {questions.map((question) => (
+            <details key={question}>
+              <summary>
+                {t(question)}
+                <Plus aria-hidden="true" />
+              </summary>
+              <p>{numericText(t(`${question}Answer`))}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <div className="page-width">
+          <div className="closing">
+            <img
+              className="closing-mascot"
+              src="/icon.svg"
+              alt=""
+              aria-hidden="true"
+              width="360"
+              height="360"
+            />
             <div>
-              <h2 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tighter leading-tight mb-6">
-                {t("solutionTitle")}
-              </h2>
-            </div>
-            <div className="flex flex-col gap-6">
-              <p className="text-base sm:text-lg md:text-xl text-zinc-400 font-light leading-relaxed">
-                {t("solutionIntro")}
-              </p>
-              <p className="text-base sm:text-lg md:text-xl text-zinc-500 font-light leading-relaxed">
-                {t("solutionPrereq")}
-              </p>
+              <h2>{t("closingTitle")}</h2>
+              <RegisterCta />
             </div>
           </div>
-
-          {/* 3.1 zakkig auf einen Blick */}
-          <div className="mb-24 md:mb-32">
-            <h3 className="text-2xl md:text-4xl font-semibold tracking-tight mb-8 pb-4">
-              {t("glanceTitle")}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              <div className="flex flex-col">
-                <h4 className="text-xl font-medium mb-3 text-white">
-                  {t("glanceYouTitle")}
-                </h4>
-                <p className="text-zinc-400 font-light text-sm sm:text-base leading-relaxed">
-                  {t("glanceYouText")}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <h4 className="text-xl font-medium mb-3 text-white">
-                  {t("glanceCustomersTitle")}
-                </h4>
-                <p className="text-zinc-400 font-light text-sm sm:text-base leading-relaxed">
-                  {t("glanceCustomersText")}
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <h4 className="text-xl font-medium mb-3 text-white">
-                  {t("glanceKitchenTitle")}
-                </h4>
-                <p className="text-zinc-400 font-light text-sm sm:text-base leading-relaxed">
-                  {t("glanceKitchenText")}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* 3.2 In 3 einfachen Schritten startklar */}
-          <div className="mb-8 md:mb-12">
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
-              <div className="lg:col-span-7 xl:col-span-8">
-                <h3 className="mb-12 text-2xl font-semibold tracking-tight md:text-4xl">
-                  {t("stepsTitle")}
-                </h3>
-                <div className="flex flex-col gap-10">
-                  <div className="flex flex-col gap-3">
-                    <h4 className="text-xl font-medium text-white">{t("step1Title")}</h4>
-                    <p className="max-w-[40ch] text-sm font-light leading-relaxed text-zinc-400 sm:text-base">{t("step1Text")}</p>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <h4 className="text-xl font-medium text-white">{t("step2Title")}</h4>
-                    <p className="max-w-[40ch] text-sm font-light leading-relaxed text-zinc-400 sm:text-base">{t("step2Text")}</p>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <h4 className="text-xl font-medium text-white">{t("step3Title")}</h4>
-                    <p className="max-w-[40ch] text-sm font-light leading-relaxed text-zinc-400 sm:text-base">{t("step3Text")}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-5 xl:col-span-4 flex justify-center lg:justify-end">
-                <QrCodeShowcase />
-              </div>
-            </div>
-          </div>
-
-          {/* 3.3 Buchhaltung und faires Preismodell */}
-          <div className="pt-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-              <div>
-                <h4 className="text-2xl font-semibold tracking-tight mb-4 text-white">
-                  {t("accountingTitle")}
-                </h4>
-                <p className="text-zinc-400 font-light text-sm sm:text-base leading-relaxed">
-                  {t("accountingText")}
-                </p>
-              </div>
-              <div>
-                <h4 className="text-2xl font-semibold tracking-tight mb-4 text-white">
-                  {t("pricingTitle")}
-                </h4>
-                <p className="text-zinc-400 font-light text-sm sm:text-base leading-relaxed">
-                  {t("pricingText")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. ABOUT US SECTION (Light Mode - White Background) */}
-      <section className="bg-white text-black py-24 md:py-36">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left side: Photo Placeholder & MARS Logo */}
-            <div className="lg:col-span-5 flex justify-center lg:justify-start">
-              <div className="w-full max-w-md lg:max-w-none flex flex-col items-center gap-6">
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] min-h-[460px] sm:min-h-[540px] lg:min-h-[580px] bg-zinc-100 shadow-sm border border-zinc-100">
-                  <Image
-                    src="/selim.jpg"
-                    alt={t("portraitAlt")}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="object-cover object-top"
-                    priority
-                  />
-                </div>
-                {/* Trust Badge - MARS Logo */}
-                <a
-                  href="https://launchtomars.de/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex"
-                >
-                  <Image
-                    src="/mars_full.svg"
-                    alt={t("marsLogoAlt")}
-                    width={200}
-                    height={64}
-                    className="h-16 w-auto object-contain block hover:opacity-80 transition-opacity duration-200"
-                  />
-                </a>
-              </div>
-            </div>
-
-            {/* Right side: Story (starts at column 7) */}
-            <div className="lg:col-start-7 lg:col-span-6 flex flex-col items-start text-left">
-              <h2 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tighter leading-tight mb-8 max-w-[20ch]">
-                {t("aboutTitle")}
-              </h2>
-              <div className="space-y-6 text-zinc-600 font-light leading-relaxed text-base sm:text-lg md:text-xl max-w-[52ch]">
-                <p>{t("aboutText")}</p>
-                <p>{t("trustText")}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. FOOTER WAITLIST SECTION (Dark Mode - Black Background) */}
-      <section className="bg-black text-white pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="pb-20 mb-12 flex flex-col gap-10">
-            <div className="flex flex-col gap-6">
-              <h2 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tighter leading-tight">
-                {t("footerTitle")
-                  .split("\n")
-                  .map((line) => (
-                    <span key={line} className="block">
-                      {line}
-                    </span>
-                  ))}
-              </h2>
-              <p className="max-w-[58ch] text-base font-light leading-relaxed text-zinc-400 sm:text-lg md:text-xl">
-                {t("footerText")
-                  .split("\n")
-                  .map((line) => (
-                    <span key={line} className="block">
-                      {line}
-                    </span>
-                  ))}
-              </p>
-            </div>
-
-            <RegisterCta />
-
-            <div className="pt-4 flex flex-col gap-2 items-end text-right">
-              <p className="text-zinc-500 font-light text-base sm:text-lg md:text-xl">
-                {t("footerContact")}
-              </p>
-              <a
-                href="mailto:selim@zakkig.com"
-                className="text-white hover:underline text-2xl sm:text-4xl md:text-5xl font-normal tracking-tight"
-              >
-                selim@zakkig.com
+          <div className="contact-row">
+            <div>
+              <p className="caption">{t("contactLabel")}</p>
+              <a className="contact-link" href={t("contactUrl")}>
+                {t("contactEmail")}
               </a>
             </div>
-          </div>
-
-          {/* Legal Footer Links */}
-          <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-between gap-y-8 gap-x-4 sm:gap-6 text-sm text-zinc-500 font-light md:text-base">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="order-1 justify-self-start self-center sm:order-1 flex items-center cursor-pointer hover:opacity-80 transition-opacity duration-200 bg-transparent hover:bg-transparent min-w-0 w-auto h-auto min-h-0 p-0"
-              aria-label={t("scrollToTopLabel")}
+            <a
+              className="mars-support"
+              href={t("marsUrl")}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Image
-                src="/full.svg"
-                alt="zakkig Logo"
-                width={120}
-                height={40}
-                className="h-9 md:h-10 w-auto block"
-                style={{ filter: "brightness(0) invert(1)" }}
+              <img
+                src="/mars_full.svg"
+                width="160"
+                height="52"
+                alt={t("marsLogoAlt")}
               />
-            </Button>
+              <span>{t("supportedBy")}</span>
+            </a>
+          </div>
+          <div className="footer-bottom">
+            <Link href={t("homeUrl")}>
+              <img src="/full.svg" width="110" height="36" alt={t("logoAlt")} />
+            </Link>
+            <nav aria-label={t("footerNavigation")}>
+              {(["legal", "privacy", "gtc"] as const).map((key) => (
+                <Link key={key} href={t(`${key}Url`)}>
+                  {t(`${key}Link`)}
+                </Link>
+              ))}
+            </nav>
             <button
-              type="button"
+              className="region-control"
               onClick={() => setIsModalOpen(true)}
-              className="order-2 justify-self-end self-center sm:order-3 w-9 h-9 rounded-full border border-zinc-800 hover:border-zinc-700 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer active:scale-[0.98]"
-              aria-label={t("regionSelectorTitle")}
             >
-              <Globe className="w-4 h-4 text-zinc-400" weight="bold" />
+              <Globe size={20} aria-hidden="true" />
+              {t("regionDisplay")}
             </button>
-            <div className="order-3 col-span-2 sm:order-2 sm:col-span-1 sm:ml-auto flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-end gap-5 sm:gap-6 md:gap-8 tracking-widest text-sm md:text-base text-left">
-              <Link
-                href={t("legalUrl")}
-                className="font-bold uppercase hover:text-white transition-colors duration-200"
-              >
-                {t("legalLink")}
-              </Link>
-              <Link
-                href={t("privacyUrl")}
-                className="font-bold uppercase hover:text-white transition-colors duration-200"
-              >
-                {t("privacyLink")}
-              </Link>
-              <Link
-                href={t("gtcUrl")}
-                className="font-bold uppercase hover:text-white transition-colors duration-200"
-              >
-                {t("gtcLink")}
-              </Link>
-            </div>
           </div>
         </div>
-      </section>
-
+      </footer>
       {isModalOpen && (
-        <RegionLanguageModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
+        <RegionLanguageModal isOpen onClose={() => setIsModalOpen(false)} />
       )}
-    </div>
+    </main>
   );
 }

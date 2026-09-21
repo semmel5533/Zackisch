@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Geist_Mono, Poppins, Geist, Inter } from "next/font/google";
+import { Poppins, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { translations } from "@/lib/translations";
 
@@ -49,11 +49,6 @@ const inter = Inter({
   display: "swap",
 });
 
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono-variable",
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -62,10 +57,10 @@ export default function RootLayout({
   return (
     <html
       lang="de"
+      data-scroll-behavior="smooth"
       className={cn(
         "light",
         "antialiased",
-        fontMono.variable,
         "font-sans",
         poppins.variable,
         inter.variable,

@@ -1,195 +1,125 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Globe, X, Check } from "@phosphor-icons/react";
-import { REGIONS, parseLocale, ALL_LOCALES } from "@/lib/regions";
+import { Check } from "@phosphor-icons/react";
+import { createTranslator } from "next-intl";
+import { REGIONS, parseLocale } from "@/lib/regions";
 import { useTranslation } from "@/lib/i18n";
-import { Button } from "@/components/ui/button";
-
-interface RegionLanguageModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export function RegionFlag({ code, className }: { code: string; className?: string }) {
-  if (code.toLowerCase() === "de") {
-    return (
-      <svg
-        viewBox="0 0 640 480"
-        className={`w-6 h-4.5 rounded-[3px] shadow-xs object-cover shrink-0 overflow-hidden border border-black/10 ${className || ""}`}
-        aria-hidden="true"
-      >
-        <path fill="#000000" d="M0 0h640v160H0z" />
-        <path fill="#DD0000" d="M0 160h640v160H0z" />
-        <path fill="#FFCE00" d="M0 320h640v160H0z" />
-      </svg>
-    );
-  }
-  return null;
-}
+import { translations } from "@/lib/translations";
 
 export function RegionLanguageModal({
   isOpen,
   onClose,
-}: RegionLanguageModalProps) {
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const pathname = usePathname() || "";
   const router = useRouter();
   const { t } = useTranslation();
+  const active = parseLocale(pathname);
+  const [selectedLocale, setSelectedLocale] = useState(active.locale);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const region = REGIONS[active.regionCode];
 
-  const getActiveRoute = () => {
-    const activePath = (typeof window !== "undefined" ? window.location.pathname : "") || pathname;
-    return parseLocale(activePath);
-  };
-
-  const [selectedRegion, setSelectedRegion] = useState(() => getActiveRoute().regionCode);
-  const [selectedLocale, setSelectedLocale] = useState(() => getActiveRoute().locale);
-
-  // Synchronize draft selection with active URL whenever the dialog opens
   useEffect(() => {
-    if (isOpen) {
-      const active = getActiveRoute();
-      setSelectedRegion(active.regionCode);
-      setSelectedLocale(active.locale);
-    }
-  }, [isOpen, pathname]);
+    const dialog = dialogRef.current;
+    if (!dialog || !isOpen) return;
+    const previousFocus = document.activeElement;
+    dialog.showModal();
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+      dialog.close();
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+  }, [isOpen]);
 
-  if (!isOpen) return null;
-
-  const currentRegionConfig = REGIONS[selectedRegion] || REGIONS.de;
-
-  const handleApply = () => {
-    // Set persistent preference cookie (1 year)
+  function handleApply() {
     document.cookie = `zakkig_locale=${selectedLocale}; path=/; max-age=31536000; SameSite=Lax`;
     try {
       localStorage.setItem("zakkig_locale", selectedLocale);
     } catch {
-      // ignore
+      /* Cookie remains authoritative when storage is unavailable. */
     }
-
-    // Determine target URL: preserve subpath if on legal-notice/privacy-policy/gtc
-    let targetPath = `/${selectedLocale}`;
-    if (pathname.includes("/legal-notice") || pathname.includes("/legal")) {
-      targetPath = `/${selectedLocale}/legal-notice`;
-    } else if (pathname.includes("/privacy-policy") || pathname.includes("/privacy")) {
-      targetPath = `/${selectedLocale}/privacy-policy`;
-    } else if (pathname.includes("/gtc")) {
-      targetPath = `/${selectedLocale}/gtc`;
-    }
-
+    const { lang } = parseLocale(selectedLocale);
+    const target = createTranslator({
+      locale: lang,
+      messages: translations[lang],
+    });
+    const route = pathname.split("/")[2];
+    const key =
+      route === "legal-notice" || route === "legal"
+        ? "legalUrl"
+        : route === "privacy-policy" || route === "privacy"
+          ? "privacyUrl"
+          : route === "gtc"
+            ? "gtcUrl"
+            : "homeUrl";
     onClose();
-    router.push(targetPath);
-  };
+    router.push(target(key));
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Dialog Surface */}
-      <div role="dialog" aria-modal="true" className="relative w-full max-w-md sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] bg-white text-zinc-900 rounded-[20px] sm:rounded-[24px] border border-zinc-200 shadow-2xl overflow-hidden p-0 z-10 animate-in fade-in zoom-in-95 duration-150 flex flex-col">
-        {/* Header with edge-to-edge dividing line */}
-        <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1">
-          <h2 className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
-            {t("regionSelectorTitle")}
-          </h2>
-          <p className="text-xs text-zinc-500 font-normal leading-relaxed mt-0.5">
-            {t("regionSelectorDescription")}
-          </p>
-        </div>
-
-        {/* Content */}
-        <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 flex-1 overflow-y-auto">
-          {/* Region Section */}
-          <div>
-            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-900 mb-2.5">
-              {t("regionLabel")}
-            </label>
-            <div className="space-y-2">
-              {Object.values(REGIONS).map((region) => {
-                const isSelected = selectedRegion === region.code;
-                return (
-                  <button
-                    key={region.code}
-                    type="button"
-                    onClick={() => {
-                      setSelectedRegion(region.code);
-                      setSelectedLocale(region.defaultLocale);
-                    }}
-                    className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
-                      isSelected
-                        ? "border-black bg-zinc-50 font-semibold text-black"
-                        : "border-zinc-200 hover:border-zinc-300 text-zinc-700 bg-white"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <RegionFlag code={region.code} />
-                      <span className="text-sm font-medium">
-                        {region.nativeName}
-                      </span>
-                    </div>
-                    {isSelected && (
-                      <Check className="w-4 h-4 text-black shrink-0" weight="bold" />
-                    )}
-                  </button>
-                );
-              })}
+    <dialog
+      ref={dialogRef}
+      className="region-dialog"
+      aria-labelledby="region-title"
+      aria-describedby="region-description"
+      onCancel={onClose}
+    >
+      <div className="region-dialog-inner">
+        <header className="region-dialog-header">
+          <h2 id="region-title">{t("regionSelectorTitle")}</h2>
+          <p id="region-description">{t("regionSelectorDescription")}</p>
+        </header>
+        <div className="region-dialog-body">
+          <fieldset>
+            <legend>{t("regionLabel")}</legend>
+            <div className="region-option selected">
+              <span>{region.nativeName}</span>
+              <Check size={18} aria-hidden="true" />
             </div>
-          </div>
-
-          {/* Language Section */}
-          <div>
-            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-900 mb-2.5">
-              {t("languageLabel")}
-            </label>
-            <div className="grid grid-cols-2 gap-2.5">
-              {currentRegionConfig.locales.map((loc) => {
-                const isSelected = selectedLocale === loc.code;
-                return (
-                  <button
-                    key={loc.code}
-                    type="button"
-                    onClick={() => setSelectedLocale(loc.code)}
-                    className={`flex items-center justify-between px-4 py-3 rounded-2xl border text-left transition-all cursor-pointer ${
-                      isSelected
-                        ? "border-black bg-zinc-50 font-semibold text-black"
-                        : "border-zinc-200 hover:border-zinc-300 text-zinc-700 bg-white"
-                    }`}
-                  >
-                    <span className="text-sm font-medium">{loc.label}</span>
-                    {isSelected && (
-                      <Check className="w-4 h-4 text-black shrink-0" weight="bold" />
-                    )}
-                  </button>
-                );
-              })}
+          </fieldset>
+          <fieldset>
+            <legend>{t("languageLabel")}</legend>
+            <div className="language-options">
+              {region.locales.map((loc) => (
+                <label
+                  key={loc.code}
+                  className={`region-option ${selectedLocale === loc.code ? "selected" : ""}`}
+                >
+                  <input
+                    type="radio"
+                    name="language"
+                    value={loc.code}
+                    checked={selectedLocale === loc.code}
+                    onChange={() => setSelectedLocale(loc.code)}
+                  />
+                  <span>{loc.label}</span>
+                  {selectedLocale === loc.code && (
+                    <Check size={18} aria-hidden="true" />
+                  )}
+                </label>
+              ))}
             </div>
-          </div>
+          </fieldset>
         </div>
-
-        {/* Footer actions with edge-to-edge dividing line */}
-        <div className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
-          <Button
+        <footer className="region-dialog-footer">
+          <button type="button" className="button-outline" onClick={onClose}>
+            {t("cancel")}
+          </button>
+          <button
             type="button"
-            variant="outline"
-            onClick={onClose}
-            className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
-          >
-            {t("cancel" as any)}
-          </Button>
-          <Button
-            type="button"
+            className="button-primary"
             onClick={handleApply}
-            className="w-full sm:flex-1 h-11 rounded-full bg-black text-white hover:bg-zinc-800 font-semibold active:scale-[0.98] transition-all cursor-pointer"
           >
             {t("saveAndContinue")}
-          </Button>
-        </div>
+          </button>
+        </footer>
       </div>
-    </div>
+    </dialog>
   );
 }

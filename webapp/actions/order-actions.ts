@@ -1,5 +1,6 @@
 "use server";
 
+import { platformFee } from "@/lib/platform-fee";
 import { revalidatePath } from "next/cache";
 import {
   createOrder,
@@ -79,7 +80,7 @@ export async function placeOrderAction(
     }
 
     const brutto = total / 100;
-    const zakkigFee = Math.round(brutto * 0.01 * 100);
+    const zakkigFee = platformFee(total);
     const stripeFee = Math.round((brutto * 0.015 + 0.25) * 100);
     const netAmount = total - zakkigFee - stripeFee;
 
@@ -158,14 +159,14 @@ export async function exportOrdersCSVAction(organizationId: string) {
       "Brutto-Umsatz",
       "S/H",
       "Währung",
-      "zakkig-Gebühr (1%)",
+      "zakkig-Gebühr",
       "Stripe-Gebühr (geschätzt)",
       "Netto-Geldeingang",
     ].join(";");
 
     const rows = orders.map((order) => {
       const brutto = order.total / 100;
-      const zakkigFee = brutto * 0.01;
+      const zakkigFee = order.zakkigFee / 100;
       const stripeFee = brutto * 0.015 + 0.25; // estimated
       const netto = brutto - zakkigFee - stripeFee;
 

@@ -1,3 +1,4 @@
+import { platformFee } from "../lib/platform-fee";
 import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -371,7 +372,7 @@ export const createPaidOrderFromWebhook = internalMutation({
     const nextNum = maxNum >= 999 ? 1 : maxNum + 1;
     const orderNumber = String(nextNum).padStart(3, "0");
 
-    const zakkigFee = Math.round(args.total * 0.01);
+    const zakkigFee = platformFee(args.total);
     const stripeFee = 0; // Stripe deducts directly from merchant
     const netAmount = args.total - zakkigFee;
 

@@ -79,13 +79,13 @@ components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.primary-foreground}"
-    rounded: "{rounded.lg}"
-    padding: "8px 16px"
+    rounded: "{rounded.full}"
+    padding: "12px 24px"
   button-secondary:
     backgroundColor: "{colors.secondary}"
     textColor: "{colors.secondary-foreground}"
-    rounded: "{rounded.lg}"
-    padding: "8px 16px"
+    rounded: "{rounded.full}"
+    padding: "12px 24px"
   button-destructive:
     backgroundColor: "{colors.destructive}"
     textColor: "{colors.destructive-foreground}"
@@ -167,7 +167,7 @@ The palette is strictly monochromatic and high-contrast, supported only by muted
 Poppins brings architectural weight to bold display headlines while remaining remarkably legible in dense kitchen tickets and ingredient modifier lists. Inter brings mathematical precision, alignment, and tabular legibility to all figures and numerical data.
 
 ### Hierarchy
-- **Display** (Bold 700, `clamp(2rem, 5vw, 3rem)`, `line-height: 1.1`, `letter-spacing: -0.02em`): Hero headlines on marketing pages and dashboard welcome titles.
+- **Display** (Bold 700, `clamp(2rem, 5vw, 3rem)`, `line-height: 1.1`, `letter-spacing: -0.02em`): Dashboard welcome titles. Marketing typography is defined in section 11.
 - **Headline** (SemiBold 600, `1.5rem` / `24px`, `line-height: 1.25`, `letter-spacing: -0.01em`): Category section headers, modal titles, and large KPI metrics.
 - **Title** (SemiBold 600, `1.125rem` / `18px`, `line-height: 1.3`, `letter-spacing: normal`): Menu item names, dialog sub-headers, and order ticket numbers.
 - **Body** (Regular 400, `0.875rem` / `14px`, `line-height: 1.5`, `max-width: 65ch`): Item descriptions, explanations, and general paragraph content.
@@ -432,3 +432,36 @@ Keep the codebase clean, professional, minimal, and human-written. Strictly foll
 - **Don't** evaluate content layouts against `window.innerWidth` when a sidebar is present.
 - **Don't** rely on raw whitespace strings `{" "}` inside flexbox badges.
 - **Don't** allow client components to call mutating Convex functions directly without going through Server Actions.
+
+## 11. Marketing website
+
+The website is a light, editorial surface for restaurant operators. Its primary action is direct registration. The webapp's functional design rules remain unchanged; the following tokens describe the marketing surface in `website/app/globals.css`.
+
+### Composition and tokens
+
+- Canvas: white; soft sections and footer `#f7f7f5`; text black; secondary text `#595959`; hairlines `#e6e6e6`.
+- Content: maximum 1200px, centered. Side gutters scale from 24px to 64px. Section padding scales from 72px to 128px.
+- Spacing rhythm: 4, 8, 12, 16, 24, 32, 40, 48, 64px. Use close spacing within a group and large spacing between groups.
+- Poppins is the text family. Hero: 46–88px, 600, line-height 1.08. Section heading: 32–52px, 600, line-height 1.17. Subheading: 18px. Body: 14–17px. Supporting captions: 12px. Tracking never below -0.04em; Inter is reserved for numeric digits and decimal separators.
+- Primary controls: black/white pill, minimum 48px height, 14px semibold. Secondary controls: 44px, thin border. Pointer-down scale 0.98. Keyboard focus: visible 2px black outline with 5px offset.
+- Native locale dialog: white, 24px outer radius, 24px padding, edge-to-edge header/footer dividers. Options use explicit 12px radii. The dialog traps focus, closes on Escape and applies draft language only through the primary action.
+
+### Visual signature and product imagery
+
+The hero QR is a slightly rotated paper sheet held by two restrained translucent tape strips. It is the only physical visual effect. QR modules, finders and centered logo follow the existing product QR settings; the example links to the app entry, not a real restaurant table. No animated background, rotating QR showcase, card grid or decorative scroll effects.
+
+The ordering flow uses actual `GuestFrontend`, `CartSheet` and `CurrentOrdersContent` renders with isolated demo data. Images are localized for German and English, served as WebP and labelled as examples. Two portrait phone frames and one landscape tablet describe scan, checkout and kitchen. Never replace their interfaces with imagined dashboards. The squirrel is the existing brand SVG used once in the closing section.
+
+### Responsive contract
+
+- Above 900px: split hero headline flanks the paper QR. At desktop widths the flow has two phone columns and a wider tablet column.
+- 601–900px: headline above the QR, two phone columns, tablet beneath; reduced text-column spacing.
+- Up to 600px: single-column page, compact header and disclosure navigation; sequential phone/tablet flow, stacked pricing and FAQ, independent contact and footer controls.
+- At 320px the header uses smaller horizontal gaps. All primary actions remain at least 44px high. No horizontal document overflow.
+- Reduced-motion preference disables smooth scrolling and transitions. Content is visible without entrance animation.
+
+### Content rules
+
+Keep one sentence per flow step. Setup needs three named actions, not three descriptive cards. Pricing states 2 % per order plus variable payment-provider fees; no setup or monthly fee. Do not invent adoption statistics, promises of increased revenue, testimonials or automatic POS integration. A restrained two-column benefits section combines service time with a sourced industry example; attribution and the absence of measured zakkig results must remain adjacent to the 30% figure. On mobile it stacks into one column. FAQ explicitly describes manual entry into the till. MARS appears with its existing logo and the verified zakkig startup profile link.
+
+Every visible interface string and destination is resolved through next-intl. Legal routes retain their existing paths and content and use the same light typography and navigation. Keep the AGB finalization notice until approved legal terms are supplied.

@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { createTranslator } from "next-intl";
 import { usePathname } from "next/navigation";
-import { translations, Locale, TranslationKeys } from "./translations";
+import { translations } from "./translations";
 import { parseLocale } from "./regions";
 
 export function useTranslation() {
