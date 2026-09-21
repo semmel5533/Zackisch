@@ -6,7 +6,7 @@ export function RegisterCta() {
   return (
     <a href={t("registerUrl")} className="button-primary">
       {t("registerCta")}
-      <ArrowUpRight size={19} weight="bold" aria-hidden="true" />
+      <ArrowUpRight size={16} aria-hidden="true" />
     </a>
   );
 }
