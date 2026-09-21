@@ -227,7 +227,7 @@ html {
   padding-bottom: 3px;
   transition: background-size 200ms ease-out;
 }
-.site-header :is(a, button):not(.button-outline):not(.button-primary):is(:hover, :focus-visible) .link-label,
+.site-header :is(a, button):not(.button-outline):not(.button-primary):not(.header-region):is(:hover, :focus-visible) .link-label,
 .site-footer :is(a, button):not(.button-outline):not(.button-primary):is(:hover, :focus-visible) .link-label,
 .legal-back:is(:hover, :focus-visible) .link-label {
   background-size: 100% 2px;
@@ -377,12 +377,6 @@ html {
 .header-region svg {
   flex-shrink: 0;
   display: block;
-}
-.header-region .link-label {
-  padding-bottom: 0;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
 }
 .qr-showcase-box {
   display: flex;

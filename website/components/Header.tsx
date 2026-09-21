@@ -133,7 +133,7 @@ export function Header() {
             onClick={() => setIsModalOpen(true)}
           >
             <Globe size={18} className="shrink-0" aria-hidden="true" />
-            <span className="link-label">{t("regionDisplay")}</span>
+            <span>{t("regionDisplay")}</span>
           </button>
           <button
             className="icon-control menu-toggle"
