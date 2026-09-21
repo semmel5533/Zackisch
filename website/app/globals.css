@@ -952,7 +952,7 @@ h2[id] {
 }
 @media (max-width: 720px) {
   .site-header {
-    min-height: 88px;
+    min-height: 72px;
     gap: 12px;
   }
   .brand img {
@@ -970,7 +970,7 @@ h2[id] {
   .header-nav {
     display: none;
     position: absolute;
-    top: 76px;
+    top: 68px;
     left: 0;
     right: 0;
     background: white;
@@ -1542,7 +1542,7 @@ h2[id] {
     justify-items: center;
     text-align: center;
     gap: 32px;
-    padding-block: 36px 80px;
+    padding-block: 16px 80px;
   }
   .hero-heading {
     grid-area: heading;
@@ -1557,11 +1557,17 @@ h2[id] {
   .hero-right {
     justify-self: center;
     text-align: center;
-    font-size: clamp(20px, 5.5vw, 40px);
+    font-size: clamp(24px, 6.4vw, 44px);
     line-height: 1.1;
   }
   .hero-left::after {
     content: ",";
+  }
+  .hero-right::after {
+    content: ".";
+  }
+  .hero-qr {
+    margin-block: 8px;
   }
   .hero-copy {
     justify-self: center;
@@ -1573,12 +1579,15 @@ h2[id] {
 }
 @media (max-width: 600px) {
   .hero {
-    gap: 24px;
-    padding-block: 24px 56px;
+    gap: 28px;
+    padding-block: 8px 56px;
   }
   .hero-left,
   .hero-right {
-    font-size: clamp(19px, 5.4vw, 28px);
+    font-size: clamp(22px, 6.5vw, 36px);
+  }
+  .hero-qr {
+    margin-block: 10px;
   }
   .header-actions .button-outline {
     gap: 6px;
