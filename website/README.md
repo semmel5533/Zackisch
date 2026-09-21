@@ -20,6 +20,15 @@ Use `http://127.0.0.1:4174/?lang=de` or `?lang=en`, a 390 × 740 viewport, selec
 
 The QR in the hero is rendered by the existing QR library with square modules and the centered zakkig logo. It is an example linking to app.zakkig.com, not a live table-ordering session.
 
+## Pricing and fees
+
+zakkig operates on a transparent pay-as-you-go model:
+- 0 € setup fee (keine Einrichtungsgebühr)
+- 0 € monthly base fee (keine Monatsgebühr)
+- 2 % zakkig platform fee per order (2 % zakkig-Plattformgebühr pro Bestellung)
+- Variable payment provider fees (zzgl. variabler Zahlungsanbietergebühren, z.B. Stripe)
+The server-side calculation lives in `webapp/lib/platform-fee.ts`.
+
 ## Validation
 
 Before shipping, build the static export and inspect German/English pages at desktop, tablet and mobile sizes including 320px. Check: no horizontal overflow, all screenshots loaded, mobile navigation, FAQ expansion, registration and login targets, email/MARS/legal links, locale apply/cancel/Escape, route retention on legal pages, and root preference restoration. Fee calculations have integration tests in `webapp/tests/platform-fee.test.ts`.

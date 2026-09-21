@@ -10,6 +10,7 @@ import { QrCodeShowcase } from "./QrCodeShowcase";
 import { RegionLanguageModal } from "./RegionLanguageModal";
 import { WaveLine } from "./WaveLine";
 import { ProductDemo } from "./ProductDemo";
+import { AnimatedBenefitStat } from "./AnimatedBenefitStat";
 
 export function MainPage() {
   const { t } = useTranslation();
@@ -73,7 +74,7 @@ export function MainPage() {
         </div>
         <div className="benefit-evidence">
           <p className="caption">{t("benefitPrefix")}</p>
-          <p className="benefit-stat">{numericText(t("benefitNumber"))}</p>
+          <AnimatedBenefitStat target={30} unit="%" />
           <h3>{t("benefitMetric")}</h3>
           <a
             href={t("benefitSourceUrl")}
