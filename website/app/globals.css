@@ -610,10 +610,17 @@ h2[id] {
   text-align: center;
   justify-content: center;
 }
+.setup-grid > div:first-child {
+  align-items: flex-start;
+  text-align: left;
+}
 .benefits-section h2,
 .setup-grid h2,
 .pricing-section h2 {
   text-align: center;
+}
+.setup-grid h2 {
+  text-align: left;
 }
 .section-copy {
   color: var(--site-muted);
@@ -622,6 +629,10 @@ h2[id] {
   font-size: 15px;
   text-align: center;
   margin-inline: auto;
+}
+.setup-grid .section-copy {
+  text-align: left;
+  margin-inline: 0;
 }
 .setup-list {
   align-self: center;
