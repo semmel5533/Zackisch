@@ -64,19 +64,21 @@ export function MainPage() {
 
   return (
     <main id="content" className="marketing">
-      <section className="hero page-width">
-        <h1 className="hero-heading">
-          <span className="hero-left">{t("heroLeft")}</span>
-          <span className="hero-right">{t("heroRight")}</span>
-        </h1>
-        <div className="hero-qr">
-          <QrCodeShowcase />
-        </div>
-        <div className="hero-copy">
-          <p className="whitespace-pre-line">{t("heroSummary")}</p>
-          <RegisterCta />
-        </div>
-      </section>
+      <div className="w-full relative bg-[#e7e7e7] bg-[url('/hero-stone-bg.webp')] bg-cover bg-top -mt-[var(--header-height)] pt-[var(--header-height)] border-b border-[var(--site-line)] overflow-hidden">
+        <section className="hero page-width">
+          <h1 className="hero-heading">
+            <span className="hero-left">{t("heroLeft")}</span>
+            <span className="hero-right">{t("heroRight")}</span>
+          </h1>
+          <div className="hero-qr">
+            <QrCodeShowcase />
+          </div>
+          <div className="hero-copy">
+            <p className="whitespace-pre-line">{t("heroSummary")}</p>
+            <RegisterCta />
+          </div>
+        </section>
+      </div>
 
       <section className="section page-width flow-section">
         <div className="section-heading">
