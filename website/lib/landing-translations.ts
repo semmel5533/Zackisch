@@ -24,7 +24,7 @@ export const landingTranslations = {
     flowPayText: "Deine Kunden bestellen selbst. Am Tisch oder zum Abholen.",
     flowKitchen: "Vorbereiten",
     flowKitchenText: "Die Bestellung erscheint auf deinem Personal-Tablet.",
-    benefitTitle: "Mehr Zeit für Kunden.\nMehr Raum für Umsatz.",
+    benefitTitle: "Mehr Raum für Umsatz.",
     benefitService:
       "Deine Kunden bestellen und bezahlen selbst. Dein Team hat mehr Zeit für den Service – und dafür, dass Kunden gerne wiederkommen.",
     benefitPrefix: "Bis zu",
