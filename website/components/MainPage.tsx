@@ -19,27 +19,18 @@ export function MainPage() {
     "faqApp",
     "faqDevices",
     "faqPickup",
-    "faqMenu",
-    "faqUnavailable",
-    "faqOptions",
     "faqPayment",
-    "faqTips",
-    "faqStart",
     "faqPos",
     "faqPayout",
     "faqContract",
-    "faqCosts",
   ] as const;
 
   return (
     <main id="content" className="marketing">
       <section className="hero page-width">
-        <h1 className="hero-title">
-          <span className="hero-word">
-            {t("heroFirst")}
-            <WaveLine repeat />
-          </span>
-          <span>{t("heroLast")}</span>
+        <h1 className="hero-heading">
+          <span className="hero-left">{t("heroLeft")}</span>
+          <span className="hero-right">{t("heroRight")}</span>
         </h1>
         <div className="hero-qr">
           <QrCodeShowcase />
@@ -50,9 +41,9 @@ export function MainPage() {
         </div>
       </section>
 
-      <section id="ablauf" className="section page-width flow-section">
+      <section className="section page-width flow-section">
         <div className="section-heading">
-          <h2>{t("flowTitle")}</h2>
+          <h2 id="ablauf">{t("flowTitle")}</h2>
         </div>
         <div className="flow-grid">
           {(["Scan", "Pay", "Kitchen"] as const).map((step, index) => (
@@ -111,9 +102,9 @@ export function MainPage() {
         </div>
       </section>
 
-      <section id="kosten" className="section page-width pricing-section">
+      <section className="section page-width pricing-section">
         <div>
-          <h2>{t("feeTitle")}</h2>
+          <h2 id="kosten">{t("feeTitle")}</h2>
           <p className="section-copy">{t("feePromise")}</p>
           <div className="fee-promises">
             <p>{t("feeNoSetup")}</p>
@@ -130,8 +121,8 @@ export function MainPage() {
         </div>
       </section>
 
-      <section id="faq" className="section page-width faq-section">
-        <h2>{t("faqTitle")}</h2>
+      <section className="section page-width faq-section">
+        <h2 id="faq">{t("faqTitle")}</h2>
         <div className="faq-list">
           {questions.map((question) => (
             <details key={question}>
@@ -146,28 +137,18 @@ export function MainPage() {
       </section>
 
       <footer className="site-footer">
-        <div className="page-width">
-          <div className="closing">
-            <img
-              className="closing-mascot"
-              src="/icon.svg"
-              alt=""
-              aria-hidden="true"
-              width="360"
-              height="360"
-            />
-            <div>
-              <h2>{t("closingTitle")}</h2>
-              <RegisterCta />
-            </div>
+        <div className="page-width footer-container">
+          <div className="footer-closing">
+            <h2>{t("closingTitle")}</h2>
+            <RegisterCta />
           </div>
-          <div className="contact-row">
-            <div>
-              <h3 className="contact-label">{t("contactLabel")}</h3>
-              <a className="contact-link" href={t("contactUrl")}>
-                <span className="link-label">{t("contactEmail")}</span>
-              </a>
-            </div>
+          <div className="footer-contact">
+            <h3 className="contact-label">{t("contactLabel")}</h3>
+            <a className="contact-link" href={t("contactUrl")}>
+              <span className="link-label">{t("contactEmail")}</span>
+            </a>
+          </div>
+          <div className="footer-mars">
             <a
               className="mars-support"
               href={t("marsUrl")}
@@ -176,17 +157,24 @@ export function MainPage() {
             >
               <img
                 src="/mars_full.svg"
-                width="160"
-                height="52"
+                width="180"
+                height="58"
                 alt={t("marsLogoAlt")}
               />
               <span>{t("supportedBy")}</span>
             </a>
           </div>
+          <div className="footer-mascot">
+            <img
+              className="closing-mascot"
+              src="/icon.svg"
+              alt=""
+              aria-hidden="true"
+              width="420"
+              height="420"
+            />
+          </div>
           <div className="footer-bottom">
-            <Link href={t("homeUrl")}>
-              <img src="/full.svg" width="110" height="36" alt={t("logoAlt")} />
-            </Link>
             <nav aria-label={t("footerNavigation")}>
               {(["legal", "privacy", "gtc"] as const).map((key) => (
                 <Link key={key} href={t(`${key}Url`)}>

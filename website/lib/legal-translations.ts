@@ -23,7 +23,7 @@ export const legalTranslations = {
     gtcPending:
       "Die Allgemeinen Geschäftsbedingungen für die Nutzung von zakkig werden derzeit juristisch finalisiert und in Kürze an dieser Stelle bereitgestellt.",
     gtcContact:
-      "Bei dringenden Fragen zu unseren Nutzungs- und Geschäftsbedingungen für Gastronomen oder Gäste wenden Sie sich bitte jederzeit direkt an uns:",
+      "Bei dringenden Fragen zu unseren Nutzungs- und Geschäftsbedingungen für Gastronomen oder Kunden wenden Sie sich bitte jederzeit direkt an uns:",
     openGraphLocale: "de_DE",
   },
   en: {

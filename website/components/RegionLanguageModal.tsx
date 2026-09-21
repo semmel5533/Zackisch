@@ -68,6 +68,19 @@ export function RegionLanguageModal({
       className="region-dialog"
       aria-labelledby="region-title"
       aria-describedby="region-description"
+      onClick={(e) => {
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+        const rect = dialog.getBoundingClientRect();
+        const isInDialog =
+          rect.top <= e.clientY &&
+          e.clientY <= rect.top + rect.height &&
+          rect.left <= e.clientX &&
+          e.clientX <= rect.left + rect.width;
+        if (!isInDialog) {
+          onClose();
+        }
+      }}
       onCancel={onClose}
     >
       <div className="region-dialog-inner">

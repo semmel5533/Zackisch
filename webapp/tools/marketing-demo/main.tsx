@@ -23,6 +23,11 @@ const labels = {
     description: "Tomatensauce, Mozzarella und frisches Basilikum",
     second: "Pasta al Limone",
     secondDescription: "Zitrone, Parmesan und frischer Pfeffer",
+    crustStep: "Teig",
+    crustOpt: "Sauerteig",
+    extrasStep: "Extras",
+    extrasOpt: "Oliven",
+    extrasOpt2: "Knoblauch",
   },
   en: {
     menu: "Favourites",
@@ -36,6 +41,11 @@ const labels = {
     description: "Tomato sauce, mozzarella and fresh basil",
     second: "Pasta al Limone",
     secondDescription: "Lemon, Parmesan and fresh pepper",
+    crustStep: "Dough",
+    crustOpt: "Sourdough",
+    extrasStep: "Extras",
+    extrasOpt: "Olives",
+    extrasOpt2: "Garlic",
   },
 }[locale];
 const base = { _creationTime: 1789992000000, organizationId: "demo" };
@@ -136,13 +146,26 @@ items.push(
     customizations: "[]",
   },
 );
+const pizzaCustomizations = [
+  { stepName: labels.crustStep, optionName: labels.crustOpt, extraPrice: 0 },
+  { stepName: labels.extrasStep, optionName: labels.extrasOpt, extraPrice: 100 },
+  { stepName: labels.extrasStep, optionName: labels.extrasOpt2, extraPrice: 150 },
+];
 useCartStore.setState({
   items: [
     {
-      id: "pizza",
+      id: "pizza-custom",
       menuItemId: "pizza",
       name: labels.dish,
-      price: 1250,
+      price: 1500,
+      quantity: 1,
+      customizations: pizzaCustomizations,
+    },
+    {
+      id: "lemonade",
+      menuItemId: "lemonade",
+      name: labels.drink,
+      price: 450,
       quantity: 1,
     },
   ],
@@ -156,15 +179,24 @@ const orders = [1, 2, 3].map((n): Order => ({
   type: n === 3 ? "takeaway" : "dine-in",
   tableNumber: n === 3 ? undefined : String(n),
   items: JSON.stringify([
-    { name: labels.dish, price: 1250, quantity: 1 },
-    { name: labels.second, price: 1450, quantity: 1 },
+    {
+      name: labels.dish,
+      price: 1500,
+      quantity: 1,
+      customizations: pizzaCustomizations,
+    },
+    {
+      name: labels.drink,
+      price: 450,
+      quantity: 1,
+    },
   ]),
-  total: 2700,
+  total: 1950,
   status: n === 3 ? "ready_for_pickup" : "in_progress",
   email: "demo@example.com",
-  zakkigFee: 54,
+  zakkigFee: 39,
   stripeFee: 0,
-  netAmount: 2646,
+  netAmount: 1911,
   currency: "EUR",
 }));
 createRoot(document.getElementById("root")!).render(
@@ -179,6 +211,14 @@ createRoot(document.getElementById("root")!).render(
       items={items}
       type="dine-in"
       tableNumber="1"
+      initialActiveTab={
+        params.get("screen") === "pay" ||
+        params.get("screen") === "cart" ||
+        params.get("screen") === "checkout"
+          ? "cart"
+          : "menu"
+      }
+      initialCheckoutOpen={params.get("screen") === "checkout"}
     />
   ),
 );

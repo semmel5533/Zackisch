@@ -27,6 +27,8 @@ interface GuestFrontendProps {
   tableNumber?: string;
   orderId?: string;
   initialOrder?: Order | null;
+  initialActiveTab?: "menu" | "cart";
+  initialCheckoutOpen?: boolean;
 }
 
 function GuestHeader({
@@ -559,13 +561,15 @@ export function GuestFrontend({
   tableNumber,
   orderId,
   initialOrder,
+  initialActiveTab = "menu",
+  initialCheckoutOpen = false,
 }: GuestFrontendProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
   const { items: cartItems, total } = useCartStore();
 
-  const [activeTab, setActiveTab] = useState<"menu" | "cart">("menu");
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"menu" | "cart">(initialActiveTab);
+  const [checkoutOpen, setCheckoutOpen] = useState(initialCheckoutOpen);
   const [dineInSuccess, setDineInSuccess] = useState<{
     orderNumber: string;
   } | null>(null);
