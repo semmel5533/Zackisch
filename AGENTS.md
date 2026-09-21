@@ -210,6 +210,11 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
    - Section block titles, card categorization headers, queue column headers, and metadata headers across the webapp and modals (e.g. `BETRIEBSDATEN`, `LOGO & BANNER`, `ZAHLUNGSANBIETER`, `GEFAHRENZONE`, `IN BEARBEITUNG`, `ABHOLBEREIT`, `STATISTIK`, `QR-CODE VERWALTUNG`, `SITZUNGEN`, `ARTIKELDETAILS`, `BILD & VORSCHAU`, `PRESETS & ANPASSUNGEN`, `REGION`, `SPRACHE`) strictly render with `text-sm font-bold uppercase tracking-wider text-foreground` (or `text-zinc-900` on Apple light modal dialogs, and `text-destructive` for danger zones).
    - Always use `t('key')` with CSS `uppercase tracking-wider` for clean, consistent internationalization.
 
+7. **Tailwind-First Styling Standard (Zero Custom CSS Bloat):**
+   - Strictly implement all styling, layouts, spacing, responsive behavior, typography, transitions, and hover states using Tailwind utility classes directly in JSX/TSX.
+   - DO NOT introduce arbitrary or redundant custom CSS rules into `globals.css` when they can be accomplished via Tailwind utility classes (e.g. `gap-*`, `flex`, `grid`, `text-*`, `leading-*`, `items-*`, `justify-*`, `p-*`, `m-*`).
+   - Keep `globals.css` minimal and restricted strictly to global resets, custom fonts/variables, keyframe animations, and base layout resets that cannot be expressed with Tailwind.
+
 <!-- END:design-theme-conventions -->
 
 <!-- BEGIN:git-commit-conventions -->

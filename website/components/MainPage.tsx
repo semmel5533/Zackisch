@@ -3,7 +3,7 @@
 import { numericText } from "@/lib/numeric-text";
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Globe, Plus } from "@phosphor-icons/react";
+import { ArrowUpRight, Globe, Plus } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { QrCodeShowcase } from "./QrCodeShowcase";
@@ -169,7 +169,7 @@ export function MainPage() {
             <RegisterCta />
           </div>
           <div className="footer-contact flex flex-col items-end text-right justify-self-end gap-2 pt-2 max-md:pt-0">
-            <h3 className="text-2xl font-medium m-0 leading-[1.1]">{t("contactLabel")}</h3>
+            <h3 className="contact-label text-2xl font-medium m-0 leading-[1.1]">{t("contactLabel")}</h3>
             <a
               className="inline-block text-[clamp(24px,3.8vw,46px)] max-md:text-[clamp(26px,7.8vw,36px)] tracking-tight leading-[1.1] text-right"
               href={t("contactUrl")}
@@ -179,7 +179,7 @@ export function MainPage() {
           </div>
           <div className="footer-mars justify-self-end flex justify-end">
             <a
-              className="inline-flex items-center justify-end gap-1.5 text-[13px] text-[var(--site-muted)] whitespace-nowrap"
+              className="inline-flex items-center justify-end gap-1.5 text-[13px] text-[var(--site-muted)] whitespace-nowrap group hover:text-white transition-colors"
               href={t("marsUrl")}
               target="_blank"
               rel="noopener noreferrer"
@@ -191,6 +191,11 @@ export function MainPage() {
                 height="58"
                 alt={t("marsLogoAlt")}
                 className="w-[150px] shrink-0 h-auto block"
+              />
+              <ArrowUpRight
+                size={14}
+                className="shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden="true"
               />
             </a>
           </div>
