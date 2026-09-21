@@ -49,17 +49,27 @@ export function MainPage() {
         <div className="flow-grid">
           {(["Scan", "Pay", "Kitchen"] as const).map((step, index) => (
             <article
-              className={`flow-step flow-${step.toLowerCase()}`}
+              className={`flex flex-col items-center w-full ${
+                step === "Kitchen"
+                  ? "col-span-full max-w-[800px] mx-auto"
+                  : "max-w-[340px] justify-self-center"
+              }`}
               key={step}
             >
               <ProductDemo screen={step} />
-              <div className="flow-caption">
+              <div
+                className={`flex items-start gap-4 mt-6 md:mt-8 w-full ${
+                  step === "Kitchen" ? "max-w-[520px]" : "max-w-[340px]"
+                } mx-auto`}
+              >
                 <span className="step-number" aria-hidden="true">
                   {index + 1}
                 </span>
-                <div>
-                  <h3>{t(`flow${step}`)}</h3>
-                  <p>{t(`flow${step}Text`)}</p>
+                <div className="flex flex-col items-start text-left">
+                  <h3 className="text-left">{t(`flow${step}`)}</h3>
+                  <p className="text-sm text-[var(--site-muted)] mt-1.5 text-left">
+                    {t(`flow${step}Text`)}
+                  </p>
                 </div>
               </div>
             </article>

@@ -89,15 +89,19 @@ export function RegionLanguageModal({
           <p id="region-description">{t("regionSelectorDescription")}</p>
         </header>
         <div className="region-dialog-body">
-          <fieldset>
-            <legend>{t("regionLabel")}</legend>
+          <fieldset className="border-0 p-0 m-0 min-w-0">
+            <legend className="text-sm font-semibold text-black mb-2 normal-case tracking-normal">
+              {t("regionLabel")}
+            </legend>
             <div className="region-option selected">
               <span>{region.nativeName}</span>
               <Check size={16} weight="bold" aria-hidden="true" />
             </div>
           </fieldset>
-          <fieldset>
-            <legend>{t("languageLabel")}</legend>
+          <fieldset className="border-0 p-0 m-0 min-w-0">
+            <legend className="text-sm font-semibold text-black mb-2 normal-case tracking-normal">
+              {t("languageLabel")}
+            </legend>
             <div className="language-options">
               {region.locales.map((loc) => (
                 <label
