@@ -58,8 +58,8 @@ export function MainPage() {
             >
               <ProductDemo screen={step} />
               <div
-                className={`flex items-start gap-4 mt-6 md:mt-8 w-full ${
-                  step === "Kitchen" ? "max-w-[520px]" : "max-w-[340px]"
+                className={`flex items-start gap-4 mt-6 md:mt-8 w-fit ${
+                  step === "Kitchen" ? "max-w-[520px]" : "max-w-[320px]"
                 } mx-auto`}
               >
                 <span className="step-number" aria-hidden="true">
@@ -67,7 +67,7 @@ export function MainPage() {
                 </span>
                 <div className="flex flex-col items-start text-left">
                   <h3 className="text-left">{t(`flow${step}`)}</h3>
-                  <p className="text-sm text-[var(--site-muted)] mt-1.5 text-left">
+                  <p className="text-sm text-[var(--site-muted)] mt-1.5 text-left text-balance">
                     {t(`flow${step}Text`)}
                   </p>
                 </div>

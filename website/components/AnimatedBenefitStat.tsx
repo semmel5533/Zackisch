@@ -35,7 +35,7 @@ export function AnimatedBenefitStat({
           hasAnimated.current = true;
           observer.disconnect();
 
-          const duration = 1200; // ms
+          const duration = 2200; // ms
           const startTime = performance.now();
 
           const animate = (currentTime: number) => {
