@@ -218,7 +218,8 @@ html {
   display: none;
 }
 .site-header .link-label,
-.site-footer .link-label {
+.site-footer .link-label,
+.legal-back .link-label {
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
   background-position: left bottom;
@@ -227,7 +228,8 @@ html {
   transition: background-size 200ms ease-out;
 }
 .site-header :is(a, button):not(.button-outline):not(.button-primary):is(:hover, :focus-visible) .link-label,
-.site-footer :is(a, button):not(.button-outline):not(.button-primary):is(:hover, :focus-visible) .link-label {
+.site-footer :is(a, button):not(.button-outline):not(.button-primary):is(:hover, :focus-visible) .link-label,
+.legal-back:is(:hover, :focus-visible) .link-label {
   background-size: 100% 2px;
 }
 .header-actions {
@@ -1181,9 +1183,6 @@ h2[id] {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-size: 14px;
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 .legal-copy {
   max-width: 760px;
@@ -1224,23 +1223,6 @@ h2[id] {
 .legal-copy a {
   text-decoration: underline;
   text-underline-offset: 4px;
-}
-.legal-footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  border-top: 1px solid var(--site-line);
-  margin-top: 64px;
-  padding-top: 24px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.legal-footer a {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
 }
 .not-found {
   padding-block: 100px;

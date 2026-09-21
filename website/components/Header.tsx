@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ArrowUpRight, Globe, List, X } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegionLanguageModal } from "./RegionLanguageModal";
@@ -10,6 +10,7 @@ import { RegionLanguageModal } from "./RegionLanguageModal";
 export function Header() {
   const { t, locale } = useTranslation();
   const pathname = usePathname() || "";
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -27,18 +28,30 @@ export function Header() {
     const targetId = href.slice(hashIndex + 1);
     const targetPath = href.slice(0, hashIndex);
 
-    if (
+    e.preventDefault();
+
+    const isCurrentPage =
       pathname === targetPath ||
       pathname === `${targetPath}/` ||
-      pathname.endsWith(targetPath)
-    ) {
-      e.preventDefault();
+      pathname.endsWith(targetPath);
+
+    if (isCurrentPage) {
       const el = document.getElementById(targetId);
       if (el) {
         const top =
           el.getBoundingClientRect().top + window.pageYOffset - 32;
         window.scrollTo({ top, behavior: "smooth" });
       }
+      if (window.location.hash) {
+        window.history.replaceState(null, "", targetPath);
+      }
+    } else {
+      try {
+        sessionStorage.setItem("zakkig_scroll_target", targetId);
+      } catch {
+        // ignore
+      }
+      router.push(targetPath, { scroll: false });
     }
   };
   return (
@@ -71,15 +84,19 @@ export function Header() {
                 ["pricingUrl", "navPricing"],
                 ["faqUrl", "navFaq"],
               ] as const
-            ).map(([url, label]) => (
-              <Link
-                onClick={(e) => handleNavClick(e, url)}
-                key={url}
-                href={t(url)}
-              >
-                <span className="link-label">{t(label)}</span>
-              </Link>
-            ))}
+            ).map(([url, label]) => {
+              const fullUrl = t(url);
+              const targetPath = fullUrl.split("#")[0];
+              return (
+                <Link
+                  onClick={(e) => handleNavClick(e, url)}
+                  key={url}
+                  href={targetPath}
+                >
+                  <span className="link-label">{t(label)}</span>
+                </Link>
+              );
+            })}
           </div>
           <div className="mobile-nav-actions">
             <a href={t("signInUrl")} className="button-primary">
