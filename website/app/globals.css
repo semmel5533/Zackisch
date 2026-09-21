@@ -783,6 +783,10 @@ h2[id] {
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--site-muted);
+  white-space: nowrap;
 }
 .mars-support img {
   width: 150px;
