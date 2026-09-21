@@ -667,7 +667,7 @@ h2[id] {
   grid-template-areas:
     "title   ."
     "cta     contact"
-    "mascot  mars"
+    ".       mars"
     "mascot  bottom";
   gap: 28px 48px;
   align-items: start;
@@ -732,8 +732,8 @@ h2[id] {
       "cta"
       "contact"
       "mars"
-      "bottom"
-      "mascot";
+      "mascot"
+      "bottom";
     gap: 32px;
   }
   .footer-contact {
@@ -770,14 +770,6 @@ h2[id] {
     justify-content: flex-end;
     text-align: right;
     white-space: nowrap;
-  }
-  .footer-mascot {
-    justify-self: start;
-    margin-bottom: -75px;
-    margin-top: 24px;
-  }
-  .closing-mascot {
-    width: clamp(220px, 52vw, 300px);
   }
 }
 @media (max-width: 720px) {
