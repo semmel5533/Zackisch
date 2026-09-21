@@ -37,7 +37,7 @@ export function MainPage() {
           <QrCodeShowcase />
         </div>
         <div className="hero-copy">
-          <p>{t("heroSummary")}</p>
+          <p className="whitespace-pre-line">{t("heroSummary")}</p>
           <RegisterCta />
         </div>
       </section>

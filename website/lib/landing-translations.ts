@@ -5,7 +5,7 @@ export const landingTranslations = {
     heroFirst: "Ein Scan,",
     heroLast: "Alles drin.",
     heroSummary:
-      "Dein Menü. Die Bestellung. Die Bezahlung. Direkt auf dem Handy deiner Kunden.",
+      "Dein Menü. Die Bestellung. Die Bezahlung.\nDirekt auf dem Handy deiner Kunden.",
     navFlow: "So funktioniert’s",
     navPricing: "Kosten",
     navFaq: "FAQ",
@@ -107,7 +107,7 @@ export const landingTranslations = {
     heroFirst: "One scan,",
     heroLast: "All inside.",
     heroSummary:
-      "Your menu. The order. The payment. Right on your customers’ phones.",
+      "Your menu. The order. The payment.\nRight on your customers’ phones.",
     navFlow: "How it works",
     navPricing: "Pricing",
     navFaq: "FAQ",
