@@ -5,7 +5,7 @@ export const translations = {
   de: {
     ...landingTranslations.de,
     ...legalTranslations.de,
-    metaTitle: "zakkig: Bestellen und bezahlen per QR-Code",
+    metaTitle: "zakkig: Bestellen und Bezahlen per QR-Code",
     metaDescription:
       "Deine Kunden bestellen und bezahlen direkt am Handy. Am Tisch oder zum Abholen. Keine Monatsgebühr, 2 % Gebühr zzgl. Zahlungsanbietergebühren.",
     registerCta: "Kostenlos registrieren",
@@ -37,7 +37,7 @@ export const translations = {
   en: {
     ...landingTranslations.en,
     ...legalTranslations.en,
-    metaTitle: "zakkig: Order and pay by QR code",
+    metaTitle: "zakkig: Order and Pay by QR code",
     metaDescription:
       "Your customers order and pay on their phones. At the table or for pickup. No monthly fee, 2% fee plus payment provider fees.",
     registerCta: "Register for free",

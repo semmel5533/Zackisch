@@ -14,7 +14,14 @@ export function legalMetadata(locale: string, kind: LegalKind): Metadata {
   return {
     title: t(`${kind}Title`),
     description: t(`${kind}Description`),
-    robots: "noindex, follow",
+    robots: {
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
+    },
     alternates: { canonical: `https://www.zakkig.com${t(`${kind}Url`)}` },
     openGraph: {
       title: t(`${kind}Title`),

@@ -5,7 +5,7 @@ export const landingTranslations = {
     heroFirst: "Ein Scan,",
     heroLast: "Alles drin.",
     heroSummary:
-      "Deine Speisekarte. Die Bestellung. Die Bezahlung. Direkt auf dem Handy deiner Kunden.",
+      "Dein Menü. Die Bestellung. Die Bezahlung. Direkt auf dem Handy deiner Kunden.",
     navFlow: "So funktioniert’s",
     navPricing: "Kosten",
     navFaq: "FAQ",
@@ -19,7 +19,7 @@ export const landingTranslations = {
     closeMenu: "Navigation schließen",
     flowTitle: "So einfach funktioniert’s.",
     flowScan: "Scannen & auswählen",
-    flowScanText: "Die Speisekarte öffnet sich direkt im Browser.",
+    flowScanText: "Das Menü öffnet sich direkt im Browser.",
     flowPay: "Bestellen & bezahlen",
     flowPayText: "Deine Kunden bestellen selbst. Am Tisch oder zum Abholen.",
     flowKitchen: "Vorbereiten",
@@ -36,7 +36,7 @@ export const landingTranslations = {
     feePromise:
       "Du zahlst nur für Bestellungen über zakkig. Ohne Bestellungen bleibt die Nutzung kostenlos.",
     setupTitle: "Kinderleicht einrichten.",
-    setupFirst: "Speisekarte anlegen",
+    setupFirst: "Menü anlegen",
     setupSecond: "QR-Codes auslegen",
     setupThird: "Personalsitzung öffnen",
     setupNote:
@@ -51,16 +51,16 @@ export const landingTranslations = {
     faqTitle: "Noch Fragen?",
     faqApp: "Brauchen meine Kunden eine App?",
     faqAppAnswer:
-      "Nein. Der QR-Code öffnet deine Speisekarte direkt im Browser. Dort können deine Kunden bestellen und bezahlen.",
+      "Nein. Der QR-Code öffnet dein Menü direkt im Browser. Dort können deine Kunden bestellen und bezahlen.",
     faqDevices: "Welche Geräte brauche ich?",
     faqDevicesAnswer:
       "Ein normales Tablet mit Browser und eine stabile Internetverbindung für das Personal. Deine Kunden nutzen ihr eigenes Handy.",
     faqPickup: "Kann ich auch Bestellungen zum Abholen anbieten?",
     faqPickupAnswer:
       "Ja. Du kannst Bestellungen am Tisch, zum Abholen oder beides anbieten. Abholbestellungen erscheinen ebenfalls auf deinem Personal-Tablet.",
-    faqMenu: "Kann ich meine Speisekarte selbst ändern?",
+    faqMenu: "Kann ich mein Menü selbst ändern?",
     faqMenuAnswer:
-      "Ja. Du verwaltest Kategorien, Gerichte, Bilder und Preise in deinem Dashboard. Deine Kunden sehen die aktuelle Speisekarte über denselben QR-Code.",
+      "Ja. Du verwaltest Kategorien, Gerichte, Bilder und Preise in deinem Dashboard. Deine Kunden sehen das aktuelle Menü über denselben QR-Code.",
     faqUnavailable: "Was mache ich, wenn ein Gericht ausverkauft ist?",
     faqUnavailableAnswer:
       "Du kannst Artikel als nicht verfügbar markieren und später wieder freigeben. So bestellen Kunden nur das, was du gerade anbieten kannst.",
@@ -75,7 +75,7 @@ export const landingTranslations = {
       "Ja. Deine Kunden können beim Bezahlen ganz einfach ein Trinkgeld mit vorgegebenen Beträgen oder einem freien Wunschbetrag hinzufügen.",
     faqStart: "Was brauche ich, um Bestellungen anzunehmen?",
     faqStartAnswer:
-      "Lege dein Konto und deine Speisekarte an, richte den Zahlungsanbieter ein und verteile deine QR-Codes. Öffne anschließend die Personalsitzung auf deinem Tablet.",
+      "Lege dein Konto und dein Menü an, richte den Zahlungsanbieter ein und verteile deine QR-Codes. Öffne anschließend die Personalsitzung auf deinem Tablet.",
     faqPos: "Wie funktioniert das mit meiner Kasse?",
     faqPosAnswer:
       "Bestellungen überträgst du manuell als unbaren Umsatz in dein Kassensystem. Deine Transaktionen kannst du exportieren.",
@@ -127,7 +127,7 @@ export const landingTranslations = {
     flowPayText: "Your customers order themselves. At the table or for pickup.",
     flowKitchen: "Prepare",
     flowKitchenText: "The order appears on your staff tablet.",
-    benefitTitle: "More time for customers.\nMore room for revenue.",
+    benefitTitle: "More room for revenue.",
     benefitService:
       "Customers order and pay themselves. Your team has more time for service – and giving customers a reason to come back.",
     benefitPrefix: "Up to",

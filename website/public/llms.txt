@@ -7,7 +7,7 @@ Das übergeordnete Ziel des Projekts ist es, eine nahtlose, app-lose Lösung fü
 
 - **Fokus:** Keine App-Downloads, extrem schnelle Ladezeiten, einfache intuitive Bedienung.
 - **Mehrwert für Gastronomen:** Das Personal wird entlastet, gewinnt Zeit für das Wesentliche (den Service am Gast) und der Umsatz kann durch effizientere Bestellabläufe gesteigert werden.
-- **Mehrwert für Gäste:** Nie wieder auf die Speisekarte oder die Rechnung warten.
+- **Mehrwert für Gäste:** Nie wieder auf das Menü oder die Rechnung warten.
 
 ## Architektur & Technischer Stack (Monorepo)
 
