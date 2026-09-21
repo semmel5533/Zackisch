@@ -662,6 +662,7 @@ h2[id] {
 .footer-container {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
+  grid-template-rows: auto auto 1fr auto;
   grid-template-areas:
     "title   ."
     "cta     contact"
@@ -672,116 +673,21 @@ h2[id] {
 }
 .footer-closing-title {
   grid-area: title;
-  text-align: left;
 }
 .footer-closing-cta {
   grid-area: cta;
-  display: flex;
-  align-items: center;
 }
 .footer-contact {
   grid-area: contact;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-  justify-self: end;
-  align-self: start;
-  gap: 8px;
-  padding-top: 8px;
 }
 .footer-mars {
   grid-area: mars;
-  justify-self: end;
-  display: flex;
-  justify-content: flex-end;
 }
 .footer-mascot {
   grid-area: mascot;
-  justify-self: start;
-  display: flex;
-  align-items: flex-end;
-  margin-top: clamp(64px, 8vw, 120px);
-  margin-bottom: -110px;
-}
-.closing-mascot {
-  width: clamp(290px, 26vw, 380px);
-  height: auto;
-  object-fit: contain;
-  display: block;
 }
 .footer-bottom {
   grid-area: bottom;
-  border-top: none;
-  padding-block: 28px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-}
-.footer-bottom nav {
-  display: flex;
-  gap: 24px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.footer-bottom nav a {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-}
-.contact-link {
-  display: inline-block;
-  font-size: clamp(24px, 3.8vw, 46px);
-  letter-spacing: -0.035em;
-  margin-top: 0;
-  line-height: 1.1;
-  text-align: right;
-}
-.mars-support {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--site-muted);
-  white-space: nowrap;
-}
-.mars-support img {
-  width: 150px;
-  flex-shrink: 0;
-  height: auto;
-  display: block;
-}
-.region-control {
-  display: inline-flex;
-  gap: 10px;
-  align-items: center;
-  min-height: 44px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  background: transparent;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  transition: opacity 150ms ease;
-}
-.region-control:hover {
-  opacity: 0.8;
-}
-.region-control span {
-  display: inline-flex;
-  align-items: center;
-  line-height: 1;
-}
-.region-control svg {
-  display: block;
-  flex-shrink: 0;
 }
 @media (max-width: 1100px) {
   .flow-grid {
@@ -819,6 +725,7 @@ h2[id] {
   }
   .footer-container {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
     grid-template-areas:
       "title"
       "cta"
