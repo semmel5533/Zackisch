@@ -84,7 +84,7 @@ export function MainPage() {
         <div className="section-heading">
           <h2 id="ablauf">{t("flowTitle")}</h2>
         </div>
-        <div className="flow-grid">
+        <div className="flow-grid items-start">
           {(["Scan", "Pay", "Kitchen"] as const).map((step, index) => (
             <article
               className={`flex flex-col items-center w-full ${

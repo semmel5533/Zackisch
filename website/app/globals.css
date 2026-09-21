@@ -502,7 +502,6 @@ h2[id] {
   margin-inline: auto;
   column-gap: 48px;
   row-gap: clamp(56px, 7vw, 84px);
-  align-items: end;
 }
 .flow-kitchen {
   grid-column: 1 / -1;
