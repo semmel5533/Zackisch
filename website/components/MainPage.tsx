@@ -3,7 +3,7 @@
 import { numericText } from "@/lib/numeric-text";
 import { useState } from "react";
 import Link from "next/link";
-import { Globe, Plus } from "@phosphor-icons/react";
+import { Check, Globe, Plus } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { QrCodeShowcase } from "./QrCodeShowcase";
@@ -53,17 +53,17 @@ export function MainPage() {
                 step === "Kitchen"
                   ? "col-span-full max-w-[800px] mx-auto"
                   : step === "Scan"
-                    ? "max-w-[230px] justify-self-center md:justify-self-start"
-                    : "max-w-[230px] justify-self-center md:justify-self-end"
+                    ? "max-w-[260px] mx-auto md:max-w-[230px] md:justify-self-start md:mx-0"
+                    : "max-w-[260px] mx-auto md:max-w-[230px] md:justify-self-end md:mx-0"
               }`}
               key={step}
             >
               <ProductDemo screen={step} />
               <div
-                className={`flex items-start gap-3 mt-6 md:mt-8 shrink-0 ${
+                className={`flex items-start gap-3 mt-6 md:mt-8 shrink-0 w-full ${
                   step === "Kitchen"
-                    ? "w-fit max-w-[520px] mx-auto"
-                    : "w-[255px]"
+                    ? "max-w-[340px] md:max-w-[520px] mx-auto"
+                    : "max-w-[250px] md:w-[255px] mx-auto"
                 }`}
               >
                 <span className="step-number shrink-0" aria-hidden="true">
@@ -118,21 +118,29 @@ export function MainPage() {
       </section>
 
       <section className="section page-width pricing-section">
-        <div>
+        <div className="flex flex-col items-center text-center justify-center">
           <h2 id="kosten">{t("feeTitle")}</h2>
           <p className="section-copy">{t("feePromise")}</p>
-          <div className="fee-promises">
-            <p>{t("feeNoSetup")}</p>
-            <p>{t("feeNoMonthly")}</p>
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mt-7">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-black/15 bg-black/[0.04] text-black font-semibold text-sm tracking-tight shadow-xs">
+              <Check size={16} weight="bold" className="text-black shrink-0" aria-hidden="true" />
+              {t("feeNoSetup")}
+            </span>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-black/15 bg-black/[0.04] text-black font-semibold text-sm tracking-tight shadow-xs">
+              <Check size={16} weight="bold" className="text-black shrink-0" aria-hidden="true" />
+              {t("feeNoMonthly")}
+            </span>
           </div>
         </div>
-        <div className="fee">
-          <div className="fee-value">
+        <div className="flex flex-col items-center justify-center text-center self-center">
+          <div className="flex items-baseline justify-center gap-1.5 text-4xl sm:text-5xl font-semibold tracking-tight text-black mb-3">
             <span className="font-inter tabular-nums">{t("feeNumber")}</span>
             <span>{t("feeUnit")}</span>
           </div>
-          <h3>{t("feeLabel")}</h3>
-          <p>{t("feeNote")}</p>
+          <h3 className="text-base font-semibold text-black">{t("feeLabel")}</h3>
+          <p className="text-xs text-[var(--site-muted)] mt-1.5 max-w-[32ch] text-center mx-auto">
+            {t("feeNote")}
+          </p>
         </div>
       </section>
 

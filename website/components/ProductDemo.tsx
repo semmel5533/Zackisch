@@ -15,8 +15,8 @@ export function ProductDemo({
         <img
           src={`/product/${locale}-${screen.toLowerCase()}.webp`}
           alt={t(`flow${screen}Text`)}
-          width={tablet ? 1200 : 390}
-          height={tablet ? 720 : 814}
+          width={tablet ? 2400 : 780}
+          height={tablet ? 1420 : 1692}
           loading="lazy"
         />
       </div>

@@ -165,6 +165,7 @@ input[type="tel"] {
   --site-muted: #595959;
   --site-line: #e6e6e6;
   --site-soft: #f7f7f5;
+  --header-height: 104px;
 }
 html {
   scroll-behavior: smooth;
@@ -282,18 +283,7 @@ html {
 .menu-toggle {
   display: none;
 }
-.skip-link {
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  z-index: 100;
-  background: white;
-  padding: 12px;
-  transform: translateY(-150%);
-}
-.skip-link:focus {
-  transform: translateY(0);
-}
+
 .marketing h1,
 .marketing h2,
 .marketing h3 {
@@ -325,9 +315,11 @@ html {
     "left-word qr right-word"
     "copy      copy copy";
   align-items: center;
+  align-content: center;
   justify-content: center;
+  min-height: calc(100svh - var(--header-height));
   gap: 40px 48px;
-  padding-block: 48px 104px;
+  padding-block: clamp(32px, 5vh, 64px);
   width: min(1320px, calc(100% - var(--site-gutter) * 2));
 }
 .hero-heading {
@@ -623,49 +615,7 @@ h2[id] {
 .setup-list h3 {
   text-align: left;
 }
-.fee-promises {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px 24px;
-  margin-top: 32px;
-  font-size: 14px;
-  color: var(--site-muted);
-  text-align: center;
-}
-.fee-promises p + p {
-  margin-top: 0;
-}
-.fee {
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.fee-value {
-  font-size: 88px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  text-align: center;
-}
-.fee-value > span:last-child {
-  font-size: inherit;
-  align-self: baseline;
-}
-.fee > p {
-  font-size: 14px;
-  color: var(--site-muted);
-  max-width: 40ch;
-  margin-top: 12px;
-  text-align: center;
-  margin-inline: auto;
-}
+
 .faq-section {
   border-top: 1px solid var(--site-line);
   padding-top: 64px;
@@ -713,10 +663,11 @@ h2[id] {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   grid-template-areas:
+    "closing ."
     "closing contact"
-    "closing mars"
+    "mascot  mars"
     "mascot  bottom";
-  gap: 32px 48px;
+  gap: 24px 48px;
   align-items: end;
 }
 .footer-closing {
@@ -734,6 +685,7 @@ h2[id] {
   align-items: flex-end;
   text-align: right;
   justify-self: end;
+  align-self: start;
   gap: 8px;
 }
 .footer-mars {
@@ -917,6 +869,9 @@ h2[id] {
   }
 }
 @media (max-width: 720px) {
+  :root {
+    --header-height: 72px;
+  }
   .site-header {
     min-height: 72px;
     gap: 12px;
@@ -1280,26 +1235,26 @@ h2[id] {
   border-radius: 26px;
   padding-block: 0;
 }
-.device-tablet .device-screen {
-  border-radius: 18px;
-}
 .device-tablet {
   width: 100%;
   max-width: 800px;
-  height: 480px;
-  aspect-ratio: 1200 / 720;
+  height: auto;
   border-radius: 24px;
   padding: 6px;
   border: 2px solid #444;
 }
-@media (max-width: 850px) {
-  .device-tablet {
-    height: auto;
-    width: 100%;
-    aspect-ratio: 1200 / 720;
-  }
+.device-tablet .device-screen {
+  border-radius: 18px;
+  height: auto;
+  overflow: hidden;
+  background: #fff;
 }
 .device-tablet img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  aspect-ratio: 2400 / 1420;
   border-radius: 18px;
 }
 @media (max-width: 600px) {
@@ -1499,9 +1454,10 @@ h2[id] {
       "qr"
       "copy";
     justify-items: center;
+    align-content: center;
     text-align: center;
     gap: 32px;
-    padding-block: 16px 80px;
+    padding-block: clamp(16px, 3vh, 48px);
   }
   .hero-heading {
     grid-area: heading;
@@ -1533,7 +1489,7 @@ h2[id] {
 @media (max-width: 600px) {
   .hero {
     gap: 28px;
-    padding-block: 8px 56px;
+    padding-block: clamp(16px, 3vh, 36px);
   }
   .hero-left,
   .hero-right {

@@ -43,7 +43,10 @@ export function Header() {
   };
   return (
     <>
-      <a className="skip-link" href="#content">
+      <a
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded-full focus:shadow-md focus:font-semibold focus:text-sm"
+        href="#content"
+      >
         {t("skipContent")}
       </a>
       <header className="site-header page-width">

@@ -38,7 +38,7 @@ export const landingTranslations = {
     setupTitle: "Kinderleicht einrichten.",
     setupFirst: "Menü anlegen",
     setupSecond: "QR-Codes ausdrucken und anbringen",
-    setupThird: "Tablet vorbereiten und Personalsitzung öffnen",
+    setupThird: "Personalsitzung öffnen",
     setupNote:
       "Ein Tablet, Internet und dein Angebot. Mehr brauchst du zum Start nicht.",
     feeTitle: "Nur wenn bestellt wird.",
@@ -141,7 +141,7 @@ export const landingTranslations = {
     setupTitle: "Effortless setup.",
     setupFirst: "Add your menu",
     setupSecond: "Print and place QR codes",
-    setupThird: "Prepare tablet and open staff session",
+    setupThird: "Open staff session",
     setupNote:
       "A tablet, internet and your menu. That’s all you need to get started.",
     feeTitle: "Only when orders come in.",
