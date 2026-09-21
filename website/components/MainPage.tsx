@@ -156,7 +156,6 @@ export function MainPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span>{t("supportedBy")}</span>
               <img
                 src="/mars_full.svg"
                 width="180"
