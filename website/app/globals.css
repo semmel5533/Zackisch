@@ -331,7 +331,7 @@ html {
   grid-area: left-word;
   justify-self: end;
   text-align: right;
-  font-size: clamp(48px, 5.5vw, 84px);
+  font-size: clamp(52px, 6.2vw, 96px);
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -345,7 +345,7 @@ html {
   grid-area: right-word;
   justify-self: start;
   text-align: left;
-  font-size: clamp(48px, 5.5vw, 84px);
+  font-size: clamp(52px, 6.2vw, 96px);
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -356,12 +356,12 @@ html {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  max-width: 44ch;
+  max-width: 46ch;
   margin-inline: auto;
   gap: 20px;
 }
 .hero-copy > p {
-  font-size: 18px;
+  font-size: 20px;
   color: #000;
   line-height: 1.5;
   margin-bottom: 0;
