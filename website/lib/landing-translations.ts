@@ -35,7 +35,7 @@ export const landingTranslations = {
       "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
     feePromise:
       "Du zahlst nur für Bestellungen über zakkig. Ohne Bestellungen bleibt die Nutzung kostenlos.",
-    setupTitle: "Kinderleicht einrichten.",
+    setupTitle: "Ruckzuck eingerichtet.",
     setupFirst: "Menü anlegen",
     setupSecond: "QR-Codes ausdrucken und anbringen",
     setupThird: "Personalsitzung öffnen",
