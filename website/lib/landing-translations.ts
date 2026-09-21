@@ -89,7 +89,7 @@ export const landingTranslations = {
     faqCostsAnswer:
       "Die Registrierung ist kostenlos. Es gibt keine Einrichtungs- oder Monatsgebühr. Pro Bestellung berechnet zakkig 2 % zzgl. der variablen Gebühren des Zahlungsanbieters.",
     closingTitle: "Na dann.\nMachen wir’s zakkig.",
-    contactLabel: "Interesse?",
+    contactLabel: "Irgendwas unklar?",
     contactEmail: "selim@zakkig.com",
     contactUrl: "mailto:selim@zakkig.com",
     supportedBy: "Unterstützt durch",
@@ -192,7 +192,7 @@ export const landingTranslations = {
     faqCostsAnswer:
       "Registration is free. There are no setup or monthly fees. zakkig charges 2% per order, plus the payment provider’s variable fees.",
     closingTitle: "Let’s get\nzakkig.",
-    contactLabel: "Interested?",
+    contactLabel: "Anything unclear?",
     contactEmail: "selim@zakkig.com",
     contactUrl: "mailto:selim@zakkig.com",
     supportedBy: "Supported by",

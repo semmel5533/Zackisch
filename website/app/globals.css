@@ -752,7 +752,7 @@ h2[id] {
   align-items: flex-end;
   text-align: right;
   justify-self: end;
-  gap: 0;
+  gap: 8px;
 }
 .footer-mars {
   grid-area: mars;
