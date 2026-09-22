@@ -1,205 +1,35 @@
-# Zakkig Webapp
+# Web app
 
-Dieses Verzeichnis enthält die Haupt-Applikation von Zakkig (das Gastronomen-Dashboard, die Bestell-Oberflächen für Gäste sowie die Kitchen- und Verfügbarkeits-Terminals).
+This Next.js application serves owner dashboard, guest table and pickup ordering, and the combined staff terminal. Its Convex directory is the shared reactive backend. The [repository overview](../README.md) and [architecture guide](../docs/architecture.md) provide the cross-app context. The descriptions below refer to the current implementation, not a security certification.
 
----
+## Routes and user flows
 
-## Technologie-Stack
+| Surface | Routes | Source |
+| --- | --- | --- |
+| Account | `/sign-in`, `/sign-up`, `/reset-password`, `/reset-password/confirm`, `/change-email/otp`, `/change-email/confirm`, `/delete-account` | [auth pages](app/%28auth%29/), [auth actions](actions/auth-actions.ts), [settings actions](actions/settings-actions.ts) |
+| Owner | `/dashboard`, `/dashboard/[organizationId]/{overview,current-orders,all-orders,menu,settings}`, and `/dashboard/[organizationId]/settings/stripe-return` | [dashboard pages](app/%28dashboard%29/), [owner check](lib/convex/auth.ts) |
+| Staff | `/staff/[organizationId]`; old `/orders/[organizationId]` and `/availability/[organizationId]` redirect there | [staff page](app/staff/%5BorganizationId%5D/page.tsx), [legacy pages](app/orders/%5BorganizationId%5D/page.tsx) |
+| Guests | `/pickup/[organizationId]`, `/table/[organizationId]`, their `/success` pages; `/to-go` and `/to-stay` redirect to these routes | [guest pages](app/pickup/%5BorganizationId%5D/page.tsx), [redirects](next.config.ts) |
+| Media | `/api/storage/[storageId]` | [route handler](app/api/storage/%5BstorageId%5D/route.ts) |
 
-- **Framework:** Next.js (App Router, Server Actions, Server Components, Turbopack) & `vinext` für Cloudflare Workers
-- **Backend Platform:** Convex (Reaktive Echtzeit-Datenbank, serverseitige Mutations/Queries/Actions, File Storage, Crons & HTTP Endpoints)
-- **Corporate Infrastructure:** Cloudflare (Domain Registrar, DNS, Pages & Workers)
-- **Edge-Architektur:** Strikte Zero-Node-Edge-Architektur. Das Next.js-Frontend läuft auf V8 Edge Runtimes (Cloudflare Workers) ohne Node-Sockets; alle E-Mail- (SMTP) und Zahlungs-Abwicklungen (Stripe) laufen exklusiv auf Convex
-- **Authentifizierung:** Convex Auth & SSR Session Management mit HttpOnly-Cookies und E-Mail-OTP
-- **E-Mail-Versand:** Microsoft 365 (SMTP via `smtp.office365.com`, Port 587 STARTTLS, `selim@zakkig.com`, abgewickelt als Convex Node Action)
-- **Zahlungsabwicklung:** Stripe Connect (Destination Charges mit 2% Plattform-Gebühr, Checkout Sessions API & Payment Element)
-- **UI & Styling:** Tailwind CSS, Shadcn UI, Phosphor Icons, Apple-inspirierte Edge-to-Edge Dividers
-- **State Management:** Zustand & reaktive Convex Hooks (`useQuery`, `useMutation`)
-- **Internationalisierung (i18n):** next-intl (Model B Regionen- & Sprachstruktur, Endonyme für Länderbezeichnungen)
+The guest menu and cart live in [guest components](components/guest/) and [Zustand store](store/). The cart starts [Checkout Sessions](actions/checkout-actions.ts) using [`CheckoutElementsProvider`](components/guest/cart-sheet.tsx) and [`PaymentElement`](components/guest/checkout-form.tsx). [`priceCheckout`](convex/checkoutPricing.ts) rebuilds canonical item names, stored prices, option surcharges, and total; it rejects unavailable or stale selections, limits carts to 1–100 lines and 1–50 units per line, and limits total to 1,000,000 cents. Paid sessions or successful legacy Payment Intents create orders via the [Stripe webhook](convex/http.ts) and idempotent [`createPaidOrderFromWebhook`](convex/orders.ts); [`verifyPaymentAndCreateOrder`](convex/stripe.ts) provides the success-page fallback. [`placeOrderAction`](actions/order-actions.ts) is a legacy placeholder path and does not prove payment.
 
----
+The staff and owner order views use [`getLiveOrders`](convex/orders.ts) and [`getOrders`](convex/orders.ts). Orders move manually from `in_progress` to `ready_for_pickup` to `completed`; `completedAt` is set at completion and completed orders leave the live query. [`getOrders`](convex/orders.ts) returns at most 100 newest records, also limiting [overview statistics](app/%28dashboard%29/dashboard/%5BorganizationId%5D/overview/page.tsx) and [`exportOrdersCSVAction`](actions/order-actions.ts). The export estimates Stripe fees as 1.5% + €0.25 rather than reading an actual Stripe fee. The pickup [tracker](components/guest/order-tracker.tsx) switches after ten minutes from `completedAt` (or completion fallback); the client timer does not revoke backend reads.
 
-## Architektur & Authentifizierung
+## Backend and authorization
 
-Die Applikation nutzt ein striktes **Server-Side Rendering (SSR) Authentifizierungs-Modell** in Verbindung mit Convex.
+[Schema](convex/schema.ts) defines Convex Auth tables plus `organizations`, `menuCategories`, `menuItems`, `orders`, `orderSessions`, `availabilitySessions`, `staffSessions`, and custom `verificationCodes`. Menu customization and order item arrays are stored as JSON strings. Prices and fee fields are integer cents. [`createOrder`](convex/orders.ts) and [`createPaidOrderFromWebhook`](convex/orders.ts) allocate rolling `001`–`999` numbers from recent orders in a transaction. [`platformFee`](lib/platform-fee.ts) computes the 2% platform amount. The checkout's `transfer_data.amount` is total minus that fee ([Stripe action](convex/stripe.ts)); paid orders persist `stripeFee: 0` and `netAmount: total - zakkigFee`, which are not actual bank payout figures ([order mutation](convex/orders.ts)).
 
-- **Sichere HttpOnly-Cookies:** Nach erfolgreicher Anmeldung oder Registrierung setzt der Server ein sicheres `HttpOnly`-Cookie (`zakkig_session`). Clientseitiger JavaScript-Code kann das Cookie nicht auslesen, was effektiven Schutz vor XSS bietet.
-- **Zwei-Faktor E-Mail-OTP:** Sowohl bei der Registrierung als auch beim Login wird standardmäßig ein kryptografischer 6-stelliger Einmalcode per E-Mail versendet. Erst nach korrekter Eingabe wird die Sitzung aktiv.
-- **Proxy & Session-Validierung:** `webapp/proxy.ts` und serverseitige Helfer in `lib/convex/auth.ts` (`getUser()`, `getAuthenticatedConvexClient()`) validieren bestehende Sessions für geschützte Routen.
+Custom login writes the `zakkig_session` HttpOnly cookie through [auth actions](actions/auth-actions.ts). [`getUser`](lib/convex/auth.ts) resolves it with `authQueries.getUserBySession`; the custom token created by [`createSessionToken`](convex/authQueries.ts) lasts 30 days. `getAuthenticatedConvexClient` only sets a Convex Auth JWT when present and does not authenticate with that custom cookie. Owner and terminal checks are performed by [`requireOwner`, `requireKitchenOrOwner`, and `requireStaffOrOwner`](lib/convex/auth.ts), with backend checks in [`permissions.ts`](convex/permissions.ts) for selected functions. They are not uniformly applied to the public Convex API; see the [audit gaps](../docs/documentation-audit.md#open-implementation-gaps).
 
----
+The [proxy](proxy.ts) consumes a `?token=` pairing URL for staff and legacy terminal routes and sets `staff_session_*`, `order_session_*`, or `availability_session_*` HttpOnly, SameSite=lax cookies with a 30-day browser age. Session records have optional expiry fields in [schema](convex/schema.ts). The current [staff page](app/staff/%5BorganizationId%5D/page.tsx) passes a session token to the client shell, whose tab navigation can place it back in the URL ([shell](components/staff/staff-terminal-shell.tsx)); pairing tokens are therefore not kept wholly out of client-visible state. The [sign-out action](actions/auth-actions.ts) deletes the owner cookie without revoking the backend token, and [`logoutAllDevicesAction`](actions/settings-actions.ts) only redirects to sign-in.
 
-## E-Mail-Infrastruktur (Convex Node Actions)
+## Time, uploads, and email
 
-Der Versand von Transaktions-E-Mails (Anmeldecodes, Passwort-Resets, Bestätigungen für E-Mail-Änderungen und Account-Löschungen) ist zu 100 % in `convex/emails.ts` implementiert und läuft über den Convex-Scheduler (`ctx.scheduler.runAfter(0, internal.emails....)`).
+The custom login OTP path uses a 30-minute expiry and deletes a code after five failed attempts ([auth queries](convex/authQueries.ts)). The email-change path differs: its OTP is checked, but its associated change token expiry and five-attempt limit are not enforced in [`confirmEmailChangeWithOtp`](convex/users.ts). Media upload helpers advertise 10 MiB JPG/PNG and accept a recognized filename extension if the MIME type is absent or unrecognized ([constants](lib/constants.ts), [upload helper](lib/convex/storage.ts)). The [Next Server Action body limit](next.config.ts) is 5 MB, so action-based uploads cannot reliably reach the advertised 10 MiB limit. This is extension/MIME screening, not file-content inspection. SMTP sending uses [Convex Node actions](convex/emails.ts), not the Worker runtime.
 
-- **Keine Node-Abhängigkeiten in Next.js:** Das Frontend ruft ausschließlich Convex-Mutationen auf (`requestAccountDeletionEmail`, `requestEmailChangeEmail`, `sendEmailChangeOtpWithEmail`), wodurch die Webapp frei von `nodemailer` oder TCP-Sockets bleibt.
-- **Primärer Versandweg:** Microsoft 365 SMTP (`smtp.office365.com`, Port 587 STARTTLS) mit TLS-Verschlüsselung.
-- **Absender-Konfiguration:**
-  - **Absender-E-Mail:** `selim@zakkig.com`
-  - **Absender-Name (Deutsch):** `Selim von zakkig`
-  - **Absender-Name (Englisch):** `Selim at zakkig`
-- **Standardisierte Betreffzeilen:**
-  - `Anmeldecode für zakkig` (EN: `Sign-in code for zakkig`)
-  - `Passwort zurücksetzen für zakkig` (EN: `Reset password for zakkig`)
-  - `Email-Adresse ändern für zakkig` (EN: `Change email address for zakkig`)
-- **Responsiver E-Mail-Container:** Skaliert auf kleinen Bildschirmbreiten innerhalb mobiler E-Mail-Clients mit reduzierter Polsterung und Schriftgröße, sodass der Code stets sauber einzeilig bleibt.
+## Configuration and commands
 
----
+[`package.json`](package.json) is the command source. After `npm ci`, run `npx convex dev` in one terminal and `npm run dev` in another. If the website uses its default port 3000, start the web app with `npm run dev -- --port 3001`. `npm run typecheck` runs Next type generation and TypeScript; `npm test` runs Vitest; `npm run build` builds local Next. `npm run dev:cloudflare` and `npm run build:cloudflare` use vinext; `npm run check:cloudflare` is a deploy dry run; `npm run deploy:cloudflare` publishes. [`wrangler.jsonc`](wrangler.jsonc) uses `vinext/server/fetch-handler`, `dist/client`, and `nodejs_compat`. The `lint` script still invokes removed `next lint` and is not a working gate. Consult [configuration ownership](../docs/architecture.md#configuration-and-builds) before deploying. The checked-in [`.env.example`](.env.example) lists candidate values but includes Convex-side secrets that must be set on the Convex deployment, not assumed available in Next or Cloudflare.
 
-## Datenmodell & Schema (`convex/schema.ts`)
-
-Alle Tabellen sind typsicher über Convex definiert:
-
-1. **`users` & `authAccounts`:** Benutzerkonten, Namen, E-Mail-Adressen und gehashte Zugangsdaten.
-2. **`organizations`:** Restaurant-Stammdaten (Name, Adresse, Logo-Storage-ID, Owner-ID, Stripe-Verbindungsstatus, Tische, Schalter für Abholung / Tischbestellung).
-3. **`menuCategories`:** Speisekarten-Kategorien mit Sortier-Index (`by_organizationId_and_sortOrder`).
-4. **`menuItems`:** Gerichte & Getränke mit Preisen in Cent, Bild-Storage-ID, MwSt.-Satz, Verfügbarkeits-Status und JSON-konfigurierten `customizations` (z.B. Größen, Teig, Toppings).
-5. **`orders`:** Bestellungen mit fortlaufend aufsteigender, rollierender dreistelliger Bestellnummer (`001`–`999`, mit Rollover-Absicherung), Bestelltyp (`takeaway` / `dine-in`), Tischnummer (strikt auf max. 4 Zeichen begrenzt), Status (`in_progress`, `ready_for_pickup`, `completed`, `cancelled`), Gesamtsumme und Gebührenaufschlüsselung.
-6. **`staffSessions`:** Autorisierungs-Token für die kombinierte Personal-Sitzung (`/staff/[orgId]`) mit Rollen- und Rechteprüfung sowie Abwärtskompatibilität zu Legacy-Sitzungen (`orderSessions`, `availabilitySessions`).
-7. **`verificationCodes`:** Temporäre Prüfcodes für Login-OTPs, Passwort-Resets und Stammdaten-Änderungen.
-
----
-
-## Reaktives Echtzeit-System (Realtime)
-
-Convex synchronisiert Änderungen automatisch und ohne manuelle WebSocket-Verwaltung an alle aktiven Clients:
-
-- **Personal-Terminal (`/staff/[orgId]`):** Vereinte Terminal-Oberfläche (`StaffTerminalShell`) für Service- und Küchenpersonal mit 3 Tabs:
-  - **Aktuelle Bestellungen:** Reaktive `useQuery(api.orders.getLiveOrders)` Subscriptions mit "In Bearbeitung" und "Abholbereit", Audio-Glockenton bei Bestelleingang, "Bereitstellen", Reversions-Möglichkeit ("Zurück in Bearbeitung" ohne redundante Toast-Benachrichtigung) und Apple-Sicherheits-Bestätigungsdialog für "Abschließen" ("Bestellung \"[Nummer]\" abschließen?").
-  - **Alle Bestellungen:** Vollständige Bestellhistorie mit Status- und Typfiltern, Stornierung aktiver Bestellungen, bewusst ohne DATEV-Export und ohne redundanten Tabellentitel.
-  - **Verfügbarkeit:** Sekundenschnelles Ein- und Ausschalten von Speisen, Optionen und Kategorien (`toggleMenuItemAvailability`).
-  - **Responsive Layouts:** Desktop und Tablets nutzen eine einklappbare Seitenleiste; mobile Geräte (<1024px) wechseln auf eine native Touch-Tab-Leiste am unteren Bildschirmrand.
-- **Gast-Bestellverfolgung (`/pickup` & `/table` Tracker):** Der Gast sieht den aktuellen Zubereitungs-Status seiner Bestellung in Echtzeit über `useQuery(api.orders.getOrder)`.
-
----
-
-## Ablaufzeiten & Lifecycle-Management (TTL & Timeouts)
-
-Um höchste Sicherheit, Speicher-Hygiene und eine transparente Nutzererfahrung zu gewährleisten, folgt die Plattform strikten und einheitlichen Ablaufzeiten:
-
-| Komponente / Vorgang | Gültigkeit / Timeout | Verhalten nach Ablauf | Sicherheitsfunktion |
-| :--- | :--- | :--- | :--- |
-| **Auth OTP (Login, Registrierung & E-Mail-Änderung)** | 30 Minuten | Dynamischer Live-Countdown (`<OtpValidityTimer />`: "Code noch für 30 Minuten gültig" bis "1 Minute gültig", Ziffern in Inter `tabular-nums`). Nach Ablauf erscheint ein destruktiver Inline-Hinweis ("Code abgelaufen. Bitte neuen Code anfordern.") und der Primärbutton wechselt vollflächig auf "Neuen Code anfordern". Serverseitig wird der Code nach 30 Minuten endgültig abgelehnt. | Schutz vor Replay- und Brute-Force-Angriffen |
-| **Brute-Force Lockout (OTP)** | 5 Fehlversuche | Sofortige Löschung des Codes | Verhindert systematisches Durchprobieren von Einmalcodes |
-| **Unverifizierte Accounts** | 30 Minuten | Vollständige Bereinigung via Convex Scheduler (`cleanupUnverifiedUser`) | Gibt die E-Mail-Adresse wieder frei, verhindert Ghost-Accounts |
-| **Passwort-Reset Link** | 30 Minuten | Token wird ungültig, Neuanforderung erforderlich | Schutz vor missbräuchlicher Passwortänderung über alte Links |
-| **Account-Löschung & E-Mail-Änderung** | 30 Minuten | Signierter Bestätigungslink verfällt | Schutz vor verspäteter Token-Ausnutzung |
-| **Küchen-Board & Bestell-Lifecycle** | Manuell / Direkt | Bestellungen werden nach Bereitstellung manuell abgeschlossen und sofort ins Archiv ("Alle Bestellungen") überführt | Volle Kontrolle für das Küchenteam ohne unerwünschte automatische Archivierung |
-| **Takeaway Live-Tracker (Gast)** | 10 Minuten | Tracker schaltet auf Abschluss-Screen um (`TRACKING_EXPIRY_MINUTES = 10`) | Datenschutz und Vermeidung verwaister Live-Links |
-| **Terminal & Personal-Sitzung Tokens** | Dauerhaft (Widerrufbar) | Gespeichert in sicheren HttpOnly SameSite=lax Cookies (`staff_session_*`, `order_session_*`) | Sicherer Tablet- und Smartphone-Betrieb ohne XSS-Gefährdung |
-
----
-
-## Dateispeicher & Upload-Limits (Convex Storage)
-
-Logos, Restaurant-Banner und Speisekarten-Bilder werden im nativen Convex File Storage gespeichert und unterliegen strengen Sicherheits- und Größenbegrenzungen:
-
-- **Maximale Dateigröße:** Einheitlich 10 MB pro Datei (`MAX_IMAGE_SIZE_MB = 10`, `MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024`).
-- **Erlaubte Dateitypen:** Exklusiv JPG und PNG (`image/jpeg`, `image/png`).
-- **Clientseitige Validierung:** Sofortiges Feedback bei ungültigen Dateitypen ("Nur Bilder im JPG- oder PNG-Format sind erlaubt.") oder bei Überschreiten von 10 MB ("Das Bild darf maximal 10 MB groß sein.") via Toast-Meldung, sowie transparente Kennzeichnung im UI ("JPG, PNG bis 10 MB", "im Format JPG oder PNG", "max. 10 MB").
-- **Serverseitige Enforcierung (Defense-in-Depth):**
-  - Vor dem Upload in Convex File Storage validiert `lib/convex/storage.ts` (`uploadFileToConvex`) sowohl Dateityp (`isAllowedImageFile`) als auch die Dateigröße.
-  - Alle Server Actions (`createMenuItemAction`, `updateMenuItemAction`, `updateBusinessAction`) prüfen Dateityp und Dateigröße serverseitig ab, bevor eine Speicheroperation angestoßen wird.
-- **Speicherbereinigung:** Beim Aktualisieren oder Löschen von Artikeln und Logos werden alte Dateien automatisch über `ctx.storage.delete` aus dem Speicher entfernt.
-
----
-
-## Sicherheit & Mandantentrennung (Defense-in-Depth)
-
-1. **Strikte Mandanten-Isolation:** Jede Server Action, die Betriebsdaten liest oder modifiziert, autorisiert den Aufruf über `requireOwner(organizationId)` oder `requireStaffOrOwner(organizationId)`.
-2. **Anti-IDOR Schutz (Insecure Direct Object Reference):**
-   - Beim Bearbeiten oder Löschen von Kategorien (`updateCategoryAction`, `deleteCategoryAction`) wird validiert, dass die Kategorie tatsächlich zur autorisierten `organizationId` gehört.
-   - Beim Bearbeiten, Löschen oder Umschalten der Verfügbarkeit von Speisen (`updateMenuItemAction`, `deleteMenuItemAction`, `toggleMenuItemAvailability`) wird geprüft, dass der Artikel zur autorisierten Organisation gehört.
-   - Beim Aktualisieren des Bestellstatus auf dem Küchenboard (`updateOrderStatusAction`) wird geprüft, dass die Bestellung der autorisierten Organisation zugeordnet ist.
-3. **Zero Data Leakage an Gast-Schnittstellen:**
-   - Auf öffentlichen Gast-Seiten (`/pickup/[orgId]`, `/table/[orgId]`) werden sensible Betreiberdaten (`stripeAccountId`, `taxId`, `ownerId`) vor der Serialisierung in den React Server Component Payload unkenntlich gemacht bzw. genullt.
-   - Bei der Bestellverfolgung werden Plattform- und Zahlungsgebühren (`zakkigFee`, `stripeFee`, `netAmount`, `stripePaymentId`) serverseitig auf 0 gesetzt, sodass Gäste ausschließlich für sie relevante Bestelldaten einsehen können.
-4. **Serverseitige Preis- und Integritätsprüfung:**
-   - Gast-Warenkörbe werden im Checkout niemals ungeprüft akzeptiert. Die Convex Action `createCheckoutSession` liest alle Artikelpreise direkt aus der Datenbank und rechnet die Gesamtsumme centgenau nach.
-5. **Tischnamen- und Tischnummern-Begrenzung:**
-   - Alle Tischnummern sind durchgängig auf maximal 4 Zeichen limitiert (`<= 4`). Dies wird sowohl im Frontend (`maxLength={4}`, Input Clamping) als auch in den Server Actions (`settings-actions`, `checkout-actions`, `order-actions`) und Convex-Mutationen (`organizations`, `orders`, `stripe`) strikt durchgesetzt.
-
-## Routing & Verzeichnisstruktur
-
-```
-webapp/
-├── actions/             # Next.js Server Actions (Auth, Availability, Checkout, Menu, Orders, Settings, Stripe)
-├── app/
-│   ├── (auth)/          # Login, Registrierung, Passwort-Reset, Account-Löschung
-│   ├── (dashboard)/     # Hauptdashboard (Übersicht, Aktuelle Bestellungen, Menü, Einstellungen, Alle Bestellungen, Stripe-Return)
-│   ├── staff/           # Kombiniertes Personal-Terminal (Aktuelle Bestellungen, Alle Bestellungen, Verfügbarkeit)
-│   ├── availability/    # Legacy-Redirect auf /staff/[orgId]?tab=availability
-│   ├── orders/          # Legacy-Redirect auf /staff/[orgId]
-│   ├── pickup/          # Gast-Bestellung zum Abholen, Checkout & Live-Tracking
-│   └── table/           # Gast-Bestellung am Tisch, Checkout & Bestätigung
-├── components/          # React-Komponenten (Dashboard, Guest UI, Staff-Terminal, UI-Primitives, Dialogs)
-├── convex/              # Convex Backend
-│   ├── schema.ts        # Typsicheres Datenbank-Schema
-│   ├── auth.ts          # Convex Auth Konfiguration
-│   ├── authQueries.ts   # Interne Queries & Mutationen für Authentifizierung
-│   ├── customAuth.ts    # Node Actions für Registrierung, Login & OTP
-│   ├── emails.ts        # E-Mail-Versand (Microsoft 365 SMTP via Nodemailer)
-│   ├── http.ts          # HTTP-Router (Stripe Webhook)
-│   ├── menu.ts          # Speisekarten-Logik
-│   ├── orders.ts        # Bestellungen & rollierende Nummern (001-999)
-│   ├── organizations.ts # Restaurant-Verwaltung & Kaskadenlöschung
-│   ├── sessions.ts      # Terminal-Token-Verwaltung
-│   ├── storage.ts       # Datei-Upload & Löschung
-│   ├── stripe.ts        # Stripe Connect & Checkout Sessions (Payment Element)
-│   └── users.ts         # Benutzerprofil & Kontolöschung
-├── lib/
-│   ├── convex/          # Server- & Client-Helfer für Convex (getUser, requireOwner, Client)
-│   ├── constants.ts     # Globale Konstanten & Timer (TTL, Limits)
-│   ├── i18n.ts          # Lokalisierung (next-intl)
-│   └── types.ts         # TypeScript Interfaces
-└── proxy.ts             # Proxy für Session- & Auth-Prüfungen (Next.js 16+)
-```
-
----
-
-## Entwicklung & Deployment
-
-### Lokaler Start
-```bash
-cd webapp
-npm run dev
-```
-Die Webapp läuft lokal standardmäßig auf Port **3000** (`http://localhost:3000`).
-
-### Typüberprüfung & Build
-```bash
-npm run typecheck
-npm run build
-```
-
-### Cloudflare Workers Kompatibilität & Deployment (vinext)
-```bash
-# Kompatibilität prüfen (95%+ nativ unterstützt)
-npx vinext check
-
-# Init & Deployment auf Cloudflare Workers
-npx @vinext/cloudflare deploy
-```
-
-### Convex Deployment
-```bash
-npx convex deploy --preview-name webapp
-```
-
-
-## Lokale Prüfung und Cloudflare Build
-
-Nach `npm ci` laufen `npm run typecheck`, `npm test` und `npm run build` für die lokale Next.js-Variante. Für Cloudflare ist `npm run build:cloudflare` vorgesehen. `vite.config.ts` verbindet vinext mit dem Cloudflare-Plugin. `wrangler.jsonc` legt den Worker-Einstieg und die statischen Assets fest. `npm run dev:cloudflare` startet die Anwendung lokal in der Worker-Umgebung. `npm run check:cloudflare` prüft nur die Deployment-Konfiguration und veröffentlicht nichts; dieser Befehl ersetzt keinen Build.
-
-`npm run deploy:cloudflare` baut und veröffentlicht den Worker. Vor der ersten Veröffentlichung müssen Cloudflare-Konto, Domain und die umgebungsspezifischen Variablen eingerichtet sein. `NEXT_PUBLIC_CONVEX_URL` wird beim Build und zur Laufzeit benötigt. Die URL muss zum jeweiligen Convex-Deployment passen. Die öffentlichen Variablen werden beim Build eingesetzt. Servervariablen und Zugangsdaten gehören in die jeweilige Umgebung, nicht in das Repository. Stripe- und SMTP-Zugangsdaten bleiben im Convex-Backend. Das Backend muss mit `npx convex deploy` vor der dazugehörigen Frontend-Version aktualisiert werden.
-
-## Übersetzungen und Backendprüfungen
-
-Beide Oberflächen verarbeiten ihre zentralen Sprachdateien mit `createTranslator` aus next-intl. `useTranslation` behält die vorhandene Sprachauswahl bei und delegiert Textformatierung und Platzhalter an next-intl. Parameter werden mit `t("key", { count })` übergeben, nicht nachträglich per String-Ersetzung eingesetzt.
-
-Menüänderungen und die Verwaltung der Geräte-Sitzungen prüfen die Inhabersitzung direkt im Convex-Backend. Der Next.js-Server gibt dafür das HttpOnly-Sitzungstoken weiter. Authentifizierte Convex-Clients werden pro Aufruf erstellt, damit kein JWT zwischen Anfragen geteilt wird. Personalgeräte prüfen ausschließlich ihr eigenes Token. Ablaufdatum und Betriebszugehörigkeit werden im Backend kontrolliert. Änderungen durch Personal sind auf Verfügbarkeiten beschränkt; Preise, Kategorien und andere Artikeldaten bleiben dem Inhaber vorbehalten.
-
-Beide Zahlungswege verwenden dieselbe Preisprüfung. Artikel, Mengen und Auswahloptionen werden mit der gespeicherten Speisekarte abgeglichen. Kostenlose enthaltene Optionen und Aufpreise werden serverseitig berechnet. Die Zahlungsmetadaten enthalten die geprüften Namen und Preise. Eine abgeschlossene Checkout-Oberfläche genügt nicht zur Bestellanlage: Der Zahlungsstatus muss bezahlt sein.
-
-`npm test` prüft direkte Backendaufrufe und die Preisberechnung mit isolierten Testdaten. Die Tests schreiben nicht in ein echtes Convex-Deployment und erzeugen keine Stripe-Zahlungen. Sie ersetzen nicht die Abnahme der vollständigen Abläufe in der vorgesehenen Testumgebung.
+On 2026-09-23, `npm run typecheck` and `npm test` passed locally: 29 tests over [security](tests/security.test.ts), [fees](tests/platform-fee.test.ts), and [translations](tests/translations.test.ts). They use isolated test data and do not confirm external Stripe, SMTP, Cloudflare, or full browser flows ([Vitest config](vitest.config.ts)).

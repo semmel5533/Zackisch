@@ -1,3 +1,5 @@
+These rules describe required implementation targets. [DESIGN.md](DESIGN.md) summarizes the intended visual system; [docs/design-system.md](docs/design-system.md) records source-backed UI details and current deviations; [docs/documentation-audit.md](docs/documentation-audit.md) records other known implementation gaps. A documented deviation does not waive a rule below.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
@@ -202,7 +204,7 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
      $$R_{\text{outer}} = R_{\text{inner}} + P \quad \Longleftrightarrow \quad R_{\text{inner}} = \max(0, R_{\text{outer}} - P)$$
    - Standard Tailwind tokens like `rounded-2xl` evaluate to `43.2px` in this project due to `--radius: 1.5rem`. NEVER use `rounded-2xl` for dropdown or select popups, as it produces distorted, bulbous spherical corners.
    - For all Dropdown and Select menus:
-     - Outer container card: strictly `rounded-[20px]` with `p-2` (8px padding)
+     - Outer container card: strictly `rounded-[20px]` with literal `p-[8px]` inset. In this project, `--spacing: 0.3rem`, so `p-2` resolves to 9.6px at a 16px root and does not express the intended 8px.
      - Inner selectable items: strictly `rounded-[12px]` ($20\text{px} - 8\text{px} = 12\text{px}$) with `px-3.5 py-2.5 font-semibold`
      - This guarantees mathematically exact concentric curvature with uniform visual margins around all corners.
 
