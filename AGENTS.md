@@ -213,9 +213,9 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
    - Always use `t('key')` with CSS `uppercase tracking-wider` for clean, consistent internationalization.
 
 7. **Tailwind-First Styling Standard (Zero Custom CSS Bloat):**
-   - Strictly implement all styling, layouts, spacing, responsive behavior, typography, transitions, and hover states using Tailwind utility classes directly in JSX/TSX.
-   - DO NOT introduce arbitrary or redundant custom CSS rules into `globals.css` when they can be accomplished via Tailwind utility classes (e.g. `gap-*`, `flex`, `grid`, `text-*`, `leading-*`, `items-*`, `justify-*`, `p-*`, `m-*`).
-   - Keep `globals.css` minimal and restricted strictly to global resets, custom fonts/variables, keyframe animations, and base layout resets that cannot be expressed with Tailwind.
+   - In `webapp` and `website`, implement styling directly in JSX/TSX with Tailwind utility classes whenever Tailwind can express it cleanly. This includes layout, spacing, typography, responsive and container behavior, state variants, transitions, and hover/focus/active states. Use arbitrary values and variants when a project-specific value or selector needs them.
+   - Do not add redundant rules to `globals.css`, CSS modules, or inline `style` props for static presentation that Tailwind can express without difficulty (e.g. `gap-*`, `flex`, `grid`, `text-*`, `leading-*`, `items-*`, `justify-*`, `p-*`, `m-*`). Existing CSS is not a precedent for adding more of the same.
+   - Keep custom CSS for genuine needs that utilities cannot express cleanly: shared tokens and fonts, global resets, keyframes, and runtime or third-party styling constraints. Keep `globals.css` limited to those needs and base layout resets that cannot be expressed with Tailwind.
 
 <!-- END:design-theme-conventions -->
 
@@ -278,4 +278,3 @@ The official technology stack, infrastructure providers, and operational archite
    - Countries and regions must ALWAYS be displayed in their primary native language (endonym) across all UI surfaces and dialogs (e.g. Germany is strictly `"Deutschland"`, never translated to "Germany" even when the active UI language is English).
 
 <!-- END:corporate-stack-rules -->
-

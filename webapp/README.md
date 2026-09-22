@@ -2,6 +2,8 @@
 
 This Next.js application serves owner dashboard, guest table and pickup ordering, and the combined staff terminal. Its Convex directory is the shared reactive backend. The [repository overview](../README.md) and [architecture guide](../docs/architecture.md) provide the cross-app context. The descriptions below refer to the current implementation, not a security certification.
 
+For UI changes, follow the [Tailwind-first rule](../DESIGN.md#layout) and its [source-linked authoring guide](../docs/design-system.md#ds-15-tailwind-first-authoring): use utilities for styling Tailwind can express cleanly, including arbitrary values and state/container variants. Existing custom CSS does not change that rule.
+
 ## Routes and user flows
 
 | Surface | Routes | Source |

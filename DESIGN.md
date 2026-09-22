@@ -136,6 +136,8 @@ The dashboard and staff shell put a black sidebar beside a white content contain
 
 **The Available Width Rule.** Use container queries inside dashboard content that can lose space to the sidebar. Use viewport breakpoints for the outer shell and website-wide composition.
 
+**The Tailwind-First Rule.** In both apps, especially the webapp, express styling in JSX/TSX with Tailwind utilities whenever that is straightforward. Utilities cover layout, spacing, type, responsive and container queries, state variants, transitions, and interactions; arbitrary values and variants are available for project-specific needs. Reserve custom CSS for shared tokens and fonts, resets, keyframes, and runtime or third-party constraints that utilities cannot express cleanly. Existing custom CSS documents current implementation, not a reason to extend it. See [DS-15](docs/design-system.md#ds-15-tailwind-first-authoring) and [AGENTS.md](AGENTS.md).
+
 ## Elevation & Depth
 
 All theme shadow definitions from 2xs through 2xl use zero-opacity color. A shadow utility alone therefore supplies no visible theme elevation. Borders, fills, overlays, and a few explicit nonzero shadows supply depth. The website's tilted QR paper has a restrained visible shadow and tape.
@@ -165,6 +167,7 @@ Dialogs have a light popup, edge-to-edge header divider, scrollable body, edge-t
 - **Do** use Poppins for words and the webapp Price component for prices there.
 - **Do** preserve visible focus, disabled, selected, loading, and error states.
 - **Do** retain the distinct responsive models of the webapp and website.
+- **Do** use Tailwind utilities, including arbitrary values and state or container variants, for expressible styling in both apps.
 - **Do** use Phosphor icons and translated UI copy.
 
 ### Don't
@@ -173,4 +176,5 @@ Dialogs have a light popup, edge-to-edge header divider, scrollable body, edge-t
 - **Don't** apply the website's 44px CSS button size to the webapp button primitive.
 - **Don't** assume stock Tailwind spacing or radius values.
 - **Don't** use a dark modal as a general surface pattern.
+- **Don't** add redundant `globals.css`, module CSS, or inline static styles where Tailwind utilities express the same result cleanly.
 - **Don't** promote a documented code deviation into a new standard.

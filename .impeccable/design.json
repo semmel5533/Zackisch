@@ -128,6 +128,7 @@
       { "name": "The Split Price Rule", "body": "In the webapp, render UI prices with its Price component: digits and decimal separator take Inter and tabular figures; the currency sign and translated prefix take the surrounding family. The website follows the family separation through its own numeric text pattern.", "section": "typography" },
       { "name": "The Endonym Rule", "body": "Region names use native forms and visible UI copy and destinations are translated with next-intl.", "section": "typography" },
       { "name": "The Available Width Rule", "body": "Use container queries inside dashboard content that can lose space to the sidebar. Use viewport breakpoints for the outer shell and website-wide composition.", "section": "layout" },
+      { "name": "The Tailwind-First Rule", "body": "In both apps, especially the webapp, express styling in JSX/TSX with Tailwind utilities whenever that is straightforward. Utilities cover layout, spacing, type, responsive and container queries, state variants, transitions, and interactions; arbitrary values and variants are available for project-specific needs. Reserve custom CSS for shared tokens and fonts, resets, keyframes, and runtime or third-party constraints that utilities cannot express cleanly. Existing custom CSS documents current implementation, not a reason to extend it.", "section": "layout" },
       { "name": "The Boundary Rule", "body": "Prefer a subtle border or tonal fill for normal containment. Visible shadows belong to surfaces with an explicitly floating or physical role.", "section": "elevation" },
       { "name": "The Nested Radius Rule", "body": "Preserve a clear inner and outer corner hierarchy. The current popup uses 20px outside and 12px inside with 9.6px padding, which is close to, but not exactly, concentric; the project convention targets outer radius minus padding.", "section": "shapes" },
       { "name": "The Inline Feedback Rule", "body": "Inline form errors use left-aligned destructive text; toasts sit top-center. Avoid duplicate inline and toast feedback for one error.", "section": "components" }
@@ -138,6 +139,7 @@
       "Do use Poppins for words and the webapp Price component for prices there.",
       "Do preserve visible focus, disabled, selected, loading, and error states.",
       "Do retain the distinct responsive models of the webapp and website.",
+      "Do use Tailwind utilities, including arbitrary values and state or container variants, for expressible styling in both apps.",
       "Do use Phosphor icons and translated UI copy."
     ],
     "donts": [
@@ -145,6 +147,7 @@
       "Don't apply the website's 44px CSS button size to the webapp button primitive.",
       "Don't assume stock Tailwind spacing or radius values.",
       "Don't use a dark modal as a general surface pattern.",
+      "Don't add redundant globals.css, module CSS, or inline static styles where Tailwind utilities express the same result cleanly.",
       "Don't promote a documented code deviation into a new standard."
     ]
   }
