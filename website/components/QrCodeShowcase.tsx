@@ -29,7 +29,7 @@ export function QrCodeShowcase() {
 
   return (
     <div className="relative flex w-[268px] flex-col items-center max-[600px]:w-[232px]">
-      <div className="relative flex min-h-[430px] w-[268px] rotate-[-5deg] flex-col justify-center rounded-[2px] bg-background px-[27px] py-7 shadow-[0_1px_2px_rgba(0,0,0,.04),0_3px_8px_-2px_rgba(0,0,0,.04),0_14px_24px_-6px_rgba(0,0,0,.07),0_0_0_1px_rgba(0,0,0,.04)] max-[600px]:w-[232px] max-[600px]:p-[25px]" role="img" aria-label={t("qrDemoLabel")}>
+      <div className="relative flex min-h-[430px] w-[268px] rotate-[-5deg] flex-col justify-center rounded-[2px] bg-background px-[27px] py-7 shadow-[0_1px_2px_rgba(0,0,0,.04),0_3px_8px_-2px_rgba(0,0,0,.04),0_14px_24px_-6px_rgba(0,0,0,.07),0_0_0_1px_rgba(0,0,0,.04)] max-[600px]:min-h-0 max-[600px]:w-[232px] max-[600px]:px-[22px] max-[600px]:py-6" role="img" aria-label={t("qrDemoLabel")}>
         <span className={`${tape} -top-3 -left-6 rotate-[-36deg]`} aria-hidden="true" />
         <span className={`${tape} -right-[22px] -bottom-2 rotate-[-33deg]`} aria-hidden="true" />
         <div className={`flex flex-col gap-2 text-center transition-[opacity,transform] duration-[400ms] ease-[cubic-bezier(.4,0,.2,1)] motion-reduce:transition-none ${isFading ? "scale-[.98] opacity-0" : ""}`} aria-hidden="true">

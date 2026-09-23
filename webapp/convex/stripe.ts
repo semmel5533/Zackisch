@@ -400,7 +400,7 @@ export const createPaymentIntent = action({
     tableNumber: v.optional(v.string()),
     items: v.string(), // JSON string
     total: v.number(), // in cents
-    email: v.string(),
+    email: v.optional(v.string()),
     currency: v.optional(v.string()),
   },
   returns: v.object({
@@ -426,10 +426,13 @@ export const createPaymentIntent = action({
         return { error: "Ungültiger Gesamtbetrag." };
       }
 
-      // 2. Validate email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(args.email.trim()) || args.email.length > 100) {
-        return { error: "Ungültige E-Mail-Adresse." };
+      // 2. Validate email (optional)
+      const cleanEmail = args.email?.trim() || "";
+      if (cleanEmail) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(cleanEmail) || cleanEmail.length > 100) {
+          return { error: "Ungültige E-Mail-Adresse." };
+        }
       }
 
       // 3. Validate tableNumber
@@ -453,7 +456,7 @@ export const createPaymentIntent = action({
         organizationId: args.organizationId,
         tableNumber: args.tableNumber || "",
         type: args.type,
-        email: args.email,
+        email: cleanEmail,
         total: String(Math.round(args.total)),
         currency: curr.toUpperCase(),
       };

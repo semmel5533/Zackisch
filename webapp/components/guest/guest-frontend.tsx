@@ -31,6 +31,8 @@ interface GuestFrontendProps {
   initialOrder?: Order | null;
   initialActiveTab?: "menu" | "cart";
   initialCheckoutOpen?: boolean;
+  initialSendEmailConfirmation?: boolean;
+  initialEmail?: string;
   initialDineInSuccess?: { orderNumber: string; order?: Order | null } | null;
 }
 
@@ -622,6 +624,8 @@ export function GuestFrontend({
   initialOrder,
   initialActiveTab = "menu",
   initialCheckoutOpen = false,
+  initialSendEmailConfirmation = false,
+  initialEmail = "",
   initialDineInSuccess = null,
 }: GuestFrontendProps) {
   const router = useRouter();
@@ -803,6 +807,8 @@ export function GuestFrontend({
         organization={organization}
         type={type}
         tableNumber={tableNumber}
+        initialSendEmailConfirmation={initialSendEmailConfirmation}
+        initialEmail={initialEmail}
         onOrderSuccess={(orderId, orderNumber) => {
           setCheckoutOpen(false);
           useCartStore.getState().clearCart();

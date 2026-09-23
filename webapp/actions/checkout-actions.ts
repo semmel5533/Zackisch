@@ -41,7 +41,7 @@ export async function createCheckoutSessionAction(params: CreateCheckoutSessionP
       tableNumber: params.tableNumber,
       items: JSON.stringify(params.items),
       total: params.total,
-      email: cleanEmail || undefined,
+      email: cleanEmail,
       origin,
     });
 

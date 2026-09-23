@@ -317,6 +317,7 @@ createRoot(document.getElementById("root")!).render(
           : "menu"
       }
       initialCheckoutOpen={params.get("screen") === "checkout"}
+      initialSendEmailConfirmation={params.get("screen") === "checkout"}
       initialDineInSuccess={
         scenario === "dine-in-success"
           ? { orderNumber: "001", order: orders[0] }

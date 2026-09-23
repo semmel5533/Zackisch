@@ -40,6 +40,10 @@ describe("generateOrderConfirmationHtml", () => {
     ]),
     total: 2950,
     status: "in_progress",
+    email: "",
+    zakkigFee: 59,
+    stripeFee: 0,
+    netAmount: 2891,
     currency: "EUR",
   };
 

@@ -29,6 +29,8 @@ interface CartSheetProps {
   organization: Organization;
   type: "dine-in" | "takeaway";
   tableNumber?: string;
+  initialSendEmailConfirmation?: boolean;
+  initialEmail?: string;
   onOrderSuccess: (orderId: string, orderNumber: string) => void;
 }
 
@@ -55,13 +57,15 @@ export function CartSheet({
   organization,
   type,
   tableNumber,
+  initialSendEmailConfirmation = false,
+  initialEmail = "",
   onOrderSuccess,
 }: CartSheetProps) {
   const { t, locale } = useTranslation();
   const { items, total } = useCartStore();
   const [checkoutSession, setCheckoutSession] = useState<{ clientSecret: string; revision: string } | null>(null);
-  const [email, setEmail] = useState("");
-  const [sendEmailConfirmation, setSendEmailConfirmation] = useState(false);
+  const [email, setEmail] = useState(initialEmail);
+  const [sendEmailConfirmation, setSendEmailConfirmation] = useState(initialSendEmailConfirmation);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
