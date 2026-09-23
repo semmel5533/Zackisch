@@ -81,14 +81,33 @@ export function MainPage() {
         </div>
       </section>
 
-      <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto" />
- 
-      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
-        <div className="flex flex-col items-center justify-center text-center">
-          <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("benefitTitle")}</h2>
-          <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("benefitService")}</p>
+      <div className="w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] mx-auto border-t border-border" />
+
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] py-[clamp(72px,9vw,128px)]">
+        <div className="grid grid-cols-2 gap-24 max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+          <div className="flex flex-col items-center justify-center text-center">
+            <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("setupTitle")}</h2>
+            <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("setupNote")}</p>
+          </div>
+          <ol className="flex w-full flex-col items-center self-center">
+            {steps.map((step, index) => (
+              <li key={step} className="flex w-full max-w-[340px] items-center gap-4 border-b border-border py-7 text-left first:pt-0 last:border-0 last:pb-0">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums">{index + 1}</span>
+                <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(step)}</h3>
+              </li>
+            ))}
+          </ol>
         </div>
-        <div className="flex flex-col items-center text-center">
+      </section>
+
+      <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto" />
+
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+        <div className="flex flex-col items-start justify-center text-left">
+          <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("benefitTitle")}</h2>
+          <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("benefitService")}</p>
+        </div>
+        <div className="flex flex-col items-center text-center self-center">
           <p className="text-[15px] text-muted-foreground">{t("benefitPrefix")}</p>
           <AnimatedBenefitStat target={30} unit="%" />
           <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t("benefitMetric")}</h3>
@@ -105,29 +124,10 @@ export function MainPage() {
 
       <div className="w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] mx-auto border-t border-border" />
 
-      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] py-[clamp(72px,9vw,128px)]">
-        <div className="grid grid-cols-2 gap-24 max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
-          <div className="flex flex-col items-start justify-center text-left">
-            <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("setupTitle")}</h2>
-            <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("setupNote")}</p>
-          </div>
-          <ol className="flex w-full flex-col items-center self-center">
-            {steps.map((step, index) => (
-              <li key={step} className="flex w-full max-w-[340px] items-center gap-4 border-b border-border py-7 text-left first:pt-0 last:border-0 last:pb-0">
-                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums">{index + 1}</span>
-                <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(step)}</h3>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <div className="w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] mx-auto border-t border-border" />
-
       <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
-        <div className="flex flex-col items-center text-center justify-center">
+        <div className="flex flex-col items-start justify-center text-left">
           <h2 id="kosten" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("feeTitle")}</h2>
-          <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("feePromise")}</p>
+          <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("feePromise")}</p>
         </div>
         <div className="flex flex-col items-center justify-center text-center self-center">
           <div className="flex flex-col items-center text-center gap-1.5 sm:gap-2">
