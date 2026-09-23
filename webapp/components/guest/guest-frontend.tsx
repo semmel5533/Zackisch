@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Plus, Minus, ShoppingCart, ArrowLeft, ArrowRight, DownloadSimple } from "@phosphor-icons/react";
+import { Plus, Minus, ShoppingCart, ArrowLeft, ArrowRight, DownloadSimple, Check } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
@@ -137,8 +137,8 @@ function GuestOrderSuccess({
         <h2 className="text-xl font-bold tracking-tight">zakkig</h2>
       </header>
       <div className="flex-1 bg-background text-foreground md:rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-6 md:my-4 max-w-[500px] mx-auto w-full border-t md:border border-border">
-        <div className="h-24 w-24 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-2">
-          <CheckCircle className="h-12 w-12" />
+        <div className="size-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-2">
+          <Check className="size-8" weight="bold" />
         </div>
         <h1 className="text-3xl font-bold">{t("orderPlaced")}</h1>
         <div>
@@ -820,13 +820,5 @@ export function GuestFrontend({
         }}
       />
     </>
-  );
-}
-
-function CheckCircle(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg fill="currentColor" viewBox="0 0 256 256" {...props}>
-      <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z" />
-    </svg>
   );
 }

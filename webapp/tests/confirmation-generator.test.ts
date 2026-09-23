@@ -51,11 +51,13 @@ describe("generateOrderConfirmationHtml", () => {
     const html = generateOrderConfirmationHtml(mockOrder, mockOrg, "de");
 
     expect(html).toContain("Bestell- und Zahlungsbestätigung");
-    expect(html).toContain("#042");
+    expect(html).toContain("Bestellnummer");
+    expect(html).toContain("042");
+    expect(html).toContain("PDF speichern");
     expect(html).toContain("Bistro Zakkig");
     expect(html).toContain("Marktplatz 1");
     expect(html).toContain("68159 Mannheim");
-    expect(html).toContain("Tisch 7");
+    expect(html).toContain("An Tisch 7");
     expect(html).toContain("Pizza Margherita");
     expect(html).toContain("Extras: Oliven");
     expect(html).toContain("Zitronenlimonade");
@@ -74,7 +76,9 @@ describe("generateOrderConfirmationHtml", () => {
     const html = generateOrderConfirmationHtml(takeawayOrder, mockOrg, "en");
 
     expect(html).toContain("Order and Payment Confirmation");
-    expect(html).toContain("#042");
+    expect(html).toContain("Order number");
+    expect(html).toContain("042");
+    expect(html).toContain("Save as PDF");
     expect(html).toContain("Takeaway");
     expect(html).toContain("Important note:");
     expect(html).toContain("The official tax invoice or receipt is issued directly by the venue upon request.");

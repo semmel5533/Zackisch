@@ -83,7 +83,7 @@ Follow this unified, multi-layered architecture for all features and changes:
    - **Auth, OTPs & Security Links:** Strictly 30 minutes (`30 * 60 * 1000` ms).
    - **Brute-Force Lockout:** OTP codes must track failed attempts and permanently delete the code after 5 failures.
    - **Kitchen Board Lifecycle:** Explicit manual completion (orders start in progress, advance to ready for pickup, and transition to completed, removing them immediately from current orders).
-   - **Guest Takeaway Tracker:** 10 minutes active countdown once ready for pickup.
+   - **Guest Takeaway Tracker:** Remains active on the tracking page until the order is cancelled or completed.
 
 7. **Terminal Session Persistence:**
    - Terminal pairing tokens from URLs (`?token=...`) must be persisted via secure, HttpOnly, SameSite=lax cookies (`staff_session_[orgId]`, `order_session_[orgId]`, `availability_session_[orgId]`). Never store pairing tokens in unencrypted client `localStorage`.

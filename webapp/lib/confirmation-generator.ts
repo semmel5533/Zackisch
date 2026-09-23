@@ -34,10 +34,14 @@ export function generateOrderConfirmationHtml(
   const orderType =
     order.type === "dine-in"
       ? isDe
-        ? `Im Restaurant${order.tableNumber ? ` (Tisch ${order.tableNumber})` : ""}`
-        : `Dine-in${order.tableNumber ? ` (Table ${order.tableNumber})` : ""}`
+        ? order.tableNumber
+          ? `An Tisch ${order.tableNumber}`
+          : "Am Tisch"
+        : order.tableNumber
+        ? `At table ${order.tableNumber}`
+        : "Dine-in"
       : isDe
-      ? "Zum Mitnehmen"
+      ? "Zum Abholen"
       : "Takeaway";
 
   let parsedItems: Array<{
@@ -85,12 +89,15 @@ export function generateOrderConfirmationHtml(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(title)} - #${escapeHtml(order.orderNumber)}</title>
+  <title>${escapeHtml(title)} - ${isDe ? "Bestellnummer" : "Order number"} ${escapeHtml(order.orderNumber)}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     @page { margin: 15mm; size: portrait; }
     * { box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #111;
       background: #fff;
       margin: 0;
@@ -102,101 +109,134 @@ export function generateOrderConfirmationHtml(
       max-width: 560px;
       margin: 0 auto;
       border: 1px solid #e5e5e5;
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 32px;
       background: #fff;
     }
     .header {
-      border-bottom: 2px solid #111;
-      padding-bottom: 20px;
-      margin-bottom: 24px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       gap: 16px;
     }
     .brand-title {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: -0.02em;
-      margin: 0 0 4px;
-      color: #000;
-    }
-    .brand-sub {
-      font-size: 12px;
-      color: #666;
       margin: 0;
+      color: #000;
+      line-height: 1.25;
     }
-    .btn-print {
+    .btn-pdf {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: #000;
       color: #fff;
       border: none;
-      padding: 8px 16px;
+      height: 40px;
+      padding: 0 18px;
       border-radius: 9999px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s ease;
     }
-    .btn-print:hover { opacity: 0.85; }
+    .btn-pdf:hover { opacity: 0.85; }
+    @media (max-width: 520px) {
+      body { padding: 16px 12px; }
+      .container { padding: 24px 18px; border-radius: 16px; }
+      .header { flex-direction: column; align-items: stretch; gap: 14px; }
+      .btn-pdf { width: 100%; height: 44px; font-size: 14px; }
+    }
+    .waveline {
+      display: block;
+      width: 100%;
+      height: 12px;
+      overflow: hidden;
+      color: #000;
+    }
     .badge-number {
-      font-size: 28px;
-      font-weight: 900;
-      font-variant-numeric: tabular-nums;
+      font-size: 24px;
+      font-weight: 700;
       margin: 0 0 16px;
       letter-spacing: -0.02em;
+      color: #000;
+    }
+    .badge-number .num {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
     }
     .meta-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px 20px;
+      gap: 14px 20px;
       margin-bottom: 24px;
       background: #f9f9f9;
-      padding: 16px;
+      padding: 18px;
       border-radius: 12px;
     }
     .meta-item { display: flex; flex-direction: column; }
-    .meta-label { font-size: 11px; text-transform: uppercase; tracking: 0.05em; color: #666; font-weight: 700; }
+    .meta-label { font-size: 12px; color: #666; font-weight: 600; }
     .meta-value { font-size: 13px; font-weight: 600; color: #111; margin-top: 2px; }
     .items-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
     }
     .items-table th {
       text-align: left;
       border-bottom: 1px solid #e5e5e5;
       padding: 8px 4px;
-      font-size: 12px;
-      color: #666;
-      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 700;
+      color: #111;
     }
     .items-table td {
       padding: 12px 4px;
       border-bottom: 1px solid #f0f0f0;
       vertical-align: top;
     }
-    .col-qty { width: 36px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .col-qty {
+      width: 36px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
     .col-name { font-weight: 500; }
     .item-options { font-size: 12px; color: #666; margin-top: 2px; }
-    .col-price { width: 90px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .col-price {
+      width: 90px;
+      text-align: right;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
     .total-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      padding: 16px 4px;
-      border-top: 2px solid #111;
+      padding: 12px 4px 0;
       margin-bottom: 24px;
     }
-    .total-label { font-size: 16px; font-weight: 800; }
-    .total-price { font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .total-label { font-size: 16px; font-weight: 700; color: #000; }
+    .total-price {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      color: #000;
+    }
     .notice-box {
       border: 1px solid #e5e5e5;
       background: #fafafa;
-      border-radius: 10px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 14px 16px;
       font-size: 12px;
       color: #555;
-      line-height: 1.45;
+      line-height: 1.5;
     }
     .notice-box strong { color: #111; }
     .footer-note {
@@ -207,7 +247,7 @@ export function generateOrderConfirmationHtml(
     }
     @media print {
       body { padding: 0; background: #fff; }
-      .container { border: none; padding: 0; max-width: 100%; }
+      .container { border: none; padding: 0; max-width: 100%; border-radius: 0; }
       .no-print { display: none !important; }
     }
   </style>
@@ -215,24 +255,32 @@ export function generateOrderConfirmationHtml(
 <body>
   <div class="container">
     <div class="header">
-      <div>
-        <h1 class="brand-title">${escapeHtml(title)}</h1>
-        <p class="brand-sub">${escapeHtml(organization.name)}</p>
-      </div>
-      <button class="btn-print no-print" onclick="window.print()">
-        ${isDe ? "Drucken / Als PDF speichern" : "Print / Save as PDF"}
+      <h1 class="brand-title">${escapeHtml(title)}</h1>
+      <button class="btn-pdf no-print" onclick="window.print()">
+        <svg width="15" height="15" viewBox="0 0 256 256" fill="currentColor" style="vertical-align:-2px;margin-right:6px;"><path d="M224,152v56a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V152a8,8,0,0,1,16,0v56H208V152a8,8,0,0,1,16,0Zm-101.66,13.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,140.69V32a8,8,0,0,0-16,0V140.69L93.66,114.34a8,8,0,0,0-11.32,11.32Z"/></svg>
+        <span>${isDe ? "PDF speichern" : "Save as PDF"}</span>
       </button>
     </div>
 
+    <!-- Iconic WaveLine divider -->
+    <svg class="waveline" width="100%" height="12" style="margin:16px 0 20px;">
+      <defs>
+        <pattern id="doc-wave-1" width="16" height="12" patternUnits="userSpaceOnUse">
+          <path d="M 0 6 Q 4 1.5, 8 6 T 16 6" fill="none" stroke="#000" stroke-width="2.25" stroke-linecap="round" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="12" fill="url(#doc-wave-1)" />
+    </svg>
+
     <div class="badge-number">
-      #${escapeHtml(order.orderNumber)}
+      ${isDe ? "Bestellnummer" : "Order number"} <span class="num">${escapeHtml(order.orderNumber)}</span>
     </div>
 
     <div class="meta-grid">
       <div class="meta-item">
         <span class="meta-label">${isDe ? "Betrieb" : "Venue"}</span>
         <span class="meta-value">${escapeHtml(organization.name)}</span>
-        ${organization.address ? `<span style="font-size:11px;color:#666;">${escapeHtml(organization.address)}</span>` : ""}
+        ${organization.address ? `<span style="font-size:11px;color:#666;margin-top:2px;">${escapeHtml(organization.address)}</span>` : ""}
       </div>
       <div class="meta-item">
         <span class="meta-label">${isDe ? "Bestellart" : "Order Type"}</span>
@@ -244,7 +292,7 @@ export function generateOrderConfirmationHtml(
       </div>
       <div class="meta-item">
         <span class="meta-label">${isDe ? "Zahlungsstatus" : "Payment Status"}</span>
-        <span class="meta-value" style="color:#059669;">${isDe ? "Erfolgreich bezahlt" : "Paid successfully"}</span>
+        <span class="meta-value">${isDe ? "Erfolgreich bezahlt" : "Paid successfully"}</span>
       </div>
     </div>
 
@@ -260,6 +308,16 @@ export function generateOrderConfirmationHtml(
         ${itemsHtml}
       </tbody>
     </table>
+
+    <!-- Iconic WaveLine divider -->
+    <svg class="waveline" width="100%" height="12" style="margin:16px 0 12px;">
+      <defs>
+        <pattern id="doc-wave-2" width="16" height="12" patternUnits="userSpaceOnUse">
+          <path d="M 0 6 Q 4 1.5, 8 6 T 16 6" fill="none" stroke="#000" stroke-width="2.25" stroke-linecap="round" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="12" fill="url(#doc-wave-2)" />
+    </svg>
 
     <div class="total-row">
       <div>

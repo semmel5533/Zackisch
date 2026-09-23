@@ -10,9 +10,8 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { CheckCircle, CookingPot, X, Clock, Check, DownloadSimple } from "@phosphor-icons/react";
+import { CookingPot, X, Check, DownloadSimple } from "@phosphor-icons/react";
 import { playOrderReadySound, initAudioContext } from "@/lib/audio";
-import { TRACKING_EXPIRY_MS } from "@/lib/constants";
 import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
 import type { Organization, Order } from "@/lib/types";
 
@@ -48,7 +47,6 @@ export function OrderTracker({
     : initialOrder || null;
 
   const prevStatusRef = useRef<string | null>(initialOrder?.status || null);
-  const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
     const handleInteract = () => initAudioContext();
@@ -69,26 +67,7 @@ export function OrderTracker({
     }
   }, [order?.status]);
 
-  useEffect(() => {
-    if (order?.status === "ready_for_pickup" || order?.status === "completed") {
-      const interval = setInterval(() => {
-        setNow(Date.now());
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [order?.status]);
-
-  const readyTime =
-    order?.readyAt ||
-    order?.completedAt ||
-    (order?.$updatedAt ? new Date(order.$updatedAt).getTime() : 0) ||
-    order?._creationTime ||
-    (order?.$createdAt ? new Date(order.$createdAt).getTime() : Date.now());
-
-  const remainingMs = Math.max(0, TRACKING_EXPIRY_MS - (now - readyTime));
-  const isExpired = (order?.status === "ready_for_pickup" || order?.status === "completed") && remainingMs <= 0;
-
-  const error = (!order && liveOrder === null) || isExpired;
+  const error = !order && liveOrder === null;
 
   if (error) {
     return (
@@ -141,12 +120,6 @@ export function OrderTracker({
       : order.status === "ready_for_pickup"
       ? 1
       : 0;
-  const remainingTotalSeconds = Math.ceil(remainingMs / 1000);
-  const remainingMins = Math.floor(remainingTotalSeconds / 60);
-  const remainingSecs = remainingTotalSeconds % 60;
-  const remainingParts = t("trackingActiveRemaining", { time: "%%" }).split("%%");
-  const minuteParts = t("trackingMinutes", { count: "%%" }).split("%%");
-
   return (
     <div className="flex flex-col min-h-screen bg-muted/30 overflow-x-clip">
       <header className="bg-background text-foreground border-b border-border px-6 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 sm:py-4 flex items-center justify-between shrink-0 max-w-[500px] mx-auto w-full">
@@ -186,8 +159,8 @@ export function OrderTracker({
 
           {order.status === "ready_for_pickup" && (
             <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-              <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto">
-                <CheckCircle className="w-7 h-7" weight="fill" />
+              <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+                <Check className="size-6" weight="bold" />
               </div>
               <h2 className="text-xl font-bold text-primary">
                 {t("orderReadyForPickup")}
@@ -200,8 +173,8 @@ export function OrderTracker({
 
           {order.status === "completed" && (
               <div className="w-full bg-muted/30 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
-                  <CheckCircle className="w-7 h-7" weight="fill" />
+                <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+                  <Check className="size-6" weight="bold" />
                 </div>
                 <h2 className="text-xl font-bold text-foreground">
                   {t("orderPickedUp")}
@@ -210,21 +183,6 @@ export function OrderTracker({
                   {t("orderPickedUpDesc")}
                 </p>
               </div>
-          )}
-
-          {(order.status === "ready_for_pickup" || order.status === "completed") && (
-            <p className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground text-center">
-              <Clock className="size-4 shrink-0" />
-              <span>{remainingParts[0]}</span>
-              <span>
-                {minuteParts[0]}
-                <span className="font-inter tabular-nums font-bold text-foreground">
-                  {remainingMins}:{remainingSecs.toString().padStart(2, "0")}
-                </span>
-                {minuteParts[1]}
-              </span>
-              <span>{remainingParts[1]}</span>
-            </p>
           )}
 
           <Card className="w-full p-5 sm:p-6">
