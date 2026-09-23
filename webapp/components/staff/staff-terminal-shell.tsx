@@ -20,6 +20,7 @@ import { useSidebarStore } from "@/store/sidebar-store";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Organization, Order, MenuCategory, MenuItem } from "@/lib/types";
 import { getImagePreviewUrl } from "@/lib/convex/client";
+import { WaveLine } from "@/components/ui/wave-line";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -122,7 +123,7 @@ export function StaffTerminalShell({
   };
 
   return (
-    <div className="flex h-screen w-full bg-primary overflow-hidden print:h-auto print:overflow-visible print:block">
+    <div className="flex h-screen w-full bg-background overflow-hidden print:h-auto print:overflow-visible print:block">
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <button
@@ -136,7 +137,7 @@ export function StaffTerminalShell({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col border-l border-primary-foreground/10 bg-primary text-primary-foreground lg:relative print:hidden",
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-background text-foreground lg:relative print:hidden",
           isExpanded ? "w-64" : "w-16",
           "max-lg:w-64", // Always wide on mobile
           isMobileOpen
@@ -144,10 +145,15 @@ export function StaffTerminalShell({
             : "-translate-x-full lg:translate-x-0 max-lg:hidden",
         )}
       >
+        <WaveLine
+          orientation="vertical"
+          className="absolute top-0 -right-[5px] h-full text-foreground/20 pointer-events-none hidden lg:flex"
+        />
+
         {/* Sidebar Header */}
         <div
           className={cn(
-            "flex h-16 items-center border-b border-primary-foreground/10 shrink-0",
+            "flex h-16 items-center border-b border-border shrink-0",
             isExpanded
               ? "justify-between px-4"
               : "lg:justify-center lg:px-2 justify-between px-4",
@@ -168,7 +174,7 @@ export function StaffTerminalShell({
                 height={24}
                 priority
                 loading="eager"
-                className="h-6 w-auto brightness-0 invert select-none"
+                className="h-6 w-auto brightness-0 select-none"
               />
             </div>
           </div>
@@ -178,7 +184,7 @@ export function StaffTerminalShell({
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="hidden lg:flex shrink-0 h-9 w-9 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 cursor-pointer"
+            className="hidden lg:flex shrink-0 h-9 w-9 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
           >
             {isExpanded ? (
               <CaretLeft weight="bold" />
@@ -192,7 +198,7 @@ export function StaffTerminalShell({
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileOpen(false)}
-            className="lg:hidden shrink-0 h-9 w-9 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10 cursor-pointer"
+            className="lg:hidden shrink-0 h-9 w-9 text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"
             aria-label="Close sidebar"
           >
             <X weight="bold" className="h-5 w-5" />
@@ -214,8 +220,8 @@ export function StaffTerminalShell({
                       "h-11 transition-colors relative overflow-visible rounded-full font-semibold cursor-pointer p-0 justify-start",
                       isExpanded ? "w-full" : "w-11 mx-auto",
                       isActive
-                        ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary shadow-xs"
-                        : "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground shadow-xs"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
                     )}
                     aria-label={!isExpanded ? item.label : undefined}
                     onClick={() => {
@@ -235,8 +241,8 @@ export function StaffTerminalShell({
                             className={cn(
                               "absolute top-2.5 right-2.5 h-2.5 w-2.5 rounded-full shadow-sm",
                               isActive
-                                ? "bg-primary ring-2 ring-primary-foreground"
-                                : "bg-primary-foreground ring-2 ring-primary",
+                                ? "bg-background ring-2 ring-primary"
+                                : "bg-primary ring-2 ring-background",
                             )}
                           >
                             <span className="sr-only">{activeOrdersCount}</span>
@@ -254,8 +260,8 @@ export function StaffTerminalShell({
                               className={cn(
                                 "mr-2.5 h-5 min-w-5 px-1.5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 font-inter tabular-nums leading-none shadow-xs",
                                 isActive
-                                  ? "bg-primary text-primary-foreground"
-                                  : "bg-primary-foreground text-primary",
+                                  ? "bg-background text-foreground"
+                                  : "bg-primary text-primary-foreground",
                               )}
                             >
                               {activeOrdersCount}
@@ -273,14 +279,14 @@ export function StaffTerminalShell({
         {/* Sidebar Footer */}
         <div
           className={cn(
-            "border-t border-primary-foreground/10 flex flex-col gap-4 shrink-0",
+            "border-t border-border flex flex-col gap-4 shrink-0",
             isExpanded ? "p-4" : "p-3 py-4",
           )}
         >
           {isExpanded ? (
             <div className="flex flex-col gap-2">
               {/* Mini Lieferando-style Banner Card with bottom-left logo */}
-              <div className="relative w-full aspect-[2.3/1] rounded-[16px] overflow-hidden bg-black border border-white/15 shadow-sm">
+              <div className="relative w-full aspect-[2.3/1] rounded-[16px] overflow-hidden bg-muted border border-border shadow-sm">
                 {organization?.bannerFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -289,11 +295,11 @@ export function StaffTerminalShell({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-black" />
+                  <div className="w-full h-full bg-muted" />
                 )}
 
                 {/* Bottom-left logo box */}
-                <div className="absolute bottom-2 left-2 z-10 w-10 h-10 rounded-[8px] bg-neutral-900 flex items-center justify-center overflow-hidden border border-white/20 shrink-0">
+                <div className="absolute bottom-2 left-2 z-10 w-10 h-10 rounded-[8px] bg-card flex items-center justify-center overflow-hidden border border-border shrink-0">
                   {organization?.logoFileId ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
@@ -302,17 +308,17 @@ export function StaffTerminalShell({
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-neutral-900" />
+                    <div className="w-full h-full bg-muted" />
                   )}
                 </div>
               </div>
 
               <div className="flex flex-col flex-1 overflow-hidden px-0.5">
-                <span className="truncate font-semibold text-sm leading-tight text-primary-foreground">
+                <span className="truncate font-semibold text-sm leading-tight text-foreground">
                   {organization?.name ?? "Zakkig"}
                 </span>
                 {organization?.address && (
-                  <span className="text-xs text-primary-foreground/70 whitespace-pre-wrap leading-tight mt-1">
+                  <span className="text-xs text-muted-foreground whitespace-pre-wrap leading-tight mt-1">
                     {organization.address}
                   </span>
                 )}
@@ -323,7 +329,7 @@ export function StaffTerminalShell({
               className="flex items-center justify-center"
               title={organization?.name ?? "Restaurant"}
             >
-              <div className="w-10 h-10 rounded-[10px] bg-black flex items-center justify-center overflow-hidden border border-white/20 shrink-0">
+              <div className="w-10 h-10 rounded-[10px] bg-muted flex items-center justify-center overflow-hidden border border-border shrink-0">
                 {organization?.logoFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -332,7 +338,7 @@ export function StaffTerminalShell({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-neutral-900" />
+                  <div className="w-full h-full bg-muted" />
                 )}
               </div>
             </div>
@@ -351,7 +357,7 @@ export function StaffTerminalShell({
                 className={cn(
                   "justify-start h-10 overflow-hidden cursor-pointer",
                   isExpanded ? "px-3 rounded-full font-semibold" : "px-2.5 w-full rounded-full",
-                  "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
+                  "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
                 aria-label={!isExpanded ? t("signOut") : undefined}
               >
@@ -361,16 +367,16 @@ export function StaffTerminalShell({
             </form>
             <LanguageSwitcher
               variant="ghost"
-              className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground shrink-0 cursor-pointer"
+              className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground shrink-0 cursor-pointer"
             />
           </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background lg:rounded-l-[1.5rem] shadow-sm print:overflow-visible print:block print:bg-white print:shadow-none @container">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background print:overflow-visible print:block print:bg-white print:shadow-none @container">
         {/* Mobile Header (lg:hidden) */}
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary-foreground/10 px-4 lg:hidden print:hidden bg-primary text-primary-foreground">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-background text-foreground">
           <div className="flex items-center">
             <Image
               src="https://www.zakkig.com/full.svg"
@@ -379,14 +385,14 @@ export function StaffTerminalShell({
               height={24}
               priority
               loading="eager"
-              className="h-6 w-auto brightness-0 invert select-none"
+              className="h-6 w-auto brightness-0 select-none"
             />
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileOpen(true)}
-            className="text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground cursor-pointer"
+            className="text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
             aria-label="Open menu"
           >
             <List weight="bold" className="h-6 w-6" />

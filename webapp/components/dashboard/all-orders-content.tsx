@@ -311,6 +311,26 @@ export function AllOrdersContent({
     }
   }
 
+  async function handleCopyOrderId(id: string) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(id);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = id;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      toast.success(t("orderIdCopied"));
+    } catch {
+      toast.error(t("error"));
+    }
+  }
+
   return (
     <div className="flex-1 space-y-4 @container">
       <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
@@ -550,7 +570,12 @@ export function AllOrdersContent({
                         <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap pl-4 sm:pl-6">
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger className="cursor-help hover:text-foreground transition-colors">
+                              <TooltipTrigger
+                                type="button"
+                                onClick={() => handleCopyOrderId(order.$id)}
+                                className="cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:underline"
+                                aria-label={order.$id}
+                              >
                                 {order.$id.length > 8 ? order.$id.slice(-6) : order.$id}
                               </TooltipTrigger>
                               <TooltipContent>

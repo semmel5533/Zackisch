@@ -1,8 +1,17 @@
 "use client";
 
+import * as React from "react";
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 
 import { cn } from "@/lib/utils";
+
+interface TooltipContextValue {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  toggle: () => void;
+}
+
+const TooltipContext = React.createContext<TooltipContextValue | null>(null);
 
 function TooltipProvider({
   delay = 0,
@@ -17,12 +26,72 @@ function TooltipProvider({
   );
 }
 
-function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
+function Tooltip({
+  open: controlledOpen,
+  defaultOpen = false,
+  onOpenChange,
+  ...props
+}: TooltipPrimitive.Root.Props) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const handleOpenChange = React.useCallback(
+    (nextOpen: boolean, eventDetails: any) => {
+      if (!isControlled) {
+        setUncontrolledOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen, eventDetails);
+    },
+    [isControlled, onOpenChange]
+  );
+
+  const toggle = React.useCallback(() => {
+    handleOpenChange(!open, {} as any);
+  }, [handleOpenChange, open]);
+
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      handleOpenChange(next, {} as any);
+    },
+    [handleOpenChange]
+  );
+
+  const ctxValue = React.useMemo(
+    () => ({ open, setOpen, toggle }),
+    [open, setOpen, toggle]
+  );
+
+  return (
+    <TooltipContext.Provider value={ctxValue}>
+      <TooltipPrimitive.Root
+        data-slot="tooltip"
+        open={open}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </TooltipContext.Provider>
+  );
 }
 
-function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+function TooltipTrigger({
+  onClick,
+  closeOnClick = false,
+  ...props
+}: TooltipPrimitive.Trigger.Props) {
+  const ctx = React.useContext(TooltipContext);
+
+  return (
+    <TooltipPrimitive.Trigger
+      data-slot="tooltip-trigger"
+      closeOnClick={closeOnClick}
+      onClick={(e) => {
+        ctx?.toggle();
+        onClick?.(e);
+      }}
+      {...props}
+    />
+  );
 }
 
 function TooltipContent({

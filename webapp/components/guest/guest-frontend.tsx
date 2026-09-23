@@ -503,23 +503,23 @@ function GuestCart({
                   className="text-sm font-bold text-primary text-right leading-snug"
                 />
 
-                <div className="flex items-center gap-0.5 bg-muted/80 p-0.5 h-7 rounded-full border border-border/60 shrink-0">
+                <div className="flex items-center bg-muted/80 p-[1.5px] h-[26px] rounded-full border border-border/60 shrink-0">
                   <Button
                     size="icon-xs"
                     variant="ghost"
-                    className="size-6 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
+                    className="size-5 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     aria-label={`${item.quantity === 1 ? t("removeFromCart") : t("decreaseQuantity")}: ${item.name}`}
                   >
                     <Minus weight="bold" className="size-2.5" />
                   </Button>
-                  <span className="text-xs font-bold font-inter tabular-nums min-w-[12px] text-center px-0">
+                  <span className="text-xs font-bold font-inter tabular-nums min-w-[10px] text-center px-0.5">
                     {item.quantity}
                   </span>
                   <Button
                     size="icon-xs"
                     variant="ghost"
-                    className="size-6 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
+                    className="size-5 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
                     aria-label={`${t("increaseQuantity")}: ${item.name}`}

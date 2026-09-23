@@ -31,6 +31,8 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { signOutAction } from "@/actions/auth-actions";
 
+import { WaveLine } from "@/components/ui/wave-line";
+
 interface DashboardShellProps {
   organization: Organization | null;
   user: { name?: string; email?: string; [key: string]: any };
@@ -89,7 +91,7 @@ export function DashboardShell({
   ];
 
   return (
-    <div className="flex h-screen w-full bg-primary overflow-hidden print:h-auto print:overflow-visible print:block">
+    <div className="flex h-screen w-full bg-background overflow-hidden print:h-auto print:overflow-visible print:block">
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <button
@@ -103,7 +105,7 @@ export function DashboardShell({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col border-l border-primary-foreground/10 bg-primary text-primary-foreground lg:relative print:hidden",
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-background text-foreground lg:relative print:hidden",
           isExpanded ? "w-64" : "w-16",
           "max-lg:w-64", // Always wide on mobile
           isMobileOpen
@@ -111,9 +113,14 @@ export function DashboardShell({
             : "-translate-x-full lg:translate-x-0 max-lg:hidden",
         )}
       >
+        <WaveLine
+          orientation="vertical"
+          className="absolute top-0 -right-[5px] h-full text-foreground/20 pointer-events-none hidden lg:flex"
+        />
+
         <div
           className={cn(
-            "flex h-16 items-center border-b border-primary-foreground/10 shrink-0",
+            "flex h-16 items-center border-b border-border shrink-0",
             isExpanded ? "justify-between px-4" : "justify-center px-2",
             "max-lg:justify-end max-lg:px-4",
           )}
@@ -133,7 +140,7 @@ export function DashboardShell({
                 height={24}
                 priority
                 loading="eager"
-                className="h-6 w-auto brightness-0 invert select-none"
+                className="h-6 w-auto brightness-0 select-none"
               />
             </div>
           </div>
@@ -143,7 +150,7 @@ export function DashboardShell({
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="hidden lg:flex shrink-0 h-9 w-9 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10"
+            className="hidden lg:flex shrink-0 h-9 w-9 text-muted-foreground hover:text-foreground hover:bg-muted"
           >
             {isExpanded ? (
               <CaretLeft weight="bold" />
@@ -157,7 +164,7 @@ export function DashboardShell({
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileOpen(false)}
-            className="lg:hidden shrink-0 h-9 w-9 text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10"
+            className="lg:hidden shrink-0 h-9 w-9 text-muted-foreground hover:text-foreground hover:bg-muted"
             aria-label="Close sidebar"
           >
             <X weight="bold" className="h-5 w-5" />
@@ -178,8 +185,8 @@ export function DashboardShell({
                       "h-11 transition-colors relative overflow-visible rounded-full font-semibold p-0 justify-start",
                       isExpanded ? "w-full" : "w-11 mx-auto",
                       isActive
-                        ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary shadow-xs"
-                        : "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground shadow-xs"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
                     )}
                     aria-label={!isExpanded ? item.label : undefined}
                     onClick={() => {
@@ -199,8 +206,8 @@ export function DashboardShell({
                             className={cn(
                               "absolute top-2.5 right-2.5 h-2.5 w-2.5 rounded-full shadow-sm",
                               isActive
-                                ? "bg-primary ring-2 ring-primary-foreground"
-                                : "bg-primary-foreground ring-2 ring-primary"
+                                ? "bg-background ring-2 ring-primary"
+                                : "bg-primary ring-2 ring-background"
                             )}
                           >
                             <span className="sr-only">{activeOrdersCount}</span>
@@ -215,8 +222,8 @@ export function DashboardShell({
                             className={cn(
                               "mr-2.5 h-5 min-w-5 px-1.5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 font-inter tabular-nums leading-none shadow-xs",
                               isActive
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-primary-foreground text-primary"
+                                ? "bg-background text-foreground"
+                                : "bg-primary text-primary-foreground"
                             )}
                           >
                             {activeOrdersCount}
@@ -233,7 +240,7 @@ export function DashboardShell({
 
         <div
           className={cn(
-            "border-t border-primary-foreground/10 flex flex-col gap-4 shrink-0",
+            "border-t border-border flex flex-col gap-4 shrink-0",
             isExpanded ? "p-4" : "p-3 py-4",
           )}
         >
@@ -243,7 +250,7 @@ export function DashboardShell({
               className="flex flex-col gap-2 transition-all hover:opacity-95 cursor-pointer group"
             >
               {/* Mini Lieferando-style Banner Card with bottom-left logo */}
-              <div className="relative w-full aspect-[2.3/1] rounded-[16px] overflow-hidden bg-black border border-white/15 shadow-sm">
+              <div className="relative w-full aspect-[2.3/1] rounded-[16px] overflow-hidden bg-muted border border-border/60 shadow-xs">
                 {organization?.bannerFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -252,11 +259,11 @@ export function DashboardShell({
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full bg-black" />
+                  <div className="w-full h-full bg-muted" />
                 )}
 
                 {/* Bottom-left logo box */}
-                <div className="absolute bottom-2 left-2 z-10 w-10 h-10 rounded-[8px] bg-neutral-900 flex items-center justify-center overflow-hidden border border-white/20 shrink-0">
+                <div className="absolute bottom-2 left-2 z-10 w-10 h-10 rounded-[8px] bg-background flex items-center justify-center overflow-hidden border border-border/60 shrink-0">
                   {organization?.logoFileId ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
@@ -265,17 +272,17 @@ export function DashboardShell({
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-neutral-900" />
+                    <div className="w-full h-full bg-muted" />
                   )}
                 </div>
               </div>
 
               <div className="flex flex-col flex-1 overflow-hidden px-0.5">
-                <span className="truncate font-semibold text-sm leading-tight text-primary-foreground">
+                <span className="truncate font-semibold text-sm leading-tight text-foreground">
                   {organization?.name ?? "Zakkig"}
                 </span>
                 {organization?.address && (
-                  <span className="text-xs text-primary-foreground/70 whitespace-pre-wrap leading-tight mt-1">
+                  <span className="text-xs text-muted-foreground whitespace-pre-wrap leading-tight mt-1">
                     {organization.address}
                   </span>
                 )}
@@ -287,7 +294,7 @@ export function DashboardShell({
               className="flex items-center justify-center transition-all hover:opacity-90 cursor-pointer"
               title={organization?.name ?? "Settings"}
             >
-              <div className="w-10 h-10 rounded-[10px] bg-black flex items-center justify-center overflow-hidden border border-white/20 shrink-0">
+              <div className="w-10 h-10 rounded-[10px] bg-background flex items-center justify-center overflow-hidden border border-border/60 shrink-0">
                 {organization?.logoFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -296,7 +303,7 @@ export function DashboardShell({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-neutral-900" />
+                  <div className="w-full h-full bg-muted" />
                 )}
               </div>
             </Link>
@@ -318,7 +325,7 @@ export function DashboardShell({
                 className={cn(
                   "justify-start h-10 overflow-hidden",
                   isExpanded ? "px-3" : "px-2.5 w-full",
-                  "text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground",
+                  "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
                 <SignOut className="h-5 w-5 shrink-0" />
@@ -327,15 +334,15 @@ export function DashboardShell({
             </form>
             <LanguageSwitcher
               variant="ghost"
-              className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-primary-foreground/80 hover:bg-primary-foreground/20 hover:text-primary-foreground shrink-0"
+              className="w-10 h-10 rounded-full p-0 flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground shrink-0"
             />
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background lg:rounded-l-[1.5rem] shadow-sm print:overflow-visible print:block print:bg-white print:shadow-none @container">
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary-foreground/10 px-4 lg:hidden print:hidden bg-primary text-primary-foreground">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background print:overflow-visible print:block print:bg-white print:shadow-none @container">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-background text-foreground">
           <div className="flex items-center">
             <Image
               src="https://www.zakkig.com/full.svg"
@@ -344,14 +351,14 @@ export function DashboardShell({
               height={24}
               priority
               loading="eager"
-              className="h-6 w-auto brightness-0 invert select-none"
+              className="h-6 w-auto brightness-0 select-none"
             />
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileOpen(true)}
-            className="text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+            className="text-muted-foreground hover:bg-muted hover:text-foreground"
             aria-label="Open menu"
           >
             <List weight="bold" className="h-6 w-6" />

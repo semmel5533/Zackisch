@@ -53,8 +53,8 @@ export function MainPage() {
                 step === "Kitchen"
                   ? "col-span-full mx-auto max-w-[800px] max-[600px]:col-span-1"
                   : step === "Scan"
-                    ? "max-w-[260px] mx-auto md:max-w-[230px] md:justify-self-start md:mx-0"
-                    : "max-w-[260px] mx-auto md:max-w-[230px] md:justify-self-end md:mx-0"
+                    ? "max-w-[290px] mx-auto md:max-w-[285px] md:justify-self-start md:mx-0"
+                    : "max-w-[290px] mx-auto md:max-w-[285px] md:justify-self-end md:mx-0"
               }`}
               key={step}
             >
@@ -63,7 +63,7 @@ export function MainPage() {
                 className={`flex items-start gap-3 mt-6 md:mt-8 shrink-0 w-full ${
                   step === "Kitchen"
                     ? "max-w-[340px] md:max-w-[520px] mx-auto"
-                    : "max-w-[250px] md:w-[255px] mx-auto"
+                    : "max-w-[285px] mx-auto"
                 }`}
               >
                 <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums" aria-hidden="true">
@@ -101,22 +101,26 @@ export function MainPage() {
         </div>
       </section>
 
-      <section data-dark-surface className="bg-primary py-[clamp(72px,9vw,128px)] text-primary-foreground">
-        <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+      <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto" />
+
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] py-[clamp(72px,9vw,128px)]">
+        <div className="grid grid-cols-2 gap-24 max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
           <div className="flex flex-col items-start justify-center text-left">
             <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("setupTitle")}</h2>
-            <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-white/75">{t("setupNote")}</p>
+            <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("setupNote")}</p>
           </div>
           <ol className="flex w-full flex-col items-center self-center">
             {steps.map((step, index) => (
-              <li key={step} className="flex w-full max-w-[340px] items-center gap-4 border-b border-white/20 py-7 text-left first:pt-0 last:border-0 last:pb-0">
-                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-background font-inter text-sm font-semibold text-foreground tabular-nums">{index + 1}</span>
+              <li key={step} className="flex w-full max-w-[340px] items-center gap-4 border-b border-border py-7 text-left first:pt-0 last:border-0 last:pb-0">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums">{index + 1}</span>
                 <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(step)}</h3>
               </li>
             ))}
           </ol>
         </div>
       </section>
+
+      <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto" />
 
       <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
         <div className="flex flex-col items-center text-center justify-center">

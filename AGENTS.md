@@ -118,6 +118,10 @@ Follow this unified, multi-layered architecture for all features and changes:
    - DO NOT use icons next to inline form error or warning text.
    - DO NOT use heavy, blocky background alert boxes for simple form validation errors or attempts counters.
 
+3. **Interactive Tooltip Standard & Order ID Copy:**
+   - All tooltips across the webapp (`tooltip.tsx`, `info-tooltip.tsx`) must support tap/click to toggle open/close in addition to hover, ensuring full accessibility on mobile and touch devices while preserving outside-click and Escape dismissal.
+   - On the "Alle Bestellungen" page (`all-orders-content.tsx`), clicking an individual order ID copies the full ID to the clipboard, displays a confirmation toast ("Bestell-ID in Zwischenablage kopiert."), and opens the tooltip.
+
 <!-- END:ui-feedback-conventions -->
 
 <!-- BEGIN:guest-ordering-ux-conventions -->
@@ -132,7 +136,7 @@ Follow this unified, multi-layered architecture for all features and changes:
    - When viewing the cart, the merchant hero banner is suppressed. The view features a top header with an `<ArrowLeft>` back button returning to the menu, the cart title, restaurant subtitle, and order type tag.
 4. **Tactile Wavy Divider & Sleek Quantity Controls:**
    - A prominent black wavy divider (`<WaveLine className="w-full mt-4 text-black" strokeWidth={2.25} />`) in zakkig's signature physical QR aesthetic separates the top restaurant profile and address from the sticky categories carousel.
-   - Cart item quantity controls use a compact, narrow stepper pill (`h-7`, `size-6` actions) preventing layout crowding next to item titles and totals.
+   - Cart item quantity controls use an ultra-slim stepper pill (`h-[26px]`, `p-[1.5px]`, `size-5` actions, `min-w-[10px]` digit, ~52px width) preventing layout crowding next to item titles and totals.
 5. **Post-Checkout Brand Attribution & Zero-Logo Link Policy:**
    - The zakkig logo across the webapp (dashboard, staff shell, and auth pages) is non-clickable static branding.
    - Post-checkout guest views (dine-in order success and takeaway order tracker) feature a subtle, centered attribution notice at the bottom: "Bestellung abgewickelt über zakkig.com als QR-Bestell- und Bezahlsystem" (or English equivalent), where `zakkig.com` is an underlined external link.
@@ -183,10 +187,11 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 
 # UI Theme, Light Surfaces & Numerical Typography
 
-1. **Light Surface & Dialog Rule:**
-   - Dark/black backgrounds must NEVER be overused. The webapp must feel light, airy, and fresh.
-   - All dialogs, modals, action sheets, confirmation alerts, and auth pages must render with a clean light background (`bg-background text-foreground` or `bg-card text-card-foreground`) and standard border (`border-border`).
-   - Dark `#000000` is strictly reserved for deliberate focal accents: the desktop dashboard sidebar (`bg-sidebar`), primary CTA buttons (`bg-primary text-primary-foreground`), and selected badges.
+1. **Light Surface, Signature WaveLine Dividers & Contrast Rule:**
+   - The entire webapp and marketing website feature 100% clean light backgrounds (`bg-background text-foreground`). Dark/black backgrounds are NEVER used for full sections or sidebars.
+   - The desktop dashboard sidebar and staff terminal sidebar render with light surfaces (`bg-background text-foreground border-r border-border`), black logos (`brightness-0`), and a signature tactile vertical `WaveLine` divider (`text-foreground/20`) running down the right edge of the sidebar.
+   - On the marketing website, all sections and footers render with light backgrounds, cleanly delineated by Zakkig's signature horizontal `WaveLine` dividers as a core visual trademark.
+   - Dark `#000000` is strictly reserved for deliberate focal accents: primary CTA buttons (`bg-primary text-primary-foreground`), active navigation pills, and selected badges.
 
 2. **Numerical Typography Rule (Strictly Digits Only in Inter):**
    - Poppins is the primary font for everything across `webapp` and `website`: all titles, headings, body text, buttons, labels, and badges.
@@ -231,8 +236,9 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 9. **Staff Session & Operational Quick Links Standard:**
    - The staff terminal session tile on the dashboard overview renders as a dedicated operational card with a contextual info tooltip and instant pill actions (`Scannen` as prominent full-width action, with `Link kopieren` and `Neu generieren` side-by-side below). The primary navigation quick links (`Menü`, `Aktuelle Bestellungen`, `Alle Bestellungen`, `Einstellungen`) render in a balanced 2x2 responsive grid beside the staff session card on desktop viewports (`@min-[1100px]:grid-cols-2`), using subtle contextual InfoTooltips to eliminate visual clutter and text noise from everyday operations.
 
-10. **Resource Creation Cards & Standardized Overlay Actions Standard:**
+10. **Resource Creation Cards, Reorder Controls & Standardized Overlay Actions Standard:**
    - Every resource addition pattern across the webapp (categories, menu items, table QR codes) uses the dashed addition card (`border border-dashed border-muted-foreground/40`) appended at the end of the collection. Redundant creation buttons in navigation headers are omitted to keep top bars calm and clean.
+   - Inside category cards on the menu page, menu items are reordered using direct up and down arrow buttons (`ArrowUp`, `ArrowDown`) matching category header buttons, rather than dropdown menus.
    - Media overlay actions (banner, logo, and product photo change and delete buttons) render as standardized `size-10 pointer-coarse:size-11` circular buttons with centered `size-4.5` icons.
 
 <!-- END:design-theme-conventions -->

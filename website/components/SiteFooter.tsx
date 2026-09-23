@@ -6,6 +6,7 @@ import { ArrowUpRight, Globe } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { RegionLanguageModal } from "./RegionLanguageModal";
+import { WaveLine } from "./WaveLine";
 
 export function SiteFooter({
   variant = "full",
@@ -18,11 +19,12 @@ export function SiteFooter({
   if (variant === "minimal") {
     return (
       <>
-        <footer data-dark-surface className="relative overflow-hidden bg-primary pt-6 text-primary-foreground sm:pt-8">
+        <footer className="relative overflow-hidden bg-background pt-6 text-foreground border-t border-border sm:pt-8">
+          <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto mb-6" />
           <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
             <div className="footer-mascot justify-self-start flex items-end mb-[-85px] max-md:mb-[-65px] order-2 md:order-1">
               <img
-                className="block h-auto w-[clamp(210px,18vw,270px)] object-contain brightness-0 invert max-md:w-[clamp(190px,46vw,240px)]"
+                className="block h-auto w-[clamp(210px,18vw,270px)] object-contain brightness-0 max-md:w-[clamp(190px,46vw,240px)]"
                 src="/icon.svg"
                 alt=""
                 aria-hidden="true"
@@ -67,13 +69,14 @@ export function SiteFooter({
 
   return (
     <>
-      <footer data-dark-surface className="relative overflow-hidden bg-primary pt-16 text-primary-foreground sm:pt-20">
+      <footer className="relative overflow-hidden bg-background pt-16 text-foreground border-t border-border sm:pt-20">
+        <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto mb-10 sm:mb-14" />
         <div className="mx-auto grid w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid-cols-[1.15fr_.85fr] grid-rows-[auto_auto_1fr_auto] items-start gap-x-12 gap-y-7 [grid-template-areas:'title_.'_'cta_contact'_'mascot_mars'_'mascot_bottom'] max-[900px]:grid-cols-1 max-[900px]:grid-rows-none max-[900px]:gap-8 max-[900px]:[grid-template-areas:'title'_'cta'_'contact'_'mars'_'bottom'_'mascot']">
           <div className="text-left [grid-area:title]">
             <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("closingTitle")}</h2>
           </div>
           <div className="flex items-center [grid-area:cta]">
-            <RegisterCta variant="inverse" />
+            <RegisterCta />
           </div>
           <div className="flex flex-col items-end justify-self-end gap-2 pt-2 text-right [grid-area:contact] max-md:pt-0">
             <h3 className="m-0 text-2xl font-medium leading-[1.1]">{t("contactLabel")}</h3>
@@ -86,7 +89,7 @@ export function SiteFooter({
           </div>
           <div className="flex justify-end justify-self-end [grid-area:mars]">
             <a
-              className="group inline-flex items-center justify-end gap-1.5 text-[13px] whitespace-nowrap text-white/75 transition-colors hover:text-white motion-reduce:transition-none"
+              className="group inline-flex items-center justify-end gap-1.5 text-[13px] whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground motion-reduce:transition-none"
               href={t("marsUrl")}
               target="_blank"
               rel="noopener noreferrer"
@@ -108,7 +111,7 @@ export function SiteFooter({
           </div>
           <div className="flex items-end justify-self-start mt-[clamp(48px,6vw,96px)] mb-[-95px] [grid-area:mascot] max-md:mt-6 max-md:mb-[-65px]">
             <img
-              className="block h-auto w-[clamp(260px,22vw,330px)] object-contain brightness-0 invert max-md:w-[clamp(200px,48vw,260px)]"
+              className="block h-auto w-[clamp(260px,22vw,330px)] object-contain brightness-0 max-md:w-[clamp(200px,48vw,260px)]"
               src="/icon.svg"
               alt=""
               aria-hidden="true"

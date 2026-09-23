@@ -146,6 +146,7 @@ export const translations = {
     createSession: "Neu generieren",
     copyLink: "Link kopieren",
     linkCopied: "Link in Zwischenablage kopiert.",
+    orderIdCopied: "Bestell-ID in Zwischenablage kopiert.",
     regenerateAvailabilityTitle: "Verfügbarkeit-Sitzung neu generieren?",
     regenerateAvailabilityDesc:
       "Der aktuelle Link wird sofort ungültig. Alle Geräte, die den alten Link verwenden, verlieren den Zugriff und müssen den neuen Link erneut scannen oder öffnen.",
@@ -785,6 +786,7 @@ export const translations = {
     createSession: "Regenerate",
     copyLink: "Copy link",
     linkCopied: "Link copied to clipboard.",
+    orderIdCopied: "Order ID copied to clipboard.",
     regenerateAvailabilityTitle: "Regenerate Availability Session link?",
     regenerateAvailabilityDesc:
       "The current link will be invalidated immediately. All devices using the old link will lose access and will need to scan or open the new link again.",

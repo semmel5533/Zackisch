@@ -46,7 +46,6 @@ import {
   CaretDown,
   CaretUp,
   Check,
-  ArrowsDownUp,
   ArrowUp,
   ArrowDown,
 } from "@phosphor-icons/react";
@@ -57,7 +56,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogBody,
@@ -1377,7 +1375,7 @@ const ItemRowView = memo(function ItemRowView({
           </div>
 
           {/* Row 2: Price on left, Actions on right */}
-          <div className="flex items-center justify-between gap-3 pt-2 mt-auto">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 mt-auto">
             <Price
               cents={item.price}
               from={hasPaidCustomizations(item.customizations)}
@@ -1385,17 +1383,30 @@ const ItemRowView = memo(function ItemRowView({
             />
 
             <div className="flex items-center gap-1.5 shrink-0">
-              {onMove && <DropdownMenu>
-                <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={t("reorder")} title={t("reorder")} />}>
-                  <ArrowsDownUp className="size-4" weight="bold" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem disabled={!canMoveUp} onClick={() => onMove(-1)}>{t("moveUp")}</DropdownMenuItem>
-                    <DropdownMenuItem disabled={!canMoveDown} onClick={() => onMove(1)}>{t("moveDown")}</DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>}
+              {onMove && canMoveUp && (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => onMove(-1)}
+                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
+                  aria-label={t("moveUp")}
+                  title={t("moveUp")}
+                >
+                  <ArrowUp className="size-4" weight="bold" />
+                </Button>
+              )}
+              {onMove && canMoveDown && (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => onMove(1)}
+                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
+                  aria-label={t("moveDown")}
+                  title={t("moveDown")}
+                >
+                  <ArrowDown className="size-4" weight="bold" />
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 size="icon-sm"
