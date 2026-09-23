@@ -1,7 +1,6 @@
 "use client";
 
 import { numericText } from "@/lib/numeric-text";
-import { useEffect } from "react";
 import { Plus } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
@@ -15,43 +14,6 @@ export function MainPage() {
   const { t } = useTranslation();
   const steps = ["setupFirst", "setupSecond", "setupThird"] as const;
 
-  useEffect(() => {
-    const handleScrollTarget = () => {
-      let targetId: string | null = null;
-      try {
-        targetId = sessionStorage.getItem("zakkig_scroll_target");
-      } catch {
-        // ignore
-      }
-      if (!targetId && window.location.hash) {
-        targetId = window.location.hash.slice(1);
-      }
-      if (!targetId) return;
-
-      const el = document.getElementById(targetId);
-      if (el) {
-        try {
-          sessionStorage.removeItem("zakkig_scroll_target");
-        } catch {
-          // ignore
-        }
-        if (window.location.hash) {
-          window.history.replaceState(null, "", window.location.pathname);
-        }
-        const top = el.getBoundingClientRect().top + window.pageYOffset - 32;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-    };
-
-    handleScrollTarget();
-    const timer = setTimeout(handleScrollTarget, 100);
-    const timer2 = setTimeout(handleScrollTarget, 300);
-
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(timer2);
-    };
-  }, []);
   const questions = [
     "faqApp",
     "faqDevices",
@@ -63,33 +25,33 @@ export function MainPage() {
   ] as const;
 
   return (
-    <main id="content" className="marketing">
+    <main id="content">
       <div className="w-full relative bg-[#e7e7e7] bg-[url('/hero-stone-bg.webp')] bg-cover bg-top -mt-[var(--header-height)] pt-[var(--header-height)] border-b border-[var(--site-line)] overflow-hidden">
-        <section className="hero page-width">
-          <h1 className="hero-heading">
-            <span className="hero-left">{t("heroLeft")}</span>
-            <span className="hero-right">{t("heroRight")}</span>
+        <section className="mx-auto grid min-h-[calc(100svh-var(--header-height))] w-[calc(100%-2*var(--site-gutter))] max-w-[1320px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] content-center items-center justify-center gap-x-12 gap-y-10 py-[clamp(32px,5vh,64px)] [grid-template-areas:'left-word_qr_right-word'_'copy_copy_copy'] max-[1024px]:grid-cols-1 max-[1024px]:justify-items-center max-[1024px]:gap-8 max-[1024px]:py-[clamp(16px,3vh,48px)] max-[1024px]:[grid-template-areas:'heading'_'qr'_'copy'] max-[600px]:gap-7 max-[600px]:py-[clamp(16px,3vh,36px)]">
+          <h1 className="contents max-[1024px]:flex max-[1024px]:items-baseline max-[1024px]:justify-center max-[1024px]:gap-[.35em] max-[1024px]:whitespace-nowrap max-[1024px]:[grid-area:heading]">
+            <span className="justify-self-end text-right text-[clamp(52px,6.2vw,96px)] font-semibold leading-none tracking-[-.04em] text-balance [grid-area:left-word] max-[1024px]:justify-self-center max-[1024px]:text-center max-[1024px]:text-[clamp(24px,6.4vw,44px)] max-[1024px]:leading-[1.1] max-[600px]:text-[clamp(22px,6.5vw,36px)]">{t("heroLeft")}</span>
+            <span className="justify-self-start text-left text-[clamp(52px,6.2vw,96px)] font-semibold leading-none tracking-[-.04em] text-balance [grid-area:right-word] max-[1024px]:justify-self-center max-[1024px]:text-center max-[1024px]:text-[clamp(24px,6.4vw,44px)] max-[1024px]:leading-[1.1] max-[600px]:text-[clamp(22px,6.5vw,36px)]">{t("heroRight")}</span>
           </h1>
-          <div className="hero-qr">
+          <div className="flex justify-center [grid-area:qr] max-[1024px]:my-2 max-[600px]:my-2.5">
             <QrCodeShowcase />
           </div>
-          <div className="hero-copy">
-            <p className="whitespace-pre-line">{t("heroSummary")}</p>
+          <div className="mx-auto flex max-w-[44ch] flex-col items-center gap-5 text-center [grid-area:copy] max-[1024px]:max-w-[36ch]">
+            <p className="whitespace-pre-line text-lg leading-normal max-[600px]:text-[15px]">{t("heroSummary")}</p>
             <RegisterCta />
           </div>
         </section>
       </div>
 
-      <section className="section page-width flow-section">
-        <div className="section-heading">
-          <h2 id="ablauf">{t("flowTitle")}</h2>
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] border-t border-border py-[clamp(72px,9vw,128px)]">
+        <div className="mb-14 flex justify-center text-center max-[900px]:mb-10">
+          <h2 id="ablauf" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("flowTitle")}</h2>
         </div>
-        <div className="flow-grid items-start">
+        <div className="mx-auto grid max-w-[800px] grid-cols-2 items-start gap-x-12 gap-y-[clamp(56px,7vw,84px)] max-[900px]:gap-x-9 max-[900px]:gap-y-12 max-[600px]:grid-cols-1 max-[600px]:gap-y-14">
           {(["Scan", "Pay", "Kitchen"] as const).map((step, index) => (
             <article
-              className={`flex flex-col items-center w-full ${
+              className={`flex w-full min-w-0 flex-col items-center ${
                 step === "Kitchen"
-                  ? "col-span-full max-w-[800px] mx-auto"
+                  ? "col-span-full mx-auto max-w-[800px] max-[600px]:col-span-1"
                   : step === "Scan"
                     ? "max-w-[260px] mx-auto md:max-w-[230px] md:justify-self-start md:mx-0"
                     : "max-w-[260px] mx-auto md:max-w-[230px] md:justify-self-end md:mx-0"
@@ -104,12 +66,12 @@ export function MainPage() {
                     : "max-w-[250px] md:w-[255px] mx-auto"
                 }`}
               >
-                <span className="step-number shrink-0" aria-hidden="true">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums" aria-hidden="true">
                   {index + 1}
                 </span>
                 <div className="flex flex-col items-start text-left">
-                  <h3 className="text-left">{t(`flow${step}`)}</h3>
-                  <p className="text-sm text-[var(--site-muted)] mt-1.5 text-left text-balance">
+                  <h3 className="text-left text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(`flow${step}`)}</h3>
+                  <p className="mt-1.5 text-left text-sm leading-relaxed text-muted-foreground text-balance">
                     {t(`flow${step}Text`)}
                   </p>
                 </div>
@@ -119,80 +81,81 @@ export function MainPage() {
         </div>
       </section>
 
-      <section className="section page-width benefits-section">
-        <div>
-          <h2>{t("benefitTitle")}</h2>
-          <p className="section-copy">{t("benefitService")}</p>
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 border-t border-border py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+        <div className="flex flex-col items-center justify-center text-center">
+          <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("benefitTitle")}</h2>
+          <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("benefitService")}</p>
         </div>
-        <div className="benefit-evidence">
-          <p className="caption">{t("benefitPrefix")}</p>
+        <div className="flex flex-col items-center text-center">
+          <p className="text-[13px] text-muted-foreground">{t("benefitPrefix")}</p>
           <AnimatedBenefitStat target={30} unit="%" />
-          <h3>{t("benefitMetric")}</h3>
+          <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t("benefitMetric")}</h3>
           <a
             href={t("benefitSourceUrl")}
             target="_blank"
             rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center justify-center text-center text-[13px] underline underline-offset-4 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {t("benefitSource")}
           </a>
         </div>
       </section>
 
-      <section className="section setup-section">
-        <div className="page-width setup-grid">
-          <div>
-            <h2>{t("setupTitle")}</h2>
-            <p className="section-copy">{t("setupNote")}</p>
+      <section data-dark-surface className="bg-primary py-[clamp(72px,9vw,128px)] text-primary-foreground">
+        <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+          <div className="flex flex-col items-start justify-center text-left">
+            <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("setupTitle")}</h2>
+            <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-white/75">{t("setupNote")}</p>
           </div>
-          <ol className="setup-list">
+          <ol className="flex w-full flex-col items-center self-center">
             {steps.map((step, index) => (
-              <li key={step}>
-                <span className="step-number">{index + 1}</span>
-                <h3>{t(step)}</h3>
+              <li key={step} className="flex w-full max-w-[340px] items-center gap-4 border-b border-white/20 py-7 text-left first:pt-0 last:border-0 last:pb-0">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-background font-inter text-sm font-semibold text-foreground tabular-nums">{index + 1}</span>
+                <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(step)}</h3>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <section className="section page-width pricing-section">
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
         <div className="flex flex-col items-center text-center justify-center">
-          <h2 id="kosten">{t("feeTitle")}</h2>
-          <p className="section-copy">{t("feePromise")}</p>
+          <h2 id="kosten" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("feeTitle")}</h2>
+          <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("feePromise")}</p>
         </div>
         <div className="flex flex-col items-center justify-center text-center self-center">
           <div className="flex flex-col items-center text-center gap-1.5 sm:gap-2">
-            <p className="text-2xl sm:text-3xl font-semibold tracking-tight text-black">
+            <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
               {t("feeNoSetup")}
             </p>
-            <p className="text-2xl sm:text-3xl font-semibold tracking-tight text-black">
+            <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
               {t("feeNoMonthly")}
             </p>
           </div>
           <div className="mt-5 sm:mt-6 flex flex-col items-center text-center">
-            <p className="text-base sm:text-lg font-medium text-black">
+            <p className="text-base font-medium sm:text-lg">
               <span className="font-inter tabular-nums">{t("feeNumber")}</span>
               <span>{t("feeUnit")}</span>
               {" "}
               <span>{t("feeLabel")}</span>
             </p>
-            <p className="text-xs text-[var(--site-muted)] mt-1.5 text-center">
+            <p className="mt-1.5 text-center text-xs text-muted-foreground">
               {t("feeNote")}
             </p>
           </div>
         </div>
       </section>
 
-      <section className="section page-width faq-section">
-        <h2 id="faq">{t("faqTitle")}</h2>
-        <div className="faq-list">
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 border-t border-border py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+        <h2 id="faq" className="scroll-mt-8 text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("faqTitle")}</h2>
+        <div>
           {questions.map((question) => (
-            <details key={question}>
-              <summary>
+            <details key={question} className="group border-b border-border first:border-t">
+              <summary className="flex min-h-[76px] cursor-pointer list-none items-center justify-between gap-6 py-5 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
                 {t(question)}
-                <Plus aria-hidden="true" />
+                <Plus size={18} aria-hidden="true" className="shrink-0 transition-transform duration-150 group-open:rotate-45 motion-reduce:transition-none" />
               </summary>
-              <p>{numericText(t(`${question}Answer`))}</p>
+              <p className="pr-[30px] pb-6 text-sm leading-relaxed text-muted-foreground">{numericText(t(`${question}Answer`))}</p>
             </details>
           ))}
         </div>

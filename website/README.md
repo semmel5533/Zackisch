@@ -1,6 +1,6 @@
 # Marketing website
 
-This is the bilingual, static Next.js marketing site for restaurant operators. The registration destination is the separate web app. [`next.config.ts`](next.config.ts) sets `output: "export"` and unoptimized images, so `npm run build` writes `out/` for static hosting. The [root overview](../README.md), [product scope](../PRODUCT.md), and [design reference](../DESIGN.md) provide shared context.
+This is the bilingual, static Next.js marketing site for restaurant operators. The registration destination is the separate web app. [`next.config.ts`](next.config.ts) sets `output: "export"` and unoptimized images, so `npm run build` writes `out/` for static hosting. The [root overview](../README.md), [product scope](../PRODUCT.md), [design reference](../DESIGN.md), and [UX research](../docs/ux-research.md) provide shared context.
 
 ## Pages and localization
 
@@ -8,9 +8,11 @@ The supported locale paths are `/de-de` and `/de-en`; [region configuration](lib
 
 The site shows the ordering flow, setup steps, fees, FAQ, product captures, and legal links ([MainPage](components/MainPage.tsx)). Pricing copy states zero setup and monthly base fees, 2% zakkig fee per order, plus variable payment provider fees ([translations](lib/translations.ts), [calculation in web app](../webapp/lib/platform-fee.ts)). The benefits section attributes an industry example of up to 30% higher revenue to Microsoft's coverage of me&u. It is neither a measured zakkig result nor a promised outcome; see the [attributed source](https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/) and [product note](../PRODUCT.md#revenue-evidence).
 
+The [shared button variants](components/ui/button-variants.ts) give registration a black primary action and returning-user sign-in a bordered outline action; the [header](components/Header.tsx) uses translated native anchor destinations and a mobile menu that closes on Escape and returns focus. The site shares the 4px spacing scale, semantic neutral colors, 44px default actions, and 20px card corners with the web app ([website theme](app/globals.css), [design reference](../docs/design-system.md#ds-07-marketing-website)). Static presentation is authored in Tailwind JSX. Global CSS holds tokens, fonts, resets, and reduced-motion behavior; the native [region dialog](components/RegionLanguageModal.tsx) uses Tailwind backdrop and entrance utilities.
+
 ## Product images and QR example
 
-[`public/product/`](public/product/) contains German and English WebP captures made from the isolated [marketing fixture](../webapp/tools/marketing-demo/). The fixture has seeded menu/cart data and disabled mutation adapters, so its images show the current UI presentation, not a live order. To regenerate, run from `webapp/`:
+[`public/product/`](public/product/) contains German and English WebP captures made from the isolated [marketing fixture](../webapp/tools/marketing-demo/). The fixture has seeded menu/cart data and disabled mutation adapters, so its images illustrate a product flow, not a live order. Regenerate the captures after UI changes before treating them as current. Run from `webapp/`:
 
 ```sh
 node node_modules/vite/bin/vite.js --config tools/marketing-demo/vite.config.ts
@@ -22,6 +24,6 @@ The fixture uses illustrative Unsplash photography for fictional items: [Burrata
 
 ## Development and checks
 
-From `website/`, run `npm ci`, `npm run dev` (port 3000), `npm run typecheck`, and `npm run build` ([scripts](package.json)). There is no website `.env.example` and no environment variable read in its app/components/lib source. `npm run lint` invokes removed `next lint` and is not a working gate. The local typecheck passed on 2026-09-23; a static build and visual inspection are still required for shipping a page change.
+From `website/`, run `npm ci`, `npm run dev` (port 3000), `npm run typecheck`, and `npm run build` ([scripts](package.json)). There is no website `.env.example` and no environment variable read in its app/components/lib source. `npm run lint` invokes removed `next lint` and is not a working gate. Typecheck and static build passed locally on 2026-09-23; review the finished page visually before shipping further changes.
 
 Inspect `/de-de` and `/de-en` at desktop, tablet, and 320px widths; check product images, responsive navigation, FAQ, locale dialog apply/cancel/Escape, legal route retention, and registration/login/email links. Review the legal copy and third-party attribution separately before publishing. See [deployment and configuration](../docs/architecture.md#configuration-and-builds) for the relationship between this static build and the Worker app.

@@ -46,6 +46,7 @@ import {
   CaretDown,
   CaretUp,
   Check,
+  ArrowsDownUp,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
@@ -54,6 +55,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -213,6 +215,7 @@ export function MenuContent({
     null,
   );
   const isCreatingCategoryRef = useRef(false);
+  const pendingAvailabilityIdsRef = useRef(new Set<string>());
 
   // Collapsed categories state (map of categoryId -> isCollapsed)
   const [collapsedCategories, setCollapsedCategories] = useState<
@@ -474,6 +477,56 @@ export function MenuContent({
     }
   };
 
+  const moveCategory = useCallback((categoryId: string, direction: -1 | 1) => {
+    const index = categories.findIndex((category) => category.$id === categoryId);
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= categories.length) return;
+    const next = arrayMove(categories, index, target);
+    setCategories(next);
+    startTransition(async () => {
+      try {
+        const result = await reorderCategoriesAction(organizationId, next.map((category) => category.$id));
+        if (result?.error) {
+          toast.error(result.error);
+          setCategories(categories);
+        }
+      } catch {
+        toast.error(t("error"));
+        setCategories(categories);
+      }
+    });
+  }, [categories, organizationId, t]);
+
+  const moveItem = useCallback((itemId: string, direction: -1 | 1) => {
+    const item = items.find((entry) => entry.$id === itemId);
+    if (!item) return;
+    const siblings = items.filter((entry) => entry.categoryId === item.categoryId);
+    const index = siblings.findIndex((entry) => entry.$id === itemId);
+    const target = index + direction;
+    if (target < 0 || target >= siblings.length) return;
+    const moved = arrayMove(siblings, index, target);
+    const orderById = new Map(moved.map((entry, position) => [entry.$id, position]));
+    const next = items.map((entry) =>
+      entry.categoryId === item.categoryId
+        ? { ...entry, sortOrder: orderById.get(entry.$id) ?? entry.sortOrder }
+        : entry,
+    ).sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+    setItems(next);
+    const updates = next.map((entry) => ({ id: entry.$id, sortOrder: entry.sortOrder, categoryId: entry.categoryId }));
+    startTransition(async () => {
+      try {
+        const result = await reorderItemsAction(organizationId, updates);
+        if (result?.error) {
+          toast.error(result.error);
+          setItems(items);
+        }
+      } catch {
+        toast.error(t("error"));
+        setItems(items);
+      }
+    });
+  }, [items, organizationId, t]);
+
   // In-place category creation handler
   async function openNewCategory() {
     if (isCreatingCategoryRef.current) return;
@@ -600,7 +653,16 @@ export function MenuContent({
 
   const handleToggleAvailability = useCallback(
     (itemId: string, available: boolean) => {
-      setItems((prevItems) =>
+      if (pendingAvailabilityIdsRef.current.has(itemId)) return;
+      pendingAvailabilityIdsRef.current.add(itemId);
+      void (async () => {
+        try {
+          const res = await toggleMenuItemAvailability(itemId, available, organizationId);
+          if (res?.error) {
+            toast.error(res.error);
+            return;
+          }
+          setItems((prevItems) =>
         prevItems.map((i) => {
           if (i.$id !== itemId) return i;
           if (i.customizations) {
@@ -627,21 +689,15 @@ export function MenuContent({
           }
           return { ...i, available };
         }),
-      );
-      startTransition(async () => {
-        const res = await toggleMenuItemAvailability(
-          itemId,
-          available,
-          organizationId,
         );
-        if (res?.error) {
-          toast.error(res.error);
-          // Rollback optimistic update
-          setItems(initialItems);
+        } catch {
+          toast.error(t("error"));
+        } finally {
+          pendingAvailabilityIdsRef.current.delete(itemId);
         }
-      });
+      })();
     },
-    [initialItems, organizationId],
+    [organizationId, t],
   );
 
   return (
@@ -710,6 +766,10 @@ export function MenuContent({
                       onEditItem={openEditItem}
                       onDeleteItem={handleDeleteItem}
                       onToggleAvailability={handleToggleAvailability}
+                      onMoveCategory={moveCategory}
+                      onMoveItem={moveItem}
+                      canMoveUp={categories.indexOf(category) > 0}
+                      canMoveDown={categories.indexOf(category) < categories.length - 1}
                     />
                   ))}
                   {categories.length % 2 === 0 && (
@@ -735,6 +795,10 @@ export function MenuContent({
                       onEditItem={openEditItem}
                       onDeleteItem={handleDeleteItem}
                       onToggleAvailability={handleToggleAvailability}
+                      onMoveCategory={moveCategory}
+                      onMoveItem={moveItem}
+                      canMoveUp={categories.indexOf(category) > 0}
+                      canMoveDown={categories.indexOf(category) < categories.length - 1}
                     />
                   ))}
                   {categories.length % 2 === 1 && (
@@ -759,6 +823,10 @@ export function MenuContent({
                     onEditItem={openEditItem}
                     onDeleteItem={handleDeleteItem}
                     onToggleAvailability={handleToggleAvailability}
+                    onMoveCategory={moveCategory}
+                    onMoveItem={moveItem}
+                    canMoveUp={categories.indexOf(category) > 0}
+                    canMoveDown={categories.indexOf(category) < categories.length - 1}
                   />
                 ))}
 
@@ -774,7 +842,7 @@ export function MenuContent({
             }}
           >
             {activeItem ? (
-              <div className="opacity-95 shadow-2xl scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background">
+              <div className="opacity-95 scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background">
                 <ItemRowView
                   item={activeItem}
                   onEdit={() => {}}
@@ -810,7 +878,7 @@ export function MenuContent({
         open={!!deleteConfirm}
         onOpenChange={(open) => !open && setDeleteConfirm(null)}
       >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
             <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
               {deleteConfirm?.type === "category"
@@ -849,7 +917,7 @@ export function MenuContent({
               type="button"
               variant="destructive"
               onClick={confirmDelete}
-              className="w-full sm:flex-1 rounded-full h-11 gap-2 font-semibold cursor-pointer active:scale-[0.98] transition-all"
+              className="w-full sm:flex-1"
             >
               <Trash className="h-4 w-4 shrink-0" weight="bold" />
               <span>{t("delete")}</span>
@@ -868,7 +936,7 @@ function AddCategoryCardButton({ onClick }: { onClick: () => void }) {
       type="button"
       variant="ghost"
       onClick={onClick}
-      className="w-full h-[140px] rounded-xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/5 gap-2 transition-all cursor-pointer active:scale-[0.99]"
+      className="w-full h-[140px] rounded-xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/5 gap-2 transition-[color,background-color,border-color,transform] duration-150 motion-reduce:transition-none cursor-pointer active:scale-[0.98] motion-reduce:active:scale-100"
     >
       <Plus className="h-5 w-5 shrink-0" weight="bold" />
       <span>{t("addCategory")}</span>
@@ -890,6 +958,10 @@ interface SortableCategoryCardProps {
   onEditItem: (item: MenuItem) => void;
   onDeleteItem: (item: MenuItem) => void;
   onToggleAvailability: (itemId: string, available: boolean) => void;
+  onMoveCategory: (categoryId: string, direction: -1 | 1) => void;
+  onMoveItem: (itemId: string, direction: -1 | 1) => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
 }
 
 const SortableCategoryCard = memo(function SortableCategoryCard({
@@ -904,6 +976,10 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
   onEditItem,
   onDeleteItem,
   onToggleAvailability,
+  onMoveCategory,
+  onMoveItem,
+  canMoveUp,
+  canMoveDown,
 }: SortableCategoryCardProps) {
   const { t } = useTranslation();
   const [isEditingName, setIsEditingName] = useState(autoEditName);
@@ -1055,7 +1131,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                     setIsEditingName(true);
                   }}
                   className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 transition-colors cursor-pointer"
-                  title="Kategoriename bearbeiten"
+                  title={t("editCategory")}
                 >
                   <PencilSimple className="h-4 w-4" />
                 </Button>
@@ -1074,7 +1150,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
               size="icon"
               onClick={() => onToggleCollapse(category.$id)}
               className="rounded-full text-muted-foreground hover:text-foreground shrink-0"
-              title={isCollapsed ? "Aufklappen" : "Einklappen"}
+              title={isCollapsed ? t("expand") : t("collapse")}
             >
               {isCollapsed ? (
                 <CaretDown className="h-4 w-4" weight="bold" />
@@ -1084,6 +1160,17 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
             </Button>
 
             <div className="flex items-center gap-1.5 shrink-0">
+              <DropdownMenu>
+                <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={t("reorder")} title={t("reorder")} />}>
+                  <ArrowsDownUp className="size-4" weight="bold" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem disabled={!canMoveUp} onClick={() => onMoveCategory(category.$id, -1)}>{t("moveUp")}</DropdownMenuItem>
+                    <DropdownMenuItem disabled={!canMoveDown} onClick={() => onMoveCategory(category.$id, 1)}>{t("moveDown")}</DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button
                 variant="outline"
                 size="default"
@@ -1112,13 +1199,16 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                     </p>
                   </div>
                 ) : (
-                  categoryItems.map((item) => (
+                  categoryItems.map((item, index) => (
                     <SortableItemRow
                       key={item.$id}
                       item={item}
                       onEdit={onEditItem}
                       onDelete={onDeleteItem}
                       onToggleAvailability={onToggleAvailability}
+                      onMove={onMoveItem}
+                      canMoveUp={index > 0}
+                      canMoveDown={index < categoryItems.length - 1}
                     />
                   ))
                 )}
@@ -1147,6 +1237,9 @@ interface ItemRowViewProps {
   onEdit: () => void;
   onDelete: () => void;
   onToggleAvailability: (available: boolean) => void;
+  onMove?: (direction: -1 | 1) => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
   attributes?: Record<string, any>;
   listeners?: Record<string, any>;
   isDragging?: boolean;
@@ -1159,6 +1252,9 @@ const ItemRowView = memo(function ItemRowView({
   onEdit,
   onDelete,
   onToggleAvailability,
+  onMove,
+  canMoveUp,
+  canMoveDown,
   attributes,
   listeners,
   isDragging,
@@ -1184,12 +1280,12 @@ const ItemRowView = memo(function ItemRowView({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex flex-col h-full rounded-xl border overflow-hidden touch-none shadow-sm transition-all",
+        "flex flex-col h-full rounded-xl border overflow-hidden touch-none transition-colors",
         isDragging
           ? "opacity-20 bg-muted/30 border-border/40"
           : !item.available
           ? "opacity-65 bg-muted/30 border-dashed border-border/70"
-          : "opacity-100 bg-background hover:shadow-md",
+          : "opacity-100 bg-background hover:border-foreground/25",
       )}
     >
       {/* Top Image */}
@@ -1201,7 +1297,7 @@ const ItemRowView = memo(function ItemRowView({
             fill
             sizes="(max-width: 768px) 100vw, 500px"
             className={cn(
-              "object-cover transition-all",
+              "object-cover transition-[filter,opacity] duration-150",
               !item.available && "grayscale opacity-75",
             )}
             unoptimized
@@ -1273,6 +1369,17 @@ const ItemRowView = memo(function ItemRowView({
             />
 
             <div className="flex items-center gap-1.5 shrink-0">
+              {onMove && <DropdownMenu>
+                <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={t("reorder")} title={t("reorder")} />}>
+                  <ArrowsDownUp className="size-4" weight="bold" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem disabled={!canMoveUp} onClick={() => onMove(-1)}>{t("moveUp")}</DropdownMenuItem>
+                    <DropdownMenuItem disabled={!canMoveDown} onClick={() => onMove(1)}>{t("moveDown")}</DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>}
               <Button
                 variant="ghost"
                 size="icon"
@@ -1304,6 +1411,9 @@ interface SortableItemRowProps {
   onEdit: (item: MenuItem) => void;
   onDelete: (item: MenuItem) => void;
   onToggleAvailability: (itemId: string, available: boolean) => void;
+  onMove: (itemId: string, direction: -1 | 1) => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
 }
 
 const SortableItemRow = memo(function SortableItemRow(
@@ -1349,6 +1459,9 @@ const SortableItemRow = memo(function SortableItemRow(
       onEdit={handleEdit}
       onDelete={handleDelete}
       onToggleAvailability={handleToggle}
+      onMove={(direction) => props.onMove(props.item.$id, direction)}
+      canMoveUp={props.canMoveUp}
+      canMoveDown={props.canMoveDown}
       setNodeRef={setNodeRef}
       style={style}
       attributes={attributes}
@@ -1372,7 +1485,7 @@ function CategoryCardOverlay({
   const { t } = useTranslation();
 
   return (
-    <Card className="w-full opacity-95 shadow-2xl scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background @container pointer-events-none">
+    <Card className="w-full opacity-95 scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background @container pointer-events-none">
       <CardHeader className="flex flex-col pb-2 gap-2 w-full">
         <div className="flex items-center gap-3 min-w-0 flex-1 w-full">
           <button
@@ -1391,7 +1504,7 @@ function CategoryCardOverlay({
               variant="ghost"
               size="icon"
               className="h-7 w-7 rounded-lg text-muted-foreground shrink-0"
-              title="Kategoriename bearbeiten"
+              title={t("editCategory")}
             >
               <PencilSimple className="h-4 w-4" />
             </Button>

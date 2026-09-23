@@ -37,14 +37,6 @@ import { toast } from "sonner";
 
 export default function SignInPage() {
   const [state, formAction, isPending] = useActionState(signInAction, {});
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (state.error) {
-      toast.error(t(state.error as any));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
 
   if (state.requiresOtp) {
     return <OtpForm state={state} />;
@@ -56,7 +48,7 @@ export default function SignInPage() {
 }
 
 function OtpForm({ state }: { state: any }) {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [countdown, setCountdown] = useState(60);
@@ -68,6 +60,7 @@ function OtpForm({ state }: { state: any }) {
     () => Date.now() + 30 * 60 * 1000,
   );
   const [isExpired, setIsExpired] = useState(false);
+  const [otpError, setOtpError] = useState("");
 
   useEffect(() => {
     if (countdown > 0) {
@@ -94,7 +87,7 @@ function OtpForm({ state }: { state: any }) {
       if (typeof res.attemptsRemaining === "number") {
         setAttemptsRemaining(res.attemptsRemaining);
       } else {
-        toast.error(t(res.error as any));
+        setOtpError(t(res.error as any));
       }
     }
   };
@@ -115,6 +108,7 @@ function OtpForm({ state }: { state: any }) {
     setAttemptsRemaining(null);
     setCountdown(60);
     setOtp("");
+    setOtpError("");
     const res = await resendOtpAction(state.userId, state.email);
     if (res?.success) {
       setOtpExpiresAt(Date.now() + 30 * 60 * 1000);
@@ -173,9 +167,12 @@ function OtpForm({ state }: { state: any }) {
               <InputOTP
                 maxLength={6}
                 value={otp}
+                aria-invalid={!!otpError}
+                aria-describedby={otpError ? "sign-in-otp-error" : undefined}
                 onChange={(val) => {
                   if (isLockedOut || isExpired) return;
                   setOtp(val);
+                  setOtpError("");
                   if (val.length === 6) {
                     submitOtp(val);
                   }
@@ -212,6 +209,15 @@ function OtpForm({ state }: { state: any }) {
               </InputOTP>
             </div>
           </div>
+          {otpError && (
+            <p
+              id="sign-in-otp-error"
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {otpError}
+            </p>
+          )}
           <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button
@@ -265,7 +271,7 @@ function SignInForm({
   formAction: (payload: FormData) => void;
   isPending: boolean;
 }) {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -288,6 +294,7 @@ function SignInForm({
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      document.getElementById(errors.email ? "email" : "password")?.focus();
     } else {
       setFieldErrors({});
       startTransition(() => {
@@ -342,10 +349,19 @@ function SignInForm({
               placeholder={t("emailPlaceholder")}
               autoComplete="email"
               maxLength={100}
-              className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.email ? "border-destructive" : ""}`}
+              aria-invalid={!!fieldErrors.email}
+              aria-describedby={fieldErrors.email ? "email-error" : undefined}
+              onChange={() =>
+                setFieldErrors((errors) => ({ ...errors, email: "" }))
+              }
+              className={fieldErrors.email ? "border-destructive" : undefined}
             />
             {fieldErrors.email && (
-              <span className="text-sm text-destructive">
+              <span
+                id="email-error"
+                role="alert"
+                className="w-full text-left text-sm font-medium text-destructive"
+              >
                 {fieldErrors.email}
               </span>
             )}
@@ -373,13 +389,26 @@ function SignInForm({
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 maxLength={100}
-                className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.password ? "border-destructive pr-10" : "pr-10"}`}
+                aria-invalid={!!fieldErrors.password}
+                aria-describedby={
+                  fieldErrors.password ? "password-error" : undefined
+                }
+                onChange={() =>
+                  setFieldErrors((errors) => ({ ...errors, password: "" }))
+                }
+                className={
+                  fieldErrors.password ? "border-destructive pr-10" : "pr-10"
+                }
               />
               <button
-                className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                className="absolute right-2 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 title={showPassword ? t("hidePassword") : t("showPassword")}
+                aria-label={
+                  showPassword ? t("hidePassword") : t("showPassword")
+                }
+                aria-pressed={showPassword}
               >
                 {showPassword ? (
                   <EyeSlash
@@ -395,15 +424,27 @@ function SignInForm({
               </button>
             </div>
             {fieldErrors.password && (
-              <span className="text-sm text-destructive">
+              <span
+                id="password-error"
+                role="alert"
+                className="w-full text-left text-sm font-medium text-destructive"
+              >
                 {fieldErrors.password}
               </span>
             )}
           </div>
 
+          {state.error && (
+            <p
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {t(state.error as any)}
+            </p>
+          )}
           <Button
             type="submit"
-            className="w-full h-11 gap-2 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 transition-all active:scale-[0.98]"
+            className="w-full gap-2 text-base"
             disabled={isPending}
           >
             {isPending ? (

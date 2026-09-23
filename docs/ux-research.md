@@ -1,0 +1,59 @@
+# UX research and design decisions
+
+Research reviewed on 23 September 2026. This reference explains the evidence behind zakkig's design rules. [DESIGN.md](../DESIGN.md) defines the system; the [component reference](design-system.md) describes its implementation.
+
+## How to interpret the evidence
+
+Accessibility standards define testable requirements. Usability studies identify observed difficulties and useful patterns. Randomized A/B tests estimate effects for a particular population, implementation, and outcome. These are different kinds of evidence.
+
+None of the sources below establishes a universal conversion advantage for black buttons, pill shapes, Poppins, a particular corner radius, or a four-pixel spacing scale. Those are zakkig's branding and maintenance decisions. A consistent implementation makes them easier to recognize and reuse; their business impact requires local measurement.
+
+## Clear actions and familiar patterns
+
+Use a prominent primary action for the current task, an outline action for an alternative, and a quiet action for supporting navigation. Descriptive labels explain what happens next. The same operation keeps the same name and control treatment across website, guest ordering, and restaurant operations. This follows the recognition principle and consistent identification guidance, rather than a claimed conversion percentage. [NNGroup: recognition and recall](https://www.nngroup.com/articles/recognition-and-recall/), [W3C: consistent identification](https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html).
+
+Keep the website's next step explicit and distinguish registration from returning-user sign-in. GOV.UK advises avoiding multiple competing primary buttons. Its service-specific button research does not justify copying its green brand color into zakkig. [GOV.UK: button](https://design-system.service.gov.uk/components/button/).
+
+Show common operations directly. Put specialized settings behind clearly named controls when doing so reduces distraction. Required selections, prices, fulfillment information, order status, and important errors remain visible. Progressive disclosure is a way to organize a task, not a reason to hide necessary information. [NNGroup: progressive disclosure](https://www.nngroup.com/articles/progressive-disclosure/).
+
+Do not impose an arbitrary maximum number of merchant products or customization options. A meta-analysis covering 63 experimental conditions and 5,036 participants found an average choice-overload effect close to zero, with substantial variation. Reduce presentation complexity and improve grouping instead of assuming that fewer choices always improve outcomes. [Scheibehenne, Greifeneder and Todd: choice overload meta-analysis](https://doi.org/10.1086/651235).
+
+## Forms, carts, and recovery
+
+Ask for information the task needs. The number of fields a person must consider matters more than minimizing the number of screens at any cost. Preserve review and payment boundaries where they clarify the transaction. Baymard's 2024 checkout work used more than 200 moderated sessions; it is qualitative usability evidence, not a randomized restaurant-ordering conversion trial. [Baymard: checkout research](https://baymard.com/research-articles/checkout-2024-launch), [Baymard: form fields and checkout effort](https://baymard.com/research-articles/checkout-flow-average-form-fields).
+
+Keep entered values after a failed submission. Associate errors with their fields, explain how to recover, and move focus to the relevant error or invalid field when appropriate. A toast must not duplicate an error already visible in the form. Operational status belongs near the operation; a transient notification is insufficient for information needed to continue. [GOV.UK: error summary](https://design-system.service.gov.uk/components/error-summary/), [GOV.UK: notification banner](https://design-system.service.gov.uk/components/notification-banner/).
+
+Cart quantities have explicitly labeled increase and decrease controls. Totals update with the quantity, and reducing the last item to zero produces a usable empty state. Selected modifiers stay readable in the cart and order detail. Baymard's quantity-control research supports direct updates and clear removal behavior; it does not provide a universal conversion uplift. [Baymard: quantity changes](https://baymard.com/research-articles/auto-update-users-quantity-changes).
+
+Routine order progression should not require repetitive confirmation. Destructive or consequential exceptions need a specific description of what will happen. Failed operations must preserve or restore the previous state and must never emit success feedback. Undo is appropriate only when the underlying operation can actually be reversed safely. [NNGroup: confirmation dialogs](https://www.nngroup.com/articles/confirmation-dialog/).
+
+## Accessibility and responsive behavior
+
+The acceptance criteria distinguish the WCAG requirement from zakkig's preferred sizing:
+
+| Area | Requirement and design application |
+| --- | --- |
+| Text contrast | At least 4.5:1 for ordinary text and 3:1 for qualifying large text. Muted text and placeholders remain readable. |
+| Control boundaries and states | Information needed to identify controls and their state has at least 3:1 contrast against adjacent colors. Decorative dividers do not need to look as strong as input boundaries. |
+| Pointer targets | WCAG 2.2 AA specifies 24 by 24 CSS pixels or its documented spacing exceptions. zakkig prefers 44px controls for common touch actions; compact desktop controls expand for coarse pointers. |
+| Reflow | Preserve content and functionality at 320 CSS pixels. An essential two-dimensional table may scroll within its own region; unrelated content must still reflow. |
+| Keyboard and focus | All actions are keyboard-operable. Dialog focus stays inside the open modal and returns to the trigger. Focus is visible and is not entirely hidden behind sticky controls or other authored content. |
+| Dragging | Provide a simple pointer alternative to drag operations where dragging is not essential. Keyboard drag support alone does not satisfy this pointer requirement. |
+| Motion | Respect reduced-motion preferences. Avoid unnecessary automatic movement and keep loading or status information understandable without animation. |
+
+These criteria derive from [W3C: text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html), [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html), [target size](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html), [reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html), [keyboard access](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html), [focus not obscured](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html), and [dragging movements](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html). Disabling nonessential interaction animation also follows the AAA [animation from interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html) guidance. A design rule or automated browser check alone is not a WCAG conformance assessment.
+
+## What controlled studies do and do not establish
+
+| Study | Reported result | Application and limit |
+| --- | --- | --- |
+| [Morkes and Nielsen: web writing](https://www.nngroup.com/articles/concise-scannable-and-objective-how-to-write-for-the-web/) | The combined concise, scannable, and objective writing treatment scored 124% higher on the study's usability measure than its promotional control. | Use concrete headings and factual, scannable copy. This 1997 result is a composite usability measure, not a sales or conversion uplift. |
+| [GDS: related links experiment](https://www.gov.uk/government/case-studies/how-gds-used-data-to-improve-content-and-user-journeys-on-govuk) | A randomized 50/50 experiment informed related-link improvements; the authors report a potential 20–40% reduction in internal searches. | Contextual navigation can help people find a next step. The result concerns a large government information site, not restaurant checkout completion. It does not justify adding recommendation machinery here. |
+| [Vodafone: performance experiment](https://web.dev/case-studies/vodafone) | A 50/50 test of visually and functionally identical landing pages reported 31% better LCP and 8% more sales for the optimized version. | Treat prompt rendering, stable image dimensions, and lightweight assets as design requirements. The telecom funnel, traffic mix, and redacted absolute metrics prevent transferring its uplift to zakkig. |
+
+## Local measurement
+
+For a zakkig experiment, define the hypothesis, eligible population, primary outcome, guardrail metrics, sample-size requirements, and analysis period before starting. Do not stop when a favorable number first appears or mistake a navigation click for completed work. Microsoft documents common interpretation errors and preparation practices for trustworthy experiments. [Microsoft: metric interpretation pitfalls](https://www.microsoft.com/en-us/research/publication/a-dirty-dozen-twelve-common-metric-interpretation-pitfalls-in-online-controlled-experiments/), [Microsoft: pre-experiment stage](https://www.microsoft.com/en-us/research/articles/patterns-of-trustworthy-experimentation-pre-experiment-stage/).
+
+Relevant outcomes are completed paid orders and error/retry rates for guests, task completion and incorrect status changes for staff, and completed qualified registrations for the website. Check accessibility, payment failures, accidental operations, and performance alongside the primary outcome. Use observed task-based usability tests when traffic is insufficient for a reliable A/B test. External research guides the design; only local evidence can establish its effect on zakkig.

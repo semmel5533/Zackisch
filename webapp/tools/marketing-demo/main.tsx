@@ -8,6 +8,7 @@ import type { Organization, MenuCategory, MenuItem, Order } from "@/lib/types";
 import "../../app/globals.css";
 import "./preview.css";
 const params = new URLSearchParams(location.search);
+const scenario = params.get("scenario");
 const locale = params.get("lang") === "en" ? "en" : "de";
 useLanguageStore.getState().setLocale(locale);
 const labels = {
@@ -148,27 +149,101 @@ items.push(
 );
 const pizzaCustomizations = [
   { stepName: labels.crustStep, optionName: labels.crustOpt, extraPrice: 0 },
-  { stepName: labels.extrasStep, optionName: labels.extrasOpt, extraPrice: 100 },
-  { stepName: labels.extrasStep, optionName: labels.extrasOpt2, extraPrice: 150 },
+  {
+    stepName: labels.extrasStep,
+    optionName: labels.extrasOpt,
+    extraPrice: 100,
+  },
+  {
+    stepName: labels.extrasStep,
+    optionName: labels.extrasOpt2,
+    extraPrice: 150,
+  },
 ];
+if (scenario === "modifiers") {
+  items.push({
+    ...base,
+    _id: "custom-pizza",
+    $id: "custom-pizza",
+    categoryId: "food",
+    name: labels.dish,
+    price: 1250,
+    available: true,
+    sortOrder: 2,
+    taxRate: 19,
+    customizations: JSON.stringify([
+      {
+        id: "crust",
+        name: labels.crustStep,
+        minSelections: 1,
+        maxSelections: 1,
+        includedCount: 1,
+        sortOrder: 0,
+        options: [
+          {
+            id: "sourdough",
+            name: labels.crustOpt,
+            extraPrice: 0,
+            available: true,
+            sortOrder: 0,
+          },
+          {
+            id: "unavailable",
+            name: "Unavailable",
+            extraPrice: 0,
+            available: false,
+            sortOrder: 1,
+          },
+        ],
+      },
+      {
+        id: "extras",
+        name: labels.extrasStep,
+        minSelections: 1,
+        maxSelections: 2,
+        includedCount: 1,
+        sortOrder: 1,
+        options: [
+          {
+            id: "olives",
+            name: labels.extrasOpt,
+            extraPrice: 100,
+            available: true,
+            sortOrder: 0,
+          },
+          {
+            id: "garlic",
+            name: labels.extrasOpt2,
+            extraPrice: 150,
+            available: true,
+            sortOrder: 1,
+          },
+        ],
+      },
+    ]),
+  });
+}
 useCartStore.setState({
-  items: [
-    {
-      id: "pizza-custom",
-      menuItemId: "pizza",
-      name: labels.dish,
-      price: 1500,
-      quantity: 1,
-      customizations: pizzaCustomizations,
-    },
-    {
-      id: "lemonade",
-      menuItemId: "lemonade",
-      name: labels.drink,
-      price: 450,
-      quantity: 1,
-    },
-  ],
+  items:
+    scenario === "empty-cart" || scenario === "modifiers"
+      ? []
+      : [
+          {
+            id: "pizza-custom",
+            menuItemId: "pizza",
+            name: labels.dish,
+            price: 1500,
+            quantity: 1,
+            customizations: pizzaCustomizations,
+          },
+          {
+            id: "lemonade",
+            menuItemId: "lemonade",
+            name: labels.drink,
+            price: 450,
+            quantity: 1,
+          },
+        ],
 });
 const orders = [1, 2, 3].map((n): Order => ({
   ...base,
@@ -201,7 +276,7 @@ const orders = [1, 2, 3].map((n): Order => ({
 }));
 createRoot(document.getElementById("root")!).render(
   params.get("screen") === "kitchen" ? (
-    <div className="kitchen-capture">
+    <div className="@container h-dvh p-6">
       <CurrentOrdersContent orders={orders} organizationId="demo" isStaffView />
     </div>
   ) : (
@@ -219,6 +294,18 @@ createRoot(document.getElementById("root")!).render(
           : "menu"
       }
       initialCheckoutOpen={params.get("screen") === "checkout"}
+      orderId={
+        scenario === "tracker-ready" || scenario === "tracker-completed"
+          ? "order-3"
+          : undefined
+      }
+      initialOrder={
+        scenario === "tracker-ready"
+          ? orders[2]
+          : scenario === "tracker-completed"
+            ? { ...orders[2], status: "completed" }
+            : undefined
+      }
     />
   ),
 );

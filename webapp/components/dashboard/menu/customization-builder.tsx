@@ -218,7 +218,7 @@ export function CustomizationBuilder({
           </SortableContext>
         </DndContext>
       ) : (
-        <div className="p-6 text-center border border-dashed border-border/80 rounded-2xl bg-muted/20">
+        <div className="p-6 text-center border border-dashed border-border/80 rounded-xl bg-muted/20">
           <p className="text-sm text-muted-foreground font-medium">
             {t("noStepsAdded")}
           </p>
@@ -229,7 +229,7 @@ export function CustomizationBuilder({
         type="button"
         variant="ghost"
         onClick={addStep}
-        className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-card hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.98] flex items-center justify-center cursor-pointer shadow-2xs"
+        className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-card hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-colors active:scale-[0.98] flex items-center justify-center cursor-pointer"
       >
         <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
         <span>{t("addStep")}</span>
@@ -325,7 +325,7 @@ function SortableStepCard({
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-card flex flex-col border border-border/80 rounded-2xl overflow-hidden shadow-xs hover:border-border transition-all"
+      className="bg-card flex flex-col border border-border/80 rounded-xl overflow-hidden hover:border-border transition-colors"
     >
       {/* Step Header */}
       <div
@@ -689,7 +689,7 @@ function SortableStepCard({
             <Button
               type="button"
               variant="ghost"
-              className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-background hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-all active:scale-[0.98] flex items-center justify-center cursor-pointer shadow-2xs"
+              className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-background hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-colors active:scale-[0.98] flex items-center justify-center cursor-pointer"
               onClick={onAddOption}
             >
               <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
@@ -735,7 +735,7 @@ function OptionRow({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-border/80 bg-background hover:border-foreground/25 hover:bg-muted/20 hover:shadow-xs transition-all duration-150"
+      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-border/80 bg-background hover:border-foreground/25 hover:bg-muted/20 transition-colors duration-150"
     >
       {/* Name line (Full width on mobile, flex-1 on desktop) */}
       <div className="flex items-center gap-2 w-full sm:flex-1 min-w-0">
@@ -758,6 +758,7 @@ function OptionRow({
           onBlur={onEditComplete}
           onKeyDown={(e) => {
             e.stopPropagation();
+            if (e.nativeEvent.isComposing) return;
             if (e.key === "Enter") onEditComplete?.();
             if (e.key === "Escape") onEditComplete?.();
           }}

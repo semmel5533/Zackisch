@@ -23,11 +23,22 @@ export default defineConfig({
         find: "next/image",
         replacement: fileURLToPath(new URL("./Image.tsx", import.meta.url)),
       },
+      {
+        find: "next/link",
+        replacement: fileURLToPath(new URL("./Link.tsx", import.meta.url)),
+      },
+      {
+        find: "next/dynamic",
+        replacement: fileURLToPath(new URL("./dynamic.tsx", import.meta.url)),
+      },
       ...[
         "next/navigation",
         "convex/react",
         "@/actions/checkout-actions",
         "@/actions/order-actions",
+        "@/actions/menu-actions",
+        "@/actions/settings-actions",
+        "@/actions/stripe-actions",
       ].map((find) => ({ find, replacement: stub })),
       { find: "@", replacement: app },
     ],

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Plus, Minus, ShoppingCart, ArrowLeft } from "@phosphor-icons/react";
+import { Plus, Minus, ShoppingCart, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
-import { useCartStore } from "@/store/cart-store";
+import { MAX_CART_ITEM_QUANTITY, useCartStore } from "@/store/cart-store";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -49,10 +49,10 @@ function GuestHeader({
       : t("titleToStayNoTable");
 
   return (
-    <header className="bg-primary text-primary-foreground relative z-20 flex flex-col items-center px-4 pt-4 pb-6 shrink-0">
+    <header className="bg-background text-foreground relative z-20 flex flex-col items-center px-4 pt-4 pb-6 shrink-0">
       <div className="max-w-[500px] w-full flex flex-col items-stretch">
-        {/* Lieferando-style Hero Banner Box with Bottom-Left Logo Box */}
-        <div className="relative w-full aspect-[2.3/1] rounded-[22px] sm:rounded-[26px] overflow-hidden bg-black border border-white/15 shadow-sm">
+        {/* Merchant banner and logo */}
+        <div className="relative w-full aspect-[2.3/1] rounded-xl sm:rounded-2xl overflow-hidden bg-muted border border-border">
           {organization.bannerFileId ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -61,13 +61,13 @@ function GuestHeader({
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-black" />
+            <div className="w-full h-full bg-muted" />
           )}
 
           {/* Bottom Row: Logo Box (Left), Language Switcher (Right) */}
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-10 flex items-end justify-between gap-2">
             {/* Left: Logo Box */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-neutral-900 rounded-[10px] sm:rounded-[12px] border border-white/20 flex items-center justify-center overflow-hidden shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-background rounded-lg border border-border flex items-center justify-center overflow-hidden shrink-0">
               {organization.logoFileId ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
@@ -76,15 +76,15 @@ function GuestHeader({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-neutral-900" />
+                <div className="w-full h-full bg-background" />
               )}
             </div>
 
             {/* Right: Language Switcher */}
             <div className="shrink-0 flex items-center justify-end">
               <LanguageSwitcher
-                variant="default"
-                className="w-10 h-10 p-0 bg-primary text-primary-foreground flex items-center justify-center rounded-full border border-primary-foreground/20 hover:bg-neutral-800 hover:text-primary-foreground shrink-0 shadow-sm transition-colors cursor-pointer"
+                variant="outline"
+                className="size-11 bg-background text-foreground border border-input hover:bg-muted shrink-0"
               />
             </div>
           </div>
@@ -92,14 +92,14 @@ function GuestHeader({
 
         {/* Restaurant Info */}
         <div id="header-text" className="w-full mt-3.5 flex flex-col">
-          <p className="text-sm sm:text-base font-semibold text-primary-foreground leading-snug mb-1">
+          <p className="text-sm sm:text-base font-semibold text-foreground leading-snug mb-1">
             {orderingSubtitle}
           </p>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-primary-foreground leading-tight">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-tight">
             {organization.name}
           </h1>
           {organization.address && (
-            <p className="text-xs sm:text-sm text-primary-foreground/75 font-medium mt-1 whitespace-pre-wrap">
+            <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1 whitespace-pre-wrap">
               {organization.address}
             </p>
           )}
@@ -118,11 +118,11 @@ function GuestOrderSuccess({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col min-h-screen bg-primary">
-      <header className="p-6 text-center text-primary-foreground shrink-0 max-w-[500px] mx-auto w-full">
+    <div className="flex flex-col min-h-screen bg-muted/30">
+      <header className="p-6 text-center text-foreground shrink-0 max-w-[500px] mx-auto w-full">
         <h2 className="text-xl font-bold tracking-tight">zakkig</h2>
       </header>
-      <div className="flex-1 bg-background text-foreground rounded-t-[2rem] md:rounded-[2rem] shadow-2xl flex flex-col items-center justify-center p-6 text-center space-y-6 md:my-4 max-w-[500px] mx-auto w-full border-t md:border border-primary-foreground/10">
+      <div className="flex-1 bg-background text-foreground md:rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-6 md:my-4 max-w-[500px] mx-auto w-full border-t md:border border-border">
         <div className="h-24 w-24 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-2">
           <CheckCircle className="h-12 w-12" />
         </div>
@@ -262,7 +262,7 @@ function GuestMenu({
       <div 
         id="category-nav"
         className={cn(
-          "sticky top-0 z-30 w-full bg-background border-b border-border shadow-xs overflow-hidden transition-all duration-150",
+          "sticky top-0 z-30 w-full bg-background border-b border-border overflow-hidden transition-[border-radius] duration-150",
           isSticky ? "rounded-none" : "rounded-t-[1.5rem]"
         )}
       >
@@ -280,7 +280,7 @@ function GuestMenu({
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium transition-colors border cursor-pointer",
                   activeCategory === c.$id
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    ? "bg-primary text-primary-foreground border-primary"
                     : "bg-background text-foreground border-border hover:bg-muted"
                 )}
               >
@@ -307,7 +307,7 @@ function GuestMenu({
                   return (
                     <Card
                       key={item.$id}
-                      className="overflow-hidden shadow-sm hover:shadow-md transition-shadow p-0 gap-0"
+                      className="overflow-hidden hover:border-foreground/25 transition-colors p-0 gap-0"
                     >
                       {item.imageId && (
                         <div className="relative w-full h-48 bg-muted">
@@ -335,9 +335,9 @@ function GuestMenu({
                           <button
                             type="button"
                             onClick={() => handleAddClick(item)}
-                            className="group relative w-full h-11 sm:h-12 rounded-full bg-primary hover:bg-neutral-800 text-primary-foreground transition-all duration-200 active:scale-[0.98] shadow-xs flex items-center p-1 cursor-pointer select-none"
+                            className="group relative w-full h-11 sm:h-12 rounded-full bg-primary hover:bg-neutral-800 text-primary-foreground transition-[background-color,transform] duration-150 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 flex items-center p-1 cursor-pointer select-none"
                           >
-                            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors shrink-0">
+                            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-background text-foreground flex items-center justify-center group-hover:bg-neutral-100 transition-colors shrink-0">
                               {totalQuantity > 0 ? (
                                 <span className="font-extrabold text-sm sm:text-base font-inter tabular-nums leading-none">
                                   {totalQuantity}
@@ -391,8 +391,9 @@ function CartHeader({
         <div className="flex items-center gap-3">
           <Button
             size="icon"
+            variant="outline"
             onClick={onBack}
-            className="h-9 w-9 rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 shadow-sm transition-colors shrink-0 cursor-pointer"
+            className="shrink-0"
             aria-label={t("backToMenu")}
           >
             <ArrowLeft weight="bold" className="h-5 w-5" />
@@ -403,8 +404,8 @@ function CartHeader({
         </div>
 
         <LanguageSwitcher
-          variant="default"
-          className="w-10 h-10 p-0 bg-primary text-primary-foreground flex items-center justify-center rounded-full hover:bg-neutral-800 hover:text-primary-foreground shadow-sm transition-colors cursor-pointer border-0 shrink-0"
+          variant="outline"
+          className="shrink-0"
         />
       </div>
     </header>
@@ -429,7 +430,7 @@ function GuestCart({
           </p>
           <Button
             size="lg"
-            className="mt-2 rounded-full font-bold h-12 px-8 text-base shadow-md bg-primary text-primary-foreground hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center"
+            className="mt-2 inline-flex"
             onClick={() => {
               setActiveTab("menu");
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -451,9 +452,9 @@ function GuestCart({
                 {item.customizations && item.customizations.length > 0 && (
                   <div className="flex flex-col items-start gap-1 mt-1.5">
                     {item.customizations.map((c, cIdx) => (
-                      <span
+                      <p
                         key={cIdx}
-                        className="inline-block max-w-full text-xs leading-normal text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-md border border-border/40 break-words"
+                        className="max-w-full text-xs leading-normal text-muted-foreground break-words"
                       >
                         {c.stepName ? (
                           <span className="font-medium text-foreground/80">
@@ -462,14 +463,16 @@ function GuestCart({
                         ) : null}
                         <span>{c.optionName}</span>
                         {typeof c.extraPrice === "number" && c.extraPrice > 0 && (
-                          <Price
-                            cents={c.extraPrice}
-                            prefix="(+"
-                            className="text-muted-foreground/80 font-normal whitespace-nowrap ml-1 text-xs"
-                            currencyClassName="ml-0.5"
-                          />
+                          <span className="ml-1 whitespace-nowrap">
+                            (<Price
+                              cents={c.extraPrice}
+                              prefix="+"
+                              className="text-muted-foreground font-normal text-xs"
+                              currencyClassName="ml-0.5"
+                            />)
+                          </span>
                         )}
-                      </span>
+                      </p>
                     ))}
                   </div>
                 )}
@@ -487,6 +490,7 @@ function GuestCart({
                     variant="ghost"
                     className="rounded-full cursor-pointer hover:bg-background"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    aria-label={`${item.quantity === 1 ? t("removeFromCart") : t("decreaseQuantity")}: ${item.name}`}
                   >
                     <Minus weight="bold" className="h-3.5 w-3.5" />
                   </Button>
@@ -498,10 +502,17 @@ function GuestCart({
                     variant="ghost"
                     className="rounded-full cursor-pointer hover:bg-background"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
+                    aria-label={`${t("increaseQuantity")}: ${item.name}`}
                   >
                     <Plus weight="bold" className="h-3.5 w-3.5" />
                   </Button>
                 </div>
+                {item.quantity >= MAX_CART_ITEM_QUANTITY && (
+                  <p className="w-full text-left text-sm font-medium text-destructive">
+                    {t("quantityLimitReached")}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -511,7 +522,7 @@ function GuestCart({
   );
 }
 
-function LieferandoCartBanner({
+function FloatingCartBanner({
   onOpenCart,
 }: {
   onOpenCart: () => void;
@@ -529,24 +540,25 @@ function LieferandoCartBanner({
       aria-label={t("cart")}
       className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-center pointer-events-none"
     >
-      <div className="w-full max-w-[500px] bg-background border-t border-border shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-t-[24px] px-4 pt-3.5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:pb-6 pointer-events-auto animate-in fade-in slide-in-from-bottom duration-300">
+      <div className="w-full max-w-[500px] bg-background border-t border-border shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-t-[24px] px-4 pt-3.5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:pb-6 pointer-events-auto animate-in fade-in slide-in-from-bottom duration-300 motion-reduce:animate-none">
         <button
           type="button"
           id="floating-cart-banner"
           onClick={onOpenCart}
-          className="group relative w-full h-12 sm:h-13 bg-primary hover:bg-neutral-800 text-primary-foreground rounded-full shadow-md p-1 sm:p-1.5 flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer select-none"
+          className="group relative flex h-12 sm:h-13 w-full items-center gap-2 rounded-full bg-primary p-1 sm:p-1.5 text-primary-foreground transition-[background-color,box-shadow,transform] duration-150 hover:bg-foreground/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 cursor-pointer select-none"
         >
-          <div className="h-10 w-10 rounded-full bg-background text-foreground flex items-center justify-center shadow-xs group-hover:bg-neutral-100 transition-colors shrink-0">
+          <div className="h-10 w-10 rounded-full bg-background text-foreground flex items-center justify-center group-hover:bg-neutral-100 transition-colors shrink-0">
             <span className="font-extrabold text-sm sm:text-base font-inter tabular-nums leading-none">
               {count}
             </span>
           </div>
 
-          <span className="font-bold text-base truncate text-center flex-1 px-3 text-primary-foreground">
+          <span className="min-w-0 flex-1 truncate px-1 text-center text-sm sm:text-base font-bold text-primary-foreground">
             {t("viewCart")}
           </span>
 
-          <Price cents={total()} className="font-bold text-base shrink-0 mr-3 sm:mr-4 text-primary-foreground" />
+          <Price cents={total()} className="shrink-0 text-sm sm:text-base font-bold text-primary-foreground" />
+          <ArrowRight className="mr-2 size-4 shrink-0" weight="bold" aria-hidden="true" />
         </button>
       </div>
     </aside>
@@ -646,8 +658,8 @@ export function GuestFrontend({
   return (
     <>
       {activeTab === "cart" ? (
-        <div className="h-dvh bg-primary text-foreground flex flex-col items-center overflow-hidden">
-          <div className="w-full max-w-[500px] bg-background h-full flex flex-col shadow-2xl overflow-hidden">
+        <div className="h-dvh bg-background text-foreground flex flex-col items-center overflow-hidden">
+          <div className="w-full max-w-[500px] bg-background h-full flex flex-col overflow-hidden">
             <CartHeader
               onBack={() => {
                 setActiveTab("menu");
@@ -687,7 +699,7 @@ export function GuestFrontend({
                 </div>
                 <Button
                   size="lg"
-                  className="w-full mt-3 rounded-full font-bold h-12 text-base shadow-md bg-primary text-primary-foreground hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer"
+                  className="w-full mt-3"
                   onClick={() => setCheckoutOpen(true)}
                 >
                   {t("checkout")}
@@ -697,7 +709,7 @@ export function GuestFrontend({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col min-h-screen bg-primary overflow-x-clip">
+        <div className="flex flex-col min-h-screen bg-background overflow-x-clip">
           <GuestHeader
             organization={organization}
             type={type}
@@ -705,14 +717,14 @@ export function GuestFrontend({
           />
 
           {/* Main Section as rounded white Card inside dark canvas */}
-          <div className="flex-1 bg-background text-foreground shadow-2xl flex flex-col max-w-[500px] mx-auto w-full rounded-t-[1.5rem]">
+          <div className="flex-1 bg-background text-foreground flex flex-col max-w-[500px] mx-auto w-full rounded-t-[1.5rem]">
             <GuestMenu
               categories={categories}
               items={items}
             />
           </div>
 
-          <LieferandoCartBanner
+          <FloatingCartBanner
             onOpenCart={() => {
               setActiveTab("cart");
               window.scrollTo({ top: 0, behavior: "smooth" });

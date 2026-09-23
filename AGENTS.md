@@ -1,4 +1,4 @@
-These rules describe required implementation targets. [DESIGN.md](DESIGN.md) summarizes the intended visual system; [docs/design-system.md](docs/design-system.md) records source-backed UI details and current deviations; [docs/documentation-audit.md](docs/documentation-audit.md) records other known implementation gaps. A documented deviation does not waive a rule below.
+These rules describe required implementation targets. [DESIGN.md](DESIGN.md) summarizes the intended visual system; [docs/design-system.md](docs/design-system.md) records source-backed UI details and current deviations; [docs/ux-research.md](docs/ux-research.md) explains supporting UX evidence; [docs/documentation-audit.md](docs/documentation-audit.md) records other known implementation gaps. A documented deviation does not waive a rule below.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
@@ -140,19 +140,16 @@ Follow this unified, multi-layered architecture for all features and changes:
 All dialogs, modals, and settings sheets across `webapp` and `website` strictly follow a unified Apple-inspired architecture:
 
 1. **Edge-to-Edge Dividers Rule (Komplett durchgezogene Trennlinien):**
-   - Horizontal dividing lines (`border-b border-zinc-100` under the dialog header and `border-t border-zinc-100` above the dialog footer) must ALWAYS run continuously from the left outer edge to the right outer edge of the dialog frame.
-   - Dividers must NEVER be indented, floating, or cut off inside content padding (no `p-6` with inset borders). They must use `border-zinc-100` for a delicate, crisp, ultra-clean Apple finish matching the website modal.
-   - The outer container uses `p-0 sm:p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col`.
+   - Header and footer dividers must run continuously from the left outer edge to the right outer edge of the dialog frame. Put the border on the full-width header/footer wrapper, outside its content padding; never inset or float it.
+   - Use light semantic surfaces (`bg-background text-foreground`) and a subtle semantic border. The frame is 20px on mobile, 24px on desktop, and uses an explicit dialog shadow. Ordinary theme shadow utilities are transparent.
 
 2. **Standardized Header & Typography:**
-   - Every dialog features a dedicated `DialogHeader` (`px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1`).
-   - Title: `DialogTitle` in `text-xl font-bold tracking-tight text-zinc-900 leading-tight`.
-   - Description: `DialogDescription` in `text-xs text-zinc-500 font-normal leading-relaxed mt-0.5`.
+   - Use a dedicated full-width header with `px-5 sm:px-6 py-4 sm:py-5`, a bottom divider, and left-aligned text.
+   - Use a `text-xl font-bold tracking-tight leading-tight` title in `text-foreground` and a small readable description in `text-muted-foreground`.
 
 3. **Standardized Footer & Action Buttons:**
-   - Every dialog with actions features a dedicated `DialogFooter` (`px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full`).
-   - Secondary / Abbrechen button: strictly `variant="outline"`, full-width responsive (`w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer`).
-   - Primary / Action button: strictly `bg-black text-white hover:bg-zinc-800 font-semibold rounded-full h-11 w-full sm:flex-1 active:scale-[0.98] transition-all cursor-pointer` (or `variant="destructive"` for deletions).
+   - Use a dedicated full-width footer with `px-5 sm:px-6 py-3.5 sm:py-4`, a top divider, stacked actions on mobile, and aligned actions on wider screens.
+   - Cancellation is an outline action; commitment is the primary action or destructive for deletion. Use shared 44px Button roles and responsive width rather than duplicating local color and focus recipes.
 
 4. **Modal Language Switcher Standard:**
    - Clicking any language switcher (guest menus, order tracker, dashboard sidebar) must NEVER perform an abrupt toggle. It must always open a modal dialog adhering to this exact architecture (header, edge-to-edge dividers, language options with checkmarks, responsive footer buttons).
@@ -194,18 +191,20 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 3. **Apple Design & Fluid Motion:**
    - Instant feedback on pointerdown (`active:scale-[0.98]` or `active:scale-[0.97]`).
    - Smooth corner radii hierarchy (`rounded-[20px]`, `rounded-[24px]`, `rounded-full`).
-   - High contrast WCAG AA/AAA compliance.
+   - Target testable WCAG AA contrast: at least 4.5:1 for ordinary text, 3:1 for qualifying large text and necessary non-text control boundaries, with visible keyboard focus. Verify actual screens before claiming conformance.
 
-4. **Pill Buttons & Select Controls Standard:**
-   - All action buttons, select triggers (`SelectTrigger`), dropdown triggers, sidebar navigation links, and order tickets across dashboard and staff views strictly use unified Apple pill geometry (`h-11 rounded-full font-semibold px-4` or `px-5`, compact `h-9 rounded-full font-semibold px-3.5`).
+4. **Control Geometry Standard:**
+   - Action buttons, select and dropdown triggers, and navigation actions use the shared pill treatment: `h-11 rounded-full font-semibold` (44px at the 4px spacing scale), or compact `h-9` (36px) where density requires it. Compact interactive targets expand to at least 44px on coarse pointers. Guest payment actions use `h-12` (48px).
+   - Text inputs and textareas are fields, not pills: use a 12px radius, distinct `border-input`, and 44px minimum height for ordinary inputs. Content cards use a 20px radius.
+   - Button roles are primary black, outline white with an input border, ghost, and destructive red. `secondary` is a compatibility alias for outline, not a separate gray-filled action.
 
 5. **Concentric Corner Radius & Nested Geometry Standard:**
    - Whenever an inner element sits inside an outer container with uniform padding $P$, the outer radius $R_{\text{outer}}$ and inner radius $R_{\text{inner}}$ MUST strictly follow the concentric border radius formula:
      $$R_{\text{outer}} = R_{\text{inner}} + P \quad \Longleftrightarrow \quad R_{\text{inner}} = \max(0, R_{\text{outer}} - P)$$
-   - Standard Tailwind tokens like `rounded-2xl` evaluate to `43.2px` in this project due to `--radius: 1.5rem`. NEVER use `rounded-2xl` for dropdown or select popups, as it produces distorted, bulbous spherical corners.
+   - Shared radius tokens are explicit: `rounded-lg` is 12px, `rounded-xl` is 20px, and `rounded-2xl` is 24px. Use the named popup geometry below instead of guessing from a token name.
    - For all Dropdown and Select menus:
-     - Outer container card: strictly `rounded-[20px]` with literal `p-[8px]` inset. In this project, `--spacing: 0.3rem`, so `p-2` resolves to 9.6px at a 16px root and does not express the intended 8px.
-     - Inner selectable items: strictly `rounded-[12px]` ($20\text{px} - 8\text{px} = 12\text{px}$) with `px-3.5 py-2.5 font-semibold`
+     - Outer container card: `rounded-[20px] p-2` (20px radius, 8px inset at the shared `--spacing: 0.25rem` scale).
+     - Inner selectable items: `rounded-[12px]` ($20\text{px} - 8\text{px} = 12\text{px}$), `px-3.5`, and `py-2` or `py-2.5` according to the control, with `font-semibold`.
      - This guarantees mathematically exact concentric curvature with uniform visual margins around all corners.
 
 6. **Uppercase Tracked Typography Standard:**

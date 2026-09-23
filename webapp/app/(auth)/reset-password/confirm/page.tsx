@@ -50,9 +50,6 @@ function ResetPasswordConfirmForm() {
   const { t, locale } = useTranslation();
 
   useEffect(() => {
-    if (state.error) {
-      toast.error(t(state.error as any));
-    }
     if (state.success) {
       toast.success(t("passwordChangedSuccess" as any));
     }
@@ -91,6 +88,9 @@ function ResetPasswordConfirmForm() {
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      document
+        .getElementById(errors.password ? "password" : "confirmPassword")
+        ?.focus();
     } else {
       setFieldErrors({});
       startTransition(() => {
@@ -112,6 +112,8 @@ function ResetPasswordConfirmForm() {
       locale={locale}
       t={t}
       fieldErrors={fieldErrors}
+      setFieldErrors={setFieldErrors}
+      serverError={state.error}
       passwordValue={passwordValue}
       setPasswordValue={setPasswordValue}
       showPassword={showPassword}
@@ -156,10 +158,7 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
       <CardContent>
         <div className="mt-2">
           <Link href="/sign-in" className="w-full">
-            <Button
-              type="button"
-              className="w-full gap-2 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 transition-all active:scale-[0.98]"
-            >
+            <Button type="button" className="w-full gap-2 text-base">
               <ArrowLeft className="w-5 h-5" weight="bold" />
               {t("signIn")}
             </Button>
@@ -175,6 +174,8 @@ function PasswordResetFormContent({
   locale,
   t,
   fieldErrors,
+  setFieldErrors,
+  serverError,
   passwordValue,
   setPasswordValue,
   showPassword,
@@ -187,7 +188,9 @@ function PasswordResetFormContent({
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold text-foreground">{t("resetPasswordTitle")}</CardTitle>
+        <CardTitle className="text-2xl font-bold text-foreground">
+          {t("resetPasswordTitle")}
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           {t("resetPasswordSubtitle")}
         </CardDescription>
@@ -214,15 +217,31 @@ function PasswordResetFormContent({
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   value={passwordValue}
-                  onChange={(e: any) => setPasswordValue(e.target.value)}
+                  onChange={(e: any) => {
+                    setPasswordValue(e.target.value);
+                    setFieldErrors((errors: Record<string, string>) => ({
+                      ...errors,
+                      password: "",
+                    }));
+                  }}
                   maxLength={100}
-                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground pr-10 rounded-xl ${fieldErrors.password ? "border-destructive" : ""}`}
+                  aria-invalid={!!fieldErrors.password}
+                  aria-describedby={
+                    fieldErrors.password ? "password-error" : undefined
+                  }
+                  className={
+                    fieldErrors.password ? "border-destructive pr-10" : "pr-10"
+                  }
                 />
                 <button
-                  className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   title={showPassword ? t("hidePassword") : t("showPassword")}
+                  aria-label={
+                    showPassword ? t("hidePassword") : t("showPassword")
+                  }
+                  aria-pressed={showPassword}
                 >
                   {showPassword ? (
                     <EyeSlash
@@ -332,7 +351,11 @@ function PasswordResetFormContent({
               </div>
 
               {fieldErrors.password && (
-                <span className="text-sm text-destructive">
+                <span
+                  id="password-error"
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
                   {fieldErrors.password}
                 </span>
               )}
@@ -353,15 +376,35 @@ function PasswordResetFormContent({
                   type={showConfirmPassword ? "text" : "password"}
                   autoComplete="new-password"
                   maxLength={100}
-                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground pr-10 rounded-xl ${fieldErrors.confirmPassword ? "border-destructive" : ""}`}
+                  aria-invalid={!!fieldErrors.confirmPassword}
+                  aria-describedby={
+                    fieldErrors.confirmPassword
+                      ? "confirmPassword-error"
+                      : undefined
+                  }
+                  onChange={() =>
+                    setFieldErrors((errors: Record<string, string>) => ({
+                      ...errors,
+                      confirmPassword: "",
+                    }))
+                  }
+                  className={
+                    fieldErrors.confirmPassword
+                      ? "border-destructive pr-10"
+                      : "pr-10"
+                  }
                 />
                 <button
-                  className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   title={
                     showConfirmPassword ? t("hidePassword") : t("showPassword")
                   }
+                  aria-label={
+                    showConfirmPassword ? t("hidePassword") : t("showPassword")
+                  }
+                  aria-pressed={showConfirmPassword}
                 >
                   {showConfirmPassword ? (
                     <EyeSlash
@@ -377,16 +420,29 @@ function PasswordResetFormContent({
                 </button>
               </div>
               {fieldErrors.confirmPassword && (
-                <span className="text-sm text-destructive">
+                <span
+                  id="confirmPassword-error"
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
                   {fieldErrors.confirmPassword}
                 </span>
               )}
             </div>
           </div>
 
+          {serverError && (
+            <p
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {t(serverError as any)}
+            </p>
+          )}
+
           <Button
             type="submit"
-            className="w-full gap-2 mt-4 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 transition-all active:scale-[0.98]"
+            className="w-full gap-2 mt-4 text-base"
             disabled={isPending}
           >
             {isPending ? (

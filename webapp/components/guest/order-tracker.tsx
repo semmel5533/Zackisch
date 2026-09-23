@@ -32,7 +32,7 @@ export function OrderTracker({
   organization,
   initialOrder,
 }: OrderTrackerProps) {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
 
   const liveOrder = useQuery(api.orders.getOrder, {
     id: orderId as Id<"orders">,
@@ -69,7 +69,7 @@ export function OrderTracker({
   }, [order?.status]);
 
   useEffect(() => {
-    if (order?.status === "completed") {
+    if (order?.status === "ready_for_pickup" || order?.status === "completed") {
       const interval = setInterval(() => {
         setNow(Date.now());
       }, 1000);
@@ -77,14 +77,15 @@ export function OrderTracker({
     }
   }, [order?.status]);
 
-  const completedTime =
+  const readyTime =
+    order?.readyAt ||
     order?.completedAt ||
     (order?.$updatedAt ? new Date(order.$updatedAt).getTime() : 0) ||
     order?._creationTime ||
     (order?.$createdAt ? new Date(order.$createdAt).getTime() : Date.now());
 
-  const remainingMs = Math.max(0, TRACKING_EXPIRY_MS - (now - completedTime));
-  const isExpired = order?.status === "completed" && remainingMs <= 0;
+  const remainingMs = Math.max(0, TRACKING_EXPIRY_MS - (now - readyTime));
+  const isExpired = (order?.status === "ready_for_pickup" || order?.status === "completed") && remainingMs <= 0;
 
   const error = (!order && liveOrder === null) || isExpired;
 
@@ -96,7 +97,7 @@ export function OrderTracker({
         <Button
           variant="outline"
           className="font-semibold"
-          onClick={() => (window.location.href = `/pickup/${organization.$id}`)}
+          onClick={() => (window.location.href = t("pickupUrl", { organizationId: organization.$id }))}
         >
           {t("orderAgain" as any)}
         </Button>
@@ -139,22 +140,27 @@ export function OrderTracker({
       : order.status === "ready_for_pickup"
       ? 1
       : 0;
+  const remainingTotalSeconds = Math.ceil(remainingMs / 1000);
+  const remainingMins = Math.floor(remainingTotalSeconds / 60);
+  const remainingSecs = remainingTotalSeconds % 60;
+  const remainingParts = t("trackingActiveRemaining", { time: "%%" }).split("%%");
+  const minuteParts = t("trackingMinutes", { count: "%%" }).split("%%");
 
   return (
-    <div className="flex flex-col min-h-screen bg-primary overflow-x-clip">
-      <header className="bg-primary text-primary-foreground px-6 py-4 flex items-center justify-between shrink-0 max-w-[500px] mx-auto w-full">
+    <div className="flex flex-col min-h-screen bg-muted/30 overflow-x-clip">
+      <header className="bg-background text-foreground border-b border-border px-6 py-4 flex items-center justify-between shrink-0 max-w-[500px] mx-auto w-full">
         <div className="w-10" />
         <h1 className="text-lg font-bold flex-1 text-center">
           {organization.name}
         </h1>
         <LanguageSwitcher
-          className="w-10 h-10 p-0 flex items-center justify-center text-primary-foreground hover:text-primary-foreground hover:bg-primary-foreground/10 rounded-full shrink-0"
+          className="w-11 h-11 p-0 flex items-center justify-center text-foreground hover:text-foreground hover:bg-muted rounded-full shrink-0"
           variant="ghost"
         />
       </header>
 
       {/* Main Content Card */}
-      <div className="flex-1 bg-background text-foreground rounded-t-[2rem] md:rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:my-4 max-w-[500px] mx-auto w-full border-t md:border border-primary-foreground/10">
+      <div className="flex-1 bg-background text-foreground overflow-hidden flex flex-col max-w-[500px] mx-auto w-full md:my-4 md:rounded-[24px] md:border border-border">
         <main className="flex-1 p-6 md:p-8 flex flex-col items-center justify-center space-y-8">
           <div className="text-center space-y-2">
             <p className="text-sm font-medium text-muted-foreground">{t("yourOrderNumber")}</p>
@@ -164,7 +170,7 @@ export function OrderTracker({
           </div>
 
           {order.status === "in_progress" && (
-            <div className="w-full bg-muted/40 border border-border/80 rounded-2xl p-5 text-center space-y-2 animate-in fade-in zoom-in-95 duration-300">
+            <div className="w-full bg-muted/40 border border-border rounded-xl p-5 text-center space-y-2 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
               <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
                 <CookingPot className="w-5 h-5" weight="bold" />
               </div>
@@ -178,7 +184,7 @@ export function OrderTracker({
           )}
 
           {order.status === "ready_for_pickup" && (
-            <div className="w-full bg-primary/10 border-2 border-primary/25 rounded-2xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300">
+            <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
               <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto">
                 <CheckCircle className="w-7 h-7" weight="fill" />
               </div>
@@ -191,14 +197,8 @@ export function OrderTracker({
             </div>
           )}
 
-          {order.status === "completed" && (() => {
-            const remainingTotalSeconds = Math.ceil(remainingMs / 1000);
-            const remainingMins = Math.floor(remainingTotalSeconds / 60);
-            const remainingSecs = remainingTotalSeconds % 60;
-            const remainingParts = t("trackingActiveRemaining", { time: "%%" }).split("%%");
-
-            return (
-              <div className="w-full bg-muted/30 border border-border/80 rounded-2xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300">
+          {order.status === "completed" && (
+              <div className="w-full bg-muted/30 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
                 <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
                   <CheckCircle className="w-7 h-7" weight="fill" />
                 </div>
@@ -208,22 +208,25 @@ export function OrderTracker({
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {t("orderPickedUpDesc")}
                 </p>
-                <div className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground bg-muted/60 px-3 py-1.5 rounded-full mt-1">
-                  <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>
-                    {remainingParts[0]}
-                    <span className="font-inter tabular-nums font-bold text-foreground">
-                      {remainingMins}:{remainingSecs.toString().padStart(2, "0")}
-                    </span>{" "}
-                    <span>{locale === "de" ? "Min." : "min."}</span>
-                    {remainingParts[1]}
-                  </span>
-                </div>
               </div>
-            );
-          })()}
+          )}
 
-          <Card className="w-full p-5 sm:p-6 shadow-xs">
+          {(order.status === "ready_for_pickup" || order.status === "completed") && (
+            <p className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground text-center">
+              <Clock className="size-4 shrink-0" />
+              <span>{remainingParts[0]}</span>
+              <span>
+                {minuteParts[0]}
+                <span className="font-inter tabular-nums font-bold text-foreground">
+                  {remainingMins}:{remainingSecs.toString().padStart(2, "0")}
+                </span>
+                {minuteParts[1]}
+              </span>
+              <span>{remainingParts[1]}</span>
+            </p>
+          )}
+
+          <Card className="w-full p-5 sm:p-6">
             <div>
               <h2 className="font-semibold text-lg mb-6">{t("orderStatus")}</h2>
 
@@ -239,7 +242,7 @@ export function OrderTracker({
                     >
                       <div
                         className={cn(
-                          "flex items-center justify-center w-10 h-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm z-10 font-inter tabular-nums transition-colors",
+                          "flex items-center justify-center w-10 h-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-inter tabular-nums transition-colors",
                           isDone
                             ? "border-primary bg-primary text-primary-foreground"
                             : isCurrent
@@ -255,7 +258,7 @@ export function OrderTracker({
                       </div>
                       <div
                         className={cn(
-                          "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl shadow-sm border transition-colors",
+                          "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border transition-colors",
                           isCurrent || (order.status === "completed" && index === 2)
                             ? "border-primary/50 bg-primary/5"
                             : "bg-background",
@@ -286,7 +289,7 @@ export function OrderTracker({
               variant="outline"
               className="w-full h-11 rounded-full text-base font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
               onClick={() =>
-                (window.location.href = `/pickup/${organization.$id}`)
+                (window.location.href = t("pickupUrl", { organizationId: organization.$id }))
               }
             >
               {t("orderAgain" as any)}

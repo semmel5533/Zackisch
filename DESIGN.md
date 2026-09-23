@@ -1,33 +1,30 @@
 ---
 name: zakkig
-description: Monochrome ordering and restaurant operations with tactile controls
+description: Monochrome ordering and restaurant operations with clear, tactile controls
 colors:
   background: "oklch(1 0 0)"
   foreground: "oklch(0 0 0)"
   primary: "oklch(0 0 0)"
   primary-foreground: "oklch(1 0 0)"
   secondary: "oklch(0.97 0 0)"
-  muted-foreground: "oklch(0.556 0 0)"
+  muted-foreground: "oklch(0.5 0 0)"
+  input: "oklch(0.65 0 0)"
   border: "oklch(0.922 0 0)"
   destructive: "oklch(0.577 0.245 27.325)"
   sidebar-accent: "oklch(0.18 0 0)"
   sidebar-border: "oklch(1 0 0 / 0.1)"
-  site-muted: "#595959"
-  site-line: "#e6e6e6"
-  site-soft: "#f7f7f5"
+  site-muted: "oklch(0.5 0 0)"
+  site-line: "oklch(0.922 0 0)"
+  site-soft: "oklch(0.97 0 0)"
 typography:
   website-display:
     fontFamily: "Poppins, sans-serif"
     fontSize: "clamp(52px, 6.2vw, 96px)"
     fontWeight: 600
-    lineHeight: 1
-    letterSpacing: "-0.04em"
   website-headline:
     fontFamily: "Poppins, sans-serif"
     fontSize: "clamp(32px, 4vw, 52px)"
     fontWeight: 600
-    lineHeight: 1.17
-    letterSpacing: "-0.035em"
   dialog-title:
     fontFamily: "Poppins, sans-serif"
     fontSize: "1.25rem"
@@ -40,56 +37,54 @@ typography:
     fontFamily: "Poppins, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 700
-    letterSpacing: "0.05em"
   numeric:
     fontFamily: "Inter, sans-serif"
 rounded:
-  base: "1.5rem"
+  field: "12px"
+  card: "20px"
   popup: "20px"
   popup-item: "12px"
   dialog-mobile: "20px"
   dialog-desktop: "24px"
-  option: "14px"
   pill: "9999px"
 spacing:
-  unit: "0.3rem"
-  "2": "0.6rem"
-  "3": "0.9rem"
-  "4": "1.2rem"
-  "5": "1.5rem"
-  "6": "1.8rem"
+  unit: "0.25rem"
+  "2": "0.5rem"
+  "3": "0.75rem"
+  "4": "1rem"
+  "5": "1.25rem"
+  "6": "1.5rem"
 components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.primary-foreground}"
     rounded: "{rounded.pill}"
-    height: "3.3rem"
-    padding: "0 1.5rem"
+    height: "2.75rem"
   button-outline:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
     rounded: "{rounded.pill}"
-    height: "3.3rem"
+    height: "2.75rem"
   button-secondary:
-    backgroundColor: "{colors.secondary}"
+    backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
     rounded: "{rounded.pill}"
-    height: "3.3rem"
+    height: "2.75rem"
   button-destructive:
     backgroundColor: "{colors.destructive}"
     textColor: "{colors.primary-foreground}"
     rounded: "{rounded.pill}"
-    height: "3.3rem"
-  select-trigger:
+    height: "2.75rem"
+  input:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
-    rounded: "{rounded.pill}"
-    height: "3.3rem"
+    rounded: "{rounded.field}"
+    height: "2.75rem"
   popup:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
     rounded: "{rounded.popup}"
-    padding: "0.6rem"
+    padding: "0.5rem"
   dialog:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -98,83 +93,64 @@ components:
 
 ## Overview
 
-**Creative North Star: "Monochrome clarity for service in motion"**
-
-zakkig combines a quiet white working canvas with decisive black actions. The webapp favors fast scanning, clear boundaries, rounded controls, and immediate press feedback. The marketing website applies the same type and color foundation to an editorial composition and a physical QR-paper motif. This file records shared durable patterns; the [source-linked reference](docs/design-system.md) gives exact component and surface behavior.
-
-**Key Characteristics:**
-
-- White surfaces, black text and primary actions, gray containment, and red destructive states.
-- Poppins for words; Inter with tabular figures for isolated digits and decimal separators.
-- Pill actions, rounded cards and dialogs, and square QR modules.
-- Container-responsive work areas, a narrow guest column, and a separate viewport-responsive website.
-- Borders and tonal layers carry most depth; the website QR paper is a physical exception.
-
-**The Evidence Rule.** Frontmatter records the shared token layer. Check the linked reference before treating a local override or an intended rule as universal.
+**Creative north star: “Monochrome clarity for service in motion.”** zakkig uses a white working canvas, black primary actions, restrained gray boundaries, and destructive red. The marketing site adds editorial composition and a physical QR-paper motif; restaurant and guest interfaces prioritize task clarity. This is the shared design target. [AGENTS.md](AGENTS.md) sets required implementation rules, [the source-linked reference](docs/design-system.md) records current behavior and deviations, and [UX research](docs/ux-research.md) explains the evidence behind clarity and accessibility decisions. Shape, color, and spacing are brand choices, not promised conversion effects.
 
 ## Colors
 
-Both apps define the same OKLCH semantic base: white canvas and surface, black foreground and primary action, near-white secondary and muted surface, neutral gray metadata and border, and destructive red. The operational sidebar inverts to black with white text. The website defines extra neutrals for reading and hover surfaces.
+Both apps use the same semantic base: white background/card/popover, black foreground/primary, near-white muted surface, readable gray text, distinct input and surface borders, and red destructive state. The website's site-muted, site-line, and site-soft alias those shared roles. The operational sidebar and selected setup/footer sections deliberately invert to black. [Token sources: webapp](webapp/app/globals.css), [website](website/app/globals.css).
 
-**The Light Surface Rule.** Keep work areas, forms, dialogs, and guest content light. Reserve black fields for the operational sidebar, primary actions, and the website's dark setup and footer sections.
+**The Light Surface Rule.** Keep forms, guest content, and dialogs light. Use dark surfaces for intentional emphasis, not routine containment.
 
-**The Semantic Red Rule.** Use destructive red for errors and destructive actions; use black or gray for ordinary status and selection.
+**The Semantic Red Rule.** Reserve red for errors and destructive actions; ordinary status and selection use neutral contrast.
 
 ## Typography
 
-Poppins is the body and heading family in both apps. The website has a tightly tracked display and a 32–52px section headline. The webapp mostly uses 12–24px utility text, 14px bold tracked uppercase section labels, and a 20px bold dialog title. Inter is used for price digits, counters, order numbers, and timer numerals, while adjacent symbols and words remain in Poppins.
+Poppins carries words and interface text. Isolated digits and decimal separators use Inter with tabular figures; currency signs, units, prefixes, and words remain Poppins. The webapp [Price component](webapp/components/ui/price.tsx) separates these roles. The website keeps a large editorial hero and compact supporting copy; webapp section labels use bold tracked uppercase. Region names remain endonyms and visible copy and destinations are translated through next-intl. [Website typography](website/components/MainPage.tsx), [webapp tokens](webapp/app/globals.css).
 
-**The Split Price Rule.** In the webapp, render UI prices with its Price component: digits and decimal separator take Inter and tabular figures; the currency sign and translated prefix take the surrounding family. The website follows the family separation through its own numeric text pattern.
-
-**The Endonym Rule.** Region names use native forms and visible UI copy and destinations are translated with next-intl.
+**The Split Price Rule.** Use the webapp Price component for webapp prices, rather than applying Inter to a mixed-text parent.
 
 ## Layout
 
-Both apps set Tailwind's spacing unit to 0.3rem: numeric utilities advance 4.8px per step at a 16px root. Thus p-2 is 9.6px and h-11 is 52.8px. Literal px, rem, clamp, and viewport values remain literal. Do not apply stock Tailwind measurements.
+Tailwind's shared spacing unit is `0.25rem`: at a 16px root, one step is 4px, `p-2` is 8px, `h-9` is 36px, and `h-11` is 44px. Dashboard content responds to its available container width; the outer shell and the editorial website use viewport breakpoints. Guest content stays in a narrow, readable column. [Webapp tokens](webapp/app/globals.css), [website tokens](website/app/globals.css), [dashboard shell](webapp/components/dashboard/dashboard-shell.tsx).
 
-The dashboard and staff shell put a black sidebar beside a white content container. Dashboard content switches at 500px (tablet) and 1110px (desktop) of available container width; individual panels add thresholds such as 480px and 600px. Viewport lg still controls the outer sidebar. Guest content is centered within 500px. The website uses a 1200px content width, fluid 24–64px gutters and 72–128px sections, with viewport breakpoints for its hero, flow, and navigation.
+**The Available Width Rule.** Use container queries inside dashboard work areas whose width changes with the sidebar. Use viewport breakpoints for the outer shell and website composition.
 
-**The Available Width Rule.** Use container queries inside dashboard content that can lose space to the sidebar. Use viewport breakpoints for the outer shell and website-wide composition.
-
-**The Tailwind-First Rule.** In both apps, especially the webapp, express styling in JSX/TSX with Tailwind utilities whenever that is straightforward. Utilities cover layout, spacing, type, responsive and container queries, state variants, transitions, and interactions; arbitrary values and variants are available for project-specific needs. Reserve custom CSS for shared tokens and fonts, resets, keyframes, and runtime or third-party constraints that utilities cannot express cleanly. Existing custom CSS documents current implementation, not a reason to extend it. See [DS-15](docs/design-system.md#ds-15-tailwind-first-authoring) and [AGENTS.md](AGENTS.md).
+**The Tailwind-First Rule.** In both apps, write expressible layout, spacing, type, responsive behavior, state, and motion with Tailwind utilities in JSX/TSX. Arbitrary values and variants are available. Reserve CSS for tokens, fonts, resets, keyframes, and genuine runtime or third-party constraints. [Authoring detail](docs/design-system.md#ds-15-tailwind-first-authoring).
 
 ## Elevation & Depth
 
-All theme shadow definitions from 2xs through 2xl use zero-opacity color. A shadow utility alone therefore supplies no visible theme elevation. Borders, fills, overlays, and a few explicit nonzero shadows supply depth. The website's tilted QR paper has a restrained visible shadow and tape.
+Ordinary shadow tokens are valid transparent values (`0 0 #0000`), so borders and tonal layers establish normal hierarchy without accidental elevation. Explicit popup and dialog shadows identify floating layers. The website's printed QR sheet uses a deliberate physical shadow. [Webapp tokens](webapp/app/globals.css), [website tokens](website/app/globals.css), [QR showcase](website/components/QrCodeShowcase.tsx).
 
-**The Boundary Rule.** Prefer a subtle border or tonal fill for normal containment. Visible shadows belong to surfaces with an explicitly floating or physical role.
+**The Boundary Rule.** Use a border or tonal fill for ordinary containment; use a visible shadow only for a floating or physical role.
 
 ## Shapes
 
-Actions, select triggers, icon controls, and many tags are pills. Popup containers use a 20px outer radius with 0.6rem padding and 12px items. Dialogs use 20px at narrow widths and 24px at sm, with full-width header/footer dividers. The base radius is 1.5rem, so generated rounded-xl and rounded-2xl do not equal stock Tailwind sizes. Customization options use a 14px radius. QR modules and finder patterns use square or small-square styles.
+Fields have 12px corners, cards and popups 20px, and dialogs 20px on mobile and 24px on desktop. Actions remain pills. Popup outer radius 20px, padding 8px, and item radius 12px form concentric corners. QR finder modules stay square. [Shared tokens](webapp/app/globals.css), [website tokens](website/app/globals.css).
 
-**The Nested Radius Rule.** Preserve a clear inner and outer corner hierarchy. The current popup uses 20px outside and 12px inside with 9.6px padding, which is close to, but not exactly, concentric; the project convention targets outer radius minus padding.
+**The Nested Radius Rule.** For uniformly padded nested shapes, set inner radius to outer radius minus padding.
 
 ## Components
 
-The webapp button primitive offers default, outline, secondary, ghost, destructive, and link variants. It supplies xs, sm, default, lg, and four icon sizes. Default is black with white text, h-11, px-5, semibold 14px, full pill, hover color change, visible keyboard ring, disabled opacity, and active scale 0.98. The input primitive is an eight-step-high bordered rounded field with a focus and invalid ring. Select and dropdown share popup geometry. Cards use a large generated radius, surface fill, light ring, and variable internal spacing.
+Primary buttons are black; outline buttons are white with an input border; ghost buttons are quiet; destructive buttons are red. The `secondary` API remains an alias of outline. Shared default action height is 44px, compact height 36px (at least 44px for coarse pointers), and prominent guest payment height 48px. Controls use 14px semibold labels, an active press response, visible focus ring, and reduced-motion treatment. Inputs use 12px corners and 44px minimum height; cards use 20px. [Webapp button](webapp/components/ui/button.tsx), [input](webapp/components/ui/input.tsx), [website button variants](website/components/ui/button-variants.ts).
 
-Dialogs have a light popup, edge-to-edge header divider, scrollable body, edge-to-edge footer divider, and pill actions. Guest ordering reveals the bottom cart action once the cart gains an item; customization exposes selected, unselected, and disabled option states; checkout uses a mobile sheet. The tracker renders in-progress, ready, and completed progression. Dashboard and staff shells share a sidebar pattern. Website CSS buttons are 44px high, distinct from webapp h-11.
+Dialogs use light surfaces and edge-to-edge dividers; inline errors remain left aligned and toasts sit top-center without duplicating visible errors. The website locale selector is a native dialog with translated options and focus restoration. [Dialog rule](AGENTS.md), [website modal](website/components/RegionLanguageModal.tsx). Specific flow behavior and known deviations are in the [reference](docs/design-system.md).
 
-**The Inline Feedback Rule.** Inline form errors use left-aligned destructive text; toasts sit top-center. Avoid duplicate inline and toast feedback for one error.
+**The Inline Feedback Rule.** Put persistent, actionable errors beside the affected field or operation; use a toast only when it adds information.
 
 ## Do's and Don'ts
 
 ### Do
 
-- **Do** keep the main UI light and use black with white text for focal actions.
-- **Do** calculate utility dimensions from this project's 0.3rem spacing unit.
-- **Do** use Poppins for words and the webapp Price component for prices there.
-- **Do** preserve visible focus, disabled, selected, loading, and error states.
-- **Do** retain the distinct responsive models of the webapp and website.
-- **Do** use Tailwind utilities, including arbitrary values and state or container variants, for expressible styling in both apps.
-- **Do** use Phosphor icons and translated UI copy.
+- Use the shared 4px spacing scale, semantic colors, and named control roles.
+- Keep the principal next action distinct from supporting navigation; write descriptive labels.
+- Preserve input values and visible error, focus, loading, disabled, and selected states.
+- Use Tailwind utilities for styling they can express, including state and container variants.
+- Check actual source and the [research reference](docs/ux-research.md) before making a behavior or outcome claim.
 
 ### Don't
 
-- **Don't** treat a zero-opacity theme shadow as visible elevation.
-- **Don't** apply the website's 44px CSS button size to the webapp button primitive.
-- **Don't** assume stock Tailwind spacing or radius values.
-- **Don't** use a dark modal as a general surface pattern.
-- **Don't** add redundant `globals.css`, module CSS, or inline static styles where Tailwind utilities express the same result cleanly.
-- **Don't** promote a documented code deviation into a new standard.
+- Use a dark modal or visible shadow as a general surface pattern.
+- Treat `secondary` as a separate gray-filled button style.
+- Apply Inter to words, currency symbols, or mixed-text parent containers.
+- Hide required prices, selections, errors, or the next operational step.
+- Treat a documented implementation deviation as permission to change the design rule.

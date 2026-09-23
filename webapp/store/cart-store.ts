@@ -3,6 +3,8 @@
 import { create } from "zustand";
 import type { CartItem } from "@/lib/types";
 
+export const MAX_CART_ITEM_QUANTITY = 50;
+
 interface CartState {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity">) => void;
@@ -22,7 +24,9 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (existing) {
         return {
           items: state.items.map((i) =>
-            i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i,
+            i.id === item.id
+              ? { ...i, quantity: Math.min(i.quantity + 1, MAX_CART_ITEM_QUANTITY) }
+              : i,
           ),
         };
       }
@@ -43,7 +47,9 @@ export const useCartStore = create<CartState>((set, get) => ({
       }
       return {
         items: state.items.map((i) =>
-          i.id === id ? { ...i, quantity } : i,
+          i.id === id
+            ? { ...i, quantity: Math.min(quantity, MAX_CART_ITEM_QUANTITY) }
+            : i,
         ),
       };
     }),

@@ -18,11 +18,11 @@ export function SiteFooter({
   if (variant === "minimal") {
     return (
       <>
-        <footer className="site-footer pt-6 sm:pt-8">
-          <div className="page-width flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
+        <footer data-dark-surface className="relative overflow-hidden bg-primary pt-6 text-primary-foreground sm:pt-8">
+          <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
             <div className="footer-mascot justify-self-start flex items-end mb-[-85px] max-md:mb-[-65px] order-2 md:order-1">
               <img
-                className="closing-mascot w-[clamp(210px,18vw,270px)] max-md:w-[clamp(190px,46vw,240px)] h-auto object-contain block"
+                className="block h-auto w-[clamp(210px,18vw,270px)] object-contain brightness-0 invert max-md:w-[clamp(190px,46vw,240px)]"
                 src="/icon.svg"
                 alt=""
                 aria-hidden="true"
@@ -39,7 +39,7 @@ export function SiteFooter({
                   <Link
                     key={key}
                     href={t(`${key}Url`)}
-                    className="min-h-[44px] flex items-center max-md:justify-end max-md:text-right max-md:whitespace-nowrap"
+                    className="flex min-h-11 items-center hover:underline hover:underline-offset-4 focus-visible:underline focus-visible:underline-offset-4 max-md:justify-end max-md:whitespace-nowrap max-md:text-right"
                   >
                     <span className="link-label">{t(`${key}Link`)}</span>
                   </Link>
@@ -47,7 +47,7 @@ export function SiteFooter({
               </nav>
               <button
                 type="button"
-                className="inline-flex items-center gap-2.5 min-h-[44px] text-[13px] font-bold uppercase tracking-[0.08em] leading-none bg-transparent border-0 text-inherit cursor-pointer transition-opacity duration-150 hover:opacity-80"
+                className="inline-flex min-h-11 items-center gap-2.5 border-0 bg-transparent text-[13px] font-bold leading-none tracking-[.08em] text-inherit uppercase transition-opacity duration-150 hover:opacity-80 motion-reduce:transition-none"
                 onClick={() => setIsModalOpen(true)}
               >
                 <Globe size={20} aria-hidden="true" />
@@ -65,26 +65,26 @@ export function SiteFooter({
 
   return (
     <>
-      <footer className="site-footer pt-16 sm:pt-20">
-        <div className="page-width footer-container">
-          <div className="footer-closing-title text-left">
-            <h2>{t("closingTitle")}</h2>
+      <footer data-dark-surface className="relative overflow-hidden bg-primary pt-16 text-primary-foreground sm:pt-20">
+        <div className="mx-auto grid w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid-cols-[1.15fr_.85fr] grid-rows-[auto_auto_1fr_auto] items-start gap-x-12 gap-y-7 [grid-template-areas:'title_.'_'cta_contact'_'mascot_mars'_'mascot_bottom'] max-[900px]:grid-cols-1 max-[900px]:grid-rows-none max-[900px]:gap-8 max-[900px]:[grid-template-areas:'title'_'cta'_'contact'_'mars'_'bottom'_'mascot']">
+          <div className="text-left [grid-area:title]">
+            <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("closingTitle")}</h2>
           </div>
-          <div className="footer-closing-cta flex items-center">
+          <div className="flex items-center [grid-area:cta]">
             <RegisterCta variant="inverse" />
           </div>
-          <div className="footer-contact flex flex-col items-end text-right justify-self-end gap-2 pt-2 max-md:pt-0">
-            <h3 className="contact-label text-2xl font-medium m-0 leading-[1.1]">{t("contactLabel")}</h3>
+          <div className="flex flex-col items-end justify-self-end gap-2 pt-2 text-right [grid-area:contact] max-md:pt-0">
+            <h3 className="m-0 text-2xl font-medium leading-[1.1]">{t("contactLabel")}</h3>
             <a
-              className="inline-block text-[clamp(24px,3.8vw,46px)] max-md:text-[clamp(26px,7.8vw,36px)] tracking-tight leading-[1.1] text-right"
+              className="inline-block text-right text-[clamp(24px,3.8vw,46px)] leading-[1.1] tracking-tight hover:underline hover:underline-offset-4 max-md:text-[clamp(26px,7.8vw,36px)]"
               href={t("contactUrl")}
             >
               <span className="link-label">{t("contactEmail")}</span>
             </a>
           </div>
-          <div className="footer-mars justify-self-end flex justify-end">
+          <div className="flex justify-end justify-self-end [grid-area:mars]">
             <a
-              className="inline-flex items-center justify-end gap-1.5 text-[13px] text-[var(--site-muted)] whitespace-nowrap group hover:text-white transition-colors"
+              className="group inline-flex items-center justify-end gap-1.5 text-[13px] whitespace-nowrap text-white/75 transition-colors hover:text-white motion-reduce:transition-none"
               href={t("marsUrl")}
               target="_blank"
               rel="noopener noreferrer"
@@ -104,9 +104,9 @@ export function SiteFooter({
               />
             </a>
           </div>
-          <div className="footer-mascot justify-self-start flex items-end mt-[clamp(48px,6vw,96px)] mb-[-95px] max-md:mb-[-65px] max-md:mt-6">
+          <div className="flex items-end justify-self-start mt-[clamp(48px,6vw,96px)] mb-[-95px] [grid-area:mascot] max-md:mt-6 max-md:mb-[-65px]">
             <img
-              className="closing-mascot w-[clamp(260px,22vw,330px)] max-md:w-[clamp(200px,48vw,260px)] h-auto object-contain block"
+              className="block h-auto w-[clamp(260px,22vw,330px)] object-contain brightness-0 invert max-md:w-[clamp(200px,48vw,260px)]"
               src="/icon.svg"
               alt=""
               aria-hidden="true"
@@ -114,7 +114,7 @@ export function SiteFooter({
               height="420"
             />
           </div>
-          <div className="footer-bottom flex flex-col items-end self-end gap-3 py-7 max-md:pt-4 max-md:pb-0">
+          <div className="flex flex-col items-end self-end gap-3 py-7 [grid-area:bottom] max-md:pt-4 max-md:pb-0">
             <nav
               className="flex gap-6 max-md:gap-5 text-[13px] font-bold uppercase tracking-[0.08em] max-md:w-full max-md:justify-end max-md:flex-nowrap"
               aria-label={t("footerNavigation")}
@@ -123,7 +123,7 @@ export function SiteFooter({
                 <Link
                   key={key}
                   href={t(`${key}Url`)}
-                  className="min-h-[44px] flex items-center max-md:justify-end max-md:text-right max-md:whitespace-nowrap"
+                  className="flex min-h-11 items-center hover:underline hover:underline-offset-4 focus-visible:underline focus-visible:underline-offset-4 max-md:justify-end max-md:whitespace-nowrap max-md:text-right"
                 >
                   <span className="link-label">{t(`${key}Link`)}</span>
                 </Link>
@@ -131,7 +131,7 @@ export function SiteFooter({
             </nav>
             <button
               type="button"
-              className="inline-flex items-center gap-2.5 min-h-[44px] text-[13px] font-bold uppercase tracking-[0.08em] leading-none bg-transparent border-0 text-inherit cursor-pointer transition-opacity duration-150 hover:opacity-80"
+              className="inline-flex min-h-11 items-center gap-2.5 border-0 bg-transparent text-[13px] font-bold leading-none tracking-[.08em] text-inherit uppercase transition-opacity duration-150 hover:opacity-80 motion-reduce:transition-none"
               onClick={() => setIsModalOpen(true)}
             >
               <Globe size={20} aria-hidden="true" />

@@ -22,7 +22,7 @@ The preferred journey is restaurant registration, Stripe onboarding, menu and ta
 
 ## Brand Commitments
 
-Keep the predominantly white visual language, black setup and footer, Poppins text and Inter numeric digits, restrained spacing and copy, and real product captures. The hero uses a taped QR sheet and the closing section retains the squirrel mascot ([website components](website/components/), [design reference](DESIGN.md)). Do not invent zakkig metrics or testimonials. Contact is `selim@zakkig.com`; the current MARS support destination is [MARS](https://launchtomars.de/startup/zakkig/) ([marketing page](website/components/MainPage.tsx)). The GTC page retains a finalization notice ([legal messages](website/lib/legal-translations.ts)).
+Keep the predominantly white visual language, black setup and footer, Poppins words and Inter numeric digits, restrained spacing and copy, and real product captures. The shared 4px grid, black primary/bordered outline action hierarchy, readable field boundaries, and 12px field/20px card geometry are product consistency choices ([design reference](DESIGN.md), [implementation detail](docs/design-system.md)). The hero uses a taped QR sheet and the closing section retains the squirrel mascot ([website components](website/components/)). [UX research](docs/ux-research.md) supports clear actions and accessible interaction but does not establish a conversion benefit from exact tokens. Do not invent zakkig metrics or testimonials. Contact is `selim@zakkig.com`; the current MARS support destination is [MARS](https://launchtomars.de/startup/zakkig/) ([marketing page](website/components/MainPage.tsx)). The GTC page retains a finalization notice ([legal messages](website/lib/legal-translations.ts)).
 
 ## Evidence on Hand
 

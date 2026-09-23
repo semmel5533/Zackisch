@@ -7,6 +7,7 @@ import { createTranslator } from "next-intl";
 import { REGIONS, parseLocale } from "@/lib/regions";
 import { useTranslation } from "@/lib/i18n";
 import { translations } from "@/lib/translations";
+import { cn } from "@/lib/utils";
 
 export function RegionLanguageModal({
   isOpen,
@@ -65,7 +66,7 @@ export function RegionLanguageModal({
   return (
     <dialog
       ref={dialogRef}
-      className="region-dialog"
+      className="m-auto max-h-[calc(100dvh-32px)] w-[min(480px,calc(100%-32px))] overflow-hidden rounded-[20px] border border-border bg-background text-foreground shadow-[0_24px_48px_-12px_rgba(0,0,0,.18)] backdrop:bg-black/40 backdrop:backdrop-blur-sm open:animate-in open:fade-in open:zoom-in-95 motion-reduce:animate-none sm:rounded-[24px]"
       aria-labelledby="region-title"
       aria-describedby="region-description"
       onClick={(e) => {
@@ -83,17 +84,17 @@ export function RegionLanguageModal({
       }}
       onCancel={onClose}
     >
-      <div className="region-dialog-inner">
-        <header className="region-dialog-header">
-          <h2 id="region-title">{t("regionSelectorTitle")}</h2>
-          <p id="region-description">{t("regionSelectorDescription")}</p>
+      <div className="flex flex-col">
+        <header className="shrink-0 border-b border-zinc-100 bg-background px-5 py-4 text-left sm:px-6 sm:py-5">
+          <h2 id="region-title" className="text-xl font-bold leading-tight tracking-tight">{t("regionSelectorTitle")}</h2>
+          <p id="region-description" className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{t("regionSelectorDescription")}</p>
         </header>
-        <div className="region-dialog-body">
+        <div className="grid gap-5 overflow-y-auto p-5 sm:p-6">
           <fieldset className="border-0 p-0 m-0 min-w-0">
             <legend className="text-sm font-semibold text-black mb-2 normal-case tracking-normal">
               {t("regionLabel")}
             </legend>
-            <div className="region-option selected">
+            <div className="flex min-h-12 items-center justify-between gap-3 rounded-[12px] border border-foreground bg-muted px-4 py-3 text-sm font-semibold">
               <span>{region.nativeName}</span>
               <Check size={16} weight="bold" aria-hidden="true" />
             </div>
@@ -102,13 +103,19 @@ export function RegionLanguageModal({
             <legend className="text-sm font-semibold text-black mb-2 normal-case tracking-normal">
               {t("languageLabel")}
             </legend>
-            <div className="language-options">
+            <div className="grid gap-2.5 min-[441px]:grid-cols-2">
               {region.locales.map((loc) => (
                 <label
                   key={loc.code}
-                  className={`region-option ${selectedLocale === loc.code ? "selected" : ""}`}
+                  className={cn(
+                    "flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-[12px] border px-4 py-3 text-sm font-medium transition-colors duration-150 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-ring motion-reduce:transition-none",
+                    selectedLocale === loc.code
+                      ? "border-foreground bg-muted font-semibold"
+                      : "border-input bg-background hover:border-foreground/30 hover:bg-muted",
+                  )}
                 >
                   <input
+                    className="sr-only"
                     type="radio"
                     name="language"
                     value={loc.code}
@@ -124,17 +131,17 @@ export function RegionLanguageModal({
             </div>
           </fieldset>
         </div>
-        <footer className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
+        <footer className="flex w-full shrink-0 flex-col-reverse items-center justify-end gap-2.5 border-t border-zinc-100 bg-background px-5 py-3.5 sm:flex-row sm:gap-3 sm:px-6 sm:py-4">
           <button
             type="button"
-            className="w-full sm:flex-1 h-11 rounded-full border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer transition-all active:scale-[0.98] text-sm"
+            className="h-11 w-full rounded-full border border-input bg-background text-sm font-semibold text-foreground transition-colors duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-1"
             onClick={onClose}
           >
             {t("cancel")}
           </button>
           <button
             type="button"
-            className="w-full sm:flex-1 h-11 rounded-full bg-black text-white hover:bg-zinc-800 font-semibold cursor-pointer transition-all active:scale-[0.98] text-sm"
+            className="h-11 w-full rounded-full border border-primary bg-primary text-sm font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-1"
             onClick={handleApply}
           >
             {t("saveAndContinue")}

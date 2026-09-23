@@ -2,7 +2,6 @@
 
 import {
   useState,
-  useTransition,
   useCallback,
   useEffect,
   useMemo,
@@ -18,6 +17,7 @@ import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { Price } from "@/components/ui/price";
+import { toast } from "sonner";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -70,7 +70,8 @@ export function AvailabilityContent({
   const { t } = useTranslation();
   const router = useRouter();
   const [items, setItems] = useState(initialItems);
-  const [, startTransition] = useTransition();
+  const [pendingItemIds, setPendingItemIds] = useState<Set<string>>(new Set());
+  const pendingItemIdsRef = useRef(new Set<string>());
   const containerRef = useRef<HTMLDivElement>(null);
   const isTwoColumns = useIsTwoColumns(containerRef);
 
@@ -103,9 +104,30 @@ export function AvailabilityContent({
     }
   }, [organizationId, org, router]);
 
+  const runAvailabilityChange = useCallback(async (
+    itemId: string,
+    action: () => Promise<{ success?: boolean; error?: string }>,
+    apply: () => void,
+  ) => {
+    if (pendingItemIdsRef.current.has(itemId)) return;
+    pendingItemIdsRef.current.add(itemId);
+    setPendingItemIds(new Set(pendingItemIdsRef.current));
+    try {
+      const result = await action();
+      if (result.success) apply();
+      else toast.error(result.error || t("error"));
+    } catch {
+      toast.error(t("error"));
+    } finally {
+      pendingItemIdsRef.current.delete(itemId);
+      setPendingItemIds(new Set(pendingItemIdsRef.current));
+    }
+  }, [t]);
+
   const handleToggleItem = useCallback(
     (itemId: string, available: boolean) => {
-      setItems((prevItems) =>
+      void runAvailabilityChange(itemId, () => toggleMenuItemAvailability(itemId, available, organizationId), () => {
+        setItems((prevItems) =>
         prevItems.map((i) => {
           if (i.$id !== itemId) return i;
           if (i.customizations) {
@@ -130,20 +152,10 @@ export function AvailabilityContent({
           }
           return { ...i, available };
         }),
-      );
-      startTransition(async () => {
-        const res = await toggleMenuItemAvailability(
-          itemId,
-          available,
-          organizationId,
         );
-        if (!res.success) {
-          // Revert on error
-          setItems(initialItems);
-        }
       });
     },
-    [initialItems, organizationId],
+    [organizationId, runAvailabilityChange],
   );
 
   const handleToggleCustomization = useCallback(
@@ -153,7 +165,8 @@ export function AvailabilityContent({
       optionId: string | null,
       available: boolean,
     ) => {
-      setItems((prevItems) =>
+      void runAvailabilityChange(itemId, () => toggleCustomizationAvailabilityAction(itemId, stepId, optionId, available, organizationId), () => {
+        setItems((prevItems) =>
         prevItems.map((i) => {
           if (i.$id !== itemId) return i;
           const steps = parseCustomizations(i.customizations);
@@ -179,22 +192,10 @@ export function AvailabilityContent({
           });
           return { ...i, customizations: JSON.stringify(updatedSteps) };
         }),
-      );
-      startTransition(async () => {
-        const res = await toggleCustomizationAvailabilityAction(
-          itemId,
-          stepId,
-          optionId,
-          available,
-          organizationId,
         );
-        if (!res.success) {
-          // Revert on error
-          setItems(initialItems);
-        }
       });
     },
-    [initialItems, organizationId],
+    [organizationId, runAvailabilityChange],
   );
 
   return (
@@ -229,6 +230,7 @@ export function AvailabilityContent({
                     items={categoryItems}
                     onToggleItem={handleToggleItem}
                     onToggleCustomization={handleToggleCustomization}
+                    pendingItemIds={pendingItemIds}
                   />
                 );
               })}
@@ -247,6 +249,7 @@ export function AvailabilityContent({
                     items={categoryItems}
                     onToggleItem={handleToggleItem}
                     onToggleCustomization={handleToggleCustomization}
+                    pendingItemIds={pendingItemIds}
                   />
                 );
               })}
@@ -265,6 +268,7 @@ export function AvailabilityContent({
                   items={categoryItems}
                   onToggleItem={handleToggleItem}
                   onToggleCustomization={handleToggleCustomization}
+                  pendingItemIds={pendingItemIds}
                 />
               );
             })}
@@ -280,6 +284,7 @@ function CategorySection({
   items,
   onToggleItem,
   onToggleCustomization,
+  pendingItemIds,
 }: {
   category: MenuCategory;
   items: MenuItem[];
@@ -290,6 +295,7 @@ function CategorySection({
     optionId: string | null,
     available: boolean,
   ) => void;
+  pendingItemIds: Set<string>;
 }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const { t } = useTranslation();
@@ -341,6 +347,7 @@ function CategorySection({
                 items={items}
                 onToggleItem={onToggleItem}
                 onToggleCustomization={onToggleCustomization}
+                pendingItemIds={pendingItemIds}
               />
             )}
           </div>
@@ -354,6 +361,7 @@ function ItemsList({
   items,
   onToggleItem,
   onToggleCustomization,
+  pendingItemIds,
 }: {
   items: MenuItem[];
   onToggleItem: (id: string, available: boolean) => void;
@@ -363,6 +371,7 @@ function ItemsList({
     optionId: string | null,
     available: boolean,
   ) => void;
+  pendingItemIds: Set<string>;
 }) {
   return (
     <div className="grid grid-cols-1 min-[1900px]:grid-cols-2 gap-3">
@@ -372,6 +381,7 @@ function ItemsList({
           item={item}
           onToggleItem={onToggleItem}
           onToggleCustomization={onToggleCustomization}
+          pending={pendingItemIds.has(item.$id)}
         />
       ))}
     </div>
@@ -382,6 +392,7 @@ function ItemCardView({
   item,
   onToggleItem,
   onToggleCustomization,
+  pending,
 }: {
   item: MenuItem;
   onToggleItem: (id: string, available: boolean) => void;
@@ -391,6 +402,7 @@ function ItemCardView({
     optionId: string | null,
     available: boolean,
   ) => void;
+  pending: boolean;
 }) {
   const steps = parseCustomizations(item.customizations);
   const [showOptions, setShowOptions] = useState(false);
@@ -404,7 +416,7 @@ function ItemCardView({
   return (
     <div
       className={cn(
-        "flex flex-col h-full rounded-xl border overflow-hidden transition-all duration-200 shadow-xs",
+        "flex flex-col h-full rounded-xl border overflow-hidden transition-colors duration-150",
         item.available
           ? "bg-background border-border"
           : "bg-muted/40 border-dashed border-border/70 opacity-65"
@@ -466,6 +478,7 @@ function ItemCardView({
             )}
             <Switch
               checked={item.available}
+              disabled={pending}
               onCheckedChange={(checked) => onToggleItem(item.$id, checked)}
               title={item.available ? t("itemAvailable") : t("itemSoldOut")}
             />
@@ -505,7 +518,7 @@ function ItemCardView({
                       <div className="flex items-center shrink-0">
                         <Switch
                           checked={stepAvailable}
-                          disabled={!item.available}
+                          disabled={pending || !item.available}
                           onCheckedChange={(checked) =>
                             onToggleCustomization(
                               item.$id,
@@ -561,7 +574,7 @@ function ItemCardView({
                             <div className="flex items-center shrink-0">
                               <Switch
                                 checked={optAvailable}
-                                disabled={!item.available || !stepAvailable}
+                                disabled={pending || !item.available || !stepAvailable}
                                 onCheckedChange={(checked) =>
                                   onToggleCustomization(
                                     item.$id,

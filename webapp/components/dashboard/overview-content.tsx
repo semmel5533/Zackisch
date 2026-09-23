@@ -226,7 +226,7 @@ function InkConnectorText({
   className?: string;
 }) {
   const displayText = text.toLowerCase();
-  const font = `700 ${fontSize}px Inter, sans-serif`;
+  const font = `700 ${fontSize}px Poppins, sans-serif`;
   const [metrics, setMetrics] = useState(() => ({
     viewBox: `0 -${fontSize} ${displayText.length * fontSize} ${fontSize}`,
     height: fontSize,
@@ -288,7 +288,7 @@ function InkConnectorText({
           textAnchor="start"
           dominantBaseline="alphabetic"
           fill="currentColor"
-          className="font-bold font-inter lowercase"
+          className="font-bold font-poppins lowercase"
           style={{ font }}
         >
           {displayText}
@@ -380,7 +380,7 @@ function SortableTableItem({
       >
         <DotsSixVertical className="h-4 w-4" weight="bold" />
       </div>
-      <span className="truncate text-center flex-1 text-sm font-semibold font-inter tabular-nums">
+      <span className="truncate text-center flex-1 text-sm font-semibold">
         {tNum}
       </span>
     </div>
@@ -870,7 +870,7 @@ function QrCodeGeneratorCard({
                     onClick={handlePrint}
                     variant="default"
                     disabled={selectedTables.length === 0}
-                    className="w-auto h-11 rounded-full font-semibold px-5 bg-primary text-secondary shrink-0 shadow-sm cursor-pointer active:scale-[0.98] transition-all"
+                    className="w-auto"
                   >
                     <Printer className="mr-2 h-4 w-4" />
                     {selectedTables.length > 1
@@ -884,7 +884,7 @@ function QrCodeGeneratorCard({
                 <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
                   <div
                     className={cn(
-                      "flex flex-col items-center w-full max-w-[240px] gap-0 transition-all duration-200",
+                      "flex flex-col items-center w-full max-w-[240px] gap-0",
                       selectedTables.length === 0 ? "opacity-50 grayscale" : "",
                     )}
                   >
@@ -928,7 +928,7 @@ function QrCodeGeneratorCard({
                 <Button
                   onClick={handlePrint}
                   variant="default"
-                  className="w-auto h-11 rounded-full font-semibold px-5 bg-primary text-secondary shrink-0 shadow-sm cursor-pointer active:scale-[0.98] transition-all"
+                  className="w-auto"
                 >
                   <Printer className="mr-2 h-4 w-4" />
                   {t("printQrCode")}
@@ -936,7 +936,7 @@ function QrCodeGeneratorCard({
               </div>
 
               <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
-                <div className="flex flex-col items-center w-full max-w-[240px] gap-0 transition-all duration-200">
+                <div className="flex flex-col items-center w-full max-w-[240px] gap-0">
                   <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
                     <InkScaledText
                       text={t("qrCodeTitleLine1")}
@@ -982,7 +982,7 @@ function QrCodeGeneratorCard({
                 key={tNum}
                 className="relative origin-top print-color-adjust-exact break-inside-avoid flex justify-center items-start"
               >
-                <Card className="flex flex-col items-center justify-center p-4 bg-white shadow-sm print:shadow-none print:ring-0 print:rounded-none w-max print:border print:border-dashed print:border-black/40">
+                <Card className="flex flex-col items-center justify-center p-4 bg-white print:ring-0 print:rounded-none w-max print:border print:border-dashed print:border-black/40">
                   <div className="flex flex-col items-center w-[230px] gap-0">
                     <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
                       <InkScaledText
@@ -1014,7 +1014,7 @@ function QrCodeGeneratorCard({
           })
         ) : (
           <div className="relative origin-top print-color-adjust-exact break-inside-avoid flex justify-center items-start">
-            <Card className="flex flex-col items-center justify-center p-4 bg-white shadow-sm print:shadow-none print:ring-0 print:rounded-none w-max print:border print:border-dashed print:border-black/40">
+            <Card className="flex flex-col items-center justify-center p-4 bg-white print:ring-0 print:rounded-none w-max print:border print:border-dashed print:border-black/40">
               <div className="flex flex-col items-center w-[230px] gap-0">
                 <div className="text-center w-[84%] mx-auto flex flex-col items-center gap-[10px]">
                   <InkScaledText
@@ -1049,7 +1049,7 @@ function QrCodeGeneratorCard({
         open={deleteTablesDialogOpen}
         onOpenChange={setDeleteTablesDialogOpen}
       >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
             <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
               {selectedTables.length === 1
@@ -1080,7 +1080,7 @@ function QrCodeGeneratorCard({
               type="button"
               variant="destructive"
               onClick={confirmRemoveTables}
-              className="w-full sm:flex-1 rounded-full h-11 font-semibold cursor-pointer active:scale-[0.98] transition-all"
+              className="w-full sm:flex-1"
             >
               {t("delete")}
             </Button>
@@ -1154,7 +1154,7 @@ export function OverviewContent({
           <div className="@min-[700px]:col-span-2 grid grid-cols-1 @min-[500px]:grid-cols-2 gap-4 h-full">
             <Link
               href={`/dashboard/${organization.$id}/menu`}
-              className="flex items-start gap-3 p-4 bg-background border rounded-xl hover:bg-muted/50 transition-colors shadow-sm h-full"
+              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
                 <ForkKnife className="w-6 h-6" />
@@ -1170,7 +1170,7 @@ export function OverviewContent({
             </Link>
             <Link
               href={`/dashboard/${organization.$id}/current-orders`}
-              className="flex items-start gap-3 p-4 bg-background border rounded-xl hover:bg-muted/50 transition-colors shadow-sm h-full"
+              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
                 <ClipboardText className="w-6 h-6" />
@@ -1186,7 +1186,7 @@ export function OverviewContent({
             </Link>
             <Link
               href={`/dashboard/${organization.$id}/all-orders`}
-              className="flex items-start gap-3 p-4 bg-background border rounded-xl hover:bg-muted/50 transition-colors shadow-sm h-full"
+              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
                 <Archive className="w-6 h-6" />
@@ -1202,7 +1202,7 @@ export function OverviewContent({
             </Link>
             <Link
               href={`/dashboard/${organization.$id}/settings`}
-              className="flex items-start gap-3 p-4 bg-background border rounded-xl hover:bg-muted/50 transition-colors shadow-sm h-full"
+              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
                 <Gear className="w-6 h-6" />

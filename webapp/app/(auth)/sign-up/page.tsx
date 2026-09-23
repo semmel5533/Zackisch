@@ -52,14 +52,6 @@ import { toast } from "sonner";
 
 export default function SignUpPage() {
   const [state, formAction, isPending] = useActionState(signUpAction, {});
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (state.error) {
-      toast.error(t(state.error as any));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
 
   if (state.requiresOtp) {
     return <OtpForm state={state} />;
@@ -71,7 +63,7 @@ export default function SignUpPage() {
 }
 
 function OtpForm({ state }: { state: any }) {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [countdown, setCountdown] = useState(60);
@@ -83,6 +75,7 @@ function OtpForm({ state }: { state: any }) {
     () => Date.now() + 30 * 60 * 1000,
   );
   const [isExpired, setIsExpired] = useState(false);
+  const [otpError, setOtpError] = useState("");
 
   useEffect(() => {
     if (countdown > 0) {
@@ -109,7 +102,7 @@ function OtpForm({ state }: { state: any }) {
       if (typeof res.attemptsRemaining === "number") {
         setAttemptsRemaining(res.attemptsRemaining);
       } else {
-        toast.error(t(res.error as any));
+        setOtpError(t(res.error as any));
       }
     }
   };
@@ -130,6 +123,7 @@ function OtpForm({ state }: { state: any }) {
     setAttemptsRemaining(null);
     setCountdown(60);
     setOtp("");
+    setOtpError("");
     const res = await resendOtpAction(state.userId, state.email);
     if (res?.success) {
       setOtpExpiresAt(Date.now() + 30 * 60 * 1000);
@@ -188,9 +182,12 @@ function OtpForm({ state }: { state: any }) {
               <InputOTP
                 maxLength={6}
                 value={otp}
+                aria-invalid={!!otpError}
+                aria-describedby={otpError ? "sign-up-otp-error" : undefined}
                 onChange={(val) => {
                   if (isLockedOut || isExpired) return;
                   setOtp(val);
+                  setOtpError("");
                   if (val.length === 6) {
                     submitOtp(val);
                   }
@@ -227,6 +224,15 @@ function OtpForm({ state }: { state: any }) {
               </InputOTP>
             </div>
           </div>
+          {otpError && (
+            <p
+              id="sign-up-otp-error"
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {otpError}
+            </p>
+          )}
           <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button
@@ -280,16 +286,12 @@ function SignUpForm({
   formAction: (payload: FormData) => void;
   isPending: boolean;
 }) {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const { region } = useRegionStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-
-  // Regional legal links
-  const regionalTermsUrl = `https://www.zakkig.com/${region}-${locale}/gtc`;
-  const regionalPrivacyUrl = `https://www.zakkig.com/${region}-${locale}/privacy-policy`;
 
   // Wizard State
   const [step, setStep] = useState(1);
@@ -312,7 +314,6 @@ function SignUpForm({
         errors.email = t("emailInvalid");
       } else if (isDisposableEmail(email)) {
         errors.email = t("disposableEmail" as any);
-        toast.error(t("disposableEmail" as any));
       }
 
       const password = fd.get("password") as string;
@@ -340,13 +341,13 @@ function SignUpForm({
         setIsCheckingEmail(false);
         if (res.exists) {
           errors.email = t("authErrorUserExists" as any);
-          toast.error(t("authErrorUserExists" as any));
         }
       }
     }
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      document.getElementById(Object.keys(errors)[0])?.focus();
     } else {
       setFieldErrors({});
       setStep(step + 1);
@@ -378,6 +379,7 @@ function SignUpForm({
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      document.getElementById(Object.keys(errors)[0])?.focus();
     } else {
       setFieldErrors({});
       startTransition(() => {
@@ -451,10 +453,28 @@ function SignUpForm({
                 placeholder={t("businessPlaceholder")}
                 autoComplete="organization"
                 maxLength={80}
-                className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.restaurantName ? "border-destructive" : ""}`}
+                aria-invalid={!!fieldErrors.restaurantName}
+                aria-describedby={
+                  fieldErrors.restaurantName
+                    ? "restaurantName-error"
+                    : undefined
+                }
+                onChange={() =>
+                  setFieldErrors((errors) => ({
+                    ...errors,
+                    restaurantName: "",
+                  }))
+                }
+                className={
+                  fieldErrors.restaurantName ? "border-destructive" : undefined
+                }
               />
               {fieldErrors.restaurantName && (
-                <span className="text-sm text-destructive">
+                <span
+                  id="restaurantName-error"
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
                   {fieldErrors.restaurantName}
                 </span>
               )}
@@ -474,7 +494,6 @@ function SignUpForm({
                 placeholder={t("namePlaceholder")}
                 autoComplete="name"
                 maxLength={80}
-                className="h-11 border-input bg-background text-foreground placeholder:text-muted-foreground"
               />
             </div>
           </div>
@@ -495,10 +514,19 @@ function SignUpForm({
                 placeholder={t("emailPlaceholder")}
                 autoComplete="email"
                 maxLength={100}
-                className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.email ? "border-destructive" : ""}`}
+                aria-invalid={!!fieldErrors.email}
+                aria-describedby={fieldErrors.email ? "email-error" : undefined}
+                onChange={() =>
+                  setFieldErrors((errors) => ({ ...errors, email: "" }))
+                }
+                className={fieldErrors.email ? "border-destructive" : undefined}
               />
               {fieldErrors.email && (
-                <span className="text-sm text-destructive">
+                <span
+                  id="email-error"
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
                   {fieldErrors.email}
                 </span>
               )}
@@ -518,15 +546,28 @@ function SignUpForm({
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   value={passwordValue}
-                  onChange={(e) => setPasswordValue(e.target.value)}
+                  onChange={(e) => {
+                    setPasswordValue(e.target.value);
+                    setFieldErrors((errors) => ({ ...errors, password: "" }));
+                  }}
                   maxLength={100}
-                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.password ? "border-destructive pr-10" : "pr-10"}`}
+                  aria-invalid={!!fieldErrors.password}
+                  aria-describedby={
+                    fieldErrors.password ? "password-error" : undefined
+                  }
+                  className={
+                    fieldErrors.password ? "border-destructive pr-10" : "pr-10"
+                  }
                 />
                 <button
-                  className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   title={showPassword ? t("hidePassword") : t("showPassword")}
+                  aria-label={
+                    showPassword ? t("hidePassword") : t("showPassword")
+                  }
+                  aria-pressed={showPassword}
                 >
                   {showPassword ? (
                     <EyeSlash
@@ -636,7 +677,11 @@ function SignUpForm({
               </div>
 
               {fieldErrors.password && (
-                <span className="text-sm text-destructive">
+                <span
+                  id="password-error"
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
                   {fieldErrors.password}
                 </span>
               )}
@@ -660,15 +705,35 @@ function SignUpForm({
                   type={showConfirmPassword ? "text" : "password"}
                   autoComplete="new-password"
                   maxLength={100}
-                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground ${fieldErrors.confirmPassword ? "border-destructive pr-10" : "pr-10"}`}
+                  aria-invalid={!!fieldErrors.confirmPassword}
+                  aria-describedby={
+                    fieldErrors.confirmPassword
+                      ? "confirmPassword-error"
+                      : undefined
+                  }
+                  onChange={() =>
+                    setFieldErrors((errors) => ({
+                      ...errors,
+                      confirmPassword: "",
+                    }))
+                  }
+                  className={
+                    fieldErrors.confirmPassword
+                      ? "border-destructive pr-10"
+                      : "pr-10"
+                  }
                 />
                 <button
-                  className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   title={
                     showConfirmPassword ? t("hidePassword") : t("showPassword")
                   }
+                  aria-label={
+                    showConfirmPassword ? t("hidePassword") : t("showPassword")
+                  }
+                  aria-pressed={showConfirmPassword}
                 >
                   {showConfirmPassword ? (
                     <EyeSlash
@@ -684,7 +749,11 @@ function SignUpForm({
                 </button>
               </div>
               {fieldErrors.confirmPassword && (
-                <span className="text-sm text-destructive">
+                <span
+                  id="confirmPassword-error"
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
                   {fieldErrors.confirmPassword}
                 </span>
               )}
@@ -696,6 +765,13 @@ function SignUpForm({
                   id="terms"
                   name="terms"
                   value="true"
+                  aria-invalid={!!fieldErrors.terms}
+                  aria-describedby={
+                    fieldErrors.terms ? "terms-error" : undefined
+                  }
+                  onCheckedChange={() =>
+                    setFieldErrors((errors) => ({ ...errors, terms: "" }))
+                  }
                   className={`mt-0.5 border-border data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground ${fieldErrors.terms ? "border-destructive" : ""}`}
                 />
                 <div className="grid gap-1.5 leading-tight">
@@ -713,7 +789,7 @@ function SignUpForm({
                   <p className="text-xs text-muted-foreground">
                     {t("termsAgreementPrefix")}
                     <a
-                      href={regionalTermsUrl}
+                      href={t("termsUrl")}
                       className="underline hover:text-foreground"
                       target="_blank"
                       rel="noreferrer"
@@ -722,7 +798,7 @@ function SignUpForm({
                     </a>
                     {t("termsAgreementMiddle")}
                     <a
-                      href={regionalPrivacyUrl}
+                      href={t("privacyUrl")}
                       className="underline hover:text-foreground"
                       target="_blank"
                       rel="noreferrer"
@@ -733,8 +809,26 @@ function SignUpForm({
                   </p>
                 </div>
               </div>
+              {fieldErrors.terms && (
+                <p
+                  id="terms-error"
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
+                  {fieldErrors.terms}
+                </p>
+              )}
             </div>
           </div>
+
+          {state.error && (
+            <p
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {t(state.error as any)}
+            </p>
+          )}
 
           {/* Navigation Buttons */}
           <div className="flex gap-3 mt-2">
@@ -743,7 +837,7 @@ function SignUpForm({
                 type="button"
                 variant="outline"
                 onClick={handleBack}
-                className="flex-1 h-11 gap-2 text-base font-semibold rounded-full"
+                className="flex-1 gap-2 text-base"
                 disabled={isPending || isCheckingEmail}
               >
                 <ArrowLeft className="w-5 h-5" weight="bold" />
@@ -755,7 +849,7 @@ function SignUpForm({
               <Button
                 type="submit"
                 className={cn(
-                  "h-11 gap-2 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 active:scale-[0.98] transition-all",
+                  "gap-2 text-base",
                   step === 1 ? "w-full" : "flex-1",
                 )}
                 disabled={isCheckingEmail}
@@ -772,7 +866,7 @@ function SignUpForm({
             ) : (
               <Button
                 type="submit"
-                className="flex-1 h-11 gap-2 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 active:scale-[0.98] transition-all"
+                className="flex-1 gap-2 text-base"
                 disabled={isPending}
               >
                 {isPending ? (

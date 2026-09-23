@@ -43,6 +43,7 @@ function ChangeEmailOtpForm() {
     () => Date.now() + 30 * 60 * 1000,
   );
   const [isExpired, setIsExpired] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (countdown > 0) {
@@ -65,7 +66,7 @@ function ChangeEmailOtpForm() {
     setIsVerifying(false);
 
     if (res?.error) {
-      toast.error(res.error);
+      setError(res.error);
     } else if (res?.success) {
       toast.success(t("emailChangedSuccess" as any));
       router.push("/");
@@ -81,6 +82,7 @@ function ChangeEmailOtpForm() {
     if ((countdown > 0 && !isExpired) || !userId || !token || !email) return;
     setCountdown(60);
     setOtp("");
+    setError("");
 
     const formData = new FormData();
     formData.append("userId", userId);
@@ -89,7 +91,7 @@ function ChangeEmailOtpForm() {
 
     const res = await sendEmailChangeOtpAction({}, formData);
     if (res?.error) {
-      toast.error(res.error);
+      setError(res.error);
     } else {
       setOtpExpiresAt(Date.now() + 30 * 60 * 1000);
       setIsExpired(false);
@@ -118,9 +120,12 @@ function ChangeEmailOtpForm() {
               <InputOTP
                 maxLength={6}
                 value={otp}
+                aria-invalid={!!error}
+                aria-describedby={error ? "otp-error" : undefined}
                 onChange={(val) => {
                   if (isExpired) return;
                   setOtp(val);
+                  setError("");
                   if (val.length === 6) {
                     submitOtp(val);
                   }
@@ -157,12 +162,21 @@ function ChangeEmailOtpForm() {
               </InputOTP>
             </div>
           </div>
+          {error && (
+            <p
+              id="otp-error"
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {error}
+            </p>
+          )}
           <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button
               type="button"
               variant={isExpired ? "default" : "outline"}
-              className={`w-full ${isExpired ? "sm:w-full font-semibold" : "sm:w-1/2 font-semibold"} h-11 rounded-full font-semibold`}
+              className={`w-full ${isExpired ? "sm:w-full" : "sm:w-1/2"}`}
               disabled={countdown > 0 && !isExpired}
               onClick={handleResendOtp}
             >
@@ -175,7 +189,7 @@ function ChangeEmailOtpForm() {
             {!isExpired && (
               <Button
                 type="submit"
-                className="w-full sm:w-1/2 gap-2 h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold disabled:opacity-40 transition-all active:scale-[0.98]"
+                className="w-full sm:w-1/2 gap-2"
                 disabled={isVerifying || otp.length < 6}
               >
                 {isVerifying ? (

@@ -19,7 +19,6 @@ import {
   Check,
   ClipboardText,
   Info,
-  WarningCircle,
   ArrowDown,
   ArrowLeft,
 } from "@phosphor-icons/react";
@@ -34,7 +33,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
   DialogCloseButton,
 } from "@/components/ui/dialog";
@@ -84,7 +82,8 @@ export function CurrentOrdersContent({
   const [localOrders, setLocalOrders] = useState<Order[]>(orders);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<string | null>(null);
-  const [orderToComplete, setOrderToComplete] = useState<string | null>(null);
+  const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
+  const pendingOrderRef = useRef<string | null>(null);
   const [mobileTab, setMobileTab] = useState<"in_progress" | "ready_for_pickup">("in_progress");
   const [mobileView, setMobileView] = useState<"list" | "detail">("list");
   const [inProgressTooltipOpen, setInProgressTooltipOpen] = useState(false);
@@ -264,41 +263,45 @@ export function CurrentOrdersContent({
     : 0;
   const selectedOrderTime = formatOrderTime(selectedOrderTimestamp);
   const targetOrderToCancel = localOrders.find((o) => o.$id === orderToCancel);
-  const targetOrderToComplete = localOrders.find((o) => o.$id === orderToComplete);
-
   async function handleStatusChange(
     orderId: string,
     newStatus: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
   ) {
-    const timestamp = Date.now();
-
-    // If completing or cancelling the currently selected order, pick the next available order
-    if ((newStatus === "completed" || newStatus === "cancelled") && selectedOrderId === orderId) {
-      const remainingOrders = localOrders.filter((o) => o.$id !== orderId);
-      const nextActive = remainingOrders.find((o) => o.status === "in_progress") || remainingOrders[0];
-      setSelectedOrderId(nextActive ? nextActive.$id : null);
-    }
-
-    // Optimistic UI update
-    setLocalOrders((prev) => {
-      if (newStatus === "completed" || newStatus === "cancelled") {
-        return prev.filter((o) => o.$id !== orderId);
+    if (pendingOrderRef.current) return false;
+    pendingOrderRef.current = orderId;
+    setPendingOrderId(orderId);
+    try {
+      const res = await updateOrderStatusAction(orderId, newStatus, organizationId);
+      if (!res?.success) {
+        toast.error(res?.error || t("error"));
+        return false;
       }
-      return prev.map((o) =>
-        o.$id === orderId
-          ? {
-              ...o,
-              status: newStatus,
-              readyAt: newStatus === "ready_for_pickup" ? timestamp : o.readyAt,
-              $updatedAt: new Date(timestamp).toISOString(),
-            }
-          : o,
-      );
-    });
-
-    const res = await updateOrderStatusAction(orderId, newStatus, organizationId);
-    if (res?.error) {
-      toast.error(res.error);
+      const timestamp = Date.now();
+      setLocalOrders((prev) => {
+        if (newStatus === "completed" || newStatus === "cancelled") {
+          return prev.filter((order) => order.$id !== orderId);
+        }
+        return prev.map((order) =>
+          order.$id === orderId
+            ? {
+                ...order,
+                status: newStatus,
+                readyAt: newStatus === "ready_for_pickup" ? timestamp : order.readyAt,
+                $updatedAt: new Date(timestamp).toISOString(),
+              }
+            : order,
+        );
+      });
+      if (newStatus === "completed" || newStatus === "cancelled") {
+        setSelectedOrderId((current) => (current === orderId ? null : current));
+      }
+      return true;
+    } catch {
+      toast.error(t("error"));
+      return false;
+    } finally {
+      pendingOrderRef.current = null;
+      setPendingOrderId(null);
     }
   }
 
@@ -331,9 +334,9 @@ export function CurrentOrdersContent({
           }
         }}
         className={cn(
-          "w-full h-11 text-left rounded-full transition-all relative flex items-center justify-between gap-2 select-none bg-card text-foreground border border-border hover:bg-muted/50 hover:border-foreground/20 px-3.5 sm:px-4 font-semibold cursor-pointer active:scale-[0.98]",
+          "w-full min-h-11 text-left rounded-full transition-[color,background-color,border-color,transform] duration-150 motion-reduce:transition-none motion-reduce:active:scale-100 relative flex items-center justify-between gap-2 select-none bg-card text-foreground border border-border hover:bg-muted/50 hover:border-foreground/20 px-3.5 sm:px-4 font-semibold cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           isSelected &&
-            "desktop:bg-primary desktop:text-primary-foreground desktop:border-primary desktop:shadow-xs desktop:hover:bg-primary desktop:hover:border-primary",
+            "desktop:bg-primary desktop:text-primary-foreground desktop:border-primary desktop:hover:bg-primary desktop:hover:border-primary",
         )}
       >
         {/* Left: Optional Back-to-Progress Arrow, Number and Type */}
@@ -345,8 +348,9 @@ export function CurrentOrdersContent({
                 e.stopPropagation();
                 await handleStatusChange(order.$id, "in_progress");
               }}
+              disabled={pendingOrderId !== null}
               className={cn(
-                "w-7 h-7 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer active:scale-90 text-foreground border border-border/60 bg-muted/30 hover:bg-muted",
+                "w-9 h-9 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-colors duration-150 motion-reduce:transition-none text-foreground border border-border bg-background hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50",
                 isSelected
                   ? "desktop:hover:bg-white/20 desktop:text-white desktop:border-transparent desktop:bg-transparent"
                   : "desktop:hidden",
@@ -425,7 +429,6 @@ export function CurrentOrdersContent({
               localStorage.setItem("zakkig_kitchen_sound", next ? "1" : "0");
               if (next) playNewOrderSound();
             }}
-            className="h-11 text-sm px-5 gap-2 rounded-full cursor-pointer active:scale-[0.98] transition-all font-semibold shadow-xs"
           >
             {soundEnabled ? (
               <>
@@ -498,7 +501,7 @@ export function CurrentOrdersContent({
 
           {/* Dual Columns Side-by-Side */}
           <TooltipProvider delay={100}>
-            <div className="flex-1 min-h-0 grid grid-cols-1 tablet:grid-cols-2 current-orders-queue-grid gap-3 h-full w-full">
+            <div className="flex-1 min-h-0 grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-[255px_1fr] gap-3 h-full w-full">
               {/* Column 1: In Bearbeitung */}
               <div
                 className={cn(
@@ -519,7 +522,7 @@ export function CurrentOrdersContent({
                       <TooltipTrigger
                         type="button"
                         onClick={() => setInProgressTooltipOpen((v) => !v)}
-                        className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center size-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 shrink-0 cursor-pointer"
                         aria-label={t("info")}
                       >
                         <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -574,7 +577,7 @@ export function CurrentOrdersContent({
                       <TooltipTrigger
                         type="button"
                         onClick={() => setReadyTooltipOpen((v) => !v)}
-                        className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center size-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 shrink-0 cursor-pointer"
                         aria-label={t("info")}
                       >
                         <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -624,7 +627,7 @@ export function CurrentOrdersContent({
             <Button
               variant="outline"
               size="default"
-              className="h-11 px-4 sm:px-5 text-sm font-semibold rounded-full border-border bg-card hover:bg-muted text-foreground flex items-center gap-2 cursor-pointer active:scale-[0.98] transition-all shadow-xs"
+              className="flex items-center"
               onClick={() => setMobileView("list")}
             >
               <ArrowLeft className="w-4 h-4 shrink-0" weight="bold" />
@@ -633,7 +636,7 @@ export function CurrentOrdersContent({
           </div>
 
           {selectedOrder ? (
-            <div className="flex-1 min-h-0 bg-card rounded-xl border border-border flex flex-col overflow-hidden shadow-xs">
+            <div className="flex-1 min-h-0 bg-card rounded-xl border border-border flex flex-col overflow-hidden">
               {/* Header: Edge-to-Edge Divider */}
               <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20 shrink-0 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
                 <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -708,8 +711,8 @@ export function CurrentOrdersContent({
                         >
                           <div className="flex-1 min-w-0">
                             <div className="flex items-baseline gap-2">
-                              <span className="font-bold text-sm sm:text-base font-inter tabular-nums text-foreground">
-                                {item.quantity}×
+                              <span className="font-bold text-sm sm:text-base text-foreground">
+                                <span className="font-inter tabular-nums">{item.quantity}</span>×
                               </span>
                               <span className="font-semibold text-sm sm:text-base text-foreground">
                                 {item.name}
@@ -728,9 +731,9 @@ export function CurrentOrdersContent({
                                   if (!optName || !String(optName).trim()) return null;
 
                                   return (
-                                    <span
+                                    <p
                                       key={cIdx}
-                                      className="inline-block max-w-full text-xs leading-relaxed text-muted-foreground bg-muted/60 border border-border/60 px-2.5 py-1 rounded-md break-words"
+                                      className="max-w-full text-xs leading-relaxed text-muted-foreground break-words"
                                     >
                                       {stepName ? (
                                         <span className="font-semibold text-foreground/90">
@@ -741,12 +744,12 @@ export function CurrentOrdersContent({
                                       {typeof c.extraPrice === "number" && c.extraPrice > 0 && (
                                         <>
                                           {" "}
-                                          <span className="text-muted-foreground/80 font-normal whitespace-nowrap">
-                                            (+<Price cents={c.extraPrice} />)
+                                          <span className="text-muted-foreground font-normal whitespace-nowrap">
+                                            (<Price cents={c.extraPrice} prefix="+" />)
                                           </span>
                                         </>
                                       )}
-                                    </span>
+                                    </p>
                                   );
                                 })}
                               </div>
@@ -766,7 +769,7 @@ export function CurrentOrdersContent({
                 {/* Sticky "More Items Below" pill indicator */}
                 {hasMoreBelow && (
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none z-10 animate-in fade-in duration-200">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-foreground/90 text-background text-xs font-semibold shadow-md backdrop-blur-xs">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-foreground/90 text-background text-xs font-semibold backdrop-blur-xs">
                       <ArrowDown className="w-3.5 h-3.5 shrink-0" weight="bold" />
                       <span>{t("moreItemsBelow")}</span>
                     </div>
@@ -798,6 +801,7 @@ export function CurrentOrdersContent({
                       <Button
                         size="default"
                         variant="outline"
+                        disabled={pendingOrderId !== null}
                         className="h-11 text-sm font-semibold px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
                         onClick={() => setOrderToCancel(selectedOrder.$id)}
                       >
@@ -806,7 +810,8 @@ export function CurrentOrdersContent({
                       </Button>
                       <Button
                         size="default"
-                        className="flex-1 h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full active:scale-[0.98] transition-all cursor-pointer"
+                        disabled={pendingOrderId !== null}
+                        className="flex-1"
                         onClick={() =>
                           handleStatusChange(selectedOrder.$id, "ready_for_pickup")
                         }
@@ -820,6 +825,7 @@ export function CurrentOrdersContent({
                       <Button
                         size="default"
                         variant="outline"
+                        disabled={pendingOrderId !== null}
                         className="h-11 text-sm font-semibold px-4 sm:px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
                         onClick={() => setOrderToCancel(selectedOrder.$id)}
                       >
@@ -828,8 +834,13 @@ export function CurrentOrdersContent({
                       </Button>
                       <Button
                         size="default"
-                        className="flex-1 h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full active:scale-[0.98] transition-all cursor-pointer"
-                        onClick={() => setOrderToComplete(selectedOrder.$id)}
+                        disabled={pendingOrderId !== null}
+                        className="flex-1"
+                        onClick={async () => {
+                          if (await handleStatusChange(selectedOrder.$id, "completed")) {
+                            toast.success(t("completed"));
+                          }
+                        }}
                       >
                         <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                         {t("complete")}
@@ -859,7 +870,7 @@ export function CurrentOrdersContent({
         open={!!orderToCancel}
         onOpenChange={(open) => !open && setOrderToCancel(null)}
       >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
             <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
               {targetOrderToCancel
@@ -871,19 +882,14 @@ export function CurrentOrdersContent({
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-5 sm:p-6 text-sm text-zinc-900">
-            <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full border border-zinc-200">
-              <WarningCircle
-                className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
-                weight="fill"
-              />
-              <span>{t("cancelOrderWarning")}</span>
-            </div>
+          <div className="px-5 py-5 sm:px-6 sm:py-6 text-sm text-left text-destructive font-medium">
+            {t("cancelOrderWarning")}
           </div>
 
           <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               variant="outline"
+              disabled={pendingOrderId !== null}
               className="w-full sm:flex-1 rounded-full h-11 border-zinc-200 font-semibold text-zinc-700 hover:bg-zinc-50 cursor-pointer"
               onClick={() => setOrderToCancel(null)}
             >
@@ -891,12 +897,14 @@ export function CurrentOrdersContent({
             </Button>
             <Button
               variant="destructive"
-              className="w-full sm:flex-1 rounded-full h-11 font-semibold cursor-pointer active:scale-[0.98] transition-all"
+              disabled={pendingOrderId !== null}
+              className="w-full sm:flex-1"
               onClick={async () => {
                 if (orderToCancel) {
-                  await handleStatusChange(orderToCancel, "cancelled");
-                  setOrderToCancel(null);
-                  toast.success(t("cancelledOrder"));
+                  if (await handleStatusChange(orderToCancel, "cancelled")) {
+                    setOrderToCancel(null);
+                    toast.success(t("cancelledOrder"));
+                  }
                 }
               }}
             >
@@ -906,53 +914,6 @@ export function CurrentOrdersContent({
         </DialogContent>
       </Dialog>
 
-      {/* Complete Order Confirmation Dialog */}
-      <Dialog
-        open={!!orderToComplete}
-        onOpenChange={(open) => !open && setOrderToComplete(null)}
-      >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
-          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
-            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
-              {targetOrderToComplete
-                ? t("completeOrderTitle", {
-                    orderNumber: targetOrderToComplete.orderNumber,
-                  })
-                : t("completeOrderTitleFallback")}
-            </DialogTitle>
-            <DialogCloseButton />
-          </DialogHeader>
-
-          <div className="p-5 sm:p-6 text-sm text-zinc-900">
-            <DialogDescription className="text-xs sm:text-sm text-zinc-600 font-normal leading-relaxed">
-              {t("completeOrderDesc")}
-            </DialogDescription>
-          </div>
-
-          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
-            <Button
-              variant="outline"
-              className="w-full sm:flex-1 rounded-full h-11 border-zinc-200 font-semibold text-zinc-700 hover:bg-zinc-50 cursor-pointer"
-              onClick={() => setOrderToComplete(null)}
-            >
-              {t("cancel")}
-            </Button>
-            <Button
-              className="w-full sm:flex-1 rounded-full h-11 font-semibold bg-black text-white hover:bg-zinc-800 cursor-pointer active:scale-[0.98] transition-all"
-              onClick={async () => {
-                if (orderToComplete) {
-                  await handleStatusChange(orderToComplete, "completed");
-                  setOrderToComplete(null);
-                  toast.success(t("completed"));
-                }
-              }}
-            >
-              <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-              {t("completeConfirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

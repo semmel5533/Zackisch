@@ -5,6 +5,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n";
 import { X } from "@phosphor-icons/react";
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
@@ -27,6 +28,7 @@ function DialogCloseButton({
   className,
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const { t } = useTranslation();
   return (
     <DialogPrimitive.Close
       data-slot="dialog-close"
@@ -43,7 +45,7 @@ function DialogCloseButton({
       }
     >
       <X className="w-4 h-4" weight="bold" />
-      <span className="sr-only">Close</span>
+      <span className="sr-only">{t("close")}</span>
     </DialogPrimitive.Close>
   );
 }
@@ -56,7 +58,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/60 backdrop-blur-xs transition-opacity duration-150 ease-out data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-black/50 backdrop-blur-xs transition-opacity duration-150 ease-out motion-reduce:transition-none motion-reduce:animate-none data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className,
       )}
       {...props}
@@ -72,13 +74,14 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 flex flex-col w-full max-w-[calc(100%-1.5rem)] sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] -translate-x-1/2 -translate-y-1/2 rounded-[20px] sm:rounded-[24px] bg-white text-zinc-900 border border-zinc-200 shadow-2xl overflow-hidden p-0 text-sm outline-none transition-all duration-150 ease-out data-[starting-style]:opacity-0 data-[starting-style]:scale-95 data-[ending-style]:opacity-0 data-[ending-style]:scale-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "fixed top-1/2 left-1/2 z-50 flex flex-col w-full max-w-[calc(100%-1.5rem)] sm:max-w-lg max-h-[calc(100dvh-1.5rem)] sm:max-h-[85vh] -translate-x-1/2 -translate-y-1/2 rounded-[20px] sm:rounded-[24px] bg-background text-foreground border border-zinc-200 shadow-dialog overflow-hidden p-0 text-sm outline-none transition-all duration-150 ease-out motion-reduce:transition-none motion-reduce:animate-none data-[starting-style]:opacity-0 data-[starting-style]:scale-95 data-[ending-style]:opacity-0 data-[ending-style]:scale-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className,
         )}
         {...props}
@@ -96,7 +99,7 @@ function DialogContent({
             }
           >
             <X className="w-4 h-4" weight="bold" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{t("close")}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -109,7 +112,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="dialog-header"
       className={cn(
-        "px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-col gap-1",
+        "px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-background shrink-0 text-left flex flex-col gap-1",
         className,
       )}
       {...props}
@@ -138,11 +141,12 @@ function DialogFooter({
 }: React.ComponentProps<"div"> & {
   showCloseButton?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       data-slot="dialog-footer"
       className={cn(
-        "px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full",
+        "px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-background shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full",
         className,
       )}
       {...props}
@@ -157,7 +161,7 @@ function DialogFooter({
             />
           }
         >
-          Close
+          {t("close")}
         </DialogPrimitive.Close>
       )}
     </div>

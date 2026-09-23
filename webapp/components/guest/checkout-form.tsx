@@ -3,39 +3,39 @@
 import { useState } from "react";
 import { PaymentElement, useCheckoutElements } from "@stripe/react-stripe-js/checkout";
 import { Button } from "@/components/ui/button";
+import { SheetFooter } from "@/components/ui/sheet";
 import { useTranslation } from "@/lib/i18n";
 import { SpinnerGap } from "@phosphor-icons/react";
-import { toast } from "sonner";
 
 export function CheckoutForm({ returnUrl }: { returnUrl: string }) {
   const checkoutState = useCheckoutElements();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (isProcessing) return;
     if (checkoutState.type !== "success") return;
 
     const { checkout } = checkoutState;
     setIsProcessing(true);
+    setError(null);
 
     try {
       const confirmResult = await checkout.confirm();
 
       if (confirmResult.type === "error") {
-        console.error("Stripe Checkout confirmation failed:", confirmResult.error);
-        toast.error(confirmResult.error.message || t("paymentFailed" as any));
+        setError(confirmResult.error.message || t("paymentFailed" as any));
         setIsProcessing(false);
       } else if (confirmResult.type === "success") {
         const sessionId = confirmResult.session.id;
-        const baseReturnUrl = returnUrl || `${window.location.origin}/pickup/success`;
-        const separator = baseReturnUrl.includes("?") ? "&" : "?";
-        window.location.href = `${baseReturnUrl}${separator}session_id=${sessionId}`;
+        const nextUrl = new URL(returnUrl, window.location.origin);
+        nextUrl.searchParams.set("session_id", sessionId);
+        window.location.href = nextUrl.toString();
       }
-    } catch (err: any) {
-      console.error("Payment confirmation error:", err);
-      toast.error(err?.message || t("error"));
+    } catch {
+      setError(t("paymentFailed" as any));
       setIsProcessing(false);
     }
   };
@@ -43,18 +43,21 @@ export function CheckoutForm({ returnUrl }: { returnUrl: string }) {
   const isReady = checkoutState.type === "success" && checkoutState.checkout.canConfirm;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-      <PaymentElement options={{ layout: "tabs" }} />
-      <Button 
-        type="submit" 
-        size="lg"
-        onClick={handleSubmit}
-        disabled={!isReady || isProcessing} 
-        className="w-full rounded-full font-bold h-12 text-base shadow-md cursor-pointer"
-      >
-        {isProcessing ? <SpinnerGap className="mr-2 h-5 w-5 animate-spin" /> : null}
-        {isProcessing ? t("processingPayment" as any) : t("orderAndPay" as any)}
-      </Button>
+    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+        <PaymentElement options={{ layout: "tabs" }} />
+      </div>
+      <SheetFooter className="shrink-0">
+        {error && (
+          <p role="alert" className="w-full text-left text-sm font-medium text-destructive">
+            {error}
+          </p>
+        )}
+        <Button type="submit" size="lg" disabled={!isReady || isProcessing} className="w-full">
+          {isProcessing && <SpinnerGap data-icon="inline-start" className="size-5 animate-spin" />}
+          {isProcessing ? t("processingPayment" as any) : t("orderAndPay" as any)}
+        </Button>
+      </SheetFooter>
     </form>
   );
 }

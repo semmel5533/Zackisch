@@ -5,7 +5,6 @@ import {
   Copy,
   ArrowsClockwise,
   QrCode,
-  WarningCircle,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
@@ -63,7 +62,7 @@ export function StaffSessionCard({
   }
 
   return (
-    <Card className="@min-[700px]:col-span-2 h-full flex flex-col @container bg-card border-border shadow-xs">
+    <Card className="@min-[700px]:col-span-2 h-full flex flex-col @container bg-card border-border">
       <CardHeader className="flex flex-col gap-1 pb-2">
         <div className="flex items-center justify-between gap-4 w-full">
           <h3 className="text-sm font-bold uppercase tracking-wider text-foreground leading-tight">
@@ -92,7 +91,7 @@ export function StaffSessionCard({
                   href={getLink(staffToken)}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-2xl p-5 border border-zinc-200"
+                  className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-xl p-5 border border-zinc-200"
                 >
                   <ReactQRCode
                     value={getLink(staffToken)}
@@ -123,13 +122,9 @@ export function StaffSessionCard({
                     }}
                   />
                 </a>
-                <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full border border-zinc-200">
-                  <WarningCircle
-                    className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
-                    weight="fill"
-                  />
-                  <span>{t("staffQrWarning")}</span>
-                </div>
+                <p className="w-full text-left text-sm font-medium text-destructive">
+                  {t("staffQrWarning")}
+                </p>
               </DialogBody>
             </DialogContent>
           </Dialog>
@@ -141,7 +136,7 @@ export function StaffSessionCard({
           <Button
             variant="outline"
             onClick={() => copyLinkText(staffToken)}
-            className="w-full @min-[370px]:flex-1 h-11 rounded-full font-semibold gap-2 active:scale-[0.98] transition-all cursor-pointer"
+            className="w-full @min-[370px]:flex-1"
             disabled={isPending}
           >
             <Copy className="h-4 w-4 shrink-0" weight="bold" />
@@ -150,7 +145,7 @@ export function StaffSessionCard({
           <Button
             variant="outline"
             onClick={() => setRegenerateStaffOpen(true)}
-            className="w-full @min-[370px]:flex-1 h-11 rounded-full font-semibold gap-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive active:scale-[0.98] transition-all cursor-pointer"
+            className="w-full @min-[370px]:flex-1 hover:border-destructive hover:text-destructive"
             disabled={isPending}
           >
             <ArrowsClockwise className="h-4 w-4" weight="bold" />
@@ -164,7 +159,7 @@ export function StaffSessionCard({
         open={regenerateStaffOpen}
         onOpenChange={setRegenerateStaffOpen}
       >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
             <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
               {t("regenerateStaffTitle")}

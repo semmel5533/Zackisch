@@ -54,7 +54,6 @@ import {
   DownloadSimple,
   MagnifyingGlass,
   X,
-  WarningCircle,
   ReceiptX,
 } from "@phosphor-icons/react";
 import { Price } from "@/components/ui/price";
@@ -119,6 +118,7 @@ export function AllOrdersContent({
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [orderToCancel, setOrderToCancel] = useState<Order | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "$createdAt",
@@ -271,22 +271,30 @@ export function AllOrdersContent({
   }
 
   async function handleCancelOrder(order: Order) {
+    if (isCancelling) return;
     if (order.status === "completed") {
       toast.error(t("cannotCancelCompleted"));
       setOrderToCancel(null);
       return;
     }
 
-    const res = await updateOrderStatusAction(order.$id, "cancelled", organizationId);
-    if (res?.error) {
-      toast.error(res.error);
-    } else {
+    setIsCancelling(true);
+    try {
+      const res = await updateOrderStatusAction(order.$id, "cancelled", organizationId);
+      if (!res?.success) {
+        toast.error(res?.error || t("error"));
+        return;
+      }
       setOrders((prev) =>
         prev.map((o) => (o.$id === order.$id ? { ...o, status: "cancelled" } : o)),
       );
       toast.success(t("cancelledOrder"));
+      setOrderToCancel(null);
+    } catch {
+      toast.error(t("error"));
+    } finally {
+      setIsCancelling(false);
     }
-    setOrderToCancel(null);
   }
 
   async function handleExportCSV() {
@@ -326,7 +334,7 @@ export function AllOrdersContent({
                   setCurrentPage(1);
                 }}
                 maxLength={100}
-                className="pl-9 pr-9 bg-background h-11 rounded-full"
+                className="pl-9 pr-9 bg-background"
               />
               {searchQuery && (
                 <button
@@ -600,9 +608,9 @@ export function AllOrdersContent({
                                           (typeof c === "string" ? c : "");
                                         if (!optName || !String(optName).trim()) return null;
                                         return (
-                                          <span
+                                          <p
                                             key={cIdx}
-                                            className="inline-block max-w-full text-xs leading-normal text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-md border border-border/40 break-words"
+                                            className="max-w-full text-xs leading-normal text-muted-foreground break-words"
                                           >
                                             {stepName ? (
                                               <span className="font-medium text-foreground/80">
@@ -614,11 +622,11 @@ export function AllOrdersContent({
                                               <>
                                                 {" "}
                                                 <span className="text-muted-foreground/80 font-normal whitespace-nowrap">
-                                                  (+<Price cents={c.extraPrice} />)
+                                                  (<Price cents={c.extraPrice} prefix="+" />)
                                                 </span>
                                               </>
                                             )}
-                                          </span>
+                                          </p>
                                         );
                                       })}
                                     </div>
@@ -640,7 +648,7 @@ export function AllOrdersContent({
                             }
                             className={
                               isCancelled
-                                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90 border-transparent shadow-sm"
+                                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90 border-transparent"
                                 : ""
                             }
                           >
@@ -682,9 +690,9 @@ export function AllOrdersContent({
                 render={
                   <Button
                     variant="outline"
-                    className="h-11 rounded-full px-4 w-[90px] justify-between font-inter tabular-nums font-semibold"
+                    className="h-11 rounded-full px-4 w-[90px] justify-between font-semibold"
                   >
-                    {itemsPerPage}
+                    <span className="font-inter tabular-nums">{itemsPerPage}</span>
                     <CaretDown className="h-4 w-4 opacity-50" />
                   </Button>
                 }
@@ -778,7 +786,7 @@ export function AllOrdersContent({
         open={!!orderToCancel}
         onOpenChange={(open) => !open && setOrderToCancel(null)}
       >
-        <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[20px] sm:rounded-[24px] border border-zinc-200 bg-white text-zinc-900 shadow-2xl flex flex-col">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
             <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
               {orderToCancel
@@ -790,19 +798,14 @@ export function AllOrdersContent({
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-5 sm:p-6 text-sm text-zinc-900">
-            <div className="flex items-start gap-2.5 text-xs text-left text-zinc-600 font-medium bg-zinc-50 py-2.5 px-3.5 rounded-2xl w-full border border-zinc-200">
-              <WarningCircle
-                className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900"
-                weight="fill"
-              />
-              <span>{t("cancelOrderWarning")}</span>
-            </div>
+          <div className="px-5 py-5 sm:px-6 sm:py-6 text-sm text-left text-destructive font-medium">
+            {t("cancelOrderWarning")}
           </div>
 
           <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
             <Button
               variant="outline"
+              disabled={isCancelling}
               className="w-full sm:flex-1 rounded-full h-11 border-zinc-200 font-semibold text-zinc-700 hover:bg-zinc-50 cursor-pointer"
               onClick={() => setOrderToCancel(null)}
             >
@@ -810,7 +813,8 @@ export function AllOrdersContent({
             </Button>
             <Button
               variant="destructive"
-              className="w-full sm:flex-1 rounded-full h-11 font-semibold cursor-pointer active:scale-[0.98] transition-all"
+              disabled={isCancelling}
+              className="w-full sm:flex-1"
               onClick={() => {
                 if (orderToCancel) {
                   handleCancelOrder(orderToCancel);

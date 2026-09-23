@@ -28,13 +28,13 @@ export function QrPrintText({ text }: { text: string }) {
   }, [label]);
 
   return (
-    <svg viewBox={viewBox} className="qr-print-line">
+    <svg viewBox={viewBox} className="block w-full overflow-visible">
       <text
         ref={ref}
         x="0"
         y="0"
         fill="currentColor"
-        style={{ fontSize: 100, fontWeight: 700 }}
+        className="text-[100px] font-bold"
       >
         {label.split(/(\d+)/).map((part, index) => (
           <tspan

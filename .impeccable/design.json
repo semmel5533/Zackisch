@@ -4,48 +4,170 @@
   "title": "Design System: zakkig",
   "extensions": {
     "colorMeta": {
-      "background": { "role": "neutral", "displayName": "White canvas", "canonical": "oklch(1 0 0)" },
-      "foreground": { "role": "neutral", "displayName": "Black text", "canonical": "oklch(0 0 0)" },
-      "primary": { "role": "primary", "displayName": "Black action", "canonical": "oklch(0 0 0)" },
-      "primary-foreground": { "role": "neutral", "displayName": "White on action", "canonical": "oklch(1 0 0)" },
-      "secondary": { "role": "neutral", "displayName": "Near-white fill", "canonical": "oklch(0.97 0 0)" },
-      "muted-foreground": { "role": "neutral", "displayName": "Muted text", "canonical": "oklch(0.556 0 0)" },
-      "border": { "role": "neutral", "displayName": "Subtle border", "canonical": "oklch(0.922 0 0)" },
-      "destructive": { "role": "tertiary", "displayName": "Destructive red", "canonical": "oklch(0.577 0.245 27.325)" },
-      "sidebar-accent": { "role": "neutral", "displayName": "Dark navigation accent", "canonical": "oklch(0.18 0 0)" },
-      "sidebar-border": { "role": "neutral", "displayName": "Navigation hairline", "canonical": "oklch(1 0 0 / 0.1)" },
-      "site-muted": { "role": "neutral", "displayName": "Website reading gray", "canonical": "#595959" },
-      "site-line": { "role": "neutral", "displayName": "Website hairline", "canonical": "#e6e6e6" },
-      "site-soft": { "role": "neutral", "displayName": "Website hover fill", "canonical": "#f7f7f5" }
+      "background": {
+        "role": "neutral",
+        "displayName": "White canvas",
+        "canonical": "oklch(1 0 0)"
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Black text",
+        "canonical": "oklch(0 0 0)"
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Black action",
+        "canonical": "oklch(0 0 0)"
+      },
+      "primary-foreground": {
+        "role": "neutral",
+        "displayName": "White on action",
+        "canonical": "oklch(1 0 0)"
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "Near-white fill",
+        "canonical": "oklch(0.97 0 0)"
+      },
+      "muted-foreground": {
+        "role": "neutral",
+        "displayName": "Muted text",
+        "canonical": "oklch(0.5 0 0)"
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Subtle border",
+        "canonical": "oklch(0.922 0 0)"
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Destructive red",
+        "canonical": "oklch(0.577 0.245 27.325)"
+      },
+      "sidebar-accent": {
+        "role": "neutral",
+        "displayName": "Dark navigation accent",
+        "canonical": "oklch(0.18 0 0)"
+      },
+      "sidebar-border": {
+        "role": "neutral",
+        "displayName": "Navigation hairline",
+        "canonical": "oklch(1 0 0 / 0.1)"
+      },
+      "site-muted": {
+        "role": "neutral",
+        "displayName": "Website reading gray",
+        "canonical": "oklch(0.5 0 0)"
+      },
+      "site-line": {
+        "role": "neutral",
+        "displayName": "Website hairline",
+        "canonical": "oklch(0.922 0 0)"
+      },
+      "site-soft": {
+        "role": "neutral",
+        "displayName": "Website hover fill",
+        "canonical": "oklch(0.97 0 0)"
+      },
+      "input": {
+        "role": "neutral",
+        "displayName": "Input boundary",
+        "canonical": "oklch(0.65 0 0)"
+      }
     },
     "typographyMeta": {
-      "website-display": { "displayName": "Website hero display", "purpose": "Wide hero words" },
-      "website-headline": { "displayName": "Website section headline", "purpose": "Section titles" },
-      "dialog-title": { "displayName": "Webapp dialog title", "purpose": "Modal heading" },
-      "body": { "displayName": "Body", "purpose": "Operational UI text" },
-      "section-label": { "displayName": "Tracked section label", "purpose": "Webapp section and queue headers" },
-      "numeric": { "displayName": "Numeric", "purpose": "Isolated price and counter digits" }
+      "website-display": {
+        "displayName": "Website hero display",
+        "purpose": "Wide hero words"
+      },
+      "website-headline": {
+        "displayName": "Website section headline",
+        "purpose": "Section titles"
+      },
+      "dialog-title": {
+        "displayName": "Webapp dialog title",
+        "purpose": "Modal heading"
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Operational UI text"
+      },
+      "section-label": {
+        "displayName": "Tracked section label",
+        "purpose": "Webapp section and queue headers"
+      },
+      "numeric": {
+        "displayName": "Numeric",
+        "purpose": "Isolated price and counter digits"
+      }
     },
     "shadows": [
-      { "name": "theme shadows", "value": "hsl(0 0% 0% / 0)", "purpose": "All theme shadow utilities are visually transparent." },
-      { "name": "customization footer", "value": "0 -4px 16px rgba(0,0,0,0.06)", "purpose": "Indicates content scrolling under the fixed option footer." },
-      { "name": "website qr paper", "value": "0 1px 2px rgba(0,0,0,0.04), 0 3px 8px -2px rgba(0,0,0,0.04), 0 14px 24px -6px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)", "purpose": "Gives the printed QR sheet physical presence." }
+      {
+        "name": "ordinary theme shadows",
+        "value": "0 0 #0000",
+        "purpose": "Valid transparent shadow; keeps composited focus rings valid."
+      },
+      {
+        "name": "popup",
+        "value": "0 8px 24px rgb(0 0 0 / 0.08)",
+        "purpose": "Visible floating layer."
+      },
+      {
+        "name": "dialog",
+        "value": "0 20px 60px rgb(0 0 0 / 0.14)",
+        "purpose": "Visible modal layer."
+      }
     ],
     "motion": [
-      { "name": "button press", "value": "transform: scale(0.98)", "purpose": "Immediate active-state feedback." },
-      { "name": "dialog", "value": "150ms ease-out", "purpose": "Fade and scale popup entrance and exit." },
-      { "name": "popup", "value": "100ms", "purpose": "Dropdown and select entrance and exit." },
-      { "name": "website button", "value": "150ms", "purpose": "Hover color and press transform." }
+      {
+        "name": "button press",
+        "value": "scale(0.98)",
+        "purpose": "Active feedback, suppressed under reduced motion."
+      },
+      {
+        "name": "control transition",
+        "value": "150ms",
+        "purpose": "Shared hover and press treatment."
+      },
+      {
+        "name": "popup",
+        "value": "100ms",
+        "purpose": "Menu entrance."
+      }
     ],
     "breakpoints": [
-      { "name": "dashboard tablet container", "value": "500px" },
-      { "name": "dashboard desktop container", "value": "1110px" },
-      { "name": "settings grid container", "value": "480px" },
-      { "name": "settings wide grid container", "value": "600px" },
-      { "name": "website hero stack viewport", "value": "1024px" },
-      { "name": "website flow viewport", "value": "900px" },
-      { "name": "website mobile navigation viewport", "value": "720px" },
-      { "name": "website single column viewport", "value": "600px" }
+      {
+        "name": "dashboard tablet container",
+        "value": "500px"
+      },
+      {
+        "name": "dashboard desktop container",
+        "value": "1110px"
+      },
+      {
+        "name": "settings grid container",
+        "value": "480px"
+      },
+      {
+        "name": "settings wide grid container",
+        "value": "600px"
+      },
+      {
+        "name": "website hero stack viewport",
+        "value": "1024px"
+      },
+      {
+        "name": "website flow viewport",
+        "value": "900px"
+      },
+      {
+        "name": "website mobile navigation viewport",
+        "value": "720px"
+      },
+      {
+        "name": "website single column viewport",
+        "value": "600px"
+      }
     ]
   },
   "components": [
@@ -53,102 +175,134 @@
       "name": "Primary button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Webapp default action, full pill and tactile active state.",
+      "description": "Shared 44px black primary action.",
       "html": "<button class=\"ds-btn-primary\">Action</button>",
-      "css": ".ds-btn-primary{height:3.3rem;padding:0 1.5rem;border:1px solid transparent;border-radius:9999px;background:var(--primary);color:var(--primary-foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-primary:hover{background:color-mix(in oklch,var(--primary) 90%,transparent)}.ds-btn-primary:focus-visible{outline:3px solid color-mix(in oklch,var(--ring) 50%,transparent);outline-offset:2px}.ds-btn-primary:active{transform:scale(.98)}.ds-btn-primary:disabled{opacity:.5;pointer-events:none}"
+      "css": ".ds-btn-primary{height:44px;padding:0 20px;border:1px solid transparent;border-radius:9999px;background:var(--primary);color:var(--primary-foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-primary:hover{background:color-mix(in oklch,var(--primary) 90%,transparent)}.ds-btn-primary:focus-visible{outline:2px solid var(--ring);outline-offset:2px}.ds-btn-primary:active{transform:scale(.98)}.ds-btn-primary:disabled{opacity:.5;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-btn-primary{transition:none}.ds-btn-primary:active{transform:none}}"
     },
     {
       "name": "Outline button",
       "kind": "button",
       "refersTo": "button-outline",
-      "description": "Webapp secondary bordered action.",
+      "description": "White bordered alternative; secondary is an outline compatibility alias.",
       "html": "<button class=\"ds-btn-outline\">Cancel</button>",
-      "css": ".ds-btn-outline{height:3.3rem;padding:0 1.5rem;border:1px solid var(--border);border-radius:9999px;background:var(--background);color:var(--foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-outline:hover{background:var(--secondary)}.ds-btn-outline:focus-visible{outline:3px solid color-mix(in oklch,var(--ring) 50%,transparent);outline-offset:2px}.ds-btn-outline:active{transform:scale(.98)}.ds-btn-outline:disabled{opacity:.5;pointer-events:none}"
+      "css": ".ds-btn-outline{height:44px;padding:0 20px;border:1px solid var(--input);border-radius:9999px;background:var(--background);color:var(--foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-outline:hover{background:var(--muted)}.ds-btn-outline:focus-visible{outline:2px solid var(--ring);outline-offset:2px}.ds-btn-outline:active{transform:scale(.98)}.ds-btn-outline:disabled{opacity:.5;pointer-events:none}@media(prefers-reduced-motion:reduce){.ds-btn-outline{transition:none}.ds-btn-outline:active{transform:none}}"
     },
     {
       "name": "Secondary button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Webapp filled low-emphasis action.",
+      "description": "White bordered alternative; secondary is an outline compatibility alias.",
       "html": "<button class=\"ds-btn-secondary\">More</button>",
-      "css": ".ds-btn-secondary{height:3.3rem;padding:0 1.5rem;border:1px solid transparent;border-radius:9999px;background:var(--secondary);color:var(--foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-secondary:hover{background:color-mix(in oklch,var(--secondary),var(--foreground) 5%)}.ds-btn-secondary:focus-visible{outline:3px solid color-mix(in oklch,var(--ring) 50%,transparent);outline-offset:2px}.ds-btn-secondary:active{transform:scale(.98)}"
+      "css": ".ds-btn-secondary{height:44px;padding:0 20px;border:1px solid var(--input);border-radius:9999px;background:var(--background);color:var(--foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-secondary:hover{background:var(--muted)}.ds-btn-secondary:focus-visible{outline:2px solid var(--ring);outline-offset:2px}.ds-btn-secondary:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-btn-secondary{transition:none}.ds-btn-secondary:active{transform:none}}.ds-btn-secondary:disabled{opacity:.5;pointer-events:none}"
     },
     {
       "name": "Destructive button",
       "kind": "button",
       "refersTo": "button-destructive",
-      "description": "Webapp destructive action.",
+      "description": "Shared 44px destructive action.",
       "html": "<button class=\"ds-btn-destructive\">Delete</button>",
-      "css": ".ds-btn-destructive{height:3.3rem;padding:0 1.5rem;border:1px solid transparent;border-radius:9999px;background:var(--destructive);color:var(--destructive-foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-destructive:hover{background:color-mix(in oklch,var(--destructive) 90%,transparent)}.ds-btn-destructive:focus-visible{outline:3px solid color-mix(in oklch,var(--destructive) 20%,transparent);outline-offset:2px}.ds-btn-destructive:active{transform:scale(.98)}"
+      "css": ".ds-btn-destructive{height:44px;padding:0 20px;border:1px solid transparent;border-radius:9999px;background:var(--destructive);color:var(--destructive-foreground);font:600 14px Poppins,sans-serif;cursor:pointer;transition:all 150ms}.ds-btn-destructive:hover{background:color-mix(in oklch,var(--destructive) 90%,transparent)}.ds-btn-destructive:focus-visible{outline:2px solid var(--destructive);outline-offset:2px}.ds-btn-destructive:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-btn-destructive{transition:none}.ds-btn-destructive:active{transform:none}}"
     },
     {
       "name": "Text input",
       "kind": "input",
-      "description": "Webapp bordered input with focus and invalid states.",
+      "description": "44px minimum field with 12px corners.",
       "html": "<input class=\"ds-input\" aria-label=\"Example\" placeholder=\"Example\">",
-      "css": ".ds-input{display:block;width:100%;height:2.4rem;padding:0 .75rem;border:1px solid var(--input);border-radius:1.5rem;background:transparent;color:var(--foreground);font:400 16px Poppins,sans-serif;outline:none;transition:border-color 150ms}.ds-input::placeholder{color:var(--muted-foreground)}.ds-input:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}.ds-input[aria-invalid=true]{border-color:var(--destructive);box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive) 20%,transparent)}.ds-input:disabled{opacity:.5;background:color-mix(in oklch,var(--input) 50%,transparent)}"
+      "css": ".ds-input{display:block;width:100%;min-height:44px;padding:8px 12px;border:1px solid var(--input);border-radius:12px;background:var(--background);color:var(--foreground);font:400 16px Poppins,sans-serif;outline:none;transition:border-color 150ms}.ds-input::placeholder{color:var(--muted-foreground)}.ds-input:focus-visible{border-color:var(--ring);outline:2px solid var(--ring);outline-offset:2px}.ds-input[aria-invalid=true]{border-color:var(--destructive);box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive) 20%,transparent)}.ds-input:disabled{opacity:.5;background:color-mix(in oklch,var(--input) 50%,transparent)}"
     },
     {
       "name": "Select menu",
       "kind": "nav",
       "refersTo": "popup",
-      "description": "The 20px popup with padded 12px choices.",
+      "description": "20px popup with 8px padding and 12px choices.",
       "html": "<div class=\"ds-select-menu\"><div class=\"ds-select-item\" tabindex=\"0\">Option</div><div class=\"ds-select-item\" tabindex=\"0\">Another option</div></div>",
-      "css": ".ds-select-menu{width:220px;padding:.6rem;border:1px solid var(--border);border-radius:20px;background:var(--popover);color:var(--popover-foreground)}.ds-select-item{padding:.75rem 1.05rem;border-radius:12px;font:600 14px Poppins,sans-serif;outline:none;cursor:pointer;transition:background 100ms}.ds-select-item:hover,.ds-select-item:focus-visible{background:var(--secondary)}"
+      "css": ".ds-select-menu{width:220px;padding:8px;border:1px solid var(--border);border-radius:20px;box-shadow:0 8px 24px rgb(0 0 0 / .08);background:var(--popover);color:var(--popover-foreground)}.ds-select-item{padding:10px 14px;border-radius:12px;font:600 14px Poppins,sans-serif;outline:none;cursor:pointer;transition:background 100ms}.ds-select-item:hover,.ds-select-item:focus-visible{background:var(--secondary)}"
     },
     {
       "name": "Status badge",
       "kind": "chip",
       "description": "Compact secondary badge from the shared primitive.",
       "html": "<span class=\"ds-badge\">Status</span>",
-      "css": ".ds-badge{display:inline-flex;align-items:center;justify-content:center;height:1.5rem;padding:0 .6rem;border:1px solid transparent;border-radius:9999px;background:var(--secondary);color:var(--foreground);font:500 12px Poppins,sans-serif;white-space:nowrap}.ds-badge:focus-visible{outline:3px solid color-mix(in oklch,var(--ring) 50%,transparent);outline-offset:2px}"
+      "css": ".ds-badge{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:0 8px;border:1px solid transparent;border-radius:9999px;background:var(--secondary);color:var(--foreground);font:500 12px Poppins,sans-serif;white-space:nowrap}.ds-badge:focus-visible{outline:2px solid var(--ring);outline-offset:2px}"
     },
     {
       "name": "Card",
       "kind": "card",
-      "description": "Light webapp content card with transparent-theme elevation and a fine ring.",
+      "description": "20px light card with subtle border and no ordinary elevation.",
       "html": "<article class=\"ds-card\"><strong>Card title</strong><p>Supporting content</p></article>",
-      "css": ".ds-card{display:flex;flex-direction:column;gap:1.2rem;padding:1.2rem;border-radius:28px;background:var(--card);color:var(--card-foreground);box-shadow:0 0 0 1px color-mix(in oklch,var(--foreground) 10%,transparent);font:400 14px Poppins,sans-serif}.ds-card strong{font-weight:600}.ds-card p{margin:0;color:var(--muted-foreground)}"
+      "css": ".ds-card{display:flex;flex-direction:column;gap:16px;padding:16px;border:1px solid var(--border);border-radius:20px;background:var(--card);color:var(--card-foreground);font:400 14px Poppins,sans-serif}.ds-card strong{font-weight:600}.ds-card p{margin:0;color:var(--muted-foreground)}"
     }
   ],
   "narrative": {
     "northStar": "Monochrome clarity for service in motion",
-    "overview": "zakkig combines a quiet white working canvas with decisive black actions. The webapp favors fast scanning, clear boundaries, rounded controls, and immediate press feedback. The marketing website applies the same type and color foundation to an editorial composition and a physical QR-paper motif.",
+    "overview": "zakkig uses a white working canvas, decisive black actions, restrained borders, and destructive red. The marketing site adds editorial composition and a QR-paper motif; operational UI prioritizes task clarity.",
     "keyCharacteristics": [
-      "White surfaces, black text and primary actions, gray containment, and red destructive states.",
-      "Poppins for words; Inter with tabular figures for isolated digits and decimal separators.",
-      "Pill actions, rounded cards and dialogs, and square QR modules.",
-      "Container-responsive work areas, a narrow guest column, and a separate viewport-responsive website.",
-      "Borders and tonal layers carry most depth; the website QR paper is a physical exception."
+      "White surfaces, black primary actions, quiet gray boundaries, and red destructive states.",
+      "Poppins for words; Inter for isolated digits and decimal separators.",
+      "Pill actions, 12px fields, 20px cards and popups, and square QR modules.",
+      "A shared 4px spacing scale with container-aware work areas and responsive website composition.",
+      "Visible shadows only for floating layers and physical QR paper."
     ],
     "rules": [
-      { "name": "The Evidence Rule", "body": "Frontmatter records the shared token layer. Check the linked reference before treating a local override or an intended rule as universal.", "section": "overview" },
-      { "name": "The Light Surface Rule", "body": "Keep work areas, forms, dialogs, and guest content light. Reserve black fields for the operational sidebar, primary actions, and the website's dark setup and footer sections.", "section": "colors" },
-      { "name": "The Semantic Red Rule", "body": "Use destructive red for errors and destructive actions; use black or gray for ordinary status and selection.", "section": "colors" },
-      { "name": "The Split Price Rule", "body": "In the webapp, render UI prices with its Price component: digits and decimal separator take Inter and tabular figures; the currency sign and translated prefix take the surrounding family. The website follows the family separation through its own numeric text pattern.", "section": "typography" },
-      { "name": "The Endonym Rule", "body": "Region names use native forms and visible UI copy and destinations are translated with next-intl.", "section": "typography" },
-      { "name": "The Available Width Rule", "body": "Use container queries inside dashboard content that can lose space to the sidebar. Use viewport breakpoints for the outer shell and website-wide composition.", "section": "layout" },
-      { "name": "The Tailwind-First Rule", "body": "In both apps, especially the webapp, express styling in JSX/TSX with Tailwind utilities whenever that is straightforward. Utilities cover layout, spacing, type, responsive and container queries, state variants, transitions, and interactions; arbitrary values and variants are available for project-specific needs. Reserve custom CSS for shared tokens and fonts, resets, keyframes, and runtime or third-party constraints that utilities cannot express cleanly. Existing custom CSS documents current implementation, not a reason to extend it.", "section": "layout" },
-      { "name": "The Boundary Rule", "body": "Prefer a subtle border or tonal fill for normal containment. Visible shadows belong to surfaces with an explicitly floating or physical role.", "section": "elevation" },
-      { "name": "The Nested Radius Rule", "body": "Preserve a clear inner and outer corner hierarchy. The current popup uses 20px outside and 12px inside with 9.6px padding, which is close to, but not exactly, concentric; the project convention targets outer radius minus padding.", "section": "shapes" },
-      { "name": "The Inline Feedback Rule", "body": "Inline form errors use left-aligned destructive text; toasts sit top-center. Avoid duplicate inline and toast feedback for one error.", "section": "components" }
+      {
+        "name": "The Evidence Rule",
+        "body": "Tokens are brand choices. Verify implementation claims in source and accessibility or clarity decisions in the UX research.",
+        "section": "overview"
+      },
+      {
+        "name": "The Light Surface Rule",
+        "body": "Keep forms, guest content, and dialogs light; reserve dark surfaces for intentional emphasis.",
+        "section": "colors"
+      },
+      {
+        "name": "The Semantic Red Rule",
+        "body": "Reserve red for errors and destructive actions.",
+        "section": "colors"
+      },
+      {
+        "name": "The Split Price Rule",
+        "body": "Use webapp Price so isolated digits take Inter while signs and words stay Poppins.",
+        "section": "typography"
+      },
+      {
+        "name": "The Available Width Rule",
+        "body": "Use container queries inside dashboard work areas and viewport breakpoints for the outer shell and website.",
+        "section": "layout"
+      },
+      {
+        "name": "The Tailwind-First Rule",
+        "body": "Use Tailwind JSX utilities for expressible styling in both apps; reserve CSS for tokens, fonts, resets, keyframes, and genuine runtime or third-party constraints.",
+        "section": "layout"
+      },
+      {
+        "name": "The Boundary Rule",
+        "body": "Use borders and tonal fills for ordinary containment; explicit shadows identify floating or physical surfaces.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Nested Radius Rule",
+        "body": "A 20px popup with 8px padding has 12px inner item corners.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Inline Feedback Rule",
+        "body": "Place actionable errors by the field or operation and avoid duplicate toasts.",
+        "section": "components"
+      }
     ],
     "dos": [
-      "Do keep the main UI light and use black with white text for focal actions.",
-      "Do calculate utility dimensions from this project's 0.3rem spacing unit.",
-      "Do use Poppins for words and the webapp Price component for prices there.",
-      "Do preserve visible focus, disabled, selected, loading, and error states.",
-      "Do retain the distinct responsive models of the webapp and website.",
-      "Do use Tailwind utilities, including arbitrary values and state or container variants, for expressible styling in both apps.",
-      "Do use Phosphor icons and translated UI copy."
+      "Do use the shared 4px spacing scale, semantic colors, and named control roles.",
+      "Do keep the principal action distinct from supporting navigation.",
+      "Do preserve input values and visible focus, error, loading, disabled, and selected states.",
+      "Do use Tailwind utilities for expressible styling.",
+      "Do verify outcome claims against local evidence."
     ],
     "donts": [
-      "Don't treat a zero-opacity theme shadow as visible elevation.",
-      "Don't apply the website's 44px CSS button size to the webapp button primitive.",
-      "Don't assume stock Tailwind spacing or radius values.",
-      "Don't use a dark modal as a general surface pattern.",
-      "Don't add redundant globals.css, module CSS, or inline static styles where Tailwind utilities express the same result cleanly.",
-      "Don't promote a documented code deviation into a new standard."
+      "Do not use dark modals or visible shadows as a general surface style.",
+      "Do not treat secondary as a separate gray-filled button role.",
+      "Do not apply Inter to words, currency signs, or mixed-text parent containers.",
+      "Do not hide required prices, selections, errors, or next steps.",
+      "Do not canonize documented implementation deviations."
     ]
   }
 }

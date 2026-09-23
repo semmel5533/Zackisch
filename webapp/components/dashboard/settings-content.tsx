@@ -316,7 +316,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                       <span className="text-xs text-muted-foreground">{t("bannerRecommended")}</span>
                     </div>
 
-                    <div className="relative isolate w-full aspect-[2.3/1] rounded-[22px] sm:rounded-[26px] overflow-hidden border border-border bg-muted/40 group/banner transition-all">
+                    <div className="relative isolate w-full aspect-[2.3/1] rounded-xl sm:rounded-2xl overflow-hidden border border-border bg-muted/40 group/banner transition-colors">
                       {/* Banner Area */}
                       <div
                         role="button"
@@ -359,7 +359,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   e.stopPropagation();
                                   bannerInputRef.current?.click();
                                 }}
-                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors shadow-sm cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95"
                                 title={t("changeBanner")}
                               >
                                 <PencilSimple className="w-3.5 h-3.5" />
@@ -373,7 +373,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   setRemoveBanner(true);
                                   if (bannerInputRef.current) bannerInputRef.current.value = "";
                                 }}
-                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95"
                                 title={t("removeBanner")}
                               >
                                 <Trash className="w-3.5 h-3.5" />
@@ -384,7 +384,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           <>
                             <div className="w-full h-full bg-muted/40" />
                             <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
-                              <span className="text-white font-medium text-xs bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                              <span className="text-white font-medium text-xs bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
                                 <UploadSimple className="w-3.5 h-3.5" />
                                 {t("uploadBanner")}
                               </span>
@@ -425,7 +425,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           if (file) handleLogoFile(file);
                         }}
                         className={cn(
-                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 w-14 h-14 @min-[768px]:w-16 @min-[768px]:h-16 rounded-[10px] sm:rounded-[12px] bg-muted border transition-all cursor-pointer flex items-center justify-center overflow-hidden group/logo",
+                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 w-14 h-14 @min-[768px]:w-16 @min-[768px]:h-16 rounded-[10px] sm:rounded-[12px] bg-muted border transition-colors cursor-pointer flex items-center justify-center overflow-hidden group/logo",
                           (bannerPreview || logoPreview) ? "border-neutral-600" : "border-border",
                           isDraggingLogo && "border-primary ring-2 ring-primary/20",
                         )}
@@ -446,7 +446,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   e.stopPropagation();
                                   logoInputRef.current?.click();
                                 }}
-                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors shadow-sm cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95"
                                 title={t("changeLogo")}
                               >
                                 <PencilSimple className="w-3.5 h-3.5" />
@@ -460,7 +460,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   setRemoveLogo(true);
                                   if (logoInputRef.current) logoInputRef.current.value = "";
                                 }}
-                                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95"
                                 title={t("removeLogo")}
                               >
                                 <Trash className="w-3.5 h-3.5" />
@@ -470,7 +470,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         ) : (
                           <div className="w-full h-full bg-muted flex items-center justify-center">
                             <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/logo:opacity-100 transition-opacity flex items-center justify-center">
-                              <span className="text-white bg-black/60 backdrop-blur-sm p-2 rounded-full flex items-center justify-center shadow-sm">
+                              <span className="text-white bg-black/60 backdrop-blur-sm p-2 rounded-full flex items-center justify-center">
                                 <UploadSimple className="w-4 h-4" />
                               </span>
                             </div>
@@ -495,7 +495,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                     <Button
                       type="submit"
                       disabled={isBusinessPending}
-                      className="w-full h-11 rounded-full font-semibold bg-black text-white hover:bg-zinc-800 cursor-pointer active:scale-[0.98] transition-all shadow-xs"
+                      className="w-full"
                     >
                       {isBusinessPending ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
                       {t("save")}
@@ -504,7 +504,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 </div>
 
                 {/* Stripe Settings Column / Panel */}
-                <div className="h-full flex flex-col justify-between gap-4 p-4 sm:p-5 border border-border rounded-[22px] sm:rounded-[26px] bg-muted/20">
+                <div className="h-full flex flex-col justify-between gap-4 p-4 sm:p-5 border border-border rounded-xl sm:rounded-2xl bg-muted/20">
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
                       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -583,7 +583,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           setIsStripeLoading(false);
                         }
                       }}
-                      className="w-full h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98] transition-all"
+                      className="w-full"
                     >
                       {isStripeLoading ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
                       {organization.stripeOnboardingComplete
@@ -636,7 +636,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
             </CardHeader>
             <CardContent className="flex flex-col gap-6 items-stretch">
               <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6">
-                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
+                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-xl">
                   <div className="flex flex-col gap-1">
                     <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">{t("logoutAllDevices")}</h4>
                     <p className="text-xs text-muted-foreground">
@@ -655,7 +655,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         setIsLoggingOutAll(false);
                       }
                     }}
-                    className="w-full mt-auto h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98] transition-all"
+                    className="w-full mt-auto"
                   >
                     {isLoggingOutAll ? (
                       <SpinnerGap className="mr-2 animate-spin" weight="bold" />
@@ -664,7 +664,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   </Button>
                 </div>
 
-                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
+                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-xl">
                   <div className="flex flex-col gap-1">
                     <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">{t("changeEmailAddress" as any)}</h4>
                     <p className="text-xs text-muted-foreground">
@@ -687,7 +687,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         setIsEmailChanging(false);
                       }
                     }}
-                    className="w-full mt-auto h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98] transition-all"
+                    className="w-full mt-auto"
                   >
                     {isEmailChanging ? (
                       <SpinnerGap className="mr-2 animate-spin" weight="bold" />
@@ -697,7 +697,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                 </div>
               </div>
 
-              <div className="w-full flex flex-col justify-between gap-4 p-4 border border-border rounded-[18px] sm:rounded-[20px]">
+              <div className="w-full flex flex-col justify-between gap-4 p-4 border border-border rounded-xl">
                 <div className="flex flex-col gap-1">
                   <h4 className="text-sm font-bold uppercase tracking-wider text-destructive">{t("deleteAccount")}</h4>
                   <p className="text-xs text-muted-foreground">

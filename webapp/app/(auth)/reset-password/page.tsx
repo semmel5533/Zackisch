@@ -26,12 +26,9 @@ export default function ResetPasswordPage() {
     {},
   );
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
-    if (state.error) {
-      toast.error(t(state.error as any));
-    }
     if (state.success) {
       toast.success(t("resetPasswordSent"));
     }
@@ -52,6 +49,7 @@ export default function ResetPasswordPage() {
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      document.getElementById("email")?.focus();
       return;
     }
 
@@ -90,10 +88,7 @@ export default function ResetPasswordPage() {
           <CardContent>
             <div className="mt-2">
               <Link href="/sign-in" className="w-full">
-                <Button
-                  type="button"
-                  className="w-full gap-2 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 transition-all active:scale-[0.98]"
-                >
+                <Button type="button" className="w-full gap-2 text-base">
                   <ArrowLeft className="w-5 h-5" weight="bold" />
                   {t("backToSignIn")}
                 </Button>
@@ -104,7 +99,9 @@ export default function ResetPasswordPage() {
       ) : (
         <>
           <CardHeader className="flex-col items-start gap-1 pt-4">
-            <CardTitle className="text-2xl font-bold text-foreground">{t("resetPassword")}</CardTitle>
+            <CardTitle className="text-2xl font-bold text-foreground">
+              {t("resetPassword")}
+            </CardTitle>
             <CardDescription className="text-muted-foreground">
               {t("resetPasswordDescription")}
             </CardDescription>
@@ -130,18 +127,40 @@ export default function ResetPasswordPage() {
                   placeholder={t("emailPlaceholder")}
                   autoComplete="email"
                   maxLength={100}
-                  className={`h-11 border-input bg-background text-foreground placeholder:text-muted-foreground rounded-xl ${fieldErrors.email ? "border-destructive" : ""}`}
+                  aria-invalid={!!fieldErrors.email}
+                  aria-describedby={
+                    fieldErrors.email ? "email-error" : undefined
+                  }
+                  onChange={() =>
+                    setFieldErrors((errors) => ({ ...errors, email: "" }))
+                  }
+                  className={
+                    fieldErrors.email ? "border-destructive" : undefined
+                  }
                 />
                 {fieldErrors.email && (
-                  <span className="text-sm text-destructive">
+                  <span
+                    id="email-error"
+                    role="alert"
+                    className="w-full text-left text-sm font-medium text-destructive"
+                  >
                     {fieldErrors.email}
                   </span>
                 )}
               </div>
 
+              {state.error && (
+                <p
+                  role="alert"
+                  className="w-full text-left text-sm font-medium text-destructive"
+                >
+                  {t(state.error as any)}
+                </p>
+              )}
+
               <Button
                 type="submit"
-                className="w-full gap-2 mt-2 h-11 text-base font-semibold rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 disabled:opacity-40 transition-all active:scale-[0.98]"
+                className="w-full gap-2 mt-2 text-base"
                 disabled={isPending}
               >
                 {isPending ? (

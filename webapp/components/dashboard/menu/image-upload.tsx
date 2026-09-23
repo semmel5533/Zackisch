@@ -103,9 +103,9 @@ export function ImageUpload({
     <div className={cn("flex flex-col h-full", className)}>
       <div
         className={cn(
-          "relative rounded-2xl transition-all duration-200 overflow-hidden flex-1 flex flex-col group",
+          "relative rounded-xl transition-colors duration-200 overflow-hidden flex-1 flex flex-col group",
           hasImage
-            ? "border border-border/70 shadow-xs"
+            ? "border border-border/70"
             : isDragging
               ? "border-2 border-dashed border-primary bg-primary/5 scale-[1.01]"
               : "border border-dashed border-border/80 hover:border-foreground/30 bg-muted/30 hover:bg-muted/50 cursor-pointer",
@@ -134,7 +134,7 @@ export function ImageUpload({
             <img
               src={preview || existingUrl!}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+              className="absolute inset-0 w-full h-full object-cover rounded-xl"
             />
             <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none">
               <button
@@ -143,7 +143,7 @@ export function ImageUpload({
                   e.stopPropagation();
                   inputRef.current?.click();
                 }}
-                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors shadow-sm cursor-pointer active:scale-95"
+                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95"
                 title={t("changeImage")}
               >
                 <PencilSimple className="w-3.5 h-3.5" />
@@ -154,7 +154,7 @@ export function ImageUpload({
                   e.stopPropagation();
                   handleRemove();
                 }}
-                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors shadow-sm cursor-pointer active:scale-95"
+                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95"
                 title={t("removeImage")}
               >
                 <Trash className="w-3.5 h-3.5" />
@@ -163,7 +163,7 @@ export function ImageUpload({
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center gap-2 p-6 text-center min-h-[220px]">
-            <div className="w-12 h-12 rounded-2xl bg-muted/60 flex items-center justify-center group-hover:bg-muted transition-colors">
+            <div className="w-12 h-12 rounded-xl bg-muted/60 flex items-center justify-center group-hover:bg-muted transition-colors">
               <UploadSimple
                 className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors"
                 weight={isDragging ? "bold" : "regular"}

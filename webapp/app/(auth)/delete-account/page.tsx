@@ -29,18 +29,18 @@ function DeleteAccountConfirmForm() {
     userId || "",
     token || "",
   );
-  
+
   const formAction = async () => {
     return await boundAction();
   };
 
-  const [state, dispatch, isPending] = useActionState<{ success?: boolean; error?: string }, void>(formAction, {});
-  const { t, locale } = useTranslation();
+  const [state, dispatch, isPending] = useActionState<
+    { success?: boolean; error?: string },
+    void
+  >(formAction, {});
+  const { t } = useTranslation();
 
   useEffect(() => {
-    if (state.error) {
-      toast.error(state.error);
-    }
     if (state.success) {
       toast.success(t("accountDeletedSuccess" as any));
     }
@@ -55,42 +55,42 @@ function DeleteAccountConfirmForm() {
   };
 
   if (!userId || !token) {
-    return <InvalidLinkState locale={locale} />;
+    return <InvalidLinkState />;
   }
 
   if (state.success) {
-    return <SuccessState locale={locale} t={t} />;
+    return <SuccessState t={t} />;
   }
 
   return (
     <DeleteConfirmFormContent
-      locale={locale}
       t={t}
+      error={state.error}
       isPending={isPending}
       handleSubmit={handleSubmit}
     />
   );
 }
 
-function InvalidLinkState({ locale }: { locale: string }) {
+function InvalidLinkState() {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center text-foreground">
       <X className="w-12 h-12 text-destructive mb-4" />
       <h2 className="text-xl font-semibold">{t("invalidToken" as any)}</h2>
-      <p className="text-muted-foreground mt-2">{t("invalidLinkDeleteAccountDesc" as any)}</p>
+      <p className="text-muted-foreground mt-2">
+        {t("invalidLinkDeleteAccountDesc" as any)}
+      </p>
       <div className="mt-6">
         <Link href="/dashboard">
-          <Button type="button" className="rounded-full">
-            {t("backToDashboard" as any)}
-          </Button>
+          <Button type="button">{t("backToDashboard" as any)}</Button>
         </Link>
       </div>
     </div>
   );
 }
 
-function SuccessState({ locale, t }: { locale: string; t: any }) {
+function SuccessState({ t }: { t: any }) {
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
@@ -104,10 +104,7 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
       <CardContent>
         <div className="mt-2">
           <Link href="/" className="w-full">
-            <Button
-              type="button"
-              className="w-full gap-2 h-12 rounded-full text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-transform active:scale-[0.98]"
-            >
+            <Button type="button" className="w-full gap-2 text-base">
               <ArrowLeft className="w-5 h-5" weight="bold" />
               {t("backHome" as any)}
             </Button>
@@ -118,16 +115,13 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
   );
 }
 
-function DeleteConfirmFormContent({
-  locale,
-  t,
-  isPending,
-  handleSubmit,
-}: any) {
+function DeleteConfirmFormContent({ t, error, isPending, handleSubmit }: any) {
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl">{t("deleteAccountConfirmTitle" as any)}</CardTitle>
+        <CardTitle className="text-2xl">
+          {t("deleteAccountConfirmTitle" as any)}
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           {t("deleteAccountConfirmDesc" as any)}
         </CardDescription>
@@ -142,6 +136,14 @@ function DeleteConfirmFormContent({
           }}
           className="flex flex-col gap-4"
         >
+          {error && (
+            <p
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {error}
+            </p>
+          )}
           <Button
             type="submit"
             onKeyDown={(e) => {
@@ -150,7 +152,7 @@ function DeleteConfirmFormContent({
               }
             }}
             variant="destructive"
-            className="w-full gap-2 mt-4 h-12 rounded-full text-base bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-transform active:scale-[0.98] disabled:opacity-50"
+            className="w-full gap-2 mt-4 text-base"
             disabled={isPending}
           >
             {isPending ? (
@@ -184,7 +186,7 @@ function DeleteConfirmFormContent({
 }
 
 export default function DeleteAccountConfirmPage() {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Card className="w-full bg-card text-card-foreground border-border shadow-sm rounded-[24px]">

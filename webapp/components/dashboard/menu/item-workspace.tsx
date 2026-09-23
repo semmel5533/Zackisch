@@ -411,9 +411,9 @@ export function ItemWorkspace({
 
               {/* SECTION 2: ZUSAMMENSTELLUNG & PRESETS */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-muted/30 border border-border/70">
+                <div className="flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-muted/30 border border-border/70">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-background border border-border/80 flex items-center justify-center shrink-0 shadow-2xs">
+                    <div className="w-10 h-10 rounded-xl bg-background border border-border/80 flex items-center justify-center shrink-0">
                       <SlidersHorizontal className="w-5 h-5 text-foreground" weight="bold" />
                     </div>
                     <div className="flex flex-col gap-0.5 min-w-0 flex-1">

@@ -1,11 +1,16 @@
 "use client";
 
-import { useActionState, startTransition, useEffect, Suspense, useState } from "react";
+import {
+  useActionState,
+  startTransition,
+  useEffect,
+  Suspense,
+  useState,
+} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
-import { cn } from "@/lib/utils";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import { sendEmailChangeOtpAction } from "@/actions/settings-actions";
 import { Button } from "@/components/ui/button";
@@ -19,7 +24,12 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
-import { X, CircleNotch, ArrowLeft, EnvelopeSimple } from "@phosphor-icons/react";
+import {
+  X,
+  CircleNotch,
+  ArrowLeft,
+  EnvelopeSimple,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 
 function ChangeEmailConfirmForm() {
@@ -28,17 +38,25 @@ function ChangeEmailConfirmForm() {
   const userId = searchParams.get("userId");
   const token = searchParams.get("token");
 
-  const [state, dispatch, isPending] = useActionState<{ success?: boolean; error?: string; email?: string; userId?: string; token?: string; }, FormData>(sendEmailChangeOtpAction, {});
-  const { t, locale } = useTranslation();
+  const [state, dispatch, isPending] = useActionState<
+    {
+      success?: boolean;
+      error?: string;
+      email?: string;
+      userId?: string;
+      token?: string;
+    },
+    FormData
+  >(sendEmailChangeOtpAction, {});
+  const { t } = useTranslation();
 
   useEffect(() => {
-    if (state.error) {
-      toast.error(state.error);
-    }
     if (state.success) {
       toast.success(t("emailChangeConfirmSent" as any));
       // Redirect to OTP page with userId, email and token
-      router.push(`/change-email/otp?userId=${state.userId}&email=${encodeURIComponent(state.email as string)}&token=${state.token}`);
+      router.push(
+        `/change-email/otp?userId=${state.userId}&email=${encodeURIComponent(state.email as string)}&token=${state.token}`,
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, router]);
@@ -49,21 +67,24 @@ function ChangeEmailConfirmForm() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const email = formData.get("newEmail") as string;
-    
+
     setFieldError("");
-    
+
     if (!email) {
       setFieldError(t("emailRequired" as any));
+      document.getElementById("newEmail")?.focus();
       return;
     }
-    
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setFieldError(t("emailInvalid" as any));
+      document.getElementById("newEmail")?.focus();
       return;
     }
-    
+
     if (isDisposableEmail(email)) {
       setFieldError(t("disposableEmail" as any));
+      document.getElementById("newEmail")?.focus();
       return;
     }
 
@@ -79,7 +100,9 @@ function ChangeEmailConfirmForm() {
   return (
     <>
       <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl">{t("newEmailAddress" as any)}</CardTitle>
+        <CardTitle className="text-2xl font-bold tracking-tight">
+          {t("newEmailAddress" as any)}
+        </CardTitle>
         <CardDescription className="text-muted-foreground">
           {t("newEmailAddressDesc" as any)}
         </CardDescription>
@@ -92,9 +115,12 @@ function ChangeEmailConfirmForm() {
         >
           <input type="hidden" name="userId" value={userId} />
           <input type="hidden" name="token" value={token} />
-          
+
           <div className="flex flex-col gap-2">
-            <label htmlFor="newEmail" className="text-sm font-medium text-foreground">
+            <label
+              htmlFor="newEmail"
+              className="text-sm font-medium text-foreground"
+            >
               {t("email")}
             </label>
             <Input
@@ -103,21 +129,34 @@ function ChangeEmailConfirmForm() {
               type="email"
               placeholder={t("emailPlaceholder")}
               disabled={isPending}
-              className={cn(
-                "h-12 border-border bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/20 rounded-xl",
-                fieldError ? "border-destructive focus-visible:ring-destructive" : ""
-              )}
+              aria-invalid={!!fieldError}
+              aria-describedby={fieldError ? "newEmail-error" : undefined}
+              onChange={() => setFieldError("")}
+              className={fieldError ? "border-destructive" : undefined}
             />
             {fieldError && (
-              <span className="text-sm font-medium text-destructive text-left w-full">
+              <span
+                id="newEmail-error"
+                role="alert"
+                className="text-sm font-medium text-destructive text-left w-full"
+              >
                 {fieldError}
               </span>
             )}
           </div>
 
+          {state.error && (
+            <p
+              role="alert"
+              className="w-full text-left text-sm font-medium text-destructive"
+            >
+              {state.error}
+            </p>
+          )}
+
           <Button
             type="submit"
-            className="w-full gap-2 mt-4 h-12 rounded-full text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-transform active:scale-[0.98] disabled:opacity-50"
+            className="w-full gap-2 mt-4 text-base"
             disabled={isPending}
           >
             {isPending ? (
@@ -156,12 +195,12 @@ function InvalidLinkState() {
     <div className="flex flex-col items-center justify-center py-8 text-center text-foreground">
       <X className="w-12 h-12 text-destructive mb-4" />
       <h2 className="text-xl font-semibold">{t("invalidToken" as any)}</h2>
-      <p className="text-muted-foreground mt-2">{t("invalidLinkEmailChangeDesc" as any)}</p>
+      <p className="text-muted-foreground mt-2">
+        {t("invalidLinkEmailChangeDesc" as any)}
+      </p>
       <div className="mt-6">
         <Link href="/dashboard">
-          <Button type="button" className="rounded-full">
-            {t("backToDashboard" as any)}
-          </Button>
+          <Button type="button">{t("backToDashboard" as any)}</Button>
         </Link>
       </div>
     </div>

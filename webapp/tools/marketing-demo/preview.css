@@ -3,8 +3,3 @@
   --font-poppins-variable: Poppins;
   --font-inter-variable: Inter;
 }
-.kitchen-capture {
-  height: 100dvh;
-  padding: 24px;
-  container-type: inline-size;
-}

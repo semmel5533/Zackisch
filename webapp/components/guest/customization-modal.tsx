@@ -227,7 +227,7 @@ export function CustomizationModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-[500px] sm:max-w-[500px] md:max-w-[500px] lg:max-w-[500px] bottom-0 top-auto translate-y-0 left-1/2 -translate-x-1/2 sm:bottom-0 sm:top-auto sm:translate-y-0 sm:left-1/2 sm:-translate-x-1/2 rounded-none sm:rounded-none rounded-t-[24px] sm:rounded-t-[24px] rounded-b-none sm:rounded-b-none border-t border-zinc-200 border-b-0 border-x-0 min-[501px]:border-x h-[92vh] h-[92dvh] max-h-[92dvh] flex flex-col p-0 sm:p-0 gap-0 sm:gap-0 overflow-hidden bg-background text-foreground shadow-2xl">
+      <DialogContent className="w-full max-w-[500px] sm:max-w-[500px] bottom-0 top-auto translate-y-0 rounded-t-[24px] sm:rounded-t-[24px] rounded-b-none sm:rounded-b-none border-b-0 border-x-0 min-[501px]:border-x h-[92dvh] max-h-[92dvh] gap-0">
         {/* Fixed Header */}
         <DialogHeader className="p-5 pb-3.5 border-b border-zinc-100 shrink-0 bg-background space-y-1.5 text-left relative z-30">
           <div className="flex items-start justify-between gap-3">
@@ -299,7 +299,7 @@ export function CustomizationModal({
                       className={cn(
                         "shrink-0 text-[13px] px-2.5 py-0.5 rounded-full transition-colors duration-200",
                         isHighlighted
-                          ? "bg-destructive text-destructive-foreground font-semibold shadow-xs"
+                          ? "bg-destructive text-destructive-foreground font-semibold"
                           : "bg-muted text-muted-foreground font-medium"
                       )}
                     >
@@ -336,12 +336,12 @@ export function CustomizationModal({
                         role={isMulti ? "checkbox" : "radio"}
                         aria-checked={isSelected}
                         className={cn(
-                          "group w-full flex items-center justify-between px-4 py-3 rounded-[14px] border transition-all text-left select-none",
+                          "group w-full min-h-11 flex items-center justify-between px-4 py-3 rounded-lg border transition-[color,background-color,border-color,transform] duration-150 motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-left select-none",
                           isSelected
                             ? "border-primary bg-primary/[0.04] ring-1 ring-primary text-foreground hover:bg-primary/[0.07] active:scale-[0.985] cursor-pointer"
                             : isMaxReached
                             ? "border-border/40 opacity-40 cursor-not-allowed bg-muted/20 text-muted-foreground"
-                            : "border-border/80 bg-card hover:bg-muted/50 hover:border-foreground/25 active:scale-[0.985] cursor-pointer text-foreground hover:shadow-2xs"
+                            : "border-input bg-card hover:bg-muted/50 hover:border-foreground/25 active:scale-[0.98] cursor-pointer text-foreground"
                         )}
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
@@ -409,7 +409,7 @@ export function CustomizationModal({
         >
           <Button 
             size="lg"
-            className="w-full rounded-full font-bold h-12 text-base shadow-md cursor-pointer flex items-center justify-between px-5 bg-primary text-primary-foreground hover:bg-neutral-800 transition-all active:scale-[0.98]" 
+            className="w-full justify-between"
             onClick={handleAdd}
           >
             <span>{t("addToCart" as any)}</span>

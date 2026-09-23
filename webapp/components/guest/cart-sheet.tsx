@@ -1,12 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import {
-  AppleLogo,
-  CreditCard,
-  GoogleLogo,
-  CircleNotch,
-} from "@phosphor-icons/react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { CircleNotch } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart-store";
 import { createCheckoutSessionAction } from "@/actions/checkout-actions";
@@ -14,15 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Price } from "@/components/ui/price";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { loadStripe } from "@stripe/stripe-js";
 import { CheckoutElementsProvider } from "@stripe/react-stripe-js/checkout";
 import { CheckoutForm } from "./checkout-form";
 
-import { toast } from "sonner";
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -64,55 +58,93 @@ export function CartSheet({
 }: CartSheetProps) {
   const { t, locale } = useTranslation();
   const { items, total } = useCartStore();
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [checkoutSession, setCheckoutSession] = useState<{ clientSecret: string; revision: string } | null>(null);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const submittingRef = useRef(false);
+  const requestVersionRef = useRef(0);
+  const cartRevision = JSON.stringify({ items, type, tableNumber, organizationId: organization.$id });
+  const clientSecret = open && checkoutSession?.revision === cartRevision ? checkoutSession.clientSecret : null;
   const [stripePromise] = useState(() => {
     return loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
   });
 
+  useEffect(() => {
+    requestVersionRef.current += 1;
+    setCheckoutSession(null);
+    setCheckoutError(null);
+  }, [open, cartRevision]);
+
   async function onContinueToPayment(formData: FormData) {
+    if (submittingRef.current) return;
     const rawEmail = formData.get("email") as string;
-    const email = rawEmail?.trim() ?? "";
+    const normalizedEmail = rawEmail?.trim() ?? "";
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error(t("emailInvalid"));
+    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      setEmailError(t("emailInvalid"));
+      emailRef.current?.focus();
       return;
     }
 
-    if (email.length > 100) {
-      toast.error(t("emailTooLong"));
+    if (normalizedEmail.length > 100) {
+      setEmailError(t("emailTooLong"));
+      emailRef.current?.focus();
       return;
     }
 
+    setEmailError(null);
+    setCheckoutError(null);
+    submittingRef.current = true;
+    const requestVersion = requestVersionRef.current;
     startTransition(async () => {
-      const result = await createCheckoutSessionAction({
-        organizationId: organization.$id,
-        type,
-        tableNumber,
-        items,
-        total: total(),
-        email,
-      });
+      try {
+        const result = await createCheckoutSessionAction({
+          organizationId: organization.$id,
+          type,
+          tableNumber,
+          items,
+          total: total(),
+          email: normalizedEmail,
+        });
 
-      if (result.error) {
-        toast.error(result.error);
-        return;
-      }
+        if (requestVersion !== requestVersionRef.current) return;
 
-      if (result.clientSecret) {
-        setClientSecret(result.clientSecret);
+        if (result.error) {
+          setCheckoutError(result.error);
+        } else if (result.clientSecret) {
+          setCheckoutSession({ clientSecret: result.clientSecret, revision: cartRevision });
+        } else {
+          setCheckoutError(t("paymentFailed"));
+        }
+      } catch {
+        if (requestVersion === requestVersionRef.current) setCheckoutError(t("paymentFailed"));
+      } finally {
+        submittingRef.current = false;
       }
     });
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) {
+          requestVersionRef.current += 1;
+          setCheckoutSession(null);
+          setCheckoutError(null);
+        }
+        onOpenChange(nextOpen);
+      }}
+    >
       <SheetContent
         side="bottom"
-        className="h-[90vh] sm:h-auto rounded-t-2xl px-5 pt-5 pb-6 sm:px-6 sm:pt-6 sm:pb-8 max-w-[500px] mx-auto"
+        className="mx-auto h-[90dvh] max-h-[90dvh] w-full max-w-[500px] gap-0 overflow-hidden rounded-t-[20px] p-0 sm:h-auto sm:rounded-t-[24px]"
       >
-        <SheetHeader className="p-0 text-left mb-5">
-          <SheetTitle className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+        <SheetHeader className="shrink-0 text-left">
+          <SheetTitle className="text-xl font-bold text-foreground tracking-tight">
             {t("checkout")}
           </SheetTitle>
           <div className="flex items-baseline justify-between mt-1.5 w-full">
@@ -128,35 +160,49 @@ export function CartSheet({
           </div>
         </SheetHeader>
 
-        <div className="p-0">
-          {!organization.stripeOnboardingComplete ? (
-            <div className="p-4 text-center">
-              <p className="text-destructive font-medium mb-2">{t("onlineOrderingUnavailable" as any)}</p>
-              <p className="text-sm text-muted-foreground">{t("onlineOrderingUnavailableDesc" as any)}</p>
-            </div>
-          ) : !clientSecret ? (
-            <form
-              action={onContinueToPayment}
-              noValidate
-              className="space-y-6 overflow-y-auto max-h-[calc(90vh-8rem)] pb-8"
-            >
+        {!organization.stripeOnboardingComplete ? (
+          <div className="flex-1 px-5 py-5 sm:px-6">
+            <p className="w-full text-left text-sm font-medium text-destructive">
+              {t("onlineOrderingUnavailable" as any)}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("onlineOrderingUnavailableDesc" as any)}
+            </p>
+          </div>
+        ) : !clientSecret ? (
+          <form action={onContinueToPayment} noValidate className="flex min-h-0 flex-1 flex-col">
+            <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-semibold text-foreground">
                   {t("emailForReceipt")}
                 </Label>
                 <Input
+                  ref={emailRef}
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="name@beispiel.de"
+                  autoComplete="email"
+                  inputMode="email"
+                  value={email}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    setEmailError(null);
+                    setCheckoutError(null);
+                  }}
+                  placeholder={t("emailPlaceholder")}
                   maxLength={100}
+                  aria-invalid={Boolean(emailError)}
+                  aria-describedby={emailError ? "checkout-email-error" : undefined}
                   required
                 />
+                {emailError && (
+                  <p id="checkout-email-error" role="alert" className="w-full text-left text-sm font-medium text-destructive">
+                    {emailError}
+                  </p>
+                )}
               </div>
 
-              <Separator className="bg-zinc-100" />
-
-              <div className="space-y-1">
+              <div className="space-y-1 border-t border-border pt-5">
                 <p className="text-sm font-semibold text-foreground">
                   {t("buyingFrom")}
                 </p>
@@ -172,19 +218,7 @@ export function CartSheet({
                 )}
               </div>
 
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full rounded-full font-bold h-12 text-base shadow-md bg-primary text-primary-foreground hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer"
-                disabled={isPending}
-              >
-                {isPending && (
-                  <CircleNotch className="mr-2 h-5 w-5 animate-spin" />
-                )}
-                {isPending ? t("loading") : t("continueToPayment")}
-              </Button>
-
-              <p className="text-center text-muted-foreground text-xs leading-relaxed mt-2">
+              <p className="text-xs leading-relaxed text-muted-foreground">
                 {t("paymentDisclaimer")}{" "}
                 {t("agreeToTermsPrefix")}
                 <a
@@ -206,9 +240,21 @@ export function CartSheet({
                 </a>
                 {t("agreeToTermsSuffix")}
               </p>
-            </form>
-          ) : (
-            <div className="pb-8 overflow-y-auto max-h-[calc(90vh-8rem)]">
+            </div>
+            <SheetFooter className="shrink-0">
+              {checkoutError && (
+                <p role="alert" className="w-full text-left text-sm font-medium text-destructive">
+                  {checkoutError}
+                </p>
+              )}
+              <Button type="submit" size="lg" className="w-full" disabled={isPending}>
+                {isPending && <CircleNotch data-icon="inline-start" className="size-5 animate-spin" />}
+                {isPending ? t("loading") : t("continueToPayment")}
+              </Button>
+            </SheetFooter>
+          </form>
+        ) : (
+          <div className="flex min-h-0 flex-1 flex-col">
               <CheckoutElementsProvider
                 stripe={stripePromise}
                 options={{
@@ -218,11 +264,10 @@ export function CartSheet({
                   },
                 }}
               >
-                <CheckoutForm returnUrl={`${window.location.origin}/${type === "dine-in" ? "table" : "pickup"}/${organization.$id}/success`} />
+                <CheckoutForm returnUrl={t(type === "dine-in" ? "tableSuccessUrl" : "pickupSuccessUrl", { organizationId: organization.$id })} />
               </CheckoutElementsProvider>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

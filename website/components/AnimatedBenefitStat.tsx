@@ -67,7 +67,7 @@ export function AnimatedBenefitStat({
   }, [target]);
 
   return (
-    <p ref={containerRef} className="benefit-stat">
+    <p ref={containerRef} className="my-2 text-center text-[clamp(88px,10vw,140px)] font-medium leading-none tracking-[-.04em]">
       <span className="font-inter tabular-nums">{value}</span>
       <span>{unit ? ` ${unit}` : ""}</span>
     </p>

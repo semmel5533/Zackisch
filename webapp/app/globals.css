@@ -22,13 +22,13 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.50 0 0);
   --accent: oklch(0 0 0);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --input: oklch(0.65 0 0);
   --ring: oklch(0 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -45,26 +45,21 @@
   --sidebar-border: oklch(1 0 0 / 0.1);
   --sidebar-ring: oklch(1 0 0);
 
-  /* Typography & Shadows */
   --font-sans: var(--font-poppins-variable), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-serif: var(--font-sans);
   --font-mono: var(--font-inter-variable), monospace;
-  --shadow-x: 0;
-  --shadow-y: 1px;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0;
-  --shadow-color: oklch(0 0 0);
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.00);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.00);
-  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.00), 0 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.00), 0 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.00), 0 2px 4px -1px hsl(0 0% 0% / 0.00);
-  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.00), 0 4px 6px -1px hsl(0 0% 0% / 0.00);
-  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.00), 0 8px 10px -1px hsl(0 0% 0% / 0.00);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.00);
+  --shadow-2xs: 0 0 #0000;
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow: 0 0 #0000;
+  --shadow-md: 0 0 #0000;
+  --shadow-lg: 0 0 #0000;
+  --shadow-xl: 0 0 #0000;
+  --shadow-2xl: 0 0 #0000;
+  --surface-shadow-popup: 0 8px 24px rgb(0 0 0 / 0.08);
+  --surface-shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.14);
   --tracking-normal: 0em;
-  --spacing: 0.3rem;
+  --spacing: 0.25rem;
 }
 
 @theme inline {
@@ -110,10 +105,10 @@
   --breakpoint-3xl: 1600px;
   --breakpoint-4xl: 1800px;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
 
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
@@ -123,10 +118,12 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+  --shadow-popup: var(--surface-shadow-popup);
+  --shadow-dialog: var(--surface-shadow-dialog);
   --font-heading: var(--font-sans);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-2xl: 24px;
+  --radius-3xl: 24px;
+  --radius-4xl: 24px;
 }
 
 @utility no-scrollbar {
@@ -137,23 +134,6 @@
     width: 0;
     height: 0;
   }
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-  scrollbar-color: transparent transparent !important;
-}
-
-.no-scrollbar::-webkit-scrollbar,
-.no-scrollbar::-webkit-scrollbar-thumb,
-.no-scrollbar::-webkit-scrollbar-track,
-.no-scrollbar::-webkit-scrollbar-corner {
-  width: 0 !important;
-  height: 0 !important;
-  display: none !important;
-  background: transparent !important;
-  -webkit-appearance: none !important;
 }
 
 @layer base {
@@ -181,14 +161,4 @@ input[type="number"],
 input[type="tel"] {
   font-family: var(--font-inter);
   font-feature-settings: "tnum" on;
-}
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-@container (width >= 1110px) {
-  .current-orders-queue-grid {
-    grid-template-columns: 255px 1fr !important;
-  }
 }
