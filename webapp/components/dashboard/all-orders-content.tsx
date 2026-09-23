@@ -468,7 +468,7 @@ export function AllOrdersContent({
               <TableHeader>
                 <TableRow>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap pl-4 sm:pl-6"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap pl-4 sm:pl-6 pr-3 min-w-[90px]"
                     onClick={() => handleSort("$id")}
                   >
                     <div className="flex items-center">
@@ -477,7 +477,7 @@ export function AllOrdersContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap px-3 min-w-[90px]"
                     onClick={() => handleSort("orderNumber")}
                   >
                     <div className="flex items-center">
@@ -486,7 +486,7 @@ export function AllOrdersContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap px-3 min-w-[140px]"
                     onClick={() => handleSort("$createdAt")}
                   >
                     <div className="flex items-center">
@@ -495,7 +495,7 @@ export function AllOrdersContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap px-3 min-w-[110px]"
                     onClick={() => handleSort("type")}
                   >
                     <div className="flex items-center">
@@ -504,7 +504,7 @@ export function AllOrdersContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors min-w-[200px] max-w-[340px]"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors min-w-[260px] max-w-[400px] px-4"
                     onClick={() => handleSort("items")}
                   >
                     <div className="flex items-center">
@@ -513,7 +513,7 @@ export function AllOrdersContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors text-right whitespace-nowrap"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors text-right whitespace-nowrap min-w-[110px] px-4"
                     onClick={() => handleSort("total")}
                   >
                     <div className="flex items-center justify-end">
@@ -522,7 +522,7 @@ export function AllOrdersContent({
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap min-w-[130px] px-4"
                     onClick={() => handleSort("status")}
                   >
                     <div className="flex items-center">
@@ -530,7 +530,7 @@ export function AllOrdersContent({
                       {renderSortIcon("status")}
                     </div>
                   </TableHead>
-                  <TableHead className="text-right whitespace-nowrap pr-4 sm:pr-6 w-[160px] min-w-[160px]">
+                  <TableHead className="text-right whitespace-nowrap pr-4 sm:pr-6 pl-3 w-[160px] min-w-[160px]">
                     {t("actions")}
                   </TableHead>
                 </TableRow>
@@ -567,7 +567,7 @@ export function AllOrdersContent({
                         key={order.$id}
                         className={isCancelled ? "opacity-60 bg-muted/20" : ""}
                       >
-                        <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap pl-4 sm:pl-6">
+                        <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap pl-4 sm:pl-6 pr-3 min-w-[90px]">
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger
@@ -584,17 +584,17 @@ export function AllOrdersContent({
                             </Tooltip>
                           </TooltipProvider>
                         </TableCell>
-                        <TableCell className="font-medium font-inter tabular-nums text-sm">
+                        <TableCell className="font-medium font-inter tabular-nums text-sm whitespace-nowrap px-3 min-w-[90px]">
                           {order.orderNumber}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap text-sm font-inter tabular-nums">
+                        <TableCell className="whitespace-nowrap text-sm font-inter tabular-nums px-3 min-w-[140px]">
                           <span suppressHydrationWarning>
                             {dateFormatter.format(
                               new Date(order.$createdAt || order._creationTime || Date.now())
                             )}
                           </span>
                         </TableCell>
-                        <TableCell className="text-sm font-medium">
+                        <TableCell className="text-sm font-medium whitespace-nowrap px-3 min-w-[110px]">
                           {order.type === "dine-in" || order.tableNumber ? (
                             <span className="inline-flex items-center gap-1">
                               <span>{t("toTable")}</span>
@@ -606,8 +606,8 @@ export function AllOrdersContent({
                             t("toPickUp")
                           )}
                         </TableCell>
-                        <TableCell className="text-sm min-w-[200px] max-w-[340px]">
-                          <div className="flex flex-col gap-2 py-1">
+                        <TableCell className="text-sm whitespace-normal min-w-[260px] max-w-[400px] px-4 py-3">
+                          <div className="flex flex-col gap-2 py-1 max-w-[380px]">
                             {items.map((item: any, index: number) => {
                               const customizations = getItemCustomizations(item);
                               return (
@@ -636,7 +636,7 @@ export function AllOrdersContent({
                                         return (
                                           <p
                                             key={cIdx}
-                                            className="max-w-full text-xs leading-normal text-muted-foreground break-words"
+                                            className="max-w-full text-xs leading-normal text-muted-foreground break-words whitespace-normal"
                                           >
                                             {stepName ? (
                                               <span className="font-medium text-foreground/80">
@@ -662,10 +662,10 @@ export function AllOrdersContent({
                             })}
                           </div>
                         </TableCell>
-                        <TableCell className="text-right font-medium">
+                        <TableCell className="text-right font-medium whitespace-nowrap min-w-[110px] px-4">
                           <Price cents={order.total} />
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="whitespace-nowrap min-w-[130px] px-4">
                           <Badge
                             variant={
                               isCancelled
@@ -681,7 +681,7 @@ export function AllOrdersContent({
                             {getStatusLabel(order.status)}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right whitespace-nowrap pr-4 sm:pr-6 w-[160px] min-w-[160px]">
+                        <TableCell className="text-right whitespace-nowrap pr-4 sm:pr-6 pl-3 w-[160px] min-w-[160px]">
                           {isCancellable ? (
                             <Button
                               variant="outline"
