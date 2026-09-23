@@ -512,6 +512,11 @@ export const translations = {
     buyingFrom: "Du kaufst bei:",
     paymentDisclaimer:
       "Die technische Bestell- und Zahlungsabwicklung erfolgt über zakkig als Vermittler.",
+    paymentDisclaimerPrefix:
+      "Die technische Bestell- und Zahlungsabwicklung erfolgt über ",
+    paymentDisclaimerSuffix: " als Vermittler.",
+    zakkigUrl: "https://www.zakkig.com/",
+    zakkigHost: "zakkig.com",
     agreeToTerms: "Ich stimme den AGB und der Datenschutzerklärung zu.",
     agreeToTermsPrefix: "Mit Klick auf „Weiter zur Zahlung“ stimmst du den ",
     termsGtc: "AGB",
@@ -1138,6 +1143,11 @@ export const translations = {
     buyingFrom: "You are buying from:",
     paymentDisclaimer:
       "The technical order and payment processing is handled by zakkig as an intermediary.",
+    paymentDisclaimerPrefix:
+      "The technical order and payment processing is handled by ",
+    paymentDisclaimerSuffix: " as an intermediary.",
+    zakkigUrl: "https://www.zakkig.com/",
+    zakkigHost: "zakkig.com",
     agreeToTerms: "I agree to the GTC and Privacy Policy.",
     agreeToTermsPrefix: 'By clicking "Continue to Payment", you agree to the ',
     termsGtc: "GTC",

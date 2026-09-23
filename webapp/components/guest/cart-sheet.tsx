@@ -235,7 +235,16 @@ export function CartSheet({
               </div>
 
               <p className="text-xs leading-relaxed text-muted-foreground">
-                {t("paymentDisclaimer")}{" "}
+                {t("paymentDisclaimerPrefix")}
+                <a
+                  href={t("zakkigUrl")}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                >
+                  {t("zakkigHost")}
+                </a>
+                {t("paymentDisclaimerSuffix")}{" "}
                 {t("agreeToTermsPrefix")}
                 <a
                   href={t("termsUrl")}
