@@ -136,7 +136,7 @@ Follow this unified, multi-layered architecture for all features and changes:
    - When viewing the cart, the merchant hero banner is suppressed. The view features a top header with an `<ArrowLeft>` back button returning to the menu, the cart title, restaurant subtitle, and order type tag.
 4. **Tactile Wavy Divider & Sleek Quantity Controls:**
    - A prominent black wavy divider (`<WaveLine className="w-full mt-4 text-black" strokeWidth={2.25} />`) in zakkig's signature physical QR aesthetic separates the top restaurant profile and address from the sticky categories carousel.
-   - Cart item quantity controls use a slim stepper pill (`h-7`, `p-0.5`, `size-6` actions, `min-w-[14px]` digit, ~64px width) preventing layout crowding next to item titles and totals.
+   - Cart item quantity controls use a slim stepper pill (`h-7`, `p-0.5`, `size-6` actions, `min-w-[18px]` digit, ~72px width) preventing layout crowding next to item titles and totals while maintaining identical geometry across all viewports and pointer types.
 5. **Post-Checkout Brand Attribution & Zero-Logo Link Policy:**
    - The zakkig logo across the webapp (dashboard, staff shell, and auth pages) is non-clickable static branding.
    - Post-checkout guest views (dine-in order success and takeaway order tracker) feature a subtle, centered attribution notice at the bottom: "Bestellung abgewickelt über zakkig.com als QR-Bestell- und Bezahlsystem" (or English equivalent), where `zakkig.com` is an underlined external link.

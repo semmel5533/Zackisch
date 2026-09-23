@@ -504,28 +504,26 @@ function GuestCart({
                 />
 
                 <div className="flex items-center bg-muted/80 p-0.5 h-7 rounded-full border border-border/60 shrink-0">
-                  <Button
-                    size="icon-xs"
-                    variant="ghost"
-                    className="size-6 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
+                  <button
+                    type="button"
+                    className="size-6 rounded-full flex items-center justify-center cursor-pointer hover:bg-background active:scale-95 text-foreground transition-[background-color,transform] duration-100 disabled:opacity-50 disabled:pointer-events-none shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     aria-label={`${item.quantity === 1 ? t("removeFromCart") : t("decreaseQuantity")}: ${item.name}`}
                   >
                     <Minus weight="bold" className="size-3" />
-                  </Button>
-                  <span className="text-xs font-bold font-inter tabular-nums min-w-[14px] text-center px-1">
+                  </button>
+                  <span className="text-xs font-bold font-inter tabular-nums min-w-[18px] text-center px-1.5">
                     {item.quantity}
                   </span>
-                  <Button
-                    size="icon-xs"
-                    variant="ghost"
-                    className="size-6 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
+                  <button
+                    type="button"
+                    className="size-6 rounded-full flex items-center justify-center cursor-pointer hover:bg-background active:scale-95 text-foreground transition-[background-color,transform] duration-100 disabled:opacity-50 disabled:pointer-events-none shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
                     aria-label={`${t("increaseQuantity")}: ${item.name}`}
                   >
                     <Plus weight="bold" className="size-3" />
-                  </Button>
+                  </button>
                 </div>
                 {item.quantity >= MAX_CART_ITEM_QUANTITY && (
                   <p className="w-full text-left text-sm font-medium text-destructive">
