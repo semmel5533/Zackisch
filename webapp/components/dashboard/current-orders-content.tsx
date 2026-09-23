@@ -513,7 +513,7 @@ export function CurrentOrdersContent({
                 )}
               >
                 {/* Header: Edge-to-Edge Divider */}
-                <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
+                <div className="h-[60px] px-3 sm:px-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0">
                     <span className="text-sm font-bold text-foreground truncate">
                       {t("inProgress")}
@@ -568,7 +568,7 @@ export function CurrentOrdersContent({
                 )}
               >
                 {/* Header: Edge-to-Edge Divider */}
-                <div className="px-3 py-2 sm:px-4 sm:py-3 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
+                <div className="h-[60px] px-3 sm:px-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0">
                     <span className="text-sm font-bold text-foreground truncate">
                       {t("ready")}
@@ -641,9 +641,9 @@ export function CurrentOrdersContent({
           {selectedOrder ? (
             <div className="flex-1 min-h-0 bg-card rounded-xl border border-border flex flex-col overflow-hidden">
               {/* Header: Edge-to-Edge Divider */}
-              <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20 shrink-0 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+              <div className="h-[60px] px-3.5 sm:px-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between gap-2 sm:gap-3">
                 <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                  <span className="text-xl sm:text-2xl font-black tracking-tight font-inter tabular-nums text-foreground shrink-0">
+                  <span className="text-xl sm:text-2xl font-black tracking-tight font-inter tabular-nums text-foreground shrink-0 leading-none">
                     {selectedOrder.orderNumber}
                   </span>
                   {/* Status Badge directly next to order number */}

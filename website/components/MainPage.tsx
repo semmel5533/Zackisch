@@ -42,7 +42,7 @@ export function MainPage() {
         </section>
       </div>
 
-      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] border-t border-border py-[clamp(72px,9vw,128px)]">
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] py-[clamp(72px,9vw,128px)]">
         <div className="mb-14 flex justify-center text-center max-[900px]:mb-10">
           <h2 id="ablauf" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("flowTitle")}</h2>
         </div>
@@ -81,7 +81,9 @@ export function MainPage() {
         </div>
       </section>
 
-      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 border-t border-border py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+      <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto" />
+ 
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
         <div className="flex flex-col items-center justify-center text-center">
           <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("benefitTitle")}</h2>
           <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("benefitService")}</p>
@@ -150,7 +152,9 @@ export function MainPage() {
         </div>
       </section>
 
-      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 border-t border-border py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+      <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto" />
+
+      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
         <h2 id="faq" className="scroll-mt-8 text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("faqTitle")}</h2>
         <div>
           {questions.map((question) => (
