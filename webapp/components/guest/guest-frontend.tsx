@@ -36,86 +36,7 @@ interface GuestFrontendProps {
   initialDineInSuccess?: { orderNumber: string; order?: Order | null } | null;
 }
 
-function GuestHeader({
-  organization,
-  type,
-  tableNumber,
-}: {
-  organization: Organization;
-  type: string;
-  tableNumber?: string;
-}) {
-  const { t } = useTranslation();
-  const orderingSubtitle =
-    type === "takeaway"
-      ? t("titleToGo")
-      : tableNumber
-      ? t("titleToStay", { table: tableNumber })
-      : t("titleToStayNoTable");
-
-  return (
-    <header className="bg-background text-foreground relative z-20 flex flex-col items-center px-4 pt-[max(1.5rem,env(safe-area-inset-top))] sm:pt-6 pb-3 sm:pb-3.5 shrink-0">
-      <div className="max-w-[500px] w-full flex flex-col items-stretch">
-        {/* Merchant banner and logo */}
-        <div className="relative w-full aspect-[2.3/1] rounded-xl sm:rounded-2xl overflow-hidden bg-muted border border-border">
-          {organization.bannerFileId ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={getImagePreviewUrl(organization.bannerFileId)}
-              alt={organization.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-muted" />
-          )}
-
-          {/* Bottom Row: Logo Box (Left), Language Switcher (Right) */}
-          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-10 flex items-end justify-between gap-2">
-            {/* Left: Logo Box */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-background rounded-lg border border-border flex items-center justify-center overflow-hidden shrink-0">
-              {organization.logoFileId ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={getImagePreviewUrl(organization.logoFileId)}
-                  alt={organization.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-background" />
-              )}
-            </div>
-
-            {/* Right: Language Switcher */}
-            <div className="shrink-0 flex items-center justify-end">
-              <LanguageSwitcher
-                variant="outline"
-                className="size-11 bg-background text-foreground border border-input hover:bg-muted shrink-0"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Restaurant Info */}
-        <div id="header-text" className="w-full mt-3.5 flex flex-col">
-          <p className="text-sm sm:text-base font-semibold text-foreground leading-snug mb-1">
-            {orderingSubtitle}
-          </p>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-tight">
-            {organization.name}
-          </h1>
-          {organization.address && (
-            <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1 whitespace-pre-wrap">
-              {organization.address}
-            </p>
-          )}
-        </div>
-
-        {/* Wavy divider line in zakkig QR style */}
-        <WaveLine className="w-full mt-4 text-black" strokeWidth={2.25} />
-      </div>
-    </header>
-  );
-}
+import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header";
 
 function GuestOrderSuccess({
   orderNumber,
@@ -132,27 +53,36 @@ function GuestOrderSuccess({
 }) {
   const { t, locale } = useTranslation();
   return (
-    <div className="flex flex-col min-h-screen bg-muted/30">
-      <header className="px-6 pt-[max(2rem,env(safe-area-inset-top))] pb-6 sm:p-6 text-center text-foreground shrink-0 max-w-[500px] mx-auto w-full">
-        <h2 className="text-xl font-bold tracking-tight">zakkig</h2>
-      </header>
-      <div className="flex-1 bg-background text-foreground md:rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-6 md:my-4 max-w-[500px] mx-auto w-full border-t md:border border-border">
-        <div className="size-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-2">
-          <Check className="size-8" weight="bold" />
-        </div>
-        <h1 className="text-3xl font-bold">{t("orderPlaced")}</h1>
-        <div>
-          <p className="text-muted-foreground mb-2">{t("yourOrderNumber")}</p>
-          <div className="text-6xl font-black tracking-wider text-primary font-inter tabular-nums">
+    <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
+      <RestaurantHeroHeader
+        organization={organization}
+        type="dine-in"
+        tableNumber={tableNumber}
+        showOrderingSubtitle={false}
+      />
+
+      <main className="flex-1 px-4 py-6 max-w-[500px] mx-auto w-full flex flex-col items-center space-y-6">
+        <div className="text-center space-y-2">
+          <p className="text-sm font-medium text-muted-foreground">{t("yourOrderNumber")}</p>
+          <div className="text-7xl sm:text-8xl font-black tracking-wider text-primary font-inter tabular-nums">
             {orderNumber}
           </div>
         </div>
-        <div className="bg-muted/50 p-4 rounded-xl w-full max-w-xs mt-4 border">
-          <p className="font-medium text-sm">{t("waitAtTable")}</p>
+
+        <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3">
+          <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+            <Check className="size-6" weight="bold" />
+          </div>
+          <h2 className="text-xl font-bold text-foreground">
+            {t("orderPlaced")}
+          </h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {t("waitAtTable")}
+          </p>
         </div>
 
         {order && (
-          <div className="w-full max-w-xs flex flex-col items-center gap-2">
+          <div className="w-full flex flex-col items-center gap-2">
             <Button
               type="button"
               variant="outline"
@@ -162,7 +92,7 @@ function GuestOrderSuccess({
               <DownloadSimple className="size-4 shrink-0" weight="bold" />
               <span>{t("downloadConfirmation")}</span>
             </Button>
-            <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-1">
+            <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
               {t("confirmationDisclaimer")}
             </p>
           </div>
@@ -170,7 +100,7 @@ function GuestOrderSuccess({
 
         <Button
           variant="outline"
-          className="mt-6 font-semibold"
+          className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
           onClick={() => {
             setDineInSuccess(null);
             useCartStore.getState().clearCart();
@@ -181,9 +111,10 @@ function GuestOrderSuccess({
             }
           }}
         >
-          {t("orderAgain" as any) || "Neue Bestellung"}
+          {t("orderAgain")}
         </Button>
-      </div>
+      </main>
+
       <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
         <p className="text-xs text-muted-foreground">
           {t("processedViaZakkigPrefix")}
@@ -778,7 +709,7 @@ export function GuestFrontend({
         </div>
       ) : (
         <div className="flex flex-col min-h-screen bg-background overflow-x-clip">
-          <GuestHeader
+          <RestaurantHeroHeader
             organization={organization}
             type={type}
             tableNumber={tableNumber}

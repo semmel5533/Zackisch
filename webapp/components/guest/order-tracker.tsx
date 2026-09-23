@@ -13,6 +13,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { CookingPot, X, Check, DownloadSimple } from "@phosphor-icons/react";
 import { playOrderReadySound, initAudioContext } from "@/lib/audio";
 import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
+import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header";
 import type { Organization, Order } from "@/lib/types";
 
 interface OrderTrackerProps {
@@ -76,10 +77,10 @@ export function OrderTracker({
         <p className="text-muted-foreground mb-6">{t("trackingExpired")}</p>
         <Button
           variant="outline"
-          className="font-semibold"
+          className="h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
           onClick={() => (window.location.href = t("pickupUrl", { organizationId: organization.$id }))}
         >
-          {t("orderAgain" as any)}
+          {t("orderAgain")}
         </Button>
       </div>
     );
@@ -98,18 +99,39 @@ export function OrderTracker({
 
   if (order.status === "cancelled") {
     return (
-      <div className="flex flex-col min-h-screen bg-muted/10 items-center justify-center p-6">
-        <Card className="max-w-[500px] w-full p-6 text-center space-y-4 border-destructive/20 bg-destructive/5">
-          <div className="mx-auto w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
-            <X className="w-6 h-6" weight="bold" />
-          </div>
-          <h2 className="text-xl font-bold text-foreground">
-            {t("orderCancelledTitle")}
-          </h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {t("orderCancelledDesc")}
+      <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
+        <RestaurantHeroHeader
+          organization={organization}
+          type="takeaway"
+          showOrderingSubtitle={false}
+        />
+        <main className="flex-1 px-4 py-6 max-w-[500px] mx-auto w-full flex flex-col items-center justify-center">
+          <Card className="w-full p-6 text-center space-y-4 border-destructive/20 bg-destructive/5 rounded-xl">
+            <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+              <X className="size-6" weight="bold" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground">
+              {t("orderCancelledTitle")}
+            </h2>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              {t("orderCancelledDesc")}
+            </p>
+          </Card>
+        </main>
+        <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
+          <p className="text-xs text-muted-foreground">
+            {t("processedViaZakkigPrefix")}
+            <a
+              href={t("homepageUrl")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
+            >
+              zakkig.com
+            </a>
+            {t("processedViaZakkigSuffix")}
           </p>
-        </Card>
+        </footer>
       </div>
     );
   }
@@ -121,157 +143,149 @@ export function OrderTracker({
       ? 1
       : 0;
   return (
-    <div className="flex flex-col min-h-screen bg-muted/30 overflow-x-clip">
-      <header className="bg-background text-foreground border-b border-border px-6 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 sm:py-4 flex items-center justify-between shrink-0 max-w-[500px] mx-auto w-full">
-        <div className="w-10" />
-        <h1 className="text-lg font-bold flex-1 text-center">
-          {organization.name}
-        </h1>
-        <LanguageSwitcher
-          className="w-11 h-11 p-0 flex items-center justify-center text-foreground hover:text-foreground hover:bg-muted rounded-full shrink-0"
-          variant="ghost"
-        />
-      </header>
+    <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
+      <RestaurantHeroHeader
+        organization={organization}
+        type="takeaway"
+        showOrderingSubtitle={false}
+      />
 
-      {/* Main Content Card */}
-      <div className="flex-1 bg-background text-foreground overflow-hidden flex flex-col max-w-[500px] mx-auto w-full md:my-4 md:rounded-[24px] md:border border-border">
-        <main className="flex-1 p-6 md:p-8 flex flex-col items-center justify-center space-y-8">
-          <div className="text-center space-y-2">
-            <p className="text-sm font-medium text-muted-foreground">{t("yourOrderNumber")}</p>
-            <div className="text-6xl font-black tracking-wider text-primary font-inter tabular-nums">
-              {order.orderNumber}
-            </div>
+      <main className="flex-1 px-4 py-6 max-w-[500px] mx-auto w-full flex flex-col items-center space-y-6">
+        <div className="text-center space-y-2">
+          <p className="text-sm font-medium text-muted-foreground">{t("yourOrderNumber")}</p>
+          <div className="text-7xl sm:text-8xl font-black tracking-wider text-primary font-inter tabular-nums">
+            {order.orderNumber}
           </div>
+        </div>
 
-          {order.status === "in_progress" && (
-            <div className="w-full bg-muted/40 border border-border rounded-xl p-5 text-center space-y-2 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-              <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
-                <CookingPot className="w-5 h-5" weight="bold" />
-              </div>
-              <h2 className="text-base font-bold text-foreground">
-                {t("inProgress")}
-              </h2>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {t("inProgressDesc" as any)}
-              </p>
+        {order.status === "in_progress" && (
+          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
+            <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+              <CookingPot className="size-6" weight="bold" />
             </div>
-          )}
-
-          {order.status === "ready_for_pickup" && (
-            <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-              <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
-                <Check className="size-6" weight="bold" />
-              </div>
-              <h2 className="text-xl font-bold text-primary">
-                {t("orderReadyForPickup")}
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("orderReadyDesc")}
-              </p>
-            </div>
-          )}
-
-          {order.status === "completed" && (
-              <div className="w-full bg-muted/30 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-                <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
-                  <Check className="size-6" weight="bold" />
-                </div>
-                <h2 className="text-xl font-bold text-foreground">
-                  {t("orderPickedUp")}
-                </h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t("orderPickedUpDesc")}
-                </p>
-              </div>
-          )}
-
-          <Card className="w-full p-5 sm:p-6">
-            <div>
-              <h2 className="font-semibold text-lg mb-6">{t("orderStatus")}</h2>
-
-              <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted before:to-transparent">
-                {statusSteps.map((step, index) => {
-                  const isDone = index < currentStepIndex || (order.status === "completed" && index === 2);
-                  const isCurrent = index === currentStepIndex && order.status !== "completed";
-
-                  return (
-                    <div
-                      key={step.id}
-                      className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
-                    >
-                      <div
-                        className={cn(
-                          "flex items-center justify-center w-10 h-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-inter tabular-nums transition-colors",
-                          isDone
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : isCurrent
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-muted text-muted-foreground bg-background",
-                        )}
-                      >
-                        {isDone ? (
-                          <Check className="w-5 h-5" weight="bold" />
-                        ) : (
-                          <span className="text-sm font-bold">{index + 1}</span>
-                        )}
-                      </div>
-                      <div
-                        className={cn(
-                          "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border transition-colors",
-                          isCurrent || (order.status === "completed" && index === 2)
-                            ? "border-primary/50 bg-primary/5"
-                            : "bg-background",
-                        )}
-                      >
-                        <h3
-                          className={cn(
-                            "font-bold text-sm sm:text-base",
-                            isCurrent || (order.status === "completed" && index === 2)
-                              ? "text-primary"
-                              : isDone
-                              ? "text-foreground"
-                              : "text-muted-foreground",
-                          )}
-                        >
-                          {t(step.labelKey as any)}
-                        </h3>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </Card>
-
-          {/* Download Order & Payment Confirmation Action */}
-          <div className="w-full flex flex-col items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
-              onClick={() => downloadOrderConfirmation(order, organization, locale)}
-            >
-              <DownloadSimple className="size-4 shrink-0" weight="bold" />
-              <span>{t("downloadConfirmation")}</span>
-            </Button>
-            <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
-              {t("confirmationDisclaimer")}
+            <h2 className="text-xl font-bold text-foreground">
+              {t("inProgress")}
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {t("inProgressDesc" as any)}
             </p>
           </div>
+        )}
 
-          {order.status === "completed" && (
-            <Button
-              variant="outline"
-              className="w-full h-11 rounded-full text-base font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
-              onClick={() =>
-                (window.location.href = t("pickupUrl", { organizationId: organization.$id }))
-              }
-            >
-              {t("orderAgain" as any)}
-            </Button>
-          )}
-        </main>
-      </div>
+        {order.status === "ready_for_pickup" && (
+          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
+            <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+              <Check className="size-6" weight="bold" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground">
+              {t("orderReadyForPickup")}
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {t("orderReadyDesc")}
+            </p>
+          </div>
+        )}
+
+        {order.status === "completed" && (
+          <div className="w-full bg-muted/30 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
+            <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+              <Check className="size-6" weight="bold" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground">
+              {t("orderPickedUp")}
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {t("orderPickedUpDesc")}
+            </p>
+          </div>
+        )}
+
+        <Card className="w-full p-5 sm:p-6">
+          <div>
+            <h2 className="font-semibold text-lg mb-6">{t("orderStatus")}</h2>
+
+            <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted before:to-transparent">
+              {statusSteps.map((step, index) => {
+                const isDone = index < currentStepIndex || (order.status === "completed" && index === 2);
+                const isCurrent = index === currentStepIndex && order.status !== "completed";
+
+                return (
+                  <div
+                    key={step.id}
+                    className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
+                  >
+                    <div
+                      className={cn(
+                        "flex items-center justify-center w-10 h-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-inter tabular-nums transition-colors",
+                        isDone
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : isCurrent
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-muted text-muted-foreground bg-background",
+                      )}
+                    >
+                      {isDone ? (
+                        <Check className="w-5 h-5" weight="bold" />
+                      ) : (
+                        <span className="text-sm font-bold">{index + 1}</span>
+                      )}
+                    </div>
+                    <div
+                      className={cn(
+                        "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border transition-colors",
+                        isCurrent || (order.status === "completed" && index === 2)
+                          ? "border-primary/50 bg-primary/5"
+                          : "bg-background",
+                      )}
+                    >
+                      <h3
+                        className={cn(
+                          "font-bold text-sm sm:text-base",
+                          isCurrent || (order.status === "completed" && index === 2)
+                            ? "text-primary"
+                            : isDone
+                            ? "text-foreground"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        {t(step.labelKey as any)}
+                      </h3>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Card>
+
+        {/* Download Order & Payment Confirmation Action */}
+        <div className="w-full flex flex-col items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
+            onClick={() => downloadOrderConfirmation(order, organization, locale)}
+          >
+            <DownloadSimple className="size-4 shrink-0" weight="bold" />
+            <span>{t("downloadConfirmation")}</span>
+          </Button>
+          <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
+            {t("confirmationDisclaimer")}
+          </p>
+        </div>
+
+        {order.status === "completed" && (
+          <Button
+            variant="outline"
+            className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
+            onClick={() =>
+              (window.location.href = t("pickupUrl", { organizationId: organization.$id }))
+            }
+          >
+            {t("orderAgain")}
+          </Button>
+        )}
+      </main>
 
       <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
         <p className="text-xs text-muted-foreground">
