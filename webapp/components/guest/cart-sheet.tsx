@@ -240,7 +240,7 @@ export function CartSheet({
                   href={t("zakkigUrl")}
                   target="_blank"
                   rel="noreferrer"
-                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                  className="text-foreground underline underline-offset-2 hover:opacity-80 transition-opacity"
                 >
                   {t("zakkigHost")}
                 </a>
