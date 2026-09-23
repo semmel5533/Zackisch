@@ -87,7 +87,7 @@ export function MainPage() {
           <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("benefitService")}</p>
         </div>
         <div className="flex flex-col items-center text-center">
-          <p className="text-[13px] text-muted-foreground">{t("benefitPrefix")}</p>
+          <p className="text-[15px] text-muted-foreground">{t("benefitPrefix")}</p>
           <AnimatedBenefitStat target={30} unit="%" />
           <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t("benefitMetric")}</h3>
           <a
@@ -143,7 +143,7 @@ export function MainPage() {
               {" "}
               <span>{t("feeLabel")}</span>
             </p>
-            <p className="mt-1.5 text-center text-xs text-muted-foreground">
+            <p className="mt-1.5 text-center text-[15px] text-muted-foreground">
               {t("feeNote")}
             </p>
           </div>

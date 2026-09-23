@@ -230,23 +230,33 @@ useCartStore.setState({
   items:
     scenario === "empty-cart" || scenario === "modifiers"
       ? []
-      : [
-          {
-            id: "pizza-custom",
-            menuItemId: "pizza",
-            name: labels.dish,
-            price: 1500,
-            quantity: 1,
-            customizations: pizzaCustomizations,
-          },
-          {
-            id: "lemonade",
-            menuItemId: "lemonade",
-            name: labels.drink,
-            price: 450,
-            quantity: 1,
-          },
-        ],
+      : scenario === "single-item"
+        ? [
+            {
+              id: "pizza",
+              menuItemId: "pizza",
+              name: labels.dish,
+              price: 1250,
+              quantity: 1,
+            },
+          ]
+        : [
+            {
+              id: "pizza-custom",
+              menuItemId: "pizza",
+              name: labels.dish,
+              price: 1500,
+              quantity: 1,
+              customizations: pizzaCustomizations,
+            },
+            {
+              id: "lemonade",
+              menuItemId: "lemonade",
+              name: labels.drink,
+              price: 450,
+              quantity: 1,
+            },
+          ],
 });
 const orders = [1, 2, 3].map((n): Order => ({
   ...base,
