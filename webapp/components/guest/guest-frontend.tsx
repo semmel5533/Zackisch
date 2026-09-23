@@ -51,7 +51,7 @@ function GuestHeader({
       : t("titleToStayNoTable");
 
   return (
-    <header className="bg-background text-foreground relative z-20 flex flex-col items-center px-4 pt-4 pb-3 sm:pb-3.5 shrink-0">
+    <header className="bg-background text-foreground relative z-20 flex flex-col items-center px-4 pt-[max(1.5rem,env(safe-area-inset-top))] sm:pt-6 pb-3 sm:pb-3.5 shrink-0">
       <div className="max-w-[500px] w-full flex flex-col items-stretch">
         {/* Merchant banner and logo */}
         <div className="relative w-full aspect-[2.3/1] rounded-xl sm:rounded-2xl overflow-hidden bg-muted border border-border">
@@ -124,7 +124,7 @@ function GuestOrderSuccess({
   const { t } = useTranslation();
   return (
     <div className="flex flex-col min-h-screen bg-muted/30">
-      <header className="p-6 text-center text-foreground shrink-0 max-w-[500px] mx-auto w-full">
+      <header className="px-6 pt-[max(2rem,env(safe-area-inset-top))] pb-6 sm:p-6 text-center text-foreground shrink-0 max-w-[500px] mx-auto w-full">
         <h2 className="text-xl font-bold tracking-tight">zakkig</h2>
       </header>
       <div className="flex-1 bg-background text-foreground md:rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-6 md:my-4 max-w-[500px] mx-auto w-full border-t md:border border-border">
@@ -152,7 +152,7 @@ function GuestOrderSuccess({
           {t("orderAgain" as any) || "Neue Bestellung"}
         </Button>
       </div>
-      <footer className="p-4 pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
+      <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
         <p className="text-xs text-muted-foreground">
           {t("processedViaZakkigPrefix")}
           <a
@@ -405,7 +405,7 @@ function CartHeader({
   const { t } = useTranslation();
 
   return (
-    <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border shrink-0">
+    <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border shrink-0 pt-[max(0.5rem,env(safe-area-inset-top))] sm:pt-0">
       <div className="max-w-[500px] mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button
@@ -503,28 +503,28 @@ function GuestCart({
                   className="text-sm font-bold text-primary text-right leading-snug"
                 />
 
-                <div className="flex items-center bg-muted/80 p-[1.5px] h-[26px] rounded-full border border-border/60 shrink-0">
+                <div className="flex items-center bg-muted/80 p-0.5 h-7 rounded-full border border-border/60 shrink-0">
                   <Button
                     size="icon-xs"
                     variant="ghost"
-                    className="size-5 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
+                    className="size-6 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     aria-label={`${item.quantity === 1 ? t("removeFromCart") : t("decreaseQuantity")}: ${item.name}`}
                   >
-                    <Minus weight="bold" className="size-2.5" />
+                    <Minus weight="bold" className="size-3" />
                   </Button>
-                  <span className="text-xs font-bold font-inter tabular-nums min-w-[10px] text-center px-0.5">
+                  <span className="text-xs font-bold font-inter tabular-nums min-w-[14px] text-center px-1">
                     {item.quantity}
                   </span>
                   <Button
                     size="icon-xs"
                     variant="ghost"
-                    className="size-5 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
+                    className="size-6 p-0 rounded-full cursor-pointer hover:bg-background shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
                     aria-label={`${t("increaseQuantity")}: ${item.name}`}
                   >
-                    <Plus weight="bold" className="size-2.5" />
+                    <Plus weight="bold" className="size-3" />
                   </Button>
                 </div>
                 {item.quantity >= MAX_CART_ITEM_QUANTITY && (
@@ -559,7 +559,7 @@ function FloatingCartBanner({
       aria-label={t("cart")}
       className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-center pointer-events-none"
     >
-      <div className="w-full max-w-[500px] bg-background border-t border-border shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-t-[24px] px-4 pt-3.5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:pb-6 pointer-events-auto animate-in fade-in slide-in-from-bottom duration-300 motion-reduce:animate-none">
+      <div className="w-full max-w-[500px] bg-background border-t border-border shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-t-[24px] px-4 pt-3.5 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-6 pointer-events-auto animate-in fade-in slide-in-from-bottom duration-300 motion-reduce:animate-none">
         <button
           type="button"
           id="floating-cart-banner"
@@ -700,7 +700,7 @@ export function GuestFrontend({
             {cartItems.length > 0 && (
               <footer
                 className={cn(
-                  "shrink-0 border-t border-border bg-background px-4 md:px-6 py-4 pb-6 transition-shadow duration-200",
+                  "shrink-0 border-t border-border bg-background px-4 md:px-6 pt-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 transition-shadow duration-200",
                   hasScrollBelow
                     ? "shadow-[0_-4px_16px_rgba(0,0,0,0.06)]"
                     : "shadow-none"

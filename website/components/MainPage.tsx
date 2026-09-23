@@ -101,7 +101,7 @@ export function MainPage() {
         </div>
       </section>
 
-      <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto" />
+      <WaveLine className="w-full text-black max-w-[1200px] mx-auto" />
 
       <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] py-[clamp(72px,9vw,128px)]">
         <div className="grid grid-cols-2 gap-24 max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
@@ -120,7 +120,7 @@ export function MainPage() {
         </div>
       </section>
 
-      <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto" />
+      <WaveLine className="w-full text-black max-w-[1200px] mx-auto" />
 
       <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
         <div className="flex flex-col items-center text-center justify-center">

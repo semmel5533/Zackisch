@@ -136,10 +136,14 @@ Follow this unified, multi-layered architecture for all features and changes:
    - When viewing the cart, the merchant hero banner is suppressed. The view features a top header with an `<ArrowLeft>` back button returning to the menu, the cart title, restaurant subtitle, and order type tag.
 4. **Tactile Wavy Divider & Sleek Quantity Controls:**
    - A prominent black wavy divider (`<WaveLine className="w-full mt-4 text-black" strokeWidth={2.25} />`) in zakkig's signature physical QR aesthetic separates the top restaurant profile and address from the sticky categories carousel.
-   - Cart item quantity controls use an ultra-slim stepper pill (`h-[26px]`, `p-[1.5px]`, `size-5` actions, `min-w-[10px]` digit, ~52px width) preventing layout crowding next to item titles and totals.
+   - Cart item quantity controls use a slim stepper pill (`h-7`, `p-0.5`, `size-6` actions, `min-w-[14px]` digit, ~64px width) preventing layout crowding next to item titles and totals.
 5. **Post-Checkout Brand Attribution & Zero-Logo Link Policy:**
    - The zakkig logo across the webapp (dashboard, staff shell, and auth pages) is non-clickable static branding.
    - Post-checkout guest views (dine-in order success and takeaway order tracker) feature a subtle, centered attribution notice at the bottom: "Bestellung abgewickelt über zakkig.com als QR-Bestell- und Bezahlsystem" (or English equivalent), where `zakkig.com` is an underlined external link.
+6. **Mobile Viewport Breathing Room & Rounded Frame Clearance:**
+   - On mobile viewports, guest headers use top padding with safe-area clearance (`pt-[max(1.5rem,env(safe-area-inset-top))] sm:pt-6`) to prevent banner content and controls from crowding or clipping against rounded hardware corners and notches.
+   - Sticky cart headers include top safe-area clearance (`pt-[max(0.5rem,env(safe-area-inset-top))] sm:pt-0`).
+   - Bottom bars (floating cart banner, cart footer, and order success/tracker footers) include balanced bottom safe-area insets (`pb-[max(1.5rem,env(safe-area-inset-bottom))]` or `pb-[max(1.75rem,env(safe-area-inset-bottom))]`).
 
 <!-- END:guest-ordering-ux-conventions -->
 
@@ -189,8 +193,8 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 
 1. **Light Surface, Signature WaveLine Dividers & Contrast Rule:**
    - The entire webapp and marketing website feature 100% clean light backgrounds (`bg-background text-foreground`). Dark/black backgrounds are NEVER used for full sections or sidebars.
-   - The desktop dashboard sidebar and staff terminal sidebar render with light surfaces (`bg-background text-foreground border-r border-border`), black logos (`brightness-0`), and a signature tactile vertical `WaveLine` divider (`text-foreground/20`) running down the right edge of the sidebar.
-   - On the marketing website, all sections and footers render with light backgrounds, cleanly delineated by Zakkig's signature horizontal `WaveLine` dividers as a core visual trademark.
+   - The desktop dashboard sidebar and staff terminal sidebar render with light surfaces (`bg-background text-foreground`), a 288px width (`w-72`) ensuring navigation items like 'Aktuelle Bestellungen' are fully written out, black logos (`brightness-0`), and a signature tactile vertical `WaveLine` divider (`text-black`) inset with spacing at the top and bottom (`top-4 bottom-4 h-[calc(100%-2rem)]`) running down the right edge of the sidebar without any thin gray border lines.
+   - On the marketing website, all sections and footers render with light backgrounds, cleanly delineated by Zakkig's signature horizontal `WaveLine` dividers (`text-black`) as a core visual trademark, with the footer divider serving as the sole divider above the footer.
    - Dark `#000000` is strictly reserved for deliberate focal accents: primary CTA buttons (`bg-primary text-primary-foreground`), active navigation pills, and selected badges.
 
 2. **Numerical Typography Rule (Strictly Digits Only in Inter):**

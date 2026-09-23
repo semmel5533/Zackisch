@@ -65,7 +65,7 @@ export function StaffSessionCard({
     <Card className="h-full flex flex-col justify-between @container bg-card border-border">
       <CardHeader className="flex flex-col gap-2 pb-3">
         <div className="flex items-center gap-2 min-w-0 w-full">
-          <span className="font-semibold text-base sm:text-lg leading-none text-foreground truncate">
+          <span className="font-semibold text-base sm:text-lg leading-normal text-foreground truncate">
             {t("staffSession")}
           </span>
           <InfoTooltip content={t("staffSessionDesc")} />

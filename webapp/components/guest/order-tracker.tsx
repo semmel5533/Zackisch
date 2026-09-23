@@ -148,7 +148,7 @@ export function OrderTracker({
 
   return (
     <div className="flex flex-col min-h-screen bg-muted/30 overflow-x-clip">
-      <header className="bg-background text-foreground border-b border-border px-6 py-4 flex items-center justify-between shrink-0 max-w-[500px] mx-auto w-full">
+      <header className="bg-background text-foreground border-b border-border px-6 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 sm:py-4 flex items-center justify-between shrink-0 max-w-[500px] mx-auto w-full">
         <div className="w-10" />
         <h1 className="text-lg font-bold flex-1 text-center">
           {organization.name}
@@ -298,7 +298,7 @@ export function OrderTracker({
         </main>
       </div>
 
-      <footer className="p-4 pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
+      <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
         <p className="text-xs text-muted-foreground">
           {t("processedViaZakkigPrefix")}
           <a

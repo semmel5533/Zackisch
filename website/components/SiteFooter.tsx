@@ -19,8 +19,8 @@ export function SiteFooter({
   if (variant === "minimal") {
     return (
       <>
-        <footer className="relative overflow-hidden bg-background pt-6 text-foreground border-t border-border sm:pt-8">
-          <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto mb-6" />
+        <footer className="relative overflow-hidden bg-background pt-6 text-foreground sm:pt-8">
+          <WaveLine className="w-full text-black max-w-[1200px] mx-auto mb-6" />
           <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
             <div className="footer-mascot justify-self-start flex items-end mb-[-85px] max-md:mb-[-65px] order-2 md:order-1">
               <img
@@ -69,8 +69,8 @@ export function SiteFooter({
 
   return (
     <>
-      <footer className="relative overflow-hidden bg-background pt-16 text-foreground border-t border-border sm:pt-20">
-        <WaveLine className="w-full text-foreground/30 max-w-[1200px] mx-auto mb-10 sm:mb-14" />
+      <footer className="relative overflow-hidden bg-background pt-16 text-foreground sm:pt-20">
+        <WaveLine className="w-full text-black max-w-[1200px] mx-auto mb-10 sm:mb-14" />
         <div className="mx-auto grid w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid-cols-[1.15fr_.85fr] grid-rows-[auto_auto_1fr_auto] items-start gap-x-12 gap-y-7 [grid-template-areas:'title_.'_'cta_contact'_'mascot_mars'_'mascot_bottom'] max-[900px]:grid-cols-1 max-[900px]:grid-rows-none max-[900px]:gap-8 max-[900px]:[grid-template-areas:'title'_'cta'_'contact'_'mars'_'bottom'_'mascot']">
           <div className="text-left [grid-area:title]">
             <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("closingTitle")}</h2>

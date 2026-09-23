@@ -137,9 +137,9 @@ export function StaffTerminalShell({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-background text-foreground lg:relative print:hidden",
-          isExpanded ? "w-64" : "w-16",
-          "max-lg:w-64", // Always wide on mobile
+          "fixed inset-y-0 left-0 z-50 flex flex-col max-lg:border-r max-lg:border-border bg-background text-foreground lg:relative print:hidden",
+          isExpanded ? "w-72" : "w-16",
+          "max-lg:w-72", // Always wide on mobile
           isMobileOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0 max-lg:hidden",
@@ -147,7 +147,7 @@ export function StaffTerminalShell({
       >
         <WaveLine
           orientation="vertical"
-          className="absolute top-0 -right-[5px] h-full text-foreground/20 pointer-events-none hidden lg:flex"
+          className="absolute top-4 bottom-4 -right-[5px] h-[calc(100%-2rem)] text-black pointer-events-none hidden lg:flex"
         />
 
         {/* Sidebar Header */}

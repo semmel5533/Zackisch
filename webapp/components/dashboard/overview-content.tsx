@@ -1170,7 +1170,7 @@ export function OverviewContent({
                   <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                     <ForkKnife className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                  <span className="font-semibold text-base leading-normal text-foreground truncate">
                     {t("menu")}
                   </span>
                 </div>
@@ -1184,7 +1184,7 @@ export function OverviewContent({
                   <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                     <ClipboardText className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                  <span className="font-semibold text-base leading-normal text-foreground truncate">
                     {t("currentOrders")}
                   </span>
                 </div>
@@ -1198,7 +1198,7 @@ export function OverviewContent({
                   <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                     <Archive className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                  <span className="font-semibold text-base leading-normal text-foreground truncate">
                     {t("allOrders")}
                   </span>
                 </div>
@@ -1212,7 +1212,7 @@ export function OverviewContent({
                   <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                     <Gear className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                  <span className="font-semibold text-base leading-normal text-foreground truncate">
                     {t("settings")}
                   </span>
                 </div>
@@ -1230,7 +1230,7 @@ export function OverviewContent({
                 <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                   <ForkKnife className="w-5 h-5" />
                 </div>
-                <span className="font-semibold text-base leading-none text-foreground truncate">
+                <span className="font-semibold text-base leading-normal text-foreground truncate">
                   {t("menu")}
                 </span>
               </div>
@@ -1244,7 +1244,7 @@ export function OverviewContent({
                 <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                   <ClipboardText className="w-5 h-5" />
                 </div>
-                <span className="font-semibold text-base leading-none text-foreground truncate">
+                <span className="font-semibold text-base leading-normal text-foreground truncate">
                   {t("currentOrders")}
                 </span>
               </div>
@@ -1258,7 +1258,7 @@ export function OverviewContent({
                 <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                   <Archive className="w-5 h-5" />
                 </div>
-                <span className="font-semibold text-base leading-none text-foreground truncate">
+                <span className="font-semibold text-base leading-normal text-foreground truncate">
                   {t("allOrders")}
                 </span>
               </div>
@@ -1272,7 +1272,7 @@ export function OverviewContent({
                 <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
                   <Gear className="w-5 h-5" />
                 </div>
-                <span className="font-semibold text-base leading-none text-foreground truncate">
+                <span className="font-semibold text-base leading-normal text-foreground truncate">
                   {t("settings")}
                 </span>
               </div>
