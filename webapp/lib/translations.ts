@@ -5,6 +5,7 @@ export const translations = {
     // Auth
     sales: "Verkäufe",
     statistics: "Statistik",
+    statisticsDesc: "Umsatz- und Bestellkennzahlen über den gewählten Zeitraum.",
     signIn: "Anmelden",
     signUp: "Registrieren",
     signOut: "Abmelden",
@@ -157,6 +158,7 @@ export const translations = {
     qrCodeGenerator: "QR-Code Verwaltung",
     qrPreview: "QR-Vorschau",
     qrManagement: "QR-Verwaltung",
+    qrManagementDesc: "Generiere druckfertige QR-Codes für Tische oder die Theke zum Scannen & Bestellen.",
     generateQR: "QR-Code erstellen",
     toGo: "Abholung",
     pickup: "Abholen",
@@ -643,6 +645,7 @@ export const translations = {
     // Auth
     sales: "Sales",
     statistics: "Statistics",
+    statisticsDesc: "Revenue and order performance metrics across the selected time period.",
     signIn: "Sign In",
     signUp: "Sign Up",
     signOut: "Sign Out",
@@ -792,6 +795,7 @@ export const translations = {
     qrCodeGenerator: "QR Code Management",
     qrPreview: "QR Preview",
     qrManagement: "QR Management",
+    qrManagementDesc: "Generate print-ready QR codes for tables or counter pickup to scan & order.",
     generateQR: "Generate QR Code",
     toGo: "Pickup",
     pickup: "Pickup",

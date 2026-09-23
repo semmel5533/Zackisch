@@ -30,6 +30,7 @@ import { toast } from "sonner";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -471,14 +472,17 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   return (
     <Card className="h-full flex flex-col print:hidden">
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-        <h3 className="text-sm font-bold text-foreground">
-          {t("statistics")}
-        </h3>
+        <div className="flex items-center gap-2 min-w-0">
+          <h3 className="text-base sm:text-lg font-bold text-foreground leading-none">
+            {t("statistics")}
+          </h3>
+          <InfoTooltip content={t("statisticsDesc" as any)} />
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
               <Button
-                variant="default"
+                variant="outline"
                 className="h-11 rounded-full font-semibold px-4 cursor-pointer active:scale-[0.98]"
               >
                 {period === "24h"
@@ -699,9 +703,12 @@ function QrCodeGeneratorCard({
     <>
       <Card className="h-full flex flex-col bg-white print:hidden @container">
         <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-          <h3 className="text-sm font-bold text-foreground whitespace-nowrap">
-            {t("qrManagement")}
-          </h3>
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="text-base sm:text-lg font-bold text-foreground leading-none whitespace-nowrap">
+              {t("qrManagement")}
+            </h3>
+            <InfoTooltip content={t("qrManagementDesc" as any)} />
+          </div>
 
           <div className="flex items-center gap-3">
             <Switch
@@ -1149,78 +1156,130 @@ export function OverviewContent({
           <QrCodeGeneratorCard organization={organization} baseUrl={baseUrl} />
         </div>
 
-        {children && (
-          <div className="w-full print:hidden">
-            {children}
+        {children ? (
+          <div className="grid grid-cols-1 @min-[1100px]:grid-cols-2 gap-4 items-stretch print:hidden">
+            <div className="h-full">
+              {children}
+            </div>
+            <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 gap-3 h-full">
+              <Link
+                href={`/dashboard/${organization.$id}/menu`}
+                className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                    <ForkKnife className="w-5 h-5" />
+                  </div>
+                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                    {t("menu")}
+                  </span>
+                </div>
+                <InfoTooltip content={t("quickMenuDesc")} />
+              </Link>
+              <Link
+                href={`/dashboard/${organization.$id}/current-orders`}
+                className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                    <ClipboardText className="w-5 h-5" />
+                  </div>
+                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                    {t("currentOrders")}
+                  </span>
+                </div>
+                <InfoTooltip content={t("quickOrdersDesc")} />
+              </Link>
+              <Link
+                href={`/dashboard/${organization.$id}/all-orders`}
+                className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                    <Archive className="w-5 h-5" />
+                  </div>
+                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                    {t("allOrders")}
+                  </span>
+                </div>
+                <InfoTooltip content={t("quickArchiveDesc")} />
+              </Link>
+              <Link
+                href={`/dashboard/${organization.$id}/settings`}
+                className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                    <Gear className="w-5 h-5" />
+                  </div>
+                  <span className="font-semibold text-base leading-none text-foreground truncate">
+                    {t("settings")}
+                  </span>
+                </div>
+                <InfoTooltip content={t("quickSettingsDesc")} />
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 @min-[1100px]:grid-cols-4 gap-4 print:hidden">
+            <Link
+              href={`/dashboard/${organization.$id}/menu`}
+              className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                  <ForkKnife className="w-5 h-5" />
+                </div>
+                <span className="font-semibold text-base leading-none text-foreground truncate">
+                  {t("menu")}
+                </span>
+              </div>
+              <InfoTooltip content={t("quickMenuDesc")} />
+            </Link>
+            <Link
+              href={`/dashboard/${organization.$id}/current-orders`}
+              className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                  <ClipboardText className="w-5 h-5" />
+                </div>
+                <span className="font-semibold text-base leading-none text-foreground truncate">
+                  {t("currentOrders")}
+                </span>
+              </div>
+              <InfoTooltip content={t("quickOrdersDesc")} />
+            </Link>
+            <Link
+              href={`/dashboard/${organization.$id}/all-orders`}
+              className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                  <Archive className="w-5 h-5" />
+                </div>
+                <span className="font-semibold text-base leading-none text-foreground truncate">
+                  {t("allOrders")}
+                </span>
+              </div>
+              <InfoTooltip content={t("quickArchiveDesc")} />
+            </Link>
+            <Link
+              href={`/dashboard/${organization.$id}/settings`}
+              className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-primary text-primary-foreground p-2 rounded-full shrink-0">
+                  <Gear className="w-5 h-5" />
+                </div>
+                <span className="font-semibold text-base leading-none text-foreground truncate">
+                  {t("settings")}
+                </span>
+              </div>
+              <InfoTooltip content={t("quickSettingsDesc")} />
+            </Link>
           </div>
         )}
-
-        <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 @min-[1100px]:grid-cols-4 gap-4 print:hidden">
-          <Link
-            href={`/dashboard/${organization.$id}/menu`}
-            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-          >
-            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
-              <ForkKnife className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <span className="font-semibold text-lg leading-none">
-                {t("menu")}
-              </span>
-              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                {t("quickMenuDesc")}
-              </span>
-            </div>
-          </Link>
-          <Link
-            href={`/dashboard/${organization.$id}/current-orders`}
-            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-          >
-            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
-              <ClipboardText className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <span className="font-semibold text-lg leading-none">
-                {t("currentOrders")}
-              </span>
-              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                {t("quickOrdersDesc")}
-              </span>
-            </div>
-          </Link>
-          <Link
-            href={`/dashboard/${organization.$id}/all-orders`}
-            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-          >
-            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
-              <Archive className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <span className="font-semibold text-lg leading-none">
-                {t("allOrders")}
-              </span>
-              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                {t("quickArchiveDesc")}
-              </span>
-            </div>
-          </Link>
-          <Link
-            href={`/dashboard/${organization.$id}/settings`}
-            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-          >
-            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
-              <Gear className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <span className="font-semibold text-lg leading-none">
-                {t("settings")}
-              </span>
-              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                {t("quickSettingsDesc")}
-              </span>
-            </div>
-          </Link>
-        </div>
       </div>
     </>
   );

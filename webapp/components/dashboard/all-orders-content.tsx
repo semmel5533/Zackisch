@@ -357,8 +357,8 @@ export function AllOrdersContent({
               <DropdownMenuTrigger
                 render={
                   <Button
-                    variant="default"
-                    className="justify-between shrink-0 min-w-[110px] h-11 rounded-full font-semibold"
+                    variant="outline"
+                    className="justify-between shrink-0 min-w-[110px] h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98]"
                   >
                     <div className="flex items-center gap-2">
                       <Funnel className="h-4 w-4 mr-2" />
@@ -366,7 +366,7 @@ export function AllOrdersContent({
                       selectedStatuses.length === 0 ? (
                         <span>{t("filters")}</span>
                       ) : (
-                        <span className="text-primary-foreground font-semibold">
+                        <span className="font-semibold text-foreground">
                           {selectedTypes.length + selectedStatuses.length}{" "}
                           {t("filters")}
                         </span>

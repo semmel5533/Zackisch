@@ -7,11 +7,13 @@ import { cn } from "@/lib/utils";
 
 interface RegisterCtaProps {
   variant?: "default" | "inverse";
+  size?: "default" | "lg" | "sm";
   className?: string;
 }
 
 export function RegisterCta({
   variant = "default",
+  size = "lg",
   className = "",
 }: RegisterCtaProps = {}) {
   const { t } = useTranslation();
@@ -20,7 +22,10 @@ export function RegisterCta({
     <a
       href={t("registerUrl")}
       className={cn(
-        buttonVariants({ variant: variant === "inverse" ? "outline" : "default" }),
+        buttonVariants({
+          variant: variant === "inverse" ? "outline" : "default",
+          size,
+        }),
         variant === "inverse" && "border-background focus-visible:ring-white",
         className,
       )}

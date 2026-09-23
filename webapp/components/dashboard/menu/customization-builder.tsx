@@ -393,12 +393,12 @@ function SortableStepCard({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="icon"
+                  size="icon-sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     finishEditingName();
                   }}
-                  className="h-8 w-8 text-foreground hover:text-foreground hover:bg-muted rounded-lg shrink-0 transition-colors"
+                  className="rounded-full text-foreground hover:text-foreground hover:bg-muted shrink-0 transition-colors"
                   title={t("save")}
                 >
                   <Check
@@ -415,8 +415,8 @@ function SortableStepCard({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 opacity-70 sm:opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg shrink-0"
+                  size="icon-sm"
+                  className="opacity-70 sm:opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground hover:bg-muted rounded-full shrink-0"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditingName(true);
@@ -450,9 +450,9 @@ function SortableStepCard({
           <Button
             type="button"
             variant="ghost"
-            size="icon"
+            size="icon-sm"
             onClick={onRemove}
-            className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+            className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
             title={t("delete")}
           >
             <Trash className="w-4 h-4" weight="bold" />
@@ -481,9 +481,9 @@ function SortableStepCard({
             <Button
               type="button"
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               onClick={onRemove}
-              className="h-7 w-7 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+              className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
               title={t("delete")}
             >
               <Trash className="w-4 h-4" weight="bold" />
@@ -813,9 +813,9 @@ function OptionRow({
         <Button
           type="button"
           variant="ghost"
-          size="icon"
+          size="icon-sm"
           onClick={onRemove}
-          className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+          className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
           title={t("delete")}
         >
           <Trash className="w-4 h-4" weight="bold" />

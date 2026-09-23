@@ -4,7 +4,8 @@ import { useActionState, useEffect, useState, useRef } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea as TextArea } from "@/components/ui/textarea";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
+import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -47,13 +48,6 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
-  const addressTextareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const adjustAddressHeight = (textarea: HTMLTextAreaElement | null) => {
-    if (!textarea) return;
-    textarea.style.height = "auto";
-    textarea.style.height = `${Math.max(textarea.scrollHeight, 32)}px`;
-  };
 
   const [logoPreview, setLogoPreview] = useState<string | null>(
     organization.logoFileId
@@ -93,17 +87,6 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [businessState]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (addressTextareaRef.current) {
-        adjustAddressHeight(addressTextareaRef.current);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [organization.address]);
 
   const handleLogoFile = (file: File) => {
     if (!isAllowedImageFile(file)) {
@@ -168,13 +151,13 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
       <div className="flex flex-col gap-6 w-full">
         {/* Business & Stripe Settings */}
         <Card className="w-full flex flex-col">
-          <CardHeader className="flex-col items-start pb-4">
-            <h3 className="text-sm font-bold text-foreground">
-              {t("businessSettings")}
-            </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              {t("businessSettingsDescription" as any)}
-            </p>
+          <CardHeader className="flex-row items-center justify-between pb-4">
+            <div className="flex items-center gap-2 min-w-0">
+              <h3 className="text-base sm:text-lg font-bold text-foreground leading-none">
+                {t("businessSettings")}
+              </h3>
+              <InfoTooltip content={t("businessSettingsDescription" as any)} />
+            </div>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col">
             <form
@@ -268,15 +251,11 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   >
                     {t("address")}
                   </label>
-                  <TextArea
-                    ref={addressTextareaRef}
+                  <Input
                     id="business-address"
                     name="address"
                     defaultValue={organization.address}
-                    rows={1}
                     maxLength={300}
-                    onInput={(e) => adjustAddressHeight(e.currentTarget)}
-                    className="min-h-8 py-1 resize-none overflow-hidden leading-5 md:text-sm transition-[height] duration-75"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -425,7 +404,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           if (file) handleLogoFile(file);
                         }}
                         className={cn(
-                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 w-14 h-14 @min-[768px]:w-16 @min-[768px]:h-16 rounded-[10px] sm:rounded-[12px] bg-muted border transition-colors cursor-pointer flex items-center justify-center overflow-hidden group/logo",
+                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-xl sm:rounded-2xl bg-muted border transition-colors cursor-pointer flex items-center justify-center overflow-hidden group/logo",
                           (bannerPreview || logoPreview) ? "border-neutral-600" : "border-border",
                           isDraggingLogo && "border-primary ring-2 ring-primary/20",
                         )}
@@ -626,13 +605,13 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
 
         {/* Danger Zone */}
         <Card className="w-full flex flex-col border-destructive/50 border">
-            <CardHeader className="flex-col items-start pb-4">
-              <h3 className="text-sm font-bold text-destructive">
-                {t("dangerZone" as any)}
-              </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                {t("dangerZoneDescription" as any)}
-              </p>
+            <CardHeader className="flex-row items-center justify-between pb-4">
+              <div className="flex items-center gap-2 min-w-0">
+                <h3 className="text-base sm:text-lg font-bold text-destructive leading-none">
+                  {t("dangerZone" as any)}
+                </h3>
+                <InfoTooltip content={t("dangerZoneDescription" as any)} />
+              </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-6 items-stretch">
               <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6">

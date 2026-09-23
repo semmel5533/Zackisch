@@ -83,9 +83,9 @@ export function Header() {
           </div>
         </nav>
         <div className="flex items-center gap-2">
-          <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "outline" }), "hidden min-[721px]:inline-flex")}>{t("signIn")}</a>
-          <button type="button" className={cn(buttonVariants({ variant: "outline" }), "hidden min-[721px]:inline-flex min-[721px]:px-3 min-[1101px]:px-5")} aria-label={t("regionSelectorTitle")} onClick={() => setIsModalOpen(true)}>
-            <Globe size={18} aria-hidden="true" />
+          <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden min-[721px]:inline-flex")}>{t("signIn")}</a>
+          <button type="button" className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden min-[721px]:inline-flex min-[721px]:px-3 min-[1101px]:px-4")} aria-label={t("regionSelectorTitle")} onClick={() => setIsModalOpen(true)}>
+            <Globe size={16} aria-hidden="true" />
             <span className="hidden min-[1101px]:inline">{t("regionDisplay")}</span>
           </button>
           <button ref={menuButtonRef} type="button" className="grid size-11 place-items-center rounded-full transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-[721px]:hidden" aria-expanded={menuOpen} aria-controls="main-navigation" aria-label={t(menuOpen ? "closeMenu" : "menuLabel")} onClick={() => setMenuOpen((open) => !open)}>

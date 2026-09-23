@@ -708,6 +708,17 @@ export function MenuContent({
         <div className="flex items-center">
           <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("menu")}</h1>
         </div>
+        {categories.length > 0 && (
+          <Button
+            type="button"
+            variant="default"
+            onClick={openNewCategory}
+            className="h-11 rounded-full font-semibold px-4 cursor-pointer active:scale-[0.98] gap-2"
+          >
+            <Plus className="h-4 w-4" weight="bold" />
+            <span>{t("addCategory")}</span>
+          </Button>
+        )}
       </div>
 
       {/* Categories Cards View */}
@@ -1105,10 +1116,10 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="icon"
+                  size="icon-sm"
                   onClick={handleSaveName}
                   disabled={isSavingName}
-                  className="h-8 w-8 text-primary hover:text-primary shrink-0"
+                  className="rounded-full text-primary hover:text-primary shrink-0"
                   title={t("save")}
                 >
                   <Check className="h-4 w-4" weight="bold" />
@@ -1126,12 +1137,12 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                 <Button
                   type="button"
                   variant="ghost"
-                  size="icon"
+                  size="icon-sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditingName(true);
                   }}
-                  className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 transition-colors cursor-pointer"
+                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 transition-colors cursor-pointer"
                   title={t("editCategory")}
                 >
                   <PencilSimple className="h-4 w-4" />
@@ -1503,8 +1514,8 @@ function CategoryCardOverlay({
             <Button
               type="button"
               variant="ghost"
-              size="icon"
-              className="h-7 w-7 rounded-lg text-muted-foreground shrink-0"
+              size="icon-sm"
+              className="rounded-full text-muted-foreground shrink-0"
               title={t("editCategory")}
             >
               <PencilSimple className="h-4 w-4" />
