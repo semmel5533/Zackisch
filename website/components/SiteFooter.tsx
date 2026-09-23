@@ -89,7 +89,7 @@ export function SiteFooter({
           </div>
           <div className="flex justify-end justify-self-end [grid-area:mars] max-md:mb-2">
             <a
-              className="group inline-flex items-center justify-end gap-1.5 text-[13px] whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground motion-reduce:transition-none"
+              className="group inline-flex items-center justify-end gap-1.5 text-[15px] whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground motion-reduce:transition-none"
               href={t("marsUrl")}
               target="_blank"
               rel="noopener noreferrer"
