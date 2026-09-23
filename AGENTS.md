@@ -207,9 +207,11 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
      - Inner selectable items: `rounded-[12px]` ($20\text{px} - 8\text{px} = 12\text{px}$), `px-3.5`, and `py-2` or `py-2.5` according to the control, with `font-semibold`.
      - This guarantees mathematically exact concentric curvature with uniform visual margins around all corners.
 
-6. **Uppercase Tracked Typography Standard:**
-   - Section block titles, card categorization headers, queue column headers, and metadata headers across the webapp and modals (e.g. `BETRIEBSDATEN`, `LOGO & BANNER`, `ZAHLUNGSANBIETER`, `GEFAHRENZONE`, `IN BEARBEITUNG`, `ABHOLBEREIT`, `STATISTIK`, `QR-CODE VERWALTUNG`, `SITZUNGEN`, `ARTIKELDETAILS`, `BILD & VORSCHAU`, `PRESETS & ANPASSUNGEN`, `REGION`, `SPRACHE`) strictly render with `text-sm font-bold uppercase tracking-wider text-foreground` (or `text-zinc-900` on Apple light modal dialogs, and `text-destructive` for danger zones).
-   - Always use `t('key')` with CSS `uppercase tracking-wider` for clean, consistent internationalization.
+6. **Restrained Uppercase & Natural Title Typography Standard:**
+   - All-caps / uppercase typography is strictly and exclusively restricted to two deliberate architectural contexts:
+     1. **Navigation & Legal Links on the Website:** Navigation links in the site header and footer (`website/components/Header.tsx`, `website/components/SiteFooter.tsx`, `website/components/LegalPage.tsx`) use uppercase with tracking (`uppercase tracking-[0.08em]`) to create crisp, architectural visual anchoring for navigation wayfinding.
+     2. **Physical QR Code Signage on the Webapp:** Printed table standees, counter stickers, and physical display cards generated on the QR canvas (`overview-content.tsx`) use high-impact uppercase lettering (`SCANNEN & BESTELLEN`, `ABHOLEN`) to maximize distance legibility, immediate physical affordance, and contrast in bustling hospitality environments.
+   - All other UI surfaces across the webapp (section block titles, card categorization headers, queue column headers, metadata headers, table headers, form legends, badges, action sheets, and modal dialogs) strictly use standard sentence or title casing in `text-sm font-bold text-foreground` (or `text-destructive` for danger zones). Uppercase typography must NEVER be applied to internal webapp data, controls, or content headings.
 
 7. **Tailwind-First Styling Standard (Zero Custom CSS Bloat):**
    - In `webapp` and `website`, implement styling directly in JSX/TSX with Tailwind utility classes whenever Tailwind can express it cleanly. This includes layout, spacing, typography, responsive and container behavior, state variants, transitions, and hover/focus/active states. Use arbitrary values and variants when a project-specific value or selector needs them.

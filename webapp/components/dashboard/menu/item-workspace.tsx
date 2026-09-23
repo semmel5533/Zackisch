@@ -238,7 +238,7 @@ export function ItemWorkspace({
                   {/* Left Column (Bild) */}
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+                      <span className="text-sm font-bold text-foreground">
                         {t("imageSection")}
                       </span>
                       <span className="text-xs text-muted-foreground font-medium">
@@ -262,7 +262,7 @@ export function ItemWorkspace({
                   {/* Right Column (Details) */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+                      <span className="text-sm font-bold text-foreground">
                         {t("itemDetails")}
                       </span>
                     </div>
@@ -417,7 +417,7 @@ export function ItemWorkspace({
                       <SlidersHorizontal className="w-5 h-5 text-foreground" weight="bold" />
                     </div>
                     <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                      <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+                      <span className="text-sm font-bold text-foreground">
                         {t("customization")}
                       </span>
                       <span className="text-xs text-muted-foreground font-medium line-clamp-2 sm:line-clamp-none">

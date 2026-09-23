@@ -89,7 +89,7 @@ export function RegionLanguageSwitcher({
           </DialogHeader>
           <DialogBody className="space-y-5">
             <fieldset>
-              <legend className="mb-2.5 text-sm font-bold uppercase tracking-wider text-foreground">
+              <legend className="mb-2.5 text-sm font-bold text-foreground">
                 {t("regionLabel")}
               </legend>
               <div className="space-y-2">
@@ -119,7 +119,7 @@ export function RegionLanguageSwitcher({
               </div>
             </fieldset>
             <fieldset>
-              <legend className="mb-2.5 text-sm font-bold uppercase tracking-wider text-foreground">
+              <legend className="mb-2.5 text-sm font-bold text-foreground">
                 {t("languageLabel")}
               </legend>
               <div className="grid grid-cols-2 gap-2.5">

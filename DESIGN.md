@@ -105,7 +105,7 @@ Both apps use the same semantic base: white background/card/popover, black foreg
 
 ## Typography
 
-Poppins carries words and interface text. Isolated digits and decimal separators use Inter with tabular figures; currency signs, units, prefixes, and words remain Poppins. The webapp [Price component](webapp/components/ui/price.tsx) separates these roles. The website keeps a large editorial hero and compact supporting copy; webapp section labels use bold tracked uppercase. Region names remain endonyms and visible copy and destinations are translated through next-intl. [Website typography](website/components/MainPage.tsx), [webapp tokens](webapp/app/globals.css).
+Poppins carries words and interface text. Isolated digits and decimal separators use Inter with tabular figures; currency signs, units, prefixes, and words remain Poppins. The webapp [Price component](webapp/components/ui/price.tsx) separates these roles. The website keeps a large editorial hero and compact supporting copy, using tracked uppercase for navigation links; the webapp restricts uppercase exclusively to physical QR code signage, keeping all interface labels and section titles in natural bold casing. Region names remain endonyms and visible copy and destinations are translated through next-intl. [Website typography](website/components/MainPage.tsx), [webapp tokens](webapp/app/globals.css).
 
 **The Split Price Rule.** Use the webapp Price component for webapp prices, rather than applying Inter to a mixed-text parent.
 

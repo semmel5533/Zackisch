@@ -444,7 +444,7 @@ function SignInForm({
           )}
           <Button
             type="submit"
-            className="w-full gap-2 text-base"
+            className="w-full gap-2"
             disabled={isPending}
           >
             {isPending ? (

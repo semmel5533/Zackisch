@@ -29,7 +29,7 @@ The shared Tailwind `--spacing` is `0.25rem`: at a 16px root `p-2 = 8px`, `p-4 =
 
 All ordinary theme shadows have the valid transparent value `0 0 #0000`. A visible popup or dialog must opt into an explicit surface shadow, as the [webapp theme](../webapp/app/globals.css) does. The website's [QR paper](../website/components/QrCodeShowcase.tsx) uses a deliberate physical shadow. Transparent shadows are kept syntactically valid so they do not invalidate composited focus rings.
 
-Both [root layouts](../webapp/app/layout.tsx) and [website layout](../website/app/layout.tsx) load Poppins and Inter. Poppins carries words; Inter with tabular figures is for isolated digits and decimal separators. The webapp [Price](../webapp/components/ui/price.tsx) keeps the currency sign and prefix outside its Inter numeral span. Existing `number` and `tel` CSS selects Inter for all entered characters, which is a source-level exception to the strict numeric-only rule.
+Both [root layouts](../webapp/app/layout.tsx) and [website layout](../website/app/layout.tsx) load Poppins and Inter. Poppins carries words; Inter with tabular figures is for isolated digits and decimal separators. The webapp [Price](../webapp/components/ui/price.tsx) keeps the currency sign and prefix outside its Inter numeral span. Existing `number` and `tel` CSS selects Inter for all entered characters, which is a source-level exception to the strict numeric-only rule. All-caps typography is strictly reserved: on the website, it is used exclusively for navigation and legal links ([Header](../website/components/Header.tsx), [SiteFooter](../website/components/SiteFooter.tsx)) to establish crisp architectural wayfinding; on the webapp, it is used exclusively for physical QR code signage text ([Overview](../webapp/components/dashboard/overview-content.tsx)) to maximize high-contrast legibility from a distance on physical standees and stickers. All other webapp UI headings, section titles, table heads, badges, and controls use natural sentence and title casing in bold Poppins (`text-sm font-bold text-foreground`).
 
 <a id="ds-primitives"></a>
 ## DS-02: Buttons, fields, and cards
@@ -60,14 +60,14 @@ The [guest frontend](../webapp/components/guest/guest-frontend.tsx) keeps menu a
 <a id="ds-qr"></a>
 ## DS-06: QR, print, and numbers
 
-The [website QR showcase](../website/components/QrCodeShowcase.tsx) renders a real high-contrast QR on a tilted, taped paper sheet. The [print lettering](../website/components/QrPrintText.tsx) fits after fonts load. Merchant QR management and browser printing use the [overview](../webapp/components/dashboard/overview-content.tsx); this is `window.print`, not a dedicated PDF generator. [Price](../webapp/components/ui/price.tsx) separates numeric Inter from Poppins words and symbols. The website has its own [numeric helper](../website/lib/numeric-text.tsx).
-
+The [website QR showcase](../website/components/QrCodeShowcase.tsx) renders a real high-contrast QR on a tilted, taped paper sheet. The [print lettering](../website/components/QrPrintText.tsx) fits after fonts load. Merchant QR management and browser printing use the [overview](../webapp/components/dashboard/overview-content.tsx); this is `window.print`, not a dedicated PDF generator. Physical QR print signage uses bold uppercase lettering for high-contrast affordance and distance readability at dining tables and counters. [Price](../webapp/components/ui/price.tsx) separates numeric Inter from Poppins words and symbols. The website has its own [numeric helper](../website/lib/numeric-text.tsx).
+ 
 <a id="ds-website"></a>
 ## DS-07: Marketing website
 
 [MainPage](../website/components/MainPage.tsx) keeps the editorial hero, QR sheet, product views, setup flow, pricing, FAQ, and signup action. [Header](../website/components/Header.tsx) uses translated native hash links and an accessible mobile menu with Escape dismissal and focus return. [ProductDemo](../website/components/ProductDemo.tsx) renders the committed DE/EN captures; their visual currency depends on regeneration from the webapp [fixture](../webapp/tools/marketing-demo/) after webapp changes. The page uses the shared button roles and 4px scale; static layout is authored in Tailwind JSX, with [global CSS](../website/app/globals.css) reserved for tokens and base behavior. [AnimatedBenefitStat](../website/components/AnimatedBenefitStat.tsx) animates on intersection and jumps to its target under reduced motion.
 
-The website uses viewport composition breakpoints and retains a black setup and footer contrast to the light sections. Its QR paper shadow is an object treatment, not general elevation. [Page](../website/components/MainPage.tsx), [QR](../website/components/QrCodeShowcase.tsx), [footer](../website/components/SiteFooter.tsx).
+The website uses viewport composition breakpoints and retains a black setup and footer contrast to the light sections. Navigation and legal links render with tracked uppercase (`uppercase tracking-[0.08em]`) for distinct wayfinding, while buttons, dialog triggers, and body text use natural casing. Its QR paper shadow is an object treatment, not general elevation. [Page](../website/components/MainPage.tsx), [QR](../website/components/QrCodeShowcase.tsx), [footer](../website/components/SiteFooter.tsx).
 
 <a id="ds-i18n"></a>
 ## DS-08: Localization and accessibility

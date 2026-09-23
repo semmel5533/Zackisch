@@ -493,7 +493,7 @@ function ItemCardView({
             onClick={() => setShowOptions(!showOptions)}
             className="flex items-center justify-between w-full py-1 hover:text-foreground transition-colors group cursor-pointer"
           >
-            <span className="text-sm font-bold uppercase tracking-wider text-foreground">
+            <span className="text-sm font-bold text-foreground">
               {t("customization")}
             </span>
             {showOptions ? (

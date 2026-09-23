@@ -550,7 +550,7 @@ export function AllOrdersContent({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger className="cursor-help hover:text-foreground transition-colors">
-                                {order.$id.slice(-6)}
+                                {order.$id.length > 8 ? order.$id.slice(-6) : order.$id}
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>{order.$id}</p>

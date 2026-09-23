@@ -470,7 +470,7 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   return (
     <Card className="h-full flex flex-col print:hidden">
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
+        <h3 className="text-sm font-bold text-foreground">
           {t("statistics")}
         </h3>
         <DropdownMenu>
@@ -698,7 +698,7 @@ function QrCodeGeneratorCard({
     <>
       <Card className="h-full flex flex-col bg-white print:hidden @container">
         <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground whitespace-nowrap">
+          <h3 className="text-sm font-bold text-foreground whitespace-nowrap">
             {t("qrManagement")}
           </h3>
 
@@ -716,8 +716,8 @@ function QrCodeGeneratorCard({
               <DropdownMenuTrigger
                 render={
                   <Button
-                    variant="default"
-                    className="w-auto h-11 rounded-full font-semibold px-4 bg-primary text-secondary shrink-0 cursor-pointer active:scale-[0.98]"
+                    variant="outline"
+                    className="w-auto h-11 rounded-full font-semibold px-4 shrink-0 cursor-pointer active:scale-[0.98]"
                   >
                     {qrType === "pickup" ? t("toGo") : t("toStay")}
                     <CaretDown

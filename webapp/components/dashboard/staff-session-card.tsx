@@ -65,7 +65,7 @@ export function StaffSessionCard({
     <Card className="@min-[700px]:col-span-2 h-full flex flex-col @container bg-card border-border">
       <CardHeader className="flex flex-col gap-1 pb-2">
         <div className="flex items-center justify-between gap-4 w-full">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground leading-tight">
+          <h3 className="text-sm font-bold text-foreground leading-tight">
             {t("staffSession")}
           </h3>
 

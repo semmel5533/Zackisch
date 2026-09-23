@@ -47,7 +47,7 @@ export function SiteFooter({
               </nav>
               <button
                 type="button"
-                className="inline-flex min-h-11 items-center gap-2.5 border-0 bg-transparent text-[13px] font-bold leading-none tracking-[.08em] text-inherit uppercase transition-opacity duration-150 hover:opacity-80 motion-reduce:transition-none"
+                className="inline-flex min-h-11 items-center gap-2.5 border-0 bg-transparent text-[13px] font-semibold leading-none text-inherit transition-opacity duration-150 hover:opacity-80 motion-reduce:transition-none cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
               >
                 <Globe size={20} aria-hidden="true" />
@@ -131,7 +131,7 @@ export function SiteFooter({
             </nav>
             <button
               type="button"
-              className="inline-flex min-h-11 items-center gap-2.5 border-0 bg-transparent text-[13px] font-bold leading-none tracking-[.08em] text-inherit uppercase transition-opacity duration-150 hover:opacity-80 motion-reduce:transition-none"
+              className="inline-flex min-h-11 items-center gap-2.5 border-0 bg-transparent text-[13px] font-semibold leading-none text-inherit transition-opacity duration-150 hover:opacity-80 motion-reduce:transition-none cursor-pointer"
               onClick={() => setIsModalOpen(true)}
             >
               <Globe size={20} aria-hidden="true" />
