@@ -70,9 +70,11 @@ export function Header() {
               key={url}
               href={t(url)}
               onClick={() => setMenuOpen(false)}
-              className="flex min-h-11 items-center rounded-[12px] px-3.5 text-sm font-semibold uppercase tracking-[.08em] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-[721px]:min-h-9 min-[721px]:px-0 min-[721px]:text-[13px] min-[721px]:hover:bg-transparent min-[721px]:hover:underline min-[721px]:hover:underline-offset-4"
+              className="group relative flex min-h-11 items-center rounded-[12px] px-3.5 text-sm font-semibold uppercase tracking-[.08em] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-[721px]:min-h-9 min-[721px]:px-0 min-[721px]:text-[13px] min-[721px]:hover:bg-transparent"
             >
-              {t(label)}
+              <span className="relative py-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-250 after:ease-out group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 motion-reduce:after:transition-none">
+                {t(label)}
+              </span>
             </a>
           ))}
           <div className="mt-2 flex flex-col gap-2.5 border-t border-border pt-4 min-[721px]:hidden">

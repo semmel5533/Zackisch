@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import {
   Dialog,
@@ -65,20 +64,11 @@ export function StaffSessionCard({
   return (
     <Card className="h-full flex flex-col justify-between @container bg-card border-border">
       <CardHeader className="flex flex-col gap-2 pb-3">
-        <div className="flex items-center justify-between gap-3 w-full">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="font-semibold text-base sm:text-lg leading-none text-foreground truncate">
-              {t("staffSession")}
-            </span>
-            <InfoTooltip content={t("staffSessionDesc")} />
-          </div>
-          <Badge
-            variant="outline"
-            className="font-semibold px-2.5 py-0.5 rounded-full text-foreground border-border text-xs shrink-0 flex items-center gap-1.5"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
-            {t("staffSessionActive")}
-          </Badge>
+        <div className="flex items-center gap-2 min-w-0 w-full">
+          <span className="font-semibold text-base sm:text-lg leading-none text-foreground truncate">
+            {t("staffSession")}
+          </span>
+          <InfoTooltip content={t("staffSessionDesc")} />
         </div>
       </CardHeader>
 

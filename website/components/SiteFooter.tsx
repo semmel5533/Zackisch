@@ -39,9 +39,11 @@ export function SiteFooter({
                   <Link
                     key={key}
                     href={t(`${key}Url`)}
-                    className="flex min-h-11 items-center hover:underline hover:underline-offset-4 focus-visible:underline focus-visible:underline-offset-4 max-md:justify-end max-md:whitespace-nowrap max-md:text-right"
+                    className="group relative flex min-h-11 items-center max-md:justify-end max-md:whitespace-nowrap max-md:text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                   >
-                    <span className="link-label">{t(`${key}Link`)}</span>
+                    <span className="link-label relative py-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-250 after:ease-out group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 motion-reduce:after:transition-none">
+                      {t(`${key}Link`)}
+                    </span>
                   </Link>
                 ))}
               </nav>
@@ -123,9 +125,11 @@ export function SiteFooter({
                 <Link
                   key={key}
                   href={t(`${key}Url`)}
-                  className="flex min-h-11 items-center hover:underline hover:underline-offset-4 focus-visible:underline focus-visible:underline-offset-4 max-md:justify-end max-md:whitespace-nowrap max-md:text-right"
+                  className="group relative flex min-h-11 items-center max-md:justify-end max-md:whitespace-nowrap max-md:text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
                 >
-                  <span className="link-label">{t(`${key}Link`)}</span>
+                  <span className="link-label relative py-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-250 after:ease-out group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 motion-reduce:after:transition-none">
+                    {t(`${key}Link`)}
+                  </span>
                 </Link>
               ))}
             </nav>

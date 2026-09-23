@@ -47,6 +47,8 @@ import {
   CaretUp,
   Check,
   ArrowsDownUp,
+  ArrowUp,
+  ArrowDown,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
@@ -1172,17 +1174,30 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
             </Button>
 
             <div className="flex items-center gap-1.5 shrink-0">
-              <DropdownMenu>
-                <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={t("reorder")} title={t("reorder")} />}>
-                  <ArrowsDownUp className="size-4" weight="bold" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem disabled={!canMoveUp} onClick={() => onMoveCategory(category.$id, -1)}>{t("moveUp")}</DropdownMenuItem>
-                    <DropdownMenuItem disabled={!canMoveDown} onClick={() => onMoveCategory(category.$id, 1)}>{t("moveDown")}</DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {canMoveUp && (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => onMoveCategory(category.$id, -1)}
+                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
+                  aria-label={t("moveUp")}
+                  title={t("moveUp")}
+                >
+                  <ArrowUp className="size-4" weight="bold" />
+                </Button>
+              )}
+              {canMoveDown && (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => onMoveCategory(category.$id, 1)}
+                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
+                  aria-label={t("moveDown")}
+                  title={t("moveDown")}
+                >
+                  <ArrowDown className="size-4" weight="bold" />
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="default"
@@ -1394,7 +1409,7 @@ const ItemRowView = memo(function ItemRowView({
               </DropdownMenu>}
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon-sm"
                 onClick={onEdit}
                 className="rounded-full text-muted-foreground hover:text-foreground shrink-0"
                 title={t("edit")}
@@ -1403,7 +1418,7 @@ const ItemRowView = memo(function ItemRowView({
               </Button>
               <Button
                 variant="outline"
-                size="icon"
+                size="icon-sm"
                 onClick={onDelete}
                 className="rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
                 title={t("delete")}
