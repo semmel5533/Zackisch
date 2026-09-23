@@ -706,7 +706,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   </p>
                 </div>
                 <Button
-                  variant="destructive"
+                  variant="outline"
                   disabled={isDeleting}
                   onClick={async () => {
                     setIsDeleting(true);
@@ -721,7 +721,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                       setIsDeleting(false);
                     }
                   }}
-                  className="w-full mt-auto"
+                  className="w-full mt-auto border-border text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
                 >
                   {isDeleting ? (
                     <SpinnerGap className="mr-2 animate-spin" weight="bold" />
