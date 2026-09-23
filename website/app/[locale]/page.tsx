@@ -30,6 +30,7 @@ export async function generateMetadata({
     openGraph: {
       title: t.metaTitle,
       description: t.metaDescription,
+      url: canonicalUrl,
       locale: lang === "de" ? "de_DE" : "en_US",
       siteName: "zakkig",
       type: "website",
@@ -75,6 +76,23 @@ export default async function Page({
 
   const { lang } = parseLocale(locale);
   const t = translations[lang];
+  const canonicalUrl = `https://www.zakkig.com/${locale}`;
+
+  const faqKeys = [
+    "faqApp",
+    "faqDevices",
+    "faqPickup",
+    "faqMenu",
+    "faqUnavailable",
+    "faqOptions",
+    "faqPayment",
+    "faqTips",
+    "faqStart",
+    "faqPos",
+    "faqPayout",
+    "faqContract",
+    "faqCosts",
+  ] as const;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -97,6 +115,9 @@ export default async function Page({
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "EUR",
+          "description": lang === "de"
+            ? "Kostenlose Registrierung, 2 % Gebühr pro Bestellung zzgl. Zahlungsanbietergebühren."
+            : "Free registration, 2% fee per order plus payment provider fees.",
         },
         "description": t.metaDescription,
       },
@@ -109,6 +130,18 @@ export default async function Page({
           "@id": "https://www.zakkig.com/#organization",
         },
         "inLanguage": lang === "de" ? "de-DE" : "en-US",
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${canonicalUrl}#faq`,
+        "mainEntity": faqKeys.map((key) => ({
+          "@type": "Question",
+          "name": t[key],
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t[`${key}Answer` as keyof typeof t],
+          },
+        })),
       },
     ],
   };

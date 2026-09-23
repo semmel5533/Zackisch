@@ -3,14 +3,58 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.zakkig.com/de-de</loc>
+    <lastmod>2026-09-23</lastmod>
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de" />
     <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de" />
   </url>
   <url>
     <loc>https://www.zakkig.com/de-en</loc>
+    <lastmod>2026-09-23</lastmod>
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de" />
     <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de" />
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-de/legal-notice</loc>
+    <lastmod>2026-09-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de/legal-notice" />
+    <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en/legal-notice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de/legal-notice" />
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-en/legal-notice</loc>
+    <lastmod>2026-09-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de/legal-notice" />
+    <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en/legal-notice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de/legal-notice" />
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-de/privacy-policy</loc>
+    <lastmod>2026-09-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de/privacy-policy" />
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-en/privacy-policy</loc>
+    <lastmod>2026-09-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de/privacy-policy" />
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-de/gtc</loc>
+    <lastmod>2026-09-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de/gtc" />
+    <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en/gtc" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de/gtc" />
+  </url>
+  <url>
+    <loc>https://www.zakkig.com/de-en/gtc</loc>
+    <lastmod>2026-09-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.zakkig.com/de-de/gtc" />
+    <xhtml:link rel="alternate" hreflang="en-DE" href="https://www.zakkig.com/de-en/gtc" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.zakkig.com/de-de/gtc" />
   </url>
 </urlset>

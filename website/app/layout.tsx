@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 import { Poppins, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { translations } from "@/lib/translations";
@@ -30,6 +30,10 @@ export const metadata: Metadata = {
     description: t.metaDescription,
     images: ["/og_image.png"],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 import "./globals.css";
