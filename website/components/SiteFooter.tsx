@@ -69,7 +69,7 @@ export function SiteFooter({
 
   return (
     <>
-      <footer className="relative overflow-hidden bg-background pt-16 text-foreground sm:pt-20">
+      <footer className="relative overflow-hidden bg-background text-foreground">
         <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto mb-10 sm:mb-14" />
         <div className="mx-auto grid w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid-cols-[1.15fr_.85fr] grid-rows-[auto_auto_1fr_auto] items-start gap-x-12 gap-y-7 [grid-template-areas:'title_.'_'cta_contact'_'mascot_mars'_'mascot_bottom'] max-[900px]:grid-cols-1 max-[900px]:grid-rows-none max-[900px]:gap-8 max-[900px]:[grid-template-areas:'title'_'cta'_'contact'_'mars'_'bottom'_'mascot']">
           <div className="text-left [grid-area:title]">

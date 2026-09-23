@@ -147,7 +147,7 @@ export function RegionLanguageSwitcher({
             </fieldset>
           </DialogBody>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={close} className="w-full sm:flex-1">
+            <Button type="button" variant="outline" onClick={close} className="w-full sm:flex-1 border-border">
               {t("cancel")}
             </Button>
             <Button type="button" onClick={() => {

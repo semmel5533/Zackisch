@@ -157,7 +157,7 @@ function DialogFooter({
           render={
             <Button
               variant="outline"
-              className="w-full sm:flex-1 h-11 rounded-full border-input text-foreground hover:bg-muted font-semibold cursor-pointer"
+              className="w-full sm:flex-1 h-11 rounded-full border-border text-foreground hover:bg-muted font-semibold cursor-pointer"
             />
           }
         >

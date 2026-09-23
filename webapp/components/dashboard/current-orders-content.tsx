@@ -891,7 +891,7 @@ export function CurrentOrdersContent({
             <Button
               variant="outline"
               disabled={pendingOrderId !== null}
-              className="w-full sm:flex-1"
+              className="w-full sm:flex-1 border-border"
               onClick={() => setOrderToCancel(null)}
             >
               {t("abortCancel")}
@@ -942,7 +942,7 @@ export function CurrentOrdersContent({
             <Button
               variant="outline"
               disabled={pendingOrderId !== null}
-              className="w-full sm:flex-1"
+              className="w-full sm:flex-1 border-border"
               onClick={() => setOrderToComplete(null)}
             >
               {t("abortCancel")}

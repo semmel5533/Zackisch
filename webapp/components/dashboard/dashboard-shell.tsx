@@ -31,8 +31,6 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { signOutAction } from "@/actions/auth-actions";
 
-import { WaveLine } from "@/components/ui/wave-line";
-
 interface DashboardShellProps {
   organization: Organization | null;
   user: { name?: string; email?: string; [key: string]: any };
@@ -105,7 +103,7 @@ export function DashboardShell({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col max-lg:border-r max-lg:border-border bg-background text-foreground lg:relative print:hidden",
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-background text-foreground lg:relative print:hidden",
           isExpanded ? "w-72" : "w-16",
           "max-lg:w-72", // Always wide on mobile
           isMobileOpen
@@ -113,10 +111,6 @@ export function DashboardShell({
             : "-translate-x-full lg:translate-x-0 max-lg:hidden",
         )}
       >
-        <WaveLine
-          orientation="vertical"
-          className="absolute top-4 bottom-4 -right-[5px] h-[calc(100%-2rem)] text-black pointer-events-none hidden lg:flex"
-        />
 
         <div
           className={cn(

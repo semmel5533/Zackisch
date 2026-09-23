@@ -834,7 +834,7 @@ export function AllOrdersContent({
             <Button
               variant="outline"
               disabled={isCancelling}
-              className="w-full sm:flex-1"
+              className="w-full sm:flex-1 border-border"
               onClick={() => setOrderToCancel(null)}
             >
               {t("abortCancel")}

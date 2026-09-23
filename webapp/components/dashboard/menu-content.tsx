@@ -910,7 +910,7 @@ export function MenuContent({
               type="button"
               variant="outline"
               onClick={() => setDeleteConfirm(null)}
-              className="w-full sm:flex-1"
+              className="w-full sm:flex-1 border-border"
             >
               {t("cancel")}
             </Button>

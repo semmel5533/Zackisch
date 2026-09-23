@@ -494,8 +494,9 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   <div className="pt-2 w-full mt-auto">
                     <Button
                       type="submit"
+                      variant="outline"
                       disabled={isBusinessPending}
-                      className="w-full"
+                      className="w-full border-border"
                     >
                       {isBusinessPending ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
                       {t("save")}
@@ -583,7 +584,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           setIsStripeLoading(false);
                         }
                       }}
-                      className="w-full"
+                      className="w-full border-border"
                     >
                       {isStripeLoading ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
                       {organization.stripeOnboardingComplete
@@ -655,7 +656,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         setIsLoggingOutAll(false);
                       }
                     }}
-                    className="w-full mt-auto"
+                    className="w-full mt-auto border-border"
                   >
                     {isLoggingOutAll ? (
                       <SpinnerGap className="mr-2 animate-spin" weight="bold" />
@@ -687,7 +688,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         setIsEmailChanging(false);
                       }
                     }}
-                    className="w-full mt-auto"
+                    className="w-full mt-auto border-border"
                   >
                     {isEmailChanging ? (
                       <SpinnerGap className="mr-2 animate-spin" weight="bold" />
@@ -705,7 +706,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   </p>
                 </div>
                 <Button
-                  variant="outline"
+                  variant="destructive"
                   disabled={isDeleting}
                   onClick={async () => {
                     setIsDeleting(true);
@@ -720,7 +721,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                       setIsDeleting(false);
                     }
                   }}
-                  className="w-full mt-auto h-11 rounded-full font-semibold border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors cursor-pointer active:scale-[0.98]"
+                  className="w-full mt-auto"
                 >
                   {isDeleting ? (
                     <SpinnerGap className="mr-2 animate-spin" weight="bold" />

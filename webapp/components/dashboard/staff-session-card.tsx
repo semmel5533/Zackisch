@@ -137,7 +137,7 @@ export function StaffSessionCard({
           <Button
             variant="outline"
             onClick={() => copyLinkText(staffToken)}
-            className="w-full h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98]"
+            className="w-full border-border"
             disabled={isPending}
           >
             <Copy className="h-4 w-4 mr-2 shrink-0" weight="bold" />
@@ -147,7 +147,7 @@ export function StaffSessionCard({
           <Button
             variant="outline"
             onClick={() => setRegenerateStaffOpen(true)}
-            className="w-full h-11 rounded-full font-semibold hover:border-destructive hover:text-destructive cursor-pointer active:scale-[0.98]"
+            className="w-full border-border hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
             disabled={isPending}
             title={t("createSession")}
           >
@@ -181,7 +181,7 @@ export function StaffSessionCard({
               type="button"
               variant="outline"
               onClick={() => setRegenerateStaffOpen(false)}
-              className="w-full sm:flex-1"
+              className="w-full sm:flex-1 border-border"
             >
               {t("cancel")}
             </Button>
