@@ -21,8 +21,8 @@ export function SiteFooter({
       <>
         <footer className="relative overflow-hidden bg-background pt-6 text-foreground sm:pt-8">
           <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto mb-6" />
-          <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
-            <div className="footer-mascot justify-self-start flex items-end mb-[-85px] max-md:mb-[-65px] order-2 md:order-1">
+          <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+            <div className="footer-mascot self-start md:self-auto flex items-end mb-[-85px] max-md:mb-[-65px] order-2 md:order-1">
               <img
                 className="block h-auto w-[clamp(210px,18vw,270px)] object-contain brightness-0 max-md:w-[clamp(190px,46vw,240px)]"
                 src="/icon.svg"
