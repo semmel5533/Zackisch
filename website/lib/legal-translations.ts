@@ -17,9 +17,10 @@ export const legalTranslations = {
       "Wir nehmen nicht an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teil und sind dazu auch nicht verpflichtet.",
     privacyTitle: "Datenschutzerklärung",
     privacyDescription: "Datenschutzerklärung von zakkig.",
-    privacyDate: "Stand: 11. Juli 2026",
+    privacyDate: "Stand: 23. September 2026",
     gtcTitle: "Allgemeine Geschäftsbedingungen (AGB)",
     gtcDescription: "Allgemeine Geschäftsbedingungen von zakkig.",
+    gtcDate: "Stand: 23. September 2026",
     gtcPending:
       "Die Allgemeinen Geschäftsbedingungen für die Nutzung von zakkig werden derzeit juristisch finalisiert und in Kürze an dieser Stelle bereitgestellt.",
     gtcContact:
@@ -44,9 +45,10 @@ export const legalTranslations = {
       "We do not participate in dispute resolution proceedings before a consumer arbitration board and are not obliged to do so.",
     privacyTitle: "Privacy Policy",
     privacyDescription: "Privacy Policy of zakkig.",
-    privacyDate: "As of: July 11, 2026",
+    privacyDate: "As of: September 23, 2026",
     gtcTitle: "General Terms & Conditions",
     gtcDescription: "Terms and Conditions of zakkig.",
+    gtcDate: "As of: September 23, 2026",
     gtcPending:
       "The General Terms & Conditions for zakkig are currently being finalized and will be published here shortly.",
     gtcContact:

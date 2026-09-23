@@ -3,6 +3,7 @@ import { numericText } from "@/lib/numeric-text";
 import Link from "next/link";
 import { parseLocale } from "@/lib/regions";
 import { PrivacyDocument } from "./privacy/PrivacyDocument";
+import { GtcDocument } from "./gtc/GtcDocument";
 import { SiteFooter } from "./SiteFooter";
 
 export function LegalPage({ locale, kind }: { locale: string; kind: LegalKind }) {
@@ -53,12 +54,8 @@ export function LegalPage({ locale, kind }: { locale: string; kind: LegalKind })
           )}
           {kind === "gtc" && (
             <>
-              <p>{t("gtcPending")}</p>
-              <p>
-                {t("gtcContact")}
-                <br />
-                <a href={t("contactUrl")}>{t("contactEmail")}</a>
-              </p>
+              <p>{numericText(t("gtcDate"))}</p>
+              <GtcDocument locale={parseLocale(locale).lang} />
             </>
           )}
         </article>
