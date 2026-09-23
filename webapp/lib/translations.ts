@@ -504,6 +504,10 @@ export const translations = {
     downloadConfirmation: "Bestätigung herunterladen",
     confirmationDisclaimer:
       "Hinweis: Dies ist deine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via zakkig.com. Die steuerliche Bewirtungsquittung bzw. Rechnung wird vom Betrieb ausgestellt und kann dort angefordert werden.",
+    confirmationDisclaimerPrefix:
+      "Hinweis: Dies ist deine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via ",
+    confirmationDisclaimerSuffix:
+      ". Die steuerliche Bewirtungsquittung bzw. Rechnung wird vom Betrieb ausgestellt und kann dort angefordert werden.",
     confirmationDocumentTitle: "Bestell- und Zahlungsbestätigung",
     confirmationTaxInvoiceNote:
       "Steuerliche Rechnungen und Bewirtungsbelege werden auf Wunsch direkt vom Betrieb ausgestellt.",
@@ -1149,6 +1153,10 @@ export const translations = {
     downloadConfirmation: "Download confirmation",
     confirmationDisclaimer:
       "Note: This is your order and payment confirmation for payment processing via zakkig.com. The official tax invoice is issued by the venue and can be requested directly from them.",
+    confirmationDisclaimerPrefix:
+      "Note: This is your order and payment confirmation for payment processing via ",
+    confirmationDisclaimerSuffix:
+      ". The official tax invoice is issued by the venue and can be requested directly from them.",
     confirmationDocumentTitle: "Order and Payment Confirmation",
     confirmationTaxInvoiceNote:
       "Official tax invoices and receipts are issued directly by the venue upon request.",

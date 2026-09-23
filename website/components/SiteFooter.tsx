@@ -79,9 +79,9 @@ export function SiteFooter({
             <RegisterCta />
           </div>
           <div className="flex flex-col items-end justify-self-end gap-2 pt-2 text-right [grid-area:contact] max-md:pt-0">
-            <h3 className="m-0 text-2xl font-medium leading-[1.1]">{t("contactLabel")}</h3>
+            <h3 className="m-0 text-2xl font-semibold leading-[1.1]">{t("contactLabel")}</h3>
             <a
-              className="inline-block text-right text-[clamp(24px,3.8vw,46px)] leading-[1.1] tracking-tight hover:underline hover:underline-offset-4 max-md:text-[clamp(26px,7.8vw,36px)]"
+              className="inline-block text-right text-[clamp(24px,3.8vw,46px)] font-semibold leading-[1.1] tracking-tight hover:underline hover:underline-offset-4 max-md:text-[clamp(26px,7.8vw,36px)]"
               href={t("contactUrl")}
             >
               <span className="link-label">{t("contactEmail")}</span>

@@ -105,6 +105,14 @@ export function generateOrderConfirmationHtml(
       line-height: 1.5;
       font-size: 14px;
     }
+    a {
+      color: #000;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    a:hover {
+      opacity: 0.8;
+    }
     .container {
       max-width: 560px;
       margin: 0 auto;
@@ -330,12 +338,12 @@ export function generateOrderConfirmationHtml(
     <div class="notice-box">
       <strong>${isDe ? "Wichtiger Hinweis:" : "Important note:"}</strong>
       ${isDe
-        ? "Dies ist eine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via zakkig.com. Die steuerliche Bewirtungsquittung bzw. offizielle Rechnung wird auf Wunsch direkt vom Betrieb ausgestellt und kann dort angefordert werden."
-        : "This is an order and payment confirmation for technical payment processing via zakkig.com. The official tax invoice or receipt is issued directly by the venue upon request."}
+        ? 'Dies ist eine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via <a href="https://www.zakkig.com" target="_blank" rel="noopener noreferrer" style="color: #000; font-weight: 500; text-decoration: underline; text-underline-offset: 3px;">zakkig.com</a>. Die steuerliche Bewirtungsquittung bzw. offizielle Rechnung wird auf Wunsch direkt vom Betrieb ausgestellt und kann dort angefordert werden.'
+        : 'This is an order and payment confirmation for technical payment processing via <a href="https://www.zakkig.com" target="_blank" rel="noopener noreferrer" style="color: #000; font-weight: 500; text-decoration: underline; text-underline-offset: 3px;">zakkig.com</a>. The official tax invoice or receipt is issued directly by the venue upon request.'}
     </div>
 
     <div class="footer-note">
-      zakkig.com · ${isDe ? "QR-Bestell- und Bezahlsystem" : "QR Ordering and Payment System"}
+      <a href="https://www.zakkig.com" target="_blank" rel="noopener noreferrer" style="color: #000; font-weight: 500; text-decoration: underline; text-underline-offset: 3px;">zakkig.com</a> · ${isDe ? "QR-Bestell- und Bezahlsystem" : "QR Ordering and Payment System"}
     </div>
   </div>
 </body>

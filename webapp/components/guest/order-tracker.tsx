@@ -125,7 +125,7 @@ export function OrderTracker({
               href={t("homepageUrl")}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
+              className="underline underline-offset-4 text-black font-medium hover:opacity-80 transition-opacity"
             >
               zakkig.com
             </a>
@@ -270,7 +270,16 @@ export function OrderTracker({
             <span>{t("downloadConfirmation")}</span>
           </Button>
           <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
-            {t("confirmationDisclaimer")}
+            {t("confirmationDisclaimerPrefix")}
+            <a
+              href={t("homepageUrl")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
+            >
+              zakkig.com
+            </a>
+            {t("confirmationDisclaimerSuffix")}
           </p>
         </div>
 
@@ -294,7 +303,7 @@ export function OrderTracker({
             href={t("homepageUrl")}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
+            className="underline underline-offset-4 text-black font-medium hover:opacity-80 transition-opacity"
           >
             zakkig.com
           </a>
