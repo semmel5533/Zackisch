@@ -297,6 +297,21 @@ export function OrderTracker({
           )}
         </main>
       </div>
+
+      <footer className="p-4 pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
+        <p className="text-xs text-muted-foreground">
+          {t("processedViaZakkigPrefix")}
+          <a
+            href={t("homepageUrl")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
+          >
+            zakkig.com
+          </a>
+          {t("processedViaZakkigSuffix")}
+        </p>
+      </footer>
     </div>
   );
 }

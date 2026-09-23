@@ -36,6 +36,7 @@ export const exportOrdersCSVAction = async () => ({
   error: "fixtureActionDisabled",
 });
 export const signOutAction = disabled;
+export const signOutStaffAction = disabled;
 export const generateStaffSessionAction = disabled;
 export const revalidatePath = () => {};
 

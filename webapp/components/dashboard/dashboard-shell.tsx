@@ -60,8 +60,6 @@ export function DashboardShell({
       (o: any) => o.status === "in_progress" || o.status === "ready_for_pickup",
     ).length ?? 0;
 
-  const zakkigUrl = t("homepageUrl");
-
   const navItems = [
     {
       label: t("overview"),
@@ -127,12 +125,7 @@ export function DashboardShell({
               "hidden flex-1"
             )}
           >
-            <Link
-              href={zakkigUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="overflow-hidden"
-            >
+            <div className="overflow-hidden">
               <Image
                 src="https://www.zakkig.com/full.svg"
                 alt="zakkig logo"
@@ -140,9 +133,9 @@ export function DashboardShell({
                 height={24}
                 priority
                 loading="eager"
-                className="h-6 w-auto brightness-0 invert"
+                className="h-6 w-auto brightness-0 invert select-none"
               />
-            </Link>
+            </div>
           </div>
 
           {/* Desktop Toggle Button */}
@@ -343,7 +336,7 @@ export function DashboardShell({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background lg:rounded-l-[1.5rem] shadow-sm print:overflow-visible print:block print:bg-white print:shadow-none @container">
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary-foreground/10 px-4 lg:hidden print:hidden bg-primary text-primary-foreground">
-          <Link href={zakkigUrl} target="_blank" rel="noopener noreferrer">
+          <div className="flex items-center">
             <Image
               src="https://www.zakkig.com/full.svg"
               alt="Zakkig"
@@ -351,9 +344,9 @@ export function DashboardShell({
               height={24}
               priority
               loading="eager"
-              className="h-6 w-auto brightness-0 invert"
+              className="h-6 w-auto brightness-0 invert select-none"
             />
-          </Link>
+          </div>
           <Button
             variant="ghost"
             size="icon"

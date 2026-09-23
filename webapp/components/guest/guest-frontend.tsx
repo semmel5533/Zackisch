@@ -15,6 +15,7 @@ import { OrderTracker } from "@/components/guest/order-tracker";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import Image from "next/image";
 import { CustomizationModal } from "@/components/guest/customization-modal";
+import { WaveLine } from "@/components/ui/wave-line";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { Storefront } from "@phosphor-icons/react/dist/ssr";
 import type { Organization, MenuCategory, MenuItem, Order } from "@/lib/types";
@@ -29,6 +30,7 @@ interface GuestFrontendProps {
   initialOrder?: Order | null;
   initialActiveTab?: "menu" | "cart";
   initialCheckoutOpen?: boolean;
+  initialDineInSuccess?: { orderNumber: string } | null;
 }
 
 function GuestHeader({
@@ -105,11 +107,8 @@ function GuestHeader({
           )}
         </div>
 
-        {/* Dashed divider line in zakkig QR style */}
-        <div
-          className="w-full border-b border-dashed border-black mt-4"
-          aria-hidden="true"
-        />
+        {/* Wavy divider line in zakkig QR style */}
+        <WaveLine className="w-full mt-4 text-black" strokeWidth={2.25} />
       </div>
     </header>
   );
@@ -153,6 +152,20 @@ function GuestOrderSuccess({
           {t("orderAgain" as any) || "Neue Bestellung"}
         </Button>
       </div>
+      <footer className="p-4 pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
+        <p className="text-xs text-muted-foreground">
+          {t("processedViaZakkigPrefix")}
+          <a
+            href={t("homepageUrl")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
+          >
+            zakkig.com
+          </a>
+          {t("processedViaZakkigSuffix")}
+        </p>
+      </footer>
     </div>
   );
 }
@@ -581,6 +594,7 @@ export function GuestFrontend({
   initialOrder,
   initialActiveTab = "menu",
   initialCheckoutOpen = false,
+  initialDineInSuccess = null,
 }: GuestFrontendProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
@@ -590,7 +604,7 @@ export function GuestFrontend({
   const [checkoutOpen, setCheckoutOpen] = useState(initialCheckoutOpen);
   const [dineInSuccess, setDineInSuccess] = useState<{
     orderNumber: string;
-  } | null>(null);
+  } | null>(initialDineInSuccess);
 
   const cartScrollRef = useRef<HTMLElement>(null);
   const [hasScrollBelow, setHasScrollBelow] = useState(false);

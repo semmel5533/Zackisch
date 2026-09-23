@@ -120,16 +120,16 @@ function OtpForm({ state }: { state: any }) {
   return (
     <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-        <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
+        <div className="flex items-center">
           <Image
             src="https://www.zakkig.com/full.svg"
             alt="zakkig"
             width={120}
             height={40}
             priority
-            className="w-auto h-8 hover:opacity-80 transition-opacity"
+            className="w-auto h-8 select-none"
           />
-        </Link>
+        </div>
         <RegionLanguageSwitcher variant="outline" />
       </div>
       <CardHeader className="flex-col items-start gap-1 pt-4">
@@ -306,7 +306,7 @@ function SignInForm({
   return (
     <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-        <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
+        <div className="flex items-center">
           <Image
             src="https://www.zakkig.com/full.svg"
             alt="zakkig"
@@ -314,9 +314,9 @@ function SignInForm({
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity"
+            className="w-auto h-8 select-none"
           />
-        </Link>
+        </div>
         <div className="flex items-center gap-2">
           <RegionLanguageSwitcher variant="outline" />
         </div>

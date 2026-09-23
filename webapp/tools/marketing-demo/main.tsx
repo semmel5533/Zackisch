@@ -3,6 +3,8 @@ import { useCartStore } from "@/store/cart-store";
 import { createRoot } from "react-dom/client";
 import { GuestFrontend } from "@/components/guest/guest-frontend";
 import { CurrentOrdersContent } from "@/components/dashboard/current-orders-content";
+import { StaffTerminalShell } from "@/components/staff/staff-terminal-shell";
+import { useSidebarStore } from "@/store/sidebar-store";
 import { useLanguageStore } from "@/store/language-store";
 import type { Organization, MenuCategory, MenuItem, Order } from "@/lib/types";
 import "../../app/globals.css";
@@ -274,17 +276,37 @@ const orders = [1, 2, 3].map((n): Order => ({
   netAmount: 1911,
   currency: "EUR",
 }));
+function StaffDemoScreen() {
+  React.useEffect(() => {
+    useSidebarStore.getState().setExpanded(false);
+  }, []);
+
+  return (
+    <StaffTerminalShell
+      organization={organization}
+      initialOrders={orders}
+      categories={categories}
+      items={items}
+      initialTab="current-orders"
+    />
+  );
+}
+
+useSidebarStore.getState().setExpanded(false);
+
 createRoot(document.getElementById("root")!).render(
   params.get("screen") === "kitchen" ? (
-    <div className="@container h-dvh p-6">
-      <CurrentOrdersContent orders={orders} organizationId="demo" isStaffView />
-    </div>
+    <StaffDemoScreen />
   ) : (
     <GuestFrontend
       organization={organization}
       categories={categories}
       items={items}
-      type="dine-in"
+      type={
+        scenario === "tracker-ready" || scenario === "tracker-completed"
+          ? "takeaway"
+          : "dine-in"
+      }
       tableNumber="1"
       initialActiveTab={
         params.get("screen") === "pay" ||
@@ -294,6 +316,9 @@ createRoot(document.getElementById("root")!).render(
           : "menu"
       }
       initialCheckoutOpen={params.get("screen") === "checkout"}
+      initialDineInSuccess={
+        scenario === "dine-in-success" ? { orderNumber: "001" } : null
+      }
       orderId={
         scenario === "tracker-ready" || scenario === "tracker-completed"
           ? "order-3"
@@ -301,9 +326,9 @@ createRoot(document.getElementById("root")!).render(
       }
       initialOrder={
         scenario === "tracker-ready"
-          ? orders[2]
+          ? { ...orders[2], readyAt: Date.now() }
           : scenario === "tracker-completed"
-            ? { ...orders[2], status: "completed" }
+            ? { ...orders[2], status: "completed", completedAt: Date.now() }
             : undefined
       }
     />

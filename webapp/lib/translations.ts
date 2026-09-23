@@ -640,6 +640,8 @@ export const translations = {
     paymentSuccessful: "Zahlung erfolgreich",
     authentication: "Authentifizierung",
     setNewPassword: "Neues Passwort festlegen",
+    processedViaZakkigPrefix: "Bestellung abgewickelt über ",
+    processedViaZakkigSuffix: " als QR-Bestell- und Bezahlsystem",
   },
   en: {
     // Auth
@@ -1260,6 +1262,8 @@ export const translations = {
     paymentSuccessful: "Payment successful",
     authentication: "Authentication",
     setNewPassword: "Set New Password",
+    processedViaZakkigPrefix: "Order processed via ",
+    processedViaZakkigSuffix: " as a QR ordering and payment system",
   },
 } as const;
 

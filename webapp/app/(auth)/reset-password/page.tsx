@@ -62,7 +62,7 @@ export default function ResetPasswordPage() {
   return (
     <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-        <Link href={t("homepageUrl")} target="_blank" rel="noreferrer">
+        <div className="flex items-center">
           <Image
             src="https://www.zakkig.com/full.svg"
             alt="zakkig"
@@ -70,9 +70,9 @@ export default function ResetPasswordPage() {
             height={40}
             priority
             loading="eager"
-            className="w-auto h-8 hover:opacity-80 transition-opacity"
+            className="w-auto h-8 select-none"
           />
-        </Link>
+        </div>
         <RegionLanguageSwitcher variant="outline" />
       </div>
       {state.success ? (
