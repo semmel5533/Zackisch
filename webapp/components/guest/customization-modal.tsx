@@ -247,7 +247,7 @@ export function CustomizationModal({
             <button
               type="button"
               onClick={() => setIsDescriptionExpanded((prev) => !prev)}
-              className="text-left w-full group flex items-start justify-between gap-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm cursor-pointer"
+              className="text-left w-full group flex items-start justify-between gap-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm cursor-pointer"
               aria-expanded={isDescriptionExpanded}
             >
               <p
@@ -258,7 +258,7 @@ export function CustomizationModal({
               >
                 {item.description}
               </p>
-              <span className="w-7 h-5 flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-foreground transition-colors">
+              <span className="w-9 pointer-coarse:w-11 h-5 flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-foreground transition-colors">
                 {isDescriptionExpanded ? (
                   <CaretUp className="w-4 h-4" weight="bold" />
                 ) : (

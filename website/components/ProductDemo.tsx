@@ -13,8 +13,8 @@ export function ProductDemo({
         <img
           src={`/product/${locale}-${screen.toLowerCase()}.webp`}
           alt={t(`flow${screen}Text`)}
-          width={tablet ? 1200 : 390}
-          height={tablet ? 710 : 846}
+          width={tablet ? 1200 : 260}
+          height={tablet ? 710 : 564}
           loading="lazy"
           className={`block w-full ${tablet ? "aspect-[1200/710] h-auto rounded-[18px] object-contain" : "h-full object-cover"}`}
         />

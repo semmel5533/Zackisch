@@ -169,6 +169,7 @@ if (scenario === "modifiers") {
     $id: "custom-pizza",
     categoryId: "food",
     name: labels.dish,
+    description: labels.description,
     price: 1250,
     available: true,
     sortOrder: 2,
