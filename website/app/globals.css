@@ -30,9 +30,11 @@
   --header-height: 104px;
   --spacing: 0.25rem;
   --radius: 0.75rem;
+  --surface-shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.14);
 }
 
 @theme inline {
+  --shadow-dialog: var(--surface-shadow-dialog);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

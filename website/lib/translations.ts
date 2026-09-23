@@ -33,6 +33,7 @@ export const translations = {
     languageLabel: "Sprache",
     cancel: "Abbrechen",
     saveAndContinue: "Übernehmen",
+    close: "Schließen",
   },
   en: {
     ...landingTranslations.en,
@@ -65,6 +66,7 @@ export const translations = {
     languageLabel: "Language",
     cancel: "Cancel",
     saveAndContinue: "Apply",
+    close: "Close",
   },
 } as const;
 export type TranslationKeys = keyof typeof translations.de;

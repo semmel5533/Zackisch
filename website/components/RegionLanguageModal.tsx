@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Check } from "@phosphor-icons/react";
 import { createTranslator } from "next-intl";
@@ -8,6 +8,31 @@ import { REGIONS, parseLocale } from "@/lib/regions";
 import { useTranslation } from "@/lib/i18n";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+export function RegionFlag({ code, className }: { code: string; className?: string }) {
+  if (code.toLowerCase() !== "de") return null;
+  return (
+    <svg
+      viewBox="0 0 640 480"
+      className={cn("h-4.5 w-6 shrink-0 overflow-hidden rounded-sm border border-black/10 object-cover", className)}
+      aria-hidden="true"
+    >
+      <path fill="#000000" d="M0 0h640v160H0z" />
+      <path fill="#DD0000" d="M0 160h640v160H0z" />
+      <path fill="#FFCE00" d="M0 320h640v160H0z" />
+    </svg>
+  );
+}
 
 export function RegionLanguageModal({
   isOpen,
@@ -21,22 +46,13 @@ export function RegionLanguageModal({
   const { t } = useTranslation();
   const active = parseLocale(pathname);
   const [selectedLocale, setSelectedLocale] = useState(active.locale);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const region = REGIONS[active.regionCode];
+  const region = REGIONS[active.regionCode] || REGIONS.de;
 
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog || !isOpen) return;
-    const previousFocus = document.activeElement;
-    dialog.showModal();
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = overflow;
-      dialog.close();
-      if (previousFocus instanceof HTMLElement) previousFocus.focus();
-    };
-  }, [isOpen]);
+    if (isOpen) {
+      setSelectedLocale(active.locale);
+    }
+  }, [isOpen, active.locale]);
 
   function handleApply() {
     document.cookie = `zakkig_locale=${selectedLocale}; path=/; max-age=31536000; SameSite=Lax`;
@@ -64,90 +80,73 @@ export function RegionLanguageModal({
   }
 
   return (
-    <dialog
-      ref={dialogRef}
-      className="m-auto max-h-[calc(100dvh-32px)] w-[min(480px,calc(100%-32px))] overflow-hidden rounded-[20px] border border-border bg-background text-foreground shadow-[0_24px_48px_-12px_rgba(0,0,0,.18)] backdrop:bg-black/40 backdrop:backdrop-blur-sm open:animate-in open:fade-in open:zoom-in-95 motion-reduce:animate-none sm:rounded-[24px]"
-      aria-labelledby="region-title"
-      aria-describedby="region-description"
-      onClick={(e) => {
-        const dialog = dialogRef.current;
-        if (!dialog) return;
-        const rect = dialog.getBoundingClientRect();
-        const isInDialog =
-          rect.top <= e.clientY &&
-          e.clientY <= rect.top + rect.height &&
-          rect.left <= e.clientX &&
-          e.clientX <= rect.left + rect.width;
-        if (!isInDialog) {
-          onClose();
-        }
+    <Dialog
+      open={isOpen}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) onClose();
       }}
-      onCancel={onClose}
     >
-      <div className="flex flex-col">
-        <header className="shrink-0 border-b border-border bg-background px-5 py-4 text-left sm:px-6 sm:py-5">
-          <h2 id="region-title" className="text-xl font-bold leading-tight tracking-tight text-foreground">{t("regionSelectorTitle")}</h2>
-          <p id="region-description" className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{t("regionSelectorDescription")}</p>
-        </header>
-        <div className="grid gap-5 overflow-y-auto p-5 sm:p-6">
-          <fieldset className="border-0 p-0 m-0 min-w-0">
-            <legend className="text-sm font-semibold text-foreground mb-2 normal-case tracking-normal">
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t("regionSelectorTitle")}</DialogTitle>
+          <DialogDescription>{t("regionSelectorDescription")}</DialogDescription>
+        </DialogHeader>
+        <DialogBody className="space-y-5">
+          <fieldset>
+            <legend className="mb-2.5 text-sm font-bold text-foreground">
               {t("regionLabel")}
             </legend>
-            <div className="flex min-h-12 items-center justify-between gap-3 rounded-[12px] border border-foreground bg-muted px-4 py-3 text-sm font-semibold text-foreground">
-              <span>{region.nativeName}</span>
-              <Check size={16} weight="bold" aria-hidden="true" />
+            <div className="space-y-2">
+              <button
+                type="button"
+                aria-pressed={true}
+                className="flex min-h-11 w-full items-center justify-between rounded-lg border border-foreground bg-muted px-4 py-3 text-left text-sm font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <span className="flex items-center gap-3">
+                  <RegionFlag code={region.code} />
+                  {region.nativeName}
+                </span>
+                <Check className="size-4 shrink-0" weight="bold" aria-hidden="true" />
+              </button>
             </div>
           </fieldset>
-          <fieldset className="border-0 p-0 m-0 min-w-0">
-            <legend className="text-sm font-semibold text-foreground mb-2 normal-case tracking-normal">
+          <fieldset>
+            <legend className="mb-2.5 text-sm font-bold text-foreground">
               {t("languageLabel")}
             </legend>
-            <div className="grid gap-2.5 min-[441px]:grid-cols-2">
-              {region.locales.map((loc) => (
-                <label
-                  key={loc.code}
-                  className={cn(
-                    "flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-[12px] border px-4 py-3 text-sm font-medium transition-colors duration-150 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-ring motion-reduce:transition-none text-foreground",
-                    selectedLocale === loc.code
-                      ? "border-foreground bg-muted font-semibold"
-                      : "border-input bg-background hover:border-foreground/30 hover:bg-muted",
-                  )}
-                >
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    name="language"
-                    value={loc.code}
-                    checked={selectedLocale === loc.code}
-                    onChange={() => setSelectedLocale(loc.code)}
-                  />
-                  <span>{loc.label}</span>
-                  {selectedLocale === loc.code && (
-                    <Check size={16} weight="bold" aria-hidden="true" />
-                  )}
-                </label>
-              ))}
+            <div className="grid grid-cols-2 gap-2.5">
+              {region.locales.map((loc) => {
+                const selected = selectedLocale === loc.code;
+                return (
+                  <button
+                    key={loc.code}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setSelectedLocale(loc.code)}
+                    className={cn(
+                      "flex min-h-11 items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                      selected
+                        ? "border-foreground bg-muted text-foreground"
+                        : "border-input bg-background text-foreground hover:bg-muted",
+                    )}
+                  >
+                    {loc.label}
+                    {selected && <Check className="size-4 shrink-0" weight="bold" aria-hidden="true" />}
+                  </button>
+                );
+              })}
             </div>
           </fieldset>
-        </div>
-        <footer className="flex w-full shrink-0 flex-col-reverse items-center justify-end gap-2.5 border-t border-border bg-background px-5 py-3.5 sm:flex-row sm:gap-3 sm:px-6 sm:py-4">
-          <button
-            type="button"
-            className="h-11 w-full rounded-full border border-input bg-background text-sm font-semibold text-foreground transition-colors duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-1"
-            onClick={onClose}
-          >
+        </DialogBody>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={onClose} className="w-full sm:flex-1">
             {t("cancel")}
-          </button>
-          <button
-            type="button"
-            className="h-11 w-full rounded-full border border-primary bg-primary text-sm font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-1"
-            onClick={handleApply}
-          >
+          </Button>
+          <Button type="button" onClick={handleApply} className="w-full sm:flex-1">
             {t("saveAndContinue")}
-          </button>
-        </footer>
-      </div>
-    </dialog>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

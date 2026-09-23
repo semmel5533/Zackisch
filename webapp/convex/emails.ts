@@ -174,7 +174,7 @@ export const sendEmailOtp = internalAction({
   <div class="email-card" style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div class="email-header" style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
       <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 40px; width: auto; display: block;" />
       </a>
     </div>
     <div class="email-body" style="padding: 40px;">
@@ -245,7 +245,7 @@ export const sendPasswordResetEmail = internalAction({
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
       <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 40px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
@@ -318,7 +318,7 @@ export const sendDeleteAccountEmail = internalAction({
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
       <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 40px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
@@ -391,7 +391,7 @@ export const sendChangeEmailLink = internalAction({
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden;">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
       <a href="https://www.zakkig.com" style="display: inline-block; text-decoration: none;">
-        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 56px; width: auto; display: block;" />
+        <img src="https://www.zakkig.com/full.svg" alt="zakkig" style="height: 40px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
