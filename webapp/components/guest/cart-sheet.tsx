@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { CircleNotch } from "@phosphor-icons/react";
+import { CircleNotch, X } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart-store";
 import { createCheckoutSessionAction } from "@/actions/checkout-actions";
@@ -15,6 +15,7 @@ import { CheckoutForm } from "./checkout-form";
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetFooter,
   SheetHeader,
@@ -141,12 +142,27 @@ export function CartSheet({
     >
       <SheetContent
         side="bottom"
+        showCloseButton={false}
         className="mx-auto h-[90dvh] max-h-[90dvh] w-full max-w-[500px] gap-0 overflow-hidden rounded-t-[20px] p-0 sm:h-auto sm:rounded-t-[24px]"
       >
         <SheetHeader className="shrink-0 text-left">
-          <SheetTitle className="text-xl font-bold text-foreground tracking-tight">
-            {t("checkout")}
-          </SheetTitle>
+          <div className="flex items-center justify-between gap-3">
+            <SheetTitle className="text-xl font-bold text-foreground tracking-tight leading-tight">
+              {t("checkout")}
+            </SheetTitle>
+            <SheetClose
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0"
+                />
+              }
+            >
+              <X className="w-4 h-4" weight="bold" />
+              <span className="sr-only">{t("close")}</span>
+            </SheetClose>
+          </div>
           <div className="flex items-baseline justify-between mt-1.5 w-full">
             <div className="flex items-baseline gap-1.5">
               <span className="text-base font-bold text-foreground">

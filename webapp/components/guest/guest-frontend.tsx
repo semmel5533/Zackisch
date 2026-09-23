@@ -49,7 +49,7 @@ function GuestHeader({
       : t("titleToStayNoTable");
 
   return (
-    <header className="bg-background text-foreground relative z-20 flex flex-col items-center px-4 pt-4 pb-6 shrink-0">
+    <header className="bg-background text-foreground relative z-20 flex flex-col items-center px-4 pt-4 pb-3 sm:pb-3.5 shrink-0">
       <div className="max-w-[500px] w-full flex flex-col items-stretch">
         {/* Merchant banner and logo */}
         <div className="relative w-full aspect-[2.3/1] rounded-xl sm:rounded-2xl overflow-hidden bg-muted border border-border">
@@ -104,6 +104,12 @@ function GuestHeader({
             </p>
           )}
         </div>
+
+        {/* Dashed divider line in zakkig QR style */}
+        <div
+          className="w-full border-b border-dashed border-black mt-4"
+          aria-hidden="true"
+        />
       </div>
     </header>
   );
@@ -484,28 +490,28 @@ function GuestCart({
                   className="text-sm font-bold text-primary text-right leading-snug"
                 />
 
-                <div className="flex items-center gap-1 bg-muted/80 p-1 h-9 rounded-full border border-border/60 shrink-0">
+                <div className="flex items-center gap-0.5 bg-muted/80 p-0.5 h-8 rounded-full border border-border/60 shrink-0">
                   <Button
-                    size="icon-sm"
+                    size="icon-xs"
                     variant="ghost"
-                    className="rounded-full cursor-pointer hover:bg-background"
+                    className="size-7 rounded-full cursor-pointer hover:bg-background shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     aria-label={`${item.quantity === 1 ? t("removeFromCart") : t("decreaseQuantity")}: ${item.name}`}
                   >
-                    <Minus weight="bold" className="h-3.5 w-3.5" />
+                    <Minus weight="bold" className="size-3" />
                   </Button>
                   <span className="text-xs font-bold font-inter tabular-nums min-w-[14px] text-center px-0.5">
                     {item.quantity}
                   </span>
                   <Button
-                    size="icon-sm"
+                    size="icon-xs"
                     variant="ghost"
-                    className="rounded-full cursor-pointer hover:bg-background"
+                    className="size-7 rounded-full cursor-pointer hover:bg-background shrink-0"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
                     aria-label={`${t("increaseQuantity")}: ${item.name}`}
                   >
-                    <Plus weight="bold" className="h-3.5 w-3.5" />
+                    <Plus weight="bold" className="size-3" />
                   </Button>
                 </div>
                 {item.quantity >= MAX_CART_ITEM_QUANTITY && (

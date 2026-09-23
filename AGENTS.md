@@ -130,6 +130,9 @@ Follow this unified, multi-layered architecture for all features and changes:
    - A floating cart banner appears fixed at the bottom only when `itemCount > 0`. It displays the count badge, "Zum Warenkorb", total price, and arrow. It must automatically hide when the cart is emptied.
 3. **Focused Cart View:**
    - When viewing the cart, the merchant hero banner is suppressed. The view features a top header with an `<ArrowLeft>` back button returning to the menu, the cart title, restaurant subtitle, and order type tag.
+4. **Physical Dashed Separator & Sleek Quantity Controls:**
+   - A crisp black dashed separator (`border-b border-dashed border-black`) in zakkig's signature physical QR aesthetic separates the top restaurant profile and address from the sticky categories carousel.
+   - Cart item quantity controls use a compact, narrow stepper pill (`h-8`, `size-7` actions) preventing layout crowding next to item titles and totals.
 
 <!-- END:guest-ordering-ux-conventions -->
 
@@ -146,6 +149,7 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 2. **Standardized Header & Typography:**
    - Use a dedicated full-width header with `px-5 sm:px-6 py-4 sm:py-5`, a bottom divider, and left-aligned text.
    - Use a `text-xl font-bold tracking-tight leading-tight` title in `text-foreground` and a small readable description in `text-muted-foreground`.
+   - When a close button ('X') is present in the header, it must strictly align vertically on the exact center datum line with the dialog title (`flex items-center justify-between`).
 
 3. **Standardized Footer & Action Buttons:**
    - Use a dedicated full-width footer with `px-5 sm:px-6 py-3.5 sm:py-4`, a top divider, stacked actions on mobile, and aligned actions on wider screens.
@@ -223,6 +227,10 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 
 9. **Staff Session & Operational Quick Links Standard:**
    - The staff terminal session tile on the dashboard overview renders as a dedicated operational card with a contextual info tooltip and instant pill actions (`Scannen` as prominent full-width action, with `Link kopieren` and `Neu generieren` side-by-side below). The primary navigation quick links (`Menü`, `Aktuelle Bestellungen`, `Alle Bestellungen`, `Einstellungen`) render in a balanced 2x2 responsive grid beside the staff session card on desktop viewports (`@min-[1100px]:grid-cols-2`), using subtle contextual InfoTooltips to eliminate visual clutter and text noise from everyday operations.
+
+10. **Resource Creation Cards & Standardized Overlay Actions Standard:**
+   - Every resource addition pattern across the webapp (categories, menu items, table QR codes) uses the dashed addition card (`border border-dashed border-muted-foreground/40`) appended at the end of the collection. Redundant creation buttons in navigation headers are omitted to keep top bars calm and clean.
+   - Media overlay actions (banner, logo, and product photo change and delete buttons) render as standardized `size-10 pointer-coarse:size-11` circular buttons with centered `size-4.5` icons.
 
 <!-- END:design-theme-conventions -->
 

@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState, useRef } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
@@ -48,6 +49,13 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const adjustAddressHeight = (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.max(el.scrollHeight, 44)}px`;
+  };
 
   const [logoPreview, setLogoPreview] = useState<string | null>(
     organization.logoFileId
@@ -87,6 +95,12 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [businessState]);
+
+  useEffect(() => {
+    if (addressRef.current) {
+      adjustAddressHeight(addressRef.current);
+    }
+  }, [organization.address]);
 
   const handleLogoFile = (file: File) => {
     if (!isAllowedImageFile(file)) {
@@ -251,11 +265,18 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   >
                     {t("address")}
                   </label>
-                  <Input
+                  <Textarea
+                    ref={(el) => {
+                      addressRef.current = el;
+                      adjustAddressHeight(el);
+                    }}
                     id="business-address"
                     name="address"
                     defaultValue={organization.address}
+                    rows={1}
                     maxLength={300}
+                    onInput={(e) => adjustAddressHeight(e.currentTarget)}
+                    className="min-h-11 py-2.5 resize-none leading-relaxed md:text-sm"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -331,17 +352,17 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                               alt="Banner"
                               className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none">
+                            <div className="absolute inset-0 flex items-center justify-center gap-2.5 pointer-events-none">
                               <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   bannerInputRef.current?.click();
                                 }}
-                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95 shadow-md"
                                 title={t("changeBanner")}
                               >
-                                <PencilSimple className="w-3.5 h-3.5" />
+                                <PencilSimple className="size-4.5" weight="bold" />
                               </button>
                               <button
                                 type="button"
@@ -352,10 +373,10 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   setRemoveBanner(true);
                                   if (bannerInputRef.current) bannerInputRef.current.value = "";
                                 }}
-                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95 shadow-md"
                                 title={t("removeBanner")}
                               >
-                                <Trash className="w-3.5 h-3.5" />
+                                <Trash className="size-4.5" weight="bold" />
                               </button>
                             </div>
                           </>
@@ -418,17 +439,17 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                               alt="Logo"
                               className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none">
+                            <div className="absolute inset-0 flex items-center justify-center gap-2.5 pointer-events-none">
                               <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   logoInputRef.current?.click();
                                 }}
-                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95 shadow-md"
                                 title={t("changeLogo")}
                               >
-                                <PencilSimple className="w-3.5 h-3.5" />
+                                <PencilSimple className="size-4.5" weight="bold" />
                               </button>
                               <button
                                 type="button"
@@ -439,10 +460,10 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                                   setRemoveLogo(true);
                                   if (logoInputRef.current) logoInputRef.current.value = "";
                                 }}
-                                className="pointer-events-auto inline-flex size-9 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95"
+                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95 shadow-md"
                                 title={t("removeLogo")}
                               >
-                                <Trash className="w-3.5 h-3.5" />
+                                <Trash className="size-4.5" weight="bold" />
                               </button>
                             </div>
                           </>

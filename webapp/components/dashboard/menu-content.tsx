@@ -710,17 +710,6 @@ export function MenuContent({
         <div className="flex items-center">
           <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("menu")}</h1>
         </div>
-        {categories.length > 0 && (
-          <Button
-            type="button"
-            variant="default"
-            onClick={openNewCategory}
-            className="h-11 rounded-full font-semibold px-4 cursor-pointer active:scale-[0.98] gap-2"
-          >
-            <Plus className="h-4 w-4" weight="bold" />
-            <span>{t("addCategory")}</span>
-          </Button>
-        )}
       </div>
 
       {/* Categories Cards View */}

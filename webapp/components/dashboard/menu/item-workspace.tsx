@@ -236,8 +236,8 @@ export function ItemWorkspace({
               <div className="space-y-3.5 sm:space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* Left Column (Bild) */}
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-2 h-full">
+                    <div className="flex items-center justify-between shrink-0">
                       <span className="text-sm font-bold text-foreground">
                         {t("imageSection")}
                       </span>
@@ -246,7 +246,7 @@ export function ItemWorkspace({
                       </span>
                     </div>
                     <ImageUpload
-                      className="w-full min-h-[200px] h-[240px] sm:h-[260px]"
+                      className="w-full flex-1 min-h-[220px] h-[240px] md:h-full"
                       existingImageId={editingItem?.imageId}
                       onFileSelect={(file) => {
                         selectedFileRef.current = file;
@@ -322,7 +322,7 @@ export function ItemWorkspace({
                         onKeyDown={(e) => e.stopPropagation()}
                         placeholder={t("itemNamePlaceholder")}
                         maxLength={100}
-                        className={`h-10 rounded-xl border-input bg-background text-foreground placeholder:text-muted-foreground ${errors.name ? "border-destructive" : ""}`}
+                        className={`h-11 rounded-lg border-input bg-background text-foreground placeholder:text-muted-foreground ${errors.name ? "border-destructive" : ""}`}
                       />
                       {errors.name && (
                         <span className="text-sm text-destructive">
@@ -345,7 +345,7 @@ export function ItemWorkspace({
                         placeholder={t("itemDescPlaceholder")}
                         rows={3}
                         maxLength={500}
-                        className="resize-none rounded-xl border-input bg-background text-foreground placeholder:text-muted-foreground min-h-[88px]"
+                        className="resize-none rounded-lg border-input bg-background text-foreground placeholder:text-muted-foreground min-h-[96px]"
                       />
                     </div>
 
@@ -391,7 +391,7 @@ export function ItemWorkspace({
                               }));
                           }}
                           placeholder="0.00"
-                          className={`pr-8 h-10 rounded-xl border-input bg-background text-foreground placeholder:text-muted-foreground font-inter tabular-nums ${errors.price ? "border-destructive" : ""}`}
+                          className={`pr-8 h-11 rounded-lg border-input bg-background text-foreground placeholder:text-muted-foreground font-inter tabular-nums ${errors.price ? "border-destructive" : ""}`}
                         />
                         <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">
                           €

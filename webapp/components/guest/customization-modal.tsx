@@ -230,11 +230,11 @@ export function CustomizationModal({
       <DialogContent className="w-full max-w-[500px] sm:max-w-[500px] bottom-0 top-auto translate-y-0 rounded-t-[24px] sm:rounded-t-[24px] rounded-b-none sm:rounded-b-none border-b-0 border-x-0 min-[501px]:border-x h-[92dvh] max-h-[92dvh] gap-0">
         {/* Fixed Header */}
         <DialogHeader className="p-5 pb-3.5 border-b border-border shrink-0 bg-background space-y-1.5 text-left relative z-30">
-          <div className="flex items-start justify-between gap-3">
-            <DialogTitle className="text-xl font-bold min-w-0 flex-1 text-foreground break-words leading-snug">
+          <div className="flex items-center justify-between gap-3">
+            <DialogTitle className="text-xl font-bold min-w-0 flex-1 text-foreground break-words leading-tight">
               {item.name}
             </DialogTitle>
-            <DialogCloseButton className="shrink-0 -mr-1 mt-0.5" />
+            <DialogCloseButton className="shrink-0" />
           </div>
           <div>
             <Price

@@ -423,7 +423,7 @@ function SortableStepCard({
                   }}
                   title={t("edit")}
                 >
-                  <PencilSimple className="w-3.5 h-3.5" />
+                  <PencilSimple className="size-4" />
                 </Button>
               </div>
             )}

@@ -129,24 +129,24 @@ export function ImageUpload({
         }}
       >
         {hasImage ? (
-          <div className="relative w-full h-full min-h-[220px]">
+          <div className="relative w-full h-full min-h-[220px] flex-1">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={preview || existingUrl!}
               alt=""
               className="absolute inset-0 w-full h-full object-cover rounded-xl"
             />
-            <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none">
+            <div className="absolute inset-0 flex items-center justify-center gap-2.5 pointer-events-none">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   inputRef.current?.click();
                 }}
-                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95"
+                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95 shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 title={t("changeImage")}
               >
-                <PencilSimple className="w-3.5 h-3.5" />
+                <PencilSimple className="size-4.5" weight="bold" />
               </button>
               <button
                 type="button"
@@ -154,18 +154,18 @@ export function ImageUpload({
                   e.stopPropagation();
                   handleRemove();
                 }}
-                className="pointer-events-auto p-1.5 rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95"
+                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95 shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 title={t("removeImage")}
               >
-                <Trash className="w-3.5 h-3.5" />
+                <Trash className="size-4.5" weight="bold" />
               </button>
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center gap-2 p-6 text-center min-h-[220px]">
-            <div className="w-12 h-12 rounded-xl bg-muted/60 flex items-center justify-center group-hover:bg-muted transition-colors">
+          <div className="flex-1 flex flex-col items-center justify-center gap-2 p-6 text-center min-h-[220px] h-full">
+            <div className="size-12 rounded-xl bg-muted/60 flex items-center justify-center group-hover:bg-muted transition-colors">
               <UploadSimple
-                className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors"
+                className="size-6 text-muted-foreground group-hover:text-foreground transition-colors"
                 weight={isDragging ? "bold" : "regular"}
               />
             </div>
