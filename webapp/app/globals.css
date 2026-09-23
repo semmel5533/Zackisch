@@ -7,7 +7,7 @@
 @source "../tools/marketing-demo";
 
 @custom-variant dark (&:is(.dark *));
-@custom-variant desktop (@container (width >= 1130px));
+@custom-variant desktop (@container (width >= 1066px));
 @custom-variant tablet (@container (width >= 500px));
 
 :root {
