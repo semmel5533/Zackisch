@@ -194,7 +194,7 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 1. **Light Surface, Signature WaveLine Dividers & Contrast Rule:**
    - The entire webapp and marketing website feature 100% clean light backgrounds (`bg-background text-foreground`). Dark/black backgrounds are NEVER used for full sections or sidebars.
    - The desktop dashboard sidebar and staff terminal sidebar render with light surfaces (`bg-background text-foreground`), a 288px width (`w-72`) ensuring navigation items like 'Aktuelle Bestellungen' are fully written out, black logos (`brightness-0`), and a clean standard vertical border divider (`border-r border-border`) matching the horizontal dividing lines used in the header and footer.
-   - On the marketing website, all sections and footers render with light backgrounds, cleanly delineated by Zakkig's signature horizontal `WaveLine` dividers (`text-black`) as a core visual trademark separating every major section (Ablauf to Benefit, Benefit to Setup, Setup to Pricing, Pricing to FAQ, and FAQ to Footer) with zero thin gray borders, with the footer divider serving as the sole divider above the footer.
+   - On the marketing website, all sections and the footer render with clean light backgrounds (`bg-background text-foreground`). Zakkig's signature horizontal `WaveLine` dividers (`text-black`) are reserved exclusively under the 'So einfach funktioniert's' flow section and above the footer; the remaining sections (Benefit to Setup, Setup to Pricing, and Pricing to FAQ) are cleanly separated by standard subtle border dividers (`border-t border-border`).
    - Dark `#000000` is strictly reserved for deliberate focal accents: primary CTA buttons (`bg-primary text-primary-foreground`), active navigation pills, and selected badges.
 
 2. **Numerical Typography Rule (Strictly Digits Only in Inter):**
@@ -211,8 +211,8 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 
 4. **Control Geometry Standard:**
    - Action buttons, select and dropdown triggers, and navigation actions use the shared pill treatment: `h-11 rounded-full font-semibold` (44px at the 4px spacing scale), or compact `h-9` (36px) where density requires it. Compact interactive targets expand to at least 44px on coarse pointers. Guest payment actions use `h-12` (48px).
-   - Text inputs and textareas are fields, not pills: use a 12px radius, distinct `border-input`, and 44px minimum height for ordinary inputs. Content cards use a 20px radius.
-   - Button roles are primary black, outline white with an input border, ghost, and destructive red. `secondary` is a compatibility alias for outline, not a separate gray-filled action.
+   - Text inputs, textareas, and select triggers use the standard subtle outline (`border-border`), a 12px radius (`rounded-lg`), and 44px minimum height for ordinary inputs (`min-h-11`). Content cards use a 20px radius (`rounded-xl`).
+   - Button roles are primary black, outline white with the standard subtle container border (`border-border`), ghost, and destructive red. `secondary` is a compatibility alias for outline, not a separate gray-filled action.
 
 5. **Concentric Corner Radius & Nested Geometry Standard:**
    - Whenever an inner element sits inside an outer container with uniform padding $P$, the outer radius $R_{\text{outer}}$ and inner radius $R_{\text{inner}}$ MUST strictly follow the concentric border radius formula:

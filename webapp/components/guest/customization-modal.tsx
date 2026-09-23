@@ -341,7 +341,7 @@ export function CustomizationModal({
                             ? "border-primary bg-primary/[0.04] ring-1 ring-primary text-foreground hover:bg-primary/[0.07] active:scale-[0.985] cursor-pointer"
                             : isMaxReached
                             ? "border-border/40 opacity-40 cursor-not-allowed bg-muted/20 text-muted-foreground"
-                            : "border-input bg-card hover:bg-muted/50 hover:border-foreground/25 active:scale-[0.98] cursor-pointer text-foreground"
+                            : "border-border bg-card hover:bg-muted/50 hover:border-foreground/25 active:scale-[0.98] cursor-pointer text-foreground"
                         )}
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">

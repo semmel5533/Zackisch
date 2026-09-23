@@ -287,7 +287,7 @@ export function ItemWorkspace({
                           value: cat.$id,
                         }))}
                       >
-                        <SelectTrigger className="w-full bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground rounded-full h-11 px-4 cursor-pointer transition-all font-semibold active:scale-[0.98]">
+                        <SelectTrigger className="w-full bg-background border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground rounded-full h-11 px-4 cursor-pointer transition-all font-semibold active:scale-[0.98]">
                           <SelectValue placeholder={t("category")}>
                             {(value: string | null) =>
                               categories.find((c) => c.$id === value)?.name ||
@@ -324,7 +324,7 @@ export function ItemWorkspace({
                         onKeyDown={(e) => e.stopPropagation()}
                         placeholder={t("itemNamePlaceholder")}
                         maxLength={100}
-                        className={`h-11 rounded-lg border-input bg-background text-foreground placeholder:text-muted-foreground ${errors.name ? "border-destructive" : ""}`}
+                        className={`h-11 rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground ${errors.name ? "border-destructive" : ""}`}
                       />
                       {errors.name && (
                         <span className="text-sm text-destructive">
@@ -347,7 +347,7 @@ export function ItemWorkspace({
                         placeholder={t("itemDescPlaceholder")}
                         rows={3}
                         maxLength={500}
-                        className="resize-none rounded-lg border-input bg-background text-foreground placeholder:text-muted-foreground min-h-[96px]"
+                        className="resize-none rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground min-h-[96px]"
                       />
                     </div>
 
@@ -418,7 +418,7 @@ export function ItemWorkspace({
                             }
                           }}
                           placeholder="0.00"
-                          className={`pr-8 h-11 rounded-lg border-input bg-background text-foreground placeholder:text-muted-foreground font-inter tabular-nums ${errors.price ? "border-destructive" : ""}`}
+                          className={`pr-8 h-11 rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground font-inter tabular-nums ${errors.price ? "border-destructive" : ""}`}
                         />
                         <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">
                           €

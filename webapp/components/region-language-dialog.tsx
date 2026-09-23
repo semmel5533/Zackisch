@@ -105,7 +105,7 @@ export function RegionLanguageSwitcher({
                         "flex min-h-11 w-full items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                         selected
                           ? "border-foreground bg-muted text-foreground"
-                          : "border-input bg-background text-foreground hover:bg-muted",
+                          : "border-border bg-background text-foreground hover:bg-muted",
                       )}
                     >
                       <span className="flex items-center gap-3">
@@ -135,7 +135,7 @@ export function RegionLanguageSwitcher({
                         "flex min-h-11 items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                         selected
                           ? "border-foreground bg-muted text-foreground"
-                          : "border-input bg-background text-foreground hover:bg-muted",
+                          : "border-border bg-background text-foreground hover:bg-muted",
                       )}
                     >
                       {language.label}

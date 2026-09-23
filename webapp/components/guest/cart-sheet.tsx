@@ -213,7 +213,7 @@ export function CartSheet({
                       }}
                       className="peer sr-only"
                     />
-                    <div className="size-5 rounded-[6px] border border-input bg-background flex items-center justify-center transition-all peer-checked:bg-primary peer-checked:border-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
+                    <div className="size-5 rounded-[6px] border border-border bg-background flex items-center justify-center transition-all peer-checked:bg-primary peer-checked:border-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
                       {sendEmailConfirmation && (
                         <Check weight="bold" className="size-3.5 text-primary-foreground" />
                       )}

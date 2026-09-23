@@ -387,7 +387,7 @@ function SortableStepCard({
                     if (e.key === "Escape") finishEditingName();
                   }}
                   maxLength={100}
-                  className="h-8 text-sm font-medium bg-background border-input text-foreground px-2.5 rounded-lg flex-1 min-w-0"
+                  className="h-8 text-sm font-medium bg-background border-border text-foreground px-2.5 rounded-lg flex-1 min-w-0"
                   placeholder={t("stepName")}
                 />
                 <Button
@@ -538,7 +538,7 @@ function SortableStepCard({
                     onUpdate({ minSelections: 0 });
                   }
                 }}
-                className="w-full text-center bg-background border-input text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
+                className="w-full text-center bg-background border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -582,7 +582,7 @@ function SortableStepCard({
                     onUpdate({ maxSelections: 1 });
                   }
                 }}
-                className="w-full text-center bg-background border-input text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
+                className="w-full text-center bg-background border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -623,7 +623,7 @@ function SortableStepCard({
                     onUpdate({ includedCount: 0 });
                   }
                 }}
-                className="w-full text-center bg-background border-input text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
+                className="w-full text-center bg-background border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
           </div>
@@ -783,7 +783,7 @@ function OptionRow({
           onMouseDown={(e) => e.stopPropagation()}
           placeholder={t("optionName")}
           maxLength={100}
-          className="h-9 sm:h-8 text-sm bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground rounded-lg flex-1 min-w-0"
+          className="h-9 sm:h-8 text-sm bg-background border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground rounded-lg flex-1 min-w-0"
         />
       </div>
 
@@ -840,7 +840,7 @@ function OptionRow({
             }}
             onKeyDown={(e) => e.stopPropagation()}
             placeholder="0.00"
-            className="h-9 sm:h-8 text-sm pl-6 pr-6 bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground w-full font-inter tabular-nums rounded-lg text-right sm:text-left"
+            className="h-9 sm:h-8 text-sm pl-6 pr-6 bg-background border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground w-full font-inter tabular-nums rounded-lg text-right sm:text-left"
           />
           <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium select-none pointer-events-none">
             €

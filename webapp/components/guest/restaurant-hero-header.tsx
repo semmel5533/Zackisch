@@ -64,7 +64,7 @@ export function RestaurantHeroHeader({
             <div className="shrink-0 flex items-center justify-end">
               <LanguageSwitcher
                 variant="outline"
-                className="size-11 bg-background text-foreground border border-input hover:bg-muted shrink-0"
+                className="size-11 bg-background text-foreground border border-border hover:bg-muted shrink-0"
               />
             </div>
           </div>
