@@ -11,14 +11,15 @@ interface CreateCheckoutSessionParams {
   tableNumber?: string;
   items: any[];
   total: number;
-  email: string;
+  email?: string;
 }
 
 export async function createCheckoutSessionAction(params: CreateCheckoutSessionParams) {
   if (!params.organizationId) {
     return { error: "Betriebs-ID fehlt." };
   }
-  if (!params.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(params.email.trim()) || params.email.length > 100) {
+  const cleanEmail = params.email?.trim() || "";
+  if (cleanEmail && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 100)) {
     return { error: "Ungültige E-Mail-Adresse." };
   }
   if (!params.total || params.total <= 0 || params.total > 1000000) {
@@ -40,7 +41,7 @@ export async function createCheckoutSessionAction(params: CreateCheckoutSessionP
       tableNumber: params.tableNumber,
       items: JSON.stringify(params.items),
       total: params.total,
-      email: params.email,
+      email: cleanEmail || undefined,
       origin,
     });
 

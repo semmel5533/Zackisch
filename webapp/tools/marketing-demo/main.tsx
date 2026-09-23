@@ -318,7 +318,9 @@ createRoot(document.getElementById("root")!).render(
       }
       initialCheckoutOpen={params.get("screen") === "checkout"}
       initialDineInSuccess={
-        scenario === "dine-in-success" ? { orderNumber: "001" } : null
+        scenario === "dine-in-success"
+          ? { orderNumber: "001", order: orders[0] }
+          : null
       }
       orderId={
         scenario === "tracker-ready" || scenario === "tracker-completed"

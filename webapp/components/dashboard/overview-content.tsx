@@ -258,26 +258,26 @@ function InkConnectorText({
       className={cn("flex items-center w-full gap-2 leading-none", className)}
     >
       <svg
-        className="flex-1 h-[8px] overflow-hidden text-current scale-x-[-1]"
+        className="flex-1 h-[12px] overflow-hidden text-current scale-x-[-1]"
         style={{ minWidth: 16 }}
       >
         <defs>
           <pattern
             id={patternId}
-            width="12"
-            height="8"
+            width="16"
+            height="12"
             patternUnits="userSpaceOnUse"
           >
             <path
-              d="M 0 4 Q 3 1, 6 4 T 12 4"
+              d="M 0 6 Q 4 1.5, 8 6 T 16 6"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.25"
               strokeLinecap="round"
             />
           </pattern>
         </defs>
-        <rect width="100%" height="8" fill={`url(#${patternId})`} />
+        <rect width="100%" height="12" fill={`url(#${patternId})`} />
       </svg>
       <svg
         viewBox={metrics.viewBox}
@@ -297,10 +297,10 @@ function InkConnectorText({
         </text>
       </svg>
       <svg
-        className="flex-1 h-[8px] overflow-hidden text-current"
+        className="flex-1 h-[12px] overflow-hidden text-current"
         style={{ minWidth: 16 }}
       >
-        <rect width="100%" height="8" fill={`url(#${patternId})`} />
+        <rect width="100%" height="12" fill={`url(#${patternId})`} />
       </svg>
     </div>
   );

@@ -2,6 +2,7 @@ import {
   getOrganization,
   getMenuCategories,
   getAvailableMenuItems,
+  getOrder,
 } from "@/lib/convex/database";
 import { GuestFrontend } from "@/components/guest/guest-frontend";
 import { Storefront } from "@phosphor-icons/react/dist/ssr";
@@ -48,17 +49,18 @@ export default async function TablePage({
   searchParams,
 }: {
   params: Promise<{ organizationId: string }>;
-  searchParams: Promise<{ table?: string }>;
+  searchParams: Promise<{ table?: string; order?: string }>;
 }) {
-  const [{ organizationId }, { table }] = await Promise.all([
+  const [{ organizationId }, { table, order }] = await Promise.all([
     params,
     searchParams,
   ]);
 
-  const [organization, categories, items] = await Promise.all([
+  const [organization, categories, items, initialOrder] = await Promise.all([
     getOrganization(organizationId),
     getMenuCategories(organizationId),
     getAvailableMenuItems(organizationId),
+    order ? getOrder(order) : Promise.resolve(null),
   ]);
 
   if (!organization)
@@ -68,7 +70,7 @@ export default async function TablePage({
       </div>
     );
 
-  if (organization.isToStayEnabled === false) {
+  if (organization.isToStayEnabled === false && !order) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-background text-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -90,7 +92,7 @@ export default async function TablePage({
     );
   }
 
-  if (!organization.stripeOnboardingComplete) {
+  if (!organization.stripeOnboardingComplete && !order) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-background text-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -118,6 +120,17 @@ export default async function TablePage({
     ownerId: "",
   };
 
+  const sanitizedInitialOrder =
+    initialOrder && initialOrder.organizationId === organizationId
+      ? {
+          ...initialOrder,
+          stripePaymentId: undefined,
+          zakkigFee: 0,
+          stripeFee: 0,
+          netAmount: 0,
+        }
+      : null;
+
   const cleanTable = table ? table.trim().slice(0, 4) : undefined;
 
   return (
@@ -127,6 +140,8 @@ export default async function TablePage({
       items={structuredClone(items)}
       type="dine-in"
       tableNumber={cleanTable}
+      orderId={order}
+      initialOrder={sanitizedInitialOrder ? structuredClone(sanitizedInitialOrder) : null}
     />
   );
 }

@@ -10,9 +10,10 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { CheckCircle, CookingPot, X, Clock, Check } from "@phosphor-icons/react";
+import { CheckCircle, CookingPot, X, Clock, Check, DownloadSimple } from "@phosphor-icons/react";
 import { playOrderReadySound, initAudioContext } from "@/lib/audio";
 import { TRACKING_EXPIRY_MS } from "@/lib/constants";
+import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
 import type { Organization, Order } from "@/lib/types";
 
 interface OrderTrackerProps {
@@ -32,7 +33,7 @@ export function OrderTracker({
   organization,
   initialOrder,
 }: OrderTrackerProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const liveOrder = useQuery(api.orders.getOrder, {
     id: orderId as Id<"orders">,
@@ -283,6 +284,22 @@ export function OrderTracker({
               </div>
             </div>
           </Card>
+
+          {/* Download Order & Payment Confirmation Action */}
+          <div className="w-full flex flex-col items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
+              onClick={() => downloadOrderConfirmation(order, organization, locale)}
+            >
+              <DownloadSimple className="size-4 shrink-0" weight="bold" />
+              <span>{t("downloadConfirmation")}</span>
+            </Button>
+            <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
+              {t("confirmationDisclaimer")}
+            </p>
+          </div>
 
           {order.status === "completed" && (
             <Button

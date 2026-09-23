@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Plus, Minus, ShoppingCart, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
+import { Plus, Minus, ShoppingCart, ArrowLeft, ArrowRight, DownloadSimple } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
@@ -18,6 +18,7 @@ import { CustomizationModal } from "@/components/guest/customization-modal";
 import { WaveLine } from "@/components/ui/wave-line";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { Storefront } from "@phosphor-icons/react/dist/ssr";
+import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
 import type { Organization, MenuCategory, MenuItem, Order } from "@/lib/types";
 
 interface GuestFrontendProps {
@@ -30,7 +31,7 @@ interface GuestFrontendProps {
   initialOrder?: Order | null;
   initialActiveTab?: "menu" | "cart";
   initialCheckoutOpen?: boolean;
-  initialDineInSuccess?: { orderNumber: string } | null;
+  initialDineInSuccess?: { orderNumber: string; order?: Order | null } | null;
 }
 
 function GuestHeader({
@@ -116,12 +117,18 @@ function GuestHeader({
 
 function GuestOrderSuccess({
   orderNumber,
+  order,
+  organization,
+  tableNumber,
   setDineInSuccess,
 }: {
   orderNumber: string;
+  order?: Order | null;
+  organization: Organization;
+  tableNumber?: string;
   setDineInSuccess: (val: null) => void;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   return (
     <div className="flex flex-col min-h-screen bg-muted/30">
       <header className="px-6 pt-[max(2rem,env(safe-area-inset-top))] pb-6 sm:p-6 text-center text-foreground shrink-0 max-w-[500px] mx-auto w-full">
@@ -141,12 +148,35 @@ function GuestOrderSuccess({
         <div className="bg-muted/50 p-4 rounded-xl w-full max-w-xs mt-4 border">
           <p className="font-medium text-sm">{t("waitAtTable")}</p>
         </div>
+
+        {order && (
+          <div className="w-full max-w-xs flex flex-col items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
+              onClick={() => downloadOrderConfirmation(order, organization, locale)}
+            >
+              <DownloadSimple className="size-4 shrink-0" weight="bold" />
+              <span>{t("downloadConfirmation")}</span>
+            </Button>
+            <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-1">
+              {t("confirmationDisclaimer")}
+            </p>
+          </div>
+        )}
+
         <Button
           variant="outline"
           className="mt-6 font-semibold"
           onClick={() => {
             setDineInSuccess(null);
             useCartStore.getState().clearCart();
+            if (typeof window !== "undefined") {
+              const url = new URL(window.location.href);
+              url.searchParams.delete("order");
+              window.history.replaceState(null, "", url.toString());
+            }
           }}
         >
           {t("orderAgain" as any) || "Neue Bestellung"}
@@ -602,7 +632,17 @@ export function GuestFrontend({
   const [checkoutOpen, setCheckoutOpen] = useState(initialCheckoutOpen);
   const [dineInSuccess, setDineInSuccess] = useState<{
     orderNumber: string;
-  } | null>(initialDineInSuccess);
+    order?: Order | null;
+  } | null>(() => {
+    if (initialDineInSuccess) return initialDineInSuccess;
+    if (initialOrder && type === "dine-in") {
+      return {
+        orderNumber: initialOrder.orderNumber,
+        order: initialOrder,
+      };
+    }
+    return null;
+  });
 
   const cartScrollRef = useRef<HTMLElement>(null);
   const [hasScrollBelow, setHasScrollBelow] = useState(false);
@@ -668,6 +708,12 @@ export function GuestFrontend({
     return (
       <GuestOrderSuccess
         orderNumber={dineInSuccess.orderNumber}
+        order={
+          dineInSuccess.order ||
+          (initialOrder?.orderNumber === dineInSuccess.orderNumber ? initialOrder : null)
+        }
+        organization={organization}
+        tableNumber={tableNumber}
         setDineInSuccess={setDineInSuccess}
       />
     );

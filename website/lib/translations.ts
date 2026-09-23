@@ -7,7 +7,7 @@ export const translations = {
     ...legalTranslations.de,
     metaTitle: "zakkig: Bestellen und Bezahlen per QR-Code",
     metaDescription:
-      "Deine Kunden bestellen und bezahlen direkt am Handy. Am Tisch oder zum Abholen. Keine Monatsgebühr, 2 % Gebühr zzgl. Zahlungsanbietergebühren.",
+      "Deine Kunden bestellen und bezahlen direkt am Handy. Am Tisch oder zum Abholen. Keine Einrichtungsgebühren, keine Monatsgebühren, du zahlst nur für Bestellungen über die Plattform.",
     registerCta: "Kostenlos registrieren",
     registerUrl: "https://app.zakkig.com/sign-up",
     qrPrintTitle1: "Scannen &",
@@ -40,7 +40,7 @@ export const translations = {
     ...legalTranslations.en,
     metaTitle: "zakkig: Order and Pay by QR code",
     metaDescription:
-      "Your customers order and pay on their phones. At the table or for pickup. No monthly fee, 2% fee plus payment provider fees.",
+      "Your customers order and pay on their phones. At the table or for pickup. No setup fees, no monthly fees, you only pay for orders placed through the platform.",
     registerCta: "Register for free",
     registerUrl: "https://app.zakkig.com/sign-up",
     qrPrintTitle1: "Scan &",

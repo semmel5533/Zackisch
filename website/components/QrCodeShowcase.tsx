@@ -35,10 +35,10 @@ export function QrCodeShowcase() {
         <div className={`flex flex-col gap-2 text-center transition-[opacity,transform] duration-[400ms] ease-[cubic-bezier(.4,0,.2,1)] motion-reduce:transition-none ${isFading ? "scale-[.98] opacity-0" : ""}`} aria-hidden="true">
           <QrPrintText text={t("qrPrintTitle1")} />
           <QrPrintText text={t("qrPrintTitle2")} />
-          <div className="flex items-center justify-center gap-3 text-lg font-semibold [&_svg]:h-2 [&_svg]:flex-1">
-            <WaveLine />
+          <div className="flex items-center justify-center gap-3 text-lg font-semibold w-full">
+            <WaveLine className="flex-1 min-w-[20px]" />
             {t(isTable ? "qrPrintAt" : "qrPrintFor")}
-            <WaveLine />
+            <WaveLine className="flex-1 min-w-[20px]" />
           </div>
           <QrPrintText text={t(isTable ? "qrPrintTable" : "qrPrintPickup")} />
           <div className="[&_svg]:block [&_svg]:h-auto [&_svg]:w-full">

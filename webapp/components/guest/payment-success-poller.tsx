@@ -52,7 +52,7 @@ export function PaymentSuccessPoller({
       if (type === "takeaway") {
         router.replace(`/pickup/${organizationId}?order=${order._id}`);
       } else {
-        router.replace(`/table/${organizationId}?table=${order.tableNumber || ""}`);
+        router.replace(`/table/${organizationId}?table=${order.tableNumber || ""}&order=${order._id}`);
       }
     }
   }, [order, organizationId, type, router, clearCart, t]);

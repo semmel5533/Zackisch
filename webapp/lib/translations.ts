@@ -500,6 +500,13 @@ export const translations = {
     googlePay: "Google Pay",
     card: "Kartenzahlung",
     emailForReceipt: "E-Mail für den digitalen Beleg",
+    sendConfirmationEmailCheckbox: "Bestell- und Zahlungsbestätigung per E-Mail erhalten",
+    downloadConfirmation: "Bestätigung herunterladen",
+    confirmationDisclaimer:
+      "Hinweis: Dies ist deine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via zakkig.com. Die steuerliche Bewirtungsquittung bzw. Rechnung wird vom Betrieb ausgestellt und kann dort angefordert werden.",
+    confirmationDocumentTitle: "Bestell- und Zahlungsbestätigung",
+    confirmationTaxInvoiceNote:
+      "Steuerliche Rechnungen und Bewirtungsbelege werden auf Wunsch direkt vom Betrieb ausgestellt.",
     placeOrder: "Zahlungspflichtig bestellen",
     continueToPayment: "Weiter zur Zahlung",
     orderAndPay: "Bestellen & Bezahlen",
@@ -1138,6 +1145,13 @@ export const translations = {
     googlePay: "Google Pay",
     card: "Card Payment",
     emailForReceipt: "Email for digital receipt",
+    sendConfirmationEmailCheckbox: "Receive order and payment confirmation via email",
+    downloadConfirmation: "Download confirmation",
+    confirmationDisclaimer:
+      "Note: This is your order and payment confirmation for payment processing via zakkig.com. The official tax invoice is issued by the venue and can be requested directly from them.",
+    confirmationDocumentTitle: "Order and Payment Confirmation",
+    confirmationTaxInvoiceNote:
+      "Official tax invoices and receipts are issued directly by the venue upon request.",
     placeOrder: "Place binding order",
     continueToPayment: "Continue to Payment",
     buyingFrom: "You are buying from:",

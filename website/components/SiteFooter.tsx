@@ -87,7 +87,7 @@ export function SiteFooter({
               <span className="link-label">{t("contactEmail")}</span>
             </a>
           </div>
-          <div className="flex justify-end justify-self-end [grid-area:mars]">
+          <div className="flex justify-end justify-self-end [grid-area:mars] max-md:mb-2">
             <a
               className="group inline-flex items-center justify-end gap-1.5 text-[13px] whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground motion-reduce:transition-none"
               href={t("marsUrl")}
@@ -109,7 +109,7 @@ export function SiteFooter({
               />
             </a>
           </div>
-          <div className="flex items-end justify-self-start mt-[clamp(48px,6vw,96px)] mb-[-95px] [grid-area:mascot] max-md:mt-6 max-md:mb-[-65px]">
+          <div className="flex items-end justify-self-start mt-[clamp(48px,6vw,96px)] mb-[-95px] [grid-area:mascot] max-md:-mt-6 max-md:mb-[-65px]">
             <img
               className="block h-auto w-[clamp(260px,22vw,330px)] object-contain brightness-0 max-md:w-[clamp(200px,48vw,260px)]"
               src="/icon.svg"
@@ -119,7 +119,7 @@ export function SiteFooter({
               height="420"
             />
           </div>
-          <div className="flex flex-col items-end self-end gap-3 py-7 [grid-area:bottom] max-md:pt-4 max-md:pb-0">
+          <div className="flex flex-col items-end self-end gap-3 py-7 [grid-area:bottom] max-md:pt-11 max-md:pb-0">
             <nav
               className="flex gap-6 max-md:gap-5 text-[13px] font-bold uppercase tracking-[0.08em] max-md:w-full max-md:justify-end max-md:flex-nowrap"
               aria-label={t("footerNavigation")}

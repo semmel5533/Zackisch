@@ -255,7 +255,7 @@ export const createCheckoutSession = action({
     tableNumber: v.optional(v.string()),
     items: v.string(), // JSON string
     total: v.number(), // in cents
-    email: v.string(),
+    email: v.optional(v.string()),
     currency: v.optional(v.string()),
     origin: v.optional(v.string()),
   },
@@ -282,10 +282,13 @@ export const createCheckoutSession = action({
         return { error: "Ungültiger Gesamtbetrag." };
       }
 
-      // 2. Validate email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(args.email.trim()) || args.email.length > 100) {
-        return { error: "Ungültige E-Mail-Adresse." };
+      // 2. Validate email (optional)
+      const cleanEmail = args.email?.trim() || "";
+      if (cleanEmail) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(cleanEmail) || cleanEmail.length > 100) {
+          return { error: "Ungültige E-Mail-Adresse." };
+        }
       }
 
       // 3. Validate tableNumber
@@ -309,7 +312,7 @@ export const createCheckoutSession = action({
         organizationId: args.organizationId,
         tableNumber: args.tableNumber || "",
         type: args.type,
-        email: args.email,
+        email: cleanEmail,
         total: String(Math.round(args.total)),
         currency: curr.toUpperCase(),
       };
@@ -329,7 +332,7 @@ export const createCheckoutSession = action({
       const sessionParams: Stripe.Checkout.SessionCreateParams = {
         ui_mode: "elements",
         mode: "payment",
-        customer_email: args.email,
+        ...(cleanEmail ? { customer_email: cleanEmail } : {}),
         line_items: [
           {
             price_data: {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { CircleNotch, X } from "@phosphor-icons/react";
+import { CircleNotch, X, Check } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart-store";
 import { createCheckoutSessionAction } from "@/actions/checkout-actions";
@@ -61,6 +61,7 @@ export function CartSheet({
   const { items, total } = useCartStore();
   const [checkoutSession, setCheckoutSession] = useState<{ clientSecret: string; revision: string } | null>(null);
   const [email, setEmail] = useState("");
+  const [sendEmailConfirmation, setSendEmailConfirmation] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -84,16 +85,18 @@ export function CartSheet({
     const rawEmail = formData.get("email") as string;
     const normalizedEmail = rawEmail?.trim() ?? "";
 
-    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-      setEmailError(t("emailInvalid"));
-      emailRef.current?.focus();
-      return;
-    }
+    if (sendEmailConfirmation) {
+      if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+        setEmailError(t("emailInvalid"));
+        emailRef.current?.focus();
+        return;
+      }
 
-    if (normalizedEmail.length > 100) {
-      setEmailError(t("emailTooLong"));
-      emailRef.current?.focus();
-      return;
+      if (normalizedEmail.length > 100) {
+        setEmailError(t("emailTooLong"));
+        emailRef.current?.focus();
+        return;
+      }
     }
 
     setEmailError(null);
@@ -108,7 +111,7 @@ export function CartSheet({
           tableNumber,
           items,
           total: total(),
-          email: normalizedEmail,
+          email: sendEmailConfirmation ? normalizedEmail : undefined,
         });
 
         if (requestVersion !== requestVersionRef.current) return;
@@ -188,33 +191,65 @@ export function CartSheet({
         ) : !clientSecret ? (
           <form action={onContinueToPayment} noValidate className="flex min-h-0 flex-1 flex-col">
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-semibold text-foreground">
-                  {t("emailForReceipt")}
-                </Label>
-                <Input
-                  ref={emailRef}
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  inputMode="email"
-                  value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                    setEmailError(null);
-                    setCheckoutError(null);
-                  }}
-                  placeholder={t("emailPlaceholder")}
-                  maxLength={100}
-                  aria-invalid={Boolean(emailError)}
-                  aria-describedby={emailError ? "checkout-email-error" : undefined}
-                  required
-                />
-                {emailError && (
-                  <p id="checkout-email-error" role="alert" className="w-full text-left text-sm font-medium text-destructive">
-                    {emailError}
-                  </p>
+              <div className="space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer select-none group">
+                  <div className="relative flex items-center justify-center shrink-0 mt-0.5">
+                    <input
+                      type="checkbox"
+                      name="sendEmailConfirmation"
+                      checked={sendEmailConfirmation}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setSendEmailConfirmation(checked);
+                        if (!checked) {
+                          setEmailError(null);
+                        } else {
+                          setTimeout(() => emailRef.current?.focus(), 50);
+                        }
+                      }}
+                      className="peer sr-only"
+                    />
+                    <div className="size-5 rounded-[6px] border border-input bg-background flex items-center justify-center transition-all peer-checked:bg-primary peer-checked:border-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
+                      {sendEmailConfirmation && (
+                        <Check weight="bold" className="size-3.5 text-primary-foreground" />
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-sm font-semibold text-foreground leading-snug">
+                    {t("sendConfirmationEmailCheckbox")}
+                  </span>
+                </label>
+
+                {sendEmailConfirmation && (
+                  <div className="space-y-2 pt-1 animate-in fade-in duration-200">
+                    <Label htmlFor="email" className="text-sm font-semibold text-foreground sr-only">
+                      {t("emailForReceipt")}
+                    </Label>
+                    <Input
+                      ref={emailRef}
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      inputMode="email"
+                      value={email}
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                        setEmailError(null);
+                        setCheckoutError(null);
+                      }}
+                      placeholder={t("emailPlaceholder")}
+                      maxLength={100}
+                      aria-invalid={Boolean(emailError)}
+                      aria-describedby={emailError ? "checkout-email-error" : undefined}
+                      required={sendEmailConfirmation}
+                    />
+                    {emailError && (
+                      <p id="checkout-email-error" role="alert" className="w-full text-left text-sm font-medium text-destructive">
+                        {emailError}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
 

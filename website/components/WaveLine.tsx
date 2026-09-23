@@ -1,32 +1,43 @@
 import { useId } from "react";
 import { cn } from "@/lib/utils";
 
-interface WaveLineProps {
+export interface WaveLineProps {
   repeat?: boolean;
   className?: string;
   strokeWidth?: number;
+  orientation?: "horizontal" | "vertical";
 }
 
-export function WaveLine({ repeat, className, strokeWidth = 2.25 }: WaveLineProps) {
+export function WaveLine({
+  className,
+  strokeWidth = 2.25,
+  orientation = "horizontal",
+}: WaveLineProps) {
   const rawId = useId();
   const patternId = `wave-line-${rawId.replace(/:/g, "")}`;
 
-  if (repeat || className) {
+  if (orientation === "vertical") {
     return (
       <div
-        className={cn("w-full overflow-hidden text-foreground flex items-center", className)}
+        className={cn(
+          "h-full overflow-hidden text-foreground flex justify-center items-stretch",
+          className,
+        )}
         aria-hidden="true"
       >
-        <svg className="w-full h-2.5 overflow-hidden text-current" preserveAspectRatio="none">
+        <svg
+          className="h-full w-3 overflow-hidden text-current"
+          preserveAspectRatio="none"
+        >
           <defs>
             <pattern
               id={patternId}
               width="12"
-              height="10"
+              height="16"
               patternUnits="userSpaceOnUse"
             >
               <path
-                d="M 0 5 Q 3 2, 6 5 T 12 5"
+                d="M 6 0 Q 1.5 4, 6 8 T 6 16"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={strokeWidth}
@@ -34,20 +45,42 @@ export function WaveLine({ repeat, className, strokeWidth = 2.25 }: WaveLineProp
               />
             </pattern>
           </defs>
-          <rect width="100%" height="10" fill={`url(#${patternId})`} />
+          <rect width="12" height="100%" fill={`url(#${patternId})`} />
         </svg>
       </div>
     );
   }
 
   return (
-    <svg viewBox="0 0 72 8" aria-hidden="true" preserveAspectRatio="none" className={className}>
-      <path
-        d="M0 4Q3 0 6 4T12 4T18 4T24 4T30 4T36 4T42 4T48 4T54 4T60 4T66 4T72 4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-      />
-    </svg>
+    <div
+      className={cn(
+        "w-full overflow-hidden text-foreground flex items-center",
+        className,
+      )}
+      aria-hidden="true"
+    >
+      <svg
+        className="w-full h-3 overflow-hidden text-current"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <pattern
+            id={patternId}
+            width="16"
+            height="12"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 0 6 Q 4 1.5, 8 6 T 16 6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="12" fill={`url(#${patternId})`} />
+      </svg>
+    </div>
   );
 }
