@@ -722,6 +722,24 @@ function OptionRow({
   onRemove,
 }: OptionRowProps) {
   const { t } = useTranslation();
+  const [priceInput, setPriceInput] = useState(() =>
+    option.extraPrice === 0
+      ? ""
+      : (Math.round(option.extraPrice) / 100).toFixed(2),
+  );
+
+  useEffect(() => {
+    const currentCents = priceInput
+      ? Math.round(parseFloat(priceInput.replace(",", ".")) * 100)
+      : 0;
+    if (currentCents !== option.extraPrice) {
+      setPriceInput(
+        option.extraPrice === 0
+          ? ""
+          : (Math.round(option.extraPrice) / 100).toFixed(2),
+      );
+    }
+  }, [option.extraPrice]);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: option.id });
@@ -777,22 +795,50 @@ function OptionRow({
             +
           </span>
           <Input
-            type="number"
-            step="0.01"
-            min="0"
-            max="99999"
-            value={
-              option.extraPrice === 0
-                ? ""
-                : (Math.round(option.extraPrice) / 100).toFixed(2)
-            }
+            type="text"
+            inputMode="decimal"
+            value={priceInput}
             onChange={(e) => {
-              const val = e.target.value;
+              let val = e.target.value;
+              if (val === "") {
+                setPriceInput("");
+                onUpdate({ extraPrice: 0 });
+                return;
+              }
+              const separators = val.match(/[.,]/g);
+              if (separators && separators.length > 1) return;
+              if (!/^[\d]*[.,]?[\d]*$/.test(val)) return;
               if (val.length > 8) return;
+
+              setPriceInput(val);
+              const normalized = val.replace(",", ".");
+              const cents = Math.round(parseFloat(normalized) * 100);
               onUpdate({
-                extraPrice: val ? Math.round(parseFloat(val) * 100) : 0,
+                extraPrice: !isNaN(cents) && cents >= 0 ? cents : 0,
               });
             }}
+            onBlur={() => {
+              if (!priceInput.trim()) {
+                setPriceInput("");
+                onUpdate({ extraPrice: 0 });
+                return;
+              }
+              const normalized = priceInput.trim().replace(",", ".");
+              const num = parseFloat(normalized);
+              if (!isNaN(num) && num > 0) {
+                const formatted = num.toFixed(2);
+                setPriceInput(
+                  priceInput.includes(",")
+                    ? formatted.replace(".", ",")
+                    : formatted,
+                );
+                onUpdate({ extraPrice: Math.round(num * 100) });
+              } else {
+                setPriceInput("");
+                onUpdate({ extraPrice: 0 });
+              }
+            }}
+            onKeyDown={(e) => e.stopPropagation()}
             placeholder="0.00"
             className="h-9 sm:h-8 text-sm pl-6 pr-6 bg-background border-input hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground w-full font-inter tabular-nums rounded-lg text-right sm:text-left"
           />

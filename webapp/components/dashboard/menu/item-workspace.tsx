@@ -153,7 +153,9 @@ export function ItemWorkspace({
       toast.error(t("descTooLong"));
       return;
     }
-    if (!price || isNaN(parseFloat(price)) || parseFloat(price) < 0) {
+    const normalizedPrice = price.trim().replace(",", ".");
+    const parsedPrice = parseFloat(normalizedPrice);
+    if (!normalizedPrice || isNaN(parsedPrice) || parsedPrice < 0) {
       newErrors.price = t("validationItemPrice");
     }
 
@@ -169,7 +171,7 @@ export function ItemWorkspace({
     formData.append("categoryId", categoryId || categoryIdRef.current);
     formData.append("name", name.trim());
     formData.append("description", description);
-    formData.append("price", price);
+    formData.append("price", normalizedPrice);
     formData.append("taxRate", "19.0");
     formData.append(
       "available",
@@ -376,19 +378,44 @@ export function ItemWorkspace({
                       <div className="relative">
                         <Input
                           id="ws-item-price"
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          max="99999"
+                          type="text"
+                          inputMode="decimal"
                           value={price}
                           onChange={(e) => {
-                            if (e.target.value.length > 10) return;
-                            setPrice(e.target.value);
+                            let val = e.target.value;
+                            if (val === "") {
+                              setPrice("");
+                              if (errors.price)
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  price: undefined,
+                                }));
+                              return;
+                            }
+                            const separators = val.match(/[.,]/g);
+                            if (separators && separators.length > 1) return;
+                            if (!/^[\d]*[.,]?[\d]*$/.test(val)) return;
+                            if (val.length > 10) return;
+
+                            setPrice(val);
                             if (errors.price)
                               setErrors((prev) => ({
                                 ...prev,
                                 price: undefined,
                               }));
+                          }}
+                          onBlur={() => {
+                            if (!price.trim()) return;
+                            const normalized = price.trim().replace(",", ".");
+                            const num = parseFloat(normalized);
+                            if (!isNaN(num) && num >= 0) {
+                              const formatted = num.toFixed(2);
+                              setPrice(
+                                price.includes(",")
+                                  ? formatted.replace(".", ",")
+                                  : formatted,
+                              );
+                            }
                           }}
                           placeholder="0.00"
                           className={`pr-8 h-11 rounded-lg border-input bg-background text-foreground placeholder:text-muted-foreground font-inter tabular-nums ${errors.price ? "border-destructive" : ""}`}

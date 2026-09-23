@@ -184,8 +184,10 @@ export async function createMenuItemAction(
   const categoryId = formData.get("categoryId") as string;
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
-  const price = Math.round(parseFloat(formData.get("price") as string) * 100);
-  const taxRate = parseFloat(formData.get("taxRate") as string) || 19.0;
+  const rawPrice = ((formData.get("price") as string) || "").trim().replace(",", ".");
+  const price = Math.round(parseFloat(rawPrice) * 100);
+  const rawTax = ((formData.get("taxRate") as string) || "").trim().replace(",", ".");
+  const taxRate = parseFloat(rawTax) || 19.0;
   const rawSortOrder = formData.get("sortOrder") as string;
   let sortOrder = parseInt(rawSortOrder);
   if (isNaN(sortOrder)) {
@@ -275,10 +277,12 @@ export async function updateMenuItemAction(
   const categoryId = formData.get("categoryId") as string;
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
-  const price = Math.round(parseFloat(formData.get("price") as string) * 100);
+  const rawPrice = ((formData.get("price") as string) || "").trim().replace(",", ".");
+  const price = Math.round(parseFloat(rawPrice) * 100);
   const hasAvailable = formData.has("available");
   const availableFromForm = formData.get("available") === "true";
-  const taxRate = parseFloat(formData.get("taxRate") as string) || 19.0;
+  const rawTax = ((formData.get("taxRate") as string) || "").trim().replace(",", ".");
+  const taxRate = parseFloat(rawTax) || 19.0;
   const imageFile = formData.get("image") as File | null;
   const existingImageId = formData.get("existingImageId") as string;
   const removeExistingImage = formData.get("removeImage") === "true";

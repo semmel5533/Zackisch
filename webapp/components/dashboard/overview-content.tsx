@@ -755,12 +755,7 @@ function QrCodeGeneratorCard({
                 <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
                   <Button
                     type="button"
-                    variant={
-                      selectedTables.length === tables.length &&
-                      selectedTables.length > 0
-                        ? "default"
-                        : "outline"
-                    }
+                    variant="outline"
                     disabled={tables.length === 0}
                     onClick={() => {
                       if (tables.length === 0) return;
@@ -771,7 +766,7 @@ function QrCodeGeneratorCard({
                       }
                     }}
                     className={cn(
-                      "h-11 rounded-full gap-2 font-semibold text-sm transition-colors w-full cursor-pointer active:scale-[0.98]",
+                      "h-11 rounded-full gap-2 font-semibold text-sm border-border text-foreground hover:bg-muted transition-colors w-full cursor-pointer active:scale-[0.98]",
                       selectedTables.length > 0 ? "sm:flex-1" : "",
                     )}
                   >

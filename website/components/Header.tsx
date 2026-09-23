@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Globe, List, X } from "@phosphor-icons/react";
+import { ArrowUpRight, Globe, List, X } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegionLanguageModal } from "./RegionLanguageModal";
 import { buttonVariants } from "./ui/button-variants";
@@ -78,14 +78,20 @@ export function Header() {
             </a>
           ))}
           <div className="mt-2 flex flex-col gap-2.5 border-t border-border pt-4 min-[721px]:hidden">
-            <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "outline" }), "w-full")}>{t("signIn")}</a>
+            <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "outline" }), "w-full")}>
+              <span>{t("signIn")}</span>
+              <ArrowUpRight size={18} className="shrink-0" aria-hidden="true" />
+            </a>
             <button type="button" className={cn(buttonVariants({ variant: "outline" }), "w-full")} onClick={() => { setMenuOpen(false); setIsModalOpen(true); }}>
               <Globe size={18} aria-hidden="true" />{t("regionDisplay")}
             </button>
           </div>
         </nav>
         <div className="flex items-center gap-2">
-          <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden min-[721px]:inline-flex")}>{t("signIn")}</a>
+          <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden min-[721px]:inline-flex")}>
+            <span>{t("signIn")}</span>
+            <ArrowUpRight size={16} className="shrink-0" aria-hidden="true" />
+          </a>
           <button type="button" className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden min-[721px]:inline-flex min-[721px]:px-3 min-[1101px]:px-4")} aria-label={t("regionSelectorTitle")} onClick={() => setIsModalOpen(true)}>
             <Globe size={16} aria-hidden="true" />
             <span className="hidden min-[1101px]:inline">{t("regionDisplay")}</span>
