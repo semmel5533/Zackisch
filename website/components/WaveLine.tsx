@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { cn } from "@/lib/utils";
 
 interface WaveLineProps {
   repeat?: boolean;
@@ -10,10 +11,10 @@ export function WaveLine({ repeat, className, strokeWidth = 2.25 }: WaveLineProp
   const rawId = useId();
   const patternId = `wave-line-${rawId.replace(/:/g, "")}`;
 
-  if (repeat || className?.includes("w-full")) {
+  if (repeat || className) {
     return (
       <div
-        className={`w-full overflow-hidden text-foreground flex items-center ${className || ""}`}
+        className={cn("w-full overflow-hidden text-foreground flex items-center", className)}
         aria-hidden="true"
       >
         <svg className="w-full h-2.5 overflow-hidden text-current" preserveAspectRatio="none">

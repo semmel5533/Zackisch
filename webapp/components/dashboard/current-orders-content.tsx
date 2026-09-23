@@ -83,6 +83,7 @@ export function CurrentOrdersContent({
   const [localOrders, setLocalOrders] = useState<Order[]>(orders);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [orderToCancel, setOrderToCancel] = useState<string | null>(null);
+  const [orderToComplete, setOrderToComplete] = useState<string | null>(null);
   const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
   const pendingOrderRef = useRef<string | null>(null);
   const [mobileTab, setMobileTab] = useState<"in_progress" | "ready_for_pickup">("in_progress");
@@ -264,6 +265,7 @@ export function CurrentOrdersContent({
     : 0;
   const selectedOrderTime = formatOrderTime(selectedOrderTimestamp);
   const targetOrderToCancel = localOrders.find((o) => o.$id === orderToCancel);
+  const targetOrderToComplete = localOrders.find((o) => o.$id === orderToComplete);
   async function handleStatusChange(
     orderId: string,
     newStatus: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
@@ -837,11 +839,7 @@ export function CurrentOrdersContent({
                         size="default"
                         disabled={pendingOrderId !== null}
                         className="flex-1"
-                        onClick={async () => {
-                          if (await handleStatusChange(selectedOrder.$id, "completed")) {
-                            toast.success(t("completed"));
-                          }
-                        }}
+                        onClick={() => setOrderToComplete(selectedOrder.$id)}
                       >
                         <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
                         {t("complete")}
@@ -912,6 +910,56 @@ export function CurrentOrdersContent({
               }}
             >
               {t("confirmCancelOrder")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Complete Order Confirmation Dialog */}
+      <Dialog
+        open={!!orderToComplete}
+        onOpenChange={(open) => !open && setOrderToComplete(null)}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle>
+              {targetOrderToComplete
+                ? t("completeOrderTitle", {
+                    orderNumber: targetOrderToComplete.orderNumber,
+                  })
+                : t("completeOrderTitleFallback")}
+            </DialogTitle>
+            <DialogCloseButton />
+          </DialogHeader>
+
+          <DialogBody>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {t("completeOrderDesc")}
+            </p>
+          </DialogBody>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              disabled={pendingOrderId !== null}
+              className="w-full sm:flex-1"
+              onClick={() => setOrderToComplete(null)}
+            >
+              {t("abortCancel")}
+            </Button>
+            <Button
+              disabled={pendingOrderId !== null}
+              className="w-full sm:flex-1"
+              onClick={async () => {
+                if (orderToComplete) {
+                  if (await handleStatusChange(orderToComplete, "completed")) {
+                    setOrderToComplete(null);
+                    toast.success(t("completed"));
+                  }
+                }
+              }}
+            >
+              {t("completeConfirm")}
             </Button>
           </DialogFooter>
         </DialogContent>
