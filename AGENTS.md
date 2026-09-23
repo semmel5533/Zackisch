@@ -218,6 +218,12 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
    - Do not add redundant rules to `globals.css`, CSS modules, or inline `style` props for static presentation that Tailwind can express without difficulty (e.g. `gap-*`, `flex`, `grid`, `text-*`, `leading-*`, `items-*`, `justify-*`, `p-*`, `m-*`). Existing CSS is not a precedent for adding more of the same.
    - Keep custom CSS for genuine needs that utilities cannot express cleanly: shared tokens and fonts, global resets, keyframes, and runtime or third-party styling constraints. Keep `globals.css` limited to those needs and base layout resets that cannot be expressed with Tailwind.
 
+8. **Vertical Alignment Datum Line Standard:**
+   - On desktop viewports, all dashboard and terminal view headers (`sticky top-0 z-30 h-16`) share the exact 64px height and vertical center datum line ($y = 31.5\text{px}$) with the `zakkig` logo in the left sidebar (`h-16 flex items-center px-4`, logo height 24px centered at $y = 31.5\text{px}$). All main dashboard `h1` titles render with `text-2xl font-bold tracking-tight text-foreground leading-none`, aligning the baseline and center of the page title precisely with the sidebar wordmark across all viewports.
+
+9. **Staff Session & Operational Quick Links Standard:**
+   - The staff terminal session tile on the dashboard overview renders as a dedicated, full-width operational card with a `DeviceTablet` icon badge, active emerald status indicator, and instant pill actions (`Scannen`, `Link kopieren`, `Neu generieren`). The primary navigation quick links (`Menü`, `Aktuelle Bestellungen`, `Alle Bestellungen`, `Einstellungen`) render in a balanced 4-column responsive grid (`grid-cols-1 @min-[500px]:grid-cols-2 @min-[1100px]:grid-cols-4 gap-4`) underneath, ensuring visual weight is evenly distributed across mobile, tablet, and wide desktop screens.
+
 <!-- END:design-theme-conventions -->
 
 <!-- BEGIN:git-commit-conventions -->

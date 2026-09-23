@@ -58,6 +58,7 @@ import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -703,9 +704,9 @@ export function MenuContent({
   return (
     <div ref={containerRef} className="flex-1 space-y-4 @container">
       {/* Header Bar */}
-      <div className="sticky top-0 z-30 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("menu")}</h1>
+      <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("menu")}</h1>
         </div>
       </div>
 
@@ -879,8 +880,8 @@ export function MenuContent({
         onOpenChange={(open) => !open && setDeleteConfirm(null)}
       >
         <DialogContent className="sm:max-w-md">
-          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
-            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle>
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryTitle", {
                     name: deleteConfirm?.name || "",
@@ -892,8 +893,8 @@ export function MenuContent({
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-5 sm:p-6 space-y-4 text-sm text-zinc-900">
-            <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+          <DialogBody>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {deleteConfirm?.type === "category"
                 ? t("confirmDeleteCategoryDesc", {
                     name: deleteConfirm?.name || "",
@@ -902,14 +903,14 @@ export function MenuContent({
                     name: deleteConfirm?.name || "",
                   })}
             </p>
-          </div>
+          </DialogBody>
 
-          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={() => setDeleteConfirm(null)}
-              className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
+              className="w-full sm:flex-1"
             >
               {t("cancel")}
             </Button>

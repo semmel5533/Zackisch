@@ -628,7 +628,7 @@ function SortableStepCard({
             </div>
           </div>
 
-          <Separator className="bg-zinc-100" />
+          <Separator />
 
           {/* Options */}
           <div className="flex flex-col gap-2.5">

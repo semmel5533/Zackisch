@@ -1,6 +1,8 @@
 export const useRouter = () => ({ push() {}, refresh() {} });
 export const usePathname = () => "/";
 export const useSearchParams = () => new URLSearchParams();
+export const redirect = () => {};
+export const notFound = () => {};
 export const useQuery = () => undefined;
 export const useMutation = () => async () => undefined;
 export const useAction = () => async () => undefined;
@@ -33,3 +35,8 @@ export const updateOrderStatusAction = async () => {
 export const exportOrdersCSVAction = async () => ({
   error: "fixtureActionDisabled",
 });
+export const signOutAction = disabled;
+export const generateStaffSessionAction = disabled;
+export const revalidatePath = () => {};
+
+

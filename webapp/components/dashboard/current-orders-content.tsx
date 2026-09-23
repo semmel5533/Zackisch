@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/tooltip";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -412,11 +413,11 @@ export function CurrentOrdersContent({
   };
 
   return (
-    <div className="h-full flex-1 min-h-0 flex flex-col gap-3 sm:gap-4 pt-[22px]">
+    <div className="h-full flex-1 min-h-0 flex flex-col gap-4">
       {/* Top Header */}
-      <div className="flex items-center justify-between shrink-0 print:hidden sm:-mt-[10.4px]">
+      <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("orders")}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("orders")}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -871,8 +872,8 @@ export function CurrentOrdersContent({
         onOpenChange={(open) => !open && setOrderToCancel(null)}
       >
         <DialogContent className="sm:max-w-md">
-          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
-            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle>
               {targetOrderToCancel
                 ? t("cancelOrderTitle", {
                     orderNumber: targetOrderToCancel.orderNumber,
@@ -882,15 +883,17 @@ export function CurrentOrdersContent({
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="px-5 py-5 sm:px-6 sm:py-6 text-sm text-left text-destructive font-medium">
-            {t("cancelOrderWarning")}
-          </div>
+          <DialogBody>
+            <p className="text-sm text-destructive font-medium">
+              {t("cancelOrderWarning")}
+            </p>
+          </DialogBody>
 
-          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
+          <DialogFooter>
             <Button
               variant="outline"
               disabled={pendingOrderId !== null}
-              className="w-full sm:flex-1 rounded-full h-11 border-zinc-200 font-semibold text-zinc-700 hover:bg-zinc-50 cursor-pointer"
+              className="w-full sm:flex-1"
               onClick={() => setOrderToCancel(null)}
             >
               {t("abortCancel")}

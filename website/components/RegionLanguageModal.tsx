@@ -85,22 +85,22 @@ export function RegionLanguageModal({
       onCancel={onClose}
     >
       <div className="flex flex-col">
-        <header className="shrink-0 border-b border-zinc-100 bg-background px-5 py-4 text-left sm:px-6 sm:py-5">
-          <h2 id="region-title" className="text-xl font-bold leading-tight tracking-tight">{t("regionSelectorTitle")}</h2>
+        <header className="shrink-0 border-b border-border bg-background px-5 py-4 text-left sm:px-6 sm:py-5">
+          <h2 id="region-title" className="text-xl font-bold leading-tight tracking-tight text-foreground">{t("regionSelectorTitle")}</h2>
           <p id="region-description" className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{t("regionSelectorDescription")}</p>
         </header>
         <div className="grid gap-5 overflow-y-auto p-5 sm:p-6">
           <fieldset className="border-0 p-0 m-0 min-w-0">
-            <legend className="text-sm font-semibold text-black mb-2 normal-case tracking-normal">
+            <legend className="text-sm font-semibold text-foreground mb-2 normal-case tracking-normal">
               {t("regionLabel")}
             </legend>
-            <div className="flex min-h-12 items-center justify-between gap-3 rounded-[12px] border border-foreground bg-muted px-4 py-3 text-sm font-semibold">
+            <div className="flex min-h-12 items-center justify-between gap-3 rounded-[12px] border border-foreground bg-muted px-4 py-3 text-sm font-semibold text-foreground">
               <span>{region.nativeName}</span>
               <Check size={16} weight="bold" aria-hidden="true" />
             </div>
           </fieldset>
           <fieldset className="border-0 p-0 m-0 min-w-0">
-            <legend className="text-sm font-semibold text-black mb-2 normal-case tracking-normal">
+            <legend className="text-sm font-semibold text-foreground mb-2 normal-case tracking-normal">
               {t("languageLabel")}
             </legend>
             <div className="grid gap-2.5 min-[441px]:grid-cols-2">
@@ -108,7 +108,7 @@ export function RegionLanguageModal({
                 <label
                   key={loc.code}
                   className={cn(
-                    "flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-[12px] border px-4 py-3 text-sm font-medium transition-colors duration-150 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-ring motion-reduce:transition-none",
+                    "flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-[12px] border px-4 py-3 text-sm font-medium transition-colors duration-150 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-ring motion-reduce:transition-none text-foreground",
                     selectedLocale === loc.code
                       ? "border-foreground bg-muted font-semibold"
                       : "border-input bg-background hover:border-foreground/30 hover:bg-muted",
@@ -131,7 +131,7 @@ export function RegionLanguageModal({
             </div>
           </fieldset>
         </div>
-        <footer className="flex w-full shrink-0 flex-col-reverse items-center justify-end gap-2.5 border-t border-zinc-100 bg-background px-5 py-3.5 sm:flex-row sm:gap-3 sm:px-6 sm:py-4">
+        <footer className="flex w-full shrink-0 flex-col-reverse items-center justify-end gap-2.5 border-t border-border bg-background px-5 py-3.5 sm:flex-row sm:gap-3 sm:px-6 sm:py-4">
           <button
             type="button"
             className="h-11 w-full rounded-full border border-input bg-background text-sm font-semibold text-foreground transition-colors duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-1"

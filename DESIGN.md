@@ -115,6 +115,8 @@ Tailwind's shared spacing unit is `0.25rem`: at a 16px root, one step is 4px, `p
 
 **The Available Width Rule.** Use container queries inside dashboard work areas whose width changes with the sidebar. Use viewport breakpoints for the outer shell and website composition.
 
+**The Datum Line Alignment Rule.** Main dashboard page titles and the sidebar zakkig logo share an exact 64px header height and horizontal datum line center at $y = 31.5\text{px}$ on desktop viewports. Dashboard headers use `sticky top-0 z-30 h-16` with `text-2xl font-bold tracking-tight text-foreground leading-none`.
+
 **The Tailwind-First Rule.** In both apps, write expressible layout, spacing, type, responsive behavior, state, and motion with Tailwind utilities in JSX/TSX. Arbitrary values and variants are available. Reserve CSS for tokens, fonts, resets, keyframes, and genuine runtime or third-party constraints. [Authoring detail](docs/design-system.md#ds-15-tailwind-first-authoring).
 
 ## Elevation & Depth

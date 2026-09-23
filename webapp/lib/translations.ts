@@ -125,6 +125,7 @@ export const translations = {
     staffSession: "Personal-Sitzung",
     staffSessionDesc:
       "Kombinierte Terminal-Sitzung für das Küchen- und Servicepersonal mit Schnellzugriff auf Aktuelle Bestellungen, Alle Bestellungen und Verfügbarkeiten.",
+    staffSessionActive: "Aktiv",
     regenerateStaffTitle: "Personal-Sitzung neu generieren?",
     regenerateStaffDesc:
       "Der aktuelle Zugangslink wird sofort ungültig. Alle Geräte, die den alten Link verwenden, verlieren den Zugriff und müssen den neuen Link erneut scannen oder öffnen.",
@@ -759,6 +760,7 @@ export const translations = {
     staffSession: "Staff Session",
     staffSessionDesc:
       "Combined terminal session for kitchen and service staff with fast access to Current Orders, All Orders, and Availability.",
+    staffSessionActive: "Active",
     regenerateStaffTitle: "Regenerate Staff Session link?",
     regenerateStaffDesc:
       "The current link will be invalidated immediately. All devices using the old link will lose access and will need to scan or open the new link again.",

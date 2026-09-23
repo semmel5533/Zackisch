@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { useLanguageStore } from "@/store/language-store";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import type { MenuCategory, MenuItem, Order, Organization } from "@/lib/types";
 import "../../app/globals.css";
 import "./preview.css";
@@ -8,6 +9,11 @@ import "./preview.css";
 const OverviewContent = lazy(() =>
   import("@/components/dashboard/overview-content").then((m) => ({
     default: m.OverviewContent,
+  })),
+);
+const StaffSessionCard = lazy(() =>
+  import("@/components/dashboard/staff-session-card").then((m) => ({
+    default: m.StaffSessionCard,
   })),
 );
 const AllOrdersContent = lazy(() =>
@@ -106,7 +112,15 @@ const orders: Order[] = Array.from(
 );
 
 const screens: Record<string, React.ReactNode> = {
-  overview: <OverviewContent organization={organization} orders={orders} />,
+  overview: (
+    <OverviewContent organization={organization} orders={orders}>
+      <StaffSessionCard
+        staffToken="demo-token"
+        organizationId="demo"
+        baseUrl="http://localhost:3001"
+      />
+    </OverviewContent>
+  ),
   archive: <AllOrdersContent orders={orders} organizationId="demo" />,
   menu: (
     <MenuContent categories={categories} items={items} organizationId="demo" />
@@ -140,8 +154,30 @@ const screens: Record<string, React.ReactNode> = {
   ),
 };
 
+const isDashboardScreen = [
+  "overview",
+  "archive",
+  "menu",
+  "settings",
+  "availability",
+].includes(screen);
+const content = screens[screen] || screens.overview;
+
 createRoot(document.getElementById("root")!).render(
-  <main className="@container min-h-dvh p-6" data-browser-test-screen={screen}>
-    <Suspense fallback={null}>{screens[screen] || screens.overview}</Suspense>
-  </main>,
+  isDashboardScreen ? (
+    <div data-browser-test-screen={screen}>
+      <Suspense fallback={null}>
+        <DashboardShell
+          organization={organization}
+          user={{ name: "Demo User", email: "demo@example.invalid" }}
+        >
+          {content}
+        </DashboardShell>
+      </Suspense>
+    </div>
+  ) : (
+    <main className="@container min-h-dvh p-6" data-browser-test-screen={screen}>
+      <Suspense fallback={null}>{content}</Suspense>
+    </main>
+  ),
 );

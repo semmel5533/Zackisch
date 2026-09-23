@@ -141,7 +141,9 @@ export function StaffTerminalShell({
           "fixed inset-y-0 left-0 z-50 flex flex-col border-l border-primary-foreground/10 bg-primary text-primary-foreground lg:relative print:hidden",
           isExpanded ? "w-64" : "w-16",
           "max-lg:w-64", // Always wide on mobile
-          isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          isMobileOpen
+            ? "translate-x-0"
+            : "-translate-x-full lg:translate-x-0 max-lg:hidden",
         )}
       >
         {/* Sidebar Header */}

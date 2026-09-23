@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -1050,8 +1051,8 @@ function QrCodeGeneratorCard({
         onOpenChange={setDeleteTablesDialogOpen}
       >
         <DialogContent className="sm:max-w-md">
-          <DialogHeader className="px-5 sm:px-6 py-4 sm:py-5 border-b border-zinc-100 bg-white shrink-0 text-left flex flex-row items-center justify-between">
-            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900 leading-tight">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle>
               {selectedTables.length === 1
                 ? t("deleteTableTitle")
                 : t("deleteTablesTitle")}
@@ -1059,20 +1060,20 @@ function QrCodeGeneratorCard({
             <DialogCloseButton />
           </DialogHeader>
 
-          <div className="p-5 sm:p-6 space-y-4 text-sm text-zinc-900">
-            <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+          <DialogBody>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {selectedTables.length === 1
                 ? t("deleteTableDesc")
                 : t("deleteTablesDesc")}
             </p>
-          </div>
+          </DialogBody>
 
-          <DialogFooter className="px-5 sm:px-6 py-3.5 sm:py-4 border-t border-zinc-100 bg-white shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3 w-full">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={() => setDeleteTablesDialogOpen(false)}
-              className="w-full sm:flex-1 h-11 rounded-full border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-semibold cursor-pointer"
+              className="w-full sm:flex-1"
             >
               {t("cancel")}
             </Button>
@@ -1129,9 +1130,9 @@ export function OverviewContent({
   return (
     <>
       <div ref={containerRef} className="flex-1 space-y-4 @container">
-        <div className="sticky top-0 z-30 pt-[22px] -mx-4 sm:-mx-6 px-4 sm:px-6 pb-3 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between print:hidden">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">
+        <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">
               {t("overview")}
             </h1>
           </div>
@@ -1148,75 +1149,77 @@ export function OverviewContent({
           <QrCodeGeneratorCard organization={organization} baseUrl={baseUrl} />
         </div>
 
-        <div className="grid grid-cols-1 @min-[700px]:grid-cols-2 @min-[1300px]:grid-cols-4 gap-4 print:hidden">
-          {children}
-
-          <div className="@min-[700px]:col-span-2 grid grid-cols-1 @min-[500px]:grid-cols-2 gap-4 h-full">
-            <Link
-              href={`/dashboard/${organization.$id}/menu`}
-              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-            >
-              <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
-                <ForkKnife className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <span className="font-semibold text-lg leading-none">
-                  {t("menu")}
-                </span>
-                <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                  {t("quickMenuDesc")}
-                </span>
-              </div>
-            </Link>
-            <Link
-              href={`/dashboard/${organization.$id}/current-orders`}
-              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-            >
-              <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
-                <ClipboardText className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <span className="font-semibold text-lg leading-none">
-                  {t("currentOrders")}
-                </span>
-                <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                  {t("quickOrdersDesc")}
-                </span>
-              </div>
-            </Link>
-            <Link
-              href={`/dashboard/${organization.$id}/all-orders`}
-              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-            >
-              <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
-                <Archive className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <span className="font-semibold text-lg leading-none">
-                  {t("allOrders")}
-                </span>
-                <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                  {t("quickArchiveDesc")}
-                </span>
-              </div>
-            </Link>
-            <Link
-              href={`/dashboard/${organization.$id}/settings`}
-              className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
-            >
-              <div className="bg-primary text-secondary p-2.5 rounded-full shrink-0">
-                <Gear className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <span className="font-semibold text-lg leading-none">
-                  {t("settings")}
-                </span>
-                <span className="text-sm text-muted-foreground leading-relaxed text-balance">
-                  {t("quickSettingsDesc")}
-                </span>
-              </div>
-            </Link>
+        {children && (
+          <div className="w-full print:hidden">
+            {children}
           </div>
+        )}
+
+        <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 @min-[1100px]:grid-cols-4 gap-4 print:hidden">
+          <Link
+            href={`/dashboard/${organization.$id}/menu`}
+            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+          >
+            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
+              <ForkKnife className="w-6 h-6" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="font-semibold text-lg leading-none">
+                {t("menu")}
+              </span>
+              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
+                {t("quickMenuDesc")}
+              </span>
+            </div>
+          </Link>
+          <Link
+            href={`/dashboard/${organization.$id}/current-orders`}
+            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+          >
+            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
+              <ClipboardText className="w-6 h-6" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="font-semibold text-lg leading-none">
+                {t("currentOrders")}
+              </span>
+              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
+                {t("quickOrdersDesc")}
+              </span>
+            </div>
+          </Link>
+          <Link
+            href={`/dashboard/${organization.$id}/all-orders`}
+            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+          >
+            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
+              <Archive className="w-6 h-6" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="font-semibold text-lg leading-none">
+                {t("allOrders")}
+              </span>
+              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
+                {t("quickArchiveDesc")}
+              </span>
+            </div>
+          </Link>
+          <Link
+            href={`/dashboard/${organization.$id}/settings`}
+            className="flex items-start gap-3 p-4 bg-background border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
+          >
+            <div className="bg-primary text-primary-foreground p-2.5 rounded-full shrink-0">
+              <Gear className="w-6 h-6" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="font-semibold text-lg leading-none">
+                {t("settings")}
+              </span>
+              <span className="text-sm text-muted-foreground leading-relaxed text-balance">
+                {t("quickSettingsDesc")}
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
     </>
