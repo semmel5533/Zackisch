@@ -5,11 +5,13 @@ import { useEffect, useRef, useState } from "react";
 interface AnimatedBenefitStatProps {
   target?: number;
   unit?: string;
+  className?: string;
 }
 
 export function AnimatedBenefitStat({
   target = 30,
   unit = "%",
+  className,
 }: AnimatedBenefitStatProps) {
   const [value, setValue] = useState(0);
   const containerRef = useRef<HTMLParagraphElement>(null);
@@ -67,7 +69,7 @@ export function AnimatedBenefitStat({
   }, [target]);
 
   return (
-    <p ref={containerRef} className="my-2 text-center text-[clamp(88px,10vw,140px)] font-medium leading-none tracking-[-.04em]">
+    <p ref={containerRef} className={`my-2 text-[clamp(88px,10vw,140px)] font-medium leading-none tracking-[-.04em] ${className || "text-center"}`}>
       <span className="font-inter tabular-nums">{value}</span>
       <span>{unit ? ` ${unit}` : ""}</span>
     </p>

@@ -89,11 +89,11 @@ export function MainPage() {
             <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("setupTitle")}</h2>
             <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("setupNote")}</p>
           </div>
-          <ol className="flex w-full flex-col items-center self-center">
+          <ol className="flex w-full flex-col items-center justify-center self-center">
             {steps.map((step, index) => (
-              <li key={step} className="flex w-full max-w-[340px] items-center gap-4 border-b border-border py-7 text-left first:pt-0 last:border-0 last:pb-0">
+              <li key={step} className="flex w-full max-w-[400px] items-center justify-center gap-3.5 border-b border-border py-6 sm:py-7 text-center first:pt-0 last:border-0 last:pb-0">
                 <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums">{index + 1}</span>
-                <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(step)}</h3>
+                <h3 className="text-base sm:text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t(step)}</h3>
               </li>
             ))}
           </ol>
@@ -107,15 +107,15 @@ export function MainPage() {
           <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("benefitTitle")}</h2>
           <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("benefitService")}</p>
         </div>
-        <div className="flex flex-col items-center text-center self-center">
+        <div className="flex flex-col items-start justify-center text-left self-center">
           <p className="text-[15px] text-muted-foreground">{t("benefitPrefix")}</p>
-          <AnimatedBenefitStat target={30} unit="%" />
+          <AnimatedBenefitStat target={30} unit="%" className="text-left" />
           <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t("benefitMetric")}</h3>
           <a
             href={t("benefitSourceUrl")}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center justify-center text-center text-[15px] text-muted-foreground transition-colors hover:text-foreground underline underline-offset-4 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex min-h-11 items-center justify-start text-left text-[15px] text-muted-foreground transition-colors hover:text-foreground underline underline-offset-4 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {t("benefitSource")}
           </a>
@@ -129,8 +129,8 @@ export function MainPage() {
           <h2 id="kosten" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("feeTitle")}</h2>
           <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("feePromise")}</p>
         </div>
-        <div className="flex flex-col items-center justify-center text-center self-center">
-          <div className="flex flex-col items-center text-center gap-1.5 sm:gap-2">
+        <div className="flex flex-col items-start justify-center text-left self-center">
+          <div className="flex flex-col items-start text-left gap-1.5 sm:gap-2">
             <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
               {t("feeNoSetup")}
             </p>
@@ -138,14 +138,14 @@ export function MainPage() {
               {t("feeNoMonthly")}
             </p>
           </div>
-          <div className="mt-5 sm:mt-6 flex flex-col items-center text-center">
+          <div className="mt-5 sm:mt-6 flex flex-col items-start text-left">
             <p className="text-base font-medium sm:text-lg">
               <span className="font-inter tabular-nums">{t("feeNumber")}</span>
               <span>{t("feeUnit")}</span>
               {" "}
               <span>{t("feeLabel")}</span>
             </p>
-            <p className="mt-1.5 text-center text-[15px] text-muted-foreground">
+            <p className="mt-1.5 text-left text-[15px] text-muted-foreground">
               {t("feeNote")}
             </p>
           </div>
