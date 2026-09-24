@@ -787,7 +787,7 @@ function QrCodeGeneratorCard({
                   )}
                 </div>
 
-                <ScrollArea className="w-full h-[370px]">
+                <ScrollArea className="w-full h-[378px]">
                   <DndContext
                     id="tables-dnd-context"
                     sensors={sensors}
