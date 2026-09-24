@@ -103,7 +103,7 @@ export function DashboardShell({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-background text-foreground lg:relative print:hidden",
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-border bg-sidebar text-sidebar-foreground lg:relative print:hidden",
           isExpanded ? "w-72" : "w-16",
           "max-lg:w-72", // Always wide on mobile
           isMobileOpen
@@ -335,8 +335,8 @@ export function DashboardShell({
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background print:overflow-visible print:block print:bg-white print:shadow-none @container">
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-background text-foreground">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-canvas print:overflow-visible print:block print:bg-white print:shadow-none @container">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-canvas text-foreground">
           <div className="flex items-center">
             <Image
               src="https://www.zakkig.com/full.svg"

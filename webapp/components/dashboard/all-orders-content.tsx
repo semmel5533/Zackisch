@@ -333,7 +333,7 @@ export function AllOrdersContent({
 
   return (
     <div className="flex-1 space-y-4 @container">
-      <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
+      <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("allOrders")}</h1>
         </div>

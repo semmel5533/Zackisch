@@ -417,7 +417,7 @@ export function CurrentOrdersContent({
   return (
     <div className="h-full flex-1 min-h-0 flex flex-col gap-4">
       {/* Top Header */}
-      <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-background/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
+      <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("orders")}</h1>
         </div>
@@ -508,7 +508,7 @@ export function CurrentOrdersContent({
               {/* Column 1: In Bearbeitung */}
               <div
                 className={cn(
-                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card/60 overflow-hidden shrink-0",
+                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card overflow-hidden shrink-0",
                   mobileTab !== "in_progress" && "hidden tablet:flex",
                 )}
               >
@@ -563,7 +563,7 @@ export function CurrentOrdersContent({
               {/* Column 2: Abholbereit */}
               <div
                 className={cn(
-                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card/60 overflow-hidden shrink-0",
+                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card overflow-hidden shrink-0",
                   mobileTab !== "ready_for_pickup" && "hidden tablet:flex",
                 )}
               >
