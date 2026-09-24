@@ -34,7 +34,7 @@ export const landingTranslations = {
     benefitSourceUrl:
       "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
     feePromise:
-      "Du zahlst nur für Bestellungen über zakkig. Ohne Bestellungen bleibt die Nutzung kostenlos.",
+      "Du zahlst nur für Bestellungen über die Plattform. Ohne Bestellungen bleibt die Nutzung kostenlos.",
     setupTitle: "Ruckzuck eingerichtet.",
     setupFirst: "Menü anlegen",
     setupSecond: "QR-Codes ausdrucken und anbringen",
@@ -137,7 +137,7 @@ export const landingTranslations = {
     benefitSourceUrl:
       "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
     feePromise:
-      "You only pay for orders placed through zakkig. Without orders, it’s free to use.",
+      "You only pay for orders placed through the platform. Without orders, it’s free to use.",
     setupTitle: "Effortless setup.",
     setupFirst: "Add your menu",
     setupSecond: "Print and place QR codes",

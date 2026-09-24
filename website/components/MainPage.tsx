@@ -5,7 +5,6 @@ import { Plus } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { QrCodeShowcase } from "./QrCodeShowcase";
-import { WaveLine } from "./WaveLine";
 import { ProductDemo } from "./ProductDemo";
 import { AnimatedBenefitStat } from "./AnimatedBenefitStat";
 import { SiteFooter } from "./SiteFooter";
@@ -108,59 +107,57 @@ export function MainPage() {
         </div>
       </section>
 
-      <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto" />
-
-      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
-        <div className="flex flex-col items-start justify-center text-left">
-          <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("benefitTitle")}</h2>
-          <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("benefitService")}</p>
-        </div>
-        <div className="flex flex-col items-start justify-center text-left self-center">
-          <p className="text-[15px] text-muted-foreground">{t("benefitPrefix")}</p>
-          <AnimatedBenefitStat target={30} unit="%" className="text-left" />
-          <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t("benefitMetric")}</h3>
-          <a
-            href={t("benefitSourceUrl")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center justify-start text-left text-[15px] text-muted-foreground transition-colors hover:text-foreground underline underline-offset-4 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            {t("benefitSource")}
-          </a>
-        </div>
-      </section>
-
-      <div className="w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] mx-auto border-t border-border" />
-
-      <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
-        <div className="flex flex-col items-start justify-center text-left">
-          <h2 id="kosten" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("feeTitle")}</h2>
-          <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("feePromise")}</p>
-        </div>
-        <div className="flex flex-col items-start justify-center text-left self-center">
-          <div className="flex flex-col items-start text-left gap-1.5 sm:gap-2">
-            <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              {t("feeNoSetup")}
-            </p>
-            <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              {t("feeNoMonthly")}
-            </p>
+      <div className="w-full relative bg-[#e7e7e7] bg-[url('/hero-stone-bg.webp')] bg-cover bg-center border-y border-[var(--site-line)] overflow-hidden">
+        <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+          <div className="flex flex-col items-start justify-center text-left">
+            <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("benefitTitle")}</h2>
+            <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-black/75">{t("benefitService")}</p>
           </div>
-          <div className="mt-5 sm:mt-6 flex flex-col items-start text-left">
-            <p className="text-base font-medium sm:text-lg">
-              <span className="font-inter tabular-nums">{t("feeNumber")}</span>
-              <span>{t("feeUnit")}</span>
-              {" "}
-              <span>{t("feeLabel")}</span>
-            </p>
-            <p className="mt-1.5 text-left text-[15px] text-muted-foreground">
-              {t("feeNote")}
-            </p>
+          <div className="flex flex-col items-start justify-center text-left self-center">
+            <p className="text-[15px] text-black/75">{t("benefitPrefix")}</p>
+            <AnimatedBenefitStat target={30} unit="%" className="text-left" />
+            <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t("benefitMetric")}</h3>
+            <a
+              href={t("benefitSourceUrl")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center justify-start text-left text-[15px] text-black/75 transition-colors hover:text-foreground underline underline-offset-4 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              {t("benefitSource")}
+            </a>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <div className="w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] mx-auto border-t border-border" />
+        <div className="w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] mx-auto border-t border-black/20" />
+
+        <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
+          <div className="flex flex-col items-start justify-center text-left">
+            <h2 id="kosten" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("feeTitle")}</h2>
+            <p className="mt-6 max-w-[38ch] text-[15px] leading-relaxed text-black/75">{t("feePromise")}</p>
+          </div>
+          <div className="flex flex-col items-start justify-center text-left self-center">
+            <div className="flex flex-col items-start text-left gap-1.5 sm:gap-2">
+              <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                {t("feeNoSetup")}
+              </p>
+              <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                {t("feeNoMonthly")}
+              </p>
+            </div>
+            <div className="mt-5 sm:mt-6 flex flex-col items-start text-left">
+              <p className="text-base font-medium sm:text-lg">
+                <span className="font-inter tabular-nums">{t("feeNumber")}</span>
+                <span>{t("feeUnit")}</span>
+                {" "}
+                <span>{t("feeLabel")}</span>
+              </p>
+              <p className="mt-1.5 text-left text-[15px] text-black/75">
+                {t("feeNote")}
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
 
       <section className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid grid-cols-2 gap-24 py-[clamp(72px,9vw,128px)] max-[1100px]:gap-12 max-[600px]:grid-cols-1 max-[600px]:gap-10">
         <h2 id="faq" className="scroll-mt-8 text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("faqTitle")}</h2>
