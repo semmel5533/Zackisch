@@ -46,12 +46,12 @@ export function MainPage() {
         <div className="mb-14 flex justify-center text-center max-[900px]:mb-10">
           <h2 id="ablauf" className="scroll-mt-8 whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("flowTitle")}</h2>
         </div>
-        <div className="mx-auto grid max-w-[800px] grid-cols-2 items-start gap-x-12 gap-y-[clamp(56px,7vw,84px)] max-[900px]:gap-x-9 max-[900px]:gap-y-12 max-[600px]:grid-cols-1 max-[600px]:gap-y-14">
+        <div className="mx-auto grid max-w-[800px] grid-cols-2 items-start gap-x-12 gap-y-[clamp(56px,7vw,84px)] max-[900px]:gap-x-9 max-[900px]:gap-y-12 max-[680px]:grid-cols-1 max-[680px]:gap-y-14">
           {(["Scan", "Pay", "Kitchen"] as const).map((step, index) => (
             <article
               className={`flex w-full min-w-0 flex-col items-center ${
                 step === "Kitchen"
-                  ? "col-span-full mx-auto max-w-[800px] max-[600px]:col-span-1"
+                  ? "col-span-full mx-auto max-w-[800px] max-[680px]:col-span-1"
                   : step === "Scan"
                     ? "max-w-[290px] mx-auto md:max-w-[285px] md:justify-self-start md:mx-0"
                     : "max-w-[290px] mx-auto md:max-w-[285px] md:justify-self-end md:mx-0"
@@ -60,20 +60,28 @@ export function MainPage() {
             >
               <ProductDemo screen={step} />
               <div
-                className={`flex items-start justify-center gap-3 mt-6 md:mt-8 shrink-0 w-full ${
+                className={`flex items-start justify-center mt-6 md:mt-8 shrink-0 w-full ${
                   step === "Kitchen"
-                    ? "max-w-[340px] md:max-w-[520px] mx-auto"
-                    : "max-w-[285px] mx-auto"
+                    ? "max-w-[800px] mx-auto"
+                    : "max-w-[285px] max-[600px]:max-w-[270px] mx-auto"
                 }`}
               >
-                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <div className="flex flex-col items-start text-left">
-                  <h3 className="text-left text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(`flow${step}`)}</h3>
-                  <p className="mt-1.5 text-left text-sm leading-relaxed text-muted-foreground text-balance">
-                    {t(`flow${step}Text`)}
-                  </p>
+                <div className="flex items-start gap-3 w-fit text-left">
+                  <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <div
+                    className={`flex flex-col items-start text-left w-fit ${
+                      step === "Kitchen"
+                        ? "max-w-[215px] md:max-w-[420px]"
+                        : "max-w-[215px]"
+                    }`}
+                  >
+                    <h3 className="text-left text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t(`flow${step}`)}</h3>
+                    <p className="mt-1.5 text-left text-sm leading-relaxed text-muted-foreground">
+                      {t(`flow${step}Text`)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </article>
