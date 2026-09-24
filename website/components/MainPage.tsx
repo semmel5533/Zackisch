@@ -60,7 +60,7 @@ export function MainPage() {
             >
               <ProductDemo screen={step} />
               <div
-                className={`flex items-start gap-3 mt-6 md:mt-8 shrink-0 w-full ${
+                className={`flex items-start justify-center gap-3 mt-6 md:mt-8 shrink-0 w-full ${
                   step === "Kitchen"
                     ? "max-w-[340px] md:max-w-[520px] mx-auto"
                     : "max-w-[285px] mx-auto"
@@ -89,11 +89,11 @@ export function MainPage() {
             <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("setupTitle")}</h2>
             <p className="mx-auto mt-6 max-w-[38ch] text-[15px] leading-relaxed text-muted-foreground">{t("setupNote")}</p>
           </div>
-          <ol className="flex w-full flex-col items-center justify-center self-center">
+          <ol className="flex w-full max-w-[340px] flex-col items-start self-center mx-auto">
             {steps.map((step, index) => (
-              <li key={step} className="flex w-full max-w-[400px] items-center justify-center gap-3.5 border-b border-border py-6 sm:py-7 text-center first:pt-0 last:border-0 last:pb-0">
+              <li key={step} className="flex w-full items-center gap-4 border-b border-border py-7 text-left first:pt-0 last:border-0 last:pb-0">
                 <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary font-inter text-sm font-semibold text-primary-foreground tabular-nums">{index + 1}</span>
-                <h3 className="text-base sm:text-lg font-semibold leading-[1.4] tracking-[-.02em]">{t(step)}</h3>
+                <h3 className="text-lg font-semibold leading-[1.4] tracking-[-.02em] text-balance">{t(step)}</h3>
               </li>
             ))}
           </ol>
