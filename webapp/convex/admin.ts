@@ -169,8 +169,6 @@ export const getRegionalOverview = query({
   returns: v.object({
     totalOrganizations: v.number(),
     activeOrganizations: v.number(),
-    totalRestaurants: v.number(),
-    activeRestaurants: v.number(),
     totalOrders: v.number(),
     gmvCents: v.number(),
     platformFeeCents: v.number(),
@@ -216,8 +214,6 @@ export const getRegionalOverview = query({
     return {
       totalOrganizations,
       activeOrganizations,
-      totalRestaurants: totalOrganizations,
-      activeRestaurants: activeOrganizations,
       totalOrders: regionOrders.length,
       gmvCents,
       platformFeeCents,
@@ -272,8 +268,6 @@ export const listRegionalOrganizations = query({
       }));
   },
 });
-
-export const listRegionalRestaurants = listRegionalOrganizations;
 
 // List regional orders
 export const listRegionalOrders = query({

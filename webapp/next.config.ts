@@ -49,22 +49,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.zackisch.de",
       },
-      {
-        protocol: "https",
-        hostname: "zakkig.de",
-      },
-      {
-        protocol: "https",
-        hostname: "www.zakkig.de",
-      },
-      {
-        protocol: "https",
-        hostname: "zakkig.com",
-      },
-      {
-        protocol: "https",
-        hostname: "www.zakkig.com",
-      },
     ],
   },
   experimental: {
@@ -75,8 +59,6 @@ const nextConfig: NextConfig = {
         "app.zackisch.de",
         "admin.zackisch.com",
         "zackisch.com",
-        "app.zakkig.com",
-        "app.zakkig.de",
         "localhost:3000",
         "localhost:3001",
         "localhost:3002",
@@ -85,30 +67,6 @@ const nextConfig: NextConfig = {
         "127.0.0.1:3002",
       ],
     },
-  },
-  async redirects() {
-    return [
-      {
-        source: "/to-go/:path*",
-        destination: "/pickup/:path*",
-        permanent: true,
-      },
-      {
-        source: "/to-stay/:path*",
-        destination: "/table/:path*",
-        permanent: true,
-      },
-      {
-        source: "/dashboard/:organizationId/live-orders",
-        destination: "/dashboard/:organizationId/current-orders",
-        permanent: true,
-      },
-      {
-        source: "/dashboard/:organizationId/archive",
-        destination: "/dashboard/:organizationId/all-orders",
-        permanent: true,
-      },
-    ];
   },
 };
 

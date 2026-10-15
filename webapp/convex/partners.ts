@@ -19,8 +19,7 @@ export const listPartners = query({
       iban: v.optional(v.string()),
       taxId: v.optional(v.string()),
       createdAt: v.number(),
-      referredRestaurantsCount: v.number(),
-      referredOrganizationsCount: v.optional(v.number()),
+      referredOrganizationsCount: v.number(),
     })
   ),
   handler: async (ctx, args) => {
@@ -47,7 +46,6 @@ export const listPartners = query({
         iban: p.iban,
         taxId: p.taxId,
         createdAt: p.createdAt,
-        referredRestaurantsCount: referredOrgs.length,
         referredOrganizationsCount: referredOrgs.length,
       };
     });

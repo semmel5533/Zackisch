@@ -1,24 +1,27 @@
-# Documentation audit & Migration Status
+# Technischer Dokumentations- und Sicherheitsaudit
 
-This document records the audited security, architectural, and operational state of the Zackisch monorepo. It explicitly distinguishes verified, tested behavior from pending external requirements.
+Dieses Dokument erfasst den geprüften Sicherheits-, Architektur- und Betriebszustand des Zackisch-Monorepos. Es unterscheidet verbindlich zwischen lokal verifizierten Implementierungen und noch offenen externen Voraussetzungen.
 
-## 1. Resolved Security & Architectural Items (Audited & Verified)
+---
 
-| Component / Finding | Previous Issue | Resolution & Evidence | Status |
-| --- | --- | --- | --- |
-| **Cryptographic OTP & Token Randomness** | `Math.random` was used for 6-digit verification codes and session tokens in `customAuth.ts` and `users.ts`. | Replaced with cryptographically secure random generators: `crypto.randomInt(100000, 1000000)` in Node environments and `crypto.getRandomValues(new Uint32Array(1))` in Convex runtimes. Verified in `webapp/convex/customAuth.ts` and `webapp/convex/users.ts`. | **RESOLVED & TESTED** |
-| **Guest Boundary & Data Sanitization** | Public queries (`getOrder`, `organizations.get`) previously leaked internal Stripe IDs, tax numbers, owner IDs, and accounting fees to guests. | Implemented `getGuestOrderTracker` in `webapp/convex/orders.ts` and `getPublicRestaurant` in `webapp/convex/organizations.ts`. Return shapes strictly sanitize and exclude owner IDs, Stripe account IDs, tax IDs, internal fees, and payment tokens. | **RESOLVED & TESTED** |
-| **Google Workspace SMTP Infrastructure** | Migration from legacy M365/custom SMTP to Google Workspace SMTP relay (`smtp-relay.gmail.com:587`, STARTTLS, `noreply@zackisch.com`). | Synced `GOOGLE_WORKSPACE_SMTP_*` configuration and app password securely into remote Convex deployment (`dev:silent-narwhal-392`). Tested live SMTP transmission via `emails:testSmtpConnection`; connection authenticated and email delivered successfully. Central logging active in `emailLogs` table. | **RESOLVED & VERIFIED LIVE** |
-| **Operative Headquarters (`adminapp`)** | No dedicated administrative workspace existed; team actions were undocumented. | Built full Next.js application in `adminapp/` with 12 routes (`/`, `/organizations`, `/restaurants` redirect, `/orders`, `/staff`, `/partners`, `/newsletter`, `/emails`, `/audit`, `/settings`). Real-time connection to shared Convex backend, granular staff permissions, and non-sensitive audit diffs. Typecheck and Next build pass cleanly. | **RESOLVED & BUILT** |
-| **Newsletter System (Double Opt-In & RFC 8058)** | No built-in newsletter or campaign tool existed. | Full newsletter engine in Convex (`newsletter.ts`), `adminapp/app/newsletter/page.tsx` (No-Code block editor and campaign scheduler), website footer form, and public static pages (`/newsletter/confirm`, `/newsletter/unsubscribe`). RFC 8058 One-Click Unsubscribe headers (`List-Unsubscribe-Post: List-Unsubscribe=One-Click`) handled via Convex HTTP action. | **RESOLVED & TESTED** |
-| **Brand Migration to Zackisch** | Codebase and UI referenced legacy brand `zakkig`. | Canonical assets `brand_mark` (symbol only) and `combination_mark` (symbol + wordmark) generated and integrated across all three applications. Derived formats (`.png`, `.webp`, favicons, apple touch icon, QR inlays, social og_image) built via Sharp. Marketing texts, legal translations, JSON-LD schemas, and domains updated to `zackisch.com`. | **RESOLVED & COMPILED** |
-| **Unified Organization & Venue Terminology** | References specifically named "restaurants", creating ambiguity for cafés, imbisse, bakeries, and bars. | Standardized terminology across platform: Convex backend exposes `organizations` / `listRegionalOrganizations` (with aliases for backward compatibility), German UI consistently uses "Betrieb / Betriebe", English UI uses "Business / Venue", `adminapp` serves `/organizations` with automatic redirect from `/restaurants`. | **RESOLVED & COMPILED** |
+## 1. Verifizierte Sicherheits- und Architekturstandards
 
-## 2. Open Operational & External Items
+| Komponente / Themenfeld | Technische Umsetzung & Nachweis | Status |
+|---|---|---|
+| **Kryptografische Zufallswerte (OTP & Tokens)** | 6-stellige Einmal-Codes und Session-Tokens werden über kryptografisch sichere Zufallsgeneratoren (`crypto.getRandomValues`) erzeugt. 30 Minuten Gültigkeit, Sperre nach 5 Fehlversuchen. Geprüft in `webapp/convex/customAuth.ts` und `webapp/convex/users.ts`. | **Umgesetzt & getestet** |
+| **Datenschutz & Gast-Grenze (Data Minimization)** | Öffentliche Abfragen (`getGuestOrderTracker`, `getPublicRestaurant`) filtern interne Stripe-IDs, Steuernummern, Inhaber-IDs und Plattformgebühren serverseitig heraus. Gäste erhalten ausschließlich für sie relevante Daten. | **Umgesetzt & getestet** |
+| **Google Workspace SMTP-Infrastruktur** | Ausgehende Transaktions- und System-E-Mails laufen über den Google Workspace SMTP-Relay (`smtp-relay.gmail.com:587`, STARTTLS, `noreply@zackisch.com`). Das App-Passwort liegt gesichert in der Convex-Secret-Verwaltung (`dev:silent-narwhal-392`). SMTP-Verbindungstest und E-Mail-Log verifiziert. | **Umgesetzt & live geprüft** |
+| **Operative Zentrale (`adminapp`)** | Eigenständige Next.js-Anwendung in `adminapp/` mit 10 aktiven Routen (`/`, `/organizations`, `/orders`, `/staff`, `/partners`, `/newsletter`, `/emails`, `/audit`, `/settings`). Reaktiv angebunden an Convex mit serverseitiger Regionsbegrenzung. Build und Typecheck fehlerfrei. | **Umgesetzt & gebaut** |
+| **Newsletter-System (Double-Opt-in & RFC 8058)** | Vollständige No-Code-Newsletter-Verwaltung in Convex (`newsletter.ts`) und `adminapp/app/newsletter/page.tsx` mit visuellem Block-Editor, Live-Vorschau, Testversand und double-opt-in-konformen Bestätigungsseiten. RFC-8058-One-Click-Unsubscribe-Header über Convex HTTP Router angebunden. | **Umgesetzt & getestet** |
+| **Einheitliche Betriebs- und Organisationsterminologie** | Durchgängige Ausrichtung auf alle Gastronomiebetriebe (Restaurants, Cafés, Imbisse, Bars): Schema und Routen nutzen `organizations`, die deutsche Benutzeroberfläche nutzt konsistent „Betrieb / Betriebe“, die englische „Business / Venue“. Keine veralteten Weiterleitungsrouten. | **Umgesetzt & bereinigt** |
 
-The following items depend on external merchant actions, business decisions, or third-party provider accounts and remain intentionally separated from shipped code claims:
+---
 
-1. **Stripe Connect Production Verification:** The Stripe Connect integration uses Standard Connect with Checkout Sessions and Payment Elements. Production verification, live payouts, and dispute handling require live merchant onboarding.
-2. **Finom Accounting Integration:** Finom remains the intended business banking and preliminary bookkeeping tool. Specific API sync depends on available Finom developer APIs.
-3. **POS / KassenSichV Notice:** Zackisch is an ordering and cashless payment platform. Operators manually record digital orders into their existing point-of-sale systems according to local cash register regulations (KassenSichV / TSE).
-4. **General Terms & Conditions (AGB):** The GTC text remains in finalization; legal notice is maintained in `website/lib/legal-translations.ts`.
+## 2. Offene operative und externe Punkte
+
+Die folgenden Punkte erfordern externe Handlungen, geschäftliche Entscheidungen oder reale Drittkonten und werden daher bewusst als offen deklariert:
+
+1. **Stripe-Connect-Produktivverifikation:** Das Zahlungssystem nutzt Standard Connect mit Checkout Sessions und dem Payment Element. Reale Auszahlungen, Händler-Identitätsprüfungen und Dispute-Prozesse erfordern das Onboarding echter Gastronomiebetriebe im Produktivmodus.
+2. **Finom-Buchhaltungsanbindung:** Finom ist als Geschäftskonto und unterstützende Buchhaltungsumgebung vorgesehen. Eine automatisierte API-Synchronisation hängt von den verfügbaren Schnittstellen von Finom ab.
+3. **Kassenführung & KassenSichV:** Zackisch ist eine Bestell- und Zahlungsplattform, kein zertifiziertes Kassensystem (POS). Betriebe übertragen Bestellungen manuell als unbare Umsätze in ihr Kassensystem; die Einhaltung lokaler TSE-Vorschriften verbleibt beim Betrieb.
+4. **Schlussfassung der Allgemeinen Geschäftsbedingungen (AGB):** Der AGB-Text befindet sich in der juristischen Finalisierung; rechtliche Kernangaben sind im Impressum hinterlegt.

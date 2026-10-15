@@ -1,146 +1,116 @@
-# SEO & multilingual indexing reference
+# SEO- und Mehrsprachigkeits-Referenz
 
-This document describes the current SEO and i18n search indexing implementation of the zakkig marketing website (`website/`). It is a source-grounded state reference for agents and developers — not a wish list. Update this file when the implementation changes.
+Dieses Dokument beschreibt die technische Umsetzung von Suchmaschinenoptimierung (SEO) und mehrsprachiger Indexierung der Zackisch-Marketing-Website (`website/`).
 
-Last verified: 2026-09-23. Next.js 16.3.4 (`output: "export"`, fully static HTML), deployed on Cloudflare Pages.
-
----
-
-## Locale architecture
-
-| Locale path | Language | hreflang | Target audience |
-|-------------|----------|----------|-----------------|
-| `/de-de` | German | `de-DE` | German-speaking users in Germany |
-| `/de-en` | English | `en-DE` | English-speaking users in Germany |
-
-- Locale scheme: custom `{region}-{lang}` path segment (`de-de`, `de-en`). BCP 47 codes (`de-DE`, `en-DE`) are used in hreflang and OG locale — no crawl errors.
-- `DEFAULT_LOCALE = "de-de"`, `ALL_LOCALES = ["de-de", "de-en"]`, defined in [`lib/regions.ts`](../website/lib/regions.ts).
-- No `i18n` config block in [`next.config.ts`](../website/next.config.ts) — routing handled entirely via the `[locale]` path segment, which is the correct pattern for `output: "export"`.
+Stand: Oktober 2026. Next.js 16.3.4 (`output: "export"`, rein statisches HTML), bereitgestellt über Cloudflare Pages.
 
 ---
 
-## Static export constraints
+## Sprach- und Regionsarchitektur
 
-The website uses `output: "export"` in `next.config.ts`, producing flat static HTML. This has several SEO implications agents must understand:
+| Pfad | Sprache | hreflang | Zielgruppe |
+| --- | --- | --- | --- |
+| `/de-de` | Deutsch | `de-DE` | Deutschsprachige Nutzer in Deutschland |
+| `/de-en` | Englisch | `en-DE` | Englischsprachige Nutzer in Deutschland |
 
-- **No dynamic `app/sitemap.ts` or `app/robots.ts`** — use `public/sitemap.xml` and `public/robots.txt` for these.
-- **No server-side headers, redirects, or rewrites at build time** — all redirects run through Cloudflare Pages `public/_redirects`.
-- **`<html lang>` is hardcoded to `"de"` in the root layout** — nested `[locale]/layout.tsx` cannot override the `<html>` tag in static export. This is a known limitation. Google primarily evaluates hreflang links and `og:locale`, both of which are correctly set per locale.
-- **Root `/` is handled by Cloudflare Pages `_redirects`** (`/ /de-de 301`) so Googlebot receives a real 301 instead of a JS spinner. The JS fallback in [`app/page.tsx`](../website/app/page.tsx) still runs for users with cookie or localStorage locale preferences arriving after the redirect.
+- **Schema:** Pfadsegment `{region}-{sprache}` (`de-de`, `de-en`). Standardisierte BCP-47-Codes (`de-DE`, `en-DE`) in `hreflang` und `og:locale`.
+- **Konfiguration:** `DEFAULT_LOCALE = "de-de"`, `ALL_LOCALES = ["de-de", "de-en"]` in [`lib/regions.ts`](../website/lib/regions.ts).
+- Routing erfolgt vollständig über das Next.js-Pfadsegment `[locale]`.
 
 ---
 
-## Route inventory and metadata status
+## Statischer Export und Plattform-Rahmenbedingungen
 
-| Route | Indexed | Canonical set | hreflang | OG locale | noindex |
-|-------|---------|--------------|----------|-----------|---------|
-| `/de-de` | Yes | Yes | Yes | `de_DE` | No |
-| `/de-en` | Yes | Yes | Yes | `en_US` | No |
-| `/de-de/privacy-policy` | Yes | Yes | Yes | `de_DE` | No |
-| `/de-en/privacy-policy` | Yes | Yes | Yes | `en_US` | No |
-| `/de-de/legal-notice` | Yes | Yes | Yes | `de_DE` | No |
-| `/de-en/legal-notice` | Yes | Yes | Yes | `en_US` | No |
-| `/de-de/gtc` | Yes | Yes | Yes | `de_DE` | No |
-| `/de-en/gtc` | Yes | Yes | Yes | `en_US` | No |
-| `/de-de/privacy` | redirect | — | — | — | — |
-| `/de-en/privacy` | redirect | — | — | — | — |
-| `/de-de/legal` | redirect | — | — | — | — |
-| `/de-en/legal` | redirect | — | — | — | — |
-| `/_not-found` (404) | No | No | No | — | Yes (noindex in metadata) |
+Die Website nutzt `output: "export"` in `next.config.ts` zur Erzeugung statischer HTML-Dateien:
+
+- **Robots und Sitemap:** Statische Bereitstellung über `public/robots.txt` und `public/sitemap.xml`.
+- **Server-Header und Weiterleitungen:** Primäre Weiterleitungen (wie der Einstieg von `/` auf `/de-de`) werden über Cloudflare Pages `public/_redirects` (`/ /de-de 301`) ausgeführt.
+- **Wurzel-HTML-Attribut:** `<html lang="de">` im Root-Layout definiert. Suchmaschinen werten primär die seitenspezifischen `hreflang`-Verlinkungen und `og:locale` aus.
+
+---
+
+## Routenübersicht und Metadaten-Status
+
+| Route | Indexiert | Canonical gesetzt | hreflang | OG-Locale | noindex |
+| --- | --- | --- | --- | --- | --- |
+| `/de-de` | Ja | Ja | Ja | `de_DE` | Nein |
+| `/de-en` | Ja | Ja | Ja | `en_US` | Nein |
+| `/de-de/privacy-policy` | Ja | Ja | Ja | `de_DE` | Nein |
+| `/de-en/privacy-policy` | Ja | Ja | Ja | `en_US` | Nein |
+| `/de-de/legal-notice` | Ja | Ja | Ja | `de_DE` | Nein |
+| `/de-en/legal-notice` | Ja | Ja | Ja | `en_US` | Nein |
+| `/de-de/gtc` | Ja | Ja | Ja | `de_DE` | Nein |
+| `/de-en/gtc` | Ja | Ja | Ja | `en_US` | Nein |
+| `/_not-found` (404) | Nein | Nein | Nein | — | Ja (`noindex` gesetzt) |
 | `/` | 301 → `/de-de` | — | — | — | — |
 
-Legal pages (Impressum, Datenschutzerklärung, AGB) are indexed. They contain substantial content (~18 KB each), support E-E-A-T trust signals in the German market, and are commonly searched by name. All indexed legal pages carry `alternates.languages` hreflang tags and `openGraph.url` via [`lib/legal.ts`](../website/lib/legal.ts).
+Rechtliche Seiten (Impressum, Datenschutzerklärung, AGB) sind indexiert. Sie stärken E-E-A-T-Signale und führen verknüpfte `alternates.languages`-Hreflang-Tags sowie `openGraph.url` über [`lib/legal.ts`](../website/lib/legal.ts).
 
 ---
 
-## Metadata implementation
+## Metadaten-Implementierung
 
-### Root layout — [`app/layout.tsx`](../website/app/layout.tsx)
+### Root-Layout – [`app/layout.tsx`](../website/app/layout.tsx)
 
-- `metadataBase`: `https://www.zakkig.com`
-- `title.default`: German title as fallback (`"zakkig: Bestellen und Bezahlen per QR-Code"`)
-- `title.template`: `"zakkig: %s"`
-- `openGraph.locale`: `"de_DE"` (fallback; overridden per locale in page-level metadata)
+- `metadataBase`: `https://www.zackisch.com`
+- `title.default`: Deutscher Titel als Standard (`"Zackisch: Bestellen und Bezahlen per QR-Code"`)
+- `title.template`: `"Zackisch: %s"`
+- `openGraph.locale`: `"de_DE"`
 - `openGraph.images`: `/og_image.png`
 - `twitter.card`: `"summary_large_image"`
 - `viewport.themeColor`: `"#000000"`
 - `icons.icon` / `icons.apple`: `/icon.png`
-- **Known limitation:** `<html lang="de">` is hardcoded and cannot be dynamically set per locale in static export mode. Google uses hreflang and og:locale as primary language signals; this is documented as an architectural constraint.
 
-### Homepage per locale — [`app/[locale]/page.tsx`](../website/app/%5Blocale%5D/page.tsx)
+### Startseite pro Sprache – [`app/[locale]/page.tsx`](../website/app/%5Blocale%5D/page.tsx)
 
-- `title.absolute`: locale-specific (`t.metaTitle`)
-- `description`: locale-specific (`t.metaDescription`)
-- `openGraph.url`: canonical locale URL (e.g. `https://www.zakkig.com/de-de`)
-- `openGraph.locale`: `"de_DE"` or `"en_US"` dynamically
+- `title.absolute`: Lokalisierter Meta-Titel (`t.metaTitle`)
+- `description`: Lokalisierte Beschreibung (`t.metaDescription`)
+- `openGraph.url`: Kanonische Sprach-URL (`https://www.zackisch.com/{locale}`)
+- `openGraph.locale`: Dynamisch `de_DE` bzw. `en_US`
 - `robots.index / follow`: `true`
-- `alternates.canonical`: `https://www.zakkig.com/{locale}`
+- `alternates.canonical`: `https://www.zackisch.com/{locale}`
 - `alternates.languages`:
-  - `"de-DE"` → `https://www.zakkig.com/de-de`
-  - `"en-DE"` → `https://www.zakkig.com/de-en`
-  - `"x-default"` → `https://www.zakkig.com/de-de`
+  - `"de-DE"` → `https://www.zackisch.com/de-de`
+  - `"en-DE"` → `https://www.zackisch.com/de-en`
+  - `"x-default"` → `https://www.zackisch.com/de-de`
 
-### Legal pages — [`lib/legal.ts`](../website/lib/legal.ts)
+### Rechtliche Seiten – [`lib/legal.ts`](../website/lib/legal.ts)
 
-Shared `legalMetadata(locale, kind)` helper used by all legal page routes. Provides `title`, `description`, `robots` (index/follow), `alternates.canonical`, `alternates.languages` (hreflang for `de-DE`, `en-DE`, `x-default`), `openGraph` with `url`, and `twitter`.
+Zentraler Helfer `legalMetadata(locale, kind)` für alle Rechtstexte. Definiert `title`, `description`, `robots` (index/follow), `alternates.canonical`, `alternates.languages` (`de-DE`, `en-DE`, `x-default`), `openGraph` mit URL und `twitter`.
 
-### 404 page — [`app/not-found.tsx`](../website/app/not-found.tsx)
+### 404-Fehlerseite – [`app/not-found.tsx`](../website/app/not-found.tsx)
 
-Server component (no `"use client"`). Metadata: `title: "Seite nicht gefunden"`, `robots: { index: false, follow: false }`. Text is always German (`translations.de`) since the 404 has no locale context from the URL.
-
----
-
-## Sitemap and robots
-
-- **`public/robots.txt`**: allows all crawlers, references `https://www.zakkig.com/sitemap.xml`.
-- **`public/sitemap.xml`**: hand-maintained static file. Contains `/de-de` and `/de-en` with correct `xhtml:link` alternate hreflang tags and `<lastmod>`. Legal pages are correctly excluded (noindexed). **Must be updated manually if new indexable routes are added.**
-- **`public/_redirects`**: Cloudflare Pages redirect rules. Includes `/ /de-de 301` (root server-side redirect for Googlebot), legal alias redirects, and common German shortcut paths (`/impressum`, `/datenschutz`, `/agb`, `/terms`).
+Server-Komponente mit statischen Metadaten: `title: "Seite nicht gefunden"`, `robots: { index: false, follow: false }`.
 
 ---
 
-## Structured data (JSON-LD)
+## Sitemap und Robots
 
-Inline `<script type="application/ld+json">` in `@graph` format on the homepage only ([`app/[locale]/page.tsx`](../website/app/%5Blocale%5D/page.tsx)):
-
-| Schema type | `@id` | Notes |
-|-------------|-------|-------|
-| `Organization` | `#organization` | `name`, `url`, `logo`, `sameAs` (MARS) |
-| `SoftwareApplication` | `#application` | `applicationCategory: "BusinessApplication"`, `offers.description` clarifies the 2% fee model |
-| `WebSite` | `#website` | `url`, `name`, `publisher`, `inLanguage` (locale-dynamic) |
-| `FAQPage` | `#faq` | All 13 FAQ questions and answers from `landing-translations.ts`; locale-specific |
-
-The `FAQPage` schema makes the FAQ section eligible for Google Rich Results (expandable Q&A directly in search results).
+- **`public/robots.txt`**: Erlaubt allen Suchmaschinen-Crawlern den Zugriff und verweist auf `https://www.zackisch.com/sitemap.xml`.
+- **`public/sitemap.xml`**: Pflegt die kanonischen Routen `/de-de` und `/de-en` mit `xhtml:link`-Alternate-Tags.
+- **`public/_redirects`**: Cloudflare-Pages-Regelwerk mit `/ /de-de 301` für den sofortigen Server-Redirect der Wurzel-URL.
 
 ---
 
-## i18n translation structure
+## Strukturierte Daten (JSON-LD)
 
-| File | Purpose |
-|------|---------|
-| [`lib/translations.ts`](../website/lib/translations.ts) | Master `{ de, en }` object — merges landing and legal translations and adds top-level SEO and shared UI keys |
-| [`lib/landing-translations.ts`](../website/lib/landing-translations.ts) | All landing page UI copy (~100 keys per locale), including all FAQ question/answer pairs |
-| [`lib/legal-translations.ts`](../website/lib/legal-translations.ts) | Legal page titles, descriptions, `openGraphLocale` per locale |
-| [`lib/i18n.ts`](../website/lib/i18n.ts) | `useTranslation()` hook — client-side path-based locale detection |
-| [`lib/regions.ts`](../website/lib/regions.ts) | Locale/region registry and `parseLocale()` |
+Inline `<script type="application/ld+json">` im `@graph`-Format auf der Startseite ([`app/[locale]/page.tsx`](../website/app/%5Blocale%5D/page.tsx)):
 
-Metadata keys: `metaTitle`, `metaDescription` in `translations.ts`; `legalTitle`, `privacyTitle`, `gtcTitle`, and corresponding `*Description` and `*Url` keys in `legal-translations.ts`.
-
-OG title and description always reuse `metaTitle` / `metaDescription` — no separate `ogTitle` / `ogDescription` keys exist.
+| Schema-Typ | `@id` | Inhalt |
+| --- | --- | --- |
+| `Organization` | `#organization` | `name`, `url`, `logo`, `sameAs` |
+| `SoftwareApplication` | `#application` | `applicationCategory: "BusinessApplication"`, Gebührenstruktur |
+| `WebSite` | `#website` | `url`, `name`, `publisher`, `inLanguage` |
+| `FAQPage` | `#faq` | Vollständige FAQ-Fragen und Antworten für Rich Results |
 
 ---
 
-## OG image
+## Übersetzungsinfrastruktur
 
-A single shared static file `public/og_image.png` is used for all pages and locales. No locale-specific or dynamically generated OG images exist. `public/icon.png` is used as favicon and Apple touch icon.
-
----
-
-## Known gaps and future improvements
-
-| ID | Gap | Impact | Location |
-|----|-----|--------|----------|
-| G1 | `<html lang="de">` hardcoded — English pages at `/de-en` ship with wrong lang attribute | Accessibility (screen readers); low SEO impact since hreflang is correct | `app/layout.tsx:59` — architectural constraint of static export |
-| G2 | Sitemap is hand-maintained with no automated `<lastmod>` updates | May cause stale crawl signals if content changes frequently | `public/sitemap.xml` |
-| G3 | Legal `*Description` values are short (21–44 chars) | Thin OG share preview text for social shares of legal pages (low priority — pages are noindexed) | `lib/legal-translations.ts` |
-| G4 | No locale-specific OG images | Same image for all locales/pages | `public/og_image.png` |
-| G5 | `Organization` JSON-LD lacks `contactPoint`, `email`, or postal `address` | Richer knowledge graph; optional | `app/[locale]/page.tsx` |
+| Datei | Zweck |
+| --- | --- |
+| [`lib/translations.ts`](../website/lib/translations.ts) | Hauptobjekt `{ de, en }` – führt Landingpage- und Rechtstexte zusammen |
+| [`lib/landing-translations.ts`](../website/lib/landing-translations.ts) | Texte der Startseite und FAQ-Einträge |
+| [`lib/legal-translations.ts`](../website/lib/legal-translations.ts) | Titel und Beschreibungen rechtlicher Seiten |
+| [`lib/i18n.ts`](../website/lib/i18n.ts) | `useTranslation()`-Hook zur sprachabhängigen Bereitstellung |
+| [`lib/regions.ts`](../website/lib/regions.ts) | Register unterstützter Sprach- und Regionskombinationen |

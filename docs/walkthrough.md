@@ -1,19 +1,40 @@
-# zakkig: aktueller Produktdurchgang
+# Zackisch: Aktueller Produktdurchgang
 
-Stand: 23. September 2026. Dieser Durchgang beschreibt den Quellcode und lokale Prüfungen. Er belegt weder einen produktiven Stripe-Zahlungslauf noch eine veröffentlichte Cloudflare-Installation. Der [Projektüberblick](../README.md), die [Architektur](architecture.md), die [Designreferenz](design-system.md) und die [offenen Implementierungslücken](documentation-audit.md) enthalten die Details.
+Dieser Durchgang beschreibt den aktuellen Funktionsumfang des Quellcodes und die lokal verifizierten Abläufe von Zackisch. Er unterscheidet klar zwischen lokal nachgewiesenen Tests und künftigen Live-Zahlungsläufen mit echten Gästen. Details finden sich in der [Gesamtübersicht](../README.md), der [Systemarchitektur](architecture.md), dem [Designsystem](../DESIGN.md) und dem [Dokumentations-Audit](documentation-audit.md).
 
-1. **Website und Einstieg.** Die statisch exportierte [Website](../website/README.md) führt auf Deutsch und Englisch durch QR-Bestellung, Einrichtung, Preisangebot und FAQ. Anmeldung und Registrierung führen zur separaten Webapp. Der Header nutzt übersetzte Ankerziele; der Regionsdialog übernimmt Änderungen erst nach Bestätigung. Die Website behält QR-Papier, echte Produktansichten und das Maskottchen. Die Produktbilder sind Fixture-Aufnahmen und müssen nach Änderungen am Webapp-Design neu aufgenommen werden ([Website-Komponenten](../website/components/), [Fixture](../webapp/tools/marketing-demo/)).
-2. **Betrieb einrichten.** Eigentümer registrieren sich, verbinden Stripe, pflegen Menü und Tische und drucken QR-Codes über den Browser. Es gibt keinen eigenständigen PDF-Generator. Die [Dashboard-Routen](../webapp/app/%28dashboard%29/) und [Übersicht](../webapp/components/dashboard/overview-content.tsx) bilden diesen Weg ab.
-3. **Gastbestellung.** Gäste öffnen einen Tisch- oder Abhol-Link, wählen Artikel und Optionen, sehen Warenkorb und Preis und zahlen über Checkout Sessions mit Payment Element. Die [Checkout-Preisprüfung](../webapp/convex/checkoutPricing.ts) berechnet Preise und Optionen aus gespeicherten Daten neu; [Webhook](../webapp/convex/http.ts) und [Bestellmutation](../webapp/convex/orders.ts) legen bezahlte Bestellungen idempotent an. Ein älterer [Bestellpfad](../webapp/actions/order-actions.ts) bleibt eine nicht verifizierte Zahlungs-Alternative und ist als Lücke dokumentiert.
-4. **Küche und Abholung.** Das [Staff-Terminal](../webapp/components/staff/staff-terminal-shell.tsx) bearbeitet Aufträge manuell von `in_progress` über `ready_for_pickup` bis `completed`. [`updateStatus`](../webapp/convex/orders.ts) speichert `readyAt`; der [Gäste-Tracker](../webapp/components/guest/order-tracker.tsx) zeigt ab Bereitschaft zehn Minuten an. Diese Anzeige sperrt den Backend-Lesezugriff nicht.
-5. **Verwaltung und Grenzen.** Die [Bestellabfrage](../webapp/convex/orders.ts) liefert höchstens 100 neue Einträge; Übersicht und [CSV-Export](../webapp/actions/order-actions.ts) sind deshalb keine vollständige Langzeitauswertung. Der CSV-Wert für Stripe-Gebühren ist eine Schätzung. Monatliche Rechnungen, automatische steuerliche Berichte und Rückerstattungen sind nicht implementiert ([Audit](documentation-audit.md)).
+---
 
-Das Design verwendet in beiden Anwendungen ein 4px-Raster, helle Arbeitsflächen, schwarze Primäraktionen, sichtbare Eingabegrenzen und Tastaturfokus; Website und Webapp teilen die Grundrollen ([DESIGN.md](../DESIGN.md)). Das ist eine Gestaltungsentscheidung. Die [UX-Recherche](ux-research.md) stützt klare Aktionen, Fehlerbehebung und Zugänglichkeit, aber keinen behaupteten Umsatzgewinn durch eine bestimmte Farbe oder Rundung.
+## 1. Öffentliche Website und Einstieg
 
-**Lokal geprüft:** Builds und Typprüfungen beider Anwendungen sowie alle 29 Webapp-Unit-Tests bestanden. Headless Chrome bestätigte am exportierten Webauftritt die Regionsdialog- und Mobilmenü-Bedienung per Escape samt Fokusrückkehr. Eine Browser-Matrix zeigte alle 13 geprüften Oberflächen bei 1440px ohne Render-, Überlauf- oder Seitenskriptfehler; 26 von 28 automatisierten Prüfpunkten bestanden. Die zwei fehlgeschlagenen Prüfpunkte verwendeten veraltete Selektoren für Warenkorb-Mengenaktionen und native FAQ-Elemente. Diese Selektoren wurden korrigiert, die vollständige Matrix danach nicht erneut ausgeführt. Zusätzliche Fixture-Aufnahmen bei 390px und 1440px zeigten keine horizontalen Überläufe oder Seitenskriptfehler; Fixture-Daten ersetzen keine Backend-Tests.
+Die statisch exportierte [Website](../website/README.md) informiert auf Deutsch (`/de-de`) und Englisch (`/de-en`) über das Produktangebot, den Bestellablauf, das transparente Preismodell und häufige Fragen. Anmeldung und Registrierung führen direkt zur separaten Webapp. Der Header nutzt übersetzte Sprungziele; der Regions- und Sprachdialog übernimmt Änderungen erst nach Bestätigung oder schließt mit der Escape-Taste unter Rückgabe des Fokus.
 
-Ein isolierter lokaler Convex-Test bestätigte über die echte Browseroberfläche und Server Actions das Anlegen und exakte Umbenennen einer Kategorie. Auftrag `001` wechselte von `in_progress` nach `ready_for_pickup` mit gespeichertem `readyAt` und anschließend nach `completed` mit gespeichertem `completedAt`; danach verschwand er aus dem Live-Board. Es wurden keine produktiven Daten geändert, Zahlungen ausgelöst oder E-Mails versendet.
+---
 
-**Noch zu prüfen und umzusetzen:** Ein vollständiger Durchlauf aller Bildschirmgrößen und Zustände steht aus, ebenso Registrierung/OTP/E-Mail, Einstellungen und Verfügbarkeitsänderungen sowie Gast-Checkout mit Stripe. Die sechs Produktbilder der Website zeigen noch den vorherigen Designstand und müssen neu aufgenommen werden. Schnelle überlappende Menü-Umsortierungen benötigen einen gezielten Persistenztest. React Doctor meldete zuletzt keine Fehler, aber 22 Webapp-Warnungen, unter anderem zu komplexen Komponenten und Zustandsverwaltung; diese sind weiter zu bewerten. Der dabei beanstandete IME-Enter-Handler wurde anschließend abgesichert. Das vereinheitlichte Design ist damit lokal geprüft, aber nicht vollständig Ende zu Ende freigegeben.
+## 2. Betrieb einrichten
 
-**Vor produktiver Freigabe offen:** Die [Auditliste](documentation-audit.md) nennt fehlende Backend-Autorisierung bei öffentlichen Convex-Funktionen, klientensichtbare Staff-Tokens, fehlende vollständige Sitzungswiderrufung, verbleibenden Zugriff auf abgelaufene Tracker-Daten und weitere Betriebsgrenzen. Diese Punkte sind keine reinen Dokumentationsfehler und werden durch das neue Design nicht behoben.
+Betriebsinhaber registrieren sich in der Webapp, verbinden ihr Bankkonto über Stripe Connect, erfassen Speisen und Kategorien, hinterlegen Zusatzoptionen und drucken optimierte QR-Code-Tischaufsteller direkt über den Browser. Die [Dashboard-Routen](../webapp/README.md) (`/dashboard/[organizationId]/...`) bilden diesen Verwaltungsweg ab.
+
+---
+
+## 3. Gastbestellung und Bezahlung
+
+Gäste scannen den QR-Code am Tisch (`/table/[organizationId]`) oder wählen die Abholansicht (`/pickup/[organizationId]`), wählen Artikel und Beilagen, prüfen ihren Warenkorb und zahlen bargeldlos über Stripe Checkout mit dem Payment Element. Die [Checkout-Preisprüfung](../webapp/convex/checkoutPricing.ts) berechnet alle Preise und Optionen aus den gespeicherten Daten serverseitig nach. Nach erfolgreicher Zahlung steht sofort eine formatierte Bestätigungsdatei zum Download bereit; eine optionale E-Mail-Kopie kann auf Wunsch angefordert werden.
+
+---
+
+## 4. Küche und Ausgabe
+
+Das Personal-Terminal (`/staff/[organizationId]`) visualisiert eingehende Aufträge in Echtzeit. Mitarbeiter schalten Bestellungen manuell von `in_progress` über `ready_for_pickup` bis `completed`. Ausverkaufte Gerichte werden über den integrierten 86-Verfügbarkeitsschalter sofort für Neubestellungen gesperrt.
+
+---
+
+## 5. Operative Zentrale
+
+Das interne Zackisch-Team steuert Betriebe, Bestellungen, Partner-Provisionen, Newsletter-Kampagnen und E-Mail-Logs über die [Adminapp](../adminapp/README.md) (`https://admin.zackisch.com`). Datenzugriffe werden serverseitig auf die zugewiesene Region begrenzt und manipulationsgeschützt protokolliert.
+
+---
+
+## 6. Prüfungs- und Teststand
+
+- **Lokale Builds und Tests:** Builds und TypeScript-Prüfungen aller drei Anwendungen (`website/`, `webapp/`, `adminapp/`) sowie alle 32 Unit- und Sicherheitstests in `webapp/` wurden erfolgreich ausgeführt.
+- **Offene Punkte vor dem Produktivbetrieb:** Echte Auszahlungen und Streitfall-Prozesse erfordern das Onboarding realer Gastronomiebetriebe mit verifizierten Stripe-Geschäftskonten. Die fiskalische Erfassung im Vor-Ort-Kassensystem verbleibt beim Betrieb.

@@ -68,7 +68,7 @@ Follow this unified, multi-layered architecture for all features and changes:
    - Dashboard layouts must strictly verify ownership (`if (org.ownerId !== user._id && org.ownerId !== user.$id) redirect("/sign-in")`).
 
 3. **Zero Data Leakage (Guest Boundary & DOM Hygiene):**
-   - When passing data to public guest pages (`pickup`, `table`), NEVER expose sensitive merchant or platform accounting data (`stripeAccountId`, `taxId`, `ownerId`, `zakkigFee`, `stripeFee`, `netAmount`). Always sanitize or zero out before serializing into RSC payloads or query responses.
+   - When passing data to public guest pages (`pickup`, `table`), NEVER expose sensitive merchant or platform accounting data (`stripeAccountId`, `taxId`, `ownerId`, `zackischFee`, `stripeFee`, `netAmount`). Always sanitize or zero out before serializing into RSC payloads or query responses.
 
 4. **Server-Side Price & Integrity Enforcement:**
    - NEVER trust client-supplied prices, item names, or order totals.
@@ -135,11 +135,11 @@ Follow this unified, multi-layered architecture for all features and changes:
 3. **Focused Cart View:**
    - When viewing the cart, the merchant hero banner is suppressed. The view features a top header with an `<ArrowLeft>` back button returning to the menu, the cart title, restaurant subtitle, and order type tag.
 4. **Tactile Wavy Divider & Sleek Quantity Controls:**
-   - A prominent black wavy divider (`<WaveLine className="w-full mt-4 text-black" strokeWidth={2.25} />`) in zakkig's signature physical QR aesthetic separates the top restaurant profile and address from the sticky categories carousel.
+   - A prominent black wavy divider (`<WaveLine className="w-full mt-4 text-black" strokeWidth={2.25} />`) in Zackisch's signature physical QR aesthetic separates the top restaurant profile and address from the sticky categories carousel.
    - Cart item quantity controls use a slim stepper pill (`h-7`, `p-0.5`, `size-6` actions, `min-w-[18px]` digit, ~72px width) preventing layout crowding next to item titles and totals while maintaining identical geometry across all viewports and pointer types.
 5. **Post-Checkout Brand Attribution & Zero-Logo Link Policy:**
-   - The zakkig logo across the webapp (dashboard, staff shell, and auth pages) is non-clickable static branding.
-   - Post-checkout guest views (dine-in order success and takeaway order tracker) feature a subtle, centered attribution notice at the bottom: "Bestellung abgewickelt über zakkig.com als QR-Bestell- und Bezahlsystem" (or English equivalent), where `zakkig.com` is an underlined external link.
+   - The Zackisch logo across the webapp (dashboard, staff shell, and auth pages) is non-clickable static branding.
+   - Post-checkout guest views (dine-in order success and takeaway order tracker) feature a subtle, centered attribution notice at the bottom: "Bestellung abgewickelt über zackisch.com als QR-Bestell- und Bezahlsystem" (or English equivalent), where `zackisch.com` is an underlined external link.
 6. **Mobile Viewport Breathing Room & Rounded Frame Clearance:**
    - On mobile viewports, guest headers use top padding with safe-area clearance (`pt-[max(1.5rem,env(safe-area-inset-top))] sm:pt-6`) to prevent banner content and controls from crowding or clipping against rounded hardware corners and notches.
    - Sticky cart headers include top safe-area clearance (`pt-[max(0.5rem,env(safe-area-inset-top))] sm:pt-0`).
@@ -194,7 +194,7 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
 1. **Light Surface, Signature WaveLine Dividers & Contrast Rule:**
    - The entire webapp and marketing website feature 100% clean light backgrounds (`bg-background text-foreground`). Dark/black backgrounds are NEVER used for full sections or sidebars.
    - The desktop dashboard sidebar and staff terminal sidebar render with light surfaces (`bg-sidebar text-sidebar-foreground` on a pure white sidebar, with the main content canvas rendering in subtle light neutral `bg-canvas` (`oklch(0.982 0 0)`) against which cards render elevated in `bg-card`), a 288px width (`w-72`) ensuring navigation items like 'Aktuelle Bestellungen' are fully written out, black logos (`brightness-0`), and a clean standard vertical border divider (`border-r border-border`) matching the horizontal dividing lines used in the header and footer.
-   - On the marketing website, all sections and the footer render with clean light surfaces. Zakkig's signature horizontal `WaveLine` divider (`text-black`) is reserved exclusively above the footer; the benefit section ('Mehr Raum für Umsatz.') and pricing section ('Nur wenn bestellt wird.') share the tactile hero stone texture background (`bg-[#e7e7e7] bg-[url('/hero-stone-bg.webp')]`), separated by an inner divider with recognized contrast (`border-black/20`), high-contrast secondary text (`text-black/75` meeting WCAG AAA against stone), and subtle boundary borders (`border-y border-[var(--site-line)]`); all remaining section transitions (Ablauf to Setup, Setup to Benefit, and Pricing to FAQ) are cleanly separated by standard subtle border dividers.
+   - On the marketing website, all sections and the footer render with clean light surfaces. Zackisch's signature horizontal `WaveLine` divider (`text-black`) is reserved exclusively above the footer; the benefit section ('Mehr Raum für Umsatz.') and pricing section ('Nur wenn bestellt wird.') share the tactile hero stone texture background (`bg-[#e7e7e7] bg-[url('/hero-stone-bg.webp')]`), separated by an inner divider with recognized contrast (`border-black/20`), high-contrast secondary text (`text-black/75` meeting WCAG AAA against stone), and subtle boundary borders (`border-y border-[var(--site-line)]`); all remaining section transitions (Ablauf to Setup, Setup to Benefit, and Pricing to FAQ) are cleanly separated by standard subtle border dividers.
    - Dark `#000000` is strictly reserved for deliberate focal accents: primary CTA buttons (`bg-primary text-primary-foreground`), active navigation pills, and selected badges.
 
 2. **Numerical Typography Rule (Strictly Digits Only in Inter):**
@@ -235,7 +235,7 @@ All dialogs, modals, and settings sheets across `webapp` and `website` strictly 
    - Keep custom CSS for genuine needs that utilities cannot express cleanly: shared tokens and fonts, global resets, keyframes, and runtime or third-party styling constraints. Keep `globals.css` limited to those needs and base layout resets that cannot be expressed with Tailwind.
 
 8. **Vertical Alignment Datum Line Standard:**
-   - On desktop viewports, all dashboard and terminal view headers (`sticky top-0 z-30 h-16`) share the exact 64px height and vertical center datum line ($y = 31.5\text{px}$) with the `zakkig` logo in the left sidebar (`h-16 flex items-center px-4`, logo height 24px centered at $y = 31.5\text{px}$). All main dashboard `h1` titles render with `text-2xl font-bold tracking-tight text-foreground leading-none`, aligning the baseline and center of the page title precisely with the sidebar wordmark across all viewports.
+   - On desktop viewports, all dashboard and terminal view headers (`sticky top-0 z-30 h-16`) share the exact 64px height and vertical center datum line ($y = 31.5\text{px}$) with the `Zackisch` logo in the left sidebar (`h-16 flex items-center px-4`, logo height 24px centered at $y = 31.5\text{px}$). All main dashboard `h1` titles render with `text-2xl font-bold tracking-tight text-foreground leading-none`, aligning the baseline and center of the page title precisely with the sidebar wordmark across all viewports.
    - On the live order board (`current-orders-content.tsx`), both queue column headers ('In Bearbeitung' and 'Abholbereit') and the selected order detail card header share an exact 60px height (`h-[60px]`), ensuring the horizontal divider lines separating the headers from the lists align on the identical horizontal datum line across all three columns as a unified visual unit.
 
 9. **Staff Session & Operational Quick Links Standard:**

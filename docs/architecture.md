@@ -1,58 +1,68 @@
-# Architecture and Developer Guide
+# Systemarchitektur und Entwicklerhandbuch
 
-This guide documents the technical architecture, runtime boundaries, security model, and data flows of Zackisch.
+Dieses Dokument beschreibt die technische Architektur, Laufzeitgrenzen, Sicherheitsmodelle und Datenflüsse der Plattform **Zackisch**.
 
-## 1. System Topology & Three-App Architecture
+---
 
-Zackisch is built as a cohesive monorepo comprising three Next.js frontend applications powered by a single shared Convex backend:
+## 1. Systemtopologie und Drei-App-Architektur
+
+Zackisch ist als Monorepo organisiert, das drei Next.js-Frontend-Anwendungen mit einem gemeinsamen, reaktiven Convex-Cloud-Backend verbindet:
 
 ```text
-├── website/       Public multilingual marketing & legal website (Cloudflare Pages, static export out/)
-├── webapp/        Merchant dashboard, kitchen terminal & guest mobile checkout (Cloudflare Workers)
-├── adminapp/      Internal operative headquarters for regional admins & staff (Cloudflare Workers)
-└── webapp/convex/ Single shared Convex reactive backend, database, actions, and storage
+├── website/       Öffentliche statische Marketing- & Rechtswebsite (Cloudflare Pages, out/)
+├── webapp/        Betriebs-Dashboard, Küchenterminal & mobiler Gäste-Checkout (Cloudflare Workers)
+├── adminapp/      Operative Zentrale für Regional-Admins & Mitarbeiter (Cloudflare Workers)
+└── webapp/convex/ Zentrales reaktives Convex-Backend, Datenbank, Actions und Storage
 ```
 
-| Application | Public URL | Runtime & Hosting | Primary Responsibilities |
-| --- | --- | --- | --- |
-| `website/` | `https://zackisch.com` | Cloudflare Pages (`output: "export"`) | Regional marketing pages (`/de-de`, `/de-en`), Double-Opt-In newsletter signup, unsubscription and legal notices. |
-| `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Venue onboarding, menu management, 86-availability, kitchen order terminal, guest table & pickup ordering. |
-| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Operational headquarters: regional overview, organizations (`/organizations`, aliasing `/restaurants`), orders, staff invitations & roles, partner commissions, No-Code newsletter editor & dispatch, audit log. |
-| `Convex` | `*.convex.cloud` | Convex Serverless Cloud (`dev:silent-narwhal-392`) | Realtime reactive database, cryptographic auth, Google Workspace SMTP actions, Stripe webhooks, and public HTTP endpoints. |
+| Anwendung | Öffentliche Adresse | Laufzeit & Hosting | Hauptaufgaben |
+|---|---|---|---|
+| `website/` | `https://zackisch.com` | Cloudflare Pages (`output: "export"`) | Regionale Marketingseiten (`/de-de`, `/de-en`), Double-Opt-In-Newsletter-Anmeldung, Abmeldung und rechtliche Pflichtangaben. |
+| `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Betriebs-Onboarding, Speisekarten- und Tischverwaltung, 86-Verfügbarkeitsmanager, Küchen-Terminal und bargeldloser Gäste-Checkout. |
+| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Operative Zentrale: Regionale Übersicht, Betriebsverwaltung (`/organizations`), Bestellungen, Teamberechtigungen, Partner-Provisionen, No-Code-Newsletter-Editor und Audit-Log. |
+| `Convex` | `*.convex.cloud` | Convex Serverless Cloud (`dev:silent-narwhal-392`) | Reaktive Echtzeit-Datenbank, kryptografische Tokens, Google-Workspace-SMTP-Versand, Stripe-Webhooks und öffentliche HTTP-Endpunkte. |
 
-## 2. Regional Expansion & Data Boundaries
+---
 
-- **Single Domain & Shared Backend:** All operations run from `zackisch.com` and its designated subdomains (`app.zackisch.com`, `admin.zackisch.com`), backed by one unified Convex deployment.
-- **Starting Region:** Germany (`de`). Additional regions (Austria `at`, Switzerland `ch`) can be configured in the `regions` table.
-- **Regional Scoping:** Team members in `adminapp` operate exclusively within their assigned `regionId`. Queries and mutations filter by `regionId` on the server.
-- **Guest Boundary Sanitization:**
-  - `orders.getGuestOrderTracker`: Sanitizes order data, returning only guest-safe fields (items, order number, table, status, type, total). Internal platform fees, Stripe payment IDs, and merchant tax data are omitted.
-  - `organizations.getPublicRestaurant`: Returns only public organization/venue data (name, description, branding, ordering enabled). Strips owner ID, tax ID, and Stripe Connected account ID.
+## 2. Regionale Struktur und Datenbegrenzung
 
-## 3. Authentication & Security Architecture
+- **Zentrale Domain mit Subdomains:** Alle Dienste laufen unter `zackisch.com` und den zugeordneten Subdomains (`app.zackisch.com`, `admin.zackisch.com`), gestützt durch dieselbe Convex-Bereitstellung.
+- **Startregion:** Deutschland (`de`). Weitere Regionen (Österreich `at`, Schweiz `ch`) sind im Backend strukturell vorbereitet und werden nach Klärung regionaler Steuersätze freigeschaltet.
+- **Serverseitige Isolation:** Mitarbeiter in der Adminapp arbeiten ausschließlich innerhalb ihrer zugewiesenen Region (`regionId`). Datenbankabfragen und Mutationen erzwingen diese Begrenzung serverseitig.
+- **Gästegrenze & Datenminimierung:**
+  - `orders.getGuestOrderTracker`: Filtert Bestelldaten und liefert ausschließlich für Gäste bestimmte Felder aus (Artikel, Bestellnummer, Tisch, Status, Typ, Summe). Interne Plattformgebühren, Stripe-Zahlungs-IDs und Betriebssteuernummern werden nicht exponiert.
+  - `organizations.getPublicRestaurant`: Liefert nur öffentliche Betriebsdaten (Name, Beschreibung, Medien, Bestellstatus). Inhaber-IDs, Steuernummern und Stripe-Konto-IDs werden serverseitig entfernt.
 
-1. **Cryptographic Token & OTP Generation:**
-   - 6-digit verification codes: Generated using `crypto.randomInt(100000, 1000000)` in Node environments and `crypto.getRandomValues(new Uint32Array(1))` in Convex runtime.
-   - Session & double-opt-in tokens: Generated via 24-byte random values hex-encoded (`crypto.getRandomValues`).
-   - Time-to-live: OTPs expire in 30 minutes; brute-force protection locks out and deletes codes after 5 consecutive failed attempts.
-2. **Admin & Staff Roles:**
-   - Initial Regional Admin seeded securely without public sign-up endpoints.
-   - Staff invitations: Generated by regional admins with granular permission flags (`manage_restaurants`, `manage_orders`, `manage_staff`, `manage_partners`, `manage_newsletter`, `view_emails`, `view_audit`).
-3. **Audit Trail:**
-   - Chronological logging in `auditLogs` for staff and admin actions (creation, updates, payouts, campaign dispatch). Sensitive credentials, passwords, and OTPs are automatically redacted.
+---
 
-## 4. Email Infrastructure (Google Workspace)
+## 3. Authentifizierung und Sicherheitsarchitektur
 
-Zackisch relies solely on **Google Workspace** (`smtp-relay.gmail.com:587`, STARTTLS):
-- Visible sender for automated transactional emails and newsletters: `noreply@zackisch.com`.
-- Reply-To and personal support: `selim@zackisch.com`.
-- Credentials: `GOOGLE_WORKSPACE_SMTP_APP_PASSWORD` stored securely in the Convex deployment secret manager; never exposed in client bundles or shell history.
-- Delivery Telemetry: Dispatched messages are logged centrally in `emailLogs` with recipient, subject, campaign ID, status, and error details.
-- RFC 8058 One-Click Unsubscribe: `List-Unsubscribe` and `List-Unsubscribe-Post: List-Unsubscribe=One-Click` headers are attached to all marketing communications and routed to Convex HTTP handlers.
+1. **Kryptografische Token- und Code-Generierung:**
+   - 6-stellige Einmal-Codes (OTP): Werden über kryptografisch sichere Zufallsgeneratoren (`crypto.getRandomValues`) erzeugt.
+   - Session- und Double-Opt-in-Tokens: 24-Byte-Zufallswerte, hexadezimal kodiert.
+   - Gültigkeitsdauer: OTP-Codes verfallen nach 30 Minuten; ein Brute-Force-Schutz sperrt den Code nach fünf aufeinanderfolgenden Fehlversuchen permanent.
+2. **Admin- und Mitarbeiterrollen:**
+   - Der initiale Regional-Administrator wird sicher über Convex-Funktionen hinterlegt (keine offene Registrierungs-Schnittstelle).
+   - Mitarbeiter-Einladungen: Werden vom Regional-Admin mit granularen Rechten ausgestellt (`restaurants:read`, `restaurants:write`, `orders:read`, `staff:manage`, `partners:write`, `newsletter:send`, `audit:read`).
+3. **Audit-Trail:**
+   - Lückenlose Aufzeichnung aller relevanten Aktionen in der Tabelle `auditLogs` (Änderungen an Betriebsdaten, Provisionsbuchungen, Newsletterversand). Passwörter, Authentifizierungs-Codes und Geheimnisse werden vor dem Speichern geschwärzt.
 
-## 5. Stripe Connect & Commercial Flow
+---
 
-- **Zero Base Fee:** 0 € setup fee, 0 € monthly base fee.
-- **2% Platform Fee:** Calculated per order via `platformFee(total)`. Persisted as `zackischFee` on orders.
-- **50% Partner Commission:** 1% of gross order volume (50% of the platform fee) credited to the referring sales partner ledger in `adminapp`.
-- **Checkout Mode:** Stripe Checkout Sessions with the Payment Element (`ui_mode: "elements"`). Server-side repricing validates menu item availability and option surcharges against Convex records.
+## 4. E-Mail-Infrastruktur (Google Workspace)
+
+Zackisch nutzt **Google Workspace** als alleinige E-Mail-Infrastruktur (`smtp-relay.gmail.com:587`, STARTTLS):
+- Sichtbarer Absender für automatisierte Transaktions- und Marketingnachrichten: `noreply@zackisch.com`.
+- Persönlicher Support und geschäftliche Kommunikation: `selim@zackisch.com`.
+- Secret-Verwaltung: `GOOGLE_WORKSPACE_SMTP_APP_PASSWORD` liegt verschlüsselt in der Convex-Secret-Verwaltung und wird niemals im Client-Code oder im Git-Repository exponiert.
+- Protokollierung: Ausgelöste E-Mails werden in der Tabelle `emailLogs` mit Empfänger, Betreff, Kampagnen-ID und Übermittlungsstatus festgehalten.
+- RFC 8058 One-Click-Unsubscribe: Alle Marketing-Nachrichten enthalten standardkonforme `List-Unsubscribe`- und `List-Unsubscribe-Post`-Header, die auf Convex-HTTP-Endpunkte verweisen.
+
+---
+
+## 5. Stripe Connect und Zahlungsflüsse
+
+- **0 € Grundgebühr:** Keine Einrichtungsgebühr, keine monatliche Fixgebühr.
+- **2 % Plattformgebühr:** Berechnet pro Bestellung über `platformFee(total)` und als `zackischFee` gespeichert.
+- **50 % Partnerprovision:** 1 % des Bruttobestellvolumens (50 % der Plattformgebühr) werden dem vermittelnden Partner gutgeschrieben.
+- **Checkout-Modus:** Stripe Checkout Sessions mit dem Payment Element (`ui_mode: "elements"`). Serverseitige Preisprüfung (`priceCheckout`) validiert Artikelverfügbarkeit und Optionspreise gegen Convex-Echtzeitdaten.

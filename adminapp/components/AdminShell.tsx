@@ -63,11 +63,7 @@ export function AdminShell({ children }: AdminShellProps) {
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navigation.map((item) => {
             const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : item.href === "/organizations"
-                  ? pathname.startsWith("/organizations") || pathname.startsWith("/restaurants")
-                  : pathname.startsWith(item.href);
+              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             const Icon = item.icon;
             return (
               <Link
@@ -114,11 +110,7 @@ export function AdminShell({ children }: AdminShellProps) {
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold text-zinc-900 tracking-tight">
               {navigation.find((n) =>
-                n.href === "/"
-                  ? pathname === "/"
-                  : n.href === "/organizations"
-                    ? pathname.startsWith("/organizations") || pathname.startsWith("/restaurants")
-                    : pathname.startsWith(n.href)
+                n.href === "/" ? pathname === "/" : pathname.startsWith(n.href)
               )?.name || "Admin"}
             </h1>
           </div>

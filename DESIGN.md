@@ -1,6 +1,6 @@
 ---
 name: Zackisch
-description: Monochrome ordering, operations, and administration with tactile clarity
+description: Monochrome Gestaltung für mobile Bestell- und Betriebsabläufe mit taktiler Klarheit
 colors:
   background: "oklch(1 0 0)"
   foreground: "oklch(0 0 0)"
@@ -91,68 +91,49 @@ components:
     rounded: "{rounded.dialog-mobile}"
 ---
 
-## Overview
+## 1. Gestaltungsphilosophie
 
-**Creative north star: “Monochrome clarity for service in motion.”** Zackisch uses a white working canvas, black primary actions, restrained gray boundaries, and destructive red. The marketing site adds editorial composition and a physical QR-paper motif; restaurant and guest interfaces prioritize task clarity; admin interfaces provide dense, structured tables and intuitive No-Code tools. This is the shared design target across website, webapp, and adminapp. Canonical brand assets are `brand_mark` (symbol only) and `combination_mark` (symbol and wordmark). [AGENTS.md](AGENTS.md) sets required implementation rules, [the source-linked reference](docs/design-system.md) records current behavior and deviations, and [UX research](docs/ux-research.md) explains the evidence behind clarity and accessibility decisions. Shape, color, and spacing are brand choices, not promised conversion effects.
+**Visueller Leitstern: „Monochrome Klarheit für lebendige Betriebsabläufe.“** Zackisch setzt auf eine weiße Arbeitsfläche, schwarze Primäraktionen, zurückhaltende graue Abgrenzungen und semantisches Rot für Gefahren- und Abbruchoperationen. Die Marketingseite kombiniert redaktionelle Eleganz mit einem haptischen QR-Papier-Motiv; Gäste- und Betriebs-Oberflächen stellen Übersicht und Fehlertoleranz in den Mittelpunkt; Admin-Ansichten bieten kompakte, strukturierte Tabellen und visuelle No-Code-Editoren.
 
-## Colors
+Maßgebliche Original-Markenassets sind `brand_mark` (nur Symbol) und `combination_mark` (Symbol und Wortmarke). Die Gestaltungsregeln sind funktionale und markenbezogene Designentscheidungen, keine Heilsversprechen für Konversionsraten.
 
-All three apps use the same semantic base: white background/card/popover, black foreground/primary, near-white muted surface, readable gray text, distinct input and surface borders, and red destructive state. The website's site-muted, site-line, and site-soft alias those shared roles. The operational sidebar and selected setup/footer sections deliberately invert to black. [Token sources: webapp](webapp/app/globals.css), [website](website/app/globals.css), [adminapp](adminapp/app/globals.css).
+---
 
-**The Light Surface Rule.** Keep forms, guest content, and dialogs light. Use dark surfaces for intentional emphasis, not routine containment.
+## 2. Farben und Oberflächen
 
-**The Semantic Red Rule.** Reserve red for errors and destructive actions; ordinary status and selection use neutral contrast.
+Alle drei Anwendungen (`website`, `webapp`, `adminapp`) nutzen dieselbe semantische Farbpalette:
+- **Flächen:** Reines Weiß für Hintergrund, Karten und Popups (`bg-background`, `bg-card`).
+- **Aktionen:** Reines Schwarz (`#000000`) für primäre Aktionsschaltflächen (`bg-primary`), aktive Navigationspills und ausgewählte Filter-Badges.
+- **Linien & Grenzen:** Sanfte, neutrale Grauwerte (`oklch(0.922 0 0)`) für Ränder, Trennlinien und Eingaberahmen.
+- **Hinweise & Fehler:** Reines semantisches Rot (`oklch(0.577 0.245 27.325)`) ausschließlich für Fehlermeldungen und destruktive Aktionen (z. B. Löschen).
 
-## Typography
+**Die Regel der hellen Flächen:** Formulare, Gastinhalte und Dialoge bleiben durchgängig hell. Dunkle Flächen werden punktuell zur Hervorhebung primärer Aktionen eingesetzt, nicht als flächendeckende Container.
 
-Poppins carries words and interface text. Isolated digits and decimal separators use Inter with tabular figures; currency signs, units, prefixes, and words remain Poppins. The webapp [Price component](webapp/components/ui/price.tsx) separates these roles. The website keeps a large editorial hero and compact supporting copy, using tracked uppercase for navigation links; the webapp restricts uppercase exclusively to physical QR code signage, keeping all interface labels and section titles in natural bold casing. Region names remain endonyms and visible copy and destinations are translated through next-intl. [Website typography](website/components/MainPage.tsx), [webapp tokens](webapp/app/globals.css).
+---
 
-**The Split Price Rule.** Use the webapp Price component for webapp prices, rather than applying Inter to a mixed-text parent.
+## 3. Typografie
 
-## Layout
+- **Poppins:** Trägt alle Wörter, Überschriften, Schnittstellenbeschriftungen, Navigationspunkte, Schaltflächentexte und Währungssymbole.
+- **Inter (`font-inter`, `tabular-nums`):** Wird streng und ausschließlich auf Ziffern (`0-9`) und Dezimaltrenner (`.` oder `,`) bei Preisen und Mengenangaben angewendet. Währungssymbole (`€`), Einheiten und Wörter bleiben in Poppins.
+- **Preis-Komponente (`Price`):** In der Webapp trennt die Komponente `<Price cents={...} />` diese Rollen automatisch und verhindert typografische Mischfehler.
+- **Schreibweise:** Natürliche Groß- und Kleinschreibung (Sentence- / Title-Casing). All-Caps ist ausschließlich für physische QR-Tischaufsteller und Ländercodes (`DE`, `AT`, `CH`) zulässig.
 
-Tailwind's shared spacing unit is `0.25rem`: at a 16px root, one step is 4px, `p-2` is 8px, `h-9` is 36px, and `h-11` is 44px. Dashboard content responds to its available container width; the outer shell and the editorial website use viewport breakpoints. Guest content stays in a narrow, readable column. [Webapp tokens](webapp/app/globals.css), [website tokens](website/app/globals.css), [dashboard shell](webapp/components/dashboard/dashboard-shell.tsx).
+---
 
-**The Available Width Rule.** Use container queries inside dashboard work areas whose width changes with the sidebar. Use viewport breakpoints for the outer shell and website composition.
+## 4. Formen und Maße
 
-**The Datum Line Alignment Rule.** Main dashboard page titles and the sidebar zakkig logo share an exact 64px header height and horizontal datum line center at $y = 31.5\text{px}$ on desktop viewports. Dashboard headers use `sticky top-0 z-30 h-16` with `text-2xl font-bold tracking-tight text-foreground leading-none`. In the live order board, queue column headers ('In Bearbeitung' and 'Abholbereit') and the selected order card header share an exact 60px height (`h-[60px]`), ensuring header bottom divider lines align on the identical horizontal datum line across all three columns.
+- **Gemeinsames 4px-Raster:** Tailwind-Einheit `0.25rem` (4 px). Standardhöhe für Steuerelemente ist `h-11` (44 px), kompakte Höhe `h-9` (36 px, mit automatischer Ausdehnung auf mindestens 44 px bei Touch-Bedienung).
+- **Abrundungen (Border Radius):**
+  - Eingabefelder: 12 px (`rounded-xl` bzw. `rounded-[12px]`)
+  - Karten und Popovers: 20 px (`rounded-[20px]`)
+  - Dialogfenster: 20 px mobil, 24 px auf Desktop (`rounded-[24px]`)
+  - Aktionen und Schaltflächen: Pill-Form (`rounded-full`)
 
-**The Tailwind-First Rule.** In both apps, write expressible layout, spacing, type, responsive behavior, state, and motion with Tailwind utilities in JSX/TSX. Arbitrary values and variants are available. Reserve CSS for tokens, fonts, resets, keyframes, and genuine runtime or third-party constraints. [Authoring detail](docs/design-system.md#ds-15-tailwind-first-authoring).
+---
 
-## Elevation & Depth
+## 5. Komponentenstandard
 
-Ordinary shadow tokens are valid transparent values (`0 0 #0000`), so borders and tonal layers establish normal hierarchy without accidental elevation. Explicit popup and dialog shadows identify floating layers. The website's printed QR sheet uses a deliberate physical shadow. [Webapp tokens](webapp/app/globals.css), [website tokens](website/app/globals.css), [QR showcase](website/components/QrCodeShowcase.tsx).
-
-**The Boundary Rule.** Use a border or tonal fill for ordinary containment; use a visible shadow only for a floating or physical role.
-
-## Shapes
-
-Fields have 12px corners, cards and popups 20px, and dialogs 20px on mobile and 24px on desktop. Actions remain pills. Popup outer radius 20px, padding 8px, and item radius 12px form concentric corners. QR finder modules stay square. [Shared tokens](webapp/app/globals.css), [website tokens](website/app/globals.css).
-
-**The Nested Radius Rule.** For uniformly padded nested shapes, set inner radius to outer radius minus padding.
-
-## Components
-
-Primary buttons are black; outline buttons are white with an input border; ghost buttons are quiet; destructive buttons are red. The `secondary` API remains an alias of outline. Shared default action height is 44px, compact height 36px (at least 44px for coarse pointers), and prominent guest payment height 48px. Controls use 14px semibold labels, an active press response, visible focus ring, and reduced-motion treatment. Inputs use 12px corners and 44px minimum height; cards use 20px. [Webapp button](webapp/components/ui/button.tsx), [input](webapp/components/ui/input.tsx), [website button variants](website/components/ui/button-variants.ts).
-
-Dialogs use light surfaces and edge-to-edge dividers; inline errors remain left aligned and toasts sit top-center without duplicating visible errors. The website locale selector is a native dialog with translated options and focus restoration. [Dialog rule](AGENTS.md), [website modal](website/components/RegionLanguageModal.tsx). Specific flow behavior and known deviations are in the [reference](docs/design-system.md).
-
-**The Inline Feedback Rule.** Put persistent, actionable errors beside the affected field or operation; use a toast only when it adds information.
-
-## Do's and Don'ts
-
-### Do
-
-- Use the shared 4px spacing scale, semantic colors, and named control roles.
-- Keep the principal next action distinct from supporting navigation; write descriptive labels.
-- Preserve input values and visible error, focus, loading, disabled, and selected states.
-- Use Tailwind utilities for styling they can express, including state and container variants.
-- Check actual source and the [research reference](docs/ux-research.md) before making a behavior or outcome claim.
-
-### Don't
-
-- Use a dark modal or visible shadow as a general surface pattern.
-- Treat `secondary` as a separate gray-filled button style.
-- Apply Inter to words, currency symbols, or mixed-text parent containers.
-- Hide required prices, selections, errors, or the next operational step.
-- Treat a documented implementation deviation as permission to change the design rule.
+- **Primärbuttons:** Schwarzer Hintergrund, weiße Schrift, pillenförmig (`h-11 px-6 rounded-full bg-primary text-primary-foreground font-semibold text-sm`).
+- **Sekundärbuttons / Kontur:** Weißer Hintergrund, schwarze Schrift, feiner Rand (`border border-input hover:bg-zinc-50`).
+- **Trennlinien:** Durchgängig von Kante zu Kante (`border-b border-border -mx-6 px-6`), niemals freischwebend oder eingerückt.
+- **Feedback & Fehler:** Formularfehler stehen linksbündig und barrierefrei direkt unter dem betreffenden Eingabefeld (`text-destructive text-sm font-medium`); Toasts werden zentriert am oberen Bildschirmrand angezeigt.

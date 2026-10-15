@@ -1,42 +1,53 @@
-# Product scope and commitments
+# Zackisch – Produktübersicht und Leistungsversprechen
 
 <!-- impeccable:product-schema 1 -->
 
-## Platform
+## 1. Plattform
 
-Web (Next.js, Cloudflare Pages & Workers, Convex Realtime Backend)
+Webbasiertes Gesamtsystem (Next.js, Cloudflare Pages & Workers, reaktives Convex-Echtzeit-Backend)
 
-## Users and Target Groups
+---
 
-Zackisch is a digital ordering and payment platform for hospitality operators, venue staff, guests, and operational team members:
-- **Guests:** Scan QR codes and order/pay directly on their smartphones without downloading an app. Immediate digital confirmation receipt with direct download.
-- **Venue & Hospitality Operators (Restaurants, Cafés, Imbisse, Bars):** Manage digital menus, categories, extras/options, prices, table/pickup QR codes, and availability in the merchant dashboard.
-- **Service & Kitchen Staff:** Real-time kitchen terminal display and order status updates on a dedicated tablet session.
-- **Zackisch Regional Admins & Staff:** Operative control in `adminapp` over regional organizations/venues, orders, staff permissions, partner commissions, and No-Code newsletter campaigns.
+## 2. Nutzer und Zielgruppen
 
-## Product Purpose
+Zackisch ist eine digitale Bestell- und Zahlungsplattform für Gastronomiebetriebe, Personal, Gäste und operative Teammitglieder:
 
-App-less QR ordering and payment alongside the venue's existing POS workflow, with fair pay-as-you-earn pricing and localized regional administration.
+- **Gäste:** Scannen tisch- oder abholbezogene QR-Codes und bestellen sowie bezahlen direkt im mobilen Browser ohne App-Download. Sofortige Bereitstellung eines herunterladbaren Bestell- und Zahlungsbelegs.
+- **Betreiber von Gastronomiebetrieben (Restaurants, Cafés, Imbisse, Bars):** Verwalten Speisekarten, Kategorien, Zusatzoptionen, Preise, Tischkontingente, QR-Codes und tagesaktuelle Verfügbarkeiten im Betriebs-Dashboard.
+- **Service- und Küchenpersonal:** Erhalten eingehende Bestellungen in Echtzeit auf einem dedizierten Tablet-Terminal und schalten ausverkaufte Artikel über den 86-Manager sofort ab.
+- **Zackisch-Regional-Admins und Mitarbeiter:** Operative Kontrolle in der Adminapp über regionale Betriebe, Bestellungen, Team-Berechtigungen, Partner-Provisionen und No-Code-Newsletter-Kampagnen.
 
-## Commercial Terms and Capabilities
+---
 
-- **Zero Base Fee & Zero Setup Fee:** Free registration and setup.
-- **2% Zackisch Platform Fee per Order:** Operators pay only 2% per successful order, plus variable payment provider fees.
-- **50% Partner Commission:** Regional sales partners receive 50% of the platform fee (1% GMV) for referred organizations.
-- **Stripe Connect Integration:** Direct merchant payouts via Stripe Connect Standard.
-- **Google Workspace Sole Email Infrastructure:** Automated transactional and newsletter emails sent via Google Workspace SMTP (`noreply@zackisch.com`), with RFC 8058 one-click unsubscription.
-- **Operative HQ (`adminapp`):** No-Code newsletter editor, double opt-in subscriber management, email logs, regional partner ledgers, and tamper-resistant audit logs.
+## 3. Produktzweck
 
-## Brand Commitments
+App-freie QR-Bestellung und bargeldlose Bezahlung parallel zum bestehenden Kassensystem des Betriebs, mit einem fairen Pay-as-you-earn-Preismodell und serverseitig isolierter regionaler Administration.
 
-- **Name:** Zackisch (`https://zackisch.com`, `https://app.zackisch.com`, `https://admin.zackisch.com`)
-- **Canonical Assets:** `brand_mark` (symbol only) and `combination_mark` (symbol + wordmark).
-- **Design System:** Poppins for primary typography, Inter for tabular numbers/monetary values, monochrome black/white palette with pill-shaped action buttons and rounded cards.
-- **Contact:** `selim@zackisch.com` (personal and founder support).
-- **Academic Partnership:** MARS Center for Entrepreneurship at TH Mannheim.
+---
 
-## Architecture and Regional Isolation
+## 4. Kommerzielle Konditionen und Funktionsumfang
 
-- **Shared Backend:** Single reactive Convex backend in `webapp/convex/` serving `website/`, `webapp/`, and `adminapp/`.
-- **Regional Scoping:** Team members and restaurant records are bound to their assigned operational region (starting with Germany `de`). Cross-regional access requires explicit administrative authorization.
-- **Security & Guest Privacy:** Guest endpoints are scoped and stripped of internal organization IDs, owner IDs, Stripe keys, and internal platform fees. Authentication uses cryptographically secure tokens.
+- **0 € Grundgebühr & 0 € Einrichtungsgebühr:** Kostenlose Registrierung und Inbetriebnahme.
+- **2 % Zackisch-Plattformgebühr pro Bestellung:** Betriebe zahlen lediglich 2 % des über die Plattform abgewickelten Bruttobestellvolumens (zzgl. variabler Zahlungsdienstleistergebühren).
+- **50 % Partnerprovision:** Regionale Vertriebspartner erhalten 50 % der Zackisch-Plattformgebühr (entspricht 1 % des vermittelten GMV).
+- **Stripe Connect Integration:** Direkte Händlerauszahlungen über Stripe Connect Standard.
+- **Google Workspace als alleinige E-Mail-Infrastruktur:** Automatisierter Versand von Transaktions- und Marketing-E-Mails über Google Workspace SMTP (`noreply@zackisch.com`) mit standardkonformem RFC-8058-One-Click-Unsubscribe.
+- **Operative Zentrale (`adminapp`):** No-Code-Newsletter-Editor, Double-Opt-In-Abonnentenverwaltung, E-Mail-Protokolle, Partner-Ledger und manipulationsgeschützte Audit-Logs.
+
+---
+
+## 5. Markenidentität und Gestaltungsregeln
+
+- **Markenname:** Zackisch (`https://zackisch.com`, `https://app.zackisch.com`, `https://admin.zackisch.com`).
+- **Verbindliche Original-Assets:** `brand_mark` (nur Symbol) und `combination_mark` (Symbol mit Wortmarke).
+- **Designsystem:** Poppins für primäre Typografie, Inter für Tabellenzahlen und Geldbeträge, monochrome Schwarz-Weiß-Farbpalette mit pillenförmigen Aktionsbuttons und abgerundeten Karten (20 px).
+- **Offizieller Kontakt:** `selim@zackisch.com` (persönlicher Gründer- und Kundensupport).
+- **Wissenschaftliche Unterstützung:** MARS – Center for Entrepreneurship an der Hochschule Mannheim.
+
+---
+
+## 6. Architektur und regionale Isolation
+
+- **Gemeinsames Backend:** Eine einheitliche, reaktive Convex-Backend-Instanz unter `webapp/convex/` versorgt `website/`, `webapp/` und `adminapp/`.
+- **Regionale Bindung:** Teammitglieder und Betriebsdatensätze sind fest ihrer zugewiesenen Betriebsregion zugeordnet (Start mit Deutschland `de`). Regionsübergreifende Zugriffe sind serverseitig unterbunden.
+- **Sicherheit & Gast-Datenschutz:** Öffentliche Gast-Schnittstellen filtern interne Betriebs-IDs, Inhaber-IDs, Stripe-Schlüssel und Plattformgebühren vollständig heraus. Die Authentifizierung erfolgt über kryptografisch sichere Zufallstokens.

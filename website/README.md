@@ -1,29 +1,76 @@
-# Marketing website
+# Zackisch Marketing-Website
 
-This is the bilingual, static Next.js marketing site for restaurant operators. The registration destination is the separate web app. [`next.config.ts`](next.config.ts) sets `output: "export"` and unoptimized images, so `npm run build` writes `out/` for static hosting. The [root overview](../README.md), [product scope](../PRODUCT.md), [design reference](../DESIGN.md), and [UX research](../docs/ux-research.md) provide shared context.
+Dieses Projekt ist die statische, mehrsprachige Marketing- und Rechtswebsite von Zackisch (`https://zackisch.com`), optimiert für Gäste, Gastronomiebetriebe und interessierte Partner. Die Registrierung führt zur separaten Webanwendung ([`webapp/`](../webapp/README.md)).
 
-## Pages and localization
+Die Website wird über Next.js mit `output: "export"` vollständig als statisches HTML-Paket in das Verzeichnis `out/` generiert und über Cloudflare Pages ausgeliefert.
 
-The supported locale paths are `/de-de` and `/de-en`; [region configuration](lib/regions.ts) currently defines Germany with German and English. [`app/[locale]/page.tsx`](app/%5Blocale%5D/page.tsx) renders the marketing page, composed in [MainPage](components/MainPage.tsx). The localized legal paths are `/legal-notice`, `/privacy-policy`, and `/gtc`, with `/legal` and `/privacy` aliases implemented as pages ([route directory](app/%5Blocale%5D/)). [`app/page.tsx`](app/page.tsx) selects the initial locale in the browser. The language and region UI uses the [region parser](lib/regions.ts), [next-intl translator](lib/i18n.ts), and [message catalog](lib/translations.ts). The GTC retains its draft/finalization notice in [legal translations](lib/legal-translations.ts); no legal approval is implied.
+---
 
-The site shows the ordering flow, setup steps, fees, FAQ, product captures, and legal links ([MainPage](components/MainPage.tsx)). Pricing copy states zero setup and monthly base fees, 2% Zackisch fee per order, plus variable payment provider fees ([translations](lib/translations.ts), [calculation in web app](../webapp/lib/platform-fee.ts)). The benefits section attributes an industry example of up to 30% higher revenue to Microsoft's coverage of me&u. It is neither a measured zakkig result nor a promised outcome; see the [attributed source](https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/) and [product note](../PRODUCT.md#revenue-evidence).
+## 1. Routen und Lokalisierung
 
-The [shared button variants](components/ui/button-variants.ts) give registration a black primary action and returning-user sign-in a bordered outline action; the [header](components/Header.tsx) uses translated native anchor destinations and a mobile menu that closes on Escape and returns focus. The site shares the 4px spacing scale, semantic neutral colors, 44px default actions, and 20px card corners with the web app ([website theme](app/globals.css), [design reference](../docs/design-system.md#ds-07-marketing-website)). Static presentation is authored in Tailwind JSX. Global CSS holds tokens, fonts, resets, and reduced-motion behavior; the native [region dialog](components/RegionLanguageModal.tsx) uses Tailwind backdrop and entrance utilities.
+Die Navigation und Adressierung folgt dem Schema **Region zuerst, Sprache danach**:
 
-## Product images and QR example
+| Route | Zweck | Sprache & Region |
+|---|---|---|
+| `/[locale]` (`/de-de`, `/de-en`) | Zentrale Marketing- und Landingpage | Deutschland (Deutsch / Englisch) |
+| `/[locale]/legal-notice` | Impressum und gesetzliche Anbieterkennzeichnung | Deutschland (Deutsch / Englisch) |
+| `/[locale]/privacy-policy` | Datenschutzerklärung gemäß DSGVO | Deutschland (Deutsch / Englisch) |
+| `/[locale]/gtc` | Allgemeine Geschäftsbedingungen (AGB) | Deutschland (Deutsch / Englisch) |
+| `/[locale]/newsletter/confirm` | Double-Opt-In-Bestätigungsseite für den Newsletter | Deutschland (Deutsch / Englisch) |
+| `/[locale]/newsletter/unsubscribe` | Abmeldeseite für Marketing-E-Mails | Deutschland (Deutsch / Englisch) |
 
-[`public/product/`](public/product/) contains German and English WebP captures made from the isolated [marketing fixture](../webapp/tools/marketing-demo/). The fixture has seeded menu/cart data and disabled mutation adapters, so its images illustrate a product flow, not a live order. Regenerate the captures after UI changes before treating them as current. Run from `webapp/`:
+- **Sprach- und Regionsauswahl:** Der Einstiegspfad `/` ermittelt über [`app/page.tsx`](app/page.tsx) die bevorzugte Sprache und leitet standardmäßig auf `/de-de` oder `/de-en` weiter. Nutzer können Region und Sprache jederzeit über das native Dialogfenster ([`RegionLanguageModal.tsx`](components/RegionLanguageModal.tsx)) im Header oder Footer anpassen.
+- **Saubere kanonische Pfade:** Es existieren keine veralteten Weiterleitungsrouten; alle internen Verweise zielen direkt auf die kanonischen Pfade.
+
+---
+
+## 2. Struktur und Inhalte der Startseite
+
+Die Hauptseite ([`MainPage.tsx`](components/MainPage.tsx)) führt durch die Kernaspekte von Zackisch:
+
+1. **Hero-Bereich:** Prägnante Botschaft mit taktilem QR-Code-Muster ([`QrCodeShowcase.tsx`](components/QrCodeShowcase.tsx)), das beispielhaft auf die Gästeansicht der Webapp verlinkt.
+2. **Ablauf (So funktioniert's):** Dreistufiger Ablauf: Scannen im Browser, selbstständiges Bestellen & Bezahlen, direkte Anzeige auf dem Personal-Tablet in der Küche.
+3. **Kosten & Gebührenmodell:** Transparente Aufschlüsselung der 2 % Zackisch-Plattformgebühr pro relevanter Bestellung bei 0 € Einrichtungsgebühr und 0 € monatlicher Grundgebühr (zzgl. variabler Zahlungsdienstleistergebühren).
+4. **Häufig gestellte Fragen (FAQ):** Antworten zu Gerätevoraussetzungen (jedes Standard-Tablet genügt), Kassensystem-Ablauf, Auszahlungen über Stripe und Vertragslaufzeiten.
+5. **Newsletter-Anmeldung:** Double-Opt-in-Formular im Footer zur Aufnahme in den regionalen Verteiler.
+6. **Rechtliche Fußzeile:** Direkte Links zu Impressum, Datenschutz, AGB und Support-Kontakt (`selim@zackisch.com`).
+
+---
+
+## 3. Design und technische Umsetzung
+
+- **Typografie:** Poppins für sämtliche Fließtexte, Überschriften und Aktionsbeschriftungen; Inter für Tabellenzahlen und Geldbeträge.
+- **Farben und Formen:** Helle Arbeitsflächen mit neutralen grauen Begrenzungen (`site-line`), schwarzen Primäraktionen (Pill-Buttons) und weißen Sekundäraktionen mit Kontur.
+- **Responsivität:** Vollständige Optimierung für Smartphones (ab 320 px Breite), Tablets und Desktop-Bildschirme.
+- **Barrierefreiheit:** Tastaturbedienung für das Dialogfenster (inklusive Schließen mit der Escape-Taste und Fokusrückkehr) sowie reduziertes Bewegungsverhalten bei aktiver Systemeinstellung (`prefers-reduced-motion`).
+
+---
+
+## 4. Lokale Entwicklung und Build
+
+### Befehle
 
 ```sh
-node node_modules/vite/bin/vite.js --config tools/marketing-demo/vite.config.ts
+# Abhängigkeiten installieren
+npm ci
+
+# Lokalen Entwicklungsserver auf Port 3000 starten
+npm run dev
+
+# TypeScript-Typen prüfen
+npm run typecheck
+
+# Statischen Produktions-Build erstellen (schreibt nach out/)
+npm run build
 ```
 
-Open `http://127.0.0.1:4174/?lang=de` or `?lang=en`, use a 390 × 740 viewport for menu/cart/checkout and 1200 × 720 with `?screen=kitchen&lang=de` or `en` for the kitchen. Capture after fonts, images, and transitions settle and save optimized `{language}-{scan|pay|kitchen}.webp` files in `public/product/`. The hero QR is an example generated by the [QR component](components/QrCodeShowcase.tsx); it links to the app and is not a paired table session.
+Die Website liest keine geheimen Umgebungsvariablen ein; alle Texte und URLs werden zur Buildzeit über `next-intl` und [`lib/translations.ts`](lib/translations.ts) statisch kompiliert.
 
-The fixture uses illustrative Unsplash photography for fictional items: [Burrata](https://unsplash.com/photos/a-white-plate-topped-with-lots-of-different-types-of-vegetables-BfV7PSGpbqc) and [lemonade by Olga Tutunaru](https://unsplash.com/photos/clear-drinking-glass-with-lemon-juice-y_tIrc1Y7eI). The benefits animation in [AnimatedBenefitStat](components/AnimatedBenefitStat.tsx) counts on intersection and respects reduced motion; review it in both modes when changing it.
+---
 
-## Development and checks
+## 5. Weiterführende Dokumente
 
-From `website/`, run `npm ci`, `npm run dev` (port 3000), `npm run typecheck`, and `npm run build` ([scripts](package.json)). There is no website `.env.example` and no environment variable read in its app/components/lib source. `npm run lint` invokes removed `next lint` and is not a working gate. Typecheck and static build passed locally on 2026-09-23; review the finished page visually before shipping further changes.
-
-Inspect `/de-de` and `/de-en` at desktop, tablet, and 320px widths; check product images, responsive navigation, FAQ, locale dialog apply/cancel/Escape, legal route retention, and registration/login/email links. Review the legal copy and third-party attribution separately before publishing. See [deployment and configuration](../docs/architecture.md#configuration-and-builds) for the relationship between this static build and the Worker app.
+- [Gesamtübersicht des Repositories](../README.md)
+- [Designsystem und Gestaltungsregeln](../DESIGN.md)
+- [Technische Richtlinien und Commit-Konventionen](../AGENTS.md)
+- [SEO- und Lokalisierungsdokumentation](../docs/seo.md)
