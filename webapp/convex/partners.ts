@@ -20,6 +20,7 @@ export const listPartners = query({
       taxId: v.optional(v.string()),
       createdAt: v.number(),
       referredRestaurantsCount: v.number(),
+      referredOrganizationsCount: v.optional(v.number()),
     })
   ),
   handler: async (ctx, args) => {
@@ -47,6 +48,7 @@ export const listPartners = query({
         taxId: p.taxId,
         createdAt: p.createdAt,
         referredRestaurantsCount: referredOrgs.length,
+        referredOrganizationsCount: referredOrgs.length,
       };
     });
   },

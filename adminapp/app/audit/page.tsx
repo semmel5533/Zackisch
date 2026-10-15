@@ -85,7 +85,7 @@ export default function AuditTrailPage() {
               entityFilter === "restaurant" ? "bg-black text-white font-semibold" : "text-zinc-500 hover:text-black hover:bg-zinc-100"
             }`}
           >
-            Restaurants
+            Betriebe
           </button>
         </div>
 

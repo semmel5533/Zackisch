@@ -401,7 +401,7 @@ export const translations = {
     accountSettings: "Kontoeinstellungen",
     businessSettings: "Betriebsdaten",
     businessSettingsDescription:
-      "Stammdaten, Restaurant-Branding und Zahlungsabwicklung deines Betriebs.",
+      "Stammdaten, Branding und Zahlungsabwicklung deines Betriebs.",
     stripeSettings: "Zahlungsanbieter",
     address: "Adresse",
     logo: "Logo",
@@ -1050,7 +1050,7 @@ export const translations = {
     accountSettings: "Account Settings",
     businessSettings: "Business Details",
     businessSettingsDescription:
-      "Master data, restaurant branding, and payment processing for your business.",
+      "Master data, branding, and payment processing for your business.",
     stripeSettings: "Payment Provider",
     address: "Address",
     logo: "Logo",

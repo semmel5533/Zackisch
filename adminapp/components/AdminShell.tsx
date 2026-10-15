@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAdmin } from "@/lib/admin-context";
 import {
   LayoutDashboard,
-  UtensilsCrossed,
+  Store,
   Receipt,
   Users,
   Handshake,
@@ -29,7 +29,7 @@ export function AdminShell({ children }: AdminShellProps) {
 
   const navigation = [
     { name: "Übersicht", href: "/", icon: LayoutDashboard },
-    { name: "Gastronomie", href: "/restaurants", icon: UtensilsCrossed },
+    { name: "Betriebe", href: "/organizations", icon: Store },
     { name: "Bestellungen", href: "/orders", icon: Receipt },
     { name: "Mitarbeiter", href: "/staff", icon: Users },
     { name: "Vertriebspartner", href: "/partners", icon: Handshake },
@@ -63,7 +63,11 @@ export function AdminShell({ children }: AdminShellProps) {
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navigation.map((item) => {
             const isActive =
-              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              item.href === "/"
+                ? pathname === "/"
+                : item.href === "/organizations"
+                  ? pathname.startsWith("/organizations") || pathname.startsWith("/restaurants")
+                  : pathname.startsWith(item.href);
             const Icon = item.icon;
             return (
               <Link
@@ -109,8 +113,13 @@ export function AdminShell({ children }: AdminShellProps) {
         <header className="h-16 bg-white border-b border-zinc-200 px-8 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-bold text-zinc-900 tracking-tight">
-              {navigation.find((n) => (n.href === "/" ? pathname === "/" : pathname.startsWith(n.href)))?.name ||
-                "Admin"}
+              {navigation.find((n) =>
+                n.href === "/"
+                  ? pathname === "/"
+                  : n.href === "/organizations"
+                    ? pathname.startsWith("/organizations") || pathname.startsWith("/restaurants")
+                    : pathname.startsWith(n.href)
+              )?.name || "Admin"}
             </h1>
           </div>
 
@@ -126,21 +135,21 @@ export function AdminShell({ children }: AdminShellProps) {
                     : "text-zinc-600 hover:text-black"
                 }`}
               >
-                🇩🇪 DE (Aktiv)
+                DE (Aktiv)
               </button>
               <button
                 disabled
                 title="Region in Vorbereitung"
                 className="px-2.5 py-1 text-xs font-medium text-zinc-600 cursor-not-allowed opacity-60"
               >
-                🇦🇹 AT (Geplant)
+                AT (Geplant)
               </button>
               <button
                 disabled
                 title="Region in Vorbereitung"
                 className="px-2.5 py-1 text-xs font-medium text-zinc-600 cursor-not-allowed opacity-60"
               >
-                🇨🇭 CH (Geplant)
+                CH (Geplant)
               </button>
             </div>
 

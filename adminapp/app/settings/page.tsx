@@ -39,7 +39,7 @@ export default function SettingsPage() {
           <div className="p-4 rounded-xl border border-zinc-100 bg-zinc-50/50">
             <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Grundgebühr</span>
             <div className="text-2xl font-extrabold text-zinc-900 font-num mt-1">0,00 €</div>
-            <p className="text-xs text-zinc-500 mt-1">Keine monatliche Fixgebühr für Restaurants</p>
+            <p className="text-xs text-zinc-500 mt-1">Keine monatliche Fixgebühr für Betriebe</p>
           </div>
 
           <div className="p-4 rounded-xl border border-zinc-100 bg-zinc-50/50">

@@ -35,8 +35,8 @@ export default function StaffPage() {
   const updateStatusMutation = useMutation((anyApi as any).admin.updateStaffStatus);
 
   const ALL_PERMISSIONS = [
-    { id: "restaurants:read", label: "Restaurants einsehen" },
-    { id: "restaurants:write", label: "Restaurants bearbeiten" },
+    { id: "restaurants:read", label: "Betriebe einsehen" },
+    { id: "restaurants:write", label: "Betriebe bearbeiten" },
     { id: "orders:read", label: "Bestellungen & Zahlungen einsehen" },
     { id: "newsletter:read", label: "Newsletter einsehen" },
     { id: "newsletter:write", label: "Newsletter verfassen & editieren" },

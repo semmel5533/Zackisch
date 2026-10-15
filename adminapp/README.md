@@ -4,10 +4,10 @@ Dieses Next.js-Projekt ist das interne Verwaltungs- und Kontrolldashboard für d
 
 ## Funktionen
 
-1. **Regionale Übersicht (`/`):** Echtzeit-Kennzahlen zu Bruttoumsatz (GMV), 2 % Zackisch-Plattformgebühr, 50 % Partner-Provisionen, aktiven Gastronomiebetrieben, Bestellungen und Double-Opt-In-Newsletter-Abonnenten.
-2. **Gastronomie-Verwaltung (`/restaurants`):** Regionale Restaurantübersicht, Stripe-Connect-Status, Tischkontingente und direkte Menülinks.
+1. **Regionale Übersicht (`/`):** Echtzeit-Kennzahlen zu Bruttoumsatz (GMV), 2 % Zackisch-Plattformgebühr, 50 % Partner-Provisionen, aktiven Betrieben, Bestellungen und Double-Opt-In-Newsletter-Abonnenten.
+2. **Betriebsverwaltung (`/organizations`):** Regionale Übersicht aller Betriebe (Restaurants, Cafés, Imbisse, Bars), Stripe-Connect-Status, Tischkontingente und direkte Menülinks (mit automatischer Weiterleitung von `/restaurants` für Abwärtskompatibilität).
 3. **Bestellübersicht (`/orders`):** Echtzeit-Bestellansicht mit Filterung nach Status (in Bearbeitung, abholbereit, abgeschlossen, storniert) und Zahlungsreferenzen.
-4. **Mitarbeiterverwaltung (`/staff`):** Granulare Einladung und Berechtigungssteuerung für Teammitglieder (Rechte: Restaurants, Bestellungen, Personal, Partner, Newsletter, E-Mails, Audit).
+4. **Mitarbeiterverwaltung (`/staff`):** Granulare Einladung und Berechtigungssteuerung für Teammitglieder (Rechte: Betriebe, Bestellungen, Personal, Partner, Newsletter, E-Mails, Audit).
 5. **Partnerverwaltung (`/partners`):** Provisionsabrechnung für regionale Vertriebspartner (50 % der Plattformgebühr = 1 % GMV), Partnercodes, vermittelte Betriebe und Auszahlungs-Buchung.
 6. **No-Code-Newsletter-Editor & Kampagnen (`/newsletter`):** Visueller blockbasierter Newsletter-Editor mit Live-Master-Template-Vorschau, Abonnentenübersicht, Testversand und Kampagnenplanung.
 7. **E-Mail-Protokoll (`/emails`):** Chronologische Übersicht aller über Google Workspace versendeten Transaktions- und Marketingnachrichten mit Zustellstatus und SMTP-Verbindungstest.

@@ -1,6 +1,6 @@
 # Zackisch
 
-Zackisch ist eine moderne, QR-basierte Bestell- und Bezahlplattform für die Gastronomie. Gäste bestellen und bezahlen direkt über ihr Smartphone (am Tisch oder zur Abholung); Gastronomen verwalten Speisekarten, Bestellungen, Personal-Terminals und QR-Codes in der Webapp. Das operative Zackisch-Team steuert Restaurants, Bestellungen, Partner-Gutschriften und No-Code-Newsletter über die Adminapp.
+Zackisch ist eine moderne, QR-basierte Bestell- und Bezahlplattform für Gastronomiebetriebe aller Art (Restaurants, Cafés, Imbisse, Bars). Gäste bestellen und bezahlen direkt über ihr Smartphone (am Tisch oder zur Abholung); Betriebsleiter verwalten Speisekarten, Bestellungen, Personal-Terminals und QR-Codes in der Webapp. Das operative Zackisch-Team steuert Betriebe, Bestellungen, Partner-Gutschriften und No-Code-Newsletter über die Adminapp.
 
 Das kommerzielle Modell umfasst **keine Einrichtungsgebühr, keine monatliche Grundgebühr und eine Zackisch-Plattformgebühr von 2 % pro relevanter Bestellung** (zzgl. variabler Zahlungsdienstleistergebühren). Vertriebspartner erhalten 50 % der Plattformgebühr (1 % GMV).
 
@@ -9,8 +9,8 @@ Das kommerzielle Modell umfasst **keine Einrichtungsgebühr, keine monatliche Gr
 | Anwendung | Öffentliche Adresse | Hosting & Technologie | Zweck |
 | --- | --- | --- | --- |
 | `website/` | `https://zackisch.com` | Cloudflare Pages (Next.js Static Export `out/`) | Mehrsprachige Marketing- und Rechtswebsite (`/de-de`, `/de-en`), Double-Opt-In-Newsletter und Abmeldung |
-| `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Gastronomen-Dashboard, Küchendisplay, 86-Verfügbarkeitsmanager und digitaler Gäste-Checkout |
-| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Interne operative Zackisch-Zentrale: Übersicht, Restaurants, Bestellungen, Personal, Partner, No-Code-Newsletter, E-Mail-Log und Audit-Trail |
+| `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Betriebs-Dashboard, Küchendisplay, 86-Verfügbarkeitsmanager und digitaler Gäste-Checkout |
+| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Interne operative Zackisch-Zentrale: Übersicht, Betriebe, Bestellungen, Personal, Partner, No-Code-Newsletter, E-Mail-Log und Audit-Trail |
 | `webapp/convex/` | `*.convex.cloud` | Convex (Shared Backend & Realtime-DB) | Gemeinsames Backend aller drei Apps mit reaktiven Queries, Mutationen, kryptografischen Tokens und serverseitiger Regionsisolation |
 
 ## Lokale Entwicklung

@@ -124,7 +124,7 @@ export default function PartnersPage() {
             <thead className="bg-zinc-50/75 border-b border-zinc-200/80 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
               <tr>
                 <th className="py-3.5 px-6">Code & Partner</th>
-                <th className="py-3.5 px-4">Vermittelte Restaurants</th>
+                <th className="py-3.5 px-4">Vermittelte Betriebe</th>
                 <th className="py-3.5 px-4">Provisionssatz</th>
                 <th className="py-3.5 px-4">Verdient</th>
                 <th className="py-3.5 px-4">Ausbezahlt</th>
@@ -158,7 +158,7 @@ export default function PartnersPage() {
                       <div className="text-[11px] text-zinc-400 mt-0.5">{p.email}</div>
                     </td>
                     <td className="py-4 px-4 font-num font-semibold text-zinc-800">
-                      {p.referredRestaurantsCount} Gastronomien
+                      {p.referredOrganizationsCount ?? p.referredRestaurantsCount} Betriebe
                     </td>
                     <td className="py-4 px-4 font-num text-zinc-700 font-medium">
                       50% (1% GMV)

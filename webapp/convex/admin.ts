@@ -167,6 +167,8 @@ export const listRegions = query({
 export const getRegionalOverview = query({
   args: { regionId: v.string() },
   returns: v.object({
+    totalOrganizations: v.number(),
+    activeOrganizations: v.number(),
     totalRestaurants: v.number(),
     activeRestaurants: v.number(),
     totalOrders: v.number(),
@@ -176,17 +178,17 @@ export const getRegionalOverview = query({
     subscriberCount: v.number(),
   }),
   handler: async (ctx, args) => {
-    // 1. Restaurants in region
+    // 1. Organizations in region (Restaurants, Cafés, Imbisse, Bars, etc.)
     const allOrgs = await ctx.db.query("organizations").collect();
     const regionOrgs = allOrgs.filter(
       (org) => (org.region || "de").toLowerCase() === args.regionId.toLowerCase()
     );
     const orgIds = new Set(regionOrgs.map((o) => o._id));
 
-    const totalRestaurants = regionOrgs.length;
-    const activeRestaurants = regionOrgs.filter((o) => o.stripeOnboardingComplete).length;
+    const totalOrganizations = regionOrgs.length;
+    const activeOrganizations = regionOrgs.filter((o) => o.stripeOnboardingComplete).length;
 
-    // 2. Orders for these restaurants
+    // 2. Orders for these organizations
     const allOrders = await ctx.db.query("orders").collect();
     const regionOrders = allOrders.filter((ord) => orgIds.has(ord.organizationId));
 
@@ -212,8 +214,10 @@ export const getRegionalOverview = query({
       .collect();
 
     return {
-      totalRestaurants,
-      activeRestaurants,
+      totalOrganizations,
+      activeOrganizations,
+      totalRestaurants: totalOrganizations,
+      activeRestaurants: activeOrganizations,
       totalOrders: regionOrders.length,
       gmvCents,
       platformFeeCents,
@@ -223,8 +227,8 @@ export const getRegionalOverview = query({
   },
 });
 
-// List regional restaurants with details
-export const listRegionalRestaurants = query({
+// List regional organizations / businesses with details (Restaurants, Cafés, Imbisse, Bars, etc.)
+export const listRegionalOrganizations = query({
   args: { regionId: v.string() },
   returns: v.array(
     v.object({
@@ -268,6 +272,8 @@ export const listRegionalRestaurants = query({
       }));
   },
 });
+
+export const listRegionalRestaurants = listRegionalOrganizations;
 
 // List regional orders
 export const listRegionalOrders = query({

@@ -71,7 +71,7 @@ export default function AdminOverviewPage() {
             Willkommen in der Zackisch Zentrale
           </h2>
           <p className="text-sm text-zinc-500 mt-1">
-            Operative Übersicht für Restaurants, Zahlungen, Partner und E-Mail-Marketing in deiner Region.
+            Operative Übersicht für Betriebe und Gastronomie, Zahlungen, Partner und E-Mail-Marketing in deiner Region.
           </p>
         </div>
 
@@ -112,7 +112,7 @@ export default function AdminOverviewPage() {
             {overview ? formatEuro(overview.gmvCents) : "—"}
           </div>
           <p className="text-xs text-zinc-600 mt-2">
-            Gesamtes über QR abgewickeltes Gastronomievolumen
+            Gesamtes über QR abgewickeltes Bestellvolumen
           </p>
         </div>
 
@@ -148,19 +148,19 @@ export default function AdminOverviewPage() {
           </p>
         </div>
 
-        {/* Restaurants */}
+        {/* Betriebe */}
         <div className="bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-xs hover:border-zinc-300 transition-colors">
           <div className="flex items-center justify-between text-zinc-500 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Gastronomien</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Betriebe</span>
             <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700">
               <Store className="w-4 h-4" />
             </div>
           </div>
           <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? overview.totalRestaurants : "—"}
+            {overview ? (overview.totalOrganizations ?? overview.totalRestaurants) : "—"}
           </div>
           <p className="text-xs text-zinc-600 mt-2">
-            {overview?.activeRestaurants || 0} mit abgeschlossenem Stripe Onboarding
+            {(overview?.activeOrganizations ?? overview?.activeRestaurants) || 0} mit abgeschlossenem Stripe Onboarding
           </p>
         </div>
 
@@ -223,7 +223,7 @@ export default function AdminOverviewPage() {
             <div className="text-[12px] text-zinc-500 space-y-0.5 mt-2">
               <div>Modell: <span className="text-zinc-700 font-medium">Standard Connect</span></div>
               <div>Gebühr: <span className="text-zinc-700 font-medium">2% Plattformanteil</span></div>
-              <div>Zahlungsabwicklung: <span className="text-zinc-700 font-medium">Gastronom trägt Kosten</span></div>
+              <div>Zahlungsabwicklung: <span className="text-zinc-700 font-medium">Betrieb trägt Kosten</span></div>
             </div>
           </div>
 

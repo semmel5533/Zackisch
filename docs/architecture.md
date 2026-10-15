@@ -16,8 +16,8 @@ Zackisch is built as a cohesive monorepo comprising three Next.js frontend appli
 | Application | Public URL | Runtime & Hosting | Primary Responsibilities |
 | --- | --- | --- | --- |
 | `website/` | `https://zackisch.com` | Cloudflare Pages (`output: "export"`) | Regional marketing pages (`/de-de`, `/de-en`), Double-Opt-In newsletter signup, unsubscription and legal notices. |
-| `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Restaurant onboarding, menu management, 86-availability, kitchen order terminal, guest table & pickup ordering. |
-| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Operational headquarters: regional overview, restaurants, orders, staff invitations & roles, partner commissions, No-Code newsletter editor & dispatch, audit log. |
+| `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Venue onboarding, menu management, 86-availability, kitchen order terminal, guest table & pickup ordering. |
+| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Operational headquarters: regional overview, organizations (`/organizations`, aliasing `/restaurants`), orders, staff invitations & roles, partner commissions, No-Code newsletter editor & dispatch, audit log. |
 | `Convex` | `*.convex.cloud` | Convex Serverless Cloud (`dev:silent-narwhal-392`) | Realtime reactive database, cryptographic auth, Google Workspace SMTP actions, Stripe webhooks, and public HTTP endpoints. |
 
 ## 2. Regional Expansion & Data Boundaries
@@ -27,7 +27,7 @@ Zackisch is built as a cohesive monorepo comprising three Next.js frontend appli
 - **Regional Scoping:** Team members in `adminapp` operate exclusively within their assigned `regionId`. Queries and mutations filter by `regionId` on the server.
 - **Guest Boundary Sanitization:**
   - `orders.getGuestOrderTracker`: Sanitizes order data, returning only guest-safe fields (items, order number, table, status, type, total). Internal platform fees, Stripe payment IDs, and merchant tax data are omitted.
-  - `organizations.getPublicRestaurant`: Returns only public restaurant data (name, description, branding, ordering enabled). Strips owner ID, tax ID, and Stripe Connected account ID.
+  - `organizations.getPublicRestaurant`: Returns only public organization/venue data (name, description, branding, ordering enabled). Strips owner ID, tax ID, and Stripe Connected account ID.
 
 ## 3. Authentication & Security Architecture
 

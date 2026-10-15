@@ -8,21 +8,21 @@ Web (Next.js, Cloudflare Pages & Workers, Convex Realtime Backend)
 
 ## Users and Target Groups
 
-Zackisch is a digital ordering and payment platform for hospitality operators, restaurant staff, guests, and operational team members:
+Zackisch is a digital ordering and payment platform for hospitality operators, venue staff, guests, and operational team members:
 - **Guests:** Scan QR codes and order/pay directly on their smartphones without downloading an app. Immediate digital confirmation receipt with direct download.
-- **Restaurant Operators:** Manage digital menus, categories, extras/options, prices, table/pickup QR codes, and availability in the merchant dashboard.
+- **Venue & Hospitality Operators (Restaurants, Cafés, Imbisse, Bars):** Manage digital menus, categories, extras/options, prices, table/pickup QR codes, and availability in the merchant dashboard.
 - **Service & Kitchen Staff:** Real-time kitchen terminal display and order status updates on a dedicated tablet session.
-- **Zackisch Regional Admins & Staff:** Operative control in `adminapp` over regional restaurants, orders, staff permissions, partner commissions, and No-Code newsletter campaigns.
+- **Zackisch Regional Admins & Staff:** Operative control in `adminapp` over regional organizations/venues, orders, staff permissions, partner commissions, and No-Code newsletter campaigns.
 
 ## Product Purpose
 
-App-less QR ordering and payment alongside the restaurant's existing POS workflow, with fair pay-as-you-earn pricing and localized regional administration.
+App-less QR ordering and payment alongside the venue's existing POS workflow, with fair pay-as-you-earn pricing and localized regional administration.
 
 ## Commercial Terms and Capabilities
 
 - **Zero Base Fee & Zero Setup Fee:** Free registration and setup.
 - **2% Zackisch Platform Fee per Order:** Operators pay only 2% per successful order, plus variable payment provider fees.
-- **50% Partner Commission:** Regional sales partners receive 50% of the platform fee (1% GMV) for referred restaurants.
+- **50% Partner Commission:** Regional sales partners receive 50% of the platform fee (1% GMV) for referred organizations.
 - **Stripe Connect Integration:** Direct merchant payouts via Stripe Connect Standard.
 - **Google Workspace Sole Email Infrastructure:** Automated transactional and newsletter emails sent via Google Workspace SMTP (`noreply@zackisch.com`), with RFC 8058 one-click unsubscription.
 - **Operative HQ (`adminapp`):** No-Code newsletter editor, double opt-in subscriber management, email logs, regional partner ledgers, and tamper-resistant audit logs.

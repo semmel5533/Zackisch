@@ -59,12 +59,12 @@ export default function NewsletterHubPage() {
       id: "b2",
       type: "paragraph",
       content:
-        "Mit Zackisch bestellen Gäste direkt am Tisch per Smartphone – ohne App-Download und ohne Wartezeiten. Entdecke jetzt die neuen Features für dein Restaurant.",
+        "Mit Zackisch bestellen Gäste direkt am Tisch per Smartphone – ohne App-Download und ohne Wartezeiten. Entdecke jetzt die neuen Features für deinen Betrieb.",
     },
     {
       id: "b3",
       type: "button",
-      content: "Jetzt Restaurant entdecken",
+      content: "Jetzt Betrieb entdecken",
       buttonUrl: "https://zackisch.com",
     },
     {
