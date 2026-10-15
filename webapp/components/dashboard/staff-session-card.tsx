@@ -116,7 +116,7 @@ export function StaffSessionCard({
                     style: "square",
                   }}
                   imageSettings={{
-                    src: "https://www.zakkig.com/full_qr.png",
+                    src: "/combination_mark_qr.png",
                     height: 42,
                     width: 133,
                     excavate: true,

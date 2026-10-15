@@ -100,7 +100,7 @@ function GuestOrderSuccess({
                 rel="noopener noreferrer"
                 className="text-black font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
               >
-                zakkig.com
+                zackisch.com
               </a>
               {t("confirmationDisclaimerSuffix")}
             </p>
@@ -133,7 +133,7 @@ function GuestOrderSuccess({
             rel="noopener noreferrer"
             className="underline underline-offset-4 text-black font-medium hover:opacity-80 transition-opacity"
           >
-            zakkig.com
+            zackisch.com
           </a>
           {t("processedViaZakkigSuffix")}
         </p>
@@ -622,11 +622,11 @@ export function GuestFrontend({
   useEffect(() => {
     const orgName = organization.name;
     if (orderId && type === "takeaway") {
-      document.title = `zakkig: ${t("orderStatus")} - ${orgName}`;
+      document.title = `Zackisch: ${t("orderStatus")} - ${orgName}`;
       return;
     }
     if (activeTab === "cart") {
-      document.title = `zakkig: ${t("cart")}`;
+      document.title = `Zackisch: ${t("cart")}`;
       return;
     }
     const prefix =
@@ -635,7 +635,7 @@ export function GuestFrontend({
         : tableNumber
         ? t("titleToStay", { table: tableNumber })
         : t("titleToStayNoTable");
-    document.title = `zakkig: ${prefix} ${orgName}`;
+    document.title = `Zackisch: ${prefix} ${orgName}`;
   }, [locale, organization.name, type, tableNumber, orderId, activeTab, t]);
 
   if (orderId && type === "takeaway") {

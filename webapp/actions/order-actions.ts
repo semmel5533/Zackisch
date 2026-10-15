@@ -159,7 +159,7 @@ export async function exportOrdersCSVAction(organizationId: string) {
       "Brutto-Umsatz",
       "S/H",
       "Währung",
-      "zakkig-Gebühr",
+      "Zackisch-Gebühr",
       "Stripe-Gebühr (geschätzt)",
       "Netto-Geldeingang",
     ].join(";");

@@ -31,6 +31,26 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "zackisch.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.zackisch.com",
+      },
+      {
+        protocol: "https",
+        hostname: "app.zackisch.com",
+      },
+      {
+        protocol: "https",
+        hostname: "zackisch.de",
+      },
+      {
+        protocol: "https",
+        hostname: "www.zackisch.de",
+      },
+      {
+        protocol: "https",
         hostname: "zakkig.de",
       },
       {
@@ -51,12 +71,18 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "5mb",
       allowedOrigins: [
+        "app.zackisch.com",
+        "app.zackisch.de",
+        "admin.zackisch.com",
+        "zackisch.com",
         "app.zakkig.com",
         "app.zakkig.de",
         "localhost:3000",
         "localhost:3001",
+        "localhost:3002",
         "127.0.0.1:3000",
         "127.0.0.1:3001",
+        "127.0.0.1:3002",
       ],
     },
   },

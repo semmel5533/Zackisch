@@ -305,7 +305,7 @@ export function AllOrdersContent({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `zakkig-export-${new Date().toISOString().split("T")[0]}.csv`;
+      link.download = `zackisch-export-${new Date().toISOString().split("T")[0]}.csv`;
       link.click();
       URL.revokeObjectURL(url);
     }

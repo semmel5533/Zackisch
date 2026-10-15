@@ -97,7 +97,7 @@ export const translations = {
     regionLabel: "Region",
     languageLabel: "Sprache",
     saveAndContinue: "Übernehmen",
-    operatingInGermanyNotice: "zakkig ist aktuell in Deutschland aktiv.",
+    operatingInGermanyNotice: "Zackisch ist aktuell in Deutschland aktiv.",
     soundOn: "Ton an",
     soundOff: "Ton aus",
     newOrderReceived: "Neue Bestellung eingegangen",
@@ -503,7 +503,7 @@ export const translations = {
     sendConfirmationEmailCheckbox: "Bestell- und Zahlungsbestätigung per E-Mail erhalten",
     downloadConfirmation: "Bestätigung herunterladen",
     confirmationDisclaimer:
-      "Hinweis: Dies ist deine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via zakkig.com. Die steuerliche Bewirtungsquittung bzw. Rechnung wird vom Betrieb ausgestellt und kann dort angefordert werden.",
+      "Hinweis: Dies ist deine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via zackisch.com. Die steuerliche Bewirtungsquittung bzw. Rechnung wird vom Betrieb ausgestellt und kann dort angefordert werden.",
     confirmationDisclaimerPrefix:
       "Hinweis: Dies ist deine Bestell- und Zahlungsbestätigung über die technische Zahlungsabwicklung via ",
     confirmationDisclaimerSuffix:
@@ -522,12 +522,12 @@ export const translations = {
     paymentFailed: "Zahlung fehlgeschlagen",
     buyingFrom: "Du kaufst bei:",
     paymentDisclaimer:
-      "Die technische Bestell- und Zahlungsabwicklung erfolgt über zakkig als Vermittler.",
+      "Die technische Bestell- und Zahlungsabwicklung erfolgt über Zackisch als Vermittler.",
     paymentDisclaimerPrefix:
       "Die technische Bestell- und Zahlungsabwicklung erfolgt über ",
     paymentDisclaimerSuffix: " als Vermittler.",
-    zakkigUrl: "https://www.zakkig.com/",
-    zakkigHost: "zakkig.com",
+    zakkigUrl: "https://zackisch.com/",
+    zakkigHost: "zackisch.com",
     agreeToTerms: "Ich stimme den AGB und der Datenschutzerklärung zu.",
     agreeToTermsPrefix: "Mit Klick auf „Weiter zur Zahlung“ stimmst du den ",
     termsGtc: "AGB",
@@ -614,7 +614,7 @@ export const translations = {
     pickupSuccessUrl: "/pickup/{organizationId}/success",
     tableSuccessUrl: "/table/{organizationId}/success",
     accountDataInfo:
-      "Aus Sicherheitsgründen kann die verknüpfte E-Mail-Adresse nur manuell von uns geändert werden. Bitte sende dazu eine E-Mail von deiner aktuell verknüpften Adresse an selim@zakkig.com mit dem Betreff 'zakkig Konto Email Adresse ändern' und nenne uns in der Nachricht die neue gewünschte E-Mail-Adresse. Die Änderung dauert im Schnitt bis zu 7 Tage.",
+      "Aus Sicherheitsgründen kann die verknüpfte E-Mail-Adresse nur manuell von uns geändert werden. Bitte sende dazu eine E-Mail von deiner aktuell verknüpften Adresse an selim@zackisch.com mit dem Betreff 'Zackisch Konto Email Adresse ändern' und nenne uns in der Nachricht die neue gewünschte E-Mail-Adresse. Die Änderung dauert im Schnitt bis zu 7 Tage.",
     invalidToken: "Ungültiger oder abgelaufener Token.",
     notAcceptingOrders:
       "{name} nimmt momentan keine Tisch-Bestellungen über das Smartphone entgegen.",
@@ -641,9 +641,9 @@ export const translations = {
     backHome: "Zurück zur Anmeldung",
     backToDashboard: "Zurück zum Dashboard",
     userFallback: "Benutzer",
-    homepageUrl: "https://www.zakkig.com/de-de",
-    termsUrl: "https://www.zakkig.com/de-de/gtc",
-    privacyUrl: "https://www.zakkig.com/de-de/privacy-policy",
+    homepageUrl: "https://zackisch.com/de-de",
+    termsUrl: "https://zackisch.com/de-de/gtc",
+    privacyUrl: "https://zackisch.com/de-de/privacy-policy",
 
     // Delete Account
     deleteAccountConfirmTitle: "Konto endgültig löschen",
@@ -754,7 +754,7 @@ export const translations = {
     regionLabel: "Region",
     languageLabel: "Language",
     saveAndContinue: "Apply",
-    operatingInGermanyNotice: "zakkig is currently active in Germany.",
+    operatingInGermanyNotice: "Zackisch is currently active in Germany.",
     soundOn: "Sound on",
     soundOff: "Sound off",
     newOrderReceived: "New order received",
@@ -1152,7 +1152,7 @@ export const translations = {
     sendConfirmationEmailCheckbox: "Receive order and payment confirmation via email",
     downloadConfirmation: "Download confirmation",
     confirmationDisclaimer:
-      "Note: This is your order and payment confirmation for payment processing via zakkig.com. The official tax invoice is issued by the venue and can be requested directly from them.",
+      "Note: This is your order and payment confirmation for payment processing via zackisch.com. The official tax invoice is issued by the venue and can be requested directly from them.",
     confirmationDisclaimerPrefix:
       "Note: This is your order and payment confirmation for payment processing via ",
     confirmationDisclaimerSuffix:
@@ -1164,12 +1164,12 @@ export const translations = {
     continueToPayment: "Continue to Payment",
     buyingFrom: "You are buying from:",
     paymentDisclaimer:
-      "The technical order and payment processing is handled by zakkig as an intermediary.",
+      "The technical order and payment processing is handled by Zackisch as an intermediary.",
     paymentDisclaimerPrefix:
       "The technical order and payment processing is handled by ",
     paymentDisclaimerSuffix: " as an intermediary.",
-    zakkigUrl: "https://www.zakkig.com/",
-    zakkigHost: "zakkig.com",
+    zakkigUrl: "https://zackisch.com/",
+    zakkigHost: "zackisch.com",
     agreeToTerms: "I agree to the GTC and Privacy Policy.",
     agreeToTermsPrefix: 'By clicking "Continue to Payment", you agree to the ',
     termsGtc: "GTC",
@@ -1253,7 +1253,7 @@ export const translations = {
     pickupSuccessUrl: "/pickup/{organizationId}/success",
     tableSuccessUrl: "/table/{organizationId}/success",
     accountDataInfo:
-      "For security reasons, the linked email address can only be changed manually by us. Please send an email from your currently linked address to selim@zakkig.com with the subject 'zakkig Change Account Email Address' and specify the new desired email address in the message. The change takes up to 7 days on average.",
+      "For security reasons, the linked email address can only be changed manually by us. Please send an email from your currently linked address to selim@zackisch.com with the subject 'Zackisch Change Account Email Address' and specify the new desired email address in the message. The change takes up to 7 days on average.",
     invalidToken: "Invalid or expired token.",
     notAcceptingOrders:
       "{name} is currently not accepting table orders via smartphone.",
@@ -1280,9 +1280,9 @@ export const translations = {
     backHome: "Back to sign in",
     backToDashboard: "Back to Dashboard",
     userFallback: "User",
-    homepageUrl: "https://www.zakkig.com/de-en",
-    termsUrl: "https://www.zakkig.com/de-en/gtc",
-    privacyUrl: "https://www.zakkig.com/de-en/privacy-policy",
+    homepageUrl: "https://zackisch.com/de-en",
+    termsUrl: "https://zackisch.com/de-en/gtc",
+    privacyUrl: "https://zackisch.com/de-en/privacy-policy",
 
     // Delete Account
     deleteAccountConfirmTitle: "Permanently delete account",

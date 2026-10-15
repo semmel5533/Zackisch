@@ -118,7 +118,7 @@ export function StaffTerminalShell({
     } catch {
       // Ignore redirect error
     }
-    window.location.replace("https://www.zakkig.com");
+    window.location.replace("https://zackisch.com");
   };
 
   return (
@@ -163,8 +163,8 @@ export function StaffTerminalShell({
           >
             <div className="overflow-hidden">
               <Image
-                src="https://www.zakkig.com/full.svg"
-                alt="zakkig logo"
+                src="/combination_mark.svg"
+                alt="Zackisch logo"
                 width={100}
                 height={24}
                 priority
@@ -374,7 +374,7 @@ export function StaffTerminalShell({
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-canvas text-foreground">
           <div className="flex items-center">
             <Image
-              src="https://www.zakkig.com/full.svg"
+              src="/combination_mark.svg"
               alt="Zakkig"
               width={100}
               height={24}

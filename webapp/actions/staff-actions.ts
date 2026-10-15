@@ -50,5 +50,5 @@ export async function signOutStaffAction(organizationId: string) {
     maxAge: 0,
     expires: new Date(0),
   });
-  redirect("https://www.zakkig.com");
+  redirect("https://zackisch.com");
 }

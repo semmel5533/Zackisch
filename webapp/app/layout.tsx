@@ -21,28 +21,28 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "zakkig: Digitales Bestell- und Bezahlsystem",
-    template: "zakkig: %s",
+    default: "Zackisch: Digitales Bestell- und Bezahlsystem",
+    template: "Zackisch: %s",
   },
   description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
   icons: {
-    icon: "https://www.zakkig.com/icon.png",
-    apple: "https://www.zakkig.com/icon.png",
+    icon: "/brand_mark_512.png",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "zakkig",
+    title: "Zackisch",
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
-    url: "https://app.zakkig.com",
-    siteName: "zakkig",
-    images: ["https://www.zakkig.com/og_image.png"],
+    url: "https://app.zackisch.com",
+    siteName: "Zackisch",
+    images: ["https://zackisch.com/og_image.png"],
     locale: "de_DE",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "zakkig",
+    title: "Zackisch",
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
-    images: ["https://www.zakkig.com/og_image.png"],
+    images: ["https://zackisch.com/og_image.png"],
   },
   robots: {
     index: false,

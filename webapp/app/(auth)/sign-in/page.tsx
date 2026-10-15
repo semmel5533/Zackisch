@@ -122,7 +122,7 @@ function OtpForm({ state }: { state: any }) {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src="https://www.zakkig.com/full.svg"
+            src="/combination_mark.svg"
             alt="zakkig"
             width={120}
             height={40}
@@ -308,7 +308,7 @@ function SignInForm({
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src="https://www.zakkig.com/full.svg"
+            src="/combination_mark.svg"
             alt="zakkig"
             width={120}
             height={40}

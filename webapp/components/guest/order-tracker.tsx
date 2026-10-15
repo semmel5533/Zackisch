@@ -127,7 +127,7 @@ export function OrderTracker({
               rel="noopener noreferrer"
               className="underline underline-offset-4 text-black font-medium hover:opacity-80 transition-opacity"
             >
-              zakkig.com
+              zackisch.com
             </a>
             {t("processedViaZakkigSuffix")}
           </p>
@@ -277,7 +277,7 @@ export function OrderTracker({
               rel="noopener noreferrer"
               className="text-black font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
             >
-              zakkig.com
+              zackisch.com
             </a>
             {t("confirmationDisclaimerSuffix")}
           </p>
@@ -305,7 +305,7 @@ export function OrderTracker({
             rel="noopener noreferrer"
             className="underline underline-offset-4 text-black font-medium hover:opacity-80 transition-opacity"
           >
-            zakkig.com
+            zackisch.com
           </a>
           {t("processedViaZakkigSuffix")}
         </p>
