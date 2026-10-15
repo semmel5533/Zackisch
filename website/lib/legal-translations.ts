@@ -1,7 +1,7 @@
 export const legalTranslations = {
   de: {
     legalTitle: "Impressum",
-    legalDescription: "Impressum von zakkig.",
+    legalDescription: "Impressum von Zackisch.",
     legalBasis: "Angaben gemäß § 5 DDG",
     legalName: "Selim Eser",
     legalAddress: "Dannstadter Straße 6-8\n68199 Mannheim\nDeutschland",
@@ -16,20 +16,20 @@ export const legalTranslations = {
     legalDispute:
       "Wir nehmen nicht an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teil und sind dazu auch nicht verpflichtet.",
     privacyTitle: "Datenschutzerklärung",
-    privacyDescription: "Datenschutzerklärung von zakkig.",
+    privacyDescription: "Datenschutzerklärung von Zackisch.",
     privacyDate: "Stand: 23. September 2026",
     gtcTitle: "Allgemeine Geschäftsbedingungen (AGB)",
-    gtcDescription: "Allgemeine Geschäftsbedingungen von zakkig.",
+    gtcDescription: "Allgemeine Geschäftsbedingungen von Zackisch.",
     gtcDate: "Stand: 23. September 2026",
     gtcPending:
-      "Die Allgemeinen Geschäftsbedingungen für die Nutzung von zakkig werden derzeit juristisch finalisiert und in Kürze an dieser Stelle bereitgestellt.",
+      "Die Allgemeinen Geschäftsbedingungen für die Nutzung von Zackisch werden derzeit juristisch finalisiert und in Kürze an dieser Stelle bereitgestellt.",
     gtcContact:
       "Bei dringenden Fragen zu unseren Nutzungs- und Geschäftsbedingungen für Gastronomen oder Kunden wenden Sie sich bitte jederzeit direkt an uns:",
     openGraphLocale: "de_DE",
   },
   en: {
     legalTitle: "Legal Notice",
-    legalDescription: "Legal Notice of zakkig.",
+    legalDescription: "Legal Notice of Zackisch.",
     legalBasis: "Information provided according to § 5 DDG",
     legalName: "Selim Eser",
     legalAddress: "Dannstadter Straße 6-8\n68199 Mannheim\nDeutschland",
@@ -44,13 +44,13 @@ export const legalTranslations = {
     legalDispute:
       "We do not participate in dispute resolution proceedings before a consumer arbitration board and are not obliged to do so.",
     privacyTitle: "Privacy Policy",
-    privacyDescription: "Privacy Policy of zakkig.",
+    privacyDescription: "Privacy Policy of Zackisch.",
     privacyDate: "As of: September 23, 2026",
     gtcTitle: "General Terms & Conditions",
-    gtcDescription: "Terms and Conditions of zakkig.",
+    gtcDescription: "Terms and Conditions of Zackisch.",
     gtcDate: "As of: September 23, 2026",
     gtcPending:
-      "The General Terms & Conditions for zakkig are currently being finalized and will be published here shortly.",
+      "The General Terms & Conditions for Zackisch are currently being finalized and will be published here shortly.",
     gtcContact:
       "If you have any urgent legal questions or inquiries regarding merchant onboarding and terms, please contact us directly:",
     openGraphLocale: "en_US",

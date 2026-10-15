@@ -6,20 +6,20 @@ import { translations } from "@/lib/translations";
 const t = translations.de;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.zakkig.com"),
+  metadataBase: new URL("https://zackisch.com"),
   title: {
     default: t.metaTitle,
-    template: "zakkig: %s",
+    template: "Zackisch: %s",
   },
   icons: {
     icon: "/icon.png",
-    apple: "/icon.png",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: t.metaTitle,
     description: t.metaDescription,
-    url: "https://www.zakkig.com",
-    siteName: "zakkig",
+    url: "https://zackisch.com",
+    siteName: "Zackisch",
     images: ["/og_image.png"],
     locale: "de_DE",
     type: "website",

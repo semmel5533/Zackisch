@@ -20,7 +20,7 @@ export async function generateMetadata({
 
   const { lang } = parseLocale(locale);
   const t = translations[lang];
-  const canonicalUrl = `https://www.zakkig.com/${locale}`;
+  const canonicalUrl = `https://zackisch.com/${locale}`;
 
   return {
     title: {
@@ -32,7 +32,7 @@ export async function generateMetadata({
       description: t.metaDescription,
       url: canonicalUrl,
       locale: lang === "de" ? "de_DE" : "en_US",
-      siteName: "zakkig",
+      siteName: "Zackisch",
       type: "website",
       images: ["/og_image.png"],
     },
@@ -56,9 +56,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        "de-DE": "https://www.zakkig.com/de-de",
-        "en-DE": "https://www.zakkig.com/de-en",
-        "x-default": "https://www.zakkig.com/de-de",
+        "de-DE": "https://zackisch.com/de-de",
+        "en-DE": "https://zackisch.com/de-en",
+        "x-default": "https://zackisch.com/de-de",
       },
     },
   };
@@ -76,7 +76,7 @@ export default async function Page({
 
   const { lang } = parseLocale(locale);
   const t = translations[lang];
-  const canonicalUrl = `https://www.zakkig.com/${locale}`;
+  const canonicalUrl = `https://zackisch.com/${locale}`;
 
   const faqKeys = [
     "faqApp",
@@ -99,16 +99,16 @@ export default async function Page({
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://www.zakkig.com/#organization",
-        "name": "zakkig",
-        "url": "https://www.zakkig.com",
-        "logo": "https://www.zakkig.com/icon.svg",
+        "@id": "https://zackisch.com/#organization",
+        "name": "Zackisch",
+        "url": "https://zackisch.com",
+        "logo": "https://zackisch.com/combination_mark.svg",
         "sameAs": ["https://launchtomars.de/startup/zakkig/"],
       },
       {
         "@type": "SoftwareApplication",
-        "@id": "https://www.zakkig.com/#application",
-        "name": "zakkig",
+        "@id": "https://zackisch.com/#application",
+        "name": "Zackisch",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "All (Web-based)",
         "offers": {
@@ -123,11 +123,11 @@ export default async function Page({
       },
       {
         "@type": "WebSite",
-        "@id": "https://www.zakkig.com/#website",
-        "url": "https://www.zakkig.com",
-        "name": "zakkig",
+        "@id": "https://zackisch.com/#website",
+        "url": "https://zackisch.com",
+        "name": "Zackisch",
         "publisher": {
-          "@id": "https://www.zakkig.com/#organization",
+          "@id": "https://zackisch.com/#organization",
         },
         "inLanguage": lang === "de" ? "de-DE" : "en-US",
       },

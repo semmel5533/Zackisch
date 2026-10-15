@@ -36,17 +36,17 @@ export function legalMetadata(locale: string, kind: LegalKind): Metadata {
       },
     },
     alternates: {
-      canonical: `https://www.zakkig.com${t(urlKey)}`,
+      canonical: `https://zackisch.com${t(urlKey)}`,
       languages: {
-        "de-DE": `https://www.zakkig.com${tDe(urlKey)}`,
-        "en-DE": `https://www.zakkig.com${tEn(urlKey)}`,
-        "x-default": `https://www.zakkig.com${tDe(urlKey)}`,
+        "de-DE": `https://zackisch.com${tDe(urlKey)}`,
+        "en-DE": `https://zackisch.com${tEn(urlKey)}`,
+        "x-default": `https://zackisch.com${tDe(urlKey)}`,
       },
     },
     openGraph: {
       title: t(`${kind}Title`),
       description: t(`${kind}Description`),
-      url: `https://www.zakkig.com${t(urlKey)}`,
+      url: `https://zackisch.com${t(urlKey)}`,
       locale: t("openGraphLocale"),
       images: ["/og_image.png"],
       type: "website",

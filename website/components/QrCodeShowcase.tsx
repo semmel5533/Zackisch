@@ -52,7 +52,7 @@ export function QrCodeShowcase() {
               finderPatternOuterSettings={{ color: "#000000", style: "square" }}
               finderPatternInnerSettings={{ color: "#000000", style: "square" }}
               imageSettings={{
-                src: "/full_qr.png",
+                src: "/combination_mark_qr.png",
                 height: 42,
                 width: 133,
                 excavate: true,

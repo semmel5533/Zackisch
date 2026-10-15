@@ -58,7 +58,7 @@ export function Header() {
       </a>
       <header ref={headerRef} className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] relative z-20 flex min-h-[72px] items-center justify-between gap-3 min-[721px]:min-h-[104px] min-[721px]:gap-6">
         <Link href={t("homeUrl")} className="shrink-0" onClick={() => setMenuOpen(false)}>
-          <img src="/full.svg" width="122" height="40" alt={t("logoAlt")} fetchPriority="high" className="h-auto w-[96px] min-[721px]:w-[122px] max-[359px]:w-[76px]" />
+          <img src="/combination_mark.svg" width="122" height="40" alt={t("logoAlt")} fetchPriority="high" className="h-auto w-[96px] min-[721px]:w-[122px] max-[359px]:w-[76px]" />
         </Link>
         <nav
           id="main-navigation"

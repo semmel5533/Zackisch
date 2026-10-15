@@ -11,7 +11,7 @@ export default function RootRouterPage() {
     // 1. Check persistent cookie preference
     const matchCookie = document.cookie
       .split("; ")
-      .find((row) => row.startsWith("zakkig_locale="));
+      .find((row) => row.startsWith("zackisch_locale=") || row.startsWith("zakkig_locale="));
     if (matchCookie) {
       const val = matchCookie.split("=")[1];
       if (ALL_LOCALES.includes(val)) {
@@ -22,7 +22,7 @@ export default function RootRouterPage() {
 
     // 2. Check localStorage preference
     try {
-      const stored = localStorage.getItem("zakkig_locale");
+      const stored = localStorage.getItem("zackisch_locale") || localStorage.getItem("zakkig_locale");
       if (stored && ALL_LOCALES.includes(stored)) {
         router.replace(`/${stored}`);
         return;

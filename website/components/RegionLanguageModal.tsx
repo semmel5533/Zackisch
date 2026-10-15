@@ -55,9 +55,9 @@ export function RegionLanguageModal({
   }, [isOpen, active.locale]);
 
   function handleApply() {
-    document.cookie = `zakkig_locale=${selectedLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = `zackisch_locale=${selectedLocale}; path=/; max-age=31536000; SameSite=Lax`;
     try {
-      localStorage.setItem("zakkig_locale", selectedLocale);
+      localStorage.setItem("zackisch_locale", selectedLocale);
     } catch {
       /* Cookie remains authoritative when storage is unavailable. */
     }

@@ -7,6 +7,7 @@ import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { RegionLanguageModal } from "./RegionLanguageModal";
 import { WaveLine } from "./WaveLine";
+import { NewsletterForm } from "./NewsletterForm";
 
 export function SiteFooter({
   variant = "full",
@@ -25,7 +26,7 @@ export function SiteFooter({
             <div className="footer-mascot self-start md:self-auto flex items-end mb-[-85px] max-md:mb-[-65px] order-2 md:order-1">
               <img
                 className="block h-auto w-[clamp(210px,18vw,270px)] object-contain brightness-0 max-md:w-[clamp(190px,46vw,240px)]"
-                src="/icon.svg"
+                src="/brand_mark.svg"
                 alt=""
                 aria-hidden="true"
                 width="420"
@@ -112,7 +113,7 @@ export function SiteFooter({
           <div className="flex items-end justify-self-start mt-[clamp(48px,6vw,96px)] mb-[-95px] [grid-area:mascot] max-md:-mt-6 max-md:mb-[-65px]">
             <img
               className="block h-auto w-[clamp(260px,22vw,330px)] object-contain brightness-0 max-md:w-[clamp(200px,48vw,260px)]"
-              src="/icon.svg"
+              src="/brand_mark.svg"
               alt=""
               aria-hidden="true"
               width="420"
@@ -145,6 +146,9 @@ export function SiteFooter({
               <span>{t("regionDisplay")}</span>
             </button>
           </div>
+        </div>
+        <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] pt-8 pb-10 border-t border-black/10">
+          <NewsletterForm />
         </div>
       </footer>
       {isModalOpen && (

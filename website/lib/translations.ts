@@ -5,11 +5,11 @@ export const translations = {
   de: {
     ...landingTranslations.de,
     ...legalTranslations.de,
-    metaTitle: "zakkig: Bestellen und Bezahlen per QR-Code",
+    metaTitle: "Zackisch: Bestellen und Bezahlen per QR-Code",
     metaDescription:
       "Deine Kunden bestellen und bezahlen direkt am Handy. Am Tisch oder zum Abholen. Keine Einrichtungsgebühren, keine Monatsgebühren, du zahlst nur für Bestellungen über die Plattform.",
     registerCta: "Kostenlos registrieren",
-    registerUrl: "https://app.zakkig.com/sign-up",
+    registerUrl: "https://app.zackisch.com/sign-up",
     qrPrintTitle1: "Scannen &",
     qrPrintTitle2: "Bestellen",
     qrPrintAt: "an",
@@ -38,11 +38,11 @@ export const translations = {
   en: {
     ...landingTranslations.en,
     ...legalTranslations.en,
-    metaTitle: "zakkig: Order and Pay by QR code",
+    metaTitle: "Zackisch: Order and Pay by QR code",
     metaDescription:
       "Your customers order and pay on their phones. At the table or for pickup. No setup fees, no monthly fees, you only pay for orders placed through the platform.",
     registerCta: "Register for free",
-    registerUrl: "https://app.zakkig.com/sign-up",
+    registerUrl: "https://app.zackisch.com/sign-up",
     qrPrintTitle1: "Scan &",
     qrPrintTitle2: "Order",
     qrPrintAt: "at",
