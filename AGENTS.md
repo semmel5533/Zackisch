@@ -278,6 +278,26 @@ All commit messages in this repository strictly follow the developer's personal 
 
 <!-- END:git-commit-conventions -->
 
+<!-- BEGIN:semantic-versioning-rules -->
+
+# Semantic Versioning & Project Releases
+
+Each individual application in this monorepo (`website/`, `webapp/`, `opsapp/`) maintains its own independent semantic versioning starting at `0.0.1` inside its `package.json` and `package-lock.json`:
+
+1. **Independent Project SemVer (`MAJOR.MINOR.PATCH`):**
+   - **PATCH (`0.0.x`):** Bug fixes, visual/styling tweaks, copy updates, minor dependency bumps, refactoring without behavior change.
+   - **MINOR (`0.x.0`):** New features, new pages, new endpoints, backwards-compatible improvements, database migrations.
+   - **MAJOR (`x.0.0`):** Breaking architectural changes, incompatible API/schema shifts, complete platform redesigns.
+
+2. **Mandatory Version Bump Rule Before Commits:**
+   - Whenever any substantive changes (fixes, features, or architectural adjustments) are made to `website/`, `webapp/`, or `opsapp/`, the agent MUST increment the corresponding project's `version` in both `package.json` and `package-lock.json` before creating a git commit.
+   - If a change spans multiple projects, bump the version in each affected project accordingly.
+
+3. **Author Identity:**
+   - All commits must strictly be authored and committed under `Selim Eser <semmel5533@gmail.com>`.
+
+<!-- END:semantic-versioning-rules -->
+
 <!-- BEGIN:corporate-stack-rules -->
 
 # Corporate Tech Stack & Infrastructure

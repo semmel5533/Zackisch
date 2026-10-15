@@ -207,7 +207,21 @@ renamed adminapp to opsapp and implemented mandatory two-factor login
 
 ---
 
-## 12. Dokumentationsübersicht
+## 12. Semantic Versioning (SemVer)
+
+Jede Anwendung im Monorepo (`website/`, `webapp/`, `opsapp/`) besitzt eine eigenständige Versionsnummer in ihrer `package.json` und `package-lock.json`, beginnend ab Version `0.0.1`:
+
+- **PATCH (`0.0.x`):** Fehlerbehebungen, optische Korrekturen, Textanpassungen und kleinere Wartungsupdates.
+- **MINOR (`0.x.0`):** Neue Funktionen, Seiten, Endpunkte oder abwärtskompatible Modulerweiterungen.
+- **MAJOR (`x.0.0`):** Fundamentale Architekturänderungen, inkompatible Schnittstellen- oder Datenbankschema-Umstellungen.
+
+**Regel vor Commits:** Vor jedem Git-Commit wird die Versionsnummer des bzw. der geänderten Projekte in `package.json` und `package-lock.json` entsprechend inkrementiert.
+
+**Commit-Identität:** Alle Commits erfolgen verbindlich unter `Selim Eser <semmel5533@gmail.com>`.
+
+---
+
+## 13. Dokumentationsübersicht
 
 Weiterführende Details und technische Spezifikationen sind in den folgenden Dokumenten zu finden:
 
