@@ -157,6 +157,49 @@ export const getOrder = query({
   },
 });
 
+export const getGuestOrderTracker = query({
+  args: { id: v.id("orders"), organizationId: v.id("organizations") },
+  returns: v.union(
+    v.null(),
+    v.object({
+      _id: v.id("orders"),
+      orderNumber: v.string(),
+      status: v.union(
+        v.literal("in_progress"),
+        v.literal("ready_for_pickup"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      ),
+      type: v.union(v.literal("dine-in"), v.literal("takeaway")),
+      tableNumber: v.optional(v.string()),
+      items: v.string(),
+      total: v.number(),
+      currency: v.string(),
+      createdAt: v.optional(v.number()),
+      readyAt: v.optional(v.number()),
+      completedAt: v.optional(v.number()),
+    })
+  ),
+  handler: async (ctx, args) => {
+    const order = await ctx.db.get(args.id);
+    if (!order || order.organizationId !== args.organizationId) return null;
+    return {
+      _id: order._id,
+      orderNumber: order.orderNumber,
+      status: order.status,
+      type: order.type,
+      tableNumber: order.tableNumber,
+      items: order.items,
+      total: order.total,
+      currency: order.currency,
+      createdAt: order.createdAt,
+      readyAt: order.readyAt,
+      completedAt: order.completedAt,
+    };
+  },
+});
+
+
 export const getOrderByPaymentIntent = query({
   args: { stripePaymentId: v.string() },
   returns: v.union(

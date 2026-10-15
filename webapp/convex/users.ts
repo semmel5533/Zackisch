@@ -3,6 +3,12 @@ import { internal } from "./_generated/api";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
+function generateSecureOtp(): string {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return (100000 + (buf[0] % 900000)).toString();
+}
+
 export const currentUser = query({
   args: {},
   returns: v.union(
@@ -87,7 +93,7 @@ export const sendNewEmailOtp = mutation({
       return { success: false, error: "Token expired or invalid" };
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = generateSecureOtp();
     const expires = Date.now() + 30 * 60 * 1000;
 
     await ctx.db.insert("verificationCodes", {
@@ -301,7 +307,7 @@ export const sendEmailChangeOtpWithEmail = mutation({
       return { success: false, error: "Token expired or invalid" };
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = generateSecureOtp();
     const expires = Date.now() + 30 * 60 * 1000;
 
     const existing = await ctx.db

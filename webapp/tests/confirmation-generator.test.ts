@@ -64,8 +64,8 @@ describe("generateOrderConfirmationHtml", () => {
     expect(html).toContain("29,50 €");
     expect(html).toContain("Wichtiger Hinweis:");
     expect(html).toContain("steuerliche Bewirtungsquittung bzw. offizielle Rechnung wird auf Wunsch direkt vom Betrieb ausgestellt");
-    expect(html).toContain("zakkig.com");
-    expect(html).toContain('href="https://www.zakkig.com"');
+    expect(html).toContain("zackisch.com");
+    expect(html).toContain('href="https://zackisch.com"');
   });
 
   it("generates English order and payment confirmation with legal tax disclaimer", () => {
@@ -83,8 +83,8 @@ describe("generateOrderConfirmationHtml", () => {
     expect(html).toContain("Takeaway");
     expect(html).toContain("Important note:");
     expect(html).toContain("The official tax invoice or receipt is issued directly by the venue upon request.");
-    expect(html).toContain("zakkig.com");
-    expect(html).toContain('href="https://www.zakkig.com"');
+    expect(html).toContain("zackisch.com");
+    expect(html).toContain('href="https://zackisch.com"');
   });
 
   it("escapes special characters to prevent HTML injection", () => {

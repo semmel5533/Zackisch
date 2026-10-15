@@ -48,6 +48,49 @@ export const get = query({
   },
 });
 
+export const getPublicRestaurant = query({
+  args: { id: v.id("organizations") },
+  returns: v.union(
+    v.null(),
+    v.object({
+      _id: v.id("organizations"),
+      name: v.string(),
+      address: v.optional(v.string()),
+      logoUrl: v.union(v.string(), v.null()),
+      bannerUrl: v.union(v.string(), v.null()),
+      isToGoEnabled: v.optional(v.boolean()),
+      isToStayEnabled: v.optional(v.boolean()),
+      currency: v.optional(v.string()),
+      region: v.optional(v.string()),
+      tables: v.optional(v.array(v.string())),
+    })
+  ),
+  handler: async (ctx, args) => {
+    const org = await ctx.db.get(args.id);
+    if (!org) return null;
+    let logoUrl: string | null = null;
+    if (org.logoStorageId) {
+      logoUrl = await ctx.storage.getUrl(org.logoStorageId);
+    }
+    let bannerUrl: string | null = null;
+    if (org.bannerStorageId) {
+      bannerUrl = await ctx.storage.getUrl(org.bannerStorageId);
+    }
+    return {
+      _id: org._id,
+      name: org.name,
+      address: org.address,
+      logoUrl,
+      bannerUrl,
+      isToGoEnabled: org.isToGoEnabled,
+      isToStayEnabled: org.isToStayEnabled,
+      currency: org.currency || "EUR",
+      region: org.region || "de",
+      tables: org.tables,
+    };
+  },
+});
+
 export const getByOwner = query({
   args: { ownerId: v.string() },
   returns: v.union(

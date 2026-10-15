@@ -55,7 +55,7 @@ export const signInWithPassword = action({
       return { success: false, error: "authError" };
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = crypto.randomInt(100000, 1000000).toString();
     await ctx.runMutation(internal.authQueries.storeOtp, {
       userId: creds.userId,
       otp,
@@ -109,7 +109,7 @@ export const signUpWithPassword = action({
       }
     );
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = crypto.randomInt(100000, 1000000).toString();
     await ctx.runMutation(internal.authQueries.storeOtp, {
       userId,
       otp,
@@ -140,7 +140,7 @@ export const resendOtp = action({
   },
   returns: v.boolean(),
   handler: async (ctx, args): Promise<boolean> => {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = crypto.randomInt(100000, 1000000).toString();
     await ctx.runMutation(internal.authQueries.storeOtp, {
       userId: args.userId,
       otp,
