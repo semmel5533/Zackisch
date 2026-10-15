@@ -31,9 +31,12 @@ interface AdminContextType {
   setCurrentLocale: (locale: "de" | "en") => void;
   login: (email: string, password?: string, otp?: string) => Promise<{ success: boolean; error?: string }>;
   initiateLogin: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  completeLoginWithOtp: (email: string, otp: string) => Promise<{ success: boolean; error?: string }>;
+  completeLoginWithOtp: (email: string, otp: string) => Promise<{ success: boolean; error?: string; admin?: AdminUser }>;
   resendOtp: (email: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
+  isRegionalAdmin: boolean;
+  isStaff: boolean;
+  hasPermission: (permission: string) => boolean;
   regions: any[];
   t: (key: string) => string;
 }
@@ -91,6 +94,9 @@ const AdminContext = createContext<AdminContextType>({
   completeLoginWithOtp: async () => ({ success: false }),
   resendOtp: async () => ({ success: false }),
   logout: () => {},
+  isRegionalAdmin: false,
+  isStaff: false,
+  hasPermission: () => false,
   regions: [],
   t: (key: string) => key,
 });
@@ -219,7 +225,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const completeLoginWithOtp = async (
     email: string,
     otp: string
-  ): Promise<{ success: boolean; error?: string }> => {
+  ): Promise<{ success: boolean; error?: string; admin?: AdminUser }> => {
     try {
       const res = await completeLoginMutation({ email, otp });
       if (res.success && res.admin) {
@@ -231,7 +237,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         try {
           localStorage.setItem("zackisch_ops_session", res.admin.sessionToken);
         } catch {}
-        return { success: true };
+        return { success: true, admin: res.admin };
       }
       return { success: false, error: res.error || "Bestätigungscode ungültig." };
     } catch (err: any) {
@@ -270,6 +276,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   const isAuthenticated = !!adminUser;
   const adminEmail = adminUser?.email || "selim@zackisch.com";
+  const isRegionalAdmin = adminUser?.role === "regional_admin";
+  const isStaff = adminUser?.role === "staff";
+  const hasPermission = (permission: string) => {
+    if (isRegionalAdmin) return true;
+    return !!adminUser?.permissions?.includes(permission);
+  };
 
   return (
     <AdminContext.Provider
@@ -287,6 +299,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         completeLoginWithOtp,
         resendOtp,
         logout,
+        isRegionalAdmin,
+        isStaff,
+        hasPermission,
         regions,
         t,
       }}

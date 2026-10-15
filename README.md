@@ -207,17 +207,18 @@ renamed adminapp to opsapp and implemented mandatory two-factor login
 
 ---
 
-## 12. Semantic Versioning (SemVer)
+## 12. Semantic Versioning & Dokumentationsregeln
 
-Jede Anwendung im Monorepo (`website/`, `webapp/`, `opsapp/`) besitzt eine eigenständige Versionsnummer in ihrer `package.json` und `package-lock.json`, beginnend ab Version `0.0.1`:
+Für das gesamte Zackisch-Monorepo (`website/`, `webapp/`, `opsapp/`) gelten verbindliche Release- und Dokumentationsrichtlinien:
 
-- **PATCH (`0.0.x`):** Fehlerbehebungen, optische Korrekturen, Textanpassungen und kleinere Wartungsupdates.
-- **MINOR (`0.x.0`):** Neue Funktionen, Seiten, Endpunkte oder abwärtskompatible Modulerweiterungen.
-- **MAJOR (`x.0.0`):** Fundamentale Architekturänderungen, inkompatible Schnittstellen- oder Datenbankschema-Umstellungen.
-
-**Regel vor Commits:** Vor jedem Git-Commit wird die Versionsnummer des bzw. der geänderten Projekte in `package.json` und `package-lock.json` entsprechend inkrementiert.
-
-**Commit-Identität:** Alle Commits erfolgen verbindlich unter `Selim Eser <semmel5533@gmail.com>`.
+1. **Eigenständiges Semantic Versioning:** Jedes Teilprojekt besitzt eine unabhängige Versionsnummer in seiner `package.json` und `package-lock.json`, beginnend ab Version `0.0.1`.
+2. **Strikte Major-Versions-Freigabe:** Die erste Hauptversion (`1.0.0`) sowie alle weiteren Major-Sprünge dürfen **ausschließlich nach ausdrücklicher Zustimmung des Projektinhabers** vergeben werden.
+3. **Automatische Minor- und Patch-Schritte:** Vor jedem Git-Commit prüfen Entwickler und Agenten die Änderungen und erhöhen die Versionen der betroffenen Projekte automatisch:
+   - **`PATCH` (`0.0.x`):** Bugfixes, Styling-Korrekturen, Textänderungen, Refactoring.
+   - **`MINOR` (`0.x.0`):** Neue Features, neue Seiten/Routen, Modulerweiterungen, Schemaanpassungen.
+4. **Verbindliche Dokumentationspflege:** Bei Routen-, Funktions- oder Architekturänderungen wird die gesamte Dokumentation vor dem Commit synchronisiert.
+5. **Reine Gegenwarts-Dokumentation (Keine Migrationsnarrative):** In der Dokumentation wird stets **nur der aktuelle, aktive Zustand** beschrieben. Historische Gegenüberstellungen („früher X, jetzt Y“) oder Umstellungsgeschichten werden nicht festgehalten.
+6. **Commit-Identität:** Alle Commits erfolgen verbindlich unter `Selim Eser <semmel5533@gmail.com>`.
 
 ---
 

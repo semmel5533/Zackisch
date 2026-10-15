@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAdmin } from "@/lib/admin-context";
 import {
   ShieldCheck,
@@ -17,6 +18,7 @@ import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
 import { toast } from "sonner";
 
 export function AdminLoginForm() {
+  const router = useRouter();
   const { initiateLogin, completeLoginWithOtp, resendOtp, currentLocale } = useAdmin();
   const [email, setEmail] = useState("selim@zackisch.com");
   const [password, setPassword] = useState("");
@@ -103,6 +105,20 @@ export function AdminLoginForm() {
             ? "Zwei-Faktor-Authentifizierung erfolgreich! Willkommen in der Zentrale."
             : "Two-factor authentication successful! Welcome to Operations."
         );
+        if (res.admin?.role === "staff") {
+          const perms = res.admin.permissions || [];
+          if (perms.includes("orders:read")) {
+            router.replace("/orders");
+          } else if (perms.includes("restaurants:read")) {
+            router.replace("/organizations");
+          } else if (perms.includes("newsletter:read")) {
+            router.replace("/newsletter");
+          } else {
+            router.replace("/orders");
+          }
+        } else {
+          router.replace("/");
+        }
       } else {
         setErrorMessage(
           res.error ||
@@ -194,8 +210,8 @@ export function AdminLoginForm() {
             <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">
               {step === "credentials"
                 ? isDe
-                  ? "Ops-Anmeldung"
-                  : "Ops Sign In"
+                  ? "Zackisch Operations"
+                  : "Zackisch Operations"
                 : isDe
                 ? "Zwei-Faktor-Bestätigung"
                 : "Two-Factor Verification"}
@@ -203,8 +219,8 @@ export function AdminLoginForm() {
             <p className="text-xs text-zinc-500 max-w-xs mx-auto leading-relaxed">
               {step === "credentials"
                 ? isDe
-                  ? "Geschützter Zugang für Betriebe, Zahlungen und Systembetrieb. Passwort + E-Mail-Bestätigung erforderlich."
-                  : "Protected access for merchants, payments, and operations. Password + email verification required."
+                  ? "Zentrale für Mitarbeiter und Administratoren. Passwort und E-Mail-Einmalkennwort erforderlich."
+                  : "Operations hub for staff and administrators. Password and email verification code required."
                 : isDe
                 ? `Wir haben einen 6-stelligen Sicherheitscode an ${email} gesendet.`
                 : `We sent a 6-digit security code to ${email}.`}
@@ -247,7 +263,7 @@ export function AdminLoginForm() {
             <form onSubmit={handleRequestOtp} className="space-y-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-zinc-700 block">
-                  {isDe ? "Administrator-E-Mail" : "Administrator Email"}
+                  {isDe ? "E-Mail-Adresse" : "Email Address"}
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />

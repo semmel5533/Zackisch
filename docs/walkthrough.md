@@ -30,7 +30,7 @@ Das Personal-Terminal (`/staff/[organizationId]`) visualisiert eingehende Auftr�
 
 ## 5. Operative Zentrale
 
-Das interne Zackisch-Team steuert Betriebe, Bestellungen, Partner-Provisionen, Newsletter-Kampagnen und E-Mail-Logs 체ber die [Opsapp](../opsapp/README.md) (`https://ops.zackisch.com`). Der Zugang ist 체ber eine Zwei-Faktor-Authentifizierung (E-Mail + Passwort + Einmalkennwort) gesichert. Datenzugriffe werden serverseitig auf die zugewiesene Region begrenzt und manipulationsgesch체tzt protokolliert.
+Das interne Zackisch-Team steuert Betriebe, Bestellungen, Partner-Provisionen, Newsletter-Kampagnen und E-Mail-Logs 체ber die [Opsapp](../opsapp/README.md) (`https://ops.zackisch.com`). Der Zugang ist 체ber eine dedizierte Anmelderoute (`/sign-in`) mit Zwei-Faktor-Authentifizierung (E-Mail + Passwort + Einmalkennwort) gesichert und f체hrt Mitarbeiter und Administratoren rollenbasiert in ihre zust채ndigen Arbeitsansichten. Datenzugriffe werden serverseitig auf die zugewiesene Region begrenzt und manipulationsgesch체tzt protokolliert.
 
 ---
 

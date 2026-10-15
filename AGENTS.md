@@ -280,23 +280,41 @@ All commit messages in this repository strictly follow the developer's personal 
 
 <!-- BEGIN:semantic-versioning-rules -->
 
-# Semantic Versioning & Project Releases
+# Semantic Versioning & Repository Release Rules
 
-Each individual application in this monorepo (`website/`, `webapp/`, `opsapp/`) maintains its own independent semantic versioning starting at `0.0.1` inside its `package.json` and `package-lock.json`:
+These rules apply universally to the entire Zackisch repository (`website/`, `webapp/`, `opsapp/`):
 
 1. **Independent Project SemVer (`MAJOR.MINOR.PATCH`):**
-   - **PATCH (`0.0.x`):** Bug fixes, visual/styling tweaks, copy updates, minor dependency bumps, refactoring without behavior change.
-   - **MINOR (`0.x.0`):** New features, new pages, new endpoints, backwards-compatible improvements, database migrations.
+   - Each project starts at `0.0.1` and maintains independent versioning in its `package.json` and `package-lock.json`.
+   - **PATCH (`0.0.x`):** Bug fixes, visual/styling tweaks, copy updates, minor dependency bumps, refactoring without behavioral change.
+   - **MINOR (`0.x.0`):** New features, new pages, new routes, backwards-compatible improvements, schema updates.
    - **MAJOR (`x.0.0`):** Breaking architectural changes, incompatible API/schema shifts, complete platform redesigns.
 
-2. **Mandatory Version Bump Rule Before Commits:**
-   - Whenever any substantive changes (fixes, features, or architectural adjustments) are made to `website/`, `webapp/`, or `opsapp/`, the agent MUST increment the corresponding project's `version` in both `package.json` and `package-lock.json` before creating a git commit.
-   - If a change spans multiple projects, bump the version in each affected project accordingly.
+2. **Strict Major Version Prohibition (User Approval Required):**
+   - The first major version (`1.0.0`) and any subsequent major version bump MUST NEVER be made automatically.
+   - Major version bumps are strictly prohibited unless the user has explicitly and verbally approved or instructed it in the conversation.
 
-3. **Author Identity:**
+3. **Automatic Minor & Patch Bumps Before Commits:**
+   - Agents must consciously evaluate Semantic Versioning before every single git commit.
+   - Increment `PATCH` or `MINOR` on all affected projects in `package.json` and `package-lock.json` before committing code.
+
+4. **Author Identity:**
    - All commits must strictly be authored and committed under `Selim Eser <semmel5533@gmail.com>`.
 
 <!-- END:semantic-versioning-rules -->
+
+<!-- BEGIN:documentation-rules -->
+
+# Continuous Documentation & Clean Current-State Rule
+
+1. **Mandatory Documentation Review Before Commits:**
+   - Before every git commit, review and update the documentation across the entire monorepo (`README.md`, subproject `README.md` files, `docs/architecture.md`, `docs/walkthrough.md`, `docs/documentation-audit.md`, `website/public/llms.txt`) whenever routes, architecture, permissions, or system behavior change.
+
+2. **Strict Current-State Focus (Zero Migration Narratives):**
+   - Documentation must always describe ONLY the current, active, and positive state of Zackisch.
+   - NEVER write migration narratives, comparisons between old and new states, or historical changelog stories (e.g. do not write "we previously used X and migrated to Y", simply document that the system uses Y).
+
+<!-- END:documentation-rules -->
 
 <!-- BEGIN:corporate-stack-rules -->
 

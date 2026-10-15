@@ -10,28 +10,32 @@ Das Projekt greift auf das gemeinsame Convex-Backend unter [`webapp/convex/`](..
 
 Die Benutzeroberfläche umfasst zehn operative Bereiche:
 
-| Bereich | Route | Zweck |
+| Bereich | Route | Zweck & Berechtigung |
 |---|---|---|
-| **Regionale Übersicht** | `/` | Echtzeit-Kennzahlen zu Bruttoumsatz (GMV), 2 % Plattformgebühr, 50 % Partner-Provisionen, aktiven Betrieben, Bestellungen, Newsletter-Abonnenten und Infrastruktur-Status |
-| **Betriebsverwaltung** | `/organizations` | Übersicht aller Gastronomiebetriebe (Restaurants, Cafés, Imbisse, Bars) mit Onboarding-Status, Tischkontingenten, Partner-Codes und Menülinks |
-| **Bestellübersicht** | `/orders` | Chronologische Echtzeit-Bestellansicht mit Filterung nach Status (in Bearbeitung, abholbereit, abgeschlossen, storniert) und Zahlungsreferenzen |
-| **Mitarbeiterverwaltung** | `/staff` | Einladung und granulare Rechtevergabe für Teammitglieder (Rechte für Betriebe, Bestellungen, Personal, Partner, Newsletter, E-Mails, Audit) |
-| **Vertriebspartner** | `/partners` | Provisionsabrechnung für regionale Partner (50 % der Plattformgebühr = 1 % GMV), Partnercodes, vermittelte Betriebe und Buchung von Auszahlungen |
-| **Newsletter-Editor** | `/newsletter` | Visueller No-Code-Block-Editor für E-Mail-Kampagnen mit Live-Master-Template-Vorschau, Abonnentenübersicht, Testversand und Terminierung |
-| **E-Mail-Protokoll** | `/emails` | Chronologische Übersicht aller über Google Workspace versendeten Transaktions- und Marketingnachrichten mit Zustellstatus und SMTP-Verbindungstest |
-| **Audit-Trail** | `/audit` | Manipulationsgeschütztes Protokoll aller relevanten Team-Aktionen mit automatischer Schwärzung vertraulicher Daten und Passwörter |
-| **Einstellungen** | `/settings` | Regionale Konfiguration, Gebührensätze und Systemstatus |
+| **Zentrale-Anmeldung** | `/sign-in` | Dedizierte Zwei-Faktor-Authentifizierung (E-Mail + Passwort + Einmalkennwort) für Mitarbeiter und Administratoren |
+| **Regionale Übersicht** | `/` | Echtzeit-Kennzahlen zu Bruttoumsatz (GMV), 2 % Plattformgebühr, 50 % Partner-Provisionen, aktiven Betrieben, Bestellungen und Systemstatus (Regional-Admins) |
+| **Betriebsverwaltung** | `/organizations` | Übersicht aller Gastronomiebetriebe (Restaurants, Cafés, Imbisse, Bars) mit Onboarding-Status, Tischkontingenten, Partner-Codes und Menülinks (`restaurants:read`) |
+| **Bestellübersicht** | `/orders` | Chronologische Echtzeit-Bestellansicht mit Filterung nach Status (in Bearbeitung, abholbereit, abgeschlossen, storniert) und Zahlungsreferenzen (`orders:read`) |
+| **Mitarbeiterverwaltung** | `/staff` | Einladung und granulare Rechtevergabe für Teammitglieder (`staff:manage` oder Regional-Admin) |
+| **Vertriebspartner** | `/partners` | Provisionsabrechnung für regionale Partner (50 % der Plattformgebühr = 1 % GMV), Partnercodes, vermittelte Betriebe und Buchung von Auszahlungen (`partners:read`) |
+| **Newsletter-Editor** | `/newsletter` | Visueller No-Code-Block-Editor für E-Mail-Kampagnen mit Live-Master-Template-Vorschau, Abonnentenübersicht, Testversand und Terminierung (`newsletter:read`) |
+| **E-Mail-Protokoll** | `/emails` | Chronologische Übersicht aller über Google Workspace versendeten Transaktions- und Marketingnachrichten mit Zustellstatus und SMTP-Verbindungstest (Regional-Admins) |
+| **Audit-Trail** | `/audit` | Manipulationsgeschütztes Protokoll aller relevanten Team-Aktionen mit automatischer Schwärzung vertraulicher Daten und Passwörter (`audit:read`) |
+| **Einstellungen** | `/settings` | Regionale Konfiguration, Gebührensätze und Systemstatus (Regional-Admins) |
 
 ---
 
 ## 2. Authentifizierung und Zwei-Faktor-Sicherheit (2FA)
 
-Der Zugang zum Operations Dashboard (`ops.zackisch.com`) ist über ein obligatorisches Zwei-Faktor-Verfahren (`OpsLoginForm` / `AdminLoginForm`) abgesichert:
+Der Zugang zum Operations Dashboard (`ops.zackisch.com`) erfolgt über die dedizierte Route `/sign-in` (`OpsLoginForm` / `AdminLoginForm`):
 
-1. **Schritt 1 – Zugangsdatenprüfung:** Der Administrator gibt seine autorisierte E-Mail-Adresse und sein Passwort ein (`initiateAdminLogin`). Bei erfolgreicher Prüfung generiert das Backend automatisch einen kryptografischen 6-stelligen Sicherheitscode (OTP).
-2. **Automatischer E-Mail-Versand via Google Workspace SMTP:** Der Sicherheitscode wird unverzüglich über das Google-Workspace-Relay von `noreply@zackisch.com` an das Postfach des Administrators zugestellt (Gültigkeit: 15 Minuten).
-3. **Schritt 2 – Bestätigungscodes (`completeAdminLoginWithOtp`):** Erst nach Eingabe des 6-stelligen E-Mail-Codes wird ein kryptografisches Sitzungstoken erzeugt und die Anmeldung im Audit-Log vermerkt.
-4. **Sitzungsvalidierung (`verifyAdminSession`):** Sitzungen bleiben lokal persistent und werden bei jedem Aufruf serverseitig gegen aktive Administrator-Konten validiert. Ein Abmelden über die Schaltfläche **„Abmelden“** in der Seitenleiste beendet die Sitzung sofort.
+1. **Schritt 1 – Zugangsdatenprüfung:** Mitarbeiter oder Administrator geben ihre autorisierte E-Mail-Adresse und ihr Passwort ein (`initiateAdminLogin`). Bei erfolgreicher Prüfung generiert das Backend automatisch einen kryptografischen 6-stelligen Sicherheitscode (OTP).
+2. **Automatischer E-Mail-Versand via Google Workspace SMTP:** Der Sicherheitscode wird unverzüglich über das Google-Workspace-Relay von `noreply@zackisch.com` an das Postfach des Teammitglieds zugestellt (Gültigkeit: 15 Minuten).
+3. **Schritt 2 – Bestätigungscodes (`completeAdminLoginWithOtp`):** Erst nach Eingabe des 6-stelligen E-Mail-Codes wird ein kryptografisches 30-Tage-Sitzungstoken erzeugt und die Anmeldung im Audit-Log vermerkt.
+4. **Rollenbasierte Weiterleitung:**
+   - **Regional-Administratoren** werden direkt auf die operative Hauptübersicht (`/`) weitergeleitet.
+   - **Mitarbeiter** werden unmittelbar in ihren primären Arbeitsbereich weitergeleitet (z. B. `/orders` oder `/organizations`).
+5. **Sitzungsvalidierung (`verifyAdminSession`) & Abmeldung:** Sitzungen bleiben lokal persistent und werden bei jedem Aufruf serverseitig gegen aktive Benutzerkonten validiert. Ein Klick auf **„Abmelden“** in der Seitenleiste beendet die Sitzung und führt zurück zu `/sign-in`.
 
 ---
 
