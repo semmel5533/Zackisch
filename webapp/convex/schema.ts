@@ -31,6 +31,7 @@ export default defineSchema({
     regionId: v.string(), // e.g. "de"
     permissions: v.array(v.string()), // ["restaurants:read", "restaurants:write", "newsletter:read", "newsletter:write", "newsletter:send", "partners:read", "partners:write", "audit:read", "staff:manage"]
     isActive: v.boolean(),
+    password: v.optional(v.string()),
     createdAt: v.number(),
     lastLoginAt: v.optional(v.number()),
   })

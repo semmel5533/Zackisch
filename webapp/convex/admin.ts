@@ -104,7 +104,29 @@ export const seedInitialAdminAndRegions = mutation({
           "staff:manage",
         ],
         isActive: true,
+        password: "demo",
         createdAt: Date.now(),
+      });
+      adminCreated = true;
+    } else {
+      await ctx.db.patch(existingAdmin._id, {
+        role: "regional_admin",
+        regionId: "de",
+        isActive: true,
+        password: "demo",
+        permissions: [
+          "restaurants:read",
+          "restaurants:write",
+          "orders:read",
+          "orders:write",
+          "newsletter:read",
+          "newsletter:write",
+          "newsletter:send",
+          "partners:read",
+          "partners:write",
+          "audit:read",
+          "staff:manage",
+        ],
       });
       adminCreated = true;
     }
@@ -171,6 +193,7 @@ export const getAdminByEmail = query({
       regionId: v.string(),
       permissions: v.array(v.string()),
       isActive: v.boolean(),
+      password: v.optional(v.string()),
       createdAt: v.number(),
       lastLoginAt: v.optional(v.number()),
     })
@@ -221,6 +244,15 @@ export const initiateAdminLogin = mutation({
       return {
         success: false,
         error: "Dieser Account ist vorübergehend deaktiviert.",
+      };
+    }
+
+    // Verify password: check if matches admin.password or default "demo"
+    const expectedPassword = admin.password || "demo";
+    if (args.password !== expectedPassword) {
+      return {
+        success: false,
+        error: "Ungültiges Administrator-Passwort.",
       };
     }
 
@@ -467,6 +499,15 @@ export const loginAdmin = mutation({
       return {
         success: false,
         error: "Dieser Account ist vorübergehend deaktiviert.",
+      };
+    }
+
+    // Verify password if provided
+    const expectedPassword = admin.password || "demo";
+    if (args.password && args.password !== expectedPassword) {
+      return {
+        success: false,
+        error: "Ungültiges Administrator-Passwort.",
       };
     }
 
@@ -854,3 +895,23 @@ export const updateStaffStatus = mutation({
     return null;
   },
 });
+
+// Update or set admin password
+export const setAdminPassword = mutation({
+  args: {
+    email: v.string(),
+    password: v.string(),
+  },
+  returns: v.boolean(),
+  handler: async (ctx, args) => {
+    const normalized = args.email.toLowerCase().trim();
+    const admin = await ctx.db
+      .query("adminUsers")
+      .withIndex("by_email", (q) => q.eq("email", normalized))
+      .first();
+    if (!admin) return false;
+    await ctx.db.patch(admin._id, { password: args.password });
+    return true;
+  },
+});
+
