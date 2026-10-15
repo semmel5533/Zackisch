@@ -117,7 +117,7 @@ export default function SettingsPage() {
         <div className="space-y-2 text-xs text-zinc-600">
           <div className="flex justify-between py-2 border-b border-zinc-100">
             <span className="font-medium text-zinc-500">SMTP Relay Host</span>
-            <span className="font-mono font-semibold text-zinc-900">smtp-relay.gmail.com:587 (STARTTLS)</span>
+            <span className="font-mono font-semibold text-zinc-900">smtp.gmail.com:587 (STARTTLS)</span>
           </div>
           <div className="flex justify-between py-2 border-b border-zinc-100">
             <span className="font-medium text-zinc-500">SMTP Auth User</span>
@@ -129,7 +129,7 @@ export default function SettingsPage() {
           </div>
           <div className="flex justify-between py-2 border-b border-zinc-100">
             <span className="font-medium text-zinc-500">Reply-To Adresse</span>
-            <span className="font-mono font-semibold text-zinc-900">selim@zackisch.com</span>
+            <span className="font-mono font-semibold text-zinc-900">noreply@zackisch.com</span>
           </div>
           <div className="flex justify-between py-2">
             <span className="font-medium text-zinc-500">App-Passwort Status</span>

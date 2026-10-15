@@ -32,13 +32,13 @@ App-freie QR-Bestellung und bargeldlose Bezahlung parallel zum bestehenden Kasse
 - **50 % Partnerprovision:** Regionale Vertriebspartner erhalten 50 % der Zackisch-Plattformgebühr (entspricht 1 % des vermittelten GMV).
 - **Stripe Connect Integration:** Direkte Händlerauszahlungen über Stripe Connect Standard.
 - **Google Workspace als alleinige E-Mail-Infrastruktur:** Automatisierter Versand von Transaktions- und Marketing-E-Mails über Google Workspace SMTP (`noreply@zackisch.com`) mit standardkonformem RFC-8058-One-Click-Unsubscribe.
-- **Operative Zentrale (`adminapp`):** No-Code-Newsletter-Editor, Double-Opt-In-Abonnentenverwaltung, E-Mail-Protokolle, Partner-Ledger und manipulationsgeschützte Audit-Logs.
+- **Operative Zentrale (`opsapp`):** No-Code-Newsletter-Editor, Double-Opt-In-Abonnentenverwaltung, E-Mail-Protokolle, Partner-Ledger und manipulationsgeschützte Audit-Logs.
 
 ---
 
 ## 5. Markenidentität und Gestaltungsregeln
 
-- **Markenname:** Zackisch (`https://zackisch.com`, `https://app.zackisch.com`, `https://admin.zackisch.com`).
+- **Markenname:** Zackisch (`https://zackisch.com`, `https://app.zackisch.com`, `https://ops.zackisch.com`).
 - **Verbindliche Original-Assets:** `brand_mark` (nur Symbol) und `combination_mark` (Symbol mit Wortmarke).
 - **Designsystem:** Poppins für primäre Typografie, Inter für Tabellenzahlen und Geldbeträge, monochrome Schwarz-Weiß-Farbpalette mit pillenförmigen Aktionsbuttons und abgerundeten Karten (20 px).
 - **Offizieller Kontakt:** `selim@zackisch.com` (persönlicher Gründer- und Kundensupport).
@@ -48,6 +48,6 @@ App-freie QR-Bestellung und bargeldlose Bezahlung parallel zum bestehenden Kasse
 
 ## 6. Architektur und regionale Isolation
 
-- **Gemeinsames Backend:** Eine einheitliche, reaktive Convex-Backend-Instanz unter `webapp/convex/` versorgt `website/`, `webapp/` und `adminapp/`.
+- **Gemeinsames Backend:** Eine einheitliche, reaktive Convex-Backend-Instanz unter `webapp/convex/` versorgt `website/`, `webapp/` und `opsapp/`.
 - **Regionale Bindung:** Teammitglieder und Betriebsdatensätze sind fest ihrer zugewiesenen Betriebsregion zugeordnet (Start mit Deutschland `de`). Regionsübergreifende Zugriffe sind serverseitig unterbunden.
 - **Sicherheit & Gast-Datenschutz:** Öffentliche Gast-Schnittstellen filtern interne Betriebs-IDs, Inhaber-IDs, Stripe-Schlüssel und Plattformgebühren vollständig heraus. Die Authentifizierung erfolgt über kryptografisch sichere Zufallstokens.

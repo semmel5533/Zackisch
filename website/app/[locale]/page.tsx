@@ -61,6 +61,12 @@ export async function generateMetadata({
         "x-default": "https://zackisch.com/de-de",
       },
     },
+    other: {
+      "geo.region": "DE",
+      "geo.placename": "Deutschland",
+      "geo.position": "51.1657;10.4515",
+      "ICBM": "51.1657, 10.4515",
+    },
   };
 }
 
@@ -103,7 +109,7 @@ export default async function Page({
         "name": "Zackisch",
         "url": "https://zackisch.com",
         "logo": "https://zackisch.com/combination_mark.svg",
-        "sameAs": ["https://launchtomars.de/startup/zakkig/"],
+        "sameAs": ["https://launchtomars.de"],
       },
       {
         "@type": "SoftwareApplication",

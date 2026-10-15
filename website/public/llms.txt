@@ -15,7 +15,7 @@ Das übergeordnete Ziel ist eine nahtlose, app-lose Lösung für Gäste, um per 
 Das Gesamtsystem besteht aus drei spezialisierten Anwendungen und einem gemeinsamen reaktiven Backend:
 - **website/ (`https://zackisch.com`):** Öffentliche mehrsprachige Marketing- und Rechtswebsite (Next.js Static Export, Cloudflare Pages).
 - **webapp/ (`https://app.zackisch.com`):** Restaurant-Dashboard, Küchendisplay/Terminal, 86-Verfügbarkeitsmanager und digitaler Gäste-Web-Checkout (Next.js, Cloudflare Workers).
-- **adminapp/ (`https://admin.zackisch.com`):** Interne operative Zackisch-Zentrale für Regional-Admins und Mitarbeiter (Restaurants, Bestellungen, Partner-Gutschriften, No-Code-Newsletter, E-Mail-Log, Audit-Trail).
+- **opsapp/ (`https://ops.zackisch.com`):** Interne operative Zackisch-Zentrale für Regional-Admins und Mitarbeiter (Organisationen, Betriebe, Bestellungen, Partner-Gutschriften, No-Code-Newsletter, E-Mail-Log, Audit-Trail, 2FA-gesichert).
 - **Backend & Realtime-Datenbank:** Convex (`webapp/convex/` als gemeinsames Backend aller drei Apps) mit reaktiven Queries, Mutationen, kryptografischer Token-Sicherheit und serverseitiger Regionsisolation.
 - **E-Mail-Infrastruktur:** Google Workspace SMTP-Relay (`noreply@zackisch.com`, Reply-To `selim@zackisch.com`, persönlicher Support `selim@zackisch.com`).
 - **Zahlungsabwicklung:** Stripe Connect mit Standard Connect, Checkout Sessions und dynamischen Payment Elements.

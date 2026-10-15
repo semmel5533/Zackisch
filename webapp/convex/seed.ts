@@ -13,14 +13,14 @@ export const seedDemoData = internalMutation({
     // 0. Ensure Demo Owner User & Session
     let demoUser = await ctx.db
       .query("users")
-      .withIndex("email", (q) => q.eq("email", "selim@zakkig.de"))
+      .withIndex("email", (q) => q.eq("email", "selim@zackisch.com"))
       .first();
 
     let userId = demoUser?._id;
     if (!userId) {
       userId = await ctx.db.insert("users", {
         name: "Selim Eser",
-        email: "selim@zakkig.de",
+        email: "selim@zackisch.com",
         emailVerificationTime: Date.now(),
       });
     }
@@ -389,17 +389,17 @@ export const seedDemoProfile = internalMutation({
     ordersCount: v.number(),
   }),
   handler: async (ctx, args) => {
-    // 1. Ensure primary user selim@zakkig.com (Google Workspace)
+    // 1. Ensure primary user selim@zackisch.com
     let userCom = await ctx.db
       .query("users")
-      .withIndex("email", (q) => q.eq("email", "selim@zakkig.com"))
+      .withIndex("email", (q) => q.eq("email", "selim@zackisch.com"))
       .first();
 
     let userComId = userCom?._id;
     if (!userComId) {
       userComId = await ctx.db.insert("users", {
         name: "Selim Eser",
-        email: "selim@zakkig.com",
+        email: "selim@zackisch.com",
         emailVerificationTime: Date.now(),
       });
     } else {
@@ -423,55 +423,12 @@ export const seedDemoProfile = internalMutation({
       await ctx.db.insert("authAccounts", {
         userId: userComId!,
         provider: "password",
-        providerAccountId: "selim@zakkig.com",
+        providerAccountId: "selim@zackisch.com",
         secret: passwordHashCom,
       });
     } else {
       await ctx.db.patch(existingAccountCom._id, {
         secret: passwordHashCom,
-      });
-    }
-
-    // 1b. Ensure secondary/legacy user selim@zakkig.de
-    let userDe = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", "selim@zakkig.de"))
-      .first();
-
-    let userDeId = userDe?._id;
-    if (!userDeId) {
-      userDeId = await ctx.db.insert("users", {
-        name: "Selim Eser",
-        email: "selim@zakkig.de",
-        emailVerificationTime: Date.now(),
-      });
-    } else {
-      await ctx.db.patch(userDeId, {
-        name: "Selim Eser",
-        emailVerificationTime: Date.now(),
-      });
-    }
-
-    const existingAccountDe = await ctx.db
-      .query("authAccounts")
-      .withIndex("userIdAndProvider", (q) =>
-        q.eq("userId", userDeId!).eq("provider", "password")
-      )
-      .first();
-
-    const passwordHashDe =
-      "b214787761be4824a10ee92a39d0ab1a:d7635764984256caba819516041e2bf4160fe346a6e353401fbbb647954a4f7a804f3936cea239db07a20041ee80d3660ac841fadd9fc88d43e0679f590500f7";
-
-    if (!existingAccountDe) {
-      await ctx.db.insert("authAccounts", {
-        userId: userDeId!,
-        provider: "password",
-        providerAccountId: "selim@zakkig.de",
-        secret: passwordHashDe,
-      });
-    } else {
-      await ctx.db.patch(existingAccountDe._id, {
-        secret: passwordHashDe,
       });
     }
 
@@ -496,18 +453,11 @@ export const seedDemoProfile = internalMutation({
       });
     }
 
-    // 3. Find or create Organization for selim@zakkig.com
+    // 3. Find or create Organization for selim@zackisch.com
     let org = await ctx.db
       .query("organizations")
       .withIndex("by_ownerId", (q) => q.eq("ownerId", userId))
       .first();
-
-    if (!org) {
-      org = await ctx.db
-        .query("organizations")
-        .withIndex("by_ownerId", (q) => q.eq("ownerId", userDeId!))
-        .first();
-    }
 
     let orgId = org?._id;
 

@@ -27,7 +27,7 @@ function getTransporter() {
     }),
     user,
     senderEmail: process.env.GOOGLE_WORKSPACE_SMTP_FROM || process.env.EMAIL_FROM || "noreply@zackisch.com",
-    replyToEmail: process.env.GOOGLE_WORKSPACE_SMTP_REPLY_TO || process.env.EMAIL_REPLY_TO || "selim@zackisch.com",
+    replyToEmail: process.env.GOOGLE_WORKSPACE_SMTP_REPLY_TO || process.env.EMAIL_REPLY_TO || "noreply@zackisch.com",
   };
 }
 
@@ -89,7 +89,13 @@ export const sendEmailOtp = internalAction({
   handler: async (ctx, args) => {
     const isDe = args.locale !== "en";
     const isEmailChange = args.type === "email_change";
-    const subject = isEmailChange
+    const isOpsLogin = args.type === "ops_login";
+
+    const subject = isOpsLogin
+      ? isDe
+        ? "Sicherheitscode für Zackisch Operations"
+        : "Security code for Zackisch Operations"
+      : isEmailChange
       ? isDe
         ? "E-Mail-Adresse ändern für Zackisch"
         : "Change email address for Zackisch"
@@ -97,20 +103,30 @@ export const sendEmailOtp = internalAction({
       ? "Anmeldecode für Zackisch"
       : "Sign-in code for Zackisch";
 
-    const title = subject;
-    const intro = isEmailChange
+    const title = isOpsLogin
+      ? isDe
+        ? "Zackisch Operations — Zwei-Faktor-Code"
+        : "Zackisch Operations — Two-Factor Code"
+      : subject;
+
+    const intro = isOpsLogin
+      ? isDe
+        ? "Verwende den folgenden 6-stelligen Sicherheitscode, um deine Anmeldung in der operativen Zentrale (ops.zackisch.com) abzuschließen. Der Code ist 15 Minuten gültig."
+        : "Use the following 6-digit security code to complete your login to the Operations Hub (ops.zackisch.com). The code is valid for 15 minutes."
+      : isEmailChange
       ? isDe
         ? "Verwende den folgenden Code, um die Änderung deiner E-Mail-Adresse zu bestätigen. Der Code ist 30 Minuten gültig."
         : "Use the following code to confirm your email address change. The code is valid for 30 minutes."
       : isDe
       ? "Verwende den folgenden Code, um deine Anmeldung zu bestätigen. Der Code ist 30 Minuten gültig."
       : "Use the following code to confirm your sign-in. The code is valid for 30 minutes.";
+
     const hint1 = isDe
       ? "Bitte gib diesen Code in dem geöffneten Browserfenster ein, um fortzufahren. Teile diesen Code niemals mit anderen Personen."
       : "Please enter this code in the open browser window to proceed. Never share this code with anyone.";
     const hint2 = isDe
-      ? "Falls du diese E-Mail nicht angefordert hast, kannst du sie einfach ignorieren."
-      : "If you did not request this email, you can safely ignore it.";
+      ? "Falls du diesen Code nicht angefordert hast, ändere bitte unverzüglich dein Passwort und informiere die Sicherheitsadministration."
+      : "If you did not request this code, please change your password immediately and notify security administration.";
 
     const footerText = isDe
       ? 'Diese E-Mail wurde automatisch von <a href="https://zackisch.com" style="color: #000000; text-decoration: underline; font-weight: 600;">zackisch.com</a> gesendet.<br/>Bitte antworte nicht auf diese E-Mail.'
@@ -175,7 +191,7 @@ export const sendEmailOtp = internalAction({
 
     await ctx.runMutation(internal.emailLogs.logEmailRecord, {
       recipient: args.to,
-      type: "otp",
+      type: isOpsLogin ? "ops_otp" : "otp",
       subject,
       status: res.success ? "sent" : "failed",
       error: res.error,

@@ -30,11 +30,11 @@ Das Personal-Terminal (`/staff/[organizationId]`) visualisiert eingehende Auftr�
 
 ## 5. Operative Zentrale
 
-Das interne Zackisch-Team steuert Betriebe, Bestellungen, Partner-Provisionen, Newsletter-Kampagnen und E-Mail-Logs über die [Adminapp](../adminapp/README.md) (`https://admin.zackisch.com`). Datenzugriffe werden serverseitig auf die zugewiesene Region begrenzt und manipulationsgeschützt protokolliert.
+Das interne Zackisch-Team steuert Betriebe, Bestellungen, Partner-Provisionen, Newsletter-Kampagnen und E-Mail-Logs über die [Opsapp](../opsapp/README.md) (`https://ops.zackisch.com`). Der Zugang ist über eine Zwei-Faktor-Authentifizierung (E-Mail + Passwort + Einmalkennwort) gesichert. Datenzugriffe werden serverseitig auf die zugewiesene Region begrenzt und manipulationsgeschützt protokolliert.
 
 ---
 
 ## 6. Prüfungs- und Teststand
 
-- **Lokale Builds und Tests:** Builds und TypeScript-Prüfungen aller drei Anwendungen (`website/`, `webapp/`, `adminapp/`) sowie alle 32 Unit- und Sicherheitstests in `webapp/` wurden erfolgreich ausgeführt.
+- **Lokale Builds und Tests:** Builds und TypeScript-Prüfungen aller drei Anwendungen (`website/`, `webapp/`, `opsapp/`) sowie alle 32 Unit- und Sicherheitstests in `webapp/` wurden erfolgreich ausgeführt.
 - **Offene Punkte vor dem Produktivbetrieb:** Echte Auszahlungen und Streitfall-Prozesse erfordern das Onboarding realer Gastronomiebetriebe mit verifizierten Stripe-Geschäftskonten. Die fiskalische Erfassung im Vor-Ort-Kassensystem verbleibt beim Betrieb.

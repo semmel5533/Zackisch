@@ -2,7 +2,7 @@
 
 Zackisch ist eine moderne, QR-basierte Bestell- und Bezahlplattform für Gastronomiebetriebe aller Art (Restaurants, Cafés, Imbisse, Bars). Gäste bestellen und bezahlen direkt über ihr eigenes Smartphone am Tisch oder zur Abholung – ohne App-Installation und ohne Registrierungszwang.
 
-Dieses Repository ist ein Monorepo, das die öffentliche Marketing-Website (`website/`), die Webanwendung für Gäste und Gastronomiebetriebe (`webapp/`), die operative Verwaltungskonsole (`adminapp/`) sowie das gemeinsame reaktive Backend (`webapp/convex/`) vereint.
+Dieses Repository ist ein Monorepo, das die öffentliche Marketing-Website (`website/`), die Webanwendung für Gäste und Gastronomiebetriebe (`webapp/`), die operative Verwaltungskonsole (`opsapp/`) sowie das gemeinsame reaktive Backend (`webapp/convex/`) vereint.
 
 ---
 
@@ -71,7 +71,7 @@ Das System besteht aus drei Frontend-Projekten und einem gemeinsamen Cloud-Backe
 |---|---|---|---|---|
 | **Website** | [`website/`](website/README.md) | `https://zackisch.com` | Cloudflare Pages (`output: "export"`) | Öffentliche Marketingseite, Preismodell, FAQ, rechtliche Angaben, Newsletter-An- und Abmeldung |
 | **Webapp** | [`webapp/`](webapp/README.md) | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Betriebs-Dashboard, Speisekarten- und Tischverwaltung, Küchen-Terminal, mobiler Gäste-Checkout |
-| **Adminapp** | [`adminapp/`](adminapp/README.md) | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Interne operative Zentrale: Betriebe, Bestellungen, Partner-Gutschriften, No-Code-Newsletter, E-Mail-Log und Audit-Trail |
+| **Opsapp** | [`opsapp/`](opsapp/README.md) | `https://ops.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Interne operative Zentrale: Betriebe, Bestellungen, Partner-Gutschriften, No-Code-Newsletter, E-Mail-Log und Audit-Trail |
 | **Convex Backend** | [`webapp/convex/`](webapp/convex/) | `*.convex.cloud` | Convex Serverless Cloud | Zentrales reaktives Datenbanksystem, serverseitige Regionsisolation, Google-Workspace-SMTP-Actions und Stripe-Webhooks |
 
 ---
@@ -79,10 +79,10 @@ Das System besteht aus drei Frontend-Projekten und einem gemeinsamen Cloud-Backe
 ## 5. Technologie und Infrastruktur
 
 - **Next.js & React 19:** Moderne App-Router-Architektur mit serverseitigen Aktionen, Container-Queries und Tailwind CSS.
-- **Cloudflare:** Authoritativer DNS-Provider für alle Domains (`zackisch.com`, `app.zackisch.com`, `admin.zackisch.com`). Hosting über Cloudflare Pages (Website) und Cloudflare Workers via `vinext` (Webapp und Adminapp).
+- **Cloudflare:** Authoritativer DNS-Provider für alle Domains (`zackisch.com`, `app.zackisch.com`, `ops.zackisch.com`). Hosting über Cloudflare Pages (Website) und Cloudflare Workers via `vinext` (Webapp und Opsapp).
 - **Convex:** Reaktiv synchronisierte Single-Source-of-Truth-Datenbank mit Live-Subscriptions, serverseitiger Autorisierung und kryptografischen Tokens.
 - **Stripe Connect Standard:** Bargeldlose Zahlungsabwicklung für Gäste mit direkter Auszahlung an verbundene Gastronomiebetriebe.
-- **Google Workspace:** Zentraler Unternehmens-E-Mail-Dienst für geschäftliche Postfächer und automatisierten Systemversand über den Workspace-SMTP-Relay (`smtp-relay.gmail.com:587`, STARTTLS).
+- **Google Workspace:** Zentraler Unternehmens-E-Mail-Dienst für geschäftliche Postfächer und automatisierten Systemversand über den Workspace-SMTP-Relay (`smtp.gmail.com:587`, STARTTLS).
 - **Finom:** Geschäftskonto und unterstützende Buchhaltungs- und Finanzprozesse.
 - **Design System:** Typografie mit Poppins für Text und Inter für Tabellenzahlen; monochrome Schwarz-Weiß-Ästhetik mit abgerundeten Karten und Pill-Buttons (Dokumentation: [`DESIGN.md`](DESIGN.md)).
 
@@ -99,10 +99,11 @@ Das System besteht aus drei Frontend-Projekten und einem gemeinsamen Cloud-Backe
 
 ---
 
-## 7. Betrieb und Administration
+## 7. Betrieb und Operations (Ops Dashboard)
 
-Die operative Steuerung erfolgt über die [`adminapp/`](adminapp/README.md):
+Die operative Steuerung erfolgt über die [`opsapp/`](opsapp/README.md) (`https://ops.zackisch.com`):
 
+- **Zwei-Faktor-Authentifizierung (2FA):** Obligatorischer zweistufiger Login mit E-Mail + Passwort und 6-stelligem Einmalcode (OTP) via Google Workspace SMTP (`noreply@zackisch.com`).
 - **Rollenmodell:** Unterscheidung zwischen regionalen Administratoren und operativen Mitarbeitern mit feingliedrigen Rechten (Betriebe, Bestellungen, Personal, Partner, Newsletter, E-Mails, Audit).
 - **Betriebsverwaltung (`/organizations`):** Übersicht aller registrierten Gastronomiebetriebe, Stripe-Connect-Status, Tischkontingente und Menülinks.
 - **Partnerabrechnung (`/partners`):** Transparente Nachverfolgung vermittelter Betriebe und Buchung von Provisionsauszahlungen (50 % der Plattformgebühr).
@@ -156,8 +157,8 @@ cd ../website
 npm ci
 npm run dev
 
-# 4. Adminapp starten (Port 3002)
-cd ../adminapp
+# 4. Opsapp starten (Port 3002)
+cd ../opsapp
 npm ci
 npm run dev
 ```
@@ -176,8 +177,8 @@ cd ../website
 npm run typecheck
 npm run build
 
-# Adminapp: Typen prüfen und Produktions-Build validieren
-cd ../adminapp
+# Opsapp: Typen prüfen und Produktions-Build validieren
+cd ../opsapp
 npm run typecheck
 npm run build
 ```
@@ -191,7 +192,7 @@ In diesem Monorepo gilt ein verbindlicher, persönlicher Commit-Stil:
 1. **100 % Kleinbuchstaben:** Jede Commit-Nachricht beginnt durchgängig kleingeschrieben (auch das allererste Wort).
 2. **Englische Sprache:** Prägnante, technische und natürliche Formulierungen.
 3. **Vergangenheitsform (Past Tense):** Verwendung handlungsorientierter Verben wie `added`, `changed`, `updated`, `fixed`, `removed`, `adjusted`, `switched`, `overhauled`, `isolated`.
-4. **Konkrete Projekt- und Bereichsbezeichnung:** Nennung der betroffenen Oberfläche oder Komponente (z. B. `on website`, `on webapp`, `on adminapp`, `in documentation`, `on live orders`).
+4. **Konkrete Projekt- und Bereichsbezeichnung:** Nennung der betroffenen Oberfläche oder Komponente (z. B. `on website`, `on webapp`, `on opsapp`, `in documentation`, `on live orders`).
 5. **Verbindung mit „and“:** Zusammenhängende Teilschritte werden flüssig mit `and` verknüpft.
 6. **Keine Satzzeichen am Ende:** Kein abschließender Punkt und kein Ausrufezeichen.
 7. **Keine Emojis und keine Präfixe:** Weder Emojis noch Conventional-Commit-Präfixe (wie `feat:`, `fix:`, `chore:`).
@@ -201,7 +202,7 @@ In diesem Monorepo gilt ein verbindlicher, persönlicher Commit-Stil:
 ```text
 updated startup overview and restored commit guidelines in repository readme
 translated project readmes and aligned mail documentation on website and webapp
-updated adminapp documentation and fixed outdated repository links
+renamed adminapp to opsapp and implemented mandatory two-factor login
 ```
 
 ---
@@ -214,7 +215,7 @@ Weiterführende Details und technische Spezifikationen sind in den folgenden Dok
 |---|---|---|
 | **Website-README** | [`website/README.md`](website/README.md) | Aufbau der statischen Marketingseite, Pfade, Sprachwechsel und Build |
 | **Webapp-README** | [`webapp/README.md`](webapp/README.md) | Routen, Gast-Checkout, Betriebs-Dashboard, Terminal und Worker-Deploy |
-| **Adminapp-README** | [`adminapp/README.md`](adminapp/README.md) | Operative Zentrale, Regional-Admins, Betriebe, Newsletter und Audit |
+| **Opsapp-README** | [`opsapp/README.md`](opsapp/README.md) | Operative Zentrale, Regional-Admins, Betriebe, Newsletter und Audit |
 | **Produkt & Zielgruppen** | [`PRODUCT.md`](PRODUCT.md) | Fachliche Zielgruppen, Produktzweck, Kernversprechen und Modell |
 | **Designsystem** | [`DESIGN.md`](DESIGN.md) | Gestaltungsprinzipien, Farben, Typografie, Maße und Barrierefreiheit |
 | **Entwicklungsregeln** | [`AGENTS.md`](AGENTS.md) | Verbindliche Entwicklungsregeln, Next.js-Richtlinien und Sicherheitsstandards |

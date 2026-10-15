@@ -7,7 +7,6 @@ import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
 import { RegionLanguageModal } from "./RegionLanguageModal";
 import { WaveLine } from "./WaveLine";
-import { NewsletterForm } from "./NewsletterForm";
 
 export function SiteFooter({
   variant = "full",
@@ -146,9 +145,6 @@ export function SiteFooter({
               <span>{t("regionDisplay")}</span>
             </button>
           </div>
-        </div>
-        <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] pt-8 pb-10 border-t border-black/10">
-          <NewsletterForm />
         </div>
       </footer>
       {isModalOpen && (

@@ -9,7 +9,11 @@ const CONVEX_SITE_URL =
   process.env.NEXT_PUBLIC_CONVEX_SITE_URL ||
   "https://silent-narwhal-392.eu-west-1.convex.site";
 
-export function NewsletterForm() {
+interface NewsletterFormProps {
+  showHeader?: boolean;
+}
+
+export function NewsletterForm({ showHeader = true }: NewsletterFormProps) {
   const { t, locale } = useTranslation();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -61,16 +65,18 @@ export function NewsletterForm() {
 
   return (
     <div className="w-full max-w-[460px] flex flex-col gap-3">
-      <div className="flex flex-col gap-1">
-        <h4 className="text-base font-semibold text-foreground">
-          {isDe ? "Zackisch Updates & Neuigkeiten" : "Zackisch Updates & News"}
-        </h4>
-        <p className="text-[13px] text-muted-foreground leading-normal">
-          {isDe
-            ? "Erfahre zuerst von neuen Funktionen, Gastronomie-Tipps und regionalen Updates."
-            : "Be the first to learn about new features, hospitality insights, and regional updates."}
-        </p>
-      </div>
+      {showHeader && (
+        <div className="flex flex-col gap-1">
+          <h4 className="text-base font-semibold text-foreground">
+            {isDe ? "Zackisch Updates & Neuigkeiten" : "Zackisch Updates & News"}
+          </h4>
+          <p className="text-[13px] text-muted-foreground leading-normal">
+            {isDe
+              ? "Erfahre zuerst von neuen Funktionen, Gastronomie-Tipps und regionalen Updates."
+              : "Be the first to learn about new features, hospitality insights, and regional updates."}
+          </p>
+        </div>
+      )}
 
       {status === "success" ? (
         <div className="flex items-start gap-2.5 rounded-2xl bg-black/5 p-3.5 text-sm text-foreground">

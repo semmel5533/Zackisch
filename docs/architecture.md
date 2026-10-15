@@ -11,7 +11,7 @@ Zackisch ist als Monorepo organisiert, das drei Next.js-Frontend-Anwendungen mit
 ```text
 ├── website/       Öffentliche statische Marketing- & Rechtswebsite (Cloudflare Pages, out/)
 ├── webapp/        Betriebs-Dashboard, Küchenterminal & mobiler Gäste-Checkout (Cloudflare Workers)
-├── adminapp/      Operative Zentrale für Regional-Admins & Mitarbeiter (Cloudflare Workers)
+├── opsapp/        Operative Zentrale für Regional-Admins & Mitarbeiter (Cloudflare Workers)
 └── webapp/convex/ Zentrales reaktives Convex-Backend, Datenbank, Actions und Storage
 ```
 
@@ -19,16 +19,16 @@ Zackisch ist als Monorepo organisiert, das drei Next.js-Frontend-Anwendungen mit
 |---|---|---|---|
 | `website/` | `https://zackisch.com` | Cloudflare Pages (`output: "export"`) | Regionale Marketingseiten (`/de-de`, `/de-en`), Double-Opt-In-Newsletter-Anmeldung, Abmeldung und rechtliche Pflichtangaben. |
 | `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Betriebs-Onboarding, Speisekarten- und Tischverwaltung, 86-Verfügbarkeitsmanager, Küchen-Terminal und bargeldloser Gäste-Checkout. |
-| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Operative Zentrale: Regionale Übersicht, Betriebsverwaltung (`/organizations`), Bestellungen, Teamberechtigungen, Partner-Provisionen, No-Code-Newsletter-Editor und Audit-Log. |
+| `opsapp/` | `https://ops.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Operative Zentrale: Regionale Übersicht, Betriebsverwaltung (`/organizations`), Bestellungen, Teamberechtigungen, Partner-Provisionen, No-Code-Newsletter-Editor und Audit-Log. |
 | `Convex` | `*.convex.cloud` | Convex Serverless Cloud (`dev:silent-narwhal-392`) | Reaktive Echtzeit-Datenbank, kryptografische Tokens, Google-Workspace-SMTP-Versand, Stripe-Webhooks und öffentliche HTTP-Endpunkte. |
 
 ---
 
 ## 2. Regionale Struktur und Datenbegrenzung
 
-- **Zentrale Domain mit Subdomains:** Alle Dienste laufen unter `zackisch.com` und den zugeordneten Subdomains (`app.zackisch.com`, `admin.zackisch.com`), gestützt durch dieselbe Convex-Bereitstellung.
+- **Zentrale Domain mit Subdomains:** Alle Dienste laufen unter `zackisch.com` und den zugeordneten Subdomains (`app.zackisch.com`, `ops.zackisch.com`), gestützt durch dieselbe Convex-Bereitstellung.
 - **Startregion:** Deutschland (`de`). Weitere Regionen (Österreich `at`, Schweiz `ch`) sind im Backend strukturell vorbereitet und werden nach Klärung regionaler Steuersätze freigeschaltet.
-- **Serverseitige Isolation:** Mitarbeiter in der Adminapp arbeiten ausschließlich innerhalb ihrer zugewiesenen Region (`regionId`). Datenbankabfragen und Mutationen erzwingen diese Begrenzung serverseitig.
+- **Serverseitige Isolation:** Mitarbeiter in der Opsapp arbeiten ausschließlich innerhalb ihrer zugewiesenen Region (`regionId`). Datenbankabfragen und Mutationen erzwingen diese Begrenzung serverseitig.
 - **Gästegrenze & Datenminimierung:**
   - `orders.getGuestOrderTracker`: Filtert Bestelldaten und liefert ausschließlich für Gäste bestimmte Felder aus (Artikel, Bestellnummer, Tisch, Status, Typ, Summe). Interne Plattformgebühren, Stripe-Zahlungs-IDs und Betriebssteuernummern werden nicht exponiert.
   - `organizations.getPublicRestaurant`: Liefert nur öffentliche Betriebsdaten (Name, Beschreibung, Medien, Bestellstatus). Inhaber-IDs, Steuernummern und Stripe-Konto-IDs werden serverseitig entfernt.
@@ -40,9 +40,11 @@ Zackisch ist als Monorepo organisiert, das drei Next.js-Frontend-Anwendungen mit
 1. **Kryptografische Token- und Code-Generierung:**
    - 6-stellige Einmal-Codes (OTP): Werden über kryptografisch sichere Zufallsgeneratoren (`crypto.getRandomValues`) erzeugt.
    - Session- und Double-Opt-in-Tokens: 24-Byte-Zufallswerte, hexadezimal kodiert.
-   - Gültigkeitsdauer: OTP-Codes verfallen nach 30 Minuten; ein Brute-Force-Schutz sperrt den Code nach fünf aufeinanderfolgenden Fehlversuchen permanent.
-2. **Admin- und Mitarbeiterrollen:**
+   - Gültigkeitsdauer: OTP-Codes verfallen nach 15 bis 30 Minuten; ein Brute-Force-Schutz sperrt den Code nach fünf aufeinanderfolgenden Fehlversuchen permanent.
+2. **Operations- und Mitarbeiterrollen:**
    - Der initiale Regional-Administrator wird sicher über Convex-Funktionen hinterlegt (keine offene Registrierungs-Schnittstelle).
+   - Die Opsapp schützt alle Arbeitsbereiche über das `OpsLoginForm` / `AdminLoginForm` mit verpflichtendem Zwei-Faktor-Login (E-Mail + Passwort + 6-stelliger E-Mail-Code via Google Workspace SMTP von `noreply@zackisch.com`).
+   - Sitzungen werden nach Validierung in `verificationCodes` hinterlegt, clientseitig gehalten und können aktiv über „Abmelden“ beendet werden.
    - Mitarbeiter-Einladungen: Werden vom Regional-Admin mit granularen Rechten ausgestellt (`restaurants:read`, `restaurants:write`, `orders:read`, `staff:manage`, `partners:write`, `newsletter:send`, `audit:read`).
 3. **Audit-Trail:**
    - Lückenlose Aufzeichnung aller relevanten Aktionen in der Tabelle `auditLogs` (Änderungen an Betriebsdaten, Provisionsbuchungen, Newsletterversand). Passwörter, Authentifizierungs-Codes und Geheimnisse werden vor dem Speichern geschwärzt.
@@ -51,7 +53,7 @@ Zackisch ist als Monorepo organisiert, das drei Next.js-Frontend-Anwendungen mit
 
 ## 4. E-Mail-Infrastruktur (Google Workspace)
 
-Zackisch nutzt **Google Workspace** als alleinige E-Mail-Infrastruktur (`smtp-relay.gmail.com:587`, STARTTLS):
+Zackisch nutzt **Google Workspace** als alleinige E-Mail-Infrastruktur (`smtp.gmail.com:587`, STARTTLS):
 - Sichtbarer Absender für automatisierte Transaktions- und Marketingnachrichten: `noreply@zackisch.com`.
 - Persönlicher Support und geschäftliche Kommunikation: `selim@zackisch.com`.
 - Secret-Verwaltung: `GOOGLE_WORKSPACE_SMTP_APP_PASSWORD` liegt verschlüsselt in der Convex-Secret-Verwaltung und wird niemals im Client-Code oder im Git-Repository exponiert.

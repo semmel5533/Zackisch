@@ -209,9 +209,9 @@ export default function AdminOverviewPage() {
               Google Workspace SMTP
             </div>
             <div className="text-[12px] text-zinc-500 space-y-0.5 mt-2">
-              <div>Host: <span className="font-mono text-zinc-700">smtp-relay.gmail.com:587</span></div>
+              <div>Host: <span className="font-mono text-zinc-700">smtp.gmail.com:587</span></div>
               <div>Absender: <span className="font-mono text-zinc-700">noreply@zackisch.com</span></div>
-              <div>Reply-To: <span className="font-mono text-zinc-700">selim@zackisch.com</span></div>
+              <div>Reply-To: <span className="font-mono text-zinc-700">noreply@zackisch.com</span></div>
             </div>
           </div>
 

@@ -57,7 +57,7 @@ const nextConfig: NextConfig = {
       allowedOrigins: [
         "app.zackisch.com",
         "app.zackisch.de",
-        "admin.zackisch.com",
+        "ops.zackisch.com",
         "zackisch.com",
         "localhost:3000",
         "localhost:3001",

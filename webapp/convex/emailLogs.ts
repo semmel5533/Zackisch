@@ -6,6 +6,7 @@ export const logEmailRecord = internalMutation({
     recipient: v.string(),
     type: v.union(
       v.literal("otp"),
+      v.literal("ops_otp"),
       v.literal("order_receipt"),
       v.literal("newsletter"),
       v.literal("partner_statement"),
@@ -68,6 +69,7 @@ export const listEmailLogs = query({
       recipient: v.string(),
       type: v.union(
         v.literal("otp"),
+        v.literal("ops_otp"),
         v.literal("order_receipt"),
         v.literal("newsletter"),
         v.literal("partner_statement"),
@@ -88,7 +90,7 @@ export const listEmailLogs = query({
     return records
       .filter((r) => {
         if (args.regionId && r.regionId && r.regionId !== args.regionId) return false;
-        if (args.type && r.type !== args.type) return false;
+        if (args.type && r.type !== args.type && !(args.type === "otp" && r.type === "ops_otp")) return false;
         return true;
       })
       .slice(0, limit);

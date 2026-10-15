@@ -285,16 +285,16 @@ All commit messages in this repository strictly follow the developer's personal 
 The official technology stack, infrastructure providers, and operational architecture for Zackisch:
 
 1. **Cloudflare:**
-   - **Domain Registrar & DNS:** Authoritative DNS and registrar for all apex and sub-domains (`zackisch.com`, `app.zackisch.com`, `admin.zackisch.com`).
+   - **Domain Registrar & DNS:** Authoritative DNS and registrar for all apex and sub-domains (`zackisch.com`, `app.zackisch.com`, `ops.zackisch.com`).
    - **Cloudflare Pages:** Hosting and edge delivery for the static marketing and legal website (`website/`).
-   - **Cloudflare Workers:** Serverless edge runtime and execution environment for the web application (`webapp/`) and operative headquarters (`adminapp/`).
+   - **Cloudflare Workers:** Serverless edge runtime and execution environment for the web application (`webapp/`) and operative headquarters (`opsapp/`).
 
 2. **Google Workspace:**
    - **Enterprise Email & Identity:** Primary business email domain with Google Workspace (`selim@zackisch.com`).
-   - **SMTP & Transactional Messaging:** Authoritative email infrastructure for notifications, auth verification, newsletter campaigns, and team communication (`smtp-relay.gmail.com` via port 587 STARTTLS, sender `noreply@zackisch.com`, reply-to `selim@zackisch.com`).
+   - **SMTP & Transactional Messaging:** Authoritative email infrastructure for notifications, auth verification, newsletter campaigns, and team communication (`smtp.gmail.com` via port 587 STARTTLS, sender `noreply@zackisch.com`, reply-to `noreply@zackisch.com`).
 
 3. **Convex:**
-   - **Unified Reactive Backend:** Complete transactional database, real-time sync, background mutation handlers, scheduled crons, and cryptographic authentication. Single shared backend in `webapp/convex/` powering `website/`, `webapp/`, and `adminapp/`.
+   - **Unified Reactive Backend:** Complete transactional database, real-time sync, background mutation handlers, scheduled crons, and cryptographic authentication. Single shared backend in `webapp/convex/` powering `website/`, `webapp/`, and `opsapp/`.
    - **Media & File Storage:** Convex Storage for restaurant assets and newsletter campaign images.
 
 4. **GitHub:**

@@ -101,7 +101,7 @@ Maßgebliche Original-Markenassets sind `brand_mark` (nur Symbol) und `combinati
 
 ## 2. Farben und Oberflächen
 
-Alle drei Anwendungen (`website`, `webapp`, `adminapp`) nutzen dieselbe semantische Farbpalette:
+Alle drei Anwendungen (`website`, `webapp`, `opsapp`) nutzen dieselbe semantische Farbpalette:
 - **Flächen:** Reines Weiß für Hintergrund, Karten und Popups (`bg-background`, `bg-card`).
 - **Aktionen:** Reines Schwarz (`#000000`) für primäre Aktionsschaltflächen (`bg-primary`), aktive Navigationspills und ausgewählte Filter-Badges.
 - **Linien & Grenzen:** Sanfte, neutrale Grauwerte (`oklch(0.922 0 0)`) für Ränder, Trennlinien und Eingaberahmen.

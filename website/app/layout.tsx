@@ -30,6 +30,12 @@ export const metadata: Metadata = {
     description: t.metaDescription,
     images: ["/og_image.png"],
   },
+  other: {
+    "geo.region": "DE",
+    "geo.placename": "Deutschland",
+    "geo.position": "51.1657;10.4515",
+    "ICBM": "51.1657, 10.4515",
+  },
 };
 
 export const viewport: Viewport = {

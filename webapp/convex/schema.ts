@@ -194,6 +194,7 @@ export default defineSchema({
     recipient: v.string(),
     type: v.union(
       v.literal("otp"),
+      v.literal("ops_otp"),
       v.literal("order_receipt"),
       v.literal("newsletter"),
       v.literal("partner_statement"),

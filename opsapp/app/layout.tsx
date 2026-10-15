@@ -21,8 +21,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Zackisch Admin — Operative Regionalzentrale",
-  description: "Internes Administrations- und Operationsdashboard für Zackisch Gastronomie",
+  title: "Zackisch Operations — Operative Zentrale",
+  description: "Internes Operations- und Verwaltungsdashboard für Zackisch Gastronomie (ops.zackisch.com)",
   icons: {
     icon: "/brand_mark_512.png",
     apple: "/apple-touch-icon.png",

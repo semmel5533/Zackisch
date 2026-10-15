@@ -8,6 +8,7 @@ import { QrCodeShowcase } from "./QrCodeShowcase";
 import { ProductDemo } from "./ProductDemo";
 import { AnimatedBenefitStat } from "./AnimatedBenefitStat";
 import { SiteFooter } from "./SiteFooter";
+import { NewsletterForm } from "./NewsletterForm";
 
 export function MainPage() {
   const { t } = useTranslation();
@@ -171,6 +172,23 @@ export function MainPage() {
               <p className="pr-[30px] pb-6 text-sm leading-relaxed text-muted-foreground">{numericText(t(`${question}Answer`))}</p>
             </details>
           ))}
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="border-t border-border bg-background py-14 sm:py-18">
+        <div className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="max-w-[520px]">
+            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+              {t("newsletterSectionTitle")}
+            </h3>
+            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+              {t("newsletterSectionDesc")}
+            </p>
+          </div>
+          <div className="w-full md:w-auto">
+            <NewsletterForm showHeader={false} />
+          </div>
         </div>
       </section>
 

@@ -59,7 +59,8 @@ Rechtliche Seiten (Impressum, Datenschutzerklärung, AGB) sind indexiert. Sie st
 - `openGraph.images`: `/og_image.png`
 - `twitter.card`: `"summary_large_image"`
 - `viewport.themeColor`: `"#000000"`
-- `icons.icon` / `icons.apple`: `/icon.png`
+- `icons.icon` / `icons.apple`: `/icon.png` (mit kontraststarkem, weißem Container für optimale Sichtbarkeit in Dark-Mode-Browsern)
+- `other.geo`: Lokale Geokoordinaten für den deutschen Kernmarkt (`geo.region: DE`, `geo.placename: Deutschland`, `geo.position: 51.1657;10.4515`, `ICBM: 51.1657, 10.4515`)
 
 ### Startseite pro Sprache – [`app/[locale]/page.tsx`](../website/app/%5Blocale%5D/page.tsx)
 
