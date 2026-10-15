@@ -1,70 +1,58 @@
-# Architecture and developer guide
+# Architecture and Developer Guide
 
-This guide describes the checked-in implementation as of 2026-09-23. The [root README](../README.md) is the entry point, [web app guide](../webapp/README.md) covers its routes, and [documentation audit](documentation-audit.md) records unresolved gaps. Deployment topology and commercial policy should be verified in their actual environments before making external claims.
+This guide documents the technical architecture, runtime boundaries, security model, and data flows of Zackisch.
 
-## System boundaries
+## 1. System Topology & Three-App Architecture
 
-The marketing [`website/`](../website/) is a Next.js static export: localized pages compile to `out/` with no runtime server ([config](../website/next.config.ts), [scripts](../website/package.json)). The [`webapp/`](../webapp/) is Next.js App Router with Server Components and Server Actions; it also has a vinext build for Cloudflare Workers using `nodejs_compat`, `vinext/server/fetch-handler`, and `dist/client` assets ([scripts](../webapp/package.json), [Worker config](../webapp/wrangler.jsonc)). Convex handles reactive data, backend actions, storage, and the Stripe webhook ([schema](../webapp/convex/schema.ts), [HTTP router](../webapp/convex/http.ts)). External Stripe calls live in [Convex actions](../webapp/convex/stripe.ts); SMTP calls live in [Convex Node actions](../webapp/convex/emails.ts). This is the intended runtime split; it does not prove a live Cloudflare or Convex deployment.
+Zackisch is built as a cohesive monorepo comprising three Next.js frontend applications powered by a single shared Convex backend:
 
-The website has Model B URL locales `/de-de` and `/de-en` ([regions](../website/lib/regions.ts), [locale routes](../website/app/%5Blocale%5D/)). The app has routes such as `/dashboard/[organizationId]`, `/staff/[organizationId]`, `/pickup/[organizationId]`, and `/table/[organizationId]` without a locale prefix ([app routes](../webapp/app/), [translation helper](../webapp/lib/i18n.ts)). Product UI and next-intl messages are maintained independently in the two applications ([website messages](../website/lib/translations.ts), [web app messages](../webapp/lib/translations.ts)).
+```text
+├── website/       Public multilingual marketing & legal website (Cloudflare Pages, static export out/)
+├── webapp/        Merchant dashboard, kitchen terminal & guest mobile checkout (Cloudflare Workers)
+├── adminapp/      Internal operative headquarters for regional admins & staff (Cloudflare Workers)
+└── webapp/convex/ Single shared Convex reactive backend, database, actions, and storage
+```
 
-| Module | Main responsibility |
-| --- | --- |
-| [website/app](../website/app/) and [website/components](../website/components/) | Static locale/legal routes and composed marketing UI. |
-| [webapp/app](../webapp/app/) and [webapp/components](../webapp/components/) | Server-rendered route entry points and browser interactions. |
-| [webapp/actions](../webapp/actions/) | Next Server Action request boundaries for auth, owner, staff, checkout, and order operations. |
-| [webapp/lib/convex](../webapp/lib/convex/) | Next-side Convex clients, auth helpers, data adapters, and storage upload helper. |
-| [webapp/convex](../webapp/convex/) | Database schema/functions, Stripe and email actions, storage, and HTTP webhook. |
-| [webapp/store](../webapp/store/) | Browser cart, language, region, and dashboard sidebar state. The [cart](../webapp/store/cart-store.ts) is in memory and resets on reload; [language](../webapp/store/language-store.ts), [region](../webapp/store/region-store.ts), and [sidebar](../webapp/store/sidebar-store.ts) use Zustand persistence. Language and region setters also write browser cookies. |
-| [webapp/tests](../webapp/tests/) | Isolated Vitest checks. |
+| Application | Public URL | Runtime & Hosting | Primary Responsibilities |
+| --- | --- | --- | --- |
+| `website/` | `https://zackisch.com` | Cloudflare Pages (`output: "export"`) | Regional marketing pages (`/de-de`, `/de-en`), Double-Opt-In newsletter signup, unsubscription and legal notices. |
+| `webapp/` | `https://app.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Restaurant onboarding, menu management, 86-availability, kitchen order terminal, guest table & pickup ordering. |
+| `adminapp/` | `https://admin.zackisch.com` | Cloudflare Workers (`vinext`, Next.js App Router) | Operational headquarters: regional overview, restaurants, orders, staff invitations & roles, partner commissions, No-Code newsletter editor & dispatch, audit log. |
+| `Convex` | `*.convex.cloud` | Convex Serverless Cloud (`dev:silent-narwhal-392`) | Realtime reactive database, cryptographic auth, Google Workspace SMTP actions, Stripe webhooks, and public HTTP endpoints. |
 
-## Request and data flows
+## 2. Regional Expansion & Data Boundaries
 
-An owner signs in through [auth Server Actions](../webapp/actions/auth-actions.ts) and Convex [customAuth](../webapp/convex/customAuth.ts). The Server Action sets `zakkig_session`; [`getUser`](../webapp/lib/convex/auth.ts) looks up the custom session through [`getUserBySession`](../webapp/convex/authQueries.ts). Owner routes use server-side ownership checks, and owner menu/settings changes flow through [Server Actions](../webapp/actions/) into Convex [menu](../webapp/convex/menu.ts), [organizations](../webapp/convex/organizations.ts), and [sessions](../webapp/convex/sessions.ts). `getAuthenticatedConvexClient` only attaches a Convex Auth JWT fallback, not the custom session token, so it is not a general equivalent of `getUser` ([auth helper](../webapp/lib/convex/auth.ts)).
+- **Single Domain & Shared Backend:** All operations run from `zackisch.com` and its designated subdomains (`app.zackisch.com`, `admin.zackisch.com`), backed by one unified Convex deployment.
+- **Starting Region:** Germany (`de`). Additional regions (Austria `at`, Switzerland `ch`) can be configured in the `regions` table.
+- **Regional Scoping:** Team members in `adminapp` operate exclusively within their assigned `regionId`. Queries and mutations filter by `regionId` on the server.
+- **Guest Boundary Sanitization:**
+  - `orders.getGuestOrderTracker`: Sanitizes order data, returning only guest-safe fields (items, order number, table, status, type, total). Internal platform fees, Stripe payment IDs, and merchant tax data are omitted.
+  - `organizations.getPublicRestaurant`: Returns only public restaurant data (name, description, branding, ordering enabled). Strips owner ID, tax ID, and Stripe Connected account ID.
 
-The owner generates a staff pairing session via [staff actions](../webapp/actions/staff-actions.ts). [`proxy.ts`](../webapp/proxy.ts) consumes `?token=` and sets an HttpOnly terminal cookie. [Terminal checks](../webapp/lib/convex/auth.ts) query [`verifyTerminalSession`](../webapp/convex/sessions.ts). [Staff UI](../webapp/components/staff/staff-terminal-shell.tsx) subscribes to public Convex order and menu functions; availability changes use [menu actions](../webapp/actions/menu-actions.ts), status changes use [order actions](../webapp/actions/order-actions.ts), and [availability actions](../webapp/actions/availability-actions.ts) generate pairing sessions. The staff shell still receives and may put the token into the URL during tab changes, so the cookie is not the only token path ([staff page](../webapp/app/staff/%5BorganizationId%5D/page.tsx), [shell](../webapp/components/staff/staff-terminal-shell.tsx)).
+## 3. Authentication & Security Architecture
 
-Guest menus read the organization and available menu ([guest page](../webapp/app/pickup/%5BorganizationId%5D/page.tsx), [table page](../webapp/app/table/%5BorganizationId%5D/page.tsx), [menu queries](../webapp/convex/menu.ts)). The client cart uses [Zustand](../webapp/store/) and calls [`createCheckoutSessionAction`](../webapp/actions/checkout-actions.ts), which calls [`createCheckoutSession`](../webapp/convex/stripe.ts). In the checkout sheet, guest email is optional: an explicit checkbox toggles email collection for email confirmations; when omitted, the session proceeds without `customer_email`. The Stripe action loads products and passes them to [`priceCheckout`](../webapp/convex/checkoutPricing.ts), which validates availability and options, canonicalizes names/prices, and compares the exact cent total. The checkout action creates a Stripe `ui_mode: "elements"` session and its frontend mounts [Payment Element](../webapp/components/guest/checkout-form.tsx). A paid `checkout.session.completed` or successful `payment_intent.succeeded` webhook creates an order through an idempotent internal mutation ([HTTP router](../webapp/convex/http.ts), [orders](../webapp/convex/orders.ts)); success-page polling may call [`verifyPaymentAndCreateOrder`](../webapp/convex/stripe.ts) as fallback. Completed dine-in orders and takeaway trackers provide client-side confirmation download via [`confirmation-generator.ts`](../webapp/lib/confirmation-generator.ts), explicitly differentiating that Zakkig provides an immediate technical *Bestell- und Zahlungsbestätigung*, whereas official tax invoices (*Rechnungen / Bewirtungsbelege*) are issued directly by the venue. The legacy [`placeOrderAction`](../webapp/actions/order-actions.ts) only uses a placeholder payment helper.
+1. **Cryptographic Token & OTP Generation:**
+   - 6-digit verification codes: Generated using `crypto.randomInt(100000, 1000000)` in Node environments and `crypto.getRandomValues(new Uint32Array(1))` in Convex runtime.
+   - Session & double-opt-in tokens: Generated via 24-byte random values hex-encoded (`crypto.getRandomValues`).
+   - Time-to-live: OTPs expire in 30 minutes; brute-force protection locks out and deletes codes after 5 consecutive failed attempts.
+2. **Admin & Staff Roles:**
+   - Initial Regional Admin seeded securely without public sign-up endpoints.
+   - Staff invitations: Generated by regional admins with granular permission flags (`manage_restaurants`, `manage_orders`, `manage_staff`, `manage_partners`, `manage_newsletter`, `view_emails`, `view_audit`).
+3. **Audit Trail:**
+   - Chronological logging in `auditLogs` for staff and admin actions (creation, updates, payouts, campaign dispatch). Sensitive credentials, passwords, and OTPs are automatically redacted.
 
-Order dashboards and staff views read [`getLiveOrders`](../webapp/convex/orders.ts) and [`getOrders`](../webapp/convex/orders.ts); the latter takes the newest 100. Status transitions are manual. [`updateStatus`](../webapp/convex/orders.ts) records `readyAt` at pickup readiness. [`getOrder`](../webapp/convex/orders.ts) powers the guest tracker, which remains active on the tracking page until the order is cancelled or completed ([tracker](../webapp/components/guest/order-tracker.tsx)).
+## 4. Email Infrastructure (Google Workspace)
 
-## Data model and business calculations
+Zackisch relies solely on **Google Workspace** (`smtp-relay.gmail.com:587`, STARTTLS):
+- Visible sender for automated transactional emails and newsletters: `noreply@zackisch.com`.
+- Reply-To and personal support: `selim@zackisch.com`.
+- Credentials: `GOOGLE_WORKSPACE_SMTP_APP_PASSWORD` stored securely in the Convex deployment secret manager; never exposed in client bundles or shell history.
+- Delivery Telemetry: Dispatched messages are logged centrally in `emailLogs` with recipient, subject, campaign ID, status, and error details.
+- RFC 8058 One-Click Unsubscribe: `List-Unsubscribe` and `List-Unsubscribe-Post: List-Unsubscribe=One-Click` headers are attached to all marketing communications and routed to Convex HTTP handlers.
 
-[`schema.ts`](../webapp/convex/schema.ts) includes the tables from `authTables`, an extended `users` table, and custom `verificationCodes`. Domain tables are `organizations`, `menuCategories`, `menuItems`, `orders`, `orderSessions`, `availabilitySessions`, and `staffSessions`. The organization owns menu and orders via `organizationId`; owner linkage is a string `ownerId`. Menu customization and order items are JSON strings. Orders store total, `zakkigFee`, `stripeFee`, and `netAmount` in cents. The order type is `dine-in` or `takeaway`; statuses are `in_progress`, `ready_for_pickup`, `completed`, `cancelled`. [`createOrder`](../webapp/convex/orders.ts) and [`createPaidOrderFromWebhook`](../webapp/convex/orders.ts) use recent orders to allocate rolling three-digit numbers in a mutation; the document ID remains the unique identifier.
+## 5. Stripe Connect & Commercial Flow
 
-[`platformFee`](../webapp/lib/platform-fee.ts) calculates the 2% platform fee. [`createCheckoutSession`](../webapp/convex/stripe.ts) sets `transfer_data.amount` to order total less that fee for connected destinations, with test-account fallback logic. The paid-order mutation records `stripeFee: 0` and `netAmount: total - zakkigFee`; it does not ingest actual processor charges ([orders](../webapp/convex/orders.ts)). [`exportOrdersCSVAction`](../webapp/actions/order-actions.ts) instead estimates 1.5% plus €0.25 per order and exports at most the 100 orders returned by `getOrders`. Neither number alone establishes the connected merchant's final bank payout.
-
-## Authorization and guest-data boundary
-
-The expected mutation entry point is a [Server Action](../webapp/actions/) with `requireOwner` or terminal-specific checks in [`lib/convex/auth.ts`](../webapp/lib/convex/auth.ts). Selected backend handlers also use [`permissions.ts`](../webapp/convex/permissions.ts). This is incomplete defense in depth: [`organizations.get`, `getByOwner`, `create`, `update`](../webapp/convex/organizations.ts), [`orders.getLiveOrders`, `getOrders`, `getOrder`, `createOrder`, `updateStatus`](../webapp/convex/orders.ts), [`storage.generateUploadUrl`](../webapp/convex/storage.ts), and Stripe admin actions remain public Convex functions without equivalent backend ownership/session checks. Public guest pages reduce some organization fields in their RSC payload, but public queries still return owner/payment/tax fields ([organizations](../webapp/convex/organizations.ts)). [`getOrder`](../webapp/convex/orders.ts) zeros three fee fields while retaining email and Stripe identifiers, and does not require the route's organization ID to match the order. The [audit](documentation-audit.md#open-implementation-gaps) treats these as implementation gaps, not documented guarantees.
-
-## Configuration and builds
-
-| Setting | Owner and purpose | Evidence |
-| --- | --- | --- |
-| `NEXT_PUBLIC_CONVEX_URL` | Web app build/browser and server access to the matching Convex deployment. | [provider](../webapp/components/providers/convex-client-provider.tsx), [server](../webapp/lib/convex/server.ts), [Next config](../webapp/next.config.ts) |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Browser Payment Element setup. | [cart](../webapp/components/guest/cart-sheet.tsx) |
-| `NEXT_PUBLIC_APP_URL` | Next auth and settings email-link origin; optional Convex checkout return URL fallback. Set for the relevant Next and Convex environments. | [auth actions](../webapp/actions/auth-actions.ts), [settings actions](../webapp/actions/settings-actions.ts), [Stripe](../webapp/convex/stripe.ts) |
-| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Convex backend only. The former is read by the app's Stripe actions; the latter is used by the registered Stripe webhook component. Never expose either to the browser or Worker. | [Stripe](../webapp/convex/stripe.ts), [HTTP router](../webapp/convex/http.ts), [Convex config](../webapp/convex/convex.config.ts), [environment example](../webapp/.env.example) |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM`, `EMAIL_REPLY_TO` | Convex email action environment. | [emails](../webapp/convex/emails.ts) |
-| `CONVEX_DEPLOYMENT`, `CONVEX_DEPLOY_KEY` | Convex CLI/deploy selection and authentication; example values appear in [`.env.example`](../webapp/.env.example). | [scripts](../webapp/package.json) |
-| `CONVEX_SITE_URL` | Convex site URL for backend auth/HTTP configuration where referenced. | [auth config](../webapp/convex/auth.config.ts) |
-
-`NEXT_PUBLIC_CONVEX_SITE_URL` appears in the [environment example](../webapp/.env.example) but is not read by the checked-in app source; do not confuse it with `CONVEX_SITE_URL`, which [auth.config.ts](../webapp/convex/auth.config.ts) reads. The Stripe webhook signing secret is consumed by the registered component, so its runtime owner is Convex even though the application router delegates route registration ([HTTP router](../webapp/convex/http.ts), [Convex component config](../webapp/convex/convex.config.ts)).
-
-The [web app `.env.example`](../webapp/.env.example) groups values by feature but is not a reliable runtime-placement guide: Stripe and SMTP secrets belong to Convex environment settings. The website has no `.env.example` and no source environment reads under app/components/lib ([website tree](../website/)). For local development, install dependencies in each app, configure Convex, run `npx convex dev` and the web app's `npm run dev`, then run the website's `npm run dev` on a separate port ([web app scripts](../webapp/package.json), [website scripts](../website/package.json)). `npm run typecheck` works in both; `npm test` is web app only. Both `npm run lint` scripts currently fail because they call `next lint` ([scripts](../webapp/package.json), [website scripts](../website/package.json)).
-
-Use `npm run build` for local Next builds; it produces `.next/` for webapp and `out/` for website ([configs](../webapp/next.config.ts), [website config](../website/next.config.ts)). `npm run build:cloudflare` is the separate vinext Worker build; `npm run check:cloudflare` is a deploy dry run; `npm run deploy:cloudflare` publishes the Worker ([scripts](../webapp/package.json), [Worker config](../webapp/wrangler.jsonc)). Configure the matching Convex deployment before deploying the Worker. No checked-in `.github/workflows` provides CI or automatic deployment in this repository snapshot.
-
-## Operational limits and validation
-
-| Lifecycle or limit | Current behavior | Source |
-| --- | --- | --- |
-| Custom login OTP | 30-minute expiry; the validation path deletes after five failed attempts. Email-change OTP handling differs and lacks the same attempt/associated-token expiry checks. | [auth queries](../webapp/convex/authQueries.ts), [email-change mutation](../webapp/convex/users.ts) |
-| Owner session | Custom session token stored in `verificationCodes`, expiring after 30 days; browser sign-out only removes its cookie. | [auth queries](../webapp/convex/authQueries.ts), [sign-out action](../webapp/actions/auth-actions.ts) |
-| Terminal session | Pairing cookie lasts 30 browser days; session table expiry is optional. | [proxy](../webapp/proxy.ts), [schema](../webapp/convex/schema.ts), [session verification](../webapp/convex/sessions.ts) |
-| Order and tracker | Kitchen completion is manual; pickup tracker remains active on the page until the order is cancelled or completed. | [orders](../webapp/convex/orders.ts), [tracker](../webapp/components/guest/order-tracker.tsx) |
-| Table labels | Relevant actions and mutations limit to four characters. | [settings actions](../webapp/actions/settings-actions.ts), [checkout action](../webapp/actions/checkout-actions.ts), [orders](../webapp/convex/orders.ts) |
-| Images | Helper allows 10 MiB JPG/PNG MIME or filename extension; Next Server Action body limit is 5 MB; bytes are not inspected. | [constants](../webapp/lib/constants.ts), [upload helper](../webapp/lib/convex/storage.ts), [Next config](../webapp/next.config.ts) |
-
-The web app's [Vitest tests](../webapp/tests/) exercise isolated security, fee, and translation behavior. On 2026-09-23, 29 tests in three files and both apps' typechecks passed locally. They do not test a live Stripe payment, SMTP delivery, actual Cloudflare Worker, or production tenant separation. Revalidate those flows and the [open gaps](documentation-audit.md#open-implementation-gaps) before a release decision.
+- **Zero Base Fee:** 0 € setup fee, 0 € monthly base fee.
+- **2% Platform Fee:** Calculated per order via `platformFee(total)`. Persisted as `zackischFee` on orders.
+- **50% Partner Commission:** 1% of gross order volume (50% of the platform fee) credited to the referring sales partner ledger in `adminapp`.
+- **Checkout Mode:** Stripe Checkout Sessions with the Payment Element (`ui_mode: "elements"`). Server-side repricing validates menu item availability and option surcharges against Convex records.

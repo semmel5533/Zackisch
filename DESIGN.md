@@ -1,6 +1,6 @@
 ---
-name: zakkig
-description: Monochrome ordering and restaurant operations with clear, tactile controls
+name: Zackisch
+description: Monochrome ordering, operations, and administration with tactile clarity
 colors:
   background: "oklch(1 0 0)"
   foreground: "oklch(0 0 0)"
@@ -93,11 +93,11 @@ components:
 
 ## Overview
 
-**Creative north star: “Monochrome clarity for service in motion.”** zakkig uses a white working canvas, black primary actions, restrained gray boundaries, and destructive red. The marketing site adds editorial composition and a physical QR-paper motif; restaurant and guest interfaces prioritize task clarity. This is the shared design target. [AGENTS.md](AGENTS.md) sets required implementation rules, [the source-linked reference](docs/design-system.md) records current behavior and deviations, and [UX research](docs/ux-research.md) explains the evidence behind clarity and accessibility decisions. Shape, color, and spacing are brand choices, not promised conversion effects.
+**Creative north star: “Monochrome clarity for service in motion.”** Zackisch uses a white working canvas, black primary actions, restrained gray boundaries, and destructive red. The marketing site adds editorial composition and a physical QR-paper motif; restaurant and guest interfaces prioritize task clarity; admin interfaces provide dense, structured tables and intuitive No-Code tools. This is the shared design target across website, webapp, and adminapp. Canonical brand assets are `brand_mark` (symbol only) and `combination_mark` (symbol and wordmark). [AGENTS.md](AGENTS.md) sets required implementation rules, [the source-linked reference](docs/design-system.md) records current behavior and deviations, and [UX research](docs/ux-research.md) explains the evidence behind clarity and accessibility decisions. Shape, color, and spacing are brand choices, not promised conversion effects.
 
 ## Colors
 
-Both apps use the same semantic base: white background/card/popover, black foreground/primary, near-white muted surface, readable gray text, distinct input and surface borders, and red destructive state. The website's site-muted, site-line, and site-soft alias those shared roles. The operational sidebar and selected setup/footer sections deliberately invert to black. [Token sources: webapp](webapp/app/globals.css), [website](website/app/globals.css).
+All three apps use the same semantic base: white background/card/popover, black foreground/primary, near-white muted surface, readable gray text, distinct input and surface borders, and red destructive state. The website's site-muted, site-line, and site-soft alias those shared roles. The operational sidebar and selected setup/footer sections deliberately invert to black. [Token sources: webapp](webapp/app/globals.css), [website](website/app/globals.css), [adminapp](adminapp/app/globals.css).
 
 **The Light Surface Rule.** Keep forms, guest content, and dialogs light. Use dark surfaces for intentional emphasis, not routine containment.
 

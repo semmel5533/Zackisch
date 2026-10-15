@@ -282,23 +282,23 @@ All commit messages in this repository strictly follow the developer's personal 
 
 # Corporate Tech Stack & Infrastructure
 
-The official technology stack, infrastructure providers, and operational architecture for zakkig:
+The official technology stack, infrastructure providers, and operational architecture for Zackisch:
 
 1. **Cloudflare:**
-   - **Domain Registrar & DNS:** Authoritative DNS and registrar for all apex and sub-domains (`zakkig.com`, `app.zakkig.com`).
-   - **Cloudflare Pages:** Hosting and edge delivery for the marketing website (`website`).
-   - **Cloudflare Workers:** Serverless edge runtime and execution environment for the web application (`webapp`).
+   - **Domain Registrar & DNS:** Authoritative DNS and registrar for all apex and sub-domains (`zackisch.com`, `app.zackisch.com`, `admin.zackisch.com`).
+   - **Cloudflare Pages:** Hosting and edge delivery for the static marketing and legal website (`website/`).
+   - **Cloudflare Workers:** Serverless edge runtime and execution environment for the web application (`webapp/`) and operative headquarters (`adminapp/`).
 
-2. **Microsoft 365:**
-   - **Enterprise Email & Identity:** Primary business email domain with Microsoft 365 Business Basic (`selim@zakkig.com`).
-   - **SMTP & Transactional Messaging:** Authoritative email infrastructure for notifications, auth verification, and team communication (`smtp.office365.com` via port 587 STARTTLS).
+2. **Google Workspace:**
+   - **Enterprise Email & Identity:** Primary business email domain with Google Workspace (`selim@zackisch.com`).
+   - **SMTP & Transactional Messaging:** Authoritative email infrastructure for notifications, auth verification, newsletter campaigns, and team communication (`smtp-relay.gmail.com` via port 587 STARTTLS, sender `noreply@zackisch.com`, reply-to `selim@zackisch.com`).
 
 3. **Convex:**
-   - **Unified Reactive Backend:** Complete transactional database, real-time sync, background mutation handlers, and scheduled crons.
-   - **Media & File Storage:** Convex Storage for all restaurant logos, hero banners, and menu item photos.
+   - **Unified Reactive Backend:** Complete transactional database, real-time sync, background mutation handlers, scheduled crons, and cryptographic authentication. Single shared backend in `webapp/convex/` powering `website/`, `webapp/`, and `adminapp/`.
+   - **Media & File Storage:** Convex Storage for restaurant assets and newsletter campaign images.
 
 4. **GitHub:**
-   - **Version Control & Repository Hosting:** Monorepo hosting, automated workflows, and continuous deployment triggers.
+   - **Version Control & Repository Hosting:** Monorepo hosting (`semmel5533/Zackisch`), automated workflows, and continuous deployment triggers.
 
 5. **AI Development Architecture:**
    - Google AI & ChatGPT for advanced agentic coding, pair programming, and architectural reasoning.
