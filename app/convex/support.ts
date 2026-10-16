@@ -31,8 +31,8 @@ const ticketObjectValidator = v.object({
   _id: v.id("supportTickets"),
   _creationTime: v.number(),
   ticketNumber: v.string(),
-  organizationId: v.optional(v.id("organizations")),
-  organizationName: v.optional(v.string()),
+  businessId: v.optional(v.id("businesses")),
+  businessName: v.optional(v.string()),
   requesterUserId: v.optional(v.string()),
   requesterEmail: v.string(),
   requesterName: v.string(),
@@ -103,7 +103,7 @@ async function requireTeamPermission(
  */
 export const createCrossAppToken = mutation({
   args: {
-    organizationId: v.optional(v.id("organizations")),
+    businessId: v.optional(v.id("businesses")),
   },
   returns: v.object({
     token: v.string(),
@@ -119,15 +119,15 @@ export const createCrossAppToken = mutation({
     const email = (user?.email || "merchant@zackisch.com").toLowerCase();
     let org: any = null;
 
-    if (args.organizationId) {
-      const candidate = await ctx.db.get(args.organizationId);
+    if (args.businessId) {
+      const candidate = await ctx.db.get(args.businessId);
       if (candidate && candidate.ownerId === userId) {
         org = candidate;
       }
     }
     if (!org) {
       org = await ctx.db
-        .query("organizations")
+        .query("businesses")
         .withIndex("by_ownerId", (q) => q.eq("ownerId", userId))
         .first();
     }
@@ -144,8 +144,8 @@ export const createCrossAppToken = mutation({
       userId: String(userId),
       email,
       name: org?.name || user?.name || email,
-      organizationId: org?._id,
-      organizationName: org?.name,
+      businessId: org?._id,
+      businessName: org?.name,
       regionId: org?.region || "de",
       expiresAt,
     });
@@ -164,8 +164,8 @@ export const exchangeCrossAppToken = mutation({
       userId: v.string(),
       email: v.string(),
       name: v.string(),
-      organizationId: v.optional(v.id("organizations")),
-      organizationName: v.optional(v.string()),
+      businessId: v.optional(v.id("businesses")),
+      businessName: v.optional(v.string()),
       regionId: v.string(),
     })
   ),
@@ -186,8 +186,8 @@ export const exchangeCrossAppToken = mutation({
       userId: row.userId,
       email: row.email,
       name: row.name,
-      organizationId: row.organizationId,
-      organizationName: row.organizationName,
+      businessId: row.businessId,
+      businessName: row.businessName,
       regionId: row.regionId,
     };
   },
@@ -195,7 +195,7 @@ export const exchangeCrossAppToken = mutation({
 
 export const createTicket = mutation({
   args: {
-    organizationId: v.optional(v.id("organizations")),
+    businessId: v.optional(v.id("businesses")),
     requesterEmail: v.string(),
     requesterName: v.string(),
     category: ticketCategoryValidator,
@@ -225,11 +225,11 @@ export const createTicket = mutation({
 
     const userId = await getAuthUserId(ctx);
     let org: any = null;
-    if (args.organizationId) {
-      org = await ctx.db.get(args.organizationId);
+    if (args.businessId) {
+      org = await ctx.db.get(args.businessId);
     } else if (userId) {
       org = await ctx.db
-        .query("organizations")
+        .query("businesses")
         .withIndex("by_ownerId", (q) => q.eq("ownerId", userId))
         .first();
     }
@@ -253,8 +253,8 @@ export const createTicket = mutation({
 
     const ticketId = await ctx.db.insert("supportTickets", {
       ticketNumber,
-      organizationId: org?._id,
-      organizationName: org?.name,
+      businessId: org?._id,
+      businessName: org?.name,
       requesterUserId: userId ? String(userId) : undefined,
       requesterEmail: cleanEmail,
       requesterName: cleanName || org?.name || cleanEmail,
@@ -310,7 +310,7 @@ export const createTicket = mutation({
 export const getCustomerTickets = query({
   args: {
     requesterEmail: v.optional(v.string()),
-    organizationId: v.optional(v.id("organizations")),
+    businessId: v.optional(v.id("businesses")),
   },
   returns: v.array(ticketObjectValidator),
   handler: async (ctx, args) => {
@@ -322,11 +322,11 @@ export const getCustomerTickets = query({
       email = user?.email?.toLowerCase();
     }
 
-    if (args.organizationId) {
+    if (args.businessId) {
       const byOrg = await ctx.db
         .query("supportTickets")
-        .withIndex("by_organizationId", (q) =>
-          q.eq("organizationId", args.organizationId)
+        .withIndex("by_businessId", (q) =>
+          q.eq("businessId", args.businessId)
         )
         .order("desc")
         .collect();
@@ -370,8 +370,8 @@ export const getCustomerTicketThread = query({
     let authorized = false;
     if (userId && ticket.requesterUserId === String(userId)) {
       authorized = true;
-    } else if (userId && ticket.organizationId) {
-      const org = await ctx.db.get(ticket.organizationId);
+    } else if (userId && ticket.businessId) {
+      const org = await ctx.db.get(ticket.businessId);
       if (org && org.ownerId === userId) {
         authorized = true;
       }

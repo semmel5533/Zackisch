@@ -10,17 +10,17 @@ import {
 } from "@/lib/convex/database";
 import { requireOwner } from "@/lib/convex/auth";
 
-export async function generateStaffSessionAction(organizationId: string) {
+export async function generateStaffSessionAction(businessId: string) {
   try {
-    const { user } = await requireOwner(organizationId);
+    const { user } = await requireOwner(businessId);
 
-    const existing = await getStaffSessions(organizationId);
+    const existing = await getStaffSessions(businessId);
     await Promise.all(existing.map((s) => deleteStaffSession(s.$id)));
     const session = await createStaffSession(
-      organizationId,
+      businessId,
       user.$id || user._id,
     );
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
     return { success: true, session: structuredClone(session) };
   } catch (error: unknown) {
     console.error("Fehler beim Generieren der Personal-Sitzung:", error);
@@ -30,22 +30,22 @@ export async function generateStaffSessionAction(organizationId: string) {
   }
 }
 
-export async function signOutStaffAction(organizationId: string) {
+export async function signOutStaffAction(businessId: string) {
   const cookieStore = await cookies();
-  cookieStore.delete(`staff_session_${organizationId}`);
-  cookieStore.delete(`order_session_${organizationId}`);
-  cookieStore.delete(`availability_session_${organizationId}`);
-  cookieStore.set(`staff_session_${organizationId}`, "", {
+  cookieStore.delete(`staff_session_${businessId}`);
+  cookieStore.delete(`order_session_${businessId}`);
+  cookieStore.delete(`availability_session_${businessId}`);
+  cookieStore.set(`staff_session_${businessId}`, "", {
     path: "/",
     maxAge: 0,
     expires: new Date(0),
   });
-  cookieStore.set(`order_session_${organizationId}`, "", {
+  cookieStore.set(`order_session_${businessId}`, "", {
     path: "/",
     maxAge: 0,
     expires: new Date(0),
   });
-  cookieStore.set(`availability_session_${organizationId}`, "", {
+  cookieStore.set(`availability_session_${businessId}`, "", {
     path: "/",
     maxAge: 0,
     expires: new Date(0),

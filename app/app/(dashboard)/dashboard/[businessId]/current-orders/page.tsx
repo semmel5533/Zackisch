@@ -1,4 +1,4 @@
-import { getOrders, getOrganization } from "@/lib/convex/database";
+import { getOrders, getBusiness } from "@/lib/convex/database";
 import { CurrentOrdersContent } from "@/components/dashboard/current-orders-content";
 import { cookies } from "next/headers";
 import { translations, Locale } from "@/lib/translations";
@@ -15,20 +15,20 @@ export async function generateMetadata() {
 export default async function CurrentOrdersPage({
   params,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
 }) {
-  const { organizationId } = await params;
-  const [orders, organization] = await Promise.all([
-    getOrders(organizationId),
-    getOrganization(organizationId),
+  const { businessId } = await params;
+  const [orders, business] = await Promise.all([
+    getOrders(businessId),
+    getBusiness(businessId),
   ]);
 
-  if (!organization) return null;
+  if (!business) return null;
 
   return (
     <CurrentOrdersContent
       orders={structuredClone(orders)}
-      organizationId={organizationId}
+      businessId={businessId}
     />
   );
 }

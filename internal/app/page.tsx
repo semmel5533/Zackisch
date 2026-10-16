@@ -157,10 +157,10 @@ export default function AdminOverviewPage() {
             </div>
           </div>
           <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? (overview.totalOrganizations ?? overview.totalRestaurants) : "—"}
+            {overview ? overview.totalBusinesses : "—"}
           </div>
           <p className="text-xs text-zinc-600 mt-2">
-            {(overview?.activeOrganizations ?? overview?.activeRestaurants) || 0} mit abgeschlossenem Stripe Onboarding
+            {(overview?.activeBusinesses) || 0} mit abgeschlossenem Stripe Onboarding
           </p>
         </div>
 

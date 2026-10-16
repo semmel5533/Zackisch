@@ -23,7 +23,7 @@ import { useTranslation } from "@/lib/i18n";
 import { useLanguageStore } from "@/store/language-store";
 import { useSidebarStore } from "@/store/sidebar-store";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import type { Organization } from "@/lib/types";
+import type { Business } from "@/lib/types";
 import Image from "next/image";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { useQuery } from "convex/react";
@@ -32,13 +32,13 @@ import { Id } from "@/convex/_generated/dataModel";
 import { signOutAction } from "@/actions/auth-actions";
 
 interface DashboardShellProps {
-  organization: Organization | null;
+  business: Business | null;
   user: { name?: string; email?: string; [key: string]: any };
   children: React.ReactNode;
 }
 
 export function DashboardShell({
-  organization,
+  business,
   user,
   children,
 }: DashboardShellProps) {
@@ -51,8 +51,8 @@ export function DashboardShell({
 
   const liveOrders = useQuery(
     api.orders.getLiveOrders,
-    organization?.$id
-      ? { organizationId: organization.$id as Id<"organizations"> }
+    business?.$id
+      ? { businessId: business.$id as Id<"businesses"> }
       : "skip"
   );
   const activeOrdersCount =
@@ -63,27 +63,27 @@ export function DashboardShell({
   const navItems = [
     {
       label: t("overview"),
-      href: `/dashboard/${organization?.$id ?? "new"}/overview`,
+      href: `/dashboard/${business?.$id ?? "new"}/overview`,
       icon: ChartBar,
     },
     {
       label: t("menu"),
-      href: `/dashboard/${organization?.$id ?? "new"}/menu`,
+      href: `/dashboard/${business?.$id ?? "new"}/menu`,
       icon: ForkKnife,
     },
     {
       label: t("currentOrders"),
-      href: `/dashboard/${organization?.$id ?? "new"}/current-orders`,
+      href: `/dashboard/${business?.$id ?? "new"}/current-orders`,
       icon: ClipboardText,
     },
     {
       label: t("allOrders"),
-      href: `/dashboard/${organization?.$id ?? "new"}/all-orders`,
+      href: `/dashboard/${business?.$id ?? "new"}/all-orders`,
       icon: Archive,
     },
     {
       label: t("settings"),
-      href: `/dashboard/${organization?.$id ?? "new"}/settings`,
+      href: `/dashboard/${business?.$id ?? "new"}/settings`,
       icon: Gear,
     },
   ];
@@ -240,16 +240,16 @@ export function DashboardShell({
         >
           {isExpanded ? (
             <Link
-              href={`/dashboard/${organization?.$id || "default"}/settings`}
+              href={`/dashboard/${business?.$id || "default"}/settings`}
               className="flex flex-col gap-2 transition-all hover:opacity-95 cursor-pointer group"
             >
               {/* Mini Lieferando-style Banner Card with bottom-left logo */}
               <div className="relative w-full aspect-[2.3/1] rounded-[16px] overflow-hidden bg-muted border border-border/60 shadow-xs">
-                {organization?.bannerFileId ? (
+                {business?.bannerFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={getImagePreviewUrl(organization.bannerFileId)}
-                    alt={organization?.name ?? "Banner"}
+                    src={getImagePreviewUrl(business.bannerFileId)}
+                    alt={business?.name ?? "Banner"}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
@@ -258,11 +258,11 @@ export function DashboardShell({
 
                 {/* Bottom-left logo box */}
                 <div className="absolute bottom-2 left-2 z-10 w-10 h-10 rounded-[8px] bg-background flex items-center justify-center overflow-hidden border border-border/60 shrink-0">
-                  {organization?.logoFileId ? (
+                  {business?.logoFileId ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                      src={getImagePreviewUrl(organization.logoFileId)}
-                      alt={organization?.name ?? "Logo"}
+                      src={getImagePreviewUrl(business.logoFileId)}
+                      alt={business?.name ?? "Logo"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -273,27 +273,27 @@ export function DashboardShell({
 
               <div className="flex flex-col flex-1 overflow-hidden px-0.5">
                 <span className="truncate font-semibold text-sm leading-tight text-foreground">
-                  {organization?.name ?? "Zakkig"}
+                  {business?.name ?? "Zakkig"}
                 </span>
-                {organization?.address && (
+                {business?.address && (
                   <span className="text-xs text-muted-foreground whitespace-pre-wrap leading-tight mt-1">
-                    {organization.address}
+                    {business.address}
                   </span>
                 )}
               </div>
             </Link>
           ) : (
             <Link
-              href={`/dashboard/${organization?.$id || "default"}/settings`}
+              href={`/dashboard/${business?.$id || "default"}/settings`}
               className="flex items-center justify-center transition-all hover:opacity-90 cursor-pointer"
-              title={organization?.name ?? "Settings"}
+              title={business?.name ?? "Settings"}
             >
               <div className="w-10 h-10 rounded-[10px] bg-background flex items-center justify-center overflow-hidden border border-border/60 shrink-0">
-                {organization?.logoFileId ? (
+                {business?.logoFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={getImagePreviewUrl(organization.logoFileId)}
-                    alt={organization?.name ?? "Logo"}
+                    src={getImagePreviewUrl(business.logoFileId)}
+                    alt={business?.name ?? "Logo"}
                     className="w-full h-full object-cover"
                   />
                 ) : (

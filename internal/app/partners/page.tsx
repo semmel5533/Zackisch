@@ -158,7 +158,7 @@ export default function PartnersPage() {
                       <div className="text-[11px] text-zinc-400 mt-0.5">{p.email}</div>
                     </td>
                     <td className="py-4 px-4 font-num font-semibold text-zinc-800">
-                      {p.referredOrganizationsCount} Betriebe
+                      {p.referredBusinessesCount} Betriebe
                     </td>
                     <td className="py-4 px-4 font-num text-zinc-700 font-medium">
                       50% (1% GMV)

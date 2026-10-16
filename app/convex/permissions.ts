@@ -4,7 +4,7 @@ import type { Id } from "./_generated/dataModel";
 
 export async function isOwner(
   ctx: QueryCtx,
-  organizationId: Id<"organizations">,
+  businessId: Id<"businesses">,
   sessionToken?: string,
 ) {
   let userId = await getAuthUserId(ctx);
@@ -20,22 +20,22 @@ export async function isOwner(
       if (user) userId = user._id;
     }
   }
-  const org = await ctx.db.get(organizationId);
-  return !!userId && !!org && org.ownerId === userId;
+  const business = await ctx.db.get(businessId);
+  return !!userId && !!business && business.ownerId === userId;
 }
 
 export async function requireOwner(
   ctx: QueryCtx,
-  organizationId: Id<"organizations">,
+  businessId: Id<"businesses">,
   sessionToken?: string,
 ) {
-  if (!(await isOwner(ctx, organizationId, sessionToken)))
+  if (!(await isOwner(ctx, businessId, sessionToken)))
     throw new Error("Unauthorized");
 }
 
 export async function verifyTerminal(
   ctx: QueryCtx,
-  organizationId: Id<"organizations">,
+  businessId: Id<"businesses">,
   token: string,
   type: "orders" | "availability" | "staff",
 ) {
@@ -51,7 +51,7 @@ export async function verifyTerminal(
       .withIndex("by_token", (q) => q.eq("token", token))
       .first();
     if (
-      session?.organizationId === organizationId &&
+      session?.businessId === businessId &&
       (!session.expiresAt || Date.parse(session.expiresAt) > Date.now())
     )
       return true;

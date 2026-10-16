@@ -4,7 +4,7 @@ Das Team Dashboard unter `https://internal.zackisch.com` ist die geschützte Arb
 
 ## Rollen und Funktionen
 
-Teammitglieder melden sich über einen gesicherten Prozess mit verpflichtender Zwei-Faktor-Authentifizierung an. Rollen und Einzelberechtigungen bestimmen den Zugang zu Organisationen, Aufträgen, Partnern, Nachrichten, Teamverwaltung, Sicherheitsprotokollen und Tickets. Alle Daten sind zusätzlich serverseitig auf die jeweilige Region und erlaubte Organisation begrenzt.
+Teammitglieder melden sich über einen gesicherten Prozess mit verpflichtender Zwei-Faktor-Authentifizierung an. Rollen und Einzelberechtigungen bestimmen den Zugang zu Betrieben, Aufträgen, Partnern, Nachrichten, Teamverwaltung, Sicherheitsprotokollen und Tickets. Alle Daten sind zusätzlich serverseitig auf die jeweilige Region und erlaubte Betriebe begrenzt.
 
 Der Ticketbereich führt offene und zugewiesene Fälle, Antworten, interne Notizen, Statuswechsel, Zuordnung, regionale Filter und nachvollziehbare Bearbeitung zusammen. Kundennachrichten und ausschließlich interne Notizen werden technisch und visuell klar unterschieden. Bestehende kaufmännische und operative Funktionen bleiben erhalten.
 

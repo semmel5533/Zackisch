@@ -38,7 +38,7 @@ Inventory cookies/localStorage/sessionStorage and external script access per sub
 
 ## 4. Support data safeguards
 
-Tickets may include pictures of screens, receipts, people or employee names. Warn against uploading payment card images, IDs, special-category medical information or unrelated personal data. Implement upload size/type constraints, private malware screening strategy and short-lived authenticated downloads, region/organization RBAC, per-ticket rate limits, malicious content sanitization, attachment deletion and audit. A staff-only note is its own server-side visibility class; neither public Convex queries, email notifications nor exports may include it. Automate ticket retention vs financial case preservation using real business purpose and legal hold. Do not use ticket content to train public AI systems without a separate documented legal assessment and user information.
+Tickets may include pictures of screens, receipts, people or employee names. Warn against uploading payment card images, IDs, special-category medical information or unrelated personal data. Implement upload size/type constraints, private malware screening strategy and short-lived authenticated downloads, region/business RBAC, per-ticket rate limits, malicious content sanitization, attachment deletion and audit. A staff-only note is its own server-side visibility class; neither public Convex queries, email notifications nor exports may include it. Automate ticket retention vs financial case preservation using real business purpose and legal hold. Do not use ticket content to train public AI systems without a separate documented legal assessment and user information.
 
 ## 5. Data rights, retention and separation
 

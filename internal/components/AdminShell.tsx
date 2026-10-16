@@ -62,8 +62,8 @@ export function AdminShell({ children }: AdminShellProps) {
       permission: null,
     },
     {
-      name: isDe ? "Betriebe" : "Organizations",
-      href: "/organizations",
+      name: isDe ? "Betriebe" : "Businesses",
+      href: "/businesses",
       icon: Store,
       requiresAdmin: false,
       permission: "restaurants:read",

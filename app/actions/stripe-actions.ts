@@ -8,19 +8,19 @@ import { Id } from "@/convex/_generated/dataModel";
 import { getAuthenticatedConvexClient, requireOwner } from "@/lib/convex/auth";
 
 export async function createConnectV2AccountAction(
-  organizationId: string,
+  businessId: string,
   dashboardAccess: "none" | "full" = "none",
 ) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.createEmbeddedAccountSession, {
-      organizationId: organizationId as Id<"organizations">,
+      businessId: businessId as Id<"businesses">,
       dashboardMode: dashboardAccess,
     });
     if (res.error) return { error: res.error };
-    revalidatePath(`/dashboard/${organizationId}/settings`);
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    revalidatePath(`/dashboard/${businessId}/settings`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
     return {
       stripeAccountId: res.accountId,
       accountVersion: "v2",
@@ -33,13 +33,13 @@ export async function createConnectV2AccountAction(
 }
 
 export async function createEmbeddedAccountSessionAction(
-  organizationId: string,
+  businessId: string,
 ) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.createEmbeddedAccountSession, {
-      organizationId: organizationId as Id<"organizations">,
+      businessId: businessId as Id<"businesses">,
     });
     if (res.error) return { error: res.error };
     return {
@@ -52,9 +52,9 @@ export async function createEmbeddedAccountSessionAction(
   }
 }
 
-export async function connectStripeAction(organizationId: string) {
+export async function connectStripeAction(businessId: string) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const headerList = await headers();
     const origin = headerList.get("origin") || process.env.NEXT_PUBLIC_APP_URL;
@@ -64,7 +64,7 @@ export async function connectStripeAction(organizationId: string) {
 
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.connectStripe, {
-      organizationId: organizationId as Id<"organizations">,
+      businessId: businessId as Id<"businesses">,
       origin,
     });
 
@@ -76,18 +76,18 @@ export async function connectStripeAction(organizationId: string) {
   }
 }
 
-export async function getStripeAccountStatusAction(organizationId: string) {
+export async function getStripeAccountStatusAction(businessId: string) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.getStripeAccountStatus, {
-      organizationId: organizationId as Id<"organizations">,
+      businessId: businessId as Id<"businesses">,
     });
 
     if (res.error) return { error: res.error };
-    revalidatePath(`/dashboard/${organizationId}/settings`);
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    revalidatePath(`/dashboard/${businessId}/settings`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
 
     return {
       isConnected: res.isConnected,
@@ -104,9 +104,9 @@ export async function getStripeAccountStatusAction(organizationId: string) {
   }
 }
 
-export async function createStripeDashboardLinkAction(organizationId: string) {
+export async function createStripeDashboardLinkAction(businessId: string) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const headerList = await headers();
     const origin = headerList.get("origin") || process.env.NEXT_PUBLIC_APP_URL;
@@ -116,7 +116,7 @@ export async function createStripeDashboardLinkAction(organizationId: string) {
 
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.createStripeDashboardLink, {
-      organizationId: organizationId as Id<"organizations">,
+      businessId: businessId as Id<"businesses">,
       origin,
     });
 
@@ -128,18 +128,18 @@ export async function createStripeDashboardLinkAction(organizationId: string) {
   }
 }
 
-export async function completeTestStripeOnboardingAction(organizationId: string) {
+export async function completeTestStripeOnboardingAction(businessId: string) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.completeTestStripeOnboarding, {
-      organizationId: organizationId as Id<"organizations">,
+      businessId: businessId as Id<"businesses">,
     });
 
     if (res.error) return { error: res.error };
-    revalidatePath(`/dashboard/${organizationId}/settings`);
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    revalidatePath(`/dashboard/${businessId}/settings`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
     return { success: res.success, accountId: res.accountId };
   } catch (error: any) {
     console.error("completeTestStripeOnboardingAction error:", error);

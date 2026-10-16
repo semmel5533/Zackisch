@@ -12,15 +12,15 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-export default function OrganizationsPage() {
+export default function BusinessesPage() {
   const { currentRegion } = useAdmin();
   const [search, setSearch] = useState("");
 
-  const organizations = useQuery((anyApi as any).admin.listRegionalOrganizations, {
+  const businesses = useQuery((anyApi as any).admin.listRegionalBusinesses, {
     regionId: currentRegion,
   });
 
-  const filtered = (organizations || []).filter((r: any) =>
+  const filtered = (businesses || []).filter((r: any) =>
     r.name.toLowerCase().includes(search.toLowerCase()) ||
     (r.address && r.address.toLowerCase().includes(search.toLowerCase())) ||
     (r.partnerCode && r.partnerCode.toLowerCase().includes(search.toLowerCase()))
@@ -51,7 +51,7 @@ export default function OrganizationsPage() {
         </div>
       </div>
 
-      {/* Organizations Table */}
+      {/* Businesses Table */}
       <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-zinc-600">
@@ -66,7 +66,7 @@ export default function OrganizationsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100">
-              {!organizations ? (
+              {!businesses ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center text-zinc-400">
                     Lade Betriebe...

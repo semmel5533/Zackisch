@@ -1,5 +1,5 @@
 import {
-  getOrganization,
+  getBusiness,
   getMenuCategories,
   getAvailableMenuItems,
   getOrder,
@@ -15,27 +15,27 @@ export async function generateMetadata({
   params,
   searchParams,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
   searchParams: Promise<{ order?: string }>;
 }) {
-  const [{ organizationId }, { order }] = await Promise.all([
+  const [{ businessId }, { order }] = await Promise.all([
     params,
     searchParams,
   ]);
   const cookieStore = await cookies();
   const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "de";
   const dict = translations[locale] || translations.de;
-  const organization = await getOrganization(organizationId);
-  const orgName = organization?.name || "";
+  const business = await getBusiness(businessId);
+  const businessName = business?.name || "";
 
   if (order) {
     return {
-      title: orgName ? `${dict.orderStatus} - ${orgName}` : dict.orderStatus,
+      title: businessName ? `${dict.orderStatus} - ${businessName}` : dict.orderStatus,
     };
   }
 
   return {
-    title: orgName ? `${dict.titleToGo} ${orgName}` : dict.titleToGo,
+    title: businessName ? `${dict.titleToGo} ${businessName}` : dict.titleToGo,
   };
 }
 
@@ -43,29 +43,29 @@ export default async function PickupPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
   searchParams: Promise<{ order?: string }>;
 }) {
-  const [{ organizationId }, { order }] = await Promise.all([
+  const [{ businessId }, { order }] = await Promise.all([
     params,
     searchParams,
   ]);
 
-  const [organization, categories, items, initialOrder] = await Promise.all([
-    getOrganization(organizationId),
-    getMenuCategories(organizationId),
-    getAvailableMenuItems(organizationId),
+  const [business, categories, items, initialOrder] = await Promise.all([
+    getBusiness(businessId),
+    getMenuCategories(businessId),
+    getAvailableMenuItems(businessId),
     order ? getOrder(order) : Promise.resolve(null),
   ]);
 
-  if (!organization)
+  if (!business)
     return (
       <div className="p-8 text-center">
-        <LocalizedText tKey="orgNotFound" />
+        <LocalizedText tKey="businessNotFound" />
       </div>
     );
 
-  if (organization.isToGoEnabled === false && !order) {
+  if (business.isToGoEnabled === false && !order) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-background text-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -79,7 +79,7 @@ export default async function PickupPage({
         </h1>
         <LocalizedText
           tKey="notAcceptingToGoOrders"
-          params={{ name: organization.name }}
+          params={{ name: business.name }}
           className="text-muted-foreground max-w-sm"
           as="p"
         />
@@ -87,7 +87,7 @@ export default async function PickupPage({
     );
   }
 
-  if (!organization.stripeOnboardingComplete && !order) {
+  if (!business.stripeOnboardingComplete && !order) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-background text-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -108,15 +108,15 @@ export default async function PickupPage({
     );
   }
 
-  const publicOrganization = {
-    ...organization,
+  const publicBusiness = {
+    ...business,
     stripeAccountId: undefined,
     taxId: undefined,
     ownerId: "",
   };
 
   const sanitizedInitialOrder =
-    initialOrder && initialOrder.organizationId === organizationId
+    initialOrder && initialOrder.businessId === businessId
       ? {
           ...initialOrder,
           stripePaymentId: undefined,
@@ -128,7 +128,7 @@ export default async function PickupPage({
 
   return (
     <GuestFrontend
-      organization={structuredClone(publicOrganization)}
+      business={structuredClone(publicBusiness)}
       categories={structuredClone(categories)}
       items={structuredClone(items)}
       type="takeaway"

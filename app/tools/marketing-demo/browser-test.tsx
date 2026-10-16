@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { useLanguageStore } from "@/store/language-store";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import type { MenuCategory, MenuItem, Order, Organization } from "@/lib/types";
+import type { MenuCategory, MenuItem, Order, Business } from "@/lib/types";
 import "../../app/globals.css";
 import "./preview.css";
 
@@ -48,8 +48,8 @@ useLanguageStore
   .getState()
   .setLocale(params.get("lang") === "en" ? "en" : "de");
 
-const base = { _creationTime: Date.now(), organizationId: "demo" };
-const organization: Organization = {
+const base = { _creationTime: Date.now(), businessId: "demo" };
+const business: Business = {
   ...base,
   _id: "demo",
   $id: "demo",
@@ -113,21 +113,21 @@ const orders: Order[] = Array.from(
 
 const screens: Record<string, React.ReactNode> = {
   overview: (
-    <OverviewContent organization={organization} orders={orders}>
+    <OverviewContent business={business} orders={orders}>
       <StaffSessionCard
         staffToken="demo-token"
-        organizationId="demo"
+        businessId="demo"
         baseUrl="http://localhost:3001"
       />
     </OverviewContent>
   ),
-  archive: <AllOrdersContent orders={orders} organizationId="demo" />,
+  archive: <AllOrdersContent orders={orders} businessId="demo" />,
   menu: (
-    <MenuContent categories={categories} items={items} organizationId="demo" />
+    <MenuContent categories={categories} items={items} businessId="demo" />
   ),
   settings: (
     <SettingsContent
-      organization={organization}
+      business={business}
       user={{ name: "Demo", email: "demo@example.invalid" }}
     />
   ),
@@ -135,20 +135,20 @@ const screens: Record<string, React.ReactNode> = {
     <AvailabilityContent
       categories={categories}
       items={items}
-      organizationId="demo"
+      businessId="demo"
     />
   ),
   "tracker-ready": (
     <OrderTracker
       orderId="order-0"
-      organization={organization}
+      business={business}
       initialOrder={orders[0]}
     />
   ),
   "tracker-completed": (
     <OrderTracker
       orderId="order-0"
-      organization={organization}
+      business={business}
       initialOrder={orders[0]}
     />
   ),
@@ -168,7 +168,7 @@ createRoot(document.getElementById("root")!).render(
     <div data-browser-test-screen={screen}>
       <Suspense fallback={null}>
         <DashboardShell
-          organization={organization}
+          business={business}
           user={{ name: "Demo User", email: "demo@example.invalid" }}
         >
           {content}

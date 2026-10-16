@@ -71,7 +71,7 @@ import type { Order } from "@/lib/types";
 
 interface AllOrdersContentProps {
   orders: Order[];
-  organizationId: string;
+  businessId: string;
   hideExport?: boolean;
 }
 
@@ -115,7 +115,7 @@ const dateFormatter = new Intl.DateTimeFormat("de-DE", {
 
 export function AllOrdersContent({
   orders: initialOrders,
-  organizationId,
+  businessId,
   hideExport = false,
 }: AllOrdersContentProps) {
   const { t, locale } = useTranslation();
@@ -292,7 +292,7 @@ export function AllOrdersContent({
 
     setIsCancelling(true);
     try {
-      const res = await updateOrderStatusAction(order.$id, "cancelled", organizationId);
+      const res = await updateOrderStatusAction(order.$id, "cancelled", businessId);
       if (!res?.success) {
         toast.error(res?.error || t("error"));
         return;
@@ -313,7 +313,7 @@ export function AllOrdersContent({
     if (recordingOrderId) return;
     setRecordingOrderId(order.$id);
     try {
-      const res = await recordOrderInPosAction(order.$id, organizationId);
+      const res = await recordOrderInPosAction(order.$id, businessId);
       if (res.error) {
         toast.error(res.error);
         return;
@@ -350,7 +350,7 @@ export function AllOrdersContent({
         : undefined;
       const res = await refundOrderAction(
         orderToRefund.$id,
-        organizationId,
+        businessId,
         parsedAmount,
         "requested_by_customer",
       );
@@ -384,7 +384,7 @@ export function AllOrdersContent({
   }
 
   async function handleExportCSV() {
-    const result = await exportOrdersCSVAction(organizationId);
+    const result = await exportOrdersCSVAction(businessId);
     if (result.csv) {
       const blob = new Blob([result.csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);

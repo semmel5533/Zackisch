@@ -1,8 +1,8 @@
 import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 
-const organizationObjectValidator = v.object({
-  _id: v.id("organizations"),
+const businessObjectValidator = v.object({
+  _id: v.id("businesses"),
   _creationTime: v.number(),
   name: v.string(),
   address: v.optional(v.string()),
@@ -44,23 +44,23 @@ const organizationObjectValidator = v.object({
 });
 
 export const get = query({
-  args: { id: v.id("organizations") },
-  returns: v.union(v.null(), organizationObjectValidator),
+  args: { id: v.id("businesses") },
+  returns: v.union(v.null(), businessObjectValidator),
   handler: async (ctx, args) => {
-    const org = await ctx.db.get(args.id);
-    if (!org) return null;
+    const business = await ctx.db.get(args.id);
+    if (!business) return null;
 
     let logoUrl: string | null = null;
-    if (org.logoStorageId) {
-      logoUrl = await ctx.storage.getUrl(org.logoStorageId);
+    if (business.logoStorageId) {
+      logoUrl = await ctx.storage.getUrl(business.logoStorageId);
     }
     let bannerUrl: string | null = null;
-    if (org.bannerStorageId) {
-      bannerUrl = await ctx.storage.getUrl(org.bannerStorageId);
+    if (business.bannerStorageId) {
+      bannerUrl = await ctx.storage.getUrl(business.bannerStorageId);
     }
 
     return {
-      ...org,
+      ...business,
       logoUrl,
       bannerUrl,
     };
@@ -69,24 +69,24 @@ export const get = query({
 
 export const getByStripeAccountInternal = internalQuery({
   args: { stripeAccountId: v.string() },
-  returns: v.union(v.null(), v.id("organizations")),
+  returns: v.union(v.null(), v.id("businesses")),
   handler: async (ctx, args) => {
-    const org = await ctx.db
-      .query("organizations")
+    const business = await ctx.db
+      .query("businesses")
       .withIndex("by_stripeAccountId", (q) =>
         q.eq("stripeAccountId", args.stripeAccountId)
       )
       .first();
-    return org ? org._id : null;
+    return business ? business._id : null;
   },
 });
 
 export const getPublicRestaurant = query({
-  args: { id: v.id("organizations") },
+  args: { id: v.id("businesses") },
   returns: v.union(
     v.null(),
     v.object({
-      _id: v.id("organizations"),
+      _id: v.id("businesses"),
       name: v.string(),
       legalName: v.optional(v.string()),
       address: v.optional(v.string()),
@@ -145,26 +145,26 @@ export const getPublicRestaurant = query({
 
 export const getByOwner = query({
   args: { ownerId: v.string() },
-  returns: v.union(v.null(), organizationObjectValidator),
+  returns: v.union(v.null(), businessObjectValidator),
   handler: async (ctx, args) => {
-    const org = await ctx.db
-      .query("organizations")
+    const business = await ctx.db
+      .query("businesses")
       .withIndex("by_ownerId", (q) => q.eq("ownerId", args.ownerId))
       .first();
 
-    if (!org) return null;
+    if (!business) return null;
 
     let logoUrl: string | null = null;
-    if (org.logoStorageId) {
-      logoUrl = await ctx.storage.getUrl(org.logoStorageId);
+    if (business.logoStorageId) {
+      logoUrl = await ctx.storage.getUrl(business.logoStorageId);
     }
     let bannerUrl: string | null = null;
-    if (org.bannerStorageId) {
-      bannerUrl = await ctx.storage.getUrl(org.bannerStorageId);
+    if (business.bannerStorageId) {
+      bannerUrl = await ctx.storage.getUrl(business.bannerStorageId);
     }
 
     return {
-      ...org,
+      ...business,
       logoUrl,
       bannerUrl,
     };
@@ -187,11 +187,11 @@ export const create = mutation({
     region: v.optional(v.string()),
     tables: v.optional(v.array(v.string())),
   },
-  returns: v.id("organizations"),
+  returns: v.id("businesses"),
   handler: async (ctx, args) => {
     const trimmedName = args.name.trim();
     if (trimmedName.length === 0 || trimmedName.length > 100) {
-      throw new Error("Invalid organization name");
+      throw new Error("Invalid business name");
     }
     if (args.address && args.address.length > 200) {
       throw new Error("Address too long");
@@ -208,7 +208,7 @@ export const create = mutation({
       }
     }
 
-    const orgId = await ctx.db.insert("organizations", {
+    const businessId = await ctx.db.insert("businesses", {
       name: trimmedName,
       ownerId: args.ownerId,
       address: args.address,
@@ -233,13 +233,13 @@ export const create = mutation({
       tables: args.tables ?? [],
     });
 
-    return orgId;
+    return businessId;
   },
 });
 
 export const update = mutation({
   args: {
-    id: v.id("organizations"),
+    id: v.id("businesses"),
     name: v.optional(v.string()),
     address: v.optional(v.string()),
     logoStorageId: v.optional(v.union(v.id("_storage"), v.null())),
@@ -282,7 +282,7 @@ export const update = mutation({
     if (patchData.name !== undefined) {
       const trimmedName = patchData.name.trim();
       if (trimmedName.length === 0 || trimmedName.length > 100) {
-        throw new Error("Invalid organization name");
+        throw new Error("Invalid business name");
       }
       patchData.name = trimmedName;
     }
@@ -301,7 +301,7 @@ export const update = mutation({
       }
     }
     const existing = await ctx.db.get(id);
-    if (!existing) throw new Error("Organization not found");
+    if (!existing) throw new Error("Business not found");
 
     if (clearLogo && existing.logoStorageId) {
       try {
@@ -356,7 +356,7 @@ export const update = mutation({
 
 export const syncStripeAccountStatusInternal = internalMutation({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     stripeAccountId: v.string(),
     stripeOnboardingComplete: v.boolean(),
     stripeChargesEnabled: v.boolean(),
@@ -371,13 +371,13 @@ export const syncStripeAccountStatusInternal = internalMutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const existing = await ctx.db.get(args.organizationId);
+    const existing = await ctx.db.get(args.businessId);
     if (!existing) return null;
 
     const shouldPauseForRestriction =
       existing.stripeOnboardingComplete && !args.stripeChargesEnabled;
 
-    await ctx.db.patch(args.organizationId, {
+    await ctx.db.patch(args.businessId, {
       stripeAccountId: args.stripeAccountId,
       stripeOnboardingComplete: args.stripeOnboardingComplete,
       stripeChargesEnabled: args.stripeChargesEnabled,
@@ -404,24 +404,24 @@ export const syncStripeAccountStatusInternal = internalMutation({
 });
 
 export const cascadeDelete = internalMutation({
-  args: { organizationId: v.id("organizations") },
+  args: { businessId: v.id("businesses") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const org = await ctx.db.get(args.organizationId);
-    if (!org) return null;
+    const business = await ctx.db.get(args.businessId);
+    if (!business) return null;
 
-    if (org.logoStorageId) {
-      await ctx.storage.delete(org.logoStorageId);
+    if (business.logoStorageId) {
+      await ctx.storage.delete(business.logoStorageId);
     }
-    if (org.bannerStorageId) {
-      await ctx.storage.delete(org.bannerStorageId);
+    if (business.bannerStorageId) {
+      await ctx.storage.delete(business.bannerStorageId);
     }
 
     // Delete categories
     const categories = await ctx.db
       .query("menuCategories")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
     for (const cat of categories) {
@@ -431,8 +431,8 @@ export const cascadeDelete = internalMutation({
     // Delete items & their images
     const items = await ctx.db
       .query("menuItems")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
     for (const item of items) {
@@ -445,8 +445,8 @@ export const cascadeDelete = internalMutation({
     // Preserve statutory order accounting data for §147 AO / GoBD retention by anonymizing guest email if orders exist
     const orders = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
     for (const order of orders) {
@@ -458,8 +458,8 @@ export const cascadeDelete = internalMutation({
     // Delete order sessions
     const orderSessions = await ctx.db
       .query("orderSessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
     for (const s of orderSessions) {
@@ -469,8 +469,8 @@ export const cascadeDelete = internalMutation({
     // Delete availability sessions
     const availSessions = await ctx.db
       .query("availabilitySessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
     for (const s of availSessions) {
@@ -480,16 +480,16 @@ export const cascadeDelete = internalMutation({
     // Delete staff sessions
     const staffSessions = await ctx.db
       .query("staffSessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
     for (const s of staffSessions) {
       await ctx.db.delete(s._id);
     }
 
-    // Delete the organization itself
-    await ctx.db.delete(args.organizationId);
+    // Delete the business itself
+    await ctx.db.delete(args.businessId);
     return null;
   },
 });

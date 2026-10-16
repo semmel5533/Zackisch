@@ -30,14 +30,14 @@ Financial transactions are **not** created when a guest merely submits a client-
 ## Core bounded contexts
 
 1. **Identity and sessions:** merchant identity; scoped internal team identity; staff terminal pairing; guest browser/checkout association. Shared merchant authentication for `app` and `support` with strictly scoped session validation, cross-origin CSRF and return URL allowlist. Never equate same backend with automatic SSO.
-2. **Organizations and regions:** business owner, membership where supported, legal region, currency, offerings, open/paused status and permitted staff session. Region is derived from the organization or verified staff assignment, never trusted from a client filter.
+2. **Businesses and regions:** business owner, membership where supported, legal region, currency, offerings, open/paused status and permitted staff session. Region is derived from the business or verified staff assignment, never trusted from a client filter.
 3. **Menu and availability:** categories, items, options, prices in minor currency units, tax classification, photo assets, availability updates, validation and ordering.
 4. **Ordering and payment:** Dine-in versus pickup; table/venue identity; canonical totals, Stripe Connect, signed webhook, idempotency, status machine, receipts and reconciliation. Existing POS manual accounting is operationally independent.
 5. **Setup readiness:** derived blockers, optional recommendations, persisted progress, resumable actions and last verified checks. Keep genuine source facts separate from UI dismissal flags.
 6. **QR/print:** canonical public URL generation, print asset builder, QR encoding and scannability verification. Never encode privileged tablet/merchant/admin tokens.
 7. **Knowledge base:** region+language+stable slug+publication state, articles and categories, search index, navigation and relevant links; editorial version matches deployed UI. Minimize CMS complexity.
-8. **Ticketing:** organization-owned ticket, region, requester, public messages, staff-only notes, attachments, assignment, status, notifications, audit. Every read and write authorizes both ticket visibility and specific message visibility.
-9. **Internal ops:** independent 2FA, regional permissions, organizations/orders/partners/newsletters/email/audit/support. No implicit global access.
+8. **Ticketing:** business-owned ticket, region, requester, public messages, staff-only notes, attachments, assignment, status, notifications, audit. Every read and write authorizes both ticket visibility and specific message visibility.
+9. **Internal ops:** independent 2FA, regional permissions, businesses/orders/partners/newsletters/email/audit/support. No implicit global access.
 10. **Infrastructure and recovery:** Cloudflare deployment/observability, Convex backups, Stripe/Workspace integrations, documented incident recovery and operational ownership.
 
 ## Recommended layout per app
@@ -56,15 +56,15 @@ Use the same clarity of module boundaries in other apps without a costly move to
 
 ## Data modeling: region, tenant, references
 
-All private domain entities are associated directly or through immutable references with exactly one organization and region. Establish indexed queries appropriate to access patterns. Do not rely on filters after broad collection reads for confidentiality or performance. For support, a reasonable example model includes:
+All private domain entities are associated directly or through immutable references with exactly one business and region. Establish indexed queries appropriate to access patterns. Do not rely on filters after broad collection reads for confidentiality or performance. For support, a reasonable example model includes:
 
 ```
 articles: regionCode, locale, slug, categoryKey, title, summary, body, status, updatedAt
-supportTickets: organizationId, regionCode, requesterUserId, subject, category, priority, status, assignedAdminId?, createdAt, updatedAt
+supportTickets: businessId, regionCode, requesterUserId, subject, category, priority, status, assignedAdminId?, createdAt, updatedAt
 supportMessages: ticketId, senderKind, senderId, visibility(public|internal), body, createdAt
 supportAttachments: ticketId, messageId?, storageId, mimeType, sizeBytes, uploadedBy, createdAt
 supportEvents: ticketId, type, actor, regionCode, safeDetails, timestamp
-setupProgress: organizationId, dismissedHints, lastReviewedStep?, updatedAt
+setupProgress: businessId, dismissedHints, lastReviewedStep?, updatedAt
 ```
 
 This is a suggested shape, not an instruction to copy blindly. Use real `Id<...>` references where appropriate, efficient indexes and server invariants. **Do not persist a trusted "ready" boolean when it can become stale.** Compute readiness from validated current status (including provider state, menu completeness, pairing, QR test) and optionally cache with explicit invalidation. Where setup steps depend on external Stripe verification, distinguish `pending`, `needs_action`, `verified`, and `error`.
@@ -72,8 +72,8 @@ This is a suggested shape, not an instruction to copy blindly. Use real `Id<...>
 ## Naming and interface conventions
 
 - Domain concepts in PascalCase for TypeScript types/classes, camelCase for functions/variables, kebab-case for filenames and URL slugs, SCREAMING_SNAKE_CASE for environment variables and stable constants, canonical DB table naming aligned with current Convex schema and generated types.
-- Prefer `organization` for business, `regionCode` for legal market, `locale` for UI translation, `member`/`operator` for auth roles, `staffSession` for paired device, `supportTicket` and `supportMessage` for customer support. Do not indiscriminately replace the existing stable schema fields without migrations/tests.
-- Intentful functions such as `requireOrganizationOwner`, `getPublicVenueMenu`, `createTicketForOrganization`, `addInternalTicketNote`, `markOrderReady`, `calculateCheckoutPrice`; avoid ambiguous `handleData`, `utils2`, `adminThing` or broad `getAll`.
+- Prefer `business` for business, `regionCode` for legal market, `locale` for UI translation, `member`/`operator` for auth roles, `staffSession` for paired device, `supportTicket` and `supportMessage` for customer support. Do not indiscriminately replace the existing stable schema fields without migrations/tests.
+- Intentful functions such as `requireBusinessOwner`, `getPublicVenueMenu`, `createTicketForBusiness`, `addInternalTicketNote`, `markOrderReady`, `calculateCheckoutPrice`; avoid ambiguous `handleData`, `utils2`, `adminThing` or broad `getAll`.
 - Server Action return types form discriminated unions with safe keys (`ok`, `errorCode`, safe `fieldErrors`) rather than provider exceptions or stack traces.
 - UI uses domain-accurate German: `Betrieb`, `Personal-Tablet`, `QR-Code`, `Kasse`, `Bestellung`, `Abholung`, `Einrichtungsassistent`, `Team Dashboard`. Internal naming may be English.
 - No direct cross-domain database mutation through browser-accessible convenience endpoints. Public data query output must use explicit allowlisted DTOs.

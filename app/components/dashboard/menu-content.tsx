@@ -86,7 +86,7 @@ import type { MenuCategory, MenuItem, CustomizationStep } from "@/lib/types";
 interface MenuContentProps {
   categories: MenuCategory[];
   items: MenuItem[];
-  organizationId: string;
+  businessId: string;
 }
 
 const EMPTY_ITEMS: MenuItem[] = [];
@@ -160,7 +160,7 @@ const customItemCollisionDetection: CollisionDetection = (args) => {
 export function MenuContent({
   categories: initialCategories,
   items: initialItems,
-  organizationId,
+  businessId,
 }: MenuContentProps) {
   const { t } = useTranslation();
   const [, startTransition] = useTransition();
@@ -366,7 +366,7 @@ export function MenuContent({
 
           startTransition(async () => {
             const res = await reorderCategoriesAction(
-              organizationId,
+              businessId,
               newCategories.map((c) => c.$id),
             );
             if (res?.error) {
@@ -468,7 +468,7 @@ export function MenuContent({
 
       if (updates.length > 0) {
         startTransition(async () => {
-          const res = await reorderItemsAction(organizationId, updates);
+          const res = await reorderItemsAction(businessId, updates);
           if (res?.error) {
             toast.error(res.error);
             setItems(previousItems);
@@ -486,7 +486,7 @@ export function MenuContent({
     setCategories(next);
     startTransition(async () => {
       try {
-        const result = await reorderCategoriesAction(organizationId, next.map((category) => category.$id));
+        const result = await reorderCategoriesAction(businessId, next.map((category) => category.$id));
         if (result?.error) {
           toast.error(result.error);
           setCategories(categories);
@@ -496,7 +496,7 @@ export function MenuContent({
         setCategories(categories);
       }
     });
-  }, [categories, organizationId, t]);
+  }, [categories, businessId, t]);
 
   const moveItem = useCallback((itemId: string, direction: -1 | 1) => {
     const item = items.find((entry) => entry.$id === itemId);
@@ -516,7 +516,7 @@ export function MenuContent({
     const updates = next.map((entry) => ({ id: entry.$id, sortOrder: entry.sortOrder, categoryId: entry.categoryId }));
     startTransition(async () => {
       try {
-        const result = await reorderItemsAction(organizationId, updates);
+        const result = await reorderItemsAction(businessId, updates);
         if (result?.error) {
           toast.error(result.error);
           setItems(items);
@@ -526,7 +526,7 @@ export function MenuContent({
         setItems(items);
       }
     });
-  }, [items, organizationId, t]);
+  }, [items, businessId, t]);
 
   // In-place category creation handler
   async function openNewCategory() {
@@ -541,7 +541,7 @@ export function MenuContent({
       _id: tempId as any,
       _creationTime: Date.now(),
       $id: tempId,
-      organizationId,
+      businessId,
       name: defaultName,
       sortOrder: newSortOrder,
       $createdAt: new Date().toISOString(),
@@ -556,7 +556,7 @@ export function MenuContent({
     setAutoEditCategoryId(tempId);
 
     const formData = new FormData();
-    formData.append("organizationId", organizationId);
+    formData.append("businessId", businessId);
     formData.append("name", defaultName);
     formData.append("sortOrder", newSortOrder.toString());
 
@@ -631,7 +631,7 @@ export function MenuContent({
   async function confirmDelete() {
     if (!deleteConfirm) return;
     if (deleteConfirm.type === "category") {
-      const res = await deleteCategoryAction(deleteConfirm.id, organizationId);
+      const res = await deleteCategoryAction(deleteConfirm.id, businessId);
       if (res?.error) {
         toast.error(res.error);
       } else {
@@ -640,7 +640,7 @@ export function MenuContent({
     } else if (deleteConfirm.type === "item") {
       const res = await deleteMenuItemAction(
         deleteConfirm.id,
-        organizationId,
+        businessId,
         deleteConfirm.imageId,
       );
       if (res?.error) {
@@ -658,7 +658,7 @@ export function MenuContent({
       pendingAvailabilityIdsRef.current.add(itemId);
       void (async () => {
         try {
-          const res = await toggleMenuItemAvailability(itemId, available, organizationId);
+          const res = await toggleMenuItemAvailability(itemId, available, businessId);
           if (res?.error) {
             toast.error(res.error);
             return;
@@ -698,7 +698,7 @@ export function MenuContent({
         }
       })();
     },
-    [organizationId, t],
+    [businessId, t],
   );
 
   return (
@@ -871,7 +871,7 @@ export function MenuContent({
         editingItem={editingItem}
         categories={categories}
         selectedCategoryId={selectedCategoryId}
-        organizationId={organizationId}
+        businessId={businessId}
       />
 
       {/* Delete Confirmation Dialog */}
@@ -1026,7 +1026,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
     setIsSavingName(true);
     const formData = new FormData();
     formData.append("categoryId", category.$id);
-    formData.append("organizationId", category.organizationId);
+    formData.append("businessId", category.businessId);
     formData.append("name", trimmed);
     formData.append("sortOrder", category.sortOrder.toString());
 

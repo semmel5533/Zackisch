@@ -39,7 +39,7 @@ export default defineSchema({
     .index("by_regionId", ["regionId"]),
 
   // Restaurants & Merchants
-  organizations: defineTable({
+  businesses: defineTable({
     name: v.string(),
     address: v.optional(v.string()),
     logoStorageId: v.optional(v.union(v.id("_storage"), v.null())),
@@ -81,15 +81,15 @@ export default defineSchema({
     .index("by_stripeAccountId", ["stripeAccountId"]),
 
   menuCategories: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     name: v.string(),
     sortOrder: v.number(),
   })
-    .index("by_organizationId", ["organizationId"])
-    .index("by_organizationId_and_sortOrder", ["organizationId", "sortOrder"]),
+    .index("by_businessId", ["businessId"])
+    .index("by_businessId_and_sortOrder", ["businessId", "sortOrder"]),
 
   menuItems: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     categoryId: v.id("menuCategories"),
     name: v.string(),
     description: v.optional(v.string()),
@@ -102,12 +102,12 @@ export default defineSchema({
     allergens: v.optional(v.array(v.string())),
     additives: v.optional(v.array(v.string())),
   })
-    .index("by_organizationId", ["organizationId"])
-    .index("by_organizationId_and_available", ["organizationId", "available"])
+    .index("by_businessId", ["businessId"])
+    .index("by_businessId_and_available", ["businessId", "available"])
     .index("by_categoryId", ["categoryId"]),
 
   orders: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     tableNumber: v.optional(v.string()),
     type: v.union(v.literal("dine-in"), v.literal("takeaway")),
     items: v.string(), // JSON stringified OrderItem[]
@@ -165,10 +165,10 @@ export default defineSchema({
     sellerSnapshot: v.optional(v.string()),
     currency: v.string(),
   })
-    .index("by_organizationId", ["organizationId"])
-    .index("by_organizationId_and_status", ["organizationId", "status"])
-    .index("by_organizationId_and_posStatus", [
-      "organizationId",
+    .index("by_businessId", ["businessId"])
+    .index("by_businessId_and_status", ["businessId", "status"])
+    .index("by_businessId_and_posStatus", [
+      "businessId",
       "posRecordingStatus",
     ])
     .index("by_stripePaymentId", ["stripePaymentId"])
@@ -176,27 +176,27 @@ export default defineSchema({
     .index("by_confirmationToken", ["confirmationToken"]),
 
   orderSessions: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     token: v.string(),
     expiresAt: v.optional(v.string()),
   })
-    .index("by_organizationId", ["organizationId"])
+    .index("by_businessId", ["businessId"])
     .index("by_token", ["token"]),
 
   availabilitySessions: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     token: v.string(),
     expiresAt: v.optional(v.string()),
   })
-    .index("by_organizationId", ["organizationId"])
+    .index("by_businessId", ["businessId"])
     .index("by_token", ["token"]),
 
   staffSessions: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     token: v.string(),
     expiresAt: v.optional(v.string()),
   })
-    .index("by_organizationId", ["organizationId"])
+    .index("by_businessId", ["businessId"])
     .index("by_token", ["token"]),
 
   verificationCodes: defineTable({
@@ -337,7 +337,7 @@ export default defineSchema({
 
   // Immutable B2B Contract & Legal Acceptance Log
   acceptanceEvents: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     userId: v.string(),
     documentSlug: v.string(), // "gtc", "data-processing", "pos-workflow", "fee-model"
     documentVersion: v.string(),
@@ -346,12 +346,12 @@ export default defineSchema({
     userAgent: v.optional(v.string()),
     context: v.string(), // "setup_wizard", "settings", "onboarding"
   })
-    .index("by_organizationId", ["organizationId"])
-    .index("by_organizationId_and_slug", ["organizationId", "documentSlug"]),
+    .index("by_businessId", ["businessId"])
+    .index("by_businessId_and_slug", ["businessId", "documentSlug"]),
 
   // Monthly B2B Fee Statements & EN 16931 E-Invoices
   merchantFeeStatements: defineTable({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     regionId: v.string(),
     period: v.string(), // e.g. "2026-10"
     statementNumber: v.string(), // e.g. "ZCK-202610-0001"
@@ -368,15 +368,15 @@ export default defineSchema({
     status: v.union(v.literal("issued"), v.literal("corrected")),
     createdAt: v.number(),
   })
-    .index("by_organizationId", ["organizationId"])
-    .index("by_organizationId_and_period", ["organizationId", "period"])
+    .index("by_businessId", ["businessId"])
+    .index("by_businessId_and_period", ["businessId", "period"])
     .index("by_regionId", ["regionId"]),
 
   // Support Tickets (shared across support.zackisch.com, app.zackisch.com, internal.zackisch.com)
   supportTickets: defineTable({
     ticketNumber: v.string(), // e.g. "ZCK-1001"
-    organizationId: v.optional(v.id("organizations")),
-    organizationName: v.optional(v.string()),
+    businessId: v.optional(v.id("businesses")),
+    businessName: v.optional(v.string()),
     requesterUserId: v.optional(v.string()),
     requesterEmail: v.string(),
     requesterName: v.string(),
@@ -412,7 +412,7 @@ export default defineSchema({
   })
     .index("by_regionId_and_updatedAt", ["regionId", "updatedAt"])
     .index("by_regionId_and_status", ["regionId", "status"])
-    .index("by_organizationId", ["organizationId"])
+    .index("by_businessId", ["businessId"])
     .index("by_requesterEmail", ["requesterEmail"])
     .index("by_ticketNumber", ["ticketNumber"]),
 
@@ -440,8 +440,8 @@ export default defineSchema({
     userId: v.string(),
     email: v.string(),
     name: v.string(),
-    organizationId: v.optional(v.id("organizations")),
-    organizationName: v.optional(v.string()),
+    businessId: v.optional(v.id("businesses")),
+    businessName: v.optional(v.string()),
     regionId: v.string(),
     expiresAt: v.number(),
   }).index("by_token", ["token"]),

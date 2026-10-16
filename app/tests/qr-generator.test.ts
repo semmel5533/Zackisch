@@ -10,17 +10,17 @@ describe("qr-generator", () => {
     expect(
       buildGuestQrUrl({
         baseUrl: "https://app.zackisch.com/",
-        organizationId: "org_123",
+        businessId: "biz_123",
       }),
-    ).toBe("https://app.zackisch.com/org_123");
+    ).toBe("https://app.zackisch.com/biz_123");
 
     expect(
       buildGuestQrUrl({
         baseUrl: "https://app.zackisch.com",
-        organizationId: "org_123",
+        businessId: "biz_123",
         tableNumber: "14",
       }),
-    ).toBe("https://app.zackisch.com/org_123/14");
+    ).toBe("https://app.zackisch.com/biz_123/14");
   });
 
   it("sanitizes special characters in table numbers", () => {
@@ -31,7 +31,7 @@ describe("qr-generator", () => {
 
   it("enforces ISO/IEC 18004 >= 4-module quiet zone, high-contrast black-on-white, and >= 30mm print size", () => {
     const card = createQrPrintCardSpec({
-      organizationId: "org_123",
+      businessId: "biz_123",
       venueName: "Bistro Zackisch",
       tableNumber: "7",
       locale: "de",
@@ -42,6 +42,6 @@ describe("qr-generator", () => {
     expect(card.backgroundColor).toBe("#FFFFFF");
     expect(card.minPrintSizeMm).toBeGreaterThanOrEqual(30);
     expect(card.heading).toBe("AN TISCH 7 BESTELLEN");
-    expect(card.displayUrl).toBe("app.zackisch.com/org_123/7");
+    expect(card.displayUrl).toBe("app.zackisch.com/biz_123/7");
   });
 });

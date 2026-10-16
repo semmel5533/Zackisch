@@ -1,4 +1,4 @@
-import { getOrganization } from "@/lib/convex/database";
+import { getBusiness } from "@/lib/convex/database";
 import { getUser } from "@/lib/convex/auth";
 import { SettingsContent } from "@/components/dashboard/settings-content";
 
@@ -17,19 +17,19 @@ export async function generateMetadata() {
 export default async function SettingsPage({
   params,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
 }) {
-  const { organizationId } = await params;
-  const [organization, user] = await Promise.all([
-    getOrganization(organizationId),
+  const { businessId } = await params;
+  const [business, user] = await Promise.all([
+    getBusiness(businessId),
     getUser(),
   ]);
 
-  if (!organization || !user) return null;
+  if (!business || !user) return null;
 
   return (
     <SettingsContent
-      organization={structuredClone(organization)}
+      business={structuredClone(business)}
       user={structuredClone(user)}
     />
   );

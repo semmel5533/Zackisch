@@ -15,15 +15,15 @@ export async function generateMetadata() {
 export default async function AllOrdersPage({
   params,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
 }) {
-  const { organizationId } = await params;
-  const orders = await getOrders(organizationId);
+  const { businessId } = await params;
+  const orders = await getOrders(businessId);
 
   return (
     <AllOrdersContent
       orders={structuredClone(orders)}
-      organizationId={organizationId}
+      businessId={businessId}
     />
   );
 }

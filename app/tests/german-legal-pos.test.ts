@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { generateOrderConfirmationHtml } from "../lib/confirmation-generator";
 import { translations } from "../lib/translations";
-import type { Order, Organization } from "../lib/types";
+import type { Order, Business } from "../lib/types";
 
-const sampleOrg: Organization = {
-  _id: "org_legal_1",
-  $id: "org_legal_1",
+const sampleBusiness: Business = {
+  _id: "biz_legal_1",
+  $id: "biz_legal_1",
   _creationTime: 1789992000000,
   name: "Ristorante Bella Vista",
   legalName: "Bella Vista Gastro GmbH",
@@ -28,7 +28,7 @@ const sampleOrder: Order = {
   $id: "order_legal_1",
   _creationTime: 1789992000000,
   createdAt: 1789992000000,
-  organizationId: "org_legal_1",
+  businessId: "biz_legal_1",
   orderNumber: "204",
   tableNumber: "7",
   type: "dine-in",
@@ -70,7 +70,7 @@ describe("German Legal, Fiscal & POS Single-Entry Matrix (DE-LEGAL-001 to DE-LEG
   });
 
   it("DE-LEGAL-006 to DE-LEGAL-012: guest confirmation states 'Bestell- und Zahlungsbestätigung' and 'Kein Kassenbeleg und keine Rechnung' without false legal claims", () => {
-    const htmlDe = generateOrderConfirmationHtml(sampleOrder, sampleOrg, "de");
+    const htmlDe = generateOrderConfirmationHtml(sampleOrder, sampleBusiness, "de");
 
     expect(htmlDe).toContain("Bestell- und Zahlungsbestätigung");
     expect(htmlDe).toContain("Kein Kassenbeleg und keine Rechnung");

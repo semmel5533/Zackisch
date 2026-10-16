@@ -6,15 +6,15 @@ import { SpinnerGap } from "@phosphor-icons/react/dist/ssr";
 export default async function StripeReturnPage({
   params,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
 }) {
-  const { organizationId } = await params;
+  const { businessId } = await params;
 
   // Wait a moment for Stripe webhooks to potentially process, though we pull status synchronously
-  const status = await getStripeAccountStatusAction(organizationId);
+  const status = await getStripeAccountStatusAction(businessId);
 
   // Redirect back to settings page
-  redirect(`/dashboard/${organizationId}/settings`);
+  redirect(`/dashboard/${businessId}/settings`);
 
   // Fallback UI if redirect is delayed
   return (

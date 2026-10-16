@@ -9,12 +9,12 @@ export const proxy = convexAuthNextjsMiddleware((request) => {
     /^\/(orders|availability|staff)\/([^/]+)/,
   );
   if (token && terminalMatch) {
-    const [, surface, organizationId] = terminalMatch;
+    const [, surface, businessId] = terminalMatch;
     const prefix = surface === "orders" ? "order" : surface;
     const redirectUrl = url.clone();
     redirectUrl.searchParams.delete("token");
     const response = NextResponse.redirect(redirectUrl);
-    response.cookies.set(`${prefix}_session_${organizationId}`, token, {
+    response.cookies.set(`${prefix}_session_${businessId}`, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

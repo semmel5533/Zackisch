@@ -381,10 +381,10 @@ export default function TeamTicketsPage() {
                       {ticketDetail.ticket.requesterName} (
                       {ticketDetail.ticket.requesterEmail})
                     </span>
-                    {ticketDetail.organizationName && (
+                    {ticketDetail.businessName && (
                       <span className="inline-flex items-center gap-1 font-medium text-zinc-700">
                         <Store className="w-3.5 h-3.5" />
-                        {ticketDetail.organizationName}
+                        {ticketDetail.businessName}
                       </span>
                     )}
                   </div>

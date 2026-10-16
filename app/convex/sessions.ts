@@ -5,23 +5,23 @@ import { v } from "convex/values";
 export const getOrderSessions = query({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.array(
     v.object({
       _id: v.id("orderSessions"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       token: v.string(),
       expiresAt: v.optional(v.string()),
     }),
   ),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     return await ctx.db
       .query("orderSessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId),
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId),
       )
       .order("desc")
       .take(10);
@@ -31,17 +31,17 @@ export const getOrderSessions = query({
 export const createOrderSession = mutation({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.object({
     _id: v.id("orderSessions"),
     token: v.string(),
   }),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     const token = crypto.randomUUID();
     const id = await ctx.db.insert("orderSessions", {
-      organizationId: args.organizationId,
+      businessId: args.businessId,
       token,
     });
     return { _id: id, token };
@@ -54,7 +54,7 @@ export const deleteOrderSession = mutation({
   handler: async (ctx, args) => {
     await requireOwner(
       ctx,
-      (await ctx.db.get(args.id))!.organizationId,
+      (await ctx.db.get(args.id))!.businessId,
       args.sessionToken,
     );
     await ctx.db.delete(args.id);
@@ -65,23 +65,23 @@ export const deleteOrderSession = mutation({
 export const getAvailabilitySessions = query({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.array(
     v.object({
       _id: v.id("availabilitySessions"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       token: v.string(),
       expiresAt: v.optional(v.string()),
     }),
   ),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     return await ctx.db
       .query("availabilitySessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId),
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId),
       )
       .order("desc")
       .take(10);
@@ -91,17 +91,17 @@ export const getAvailabilitySessions = query({
 export const createAvailabilitySession = mutation({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.object({
     _id: v.id("availabilitySessions"),
     token: v.string(),
   }),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     const token = crypto.randomUUID();
     const id = await ctx.db.insert("availabilitySessions", {
-      organizationId: args.organizationId,
+      businessId: args.businessId,
       token,
     });
     return { _id: id, token };
@@ -117,7 +117,7 @@ export const deleteAvailabilitySession = mutation({
   handler: async (ctx, args) => {
     await requireOwner(
       ctx,
-      (await ctx.db.get(args.id))!.organizationId,
+      (await ctx.db.get(args.id))!.businessId,
       args.sessionToken,
     );
     await ctx.db.delete(args.id);
@@ -128,23 +128,23 @@ export const deleteAvailabilitySession = mutation({
 export const getStaffSessions = query({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.array(
     v.object({
       _id: v.id("staffSessions"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       token: v.string(),
       expiresAt: v.optional(v.string()),
     }),
   ),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     return await ctx.db
       .query("staffSessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId),
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId),
       )
       .order("desc")
       .take(10);
@@ -154,17 +154,17 @@ export const getStaffSessions = query({
 export const createStaffSession = mutation({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.object({
     _id: v.id("staffSessions"),
     token: v.string(),
   }),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     const token = crypto.randomUUID();
     const id = await ctx.db.insert("staffSessions", {
-      organizationId: args.organizationId,
+      businessId: args.businessId,
       token,
     });
     return { _id: id, token };
@@ -177,7 +177,7 @@ export const deleteStaffSession = mutation({
   handler: async (ctx, args) => {
     await requireOwner(
       ctx,
-      (await ctx.db.get(args.id))!.organizationId,
+      (await ctx.db.get(args.id))!.businessId,
       args.sessionToken,
     );
     await ctx.db.delete(args.id);
@@ -187,7 +187,7 @@ export const deleteStaffSession = mutation({
 
 export const verifyTerminalSession = query({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     token: v.string(),
     type: v.union(
       v.literal("orders"),
@@ -197,5 +197,5 @@ export const verifyTerminalSession = query({
   },
   returns: v.boolean(),
   handler: async (ctx, args) =>
-    verifyTerminal(ctx, args.organizationId, args.token, args.type),
+    verifyTerminal(ctx, args.businessId, args.token, args.type),
 });

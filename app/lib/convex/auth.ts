@@ -53,21 +53,21 @@ export async function getAuthenticatedConvexClient() {
   return client;
 }
 
-export async function requireOwner(organizationId: string) {
+export async function requireOwner(businessId: string) {
   const user = await getUser();
   if (!user) {
     throw new Error("Nicht authentifiziert.");
   }
 
-  const org = await convexServer.query(api.organizations.get, {
-    id: organizationId as any,
+  const business = await convexServer.query(api.businesses.get, {
+    id: businessId as any,
   });
 
-  if (!org) {
+  if (!business) {
     throw new Error("Betrieb nicht gefunden.");
   }
 
-  const ownerId = String(org.ownerId);
+  const ownerId = String(business.ownerId);
   const userId = String(user._id || user.$id);
 
   if (ownerId !== userId) {
@@ -76,7 +76,7 @@ export async function requireOwner(organizationId: string) {
     );
   }
 
-  return { user, org };
+  return { user, business, org: business };
 }
 
 export async function getOwnerCredentials() {
@@ -84,26 +84,26 @@ export async function getOwnerCredentials() {
 }
 
 async function requireTerminalOrOwner(
-  organizationId: string,
+  businessId: string,
   type: "orders" | "availability",
 ) {
   const user = await getUser();
   if (user) {
-    const org = await convexServer.query(api.organizations.get, {
-      id: organizationId as any,
+    const business = await convexServer.query(api.businesses.get, {
+      id: businessId as any,
     });
-    if (org?.ownerId === user._id) return { type: "owner" as const, user, org };
+    if (business?.ownerId === user._id) return { type: "owner" as const, user, business, org: business };
   }
   const cookieStore = await cookies();
   for (const name of [
-    `staff_session_${organizationId}`,
-    `${type === "orders" ? "order" : "availability"}_session_${organizationId}`,
+    `staff_session_${businessId}`,
+    `${type === "orders" ? "order" : "availability"}_session_${businessId}`,
   ]) {
     const token = cookieStore.get(name)?.value;
     if (
       token &&
       (await convexServer.query(api.sessions.verifyTerminalSession, {
-        organizationId: organizationId as any,
+        businessId: businessId as any,
         token,
         type,
       }))
@@ -114,10 +114,10 @@ async function requireTerminalOrOwner(
   throw new Error("Nicht autorisiert: Keine gültige Personal-Sitzung.");
 }
 
-export async function requireKitchenOrOwner(organizationId: string) {
-  return requireTerminalOrOwner(organizationId, "orders");
+export async function requireKitchenOrOwner(businessId: string) {
+  return requireTerminalOrOwner(businessId, "orders");
 }
 
-export async function requireStaffOrOwner(organizationId: string) {
-  return requireTerminalOrOwner(organizationId, "availability");
+export async function requireStaffOrOwner(businessId: string) {
+  return requireTerminalOrOwner(businessId, "availability");
 }

@@ -32,10 +32,10 @@ export default function SupportTicketsPage() {
 
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerName, setCustomerName] = useState("");
-  const [organizationId, setOrganizationId] = useState<string | undefined>(
+  const [businessId, setBusinessId] = useState<string | undefined>(
     undefined
   );
-  const [organizationName, setOrganizationName] = useState<string | undefined>(
+  const [businessName, setBusinessName] = useState<string | undefined>(
     undefined
   );
   const [category, setCategory] = useState<
@@ -62,9 +62,9 @@ export default function SupportTicketsPage() {
         const parsed = JSON.parse(saved);
         if (parsed.email) setCustomerEmail(parsed.email);
         if (parsed.name) setCustomerName(parsed.name);
-        if (parsed.organizationId) setOrganizationId(parsed.organizationId);
-        if (parsed.organizationName)
-          setOrganizationName(parsed.organizationName);
+        if (parsed.businessId) setBusinessId(parsed.businessId);
+        if (parsed.businessName)
+          setBusinessName(parsed.businessName);
       }
     } catch {
       // ignore
@@ -77,13 +77,13 @@ export default function SupportTicketsPage() {
           if (res) {
             setCustomerEmail(res.email);
             setCustomerName(res.name);
-            setOrganizationId(res.organizationId as any);
-            setOrganizationName(res.organizationName);
+            setBusinessId(res.businessId as any);
+            setBusinessName(res.businessName);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(res));
             toast.success(
               isDe
-                ? `Angemeldet als ${res.organizationName || res.email}`
-                : `Signed in as ${res.organizationName || res.email}`
+                ? `Angemeldet als ${res.businessName || res.email}`
+                : `Signed in as ${res.businessName || res.email}`
             );
           }
         })
@@ -96,7 +96,7 @@ export default function SupportTicketsPage() {
     customerEmail.includes("@")
       ? {
           requesterEmail: customerEmail,
-          organizationId: organizationId as any,
+          businessId: businessId as any,
         }
       : "skip"
   );
@@ -106,7 +106,7 @@ export default function SupportTicketsPage() {
     setIsSubmitting(true);
     try {
       const res = await createTicket({
-        organizationId: organizationId as any,
+        businessId: businessId as any,
         requesterEmail: customerEmail.trim(),
         requesterName: customerName.trim() || customerEmail.trim(),
         category,
@@ -120,8 +120,8 @@ export default function SupportTicketsPage() {
         JSON.stringify({
           email: customerEmail.trim().toLowerCase(),
           name: customerName.trim(),
-          organizationId,
-          organizationName,
+          businessId,
+          businessName,
         })
       );
 
@@ -156,10 +156,10 @@ export default function SupportTicketsPage() {
                 : "Create a new support ticket or track your existing requests."}
             </p>
           </div>
-          {organizationName && (
+          {businessName && (
             <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-[#DCEFE5] text-[#173C2B] text-xs font-semibold">
               <Building2 className="w-4 h-4" />
-              <span>{organizationName}</span>
+              <span>{businessName}</span>
             </div>
           )}
         </div>

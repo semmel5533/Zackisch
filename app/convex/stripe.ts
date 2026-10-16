@@ -130,7 +130,7 @@ async function createConnectV2Account(
 
 export const createEmbeddedAccountSession = action({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     dashboardMode: v.optional(v.union(v.literal("none"), v.literal("full"))),
   },
   returns: v.object({
@@ -153,8 +153,8 @@ export const createEmbeddedAccountSession = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: args.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: args.businessId,
       });
       if (!org) throw new Error("Betrieb nicht gefunden.");
 
@@ -175,8 +175,8 @@ export const createEmbeddedAccountSession = action({
         feeCollector = created.feeCollector;
         lossCollector = created.lossCollector;
 
-        await ctx.runMutation(api.organizations.update, {
-          id: args.organizationId,
+        await ctx.runMutation(api.businesses.update, {
+          id: args.businessId,
           stripeAccountId: accountId,
           stripeDashboardType: dashboardType,
           stripeFeeCollector: feeCollector,
@@ -216,7 +216,7 @@ export const createEmbeddedAccountSession = action({
 
 export const connectStripe = action({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     origin: v.string(),
   },
   returns: v.object({
@@ -229,10 +229,10 @@ export const connectStripe = action({
     args,
   ): Promise<{ url?: string; accountId?: string; error?: string }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: args.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: args.businessId,
       });
-      if (!org) throw new Error("Organization not found");
+      if (!org) throw new Error("Betrieb nicht gefunden.");
 
       const stripe = getStripeClient();
       let accountId: string | undefined = org.stripeAccountId;
@@ -241,8 +241,8 @@ export const connectStripe = action({
         const created = await createConnectV2Account(stripe, org, "none");
         accountId = created.accountId;
 
-        await ctx.runMutation(api.organizations.update, {
-          id: args.organizationId,
+        await ctx.runMutation(api.businesses.update, {
+          id: args.businessId,
           stripeAccountId: accountId,
           stripeDashboardType: created.dashboardType,
           stripeFeeCollector: created.feeCollector,
@@ -253,8 +253,8 @@ export const connectStripe = action({
 
       const accountLink = await stripe.accountLinks.create({
         account: accountId!,
-        refresh_url: `${args.origin}/dashboard/${args.organizationId}/settings`,
-        return_url: `${args.origin}/dashboard/${args.organizationId}/settings/stripe-return`,
+        refresh_url: `${args.origin}/dashboard/${args.businessId}/settings`,
+        return_url: `${args.origin}/dashboard/${args.businessId}/settings/stripe-return`,
         type: "account_onboarding",
       });
 
@@ -267,7 +267,7 @@ export const connectStripe = action({
 });
 
 export const getStripeAccountStatus = action({
-  args: { organizationId: v.id("organizations") },
+  args: { businessId: v.id("businesses") },
   returns: v.object({
     isConnected: v.boolean(),
     isOnboardingComplete: v.boolean(),
@@ -298,8 +298,8 @@ export const getStripeAccountStatus = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: args.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: args.businessId,
       });
       if (!org || !org.stripeAccountId) {
         return { isConnected: false, isOnboardingComplete: false };
@@ -379,9 +379,9 @@ export const getStripeAccountStatus = action({
       );
 
       await ctx.runMutation(
-        internal.organizations.syncStripeAccountStatusInternal,
+        internal.businesses.syncStripeAccountStatusInternal,
         {
-          organizationId: args.organizationId,
+          businessId: args.businessId,
           stripeAccountId: org.stripeAccountId,
           stripeOnboardingComplete: isComplete,
           stripeChargesEnabled: chargesEnabled || isComplete,
@@ -421,7 +421,7 @@ export const getStripeAccountStatus = action({
 
 export const createStripeDashboardLink = action({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     origin: v.string(),
   },
   returns: v.object({
@@ -430,8 +430,8 @@ export const createStripeDashboardLink = action({
   }),
   handler: async (ctx, args): Promise<{ url?: string; error?: string }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: args.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: args.businessId,
       });
       if (!org || !org.stripeAccountId)
         throw new Error("No Stripe account connected");
@@ -445,8 +445,8 @@ export const createStripeDashboardLink = action({
       } catch {
         const accountLink = await stripe.accountLinks.create({
           account: org.stripeAccountId,
-          refresh_url: `${args.origin}/dashboard/${args.organizationId}/settings`,
-          return_url: `${args.origin}/dashboard/${args.organizationId}/settings`,
+          refresh_url: `${args.origin}/dashboard/${args.businessId}/settings`,
+          return_url: `${args.origin}/dashboard/${args.businessId}/settings`,
           type: "account_onboarding",
         });
         return { url: accountLink.url };
@@ -459,7 +459,7 @@ export const createStripeDashboardLink = action({
 });
 
 export const completeTestStripeOnboarding = action({
-  args: { organizationId: v.id("organizations") },
+  args: { businessId: v.id("businesses") },
   returns: v.object({
     success: v.boolean(),
     accountId: v.optional(v.string()),
@@ -479,10 +479,10 @@ export const completeTestStripeOnboarding = action({
         };
       }
 
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: args.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: args.businessId,
       });
-      if (!org) throw new Error("Organization not found");
+      if (!org) throw new Error("Betrieb nicht gefunden.");
 
       const stripe = getStripeClient();
       let accountId = org.stripeAccountId;
@@ -498,8 +498,8 @@ export const completeTestStripeOnboarding = action({
         lossCollector = created.lossCollector;
       }
 
-      await ctx.runMutation(api.organizations.update, {
-        id: args.organizationId,
+      await ctx.runMutation(api.businesses.update, {
+        id: args.businessId,
         stripeAccountId: accountId,
         stripeOnboardingComplete: true,
         stripeChargesEnabled: true,
@@ -554,7 +554,7 @@ export function extractItemsFromMetadata(meta: Record<string, any>): string {
  */
 export const createCheckoutSession = action({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     type: v.union(v.literal("dine-in"), v.literal("takeaway")),
     tableNumber: v.optional(v.string()),
     items: v.string(), // JSON string
@@ -583,8 +583,8 @@ export const createCheckoutSession = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: args.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: args.businessId,
       });
       if (!org) return { error: "Gastronomiebetrieb nicht gefunden." };
       if (org.isPaused) {
@@ -637,7 +637,7 @@ export const createCheckoutSession = action({
       }
 
       const menuItems = await ctx.runQuery(api.menu.getItems, {
-        organizationId: args.organizationId,
+        businessId: args.businessId,
       });
       const pricedItems = priceCheckout(args.items, menuItems, args.total);
 
@@ -651,7 +651,7 @@ export const createCheckoutSession = action({
       const curr = (org.currency || "eur").toLowerCase();
 
       const metadata: Record<string, string> = {
-        organizationId: args.organizationId,
+        businessId: args.businessId,
         connectedAccountId: org.stripeAccountId,
         tableNumber: args.tableNumber || "",
         type: args.type,
@@ -669,7 +669,7 @@ export const createCheckoutSession = action({
         args.origin ||
         process.env.NEXT_PUBLIC_APP_URL ||
         "http://localhost:3001";
-      const returnUrl = `${origin}/${args.type === "dine-in" ? "table" : "pickup"}/${args.organizationId}/success?session_id={CHECKOUT_SESSION_ID}`;
+      const returnUrl = `${origin}/${args.type === "dine-in" ? "table" : "pickup"}/${args.businessId}/success?session_id={CHECKOUT_SESSION_ID}`;
 
       const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
         {
@@ -739,7 +739,7 @@ export const createCheckoutSession = action({
  */
 export const createPaymentIntent = action({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     type: v.union(v.literal("dine-in"), v.literal("takeaway")),
     tableNumber: v.optional(v.string()),
     items: v.string(), // JSON string
@@ -769,8 +769,8 @@ export const createPaymentIntent = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: args.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: args.businessId,
       });
       if (!org) return { error: "Gastronomiebetrieb nicht gefunden." };
       if (org.isPaused) {
@@ -823,7 +823,7 @@ export const createPaymentIntent = action({
       }
 
       const menuItems = await ctx.runQuery(api.menu.getItems, {
-        organizationId: args.organizationId,
+        businessId: args.businessId,
       });
       const pricedItems = priceCheckout(args.items, menuItems, args.total);
 
@@ -837,7 +837,7 @@ export const createPaymentIntent = action({
       const curr = (org.currency || "eur").toLowerCase();
 
       const metadata: Record<string, string> = {
-        organizationId: args.organizationId,
+        businessId: args.businessId,
         connectedAccountId: org.stripeAccountId,
         tableNumber: args.tableNumber || "",
         type: args.type,
@@ -925,8 +925,8 @@ export const refundOrder = action({
         };
       }
 
-      const org: any = await ctx.runQuery(api.organizations.get, {
-        id: order.organizationId,
+      const org: any = await ctx.runQuery(api.businesses.get, {
+        id: order.businessId,
       });
       const stripeAccountId = order.connectedAccountId || org?.stripeAccountId;
       if (!stripeAccountId) {
@@ -1004,7 +1004,7 @@ export const verifyPaymentAndCreateOrder = action({
   args: {
     sessionId: v.optional(v.string()),
     paymentIntentId: v.optional(v.string()),
-    organizationId: v.optional(v.id("organizations")),
+    businessId: v.optional(v.id("businesses")),
   },
   returns: v.union(v.null(), v.id("orders")),
   handler: async (ctx, args): Promise<Id<"orders"> | null> => {
@@ -1012,9 +1012,9 @@ export const verifyPaymentAndCreateOrder = action({
       const stripe = getStripeClient();
       let stripeAccountId: string | undefined;
 
-      if (args.organizationId) {
-        const org: any = await ctx.runQuery(api.organizations.get, {
-          id: args.organizationId,
+      if (args.businessId) {
+        const org: any = await ctx.runQuery(api.businesses.get, {
+          id: args.businessId,
         });
         stripeAccountId = org?.stripeAccountId;
       }
@@ -1043,7 +1043,7 @@ export const verifyPaymentAndCreateOrder = action({
         }
 
         const meta = session.metadata;
-        if (!meta || !meta.organizationId) return null;
+        if (!meta || !meta.businessId) return null;
 
         const items = extractItemsFromMetadata(meta);
         const piId =
@@ -1054,7 +1054,7 @@ export const verifyPaymentAndCreateOrder = action({
         const orderId = await ctx.runMutation(
           internal.orders.createPaidOrderFromWebhook,
           {
-            organizationId: meta.organizationId as any,
+            businessId: meta.businessId as any,
             tableNumber: meta.tableNumber || undefined,
             type: (meta.type as any) || "takeaway",
             items,
@@ -1106,14 +1106,14 @@ export const verifyPaymentAndCreateOrder = action({
         }
 
         const meta = pi.metadata;
-        if (!meta || !meta.organizationId) return null;
+        if (!meta || !meta.businessId) return null;
 
         const items = extractItemsFromMetadata(meta);
 
         const orderId = await ctx.runMutation(
           internal.orders.createPaidOrderFromWebhook,
           {
-            organizationId: meta.organizationId as any,
+            businessId: meta.businessId as any,
             tableNumber: meta.tableNumber || undefined,
             type: (meta.type as any) || "takeaway",
             items,

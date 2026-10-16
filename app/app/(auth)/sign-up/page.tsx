@@ -87,7 +87,7 @@ function OtpForm({ state }: { state: any }) {
   const submitOtp = async (code: string) => {
     if (!state.userId || isLockedOut || isExpired) return;
     setIsVerifying(true);
-    const res = await verifyOtpAction(state.userId, code, state.pendingOrgData);
+    const res = await verifyOtpAction(state.userId, code, state.pendingBusinessData);
     setIsVerifying(false);
 
     if (res?.isLockedOut) {
@@ -451,7 +451,7 @@ function SignUpForm({
                 name="restaurantName"
                 type="text"
                 placeholder={t("businessPlaceholder")}
-                autoComplete="organization"
+                autoComplete="off"
                 maxLength={80}
                 aria-invalid={!!fieldErrors.restaurantName}
                 aria-describedby={

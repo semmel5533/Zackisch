@@ -1,5 +1,5 @@
 import {
-  getOrganization,
+  getBusiness,
   getOrders,
   getStaffSessions,
   createStaffSession,
@@ -22,23 +22,23 @@ export async function generateMetadata() {
 export default async function OverviewPage({
   params,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
 }) {
-  const { organizationId } = await params;
-  const [organization, orders, staffSessions] = await Promise.all([
-    getOrganization(organizationId),
-    getOrders(organizationId),
-    getStaffSessions(organizationId),
+  const { businessId } = await params;
+  const [business, orders, staffSessions] = await Promise.all([
+    getBusiness(businessId),
+    getOrders(businessId),
+    getStaffSessions(businessId),
   ]);
 
-  if (!organization) return null;
+  if (!business) return null;
 
   let staffToken = staffSessions[0]?.token;
 
   if (!staffToken) {
     const newSession = await createStaffSession(
-      organizationId,
-      organization.ownerId,
+      businessId,
+      business.ownerId,
     );
     staffToken = newSession.token;
   }
@@ -50,13 +50,13 @@ export default async function OverviewPage({
 
   return (
     <OverviewContent
-      organization={structuredClone(organization)}
+      business={structuredClone(business)}
       orders={structuredClone(orders)}
     >
       {staffToken && (
         <StaffSessionCard
           staffToken={staffToken}
-          organizationId={organizationId}
+          businessId={businessId}
           baseUrl={baseUrl}
         />
       )}

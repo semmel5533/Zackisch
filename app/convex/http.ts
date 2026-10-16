@@ -30,8 +30,8 @@ registerRoutes(http, components.stripe, {
       const session = event.data.object;
       if (session.payment_status !== "paid") return;
       const metadata = session.metadata || {};
-      const organizationId = metadata.organizationId as any;
-      if (organizationId) {
+      const businessId = metadata.businessId as any;
+      if (businessId) {
         const total =
           session.amount_total || parseInt(metadata.total || "0", 10);
         const currency = (
@@ -46,7 +46,7 @@ registerRoutes(http, components.stripe, {
             : undefined;
 
         await ctx.runMutation(internal.orders.createPaidOrderFromWebhook, {
-          organizationId,
+          businessId,
           tableNumber: metadata.tableNumber || undefined,
           type: (metadata.type as any) || "takeaway",
           items,
@@ -74,8 +74,8 @@ registerRoutes(http, components.stripe, {
     ) => {
       const paymentIntent = event.data.object;
       const metadata = paymentIntent.metadata || {};
-      const organizationId = metadata.organizationId as any;
-      if (organizationId) {
+      const businessId = metadata.businessId as any;
+      if (businessId) {
         const total = parseInt(
           metadata.total || String(paymentIntent.amount),
           10,
@@ -85,7 +85,7 @@ registerRoutes(http, components.stripe, {
         const items = extractItemsFromMetadata(metadata);
 
         await ctx.runMutation(internal.orders.createPaidOrderFromWebhook, {
-          organizationId,
+          businessId,
           tableNumber: metadata.tableNumber || undefined,
           type: (metadata.type as any) || "dine-in",
           items,
@@ -135,13 +135,13 @@ registerRoutes(http, components.stripe, {
     "account.updated": async (ctx: any, event: any) => {
       const account = event.data?.object;
       if (!account || !account.id) return;
-      const orgId = await ctx.runQuery(
-        internal.organizations.getByStripeAccountInternal,
+      const businessId = await ctx.runQuery(
+        internal.businesses.getByStripeAccountInternal,
         {
           stripeAccountId: String(account.id),
         },
       );
-      if (!orgId) return;
+      if (!businessId) return;
 
       const chargesEnabled = Boolean(
         account.charges_enabled ||
@@ -156,9 +156,9 @@ registerRoutes(http, components.stripe, {
         account.requirements?.disabled_reason || undefined;
 
       await ctx.runMutation(
-        internal.organizations.syncStripeAccountStatusInternal,
+        internal.businesses.syncStripeAccountStatusInternal,
         {
-          organizationId: orgId,
+          businessId,
           stripeAccountId: String(account.id),
           stripeOnboardingComplete: chargesEnabled,
           stripeChargesEnabled: chargesEnabled,

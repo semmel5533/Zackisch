@@ -21,12 +21,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Organization } from "@/lib/types";
+import type { Business } from "@/lib/types";
 
 interface CartSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  organization: Organization;
+  business: Business;
   type: "dine-in" | "takeaway";
   tableNumber?: string;
   initialSendEmailConfirmation?: boolean;
@@ -56,7 +56,7 @@ const TIP_OPTIONS = [0, 5, 10, 15] as const;
 export function CartSheet({
   open,
   onOpenChange,
-  organization,
+  business,
   type,
   tableNumber,
   initialSendEmailConfirmation = false,
@@ -90,7 +90,7 @@ export function CartSheet({
     items,
     type,
     tableNumber,
-    organizationId: organization.$id,
+    businessId: business.$id,
     tipPercent,
   });
   const clientSecret =
@@ -99,7 +99,7 @@ export function CartSheet({
       : null;
 
   const activeStripeAccountId =
-    checkoutSession?.stripeAccountId || organization.stripeAccountId;
+    checkoutSession?.stripeAccountId || business.stripeAccountId;
 
   const stripePromise = useMemo(() => {
     const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!;
@@ -143,7 +143,7 @@ export function CartSheet({
     startTransition(async () => {
       try {
         const result = await createCheckoutSessionAction({
-          organizationId: organization.$id,
+          businessId: business.$id,
           type,
           tableNumber,
           items,
@@ -225,8 +225,8 @@ export function CartSheet({
           </div>
         </SheetHeader>
 
-        {!organization.stripeOnboardingComplete ||
-        organization.orderingPaused ? (
+        {!business.stripeOnboardingComplete ||
+        business.orderingPaused ? (
           <div className="flex-1 px-5 py-5 sm:px-6">
             <p className="w-full text-left text-sm font-medium text-destructive">
               {t("onlineOrderingUnavailable" as any)}
@@ -360,27 +360,27 @@ export function CartSheet({
                   {t("buyingFrom")}
                 </p>
                 <p className="text-base sm:text-lg font-bold text-foreground tracking-tight">
-                  {organization.legalName || organization.name}
+                  {business.legalName || business.name}
                 </p>
-                {organization.legalName &&
-                  organization.legalName !== organization.name && (
+                {business.legalName &&
+                  business.legalName !== business.name && (
                     <p className="text-xs font-medium text-muted-foreground">
-                      {organization.name}
+                      {business.name}
                     </p>
                   )}
-                {organization.address?.trim() && (
+                {business.address?.trim() && (
                   <div className="text-xs text-muted-foreground space-y-0.5 pt-0.5">
-                    {formatAddressLines(organization.address).map(
+                    {formatAddressLines(business.address).map(
                       (line, idx) => (
                         <p key={idx}>{line}</p>
                       ),
                     )}
                   </div>
                 )}
-                {(organization.vatId || organization.taxId) && (
+                {(business.vatId || business.taxId) && (
                   <p className="text-[11px] text-muted-foreground pt-0.5">
                     {isDe ? "USt-IdNr. / Steuernummer:" : "VAT / Tax ID:"}{" "}
-                    {organization.vatId || organization.taxId}
+                    {business.vatId || business.taxId}
                   </p>
                 )}
               </div>
@@ -456,7 +456,7 @@ export function CartSheet({
               <CheckoutForm
                 returnUrl={t(
                   type === "dine-in" ? "tableSuccessUrl" : "pickupSuccessUrl",
-                  { organizationId: organization.$id },
+                  { businessId: business.$id },
                 )}
               />
             </CheckoutElementsProvider>

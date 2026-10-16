@@ -5,21 +5,21 @@ import { cookies } from "next/headers";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import type {
-  Organization,
+  Business,
   MenuCategory,
   MenuItem,
   Order,
   OrderSession,
   AvailabilitySession,
   StaffSession,
-  CreateOrganizationData,
+  CreateBusinessData,
   CreateMenuCategoryData,
   CreateMenuItemData,
   CreateOrderData,
 } from "@/lib/types";
 
 // Helper to normalize Convex documents with $id and $createdAt aliases
-function toOrg(doc: any): Organization {
+function toBusiness(doc: any): Business {
   return {
     ...doc,
     $id: doc._id,
@@ -72,38 +72,38 @@ function toStorageId(id?: string | null): Id<"_storage"> | undefined {
   return id as Id<"_storage">;
 }
 
-// Organizations
+// Businesses
 
-export async function getOrganizationByOwner(
+export async function getBusinessByOwner(
   ownerId: string,
-): Promise<Organization | null> {
+): Promise<Business | null> {
   const doc = await (
     await getAuthenticatedConvexClient()
-  ).query(api.organizations.getByOwner, { ownerId });
-  return doc ? toOrg(doc) : null;
+  ).query(api.businesses.getByOwner, { ownerId });
+  return doc ? toBusiness(doc) : null;
 }
 
-export async function getOrganization(
+export async function getBusiness(
   id: string,
-): Promise<Organization | null> {
+): Promise<Business | null> {
   try {
     const doc = await (
       await getAuthenticatedConvexClient()
-    ).query(api.organizations.get, {
-      id: id as Id<"organizations">,
+    ).query(api.businesses.get, {
+      id: id as Id<"businesses">,
     });
-    return doc ? toOrg(doc) : null;
+    return doc ? toBusiness(doc) : null;
   } catch {
     return null;
   }
 }
 
-export async function createOrganization(
-  data: CreateOrganizationData,
-): Promise<Organization> {
+export async function createBusiness(
+  data: CreateBusinessData,
+): Promise<Business> {
   const id = await (
     await getAuthenticatedConvexClient()
-  ).mutation(api.organizations.create, {
+  ).mutation(api.businesses.create, {
     name: data.name,
     ownerId: data.ownerId,
     address: data.address,
@@ -117,18 +117,18 @@ export async function createOrganization(
 
   const created = await (
     await getAuthenticatedConvexClient()
-  ).query(api.organizations.get, { id });
-  return toOrg(created!);
+  ).query(api.businesses.get, { id });
+  return toBusiness(created!);
 }
 
-export async function updateOrganization(
+export async function updateBusiness(
   id: string,
-  data: Partial<Organization> & { clearLogo?: boolean; clearBanner?: boolean },
+  data: Partial<Business> & { clearLogo?: boolean; clearBanner?: boolean },
 ) {
   return await (
     await getAuthenticatedConvexClient()
-  ).mutation(api.organizations.update, {
-    id: id as Id<"organizations">,
+  ).mutation(api.businesses.update, {
+    id: id as Id<"businesses">,
     name: data.name,
     address: data.address,
     logoStorageId: toStorageId(data.logoStorageId || data.logoFileId),
@@ -150,12 +150,12 @@ export async function updateOrganization(
 // Menu Categories
 
 export async function getMenuCategories(
-  organizationId: string,
+  businessId: string,
 ): Promise<MenuCategory[]> {
   const docs = await (
     await getAuthenticatedConvexClient()
   ).query(api.menu.getCategories, {
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return docs.map(toCat);
 }
@@ -167,7 +167,7 @@ export async function createMenuCategory(
     await getAuthenticatedConvexClient()
   ).mutation(api.menu.createCategory, {
     ...(await getOwnerCredentials()),
-    organizationId: data.organizationId as Id<"organizations">,
+    businessId: data.businessId as Id<"businesses">,
     name: data.name,
     sortOrder: data.sortOrder ?? 0,
   });
@@ -176,7 +176,7 @@ export async function createMenuCategory(
     _id: id,
     $id: id,
     _creationTime: Date.now(),
-    organizationId: data.organizationId,
+    businessId: data.businessId,
     name: data.name,
     sortOrder: data.sortOrder ?? 0,
   };
@@ -222,12 +222,12 @@ export async function updateCategorySortOrders(
 // Menu Items
 
 export async function getMenuItems(
-  organizationId: string,
+  businessId: string,
 ): Promise<MenuItem[]> {
   const docs = await (
     await getAuthenticatedConvexClient()
   ).query(api.menu.getItems, {
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return docs
     .map(toItem)
@@ -248,12 +248,12 @@ export async function getMenuItem(id: string): Promise<MenuItem | null> {
 }
 
 export async function getAvailableMenuItems(
-  organizationId: string,
+  businessId: string,
 ): Promise<MenuItem[]> {
   const docs = await (
     await getAuthenticatedConvexClient()
   ).query(api.menu.getAvailableItems, {
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return docs
     .map(toItem)
@@ -267,7 +267,7 @@ export async function createMenuItem(
     await getAuthenticatedConvexClient()
   ).mutation(api.menu.createItem, {
     ...(await getOwnerCredentials()),
-    organizationId: data.organizationId as Id<"organizations">,
+    businessId: data.businessId as Id<"businesses">,
     categoryId: data.categoryId as Id<"menuCategories">,
     name: data.name,
     description: data.description,
@@ -291,10 +291,10 @@ export async function updateMenuItem(
 ) {
   const item = await getMenuItem(id);
   const cookieStore = await cookies();
-  const organizationId = item?.organizationId;
+  const businessId = item?.businessId;
   const terminalToken =
-    cookieStore.get(`staff_session_${organizationId}`)?.value ||
-    cookieStore.get(`availability_session_${organizationId}`)?.value;
+    cookieStore.get(`staff_session_${businessId}`)?.value ||
+    cookieStore.get(`availability_session_${businessId}`)?.value;
   return await (
     await getAuthenticatedConvexClient()
   ).mutation(api.menu.updateItem, {
@@ -341,13 +341,13 @@ export async function updateItemSortOrders(
 // Orders
 
 export async function getOrders(
-  organizationId: string,
+  businessId: string,
   status?: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
 ): Promise<Order[]> {
   const docs = await (
     await getAuthenticatedConvexClient()
   ).query(api.orders.getOrders, {
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
     status,
   });
   return docs.map(toOrder);
@@ -381,7 +381,7 @@ export async function createOrder(data: CreateOrderData): Promise<Order> {
   const res = await (
     await getAuthenticatedConvexClient()
   ).mutation(api.orders.createOrder, {
-    organizationId: data.organizationId as Id<"organizations">,
+    businessId: data.businessId as Id<"businesses">,
     tableNumber: data.tableNumber,
     type: data.type,
     items: JSON.stringify(data.items),
@@ -415,33 +415,33 @@ export async function updateOrderStatus(
 // Order Sessions
 
 export async function getOrderSessions(
-  organizationId: string,
+  businessId: string,
 ): Promise<OrderSession[]> {
   const docs = await (
     await getAuthenticatedConvexClient()
   ).query(api.sessions.getOrderSessions, {
     ...(await getOwnerCredentials()),
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return docs.map(toSession);
 }
 
 export async function createOrderSession(
-  organizationId: string,
+  businessId: string,
   _userId: string,
 ): Promise<OrderSession> {
   const res = await (
     await getAuthenticatedConvexClient()
   ).mutation(api.sessions.createOrderSession, {
     ...(await getOwnerCredentials()),
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return {
     $id: res._id,
     $createdAt: new Date().toISOString(),
     _id: res._id,
     _creationTime: Date.now(),
-    organizationId,
+    businessId,
     token: res.token,
   };
 }
@@ -458,32 +458,32 @@ export async function deleteOrderSession(id: string): Promise<void> {
 // Availability Sessions
 
 export async function getAvailabilitySessions(
-  organizationId: string,
+  businessId: string,
 ): Promise<AvailabilitySession[]> {
   const docs = await (
     await getAuthenticatedConvexClient()
   ).query(api.sessions.getAvailabilitySessions, {
     ...(await getOwnerCredentials()),
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return docs.map(toSession);
 }
 
 export async function createAvailabilitySession(
-  organizationId: string,
+  businessId: string,
   _ownerId?: string,
 ): Promise<AvailabilitySession> {
   const res = await (
     await getAuthenticatedConvexClient()
   ).mutation(api.sessions.createAvailabilitySession, {
     ...(await getOwnerCredentials()),
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return {
     _id: res._id,
     $id: res._id,
     _creationTime: Date.now(),
-    organizationId,
+    businessId,
     token: res.token,
     expiresAt: null,
   };
@@ -501,32 +501,32 @@ export async function deleteAvailabilitySession(id: string) {
 // Staff Sessions
 
 export async function getStaffSessions(
-  organizationId: string,
+  businessId: string,
 ): Promise<StaffSession[]> {
   const docs = await (
     await getAuthenticatedConvexClient()
   ).query(api.sessions.getStaffSessions, {
     ...(await getOwnerCredentials()),
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return docs.map(toSession);
 }
 
 export async function createStaffSession(
-  organizationId: string,
+  businessId: string,
   _ownerId?: string,
 ): Promise<StaffSession> {
   const res = await (
     await getAuthenticatedConvexClient()
   ).mutation(api.sessions.createStaffSession, {
     ...(await getOwnerCredentials()),
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
   return {
     _id: res._id,
     $id: res._id,
     _creationTime: Date.now(),
-    organizationId,
+    businessId,
     token: res.token,
     expiresAt: null,
   };

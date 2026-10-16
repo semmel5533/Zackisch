@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSidebarStore } from "@/store/sidebar-store";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import type { Organization, Order, MenuCategory, MenuItem } from "@/lib/types";
+import type { Business, Order, MenuCategory, MenuItem } from "@/lib/types";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -29,7 +29,7 @@ import { AvailabilityContent } from "@/components/availability/availability-cont
 import { signOutStaffAction } from "@/actions/staff-actions";
 
 interface StaffTerminalShellProps {
-  organization: Organization;
+  business: Business;
   initialOrders: Order[];
   categories: MenuCategory[];
   items: MenuItem[];
@@ -38,7 +38,7 @@ interface StaffTerminalShellProps {
 }
 
 export function StaffTerminalShell({
-  organization,
+  business,
   initialOrders,
   categories,
   items,
@@ -85,8 +85,8 @@ export function StaffTerminalShell({
   // Real-time active orders subscription
   const liveOrders = useQuery(
     api.orders.getLiveOrders,
-    organization?.$id
-      ? { organizationId: organization.$id as Id<"organizations"> }
+    business?.$id
+      ? { businessId: business.$id as Id<"businesses"> }
       : "skip",
   );
   const activeOrdersCount =
@@ -114,7 +114,7 @@ export function StaffTerminalShell({
 
   const handleSignOut = async () => {
     try {
-      await signOutStaffAction(organization.$id || organization._id);
+      await signOutStaffAction(business.$id || business._id);
     } catch {
       // Ignore redirect error
     }
@@ -282,11 +282,11 @@ export function StaffTerminalShell({
             <div className="flex flex-col gap-2">
               {/* Mini Lieferando-style Banner Card with bottom-left logo */}
               <div className="relative w-full aspect-[2.3/1] rounded-[16px] overflow-hidden bg-muted border border-border shadow-sm">
-                {organization?.bannerFileId ? (
+                {business?.bannerFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={getImagePreviewUrl(organization.bannerFileId)}
-                    alt={organization?.name ?? "Banner"}
+                    src={getImagePreviewUrl(business.bannerFileId)}
+                    alt={business?.name ?? "Banner"}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -295,11 +295,11 @@ export function StaffTerminalShell({
 
                 {/* Bottom-left logo box */}
                 <div className="absolute bottom-2 left-2 z-10 w-10 h-10 rounded-[8px] bg-card flex items-center justify-center overflow-hidden border border-border shrink-0">
-                  {organization?.logoFileId ? (
+                  {business?.logoFileId ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                      src={getImagePreviewUrl(organization.logoFileId)}
-                      alt={organization?.name ?? "Logo"}
+                      src={getImagePreviewUrl(business.logoFileId)}
+                      alt={business?.name ?? "Logo"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -310,11 +310,11 @@ export function StaffTerminalShell({
 
               <div className="flex flex-col flex-1 overflow-hidden px-0.5">
                 <span className="truncate font-semibold text-sm leading-tight text-foreground">
-                  {organization?.name ?? "Zakkig"}
+                  {business?.name ?? "Zakkig"}
                 </span>
-                {organization?.address && (
+                {business?.address && (
                   <span className="text-xs text-muted-foreground whitespace-pre-wrap leading-tight mt-1">
-                    {organization.address}
+                    {business.address}
                   </span>
                 )}
               </div>
@@ -322,14 +322,14 @@ export function StaffTerminalShell({
           ) : (
             <div
               className="flex items-center justify-center"
-              title={organization?.name ?? "Restaurant"}
+              title={business?.name ?? "Restaurant"}
             >
               <div className="w-10 h-10 rounded-[10px] bg-muted flex items-center justify-center overflow-hidden border border-border shrink-0">
-                {organization?.logoFileId ? (
+                {business?.logoFileId ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={getImagePreviewUrl(organization.logoFileId)}
-                    alt={organization?.name ?? "Logo"}
+                    src={getImagePreviewUrl(business.logoFileId)}
+                    alt={business?.name ?? "Logo"}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -398,7 +398,7 @@ export function StaffTerminalShell({
         <main className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 pt-0 lg:pt-0 print:overflow-visible print:p-0 print:block">
           {activeTab === "current-orders" && (
             <CurrentOrdersContent
-              organizationId={organization.$id}
+              businessId={business.$id}
               orders={structuredClone(initialOrders)}
               isStaffView={true}
             />
@@ -406,7 +406,7 @@ export function StaffTerminalShell({
 
           {activeTab === "all-orders" && (
             <AllOrdersContent
-              organizationId={organization.$id}
+              businessId={business.$id}
               orders={structuredClone(initialOrders)}
               hideExport={true}
             />
@@ -414,7 +414,7 @@ export function StaffTerminalShell({
 
           {activeTab === "availability" && (
             <AvailabilityContent
-              organizationId={organization.$id}
+              businessId={business.$id}
               categories={structuredClone(categories)}
               items={structuredClone(items)}
             />

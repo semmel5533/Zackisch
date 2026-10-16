@@ -1,6 +1,6 @@
 export interface GuestQrParams {
   baseUrl?: string;
-  organizationId: string;
+  businessId: string;
   tableNumber?: string | null;
 }
 
@@ -27,9 +27,9 @@ export function buildGuestQrUrl(params: GuestQrParams): string {
     /\/+$/,
     "",
   );
-  const orgId = encodeURIComponent(params.organizationId.trim());
-  if (!orgId) {
-    throw new Error("organizationId is required for QR URL generation");
+  const businessId = encodeURIComponent(params.businessId.trim());
+  if (!businessId) {
+    throw new Error("businessId is required for QR URL generation");
   }
 
   const rawTable = params.tableNumber
@@ -37,14 +37,14 @@ export function buildGuestQrUrl(params: GuestQrParams): string {
     : "";
 
   if (rawTable) {
-    return `${cleanBase}/${orgId}/${encodeURIComponent(rawTable)}`;
+    return `${cleanBase}/${businessId}/${encodeURIComponent(rawTable)}`;
   }
-  return `${cleanBase}/${orgId}`;
+  return `${cleanBase}/${businessId}`;
 }
 
 export function createQrPrintCardSpec(options: {
   baseUrl?: string;
-  organizationId: string;
+  businessId: string;
   venueName: string;
   tableNumber?: string | null;
   locale?: "de" | "en";
@@ -55,7 +55,7 @@ export function createQrPrintCardSpec(options: {
     : undefined;
   const url = buildGuestQrUrl({
     baseUrl: options.baseUrl,
-    organizationId: options.organizationId,
+    businessId: options.businessId,
     tableNumber: cleanTable,
   });
 

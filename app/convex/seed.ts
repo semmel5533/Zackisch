@@ -4,7 +4,7 @@ import { v } from "convex/values";
 export const seedDemoData = internalMutation({
   args: {},
   returns: v.object({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     categoriesCount: v.number(),
     itemsCount: v.number(),
     ordersCount: v.number(),
@@ -38,16 +38,16 @@ export const seedDemoData = internalMutation({
       });
     }
 
-    // 1. Check if organization already exists
+    // 1. Check if business already exists
     const existingOrg = await ctx.db
-      .query("organizations")
+      .query("businesses")
       .filter((q) => q.eq(q.field("name"), "Pizzeria Gusto & Zakkig"))
       .first();
 
     let orgId = existingOrg?._id;
 
     if (!orgId) {
-      orgId = await ctx.db.insert("organizations", {
+      orgId = await ctx.db.insert("businesses", {
         name: "Pizzeria Gusto & Zakkig",
         address: "Musterstraße 42, 10115 Berlin",
         ownerId: userId,
@@ -77,13 +77,13 @@ export const seedDemoData = internalMutation({
     for (const cat of categoriesData) {
       let existingCat = await ctx.db
         .query("menuCategories")
-        .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+        .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
         .filter((q) => q.eq(q.field("name"), cat.name))
         .first();
 
       if (!existingCat) {
         const catId = await ctx.db.insert("menuCategories", {
-          organizationId: orgId!,
+          businessId: orgId!,
           name: cat.name,
           sortOrder: cat.sortOrder,
         });
@@ -216,7 +216,7 @@ export const seedDemoData = internalMutation({
 
       if (!existingItem) {
         await ctx.db.insert("menuItems", {
-          organizationId: orgId!,
+          businessId: orgId!,
           categoryId,
           name: item.name,
           description: item.description,
@@ -233,12 +233,12 @@ export const seedDemoData = internalMutation({
     // 4. Insert Live Orders
     const existingOrders = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .take(5);
 
     if (existingOrders.length === 0) {
       await ctx.db.insert("orders", {
-        organizationId: orgId!,
+        businessId: orgId!,
         tableNumber: "5",
         type: "dine-in",
         orderNumber: "001",
@@ -272,7 +272,7 @@ export const seedDemoData = internalMutation({
       });
 
       await ctx.db.insert("orders", {
-        organizationId: orgId!,
+        businessId: orgId!,
         type: "takeaway",
         orderNumber: "002",
         status: "in_progress",
@@ -299,7 +299,7 @@ export const seedDemoData = internalMutation({
       });
 
       await ctx.db.insert("orders", {
-        organizationId: orgId!,
+        businessId: orgId!,
         tableNumber: "2",
         type: "dine-in",
         orderNumber: "003",
@@ -324,30 +324,30 @@ export const seedDemoData = internalMutation({
     // 5. Insert Terminal Sessions for Kitchen Board & Availability Terminal
     const existingOrderSession = await ctx.db
       .query("orderSessions")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .first();
 
     if (!existingOrderSession) {
       await ctx.db.insert("orderSessions", {
-        organizationId: orgId!,
+        businessId: orgId!,
         token: "demo_kitchen_token",
       });
     }
 
     const existingAvailSession = await ctx.db
       .query("availabilitySessions")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .first();
 
     if (!existingAvailSession) {
       await ctx.db.insert("availabilitySessions", {
-        organizationId: orgId!,
+        businessId: orgId!,
         token: "demo_avail_token",
       });
     }
 
     return {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoriesCount: categoriesData.length,
       itemsCount: itemsData.length,
       ordersCount: 3,
@@ -382,7 +382,7 @@ export const seedDemoProfile = internalMutation({
     waterStorageId: v.optional(v.id("_storage")),
   },
   returns: v.object({
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     userId: v.id("users"),
     categoriesCount: v.number(),
     itemsCount: v.number(),
@@ -453,9 +453,9 @@ export const seedDemoProfile = internalMutation({
       });
     }
 
-    // 3. Find or create Organization for selim@zackisch.com
+    // 3. Find or create Business for selim@zackisch.com
     let org = await ctx.db
-      .query("organizations")
+      .query("businesses")
       .withIndex("by_ownerId", (q) => q.eq("ownerId", userId))
       .first();
 
@@ -482,7 +482,7 @@ export const seedDemoProfile = internalMutation({
     };
 
     if (!orgId) {
-      orgId = await ctx.db.insert("organizations", orgData);
+      orgId = await ctx.db.insert("businesses", orgData);
     } else {
       await ctx.db.patch(orgId, orgData);
     }
@@ -490,7 +490,7 @@ export const seedDemoProfile = internalMutation({
     // 4. Clean old categories, items, and orders for a clean state
     const oldCategories = await ctx.db
       .query("menuCategories")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .collect();
     for (const c of oldCategories) {
       await ctx.db.delete(c._id);
@@ -498,7 +498,7 @@ export const seedDemoProfile = internalMutation({
 
     const oldItems = await ctx.db
       .query("menuItems")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .collect();
     for (const item of oldItems) {
       await ctx.db.delete(item._id);
@@ -506,7 +506,7 @@ export const seedDemoProfile = internalMutation({
 
     const oldOrders = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .collect();
     for (const o of oldOrders) {
       await ctx.db.delete(o._id);
@@ -514,27 +514,27 @@ export const seedDemoProfile = internalMutation({
 
     // 5. Insert Categories
     const catPizza = await ctx.db.insert("menuCategories", {
-      organizationId: orgId!,
+      businessId: orgId!,
       name: "Pan Pizza & Cheezy Crust",
       sortOrder: 0,
     });
     const catStarters = await ctx.db.insert("menuCategories", {
-      organizationId: orgId!,
+      businessId: orgId!,
       name: "Vorspeisen & Fingerfood",
       sortOrder: 1,
     });
     const catPasta = await ctx.db.insert("menuCategories", {
-      organizationId: orgId!,
+      businessId: orgId!,
       name: "Pasta & Bakes",
       sortOrder: 2,
     });
     const catDesserts = await ctx.db.insert("menuCategories", {
-      organizationId: orgId!,
+      businessId: orgId!,
       name: "Desserts",
       sortOrder: 3,
     });
     const catDrinks = await ctx.db.insert("menuCategories", {
-      organizationId: orgId!,
+      businessId: orgId!,
       name: "Getränke",
       sortOrder: 4,
     });
@@ -623,7 +623,7 @@ export const seedDemoProfile = internalMutation({
     // 7. Insert Menu Items
     // Category 1: Pan Pizza & Cheezy Crust
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPizza,
       name: "Pizza Barbecue Lover's",
       description: "Zart marinierte Hähnchenbruststreifen, rauchiger Bacon, rote Zwiebeln und würzige Barbecue-Sauce auf knusprigem Pfannenteig.",
@@ -636,7 +636,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPizza,
       name: "Pizza Cheezy Cheese Lover's",
       description: "Reichhaltiger Mix aus sonnengereifter Tomatensauce, cremigem Mozzarella, herzhaftem Cheddar und feinstem Grana Padano.",
@@ -649,7 +649,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPizza,
       name: "Pizza Beef Supreme",
       description: "100% gewürztes Rinderhackfleisch, frische Champignons, rote Zwiebeln, grüne Paprika und Mozzarella.",
@@ -662,7 +662,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPizza,
       name: "Pizza Chicken Supreme",
       description: "Zarte Hähnchenbrust, frische braune Champignons, knackige rote Zwiebeln und Mozzarella auf fruchtiger Tomatensauce.",
@@ -675,7 +675,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPizza,
       name: "Pizza Hawaii",
       description: "Der beliebte Pizza Hut Klassiker mit saftigem Hinterschinken, fruchtig-süßen Ananasstücken und geschmolzenem Mozzarella.",
@@ -688,7 +688,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPizza,
       name: "Pizza Bolognese",
       description: "Traditionell geschmortes Rinderhack-Ragout mit aromatischen Kräutern, roten Zwiebeln und Mozzarella.",
@@ -701,7 +701,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPizza,
       name: "Wunschpizza",
       description: "Kreiere deine eigene Pizza Hut Legende mit deinem Lieblingsteig, Kruste und frischen Wunsch-Toppings.",
@@ -715,7 +715,7 @@ export const seedDemoProfile = internalMutation({
 
     // Category 2: Vorspeisen & Fingerfood
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catStarters,
       name: "Garlic Bread Mozzarella",
       description: "Knusprig gebackenes Baguette mit würziger Knoblauchbutter und mit goldgelbem Mozzarella überbacken (4 Stück).",
@@ -728,7 +728,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catStarters,
       name: "Mozzarella Sticks (6 Stück)",
       description: "Knusprig panierte Käsestangen mit flüssigem Mozzarellakern, serviert mit fruchtigem Tomaten-Dip.",
@@ -741,7 +741,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catStarters,
       name: "Crispy Onion Rings (8 Stück)",
       description: "Goldgelb im Bierteig gebackene Zwiebelringe, außen herrlich kross, serviert mit Barbecue-Dip.",
@@ -754,7 +754,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catStarters,
       name: "Country Potatoes",
       description: "Würzige Kartoffelecken, außen knusprig frittiert und innen zart, serviert mit kühler Sour Cream.",
@@ -768,7 +768,7 @@ export const seedDemoProfile = internalMutation({
 
     // Category 3: Pasta & Bakes
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPasta,
       name: "Lasagne Bolognese",
       description: "Klassisch geschichtete Teigblätter mit herzhafter Rinderhack-Bolognese und samtiger Béchamelsauce, im Ofen goldbraun überbacken.",
@@ -781,7 +781,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catPasta,
       name: "Macaroni & Cheese",
       description: "Amerikanischer Pasta-Klassiker: Zarte Makkaroni in einer reichhaltigen Käsesauce mit Cheddar gratiniert.",
@@ -795,7 +795,7 @@ export const seedDemoProfile = internalMutation({
 
     // Category 4: Desserts
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDesserts,
       name: "Warm Cookie Dough Double Chocolate",
       description: "Ofenfrisch gebackener Schokoladenteig mit schmelzendem Kern und Schokostückchen, heiß serviert.",
@@ -808,7 +808,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDesserts,
       name: "American Cherry Pie",
       description: "Klassischer amerikanischer Kirschkuchen mit feiner Mürbeteigkruste und fruchtiger Sauerkirschfüllung.",
@@ -821,7 +821,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDesserts,
       name: "Ben & Jerry's Cookie Dough (465ml)",
       description: "Legendäre Vanille-Eiscreme mit Riesenstücken aus Plätzchenteig und schokoladigen Bits.",
@@ -835,7 +835,7 @@ export const seedDemoProfile = internalMutation({
 
     // Category 5: Getränke
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDrinks,
       name: "Pepsi",
       description: "Der legendäre Cola-Geschmack, eiskalt serviert.",
@@ -848,7 +848,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDrinks,
       name: "Pepsi Zero Zucker",
       description: "Voller Geschmack ohne Zucker, eiskalt erfrischend.",
@@ -861,7 +861,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDrinks,
       name: "Mirinda Orange",
       description: "Fruchtig-prickelnde Orangenlimonade mit intensivem Geschmack.",
@@ -874,7 +874,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDrinks,
       name: "7Up Lemon-Lime",
       description: "Erfrischender Geschmack aus Zitronen und Limetten.",
@@ -887,7 +887,7 @@ export const seedDemoProfile = internalMutation({
     });
 
     await ctx.db.insert("menuItems", {
-      organizationId: orgId!,
+      businessId: orgId!,
       categoryId: catDrinks,
       name: "Mineralwasser",
       description: "Klares Erfrischungsquellwasser, wahlweise still oder mit feiner Kohlensäure.",
@@ -904,7 +904,7 @@ export const seedDemoProfile = internalMutation({
 
     // Active Order 1: Dine-in Table 3 (1 min ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "3",
       type: "dine-in",
       orderNumber: "051",
@@ -940,7 +940,7 @@ export const seedDemoProfile = internalMutation({
 
     // Active Order 2: Takeaway (3 min ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       type: "takeaway",
       orderNumber: "052",
       status: "in_progress",
@@ -978,7 +978,7 @@ export const seedDemoProfile = internalMutation({
 
     // Active Order 3: Dine-in Table 7 (6 min ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "7",
       type: "dine-in",
       orderNumber: "053",
@@ -1015,7 +1015,7 @@ export const seedDemoProfile = internalMutation({
 
     // Active Order 4: Takeaway (8 min ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       type: "takeaway",
       orderNumber: "054",
       status: "in_progress",
@@ -1047,7 +1047,7 @@ export const seedDemoProfile = internalMutation({
 
     // Completed Order 1: Table 1 (dine-in, completed 7 min ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "1",
       type: "dine-in",
       orderNumber: "050",
@@ -1078,7 +1078,7 @@ export const seedDemoProfile = internalMutation({
 
     // Completed Order 2: Takeaway (completed 16 min ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       type: "takeaway",
       orderNumber: "049",
       status: "completed",
@@ -1113,7 +1113,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 1: Table 5 (dine-in, completed 2 hours ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "5",
       type: "dine-in",
       orderNumber: "048",
@@ -1155,7 +1155,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 2: Takeaway (completed 4 hours ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       type: "takeaway",
       orderNumber: "047",
       status: "completed",
@@ -1188,7 +1188,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 3: Table 2 (dine-in, completed 7 hours ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "2",
       type: "dine-in",
       orderNumber: "046",
@@ -1219,7 +1219,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 4: Table 8 (dine-in, completed 1 day ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "8",
       type: "dine-in",
       orderNumber: "045",
@@ -1255,7 +1255,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 5: Takeaway (completed 1 day ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       type: "takeaway",
       orderNumber: "044",
       status: "completed",
@@ -1285,7 +1285,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 6: Table 10 (dine-in, completed 2 days ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "10",
       type: "dine-in",
       orderNumber: "043",
@@ -1328,7 +1328,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 7: Takeaway (completed 3 days ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       type: "takeaway",
       orderNumber: "042",
       status: "completed",
@@ -1361,7 +1361,7 @@ export const seedDemoProfile = internalMutation({
 
     // Archive Order 8: Table 12 (dine-in, completed 4 days ago)
     await ctx.db.insert("orders", {
-      organizationId: orgId!,
+      businessId: orgId!,
       tableNumber: "12",
       type: "dine-in",
       orderNumber: "041",
@@ -1404,28 +1404,28 @@ export const seedDemoProfile = internalMutation({
     // 9. Ensure Terminal Tokens
     let orderSession = await ctx.db
       .query("orderSessions")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .first();
     if (!orderSession) {
       await ctx.db.insert("orderSessions", {
-        organizationId: orgId!,
+        businessId: orgId!,
         token: "demo_kitchen_token",
       });
     }
 
     let availSession = await ctx.db
       .query("availabilitySessions")
-      .withIndex("by_organizationId", (q) => q.eq("organizationId", orgId!))
+      .withIndex("by_businessId", (q) => q.eq("businessId", orgId!))
       .first();
     if (!availSession) {
       await ctx.db.insert("availabilitySessions", {
-        organizationId: orgId!,
+        businessId: orgId!,
         token: "demo_avail_token",
       });
     }
 
     return {
-      organizationId: orgId!,
+      businessId: orgId!,
       userId: userId!,
       categoriesCount: 5,
       itemsCount: 21,

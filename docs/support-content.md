@@ -32,7 +32,7 @@ The support site exists for independent merchant setup and operation, not to fun
 | `was-ist-zackisch` | Was ist Zackisch – und was bleibt wie bisher? | Explains POS supplementation and manual revenue entry |
 | `voraussetzungen` | Was du vor der Einrichtung brauchst | Suitable tablet, browser, internet, payment account, POS |
 | `selbst-registrieren` | So erstellst du deinen Zackisch-Account | Self-signup without team contact |
-| `betrieb-anlegen` | So legst du deinen Betrieb an | Region and organization verified |
+| `betrieb-anlegen` | So legst du deinen Betrieb an | Region and business verified |
 | `einrichtungsassistent` | So nutzt du den Einrichtungsassistenten | Required vs optional and resume |
 | `einrichtung-pruefen` | So prüfst du, ob du startklar bist | Server readiness versus dismissed steps |
 
@@ -101,13 +101,13 @@ Article inventory is the **minimum editorial completion contract**. Agent should
 
 ## Ticket lifecycle and security
 
-Ticket from merchant account always belongs to one authorized organization and region. Customer selects their own organization if they have more than one, sees issue category and status (e.g. `new`, `open`, `waiting_for_customer`, `resolved`, `closed`) and a chronological public thread. Ops staff can assign, answer, leave internal notes and change status with permission. Every message includes safe immutable author/time identity. Customer never sees staff-only notes, internal audit metadata, privileged attachment URLs or another organization's conversation. Validate MIME/size, per-user quota, rate limits, text escaping and optional spam controls.
+Ticket from merchant account always belongs to one authorized business and region. Customer selects their own business if they have more than one, sees issue category and status (e.g. `new`, `open`, `waiting_for_customer`, `resolved`, `closed`) and a chronological public thread. Ops staff can assign, answer, leave internal notes and change status with permission. Every message includes safe immutable author/time identity. Customer never sees staff-only notes, internal audit metadata, privileged attachment URLs or another business's conversation. Validate MIME/size, per-user quota, rate limits, text escaping and optional spam controls.
 
 Notifications use the established Google Workspace sending infrastructure through approved Convex actions and a retry-safe outbox. Avoid emailing private ticket text in a manner that could expose secrets; prefer `Neue Antwort verfügbar` and secure link. Do not send duplicate email on idempotent retries. Support response expectations must not be advertised as contractual SLAs without a measured/approved policy.
 
 ## Internal workflow
 
-Queue filters by region/status/assigned agent/age and category; chronological thread with clear **customer reply** versus **internal note** editor. Internal notes should be a physically separate server-side operation. At submission time, identify author, destination, organization and visibility, and provide confirmation for sensitive mode switches. Authorized staff can merge/close/reopen only if such operations are explicitly built and audited; do not invent actions in docs. Every state change audited with redacted details.
+Queue filters by region/status/assigned agent/age and category; chronological thread with clear **customer reply** versus **internal note** editor. Internal notes should be a physically separate server-side operation. At submission time, identify author, destination, business and visibility, and provide confirmation for sensitive mode switches. Authorized staff can merge/close/reopen only if such operations are explicitly built and audited; do not invent actions in docs. Every state change audited with redacted details.
 
 ## Governance and publication
 

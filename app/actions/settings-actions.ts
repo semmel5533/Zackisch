@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { updateOrganization } from "@/lib/convex/database";
+import { updateBusiness } from "@/lib/convex/database";
 import { uploadFileToConvex } from "@/lib/convex/storage";
 import { getUser, getAuthenticatedConvexClient, requireOwner } from "@/lib/convex/auth";
 import { convexServer } from "@/lib/convex/server";
@@ -24,12 +24,12 @@ export async function updateBusinessAction(
   _prevState: SettingsActionState,
   formData: FormData,
 ): Promise<SettingsActionState> {
-  const organizationId = formData.get("organizationId") as string;
-  if (!organizationId) return { error: "Betriebs-ID fehlt." };
+  const businessId = formData.get("businessId") as string;
+  if (!businessId) return { error: "Betriebs-ID fehlt." };
 
   try {
-    const { user } = await requireOwner(organizationId);
-    const organizationName = formData.get("organizationName") as string;
+    const { user } = await requireOwner(businessId);
+    const businessName = formData.get("businessName") as string;
     const userName = formData.get("userName") as string;
     const address = formData.get("address") as string;
     const logoFile = formData.get("logo") as File | null;
@@ -39,8 +39,8 @@ export async function updateBusinessAction(
     const existingBannerId = formData.get("existingBannerId") as string;
     const removeBanner = formData.get("removeBanner") === "true";
 
-    if (!organizationName) return { error: "Name des Betriebs ist erforderlich." };
-    if (organizationName.length > 100) return { error: "Der Name des Betriebs darf maximal 100 Zeichen lang sein." };
+    if (!businessName) return { error: "Name des Betriebs ist erforderlich." };
+    if (businessName.length > 100) return { error: "Der Name des Betriebs darf maximal 100 Zeichen lang sein." };
     if (!userName) return { error: "Vertretername ist erforderlich." };
     if (userName.length > 100) return { error: "Der Name darf maximal 100 Zeichen lang sein." };
     if (address && address.length > 200) return { error: "Die Adresse darf maximal 200 Zeichen lang sein." };
@@ -84,8 +84,8 @@ export async function updateBusinessAction(
       bannerStorageId = await uploadFileToConvex(bannerFile);
     }
 
-    await updateOrganization(organizationId, {
-      name: organizationName,
+    await updateBusiness(businessId, {
+      name: businessName,
       address,
       logoStorageId,
       clearLogo: removeLogo,
@@ -93,10 +93,10 @@ export async function updateBusinessAction(
       clearBanner: removeBanner,
     });
 
-    revalidatePath(`/dashboard/${organizationId}/settings`);
-    revalidatePath(`/dashboard/${organizationId}/overview`);
-    revalidatePath(`/pickup/${organizationId}`);
-    revalidatePath(`/table/${organizationId}`);
+    revalidatePath(`/dashboard/${businessId}/settings`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
+    revalidatePath(`/pickup/${businessId}`);
+    revalidatePath(`/table/${businessId}`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -261,21 +261,21 @@ export async function confirmEmailChangeOtpAction(
 }
 
 export async function toggleFeatureAction(
-  organizationId: string,
+  businessId: string,
   feature: "pickup" | "table" | "to-go" | "to-stay",
   value: boolean,
 ): Promise<SettingsActionState> {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const updateData =
       feature === "pickup" || feature === "to-go"
         ? { isToGoEnabled: value }
         : { isToStayEnabled: value };
 
-    await updateOrganization(organizationId, updateData);
+    await updateBusiness(businessId, updateData);
 
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -287,11 +287,11 @@ export async function toggleFeatureAction(
 }
 
 export async function updateTablesAction(
-  organizationId: string,
+  businessId: string,
   tables: string[],
 ): Promise<SettingsActionState> {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     // Validate tables array: max 100 tables, each between 1 and 4 characters
     if (!Array.isArray(tables) || tables.length > 100) {
@@ -308,8 +308,8 @@ export async function updateTablesAction(
       cleanTables.push(trimmed);
     }
 
-    await updateOrganization(organizationId, { tables: cleanTables });
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    await updateBusiness(businessId, { tables: cleanTables });
+    revalidatePath(`/dashboard/${businessId}/overview`);
     return { success: true };
   } catch (error: unknown) {
     const message =

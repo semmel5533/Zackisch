@@ -36,7 +36,7 @@ Verbindliche Architektur- und Sicherheitsdetails stehen in [docs/architecture.md
 
 ## Regionen, Sprachen und Rollen
 
-Startregion ist Deutschland (`de`), öffentlich mit deutschen (`/de-de`) und englischen (`/de-en`) Inhalten. Jede Organisation ist ihrer Geschäftsregion serverseitig zugeordnet. Die angezeigte Sprache kann unabhängig gewählt werden. Weitere Regionen werden erst mit überprüften rechtlichen, steuerlichen und betrieblichen Voraussetzungen aktiviert. Öffentlich lesbare Inhalte müssen die korrekte regionale Fassung ausweisen.
+Startregion ist Deutschland (`de`), öffentlich mit deutschen (`/de-de`) und englischen (`/de-en`) Inhalten. Jeder Betrieb ist seiner Geschäftsregion serverseitig zugeordnet. Die angezeigte Sprache kann unabhängig gewählt werden. Weitere Regionen werden erst mit überprüften rechtlichen, steuerlichen und betrieblichen Voraussetzungen aktiviert. Öffentlich lesbare Inhalte müssen die korrekte regionale Fassung ausweisen.
 
 Der Zugriff unterscheidet Gäste ohne Login, Betriebseigentümer, autorisierte Personalgeräte, Support-Ticket-Absender sowie interne Teammitglieder mit regionalen Rollen. Besonders geschützt sind Stripe- und Auszahlungsdaten, personenbezogene Daten, interne Notizen, Sitzungen und Support-Anhänge.
 

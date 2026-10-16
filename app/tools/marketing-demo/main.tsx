@@ -6,7 +6,7 @@ import { CurrentOrdersContent } from "@/components/dashboard/current-orders-cont
 import { StaffTerminalShell } from "@/components/staff/staff-terminal-shell";
 import { useSidebarStore } from "@/store/sidebar-store";
 import { useLanguageStore } from "@/store/language-store";
-import type { Organization, MenuCategory, MenuItem, Order } from "@/lib/types";
+import type { Business, MenuCategory, MenuItem, Order } from "@/lib/types";
 import "../../app/globals.css";
 import "./preview.css";
 const params = new URLSearchParams(location.search);
@@ -51,8 +51,8 @@ const labels = {
     extrasOpt2: "Garlic",
   },
 }[locale];
-const base = { _creationTime: 1789992000000, organizationId: "demo" };
-const organization: Organization = {
+const base = { _creationTime: 1789992000000, businessId: "demo" };
+const business: Business = {
   ...base,
   _id: "demo",
   $id: "demo",
@@ -294,7 +294,7 @@ function StaffDemoScreen() {
 
   return (
     <StaffTerminalShell
-      organization={organization}
+      business={business}
       initialOrders={orders}
       categories={categories}
       items={items}
@@ -310,7 +310,7 @@ createRoot(document.getElementById("root")!).render(
     <StaffDemoScreen />
   ) : (
     <GuestFrontend
-      organization={organization}
+      business={business}
       categories={categories}
       items={items}
       type={

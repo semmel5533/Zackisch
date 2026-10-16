@@ -14,11 +14,11 @@ import { CookingPot, X, Check, DownloadSimple } from "@phosphor-icons/react";
 import { playOrderReadySound, initAudioContext } from "@/lib/audio";
 import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
 import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header";
-import type { Organization, Order } from "@/lib/types";
+import type { Business, Order } from "@/lib/types";
 
 interface OrderTrackerProps {
   orderId: string;
-  organization: Organization;
+  business: Business;
   initialOrder?: Order | null;
 }
 
@@ -30,7 +30,7 @@ const statusSteps = [
 
 export function OrderTracker({
   orderId,
-  organization,
+  business,
   initialOrder,
 }: OrderTrackerProps) {
   const { t, locale } = useTranslation();
@@ -78,7 +78,7 @@ export function OrderTracker({
         <Button
           variant="outline"
           className="h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
-          onClick={() => (window.location.href = t("pickupUrl", { organizationId: organization.$id }))}
+          onClick={() => (window.location.href = t("pickupUrl", { businessId: business.$id }))}
         >
           {t("orderAgain")}
         </Button>
@@ -101,7 +101,7 @@ export function OrderTracker({
     return (
       <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
         <RestaurantHeroHeader
-          organization={organization}
+          business={business}
           type="takeaway"
           showOrderingSubtitle={false}
         />
@@ -145,7 +145,7 @@ export function OrderTracker({
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
       <RestaurantHeroHeader
-        organization={organization}
+        business={business}
         type="takeaway"
         showOrderingSubtitle={false}
       />
@@ -264,7 +264,7 @@ export function OrderTracker({
             type="button"
             variant="outline"
             className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
-            onClick={() => downloadOrderConfirmation(order, organization, locale)}
+            onClick={() => downloadOrderConfirmation(order, business, locale)}
           >
             <DownloadSimple className="size-4 shrink-0" weight="bold" />
             <span>{t("downloadConfirmation")}</span>
@@ -288,7 +288,7 @@ export function OrderTracker({
             variant="outline"
             className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
             onClick={() =>
-              (window.location.href = t("pickupUrl", { organizationId: organization.$id }))
+              (window.location.href = t("pickupUrl", { businessId: business.$id }))
             }
           >
             {t("orderAgain")}

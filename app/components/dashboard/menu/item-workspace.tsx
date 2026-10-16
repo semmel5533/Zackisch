@@ -53,7 +53,7 @@ interface ItemWorkspaceProps {
   editingItem: MenuItem | null;
   categories: MenuCategory[];
   selectedCategoryId: string;
-  organizationId: string;
+  businessId: string;
 }
 
 export function ItemWorkspace({
@@ -62,7 +62,7 @@ export function ItemWorkspace({
   editingItem,
   categories,
   selectedCategoryId,
-  organizationId,
+  businessId,
 }: ItemWorkspaceProps) {
   const { t, locale } = useTranslation();
 
@@ -167,7 +167,7 @@ export function ItemWorkspace({
     setErrors({});
     const formData = new FormData();
 
-    formData.append("organizationId", organizationId);
+    formData.append("businessId", businessId);
     formData.append("categoryId", categoryId || categoryIdRef.current);
     formData.append("name", name.trim());
     formData.append("description", description);

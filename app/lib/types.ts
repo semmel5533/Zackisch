@@ -13,9 +13,9 @@ export interface ConvexDocument {
   $collectionId?: string;
 }
 
-// Organizations
+// Businesses
 
-export interface Organization extends ConvexDocument {
+export interface Business extends ConvexDocument {
   name: string;
   address?: string;
   logoStorageId?: string;
@@ -53,7 +53,7 @@ export interface Organization extends ConvexDocument {
   tables?: string[];
 }
 
-export interface CreateOrganizationData {
+export interface CreateBusinessData {
   name: string;
   address?: string;
   logoStorageId?: string;
@@ -71,13 +71,13 @@ export interface CreateOrganizationData {
 // Menu Categories
 
 export interface MenuCategory extends ConvexDocument {
-  organizationId: string;
+  businessId: string;
   name: string;
   sortOrder: number;
 }
 
 export interface CreateMenuCategoryData {
-  organizationId: string;
+  businessId: string;
   name: string;
   sortOrder?: number;
   ownerId?: string;
@@ -107,7 +107,7 @@ export interface CustomizationStep {
 }
 
 export interface MenuItem extends ConvexDocument {
-  organizationId: string;
+  businessId: string;
   categoryId: string;
   name: string;
   description?: string;
@@ -122,7 +122,7 @@ export interface MenuItem extends ConvexDocument {
 }
 
 export interface CreateMenuItemData {
-  organizationId: string;
+  businessId: string;
   categoryId: string;
   name: string;
   description?: string;
@@ -158,7 +158,7 @@ export interface OrderItem {
 }
 
 export interface Order extends ConvexDocument {
-  organizationId: string;
+  businessId: string;
   tableNumber?: string;
   type: "dine-in" | "takeaway";
   items: string; // JSON serialized OrderItem[]
@@ -195,7 +195,7 @@ export interface Order extends ConvexDocument {
 }
 
 export interface CreateOrderData {
-  organizationId: string;
+  businessId: string;
   tableNumber?: string;
   type: "dine-in" | "takeaway";
   items: OrderItem[];
@@ -211,7 +211,7 @@ export interface CreateOrderData {
 // Order Sessions
 
 export interface OrderSession extends ConvexDocument {
-  organizationId: string;
+  businessId: string;
   token: string;
   expiresAt?: string | null;
 }
@@ -219,7 +219,7 @@ export interface OrderSession extends ConvexDocument {
 // Availability Sessions
 
 export interface AvailabilitySession extends ConvexDocument {
-  organizationId: string;
+  businessId: string;
   token: string;
   expiresAt?: string | null;
 }
@@ -227,7 +227,7 @@ export interface AvailabilitySession extends ConvexDocument {
 // Staff Sessions
 
 export interface StaffSession extends ConvexDocument {
-  organizationId: string;
+  businessId: string;
   token: string;
   expiresAt?: string | null;
 }

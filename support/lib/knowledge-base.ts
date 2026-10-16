@@ -572,7 +572,7 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     },
     verification: {
       "de-de": "Die URL des Abhol-QR-Codes lautet app.zackisch.com/pickup/<betriebsId>.",
-      "de-en": "The pickup QR code URL resolves to app.zackisch.com/pickup/<organizationId>.",
+      "de-en": "The pickup QR code URL resolves to app.zackisch.com/pickup/<businessId>.",
     },
     relatedSlugs: ["configure-table-numbers-and-zones", "printing-qr-sheets-a4-and-a6"],
   },

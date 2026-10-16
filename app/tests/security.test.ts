@@ -11,26 +11,26 @@ async function setup() {
   const ids = await t.run(async (ctx) => {
     const owner = await ctx.db.insert("users", { name: "Owner" });
     const other = await ctx.db.insert("users", { name: "Other" });
-    const organizationId = await ctx.db.insert("organizations", {
+    const businessId = await ctx.db.insert("businesses", {
       name: "Cafe",
       ownerId: owner,
     });
-    const otherOrg = await ctx.db.insert("organizations", {
+    const otherBusiness = await ctx.db.insert("businesses", {
       name: "Other cafe",
       ownerId: other,
     });
     const categoryId = await ctx.db.insert("menuCategories", {
-      organizationId,
+      businessId,
       name: "Food",
       sortOrder: 0,
     });
     const otherCategory = await ctx.db.insert("menuCategories", {
-      organizationId: otherOrg,
+      businessId: otherBusiness,
       name: "Other",
       sortOrder: 0,
     });
     const itemId = await ctx.db.insert("menuItems", {
-      organizationId,
+      businessId,
       categoryId,
       name: "Cake",
       price: 500,
@@ -54,13 +54,13 @@ async function setup() {
       code: owner,
       expires: Date.now() - 1,
     });
-    await ctx.db.insert("staffSessions", { organizationId, token: "staff" });
+    await ctx.db.insert("staffSessions", { businessId, token: "staff" });
     await ctx.db.insert("staffSessions", {
-      organizationId,
+      businessId,
       token: "expired-staff",
       expiresAt: new Date(Date.now() - 1).toISOString(),
     });
-    return { organizationId, otherOrg, categoryId, otherCategory, itemId };
+    return { businessId, otherBusiness, categoryId, otherCategory, itemId };
   });
   return { t, ...ids };
 }
@@ -69,10 +69,10 @@ describe("tenant permissions at the public backend boundary", () => {
   it.each([undefined, "other", "expired"])(
     "rejects category creation with session %s",
     async (sessionToken) => {
-      const { t, organizationId } = await setup();
+      const { t, businessId } = await setup();
       await expect(
         t.mutation(api.menu.createCategory, {
-          organizationId,
+          businessId,
           name: "New",
           sortOrder: 0,
           sessionToken,
@@ -81,10 +81,10 @@ describe("tenant permissions at the public backend boundary", () => {
     },
   );
   it("allows the owner and prevents moving items to a foreign category", async () => {
-    const { t, organizationId, itemId, otherCategory } = await setup();
+    const { t, businessId, itemId, otherCategory } = await setup();
     await expect(
       t.mutation(api.menu.createCategory, {
-        organizationId,
+        businessId,
         name: "New",
         sortOrder: 0,
         sessionToken: "owner",
@@ -123,39 +123,39 @@ describe("tenant permissions at the public backend boundary", () => {
     ).rejects.toThrow("Unauthorized");
   });
   it("does not disclose pairing tokens and enforces expiration and tenant scope", async () => {
-    const { t, organizationId, otherOrg } = await setup();
+    const { t, businessId, otherBusiness } = await setup();
     await expect(
-      t.query(api.sessions.getStaffSessions, { organizationId }),
+      t.query(api.sessions.getStaffSessions, { businessId }),
     ).rejects.toThrow("Unauthorized");
     await expect(
       t.query(api.sessions.getStaffSessions, {
-        organizationId,
+        businessId,
         sessionToken: "other",
       }),
     ).rejects.toThrow("Unauthorized");
     expect(
       await t.query(api.sessions.getStaffSessions, {
-        organizationId,
+        businessId,
         sessionToken: "owner",
       }),
     ).toHaveLength(2);
     expect(
       await t.query(api.sessions.verifyTerminalSession, {
-        organizationId,
+        businessId,
         token: "staff",
         type: "staff",
       }),
     ).toBe(true);
     expect(
       await t.query(api.sessions.verifyTerminalSession, {
-        organizationId: otherOrg,
+        businessId: otherBusiness,
         token: "staff",
         type: "staff",
       }),
     ).toBe(false);
     expect(
       await t.query(api.sessions.verifyTerminalSession, {
-        organizationId,
+        businessId,
         token: "expired-staff",
         type: "staff",
       }),

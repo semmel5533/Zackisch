@@ -2,7 +2,7 @@
 
 ## Market and language routing
 
-Start country is **Deutschland** (`de`) with German (`de-de`) and English (`de-en`) locale variants. The country label is shown as its endonym in selectors even in English UI. Do not translate a legal business region based solely on preferred UI language. Region and language are distinct and should be represented as separate typed concepts in source. Public `root` and `support` routes follow `/{country}-{language}`. Merchant and internal apps retain region in verified session/organization/admin assignment rather than trusting a URL query. DACH expansion needs explicit tax/contract/payment readiness.
+Start country is **Deutschland** (`de`) with German (`de-de`) and English (`de-en`) locale variants. The country label is shown as its endonym in selectors even in English UI. Do not translate a legal business region based solely on preferred UI language. Region and language are distinct and should be represented as separate typed concepts in source. Public `root` and `support` routes follow `/{country}-{language}`. Merchant and internal apps retain region in verified session/business/admin assignment rather than trusting a URL query. DACH expansion needs explicit tax/contract/payment readiness.
 
 ## Text and navigation
 

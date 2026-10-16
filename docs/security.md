@@ -5,7 +5,7 @@
 ## Threat boundaries and actors
 
 - Anonymous guest: public menu, QR code, cart, controlled payment return page and appropriate order tracker.
-- Merchant user: authenticated account, organizations they own or explicitly belong to, related data and tickets.
+- Merchant user: authenticated account, businesses they own or explicitly belong to, related data and tickets.
 - Staff tablet: narrow terminal session with only orders/status and availability operations needed for that venue. Never inherit owner admin privileges.
 - Internal team: separate 2FA session, `regional_admin` or `staff` role and explicit resource permissions, enforced by Convex after session validation.
 - External providers: Stripe Connect via signed webhooks; Google Workspace via server-held credentials; Convex and Cloudflare through secrets and deployment scopes.
@@ -13,14 +13,14 @@
 
 ## Required access-control policy
 
-Every protected operation evaluates actor identity, authentication/session validity, action permission, object ownership, organization and region, plus ticket message visibility. The organization region must be fetched through trusted data; ignore or validate claimed request region. Deny by default and shape responses to avoid entity enumeration. Enforce at (1) route/Server Action and (2) Convex function/data access layers. Use typed policy helpers rather than copy-pasted ad hoc checks. Keep public Convex functions to minimum; mark privileged helpers `internalQuery`, `internalMutation` and `internalAction`.
+Every protected operation evaluates actor identity, authentication/session validity, action permission, object ownership, business and region, plus ticket message visibility. The business region must be fetched through trusted data; ignore or validate claimed request region. Deny by default and shape responses to avoid entity enumeration. Enforce at (1) route/Server Action and (2) Convex function/data access layers. Use typed policy helpers rather than copy-pasted ad hoc checks. Keep public Convex functions to minimum; mark privileged helpers `internalQuery`, `internalMutation` and `internalAction`.
 
 | Object / action | Merchant owner | Paired staff | Regional support staff | Anonymous guest |
 | --- | --- | --- | --- | --- |
 | Public menu read | Yes | Yes | Only as public user | Yes |
-| Menu/QR edit | Own org | No | Only explicit admin permission | No |
-| View/process live order | Own org | Paired org, bounded actions | Explicit regional permission | Only sanitized own tracker |
-| Ticket create/read/reply | Own org | No, unless explicit account policy | Assigned region + `tickets:*` | No |
+| Menu/QR edit | Own business | No | Only explicit admin permission | No |
+| View/process live order | Own business | Paired business, bounded actions | Explicit regional permission | Only sanitized own tracker |
+| Ticket create/read/reply | Own business | No, unless explicit account policy | Assigned region + `tickets:*` | No |
 | Internal ticket note | No | No | Assigned region + `tickets:note` | No |
 | Newsletter, partner ledger, staff admin | No | No | Specific operational permission | No |
 | Cross-region private queries | No | No | No by default | No |
@@ -31,7 +31,7 @@ Use the existing trusted merchant identity for `app` and `support`, without dupl
 
 ## Web threats to prove absent or mitigated
 
-1. **IDOR / BOLA:** change organization, ticket, attachment, order and table IDs in every route/action/query. Test adversarial users from other businesses and regions.
+1. **IDOR / BOLA:** change business, ticket, attachment, order and table IDs in every route/action/query. Test adversarial users from other businesses and regions.
 2. **CSRF and login CSRF:** enforce appropriate SameSite plus server Origin/Host checks for state-changing cross-site contexts; never trust browser-set headers without platform review.
 3. **XSS and rich content:** sanitize Markdown/rich text renderers, strip dangerous HTML, restrict SVG where unsafe, use CSP appropriate to Stripe and trusted assets. Untrusted ticket/restaurant text must not become executable.
 4. **SSRF:** no arbitrary user-provided URL fetches from Convex actions/Workers; strict provider host allowlists and redirect behavior for remote images/links where used.
@@ -50,7 +50,7 @@ Customer-visible replies and internal notes **must be different server operation
 
 ## Security verification matrix
 
-- Unit: policy truth table covering owner, staff terminal, ops employee, regional admin, cross-organization and cross-region.
+- Unit: policy truth table covering owner, staff terminal, ops employee, regional admin, cross-business and cross-region.
 - Integration: publicly callable Convex queries/mutations cannot enumerate private fields or mutate without server-bound proofs.
 - End to end: login, token rotation/expiry, logout across `app`/`support`, internal OTP, direct deep link with wrong region, invalid CSRF origin.
 - Provider: Stripe test mode duplicated/reordered webhook, wrong signature, stale prices and malformed cart, disputed/refunded statuses, payout account mismatch.

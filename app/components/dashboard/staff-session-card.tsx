@@ -26,11 +26,11 @@ import { generateStaffSessionAction } from "@/actions/staff-actions";
 
 export function StaffSessionCard({
   staffToken: initialStaffToken,
-  organizationId,
+  businessId,
   baseUrl,
 }: {
   staffToken: string;
-  organizationId: string;
+  businessId: string;
   baseUrl: string;
 }) {
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ export function StaffSessionCard({
   const [regenerateStaffOpen, setRegenerateStaffOpen] = useState(false);
 
   const getLink = (token: string) =>
-    `${baseUrl}/staff/${organizationId}?token=${token}`;
+    `${baseUrl}/staff/${businessId}?token=${token}`;
 
   function copyLinkText(token: string) {
     const link = getLink(token);
@@ -50,7 +50,7 @@ export function StaffSessionCard({
 
   function confirmRegenerateStaff() {
     startTransition(async () => {
-      const result = await generateStaffSessionAction(organizationId);
+      const result = await generateStaffSessionAction(businessId);
       if (result.success && result.session) {
         setStaffToken(result.session.token);
         toast.success(t("regeneratedStaff"));

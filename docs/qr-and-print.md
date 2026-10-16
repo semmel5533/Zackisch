@@ -25,7 +25,7 @@ Typography and hierarchy should survive grayscale printing, no bleed through lam
 - Print-at-actual-size option; defined layout sizes and margins. Generate properly sized A4 grid sheets, single-code A6 or small tabletop layout, and a printer-ready vector/PDF alternative. Explicit page-size and actual-size instructions; keep cut guides outside safety margin.
 - PDF embedding must retain vector quality or sufficient device-resolution raster. Report color mode and paper size rather than pretending automatic printer profile management.
 - Do not route QR through opaque redirect/analytics links unless privacy/legal and availability impacts are reviewed.
-- Stable table identifier must map to stored eligible table for correct organization. Offboarded/paused tables display safe explanatory content; stale QR never silently redirects to unrelated tenant.
+- Stable table identifier must map to stored eligible table for correct business. Offboarded/paused tables display safe explanatory content; stale QR never silently redirects to unrelated tenant.
 
 ## Printable variants
 
@@ -39,7 +39,7 @@ Typography and hierarchy should survive grayscale printing, no bleed through lam
 
 ## Implementation steps and automated tests
 
-- Separate QR payload creation from presentation and print/export. Central helper returns canonical URL for organization/table/pickup. Server checks table existence and business mode state.
+- Separate QR payload creation from presentation and print/export. Central helper returns canonical URL for business/table/pickup. Server checks table existence and business mode state.
 - Unit tests for URL encoding, locale/region-aware public routes, table/pickup distinction, character bounds and sanitization.
 - Generate sample print output for 1, 2, 4, 8+ tables and edge cases with long venue name and max table label. Compare expected number of codes and identifiers.
 - Export print variants; independent decoder rescans from rendered page or photo, validating **exact decoded URLs**. Manual physical tests on inexpensive A4 grayscale printer and multiple actual phone camera apps, old tablets, glare/poor lighting, and A6 press proof.

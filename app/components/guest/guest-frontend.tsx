@@ -19,10 +19,10 @@ import { WaveLine } from "@/components/ui/wave-line";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { Storefront } from "@phosphor-icons/react/dist/ssr";
 import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
-import type { Organization, MenuCategory, MenuItem, Order } from "@/lib/types";
+import type { Business, MenuCategory, MenuItem, Order } from "@/lib/types";
 
 interface GuestFrontendProps {
-  organization: Organization;
+  business: Business;
   categories: MenuCategory[];
   items: MenuItem[];
   type: "dine-in" | "takeaway";
@@ -41,13 +41,13 @@ import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header"
 function GuestOrderSuccess({
   orderNumber,
   order,
-  organization,
+  business,
   tableNumber,
   setDineInSuccess,
 }: {
   orderNumber: string;
   order?: Order | null;
-  organization: Organization;
+  business: Business;
   tableNumber?: string;
   setDineInSuccess: (val: null) => void;
 }) {
@@ -55,7 +55,7 @@ function GuestOrderSuccess({
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
       <RestaurantHeroHeader
-        organization={organization}
+        business={business}
         type="dine-in"
         tableNumber={tableNumber}
         showOrderingSubtitle={false}
@@ -87,7 +87,7 @@ function GuestOrderSuccess({
               type="button"
               variant="outline"
               className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
-              onClick={() => downloadOrderConfirmation(order, organization, locale)}
+              onClick={() => downloadOrderConfirmation(order, business, locale)}
             >
               <DownloadSimple className="size-4 shrink-0" weight="bold" />
               <span>{t("downloadConfirmation")}</span>
@@ -555,7 +555,7 @@ function FloatingCartBanner({
 }
 
 export function GuestFrontend({
-  organization,
+  business,
   categories,
   items,
   type,
@@ -620,9 +620,9 @@ export function GuestFrontend({
   }, [activeTab, cartItems, checkCartScroll]);
 
   useEffect(() => {
-    const orgName = organization.name;
+    const businessName = business.name;
     if (orderId && type === "takeaway") {
-      document.title = `Zackisch: ${t("orderStatus")} - ${orgName}`;
+      document.title = `Zackisch: ${t("orderStatus")} - ${businessName}`;
       return;
     }
     if (activeTab === "cart") {
@@ -635,14 +635,14 @@ export function GuestFrontend({
         : tableNumber
         ? t("titleToStay", { table: tableNumber })
         : t("titleToStayNoTable");
-    document.title = `Zackisch: ${prefix} ${orgName}`;
-  }, [locale, organization.name, type, tableNumber, orderId, activeTab, t]);
+    document.title = `Zackisch: ${prefix} ${businessName}`;
+  }, [locale, business.name, type, tableNumber, orderId, activeTab, t]);
 
   if (orderId && type === "takeaway") {
     return (
       <OrderTracker
         orderId={orderId}
-        organization={organization}
+        business={business}
         initialOrder={initialOrder}
       />
     );
@@ -656,7 +656,7 @@ export function GuestFrontend({
           dineInSuccess.order ||
           (initialOrder?.orderNumber === dineInSuccess.orderNumber ? initialOrder : null)
         }
-        organization={organization}
+        business={business}
         tableNumber={tableNumber}
         setDineInSuccess={setDineInSuccess}
       />
@@ -719,7 +719,7 @@ export function GuestFrontend({
       ) : (
         <div className="flex flex-col min-h-screen bg-background overflow-x-clip">
           <RestaurantHeroHeader
-            organization={organization}
+            business={business}
             type={type}
             tableNumber={tableNumber}
           />
@@ -744,7 +744,7 @@ export function GuestFrontend({
       <CartSheet
         open={checkoutOpen}
         onOpenChange={setCheckoutOpen}
-        organization={organization}
+        business={business}
         type={type}
         tableNumber={tableNumber}
         initialSendEmailConfirmation={initialSendEmailConfirmation}
@@ -753,7 +753,7 @@ export function GuestFrontend({
           setCheckoutOpen(false);
           useCartStore.getState().clearCart();
           if (type === "takeaway") {
-            router.push(`/pickup/${organization.$id}?order=${orderId}`);
+            router.push(`/pickup/${business.$id}?order=${orderId}`);
           } else {
             setDineInSuccess({ orderNumber });
           }

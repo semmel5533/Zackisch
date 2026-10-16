@@ -27,9 +27,9 @@ Use existing `npm` and package scripts rather than inventing success via `npm ru
 7. **Merchant existing POS fallback:** if Zackisch unavailable, UI doesn't claim offline digital orders; manual service and reconciliation guidance accessible in help.
 8. **Public support:** search German/English article, follow instructions/context deep-link, no login required for help; private ticket path requires login.
 9. **Cross-site merchant auth:** authenticate once via secure supported flow, open support ticket as same user, logout/revoke and confirm both origins enforce current session; no open redirect.
-10. **Ticket/Team Dashboard:** create ticket for org A, authorized regional agent replies, customer sees only public message and status; internal note stays private and another org cannot access.
-11. **Ops regression:** 2FA, organizations, orders, partner ledger, newsletter creation/DOI, email log and audit work as before; role-restricted ops user denied unauthorized actions.
-12. **Region isolation:** org and regional admin from Germany cannot read/modify synthetic Austria/Switzerland fixtures or other German org unless explicit legal role grants; attempt tampered IDs and direct Convex endpoints.
+10. **Ticket/Team Dashboard:** create ticket for business A, authorized regional agent replies, customer sees only public message and status; internal note stays private and another business cannot access.
+11. **Ops regression:** 2FA, businesses, orders, partner ledger, newsletter creation/DOI, email log and audit work as before; role-restricted ops user denied unauthorized actions.
+12. **Region isolation:** business and regional admin from Germany cannot read/modify synthetic Austria/Switzerland fixtures or other German business unless explicit legal role grants; attempt tampered IDs and direct Convex endpoints.
 13. **Accessibility:** keyboard-only control of forms/checkout/dialogs, screen-reader labels and errors, zoom/reflow, focus not obscured, reduced motion, target sizes and genuine contrast.
 14. **Output/privacy:** no sensitive Stripe fields, tokens or admin notes in guest DOM/RSC/JSON/logs; no private ticket pages indexed.
 15. **Deployment:** Cloudflare Workers preview of all four apps, including prerendered/static root, with correct env/host allowlists and no runtime missing Node APIs.

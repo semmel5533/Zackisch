@@ -100,7 +100,7 @@ Team Dashboard offers dense, consistent grids, strong keyboard/focus, reliable r
 
 ## 10. Support and physical QR
 
-Support landing centers the search box and popular owner questions. Every tutorial uses a consistent sidebar/TOC, prerequisites, numbered steps, current screenshots with text alternatives and next links. Ticket UI shows organization and response visibility.
+Support landing centers the search box and popular owner questions. Every tutorial uses a consistent sidebar/TOC, prerequisites, numbered steps, current screenshots with text alternatives and next links. Ticket UI shows business and response visibility.
 
 Physical QR template is a **product touchpoint** not a marketing poster. Short actionable headline, a large high-contrast actual QR, recognizable table identifier, venue name and visible fallback address. Unnecessary decorative marks must not touch the QR quiet zone. See `qr-and-print.md` for dimensions, reproducible printing and device scan tests.
 

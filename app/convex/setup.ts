@@ -6,7 +6,7 @@ const CURRENT_LEGAL_VERSION = "2026-10-v1";
 
 export const getSetupReadiness = query({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.union(
     v.null(),
@@ -34,20 +34,20 @@ export const getSetupReadiness = query({
     })
   ),
   handler: async (ctx, args) => {
-    const org = await ctx.db.get(args.organizationId);
+    const org = await ctx.db.get(args.businessId);
     if (!org) return null;
 
     const categories = await ctx.db
       .query("menuCategories")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
 
     const items = await ctx.db
       .query("menuItems")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
 
@@ -57,22 +57,22 @@ export const getSetupReadiness = query({
 
     const orderSessions = await ctx.db
       .query("orderSessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
 
     const staffSessions = await ctx.db
       .query("staffSessions")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
 
     const acceptanceRows = await ctx.db
       .query("acceptanceEvents")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
 
@@ -194,7 +194,7 @@ export const getSetupReadiness = query({
 
 export const recordLegalAcceptance = mutation({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     documentSlugs: v.array(v.string()),
     documentVersion: v.optional(v.string()),
     context: v.optional(v.string()),
@@ -209,7 +209,7 @@ export const recordLegalAcceptance = mutation({
     if (!userId) {
       throw new Error("Nicht authentifiziert.");
     }
-    const org = await ctx.db.get(args.organizationId);
+    const org = await ctx.db.get(args.businessId);
     if (!org || org.ownerId !== userId) {
       throw new Error("Keine Berechtigung für diesen Betrieb.");
     }
@@ -221,14 +221,14 @@ export const recordLegalAcceptance = mutation({
     for (const slug of args.documentSlugs) {
       const existing = await ctx.db
         .query("acceptanceEvents")
-        .withIndex("by_organizationId_and_slug", (q) =>
-          q.eq("organizationId", args.organizationId).eq("documentSlug", slug)
+        .withIndex("by_businessId_and_slug", (q) =>
+          q.eq("businessId", args.businessId).eq("documentSlug", slug)
         )
         .first();
 
       if (!existing || existing.documentVersion !== version) {
         await ctx.db.insert("acceptanceEvents", {
-          organizationId: args.organizationId,
+          businessId: args.businessId,
           userId,
           documentSlug: slug,
           documentVersion: version,
@@ -240,7 +240,7 @@ export const recordLegalAcceptance = mutation({
       }
 
       if (slug === "pos-workflow") {
-        await ctx.db.patch(args.organizationId, {
+        await ctx.db.patch(args.businessId, {
           posWorkflowConfirmedAt: now,
         });
       }
@@ -251,7 +251,7 @@ export const recordLegalAcceptance = mutation({
       actorRole: "merchant",
       action: "merchant.legal_acceptance",
       entityType: "restaurant",
-      entityId: String(args.organizationId),
+      entityId: String(args.businessId),
       regionId: org.region || "de",
       details: JSON.stringify({
         documentSlugs: args.documentSlugs,
@@ -364,13 +364,13 @@ function buildEn16931XRechnungXml(params: {
 
 export const getFeeStatements = query({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.array(
     v.object({
       _id: v.id("merchantFeeStatements"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       regionId: v.string(),
       period: v.string(),
       statementNumber: v.string(),
@@ -391,8 +391,8 @@ export const getFeeStatements = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("merchantFeeStatements")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .order("desc")
       .collect();
@@ -401,18 +401,18 @@ export const getFeeStatements = query({
 
 export const generateMonthlyFeeStatement = mutation({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     period: v.string(), // YYYY-MM
   },
   returns: v.id("merchantFeeStatements"),
   handler: async (ctx, args) => {
-    const org = await ctx.db.get(args.organizationId);
+    const org = await ctx.db.get(args.businessId);
     if (!org) throw new Error("Betrieb nicht gefunden.");
 
     const existing = await ctx.db
       .query("merchantFeeStatements")
-      .withIndex("by_organizationId_and_period", (q) =>
-        q.eq("organizationId", args.organizationId).eq("period", args.period)
+      .withIndex("by_businessId_and_period", (q) =>
+        q.eq("businessId", args.businessId).eq("period", args.period)
       )
       .first();
     if (existing) {
@@ -421,8 +421,8 @@ export const generateMonthlyFeeStatement = mutation({
 
     const allOrders = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .collect();
 
@@ -467,7 +467,7 @@ export const generateMonthlyFeeStatement = mutation({
     const platformFeeVatCents = platformFeeGrossCents - platformFeeNetCents;
 
     const statementNumber = `ZCK-${args.period.replace("-", "")}-${String(
-      args.organizationId
+      args.businessId
     )
       .slice(-4)
       .toUpperCase()}`;
@@ -488,7 +488,7 @@ export const generateMonthlyFeeStatement = mutation({
     });
 
     return await ctx.db.insert("merchantFeeStatements", {
-      organizationId: args.organizationId,
+      businessId: args.businessId,
       regionId: org.region || "de",
       period: args.period,
       statementNumber,

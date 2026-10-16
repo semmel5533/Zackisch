@@ -46,7 +46,7 @@ import type { Order, OrderItem } from "@/lib/types";
 
 interface CurrentOrdersContentProps {
   orders: Order[];
-  organizationId: string;
+  businessId: string;
   isStaffView?: boolean;
 }
 
@@ -77,7 +77,7 @@ function formatOrderTime(timestamp?: number): string {
 
 export function CurrentOrdersContent({
   orders,
-  organizationId,
+  businessId,
   isStaffView,
 }: CurrentOrdersContentProps) {
   const { t, locale } = useTranslation();
@@ -122,10 +122,10 @@ export function CurrentOrdersContent({
 
   // Reactive Convex queries
   const liveOrders = useQuery(api.orders.getLiveOrders, {
-    organizationId: organizationId as Id<"organizations">,
+    businessId: businessId as Id<"businesses">,
   });
-  const org = useQuery(api.organizations.get, {
-    id: organizationId as Id<"organizations">,
+  const business = useQuery(api.businesses.get, {
+    id: businessId as Id<"businesses">,
   });
 
   useEffect(() => {
@@ -191,11 +191,11 @@ export function CurrentOrdersContent({
   }, [liveOrders, soundEnabled, t]);
 
   useEffect(() => {
-    if (org === null) {
-      toast.error(t("orgDeletedToast" as any));
+    if (business === null) {
+      toast.error(t("businessNotFound"));
       router.push("/");
     }
-  }, [org, router, t]);
+  }, [business, router, t]);
 
   // Column 1: in_progress orders (FIFO: oldest active order first)
   const inProgressOrders = useMemo(
@@ -277,7 +277,7 @@ export function CurrentOrdersContent({
     pendingOrderRef.current = orderId;
     setPendingOrderId(orderId);
     try {
-      const res = await updateOrderStatusAction(orderId, newStatus, organizationId);
+      const res = await updateOrderStatusAction(orderId, newStatus, businessId);
       if (!res?.success) {
         toast.error(res?.error || t("error"));
         return false;
@@ -323,7 +323,7 @@ export function CurrentOrdersContent({
     pendingOrderRef.current = orderId;
     setPendingOrderId(orderId);
     try {
-      const res = await recordOrderInPosAction(orderId, organizationId);
+      const res = await recordOrderInPosAction(orderId, businessId);
       if (res.error) {
         toast.error(res.error);
         return;

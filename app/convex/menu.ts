@@ -3,12 +3,12 @@ import { isOwner, requireOwner, verifyTerminal } from "./permissions";
 import { v } from "convex/values";
 
 export const getCategories = query({
-  args: { organizationId: v.id("organizations") },
+  args: { businessId: v.id("businesses") },
   returns: v.array(
     v.object({
       _id: v.id("menuCategories"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       name: v.string(),
       sortOrder: v.number(),
     }),
@@ -16,20 +16,20 @@ export const getCategories = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("menuCategories")
-      .withIndex("by_organizationId_and_sortOrder", (q) =>
-        q.eq("organizationId", args.organizationId),
+      .withIndex("by_businessId_and_sortOrder", (q) =>
+        q.eq("businessId", args.businessId),
       )
       .collect();
   },
 });
 
 export const getItems = query({
-  args: { organizationId: v.id("organizations") },
+  args: { businessId: v.id("businesses") },
   returns: v.array(
     v.object({
       _id: v.id("menuItems"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       categoryId: v.id("menuCategories"),
       name: v.string(),
       description: v.optional(v.string()),
@@ -47,8 +47,8 @@ export const getItems = query({
   handler: async (ctx, args) => {
     const items = await ctx.db
       .query("menuItems")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId),
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId),
       )
       .collect();
 
@@ -70,12 +70,12 @@ export const getItems = query({
 });
 
 export const getAvailableItems = query({
-  args: { organizationId: v.id("organizations") },
+  args: { businessId: v.id("businesses") },
   returns: v.array(
     v.object({
       _id: v.id("menuItems"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       categoryId: v.id("menuCategories"),
       name: v.string(),
       description: v.optional(v.string()),
@@ -93,8 +93,8 @@ export const getAvailableItems = query({
   handler: async (ctx, args) => {
     const items = await ctx.db
       .query("menuItems")
-      .withIndex("by_organizationId_and_available", (q) =>
-        q.eq("organizationId", args.organizationId).eq("available", true),
+      .withIndex("by_businessId_and_available", (q) =>
+        q.eq("businessId", args.businessId).eq("available", true),
       )
       .collect();
 
@@ -122,7 +122,7 @@ export const getItem = query({
     v.object({
       _id: v.id("menuItems"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       categoryId: v.id("menuCategories"),
       name: v.string(),
       description: v.optional(v.string()),
@@ -155,19 +155,19 @@ export const getItem = query({
 export const createCategory = mutation({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     name: v.string(),
     sortOrder: v.number(),
   },
   returns: v.id("menuCategories"),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     const trimmed = args.name.trim();
     if (trimmed.length === 0 || trimmed.length > 100) {
       throw new Error("Invalid category name");
     }
     return await ctx.db.insert("menuCategories", {
-      organizationId: args.organizationId,
+      businessId: args.businessId,
       name: trimmed,
       sortOrder: args.sortOrder,
     });
@@ -185,7 +185,7 @@ export const updateCategory = mutation({
   handler: async (ctx, args) => {
     await requireOwner(
       ctx,
-      (await ctx.db.get(args.id))!.organizationId,
+      (await ctx.db.get(args.id))!.businessId,
       args.sessionToken,
     );
     const { id, sessionToken, ...patch } = args;
@@ -207,7 +207,7 @@ export const deleteCategory = mutation({
   handler: async (ctx, args) => {
     await requireOwner(
       ctx,
-      (await ctx.db.get(args.id))!.organizationId,
+      (await ctx.db.get(args.id))!.businessId,
       args.sessionToken,
     );
     // Cascade delete items in this category
@@ -231,7 +231,7 @@ export const deleteCategory = mutation({
 export const createItem = mutation({
   args: {
     sessionToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     categoryId: v.id("menuCategories"),
     name: v.string(),
     description: v.optional(v.string()),
@@ -246,7 +246,7 @@ export const createItem = mutation({
   },
   returns: v.id("menuItems"),
   handler: async (ctx, args) => {
-    await requireOwner(ctx, args.organizationId, args.sessionToken);
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     const trimmed = args.name.trim();
     if (trimmed.length === 0 || trimmed.length > 100) {
       throw new Error("Invalid item name");
@@ -259,7 +259,7 @@ export const createItem = mutation({
     }
     const { sessionToken, ...data } = args;
     const category = await ctx.db.get(args.categoryId);
-    if (category?.organizationId !== args.organizationId)
+    if (category?.businessId !== args.businessId)
       throw new Error("Invalid category");
     const itemData = {
       ...data,
@@ -293,12 +293,12 @@ export const updateItem = mutation({
     const { id, clearImage, sessionToken, terminalToken, ...patch } = args;
     const current = await ctx.db.get(id);
     if (!current) throw new Error("Item not found");
-    if (!(await isOwner(ctx, current.organizationId, sessionToken))) {
+    if (!(await isOwner(ctx, current.businessId, sessionToken))) {
       if (
         !terminalToken ||
         !(await verifyTerminal(
           ctx,
-          current.organizationId,
+          current.businessId,
           terminalToken,
           "availability",
         ))
@@ -328,8 +328,8 @@ export const updateItem = mutation({
     }
     if (
       patch.categoryId &&
-      (await ctx.db.get(patch.categoryId))?.organizationId !==
-        current.organizationId
+      (await ctx.db.get(patch.categoryId))?.businessId !==
+        current.businessId
     )
       throw new Error("Invalid category");
     if (patch.name !== undefined) {
@@ -377,7 +377,7 @@ export const deleteItem = mutation({
   handler: async (ctx, args) => {
     await requireOwner(
       ctx,
-      (await ctx.db.get(args.id))!.organizationId,
+      (await ctx.db.get(args.id))!.businessId,
       args.sessionToken,
     );
     const item = await ctx.db.get(args.id);
@@ -406,7 +406,7 @@ export const updateCategorySortOrders = mutation({
     for (const update of args.updates) {
       const current = await ctx.db.get(update.id);
       if (!current) throw new Error("Record not found");
-      await requireOwner(ctx, current.organizationId, args.sessionToken);
+      await requireOwner(ctx, current.businessId, args.sessionToken);
       await ctx.db.patch(update.id, { sortOrder: update.sortOrder });
     }
     return null;
@@ -429,7 +429,7 @@ export const updateItemSortOrders = mutation({
     for (const update of args.updates) {
       const current = await ctx.db.get(update.id);
       if (!current) throw new Error("Record not found");
-      await requireOwner(ctx, current.organizationId, args.sessionToken);
+      await requireOwner(ctx, current.businessId, args.sessionToken);
       const patch: {
         sortOrder: number;
         categoryId?: typeof update.categoryId;
@@ -438,8 +438,8 @@ export const updateItemSortOrders = mutation({
       };
       if (update.categoryId) {
         if (
-          (await ctx.db.get(update.categoryId))?.organizationId !==
-          current.organizationId
+          (await ctx.db.get(update.categoryId))?.businessId !==
+          current.businessId
         )
           throw new Error("Invalid category");
         patch.categoryId = update.categoryId;

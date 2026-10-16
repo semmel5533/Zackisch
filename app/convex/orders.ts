@@ -10,7 +10,7 @@ import { v } from "convex/values";
 const orderObjectValidator = v.object({
   _id: v.id("orders"),
   _creationTime: v.number(),
-  organizationId: v.id("organizations"),
+  businessId: v.id("businesses"),
   tableNumber: v.optional(v.string()),
   type: v.union(v.literal("dine-in"), v.literal("takeaway")),
   items: v.string(),
@@ -69,15 +69,15 @@ const orderObjectValidator = v.object({
   currency: v.string(),
 });
 
-async function verifyOrgOrSessionAccess(
+async function verifyBusinessOrSessionAccess(
   ctx: { db: any; auth: any },
-  organizationId: any,
+  businessId: any,
   sessionToken?: string
 ): Promise<{ authorized: boolean; actorLabel: string }> {
   const userId = await getAuthUserId(ctx as any);
   if (userId) {
-    const org = await ctx.db.get(organizationId);
-    if (org && org.ownerId === userId) {
+    const business = await ctx.db.get(businessId);
+    if (business && business.ownerId === userId) {
       return { authorized: true, actorLabel: `owner:${userId}` };
     }
   }
@@ -86,14 +86,14 @@ async function verifyOrgOrSessionAccess(
       .query("staffSessions")
       .withIndex("by_token", (q: any) => q.eq("token", sessionToken))
       .first();
-    if (staffSession && staffSession.organizationId === organizationId) {
+    if (staffSession && staffSession.businessId === businessId) {
       return { authorized: true, actorLabel: "staff_tablet" };
     }
     const orderSession = await ctx.db
       .query("orderSessions")
       .withIndex("by_token", (q: any) => q.eq("token", sessionToken))
       .first();
-    if (orderSession && orderSession.organizationId === organizationId) {
+    if (orderSession && orderSession.businessId === businessId) {
       return { authorized: true, actorLabel: "order_terminal" };
     }
   }
@@ -102,24 +102,24 @@ async function verifyOrgOrSessionAccess(
 
 export const getLiveOrders = query({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     sessionToken: v.optional(v.string()),
   },
   returns: v.array(orderObjectValidator),
   handler: async (ctx, args) => {
     const inProgress = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId_and_status", (q) =>
-        q.eq("organizationId", args.organizationId).eq("status", "in_progress")
+      .withIndex("by_businessId_and_status", (q) =>
+        q.eq("businessId", args.businessId).eq("status", "in_progress")
       )
       .order("desc")
       .collect();
 
     const readyForPickup = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId_and_status", (q) =>
+      .withIndex("by_businessId_and_status", (q) =>
         q
-          .eq("organizationId", args.organizationId)
+          .eq("businessId", args.businessId)
           .eq("status", "ready_for_pickup")
       )
       .order("desc")
@@ -131,7 +131,7 @@ export const getLiveOrders = query({
 
 export const getOrders = query({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     status: v.optional(
       v.union(
         v.literal("in_progress"),
@@ -147,8 +147,8 @@ export const getOrders = query({
     if (args.status) {
       return await ctx.db
         .query("orders")
-        .withIndex("by_organizationId_and_status", (q) =>
-          q.eq("organizationId", args.organizationId).eq("status", args.status!)
+        .withIndex("by_businessId_and_status", (q) =>
+          q.eq("businessId", args.businessId).eq("status", args.status!)
         )
         .order("desc")
         .take(100);
@@ -156,8 +156,8 @@ export const getOrders = query({
 
     return await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .order("desc")
       .take(100);
@@ -184,7 +184,7 @@ export const getOrder = query({
 });
 
 export const getGuestOrderTracker = query({
-  args: { id: v.id("orders"), organizationId: v.id("organizations") },
+  args: { id: v.id("orders"), businessId: v.id("businesses") },
   returns: v.union(
     v.null(),
     v.object({
@@ -221,7 +221,7 @@ export const getGuestOrderTracker = query({
   ),
   handler: async (ctx, args) => {
     const order = await ctx.db.get(args.id);
-    if (!order || order.organizationId !== args.organizationId) return null;
+    if (!order || order.businessId !== args.businessId) return null;
     return {
       _id: order._id,
       orderNumber: order.orderNumber,
@@ -308,7 +308,7 @@ function computeNextOrderNumber(recentOrders: Array<{ orderNumber: string }>): s
 
 export const createOrder = mutation({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     tableNumber: v.optional(v.string()),
     type: v.union(v.literal("dine-in"), v.literal("takeaway")),
     items: v.string(),
@@ -332,18 +332,18 @@ export const createOrder = mutation({
       throw new Error("Table number must not exceed 4 characters");
     }
 
-    const org = await ctx.db.get(args.organizationId);
-    if (!org) {
-      throw new Error("Organization not found");
+    const business = await ctx.db.get(args.businessId);
+    if (!business) {
+      throw new Error("Business not found");
     }
-    if (org.isPaused) {
+    if (business.isPaused) {
       throw new Error("Bestellannahme für diesen Betrieb ist derzeit pausiert.");
     }
 
     const recentOrders = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .order("desc")
       .take(20);
@@ -367,14 +367,14 @@ export const createOrder = mutation({
     const taxBreakdown = calculateItemTaxBreakdown(parsedItems);
 
     const sellerSnapshot = JSON.stringify({
-      name: org.name,
-      legalName: org.legalName || org.name,
-      address: org.address || "",
-      taxId: org.taxId || org.vatId || "",
+      name: business.name,
+      legalName: business.legalName || business.name,
+      address: business.address || "",
+      taxId: business.taxId || business.vatId || "",
     });
 
     const orderId = await ctx.db.insert("orders", {
-      organizationId: args.organizationId,
+      businessId: args.businessId,
       tableNumber: args.tableNumber,
       type: args.type,
       items: args.items,
@@ -387,7 +387,7 @@ export const createOrder = mutation({
       orderNumber,
       stripePaymentId: args.stripePaymentId,
       stripeSessionId: args.stripeSessionId,
-      connectedAccountId: org.stripeAccountId,
+      connectedAccountId: business.stripeAccountId,
       eligibleSubtotalCents: feeBreakdown.eligibleSubtotalCents,
       tipCents: feeBreakdown.tipCents,
       discountCents: feeBreakdown.discountCents,
@@ -406,7 +406,7 @@ export const createOrder = mutation({
       refundedAmountCents: 0,
       refundedPlatformFeeCents: 0,
       sellerSnapshot,
-      currency: args.currency ?? org.currency ?? "EUR",
+      currency: args.currency ?? business.currency ?? "EUR",
     });
 
     return {
@@ -418,7 +418,7 @@ export const createOrder = mutation({
 
 export const createPaidOrderFromWebhook = internalMutation({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
     tableNumber: v.optional(v.string()),
     type: v.union(v.literal("dine-in"), v.literal("takeaway")),
     items: v.string(),
@@ -459,11 +459,11 @@ export const createPaidOrderFromWebhook = internalMutation({
       }
     }
 
-    const org = await ctx.db.get(args.organizationId);
+    const business = await ctx.db.get(args.businessId);
     const recentOrders = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .order("desc")
       .take(20);
@@ -490,17 +490,17 @@ export const createPaidOrderFromWebhook = internalMutation({
     const zakkigFee = feeBreakdown.platformFeeGrossCents;
     const netAmount = args.total - zakkigFee - stripeFee;
 
-    const sellerSnapshot = org
+    const sellerSnapshot = business
       ? JSON.stringify({
-          name: org.name,
-          legalName: org.legalName || org.name,
-          address: org.address || "",
-          taxId: org.taxId || org.vatId || "",
+          name: business.name,
+          legalName: business.legalName || business.name,
+          address: business.address || "",
+          taxId: business.taxId || business.vatId || "",
         })
       : undefined;
 
     return await ctx.db.insert("orders", {
-      organizationId: args.organizationId,
+      businessId: args.businessId,
       tableNumber: args.tableNumber
         ? args.tableNumber.trim().slice(0, 4)
         : undefined,
@@ -515,7 +515,7 @@ export const createPaidOrderFromWebhook = internalMutation({
       orderNumber,
       stripePaymentId: args.stripePaymentId,
       stripeSessionId: args.stripeSessionId,
-      connectedAccountId: args.connectedAccountId ?? org?.stripeAccountId,
+      connectedAccountId: args.connectedAccountId ?? business?.stripeAccountId,
       eligibleSubtotalCents: feeBreakdown.eligibleSubtotalCents,
       tipCents: feeBreakdown.tipCents,
       discountCents: feeBreakdown.discountCents,
@@ -603,9 +603,9 @@ export const recordOrderInPos = mutation({
       throw new Error("Bestellung nicht gefunden.");
     }
 
-    const access = await verifyOrgOrSessionAccess(
+    const access = await verifyBusinessOrSessionAccess(
       ctx,
-      order.organizationId,
+      order.businessId,
       args.sessionToken
     );
     const actor =
@@ -632,14 +632,14 @@ export const recordOrderInPos = mutation({
       posReference: cleanRef,
     });
 
-    const org = await ctx.db.get(order.organizationId);
+    const business = await ctx.db.get(order.businessId);
     await ctx.db.insert("auditLogs", {
       actorId: actor,
       actorRole: "merchant",
       action: "order.pos_recorded",
       entityType: "order",
       entityId: String(order._id),
-      regionId: org?.region || "de",
+      regionId: business?.region || "de",
       details: JSON.stringify({
         orderNumber: order.orderNumber,
         total: order.total,
@@ -660,7 +660,7 @@ export const recordOrderInPos = mutation({
 
 export const getPosReconciliationSummary = query({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.object({
     unrecordedCount: v.number(),
@@ -683,8 +683,8 @@ export const getPosReconciliationSummary = query({
   handler: async (ctx, args) => {
     const orders = await ctx.db
       .query("orders")
-      .withIndex("by_organizationId", (q) =>
-        q.eq("organizationId", args.organizationId)
+      .withIndex("by_businessId", (q) =>
+        q.eq("businessId", args.businessId)
       )
       .order("desc")
       .take(250);
@@ -752,7 +752,7 @@ export const getPosReconciliationSummary = query({
 
 export const createControlledTestOrder = mutation({
   args: {
-    organizationId: v.id("organizations"),
+    businessId: v.id("businesses"),
   },
   returns: v.object({
     orderId: v.id("orders"),
@@ -763,8 +763,8 @@ export const createControlledTestOrder = mutation({
     if (!userId) {
       throw new Error("Nicht authentifiziert.");
     }
-    const org = await ctx.db.get(args.organizationId);
-    if (!org || org.ownerId !== userId) {
+    const business = await ctx.db.get(args.businessId);
+    if (!business || business.ownerId !== userId) {
       throw new Error("Keine Berechtigung für diesen Betrieb.");
     }
 
@@ -783,16 +783,16 @@ export const createControlledTestOrder = mutation({
     const orderNumber = "T01";
 
     const orderId = await ctx.db.insert("orders", {
-      organizationId: args.organizationId,
-      tableNumber: org.tables?.[0] || "1",
-      type: org.isToStayEnabled !== false ? "dine-in" : "takeaway",
+      businessId: args.businessId,
+      tableNumber: business.tables?.[0] || "1",
+      type: business.isToStayEnabled !== false ? "dine-in" : "takeaway",
       items: sampleItems,
       total: 1000,
       status: "in_progress",
       paymentStatus: "paid",
       posRecordingStatus: "pending",
       createdAt: Date.now(),
-      email: org.contactEmail || "test@zackisch.com",
+      email: business.contactEmail || "test@zackisch.com",
       orderNumber,
       eligibleSubtotalCents: 1000,
       tipCents: 0,
@@ -812,10 +812,10 @@ export const createControlledTestOrder = mutation({
       refundedAmountCents: 0,
       refundedPlatformFeeCents: 0,
       isTestOrder: true,
-      currency: org.currency || "EUR",
+      currency: business.currency || "EUR",
     });
 
-    await ctx.db.patch(args.organizationId, {
+    await ctx.db.patch(args.businessId, {
       testOrderCompletedAt: Date.now(),
     });
 
@@ -922,14 +922,14 @@ export const applyDisputeUpdateInternal = internalMutation({
       disputeStatus: args.disputeStatus,
     });
 
-    const org = await ctx.db.get(order.organizationId);
+    const business = await ctx.db.get(order.businessId);
     await ctx.db.insert("auditLogs", {
       actorId: "stripe_webhook",
       actorRole: "system",
       action: "order.dispute_updated",
       entityType: "order",
       entityId: String(order._id),
-      regionId: org?.region || "de",
+      regionId: business?.region || "de",
       details: JSON.stringify({
         disputeId: args.disputeId,
         disputeStatus: args.disputeStatus,

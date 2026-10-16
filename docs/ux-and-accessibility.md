@@ -42,7 +42,7 @@ Group labels with fields, totals with payment CTA, status with order/ticket and 
 
 ### Error prevention and recoverability
 
-Do not allow checkout at stale prices, ambiguous guest charge, invalid region or wrong organization. Preserve user input on recoverable form errors. Show error near field and a route to fix it; prevent duplicate form submission, note visibility mistakes and destructive operations. Prefer reversible actions/confirmation where impact is high. Source: https://www.nngroup.com/articles/error-prevention/ .
+Do not allow checkout at stale prices, ambiguous guest charge, invalid region or wrong business. Preserve user input on recoverable form errors. Show error near field and a route to fix it; prevent duplicate form submission, note visibility mistakes and destructive operations. Prefer reversible actions/confirmation where impact is high. Source: https://www.nngroup.com/articles/error-prevention/ .
 
 ### Aesthetic-usability and trust
 

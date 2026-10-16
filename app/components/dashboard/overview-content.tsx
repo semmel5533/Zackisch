@@ -63,7 +63,7 @@ import {
   updateTablesAction,
 } from "@/actions/settings-actions";
 import { cn } from "@/lib/utils";
-import type { Organization, Order } from "@/lib/types";
+import type { Business, Order } from "@/lib/types";
 import { ReactQRCode } from "@lglab/react-qr-code";
 import {
   DndContext,
@@ -540,10 +540,10 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
 }
 
 function QrCodeGeneratorCard({
-  organization,
+  business,
   baseUrl,
 }: {
-  organization: Organization;
+  business: Business;
   baseUrl: string;
 }) {
   const { t } = useTranslation();
@@ -554,25 +554,25 @@ function QrCodeGeneratorCard({
   const [deleteTablesDialogOpen, setDeleteTablesDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const [tables, setTables] = useState<string[]>(organization.tables || []);
+  const [tables, setTables] = useState<string[]>(business.tables || []);
   const [isToGoEnabled, setIsToGoEnabled] = useState(
-    organization.isToGoEnabled ?? false,
+    business.isToGoEnabled ?? false,
   );
   const [isToStayEnabled, setIsToStayEnabled] = useState(
-    organization.isToStayEnabled ?? false,
+    business.isToStayEnabled ?? false,
   );
 
   useEffect(() => {
-    setTables(organization.tables || []);
-  }, [organization.tables]);
+    setTables(business.tables || []);
+  }, [business.tables]);
 
   useEffect(() => {
-    setIsToGoEnabled(organization.isToGoEnabled ?? false);
-  }, [organization.isToGoEnabled]);
+    setIsToGoEnabled(business.isToGoEnabled ?? false);
+  }, [business.isToGoEnabled]);
 
   useEffect(() => {
-    setIsToStayEnabled(organization.isToStayEnabled ?? false);
-  }, [organization.isToStayEnabled]);
+    setIsToStayEnabled(business.isToStayEnabled ?? false);
+  }, [business.isToStayEnabled]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -596,7 +596,7 @@ function QrCodeGeneratorCard({
       const newTables = arrayMove(tables, oldIndex, newIndex);
 
       setTables(newTables);
-      const result = await updateTablesAction(organization.$id, newTables);
+      const result = await updateTablesAction(business.$id, newTables);
       if (result.error) {
         toast.error(result.error as string);
         setTables(previousTables);
@@ -611,7 +611,7 @@ function QrCodeGeneratorCard({
     if (type === "pickup") {
       const prev = isToGoEnabled;
       setIsToGoEnabled(checked);
-      const result = await toggleFeatureAction(organization.$id, type, checked);
+      const result = await toggleFeatureAction(business.$id, type, checked);
       if (result.error) {
         toast.error(result.error as string);
         setIsToGoEnabled(prev);
@@ -619,7 +619,7 @@ function QrCodeGeneratorCard({
     } else {
       const prev = isToStayEnabled;
       setIsToStayEnabled(checked);
-      const result = await toggleFeatureAction(organization.$id, type, checked);
+      const result = await toggleFeatureAction(business.$id, type, checked);
       if (result.error) {
         toast.error(result.error as string);
         setIsToStayEnabled(prev);
@@ -650,7 +650,7 @@ function QrCodeGeneratorCard({
     const updatedTables = [...currentTables, trimmed];
     setTables(updatedTables);
     startTransition(async () => {
-      const result = await updateTablesAction(organization.$id, updatedTables);
+      const result = await updateTablesAction(business.$id, updatedTables);
       if (result.error) {
         toast.error(result.error as string);
         setTables(currentTables);
@@ -675,7 +675,7 @@ function QrCodeGeneratorCard({
     );
     setTables(updatedTables);
     startTransition(async () => {
-      const result = await updateTablesAction(organization.$id, updatedTables);
+      const result = await updateTablesAction(business.$id, updatedTables);
       if (result.error) {
         toast.error(result.error as string);
         setTables(currentTables);
@@ -695,8 +695,8 @@ function QrCodeGeneratorCard({
 
   const qrUrl =
     qrType === "pickup"
-      ? `${baseUrl}/pickup/${organization.$id}`
-      : `${baseUrl}/table/${organization.$id}?table=${encodeURIComponent(selectedTables[0] || "1")}`;
+      ? `${baseUrl}/pickup/${business.$id}`
+      : `${baseUrl}/table/${business.$id}?table=${encodeURIComponent(selectedTables[0] || "1")}`;
 
   const isActive = qrType === "pickup" ? isToGoEnabled : isToStayEnabled;
 
@@ -980,7 +980,7 @@ function QrCodeGeneratorCard({
       <div className="fixed -left-[9999px] top-0 opacity-0 pointer-events-none print:static print:opacity-100 print:pointer-events-auto print:grid print:grid-cols-2 print:gap-y-4 print:gap-x-4 bg-white print:content-start">
         {qrType === "table" ? (
           selectedTables.map((tNum) => {
-            const tableQrUrl = `${baseUrl}/table/${organization.$id}?table=${encodeURIComponent(tNum)}`;
+            const tableQrUrl = `${baseUrl}/table/${business.$id}?table=${encodeURIComponent(tNum)}`;
             return (
               <div
                 key={tNum}
@@ -1096,13 +1096,13 @@ function QrCodeGeneratorCard({
 }
 
 interface OverviewContentProps {
-  organization: Organization;
+  business: Business;
   orders: Order[];
   children?: React.ReactNode;
 }
 
 export function OverviewContent({
-  organization,
+  business,
   orders,
   children,
 }: OverviewContentProps) {
@@ -1141,9 +1141,9 @@ export function OverviewContent({
           </div>
         </div>
 
-        {!organization.stripeOnboardingComplete && (
+        {!business.stripeOnboardingComplete && (
           <div className="print:hidden">
-            <SetupAndBillingPanel organization={organization} />
+            <SetupAndBillingPanel business={business} />
           </div>
         )}
 
@@ -1155,7 +1155,7 @@ export function OverviewContent({
             isMobile={isMobile}
             mounted={mounted}
           />
-          <QrCodeGeneratorCard organization={organization} baseUrl={baseUrl} />
+          <QrCodeGeneratorCard business={business} baseUrl={baseUrl} />
         </div>
 
         {children ? (
@@ -1165,7 +1165,7 @@ export function OverviewContent({
             </div>
             <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 gap-3 h-full">
               <Link
-                href={`/dashboard/${organization.$id}/menu`}
+                href={`/dashboard/${business.$id}/menu`}
                 className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -1179,7 +1179,7 @@ export function OverviewContent({
                 <InfoTooltip content={t("quickMenuDesc")} />
               </Link>
               <Link
-                href={`/dashboard/${organization.$id}/current-orders`}
+                href={`/dashboard/${business.$id}/current-orders`}
                 className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -1193,7 +1193,7 @@ export function OverviewContent({
                 <InfoTooltip content={t("quickOrdersDesc")} />
               </Link>
               <Link
-                href={`/dashboard/${organization.$id}/all-orders`}
+                href={`/dashboard/${business.$id}/all-orders`}
                 className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -1207,7 +1207,7 @@ export function OverviewContent({
                 <InfoTooltip content={t("quickArchiveDesc")} />
               </Link>
               <Link
-                href={`/dashboard/${organization.$id}/settings`}
+                href={`/dashboard/${business.$id}/settings`}
                 className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -1225,7 +1225,7 @@ export function OverviewContent({
         ) : (
           <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 @min-[1100px]:grid-cols-4 gap-4 print:hidden">
             <Link
-              href={`/dashboard/${organization.$id}/menu`}
+              href={`/dashboard/${business.$id}/menu`}
               className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -1239,7 +1239,7 @@ export function OverviewContent({
               <InfoTooltip content={t("quickMenuDesc")} />
             </Link>
             <Link
-              href={`/dashboard/${organization.$id}/current-orders`}
+              href={`/dashboard/${business.$id}/current-orders`}
               className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -1253,7 +1253,7 @@ export function OverviewContent({
               <InfoTooltip content={t("quickOrdersDesc")} />
             </Link>
             <Link
-              href={`/dashboard/${organization.$id}/all-orders`}
+              href={`/dashboard/${business.$id}/all-orders`}
               className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -1267,7 +1267,7 @@ export function OverviewContent({
               <InfoTooltip content={t("quickArchiveDesc")} />
             </Link>
             <Link
-              href={`/dashboard/${organization.$id}/settings`}
+              href={`/dashboard/${business.$id}/settings`}
               className="flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-muted/50 transition-colors h-full"
             >
               <div className="flex items-center gap-3 min-w-0">

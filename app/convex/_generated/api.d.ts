@@ -20,7 +20,7 @@ import type * as http from "../http.js";
 import type * as menu from "../menu.js";
 import type * as newsletter from "../newsletter.js";
 import type * as orders from "../orders.js";
-import type * as organizations from "../organizations.js";
+import type * as businesses from "../businesses.js";
 import type * as partners from "../partners.js";
 import type * as permissions from "../permissions.js";
 import type * as seed from "../seed.js";
@@ -50,7 +50,7 @@ declare const fullApi: ApiFromModules<{
   menu: typeof menu;
   newsletter: typeof newsletter;
   orders: typeof orders;
-  organizations: typeof organizations;
+  businesses: typeof businesses;
   partners: typeof partners;
   permissions: typeof permissions;
   seed: typeof seed;

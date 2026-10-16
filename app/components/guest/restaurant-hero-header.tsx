@@ -4,17 +4,17 @@ import { getImagePreviewUrl } from "@/lib/convex/client";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { WaveLine } from "@/components/ui/wave-line";
 import { useTranslation } from "@/lib/i18n";
-import type { Organization } from "@/lib/types";
+import type { Business } from "@/lib/types";
 
 interface RestaurantHeroHeaderProps {
-  organization: Organization;
+  business: Business;
   type?: "dine-in" | "takeaway";
   tableNumber?: string;
   showOrderingSubtitle?: boolean;
 }
 
 export function RestaurantHeroHeader({
-  organization,
+  business,
   type,
   tableNumber,
   showOrderingSubtitle = true,
@@ -33,11 +33,11 @@ export function RestaurantHeroHeader({
       <div className="w-full flex flex-col items-stretch">
         {/* Merchant banner and logo */}
         <div className="relative w-full aspect-[2.3/1] rounded-xl sm:rounded-2xl overflow-hidden bg-muted border border-border">
-          {organization.bannerFileId ? (
+          {business.bannerFileId ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
-              src={getImagePreviewUrl(organization.bannerFileId)}
-              alt={organization.name}
+              src={getImagePreviewUrl(business.bannerFileId)}
+              alt={business.name}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -48,11 +48,11 @@ export function RestaurantHeroHeader({
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-10 flex items-end justify-between gap-2">
             {/* Left: Logo Box */}
             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-background rounded-lg border border-border flex items-center justify-center overflow-hidden shrink-0">
-              {organization.logoFileId ? (
+              {business.logoFileId ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
-                  src={getImagePreviewUrl(organization.logoFileId)}
-                  alt={organization.name}
+                  src={getImagePreviewUrl(business.logoFileId)}
+                  alt={business.name}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -78,11 +78,11 @@ export function RestaurantHeroHeader({
             </p>
           )}
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-tight">
-            {organization.name}
+            {business.name}
           </h1>
-          {organization.address && (
+          {business.address && (
             <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1 whitespace-pre-wrap">
-              {organization.address}
+              {business.address}
             </p>
           )}
         </div>

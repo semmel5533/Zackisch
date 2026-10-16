@@ -16,19 +16,19 @@ export async function generateMetadata() {
 export default async function MenuPage({
   params,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
 }) {
-  const { organizationId } = await params;
+  const { businessId } = await params;
   const [categories, items] = await Promise.all([
-    getMenuCategories(organizationId),
-    getMenuItems(organizationId),
+    getMenuCategories(businessId),
+    getMenuItems(businessId),
   ]);
 
   return (
     <MenuContent
       categories={structuredClone(categories)}
       items={structuredClone(items)}
-      organizationId={organizationId}
+      businessId={businessId}
     />
   );
 }

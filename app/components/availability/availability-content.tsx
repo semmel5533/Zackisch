@@ -31,7 +31,7 @@ import type { MenuCategory, MenuItem, CustomizationStep } from "@/lib/types";
 interface AvailabilityContentProps {
   categories: MenuCategory[];
   items: MenuItem[];
-  organizationId?: string;
+  businessId?: string;
 }
 
 function parseCustomizations(customizations?: string): CustomizationStep[] {
@@ -65,7 +65,7 @@ function useIsTwoColumns(containerRef: React.RefObject<HTMLDivElement | null>) {
 export function AvailabilityContent({
   categories,
   items: initialItems,
-  organizationId,
+  businessId,
 }: AvailabilityContentProps) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -85,9 +85,9 @@ export function AvailabilityContent({
     return { leftCategories: left, rightCategories: right };
   }, [categories]);
 
-  const org = useQuery(
-    api.organizations.get,
-    organizationId ? { id: organizationId as Id<"organizations"> } : "skip"
+  const business = useQuery(
+    api.businesses.get,
+    businessId ? { id: businessId as Id<"businesses"> } : "skip"
   );
 
   useEffect(() => {
@@ -99,10 +99,10 @@ export function AvailabilityContent({
   }, []);
 
   useEffect(() => {
-    if (organizationId && org === null) {
+    if (businessId && business === null) {
       router.push("/");
     }
-  }, [organizationId, org, router]);
+  }, [businessId, business, router]);
 
   const runAvailabilityChange = useCallback(async (
     itemId: string,
@@ -126,7 +126,7 @@ export function AvailabilityContent({
 
   const handleToggleItem = useCallback(
     (itemId: string, available: boolean) => {
-      void runAvailabilityChange(itemId, () => toggleMenuItemAvailability(itemId, available, organizationId), () => {
+      void runAvailabilityChange(itemId, () => toggleMenuItemAvailability(itemId, available, businessId), () => {
         setItems((prevItems) =>
         prevItems.map((i) => {
           if (i.$id !== itemId) return i;
@@ -155,7 +155,7 @@ export function AvailabilityContent({
         );
       });
     },
-    [organizationId, runAvailabilityChange],
+    [businessId, runAvailabilityChange],
   );
 
   const handleToggleCustomization = useCallback(
@@ -165,7 +165,7 @@ export function AvailabilityContent({
       optionId: string | null,
       available: boolean,
     ) => {
-      void runAvailabilityChange(itemId, () => toggleCustomizationAvailabilityAction(itemId, stepId, optionId, available, organizationId), () => {
+      void runAvailabilityChange(itemId, () => toggleCustomizationAvailabilityAction(itemId, stepId, optionId, available, businessId), () => {
         setItems((prevItems) =>
         prevItems.map((i) => {
           if (i.$id !== itemId) return i;
@@ -195,7 +195,7 @@ export function AvailabilityContent({
         );
       });
     },
-    [organizationId, runAvailabilityChange],
+    [businessId, runAvailabilityChange],
   );
 
   return (

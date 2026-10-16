@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { generateOrderConfirmationHtml } from "../lib/confirmation-generator";
-import type { Order, Organization } from "../lib/types";
+import type { Order, Business } from "../lib/types";
 
 describe("generateOrderConfirmationHtml", () => {
-  const mockOrg: Organization = {
-    _id: "org-1",
-    $id: "org-1",
+  const mockBusiness: Business = {
+    _id: "biz-1",
+    $id: "biz-1",
     _creationTime: 1789992000000,
     name: "Bistro Zakkig",
     legalName: "Bistro Zakkig GmbH",
@@ -23,7 +23,7 @@ describe("generateOrderConfirmationHtml", () => {
     $id: "order-123456",
     _creationTime: 1789992000000,
     createdAt: 1789992000000,
-    organizationId: "org-1",
+    businessId: "biz-1",
     orderNumber: "042",
     type: "dine-in",
     tableNumber: "7",
@@ -52,7 +52,7 @@ describe("generateOrderConfirmationHtml", () => {
   };
 
   it("generates German order and payment confirmation with explicit non-fiscal notice and seller identity", () => {
-    const html = generateOrderConfirmationHtml(mockOrder, mockOrg, "de");
+    const html = generateOrderConfirmationHtml(mockOrder, mockBusiness, "de");
 
     expect(html).toContain("Bestell- und Zahlungsbestätigung");
     expect(html).toContain("Kein Kassenbeleg und keine Rechnung");
@@ -87,7 +87,7 @@ describe("generateOrderConfirmationHtml", () => {
       type: "takeaway",
       tableNumber: undefined,
     };
-    const html = generateOrderConfirmationHtml(takeawayOrder, mockOrg, "en");
+    const html = generateOrderConfirmationHtml(takeawayOrder, mockBusiness, "en");
 
     expect(html).toContain("Order and Payment Confirmation");
     expect(html).toContain("Not a fiscal POS receipt or tax invoice");
@@ -111,7 +111,7 @@ describe("generateOrderConfirmationHtml", () => {
         },
       ]),
     };
-    const html = generateOrderConfirmationHtml(xssOrder, mockOrg, "de");
+    const html = generateOrderConfirmationHtml(xssOrder, mockBusiness, "de");
 
     expect(html).not.toContain("<script>alert('xss')</script>");
     expect(html).toContain("&lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;");

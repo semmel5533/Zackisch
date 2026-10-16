@@ -112,7 +112,7 @@ export function AdminLoginForm() {
           } else if (perms.includes("orders:read")) {
             router.replace("/orders");
           } else if (perms.includes("restaurants:read")) {
-            router.replace("/organizations");
+            router.replace("/businesses");
           } else if (perms.includes("newsletter:read")) {
             router.replace("/newsletter");
           } else {

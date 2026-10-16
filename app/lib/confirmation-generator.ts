@@ -1,4 +1,4 @@
-import type { Order, Organization } from "./types";
+import type { Order, Business } from "./types";
 
 function escapeHtml(str: string): string {
   return str
@@ -15,7 +15,7 @@ function formatCents(cents: number): string {
 
 export function generateOrderConfirmationHtml(
   order: Order,
-  organization: Organization,
+  business: Business,
   locale: string = "de",
 ): string {
   const isDe = locale.startsWith("de");
@@ -90,8 +90,8 @@ export function generateOrderConfirmationHtml(
     .join("");
 
   const tipCents = Math.max(0, Math.round(order.tipCents || 0));
-  const sellerName = organization.legalName || organization.name;
-  const sellerTaxId = organization.vatId || organization.taxId;
+  const sellerName = business.legalName || business.name;
+  const sellerTaxId = business.vatId || business.taxId;
   const safeReference = `ZK-${order.orderNumber}-${String(order._id || order.$id || "REF")
     .replace(/[^a-zA-Z0-9]/g, "")
     .slice(-6)
@@ -321,9 +321,9 @@ export function generateOrderConfirmationHtml(
     <div class="meta-grid">
       <div class="meta-item">
         <span class="meta-label">${isDe ? "Verkäufer / Betrieb" : "Seller / Venue"}</span>
-        <span class="meta-value">${escapeHtml(organization.name)}</span>
-        ${sellerName !== organization.name ? `<span style="font-size:11px;color:#444;margin-top:2px;">${escapeHtml(sellerName)}</span>` : ""}
-        ${organization.address ? `<span style="font-size:11px;color:#666;margin-top:2px;">${escapeHtml(organization.address)}</span>` : ""}
+        <span class="meta-value">${escapeHtml(business.name)}</span>
+        ${sellerName !== business.name ? `<span style="font-size:11px;color:#444;margin-top:2px;">${escapeHtml(sellerName)}</span>` : ""}
+        ${business.address ? `<span style="font-size:11px;color:#666;margin-top:2px;">${escapeHtml(business.address)}</span>` : ""}
         ${sellerTaxId ? `<span style="font-size:11px;color:#666;margin-top:2px;">${isDe ? "USt-IdNr./St.-Nr.:" : "VAT/Tax ID:"} ${escapeHtml(sellerTaxId)}</span>` : ""}
       </div>
       <div class="meta-item">
@@ -399,10 +399,10 @@ export function generateOrderConfirmationHtml(
 
 export function downloadOrderConfirmation(
   order: Order,
-  organization: Organization,
+  business: Business,
   locale: string = "de",
 ): void {
-  const html = generateOrderConfirmationHtml(order, organization, locale);
+  const html = generateOrderConfirmationHtml(order, business, locale);
   const blob = new Blob([html], { type: "text/html;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");

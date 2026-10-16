@@ -34,14 +34,14 @@ import {
 } from "@/actions/stripe-actions";
 import { StripeEmbeddedPortal } from "@/components/dashboard/stripe-embedded-portal";
 import { SetupAndBillingPanel } from "@/components/dashboard/setup-and-billing-panel";
-import type { Organization } from "@/lib/types";
+import type { Business } from "@/lib/types";
 
 interface SettingsContentProps {
-  organization: Organization;
+  business: Business;
   user: { name?: string; email?: string; [key: string]: any };
 }
 
-export function SettingsContent({ organization, user }: SettingsContentProps) {
+export function SettingsContent({ business, user }: SettingsContentProps) {
   const { t } = useTranslation();
 
   const [businessState, businessAction, isBusinessPending] = useActionState(
@@ -60,13 +60,13 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
   };
 
   const [logoPreview, setLogoPreview] = useState<string | null>(
-    organization.logoFileId
-      ? getImagePreviewUrl(organization.logoFileId)
+    business.logoFileId
+      ? getImagePreviewUrl(business.logoFileId)
       : null,
   );
   const [bannerPreview, setBannerPreview] = useState<string | null>(
-    organization.bannerFileId
-      ? getImagePreviewUrl(organization.bannerFileId)
+    business.bannerFileId
+      ? getImagePreviewUrl(business.bannerFileId)
       : null,
   );
 
@@ -102,7 +102,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
     if (addressRef.current) {
       adjustAddressHeight(addressRef.current);
     }
-  }, [organization.address]);
+  }, [business.address]);
 
   const handleLogoFile = (file: File) => {
     if (!isAllowedImageFile(file)) {
@@ -183,13 +183,13 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
             >
               <input
                 type="hidden"
-                name="organizationId"
-                value={organization.$id}
+                name="businessId"
+                value={business.$id}
               />
               <input
                 type="hidden"
                 name="existingLogoId"
-                value={organization.logoFileId || ""}
+                value={business.logoFileId || ""}
               />
               <input
                 type="hidden"
@@ -199,7 +199,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
               <input
                 type="hidden"
                 name="existingBannerId"
-                value={organization.bannerFileId || ""}
+                value={business.bannerFileId || ""}
               />
               <input
                 type="hidden"
@@ -242,8 +242,8 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                   </label>
                   <Input
                     id="business-name"
-                    name="organizationName"
-                    defaultValue={organization.name}
+                    name="businessName"
+                    defaultValue={business.name}
                     required
                     maxLength={80}
                   />
@@ -274,7 +274,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                     }}
                     id="business-address"
                     name="address"
-                    defaultValue={organization.address}
+                    defaultValue={business.address}
                     rows={1}
                     maxLength={300}
                     onInput={(e) => adjustAddressHeight(e.currentTarget)}
@@ -515,8 +515,8 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                           {t("stripeSettings")}{" "}
                           <span className="text-destructive">*</span>
                         </h4>
-                        {!organization.stripeOnboardingComplete && (
-                          organization.stripeAccountId ? (
+                        {!business.stripeOnboardingComplete && (
+                          business.stripeAccountId ? (
                             <Badge variant="outline" className="font-semibold px-2.5 py-0.5 rounded-full text-foreground border-border text-xs">
                               {t("stripeOnboardingIncomplete" as any)}
                             </Badge>
@@ -529,17 +529,17 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                       </div>
 
                       <p className="text-sm text-muted-foreground">
-                        {organization.stripeOnboardingComplete
+                        {business.stripeOnboardingComplete
                           ? t("stripeConnectedDesc" as any)
                           : t("stripeDescription" as any)}
                       </p>
                     </div>
 
-                    {organization.stripeAccountId && (
+                    {business.stripeAccountId && (
                       <div className="bg-background/80 p-2.5 rounded-lg border text-xs flex flex-col gap-1">
                         <span className="font-medium text-foreground">{t("stripeAccountIdLabel" as any)}</span>
                         <code className="font-mono text-muted-foreground select-all break-all text-[11px]">
-                          {organization.stripeAccountId}
+                          {business.stripeAccountId}
                         </code>
                       </div>
                     )}
@@ -554,8 +554,8 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         const newTab = window.open("about:blank", "_blank");
                         setIsStripeLoading(true);
                         try {
-                          if (organization.stripeOnboardingComplete) {
-                            const res = await createStripeDashboardLinkAction(organization.$id);
+                          if (business.stripeOnboardingComplete) {
+                            const res = await createStripeDashboardLinkAction(business.$id);
                             if (res.url) {
                               if (newTab) {
                                 newTab.location.href = res.url;
@@ -567,7 +567,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                               toast.error(res.error || t("error"));
                             }
                           } else {
-                            const res = await connectStripeAction(organization.$id);
+                            const res = await connectStripeAction(business.$id);
                             if (res.url) {
                               if (newTab) {
                                 newTab.location.href = res.url;
@@ -589,20 +589,20 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                       className="w-full border-border"
                     >
                       {isStripeLoading ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
-                      {organization.stripeOnboardingComplete
+                      {business.stripeOnboardingComplete
                         ? t("openStripeDashboard" as any)
-                        : organization.stripeAccountId
+                        : business.stripeAccountId
                         ? t("continueOnboarding" as any)
                         : t("connectStripeWithIban" as any)}
                     </Button>
 
                     <StripeEmbeddedPortal
-                      organizationId={organization.$id}
-                      stripeAccountId={organization.stripeAccountId}
-                      stripeOnboardingComplete={organization.stripeOnboardingComplete}
+                      businessId={business.$id}
+                      stripeAccountId={business.stripeAccountId}
+                      stripeOnboardingComplete={business.stripeOnboardingComplete}
                     />
 
-                    {process.env.NODE_ENV === "development" && !organization.stripeOnboardingComplete && (
+                    {process.env.NODE_ENV === "development" && !business.stripeOnboardingComplete && (
                       <Button
                         type="button"
                         variant="ghost"
@@ -612,7 +612,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
                         onClick={async () => {
                           setIsStripeLoading(true);
                           try {
-                            const res = await completeTestStripeOnboardingAction(organization.$id);
+                            const res = await completeTestStripeOnboardingAction(business.$id);
                             if (res.success) {
                               toast.success(t("stripeConnectedSuccessfully" as any));
                             } else {
@@ -634,7 +634,7 @@ export function SettingsContent({ organization, user }: SettingsContentProps) {
         </Card>
 
         {/* Self-Service Setup Wizard & B2B Monthly Fee Statements */}
-        <SetupAndBillingPanel organization={organization} userEmail={user.email} userName={user.name} />
+        <SetupAndBillingPanel business={business} userEmail={user.email} userName={user.name} />
 
         {/* Danger Zone */}
         <Card className="w-full flex flex-col border-destructive/50 border">

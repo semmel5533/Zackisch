@@ -28,13 +28,13 @@ export interface OrderActionState {
 export async function updateOrderStatusAction(
   orderId: string,
   status: "in_progress" | "ready_for_pickup" | "completed" | "cancelled",
-  organizationId: string,
+  businessId: string,
 ) {
   try {
-    await requireKitchenOrOwner(organizationId);
+    await requireKitchenOrOwner(businessId);
 
     const order = await getOrder(orderId);
-    if (!order || order.organizationId !== organizationId) {
+    if (!order || order.businessId !== businessId) {
       return { error: "Bestellung nicht gefunden oder unberechtigt." };
     }
 
@@ -46,11 +46,11 @@ export async function updateOrderStatusAction(
     }
 
     await updateOrderStatus(orderId, status);
-    revalidatePath(`/dashboard/${organizationId}/current-orders`);
-    revalidatePath(`/dashboard/${organizationId}/all-orders`);
-    revalidatePath(`/dashboard/${organizationId}/live-orders`);
-    revalidatePath(`/dashboard/${organizationId}/archive`);
-    revalidatePath(`/staff/${organizationId}`);
+    revalidatePath(`/dashboard/${businessId}/current-orders`);
+    revalidatePath(`/dashboard/${businessId}/all-orders`);
+    revalidatePath(`/dashboard/${businessId}/live-orders`);
+    revalidatePath(`/dashboard/${businessId}/archive`);
+    revalidatePath(`/staff/${businessId}`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -63,16 +63,16 @@ export async function updateOrderStatusAction(
 
 export async function recordOrderInPosAction(
   orderId: string,
-  organizationId: string,
+  businessId: string,
   posReceiptRef?: string,
 ) {
   try {
-    await requireKitchenOrOwner(organizationId);
+    await requireKitchenOrOwner(businessId);
 
     const cookieStore = await cookies();
     const sessionToken =
-      cookieStore.get(`staff_session_${organizationId}`)?.value ||
-      cookieStore.get(`order_session_${organizationId}`)?.value ||
+      cookieStore.get(`staff_session_${businessId}`)?.value ||
+      cookieStore.get(`order_session_${businessId}`)?.value ||
       undefined;
 
     const client = await getAuthenticatedConvexClient();
@@ -82,10 +82,10 @@ export async function recordOrderInPosAction(
       posReference: posReceiptRef?.trim() || undefined,
     });
 
-    revalidatePath(`/dashboard/${organizationId}/current-orders`);
-    revalidatePath(`/dashboard/${organizationId}/all-orders`);
-    revalidatePath(`/dashboard/${organizationId}/overview`);
-    revalidatePath(`/staff/${organizationId}`);
+    revalidatePath(`/dashboard/${businessId}/current-orders`);
+    revalidatePath(`/dashboard/${businessId}/all-orders`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
+    revalidatePath(`/staff/${businessId}`);
 
     return {
       success: true,
@@ -104,12 +104,12 @@ export async function recordOrderInPosAction(
 
 export async function refundOrderAction(
   orderId: string,
-  organizationId: string,
+  businessId: string,
   refundAmountCents?: number,
   reason?: string,
 ) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.refundOrder, {
@@ -122,8 +122,8 @@ export async function refundOrderAction(
       return { error: res.error };
     }
 
-    revalidatePath(`/dashboard/${organizationId}/all-orders`);
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    revalidatePath(`/dashboard/${businessId}/all-orders`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
 
     return {
       success: true,
@@ -142,11 +142,11 @@ export async function refundOrderAction(
   }
 }
 
-export async function exportOrdersCSVAction(organizationId: string) {
+export async function exportOrdersCSVAction(businessId: string) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
-    const orders = await getOrders(organizationId);
+    const orders = await getOrders(businessId);
 
     const headers = [
       "Belegdatum",
@@ -216,17 +216,17 @@ export async function exportOrdersCSVAction(organizationId: string) {
   }
 }
 
-export async function generateOrderSessionAction(organizationId: string) {
+export async function generateOrderSessionAction(businessId: string) {
   try {
-    const { user } = await requireOwner(organizationId);
+    const { user } = await requireOwner(businessId);
 
-    const existing = await getOrderSessions(organizationId);
+    const existing = await getOrderSessions(businessId);
     await Promise.all(existing.map((s) => deleteOrderSession(s.$id)));
     const session = await createOrderSession(
-      organizationId,
+      businessId,
       user.$id || user._id,
     );
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
     return { success: true, session: structuredClone(session) };
   } catch (error: unknown) {
     console.error("Fehler beim Neu-Generieren der Order Session:", error);

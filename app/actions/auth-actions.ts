@@ -3,8 +3,8 @@
 import { redirect } from "next/navigation";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import {
-  createOrganization,
-  getOrganizationByOwner,
+  createBusiness,
+  getBusinessByOwner,
   createAvailabilitySession,
   createOrderSession,
 } from "@/lib/convex/database";
@@ -20,7 +20,7 @@ export interface AuthActionState {
   requiresOtp?: boolean;
   userId?: string;
   email?: string;
-  pendingOrgData?: { restaurantName: string; name: string; region?: string };
+  pendingBusinessData?: { restaurantName: string; name: string; region?: string };
 }
 
 export async function resendOtpAction(userId: string, email: string) {
@@ -133,7 +133,7 @@ export async function signUpAction(
       requiresOtp: true,
       userId: res.userId,
       email,
-      pendingOrgData: { restaurantName, name, region },
+      pendingBusinessData: { restaurantName, name, region },
     };
   } catch (error: any) {
     return { error: "signUpFailed" };
@@ -149,7 +149,7 @@ export interface VerifyOtpResult {
 export async function verifyOtpAction(
   userId: string,
   otp: string,
-  pendingOrgData?: { restaurantName: string; name: string; region?: string },
+  pendingBusinessData?: { restaurantName: string; name: string; region?: string },
 ): Promise<VerifyOtpResult> {
   if (!otp || otp.length !== 6) {
     return { error: "invalidOtpLength" };
@@ -181,37 +181,37 @@ export async function verifyOtpAction(
     return { error: "invalidOtp" };
   }
 
-  let orgId = "";
+  let businessId = "";
   try {
-    if (pendingOrgData) {
-      const org = await createOrganization({
-        name: pendingOrgData.restaurantName || pendingOrgData.name,
+    if (pendingBusinessData) {
+      const business = await createBusiness({
+        name: pendingBusinessData.restaurantName || pendingBusinessData.name,
         ownerId: userId,
-        region: pendingOrgData.region || "de",
+        region: pendingBusinessData.region || "de",
       });
-      orgId = org.$id || org._id;
+      businessId = business.$id || business._id;
 
       try {
         await Promise.all([
-          createAvailabilitySession(orgId, userId),
-          createOrderSession(orgId, userId),
+          createAvailabilitySession(businessId, userId),
+          createOrderSession(businessId, userId),
         ]);
       } catch (e) {
         console.error("Failed to create initial sessions", e);
       }
     } else {
-      const org = await getOrganizationByOwner(userId);
-      if (org) {
-        orgId = org.$id || org._id;
+      const business = await getBusinessByOwner(userId);
+      if (business) {
+        businessId = business.$id || business._id;
       }
     }
   } catch (error) {
-    console.error("Failed to create/get organization:", error);
+    console.error("Failed to create/get business:", error);
     return { error: "databaseError" };
   }
 
-  if (orgId) {
-    redirect(`/dashboard/${orgId}/overview`);
+  if (businessId) {
+    redirect(`/dashboard/${businessId}/overview`);
   } else {
     redirect("/dashboard/new/overview");
   }
@@ -309,21 +309,21 @@ export async function verifySessionAction() {
 }
 
 export async function verifyTerminalSessionAction(
-  organizationId: string,
+  businessId: string,
   type: "orders" | "availability",
 ) {
   const cookieStore = await cookies();
   const cookieName =
     type === "orders"
-      ? `order_session_${organizationId}`
-      : `availability_session_${organizationId}`;
+      ? `order_session_${businessId}`
+      : `availability_session_${businessId}`;
   const token = cookieStore.get(cookieName)?.value;
   if (!token) return { isValid: false };
 
   try {
     return {
       isValid: await convexServer.query(api.sessions.verifyTerminalSession, {
-        organizationId: organizationId as any,
+        businessId: businessId as any,
         token,
         type,
       }),

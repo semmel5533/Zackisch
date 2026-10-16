@@ -23,7 +23,7 @@ afterEach(() => {
 async function setup(total: number) {
   const t = convexTest(schema, modules);
   const data = await t.run(async (ctx) => {
-    const org = await ctx.db.insert("organizations", {
+    const business = await ctx.db.insert("businesses", {
       name: "Demo",
       ownerId: "owner",
       stripeAccountId: "acct_capture",
@@ -31,12 +31,12 @@ async function setup(total: number) {
       stripeChargesEnabled: true,
     });
     const category = await ctx.db.insert("menuCategories", {
-      organizationId: org,
+      businessId: business,
       name: "Food",
       sortOrder: 0,
     });
     const item = await ctx.db.insert("menuItems", {
-      organizationId: org,
+      businessId: business,
       categoryId: category,
       name: "Lunch",
       price: total,
@@ -45,12 +45,12 @@ async function setup(total: number) {
       taxRate: 19,
       customizations: "[]",
     });
-    return { org, item };
+    return { business, item };
   });
   return {
     t,
     args: {
-      organizationId: data.org,
+      businessId: data.business,
       type: "takeaway" as const,
       items: JSON.stringify([
         { menuItemId: data.item, quantity: 1, price: total },

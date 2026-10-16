@@ -2,7 +2,7 @@
 
 ## Operational ownership
 
-The internal **Team Dashboard** (`internal.zackisch.com`) is the authorized working surface for regional staff/admins. Scope includes account/organization oversight, orders, partner commission, newsletter campaigns, email delivery/auditing, permission management and merchant support. Actions are always constrained by assigned region, explicit permission and auditability.
+The internal **Team Dashboard** (`internal.zackisch.com`) is the authorized working surface for regional staff/admins. Scope includes account/business oversight, orders, partner commission, newsletter campaigns, email delivery/auditing, permission management and merchant support. Actions are always constrained by assigned region, explicit permission and auditability.
 
 Provider responsibilities: Cloudflare domain/Workers and deployment monitoring; Convex backing data/actions/storage/backups; Stripe financial ledger and connected merchant accounts; Google Workspace business/transactional email; Finom business banking/bookkeeping context; GitHub repository/CI. Retain only truthful integrations actually configured. Finom being used as business banking does not imply an automated Finom API integration.
 

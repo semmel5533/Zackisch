@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/convex/auth";
-import { getOrganizationByOwner } from "@/lib/convex/database";
+import { getBusinessByOwner } from "@/lib/convex/database";
 
 export default async function DashboardRootPage() {
   const user = await getUser();
@@ -10,10 +10,10 @@ export default async function DashboardRootPage() {
   }
 
   const userId = user.$id ?? user._id;
-  const org = await getOrganizationByOwner(userId);
+  const business = await getBusinessByOwner(userId);
 
-  if (org) {
-    redirect(`/dashboard/${org.$id}/overview`);
+  if (business) {
+    redirect(`/dashboard/${business.$id}/overview`);
   }
 
   redirect("/dashboard/new/overview");

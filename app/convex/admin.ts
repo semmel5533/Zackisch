@@ -637,8 +637,8 @@ export const listRegions = query({
 export const getRegionalOverview = query({
   args: { regionId: v.string() },
   returns: v.object({
-    totalOrganizations: v.number(),
-    activeOrganizations: v.number(),
+    totalBusinesses: v.number(),
+    activeBusinesses: v.number(),
     totalOrders: v.number(),
     gmvCents: v.number(),
     platformFeeCents: v.number(),
@@ -646,19 +646,19 @@ export const getRegionalOverview = query({
     subscriberCount: v.number(),
   }),
   handler: async (ctx, args) => {
-    // 1. Organizations in region (Restaurants, Cafés, Imbisse, Bars, etc.)
-    const allOrgs = await ctx.db.query("organizations").collect();
-    const regionOrgs = allOrgs.filter(
-      (org) => (org.region || "de").toLowerCase() === args.regionId.toLowerCase()
+    // 1. Businesses in region (Restaurants, Cafés, Imbisse, Bars, etc.)
+    const allBusinesses = await ctx.db.query("businesses").collect();
+    const regionBusinesses = allBusinesses.filter(
+      (biz) => (biz.region || "de").toLowerCase() === args.regionId.toLowerCase()
     );
-    const orgIds = new Set(regionOrgs.map((o) => o._id));
+    const businessIds = new Set(regionBusinesses.map((b) => b._id));
 
-    const totalOrganizations = regionOrgs.length;
-    const activeOrganizations = regionOrgs.filter((o) => o.stripeOnboardingComplete).length;
+    const totalBusinesses = regionBusinesses.length;
+    const activeBusinesses = regionBusinesses.filter((b) => b.stripeOnboardingComplete).length;
 
-    // 2. Orders for these organizations
+    // 2. Orders for these businesses
     const allOrders = await ctx.db.query("orders").collect();
-    const regionOrders = allOrders.filter((ord) => orgIds.has(ord.organizationId));
+    const regionOrders = allOrders.filter((ord) => businessIds.has(ord.businessId));
 
     let gmvCents = 0;
     let platformFeeCents = 0;
@@ -682,8 +682,8 @@ export const getRegionalOverview = query({
       .collect();
 
     return {
-      totalOrganizations,
-      activeOrganizations,
+      totalBusinesses,
+      activeBusinesses,
       totalOrders: regionOrders.length,
       gmvCents,
       platformFeeCents,
@@ -693,12 +693,12 @@ export const getRegionalOverview = query({
   },
 });
 
-// List regional organizations / businesses with details (Restaurants, Cafés, Imbisse, Bars, etc.)
-export const listRegionalOrganizations = query({
+// List regional businesses with details (Restaurants, Cafés, Imbisse, Bars, etc.)
+export const listRegionalBusinesses = query({
   args: { regionId: v.string() },
   returns: v.array(
     v.object({
-      _id: v.id("organizations"),
+      _id: v.id("businesses"),
       _creationTime: v.number(),
       name: v.string(),
       address: v.optional(v.string()),
@@ -716,25 +716,25 @@ export const listRegionalOrganizations = query({
     })
   ),
   handler: async (ctx, args) => {
-    const allOrgs = await ctx.db.query("organizations").collect();
-    return allOrgs
-      .filter((org) => (org.region || "de").toLowerCase() === args.regionId.toLowerCase())
-      .map((org) => ({
-        _id: org._id,
-        _creationTime: org._creationTime,
-        name: org.name,
-        address: org.address,
-        ownerId: org.ownerId,
-        stripeAccountId: org.stripeAccountId,
-        stripeOnboardingComplete: org.stripeOnboardingComplete,
-        isToGoEnabled: org.isToGoEnabled,
-        isToStayEnabled: org.isToStayEnabled,
-        legalName: org.legalName,
-        taxId: org.taxId,
-        currency: org.currency,
-        region: org.region,
-        partnerCode: org.partnerCode,
-        tablesCount: org.tables?.length || 0,
+    const allBusinesses = await ctx.db.query("businesses").collect();
+    return allBusinesses
+      .filter((biz) => (biz.region || "de").toLowerCase() === args.regionId.toLowerCase())
+      .map((biz) => ({
+        _id: biz._id,
+        _creationTime: biz._creationTime,
+        name: biz.name,
+        address: biz.address,
+        ownerId: biz.ownerId,
+        stripeAccountId: biz.stripeAccountId,
+        stripeOnboardingComplete: biz.stripeOnboardingComplete,
+        isToGoEnabled: biz.isToGoEnabled,
+        isToStayEnabled: biz.isToStayEnabled,
+        legalName: biz.legalName,
+        taxId: biz.taxId,
+        currency: biz.currency,
+        region: biz.region,
+        partnerCode: biz.partnerCode,
+        tablesCount: biz.tables?.length || 0,
       }));
   },
 });
@@ -749,7 +749,7 @@ export const listRegionalOrders = query({
     v.object({
       _id: v.id("orders"),
       _creationTime: v.number(),
-      organizationId: v.id("organizations"),
+      businessId: v.id("businesses"),
       tableNumber: v.optional(v.string()),
       type: v.union(v.literal("dine-in"), v.literal("takeaway")),
       items: v.string(),
@@ -769,21 +769,21 @@ export const listRegionalOrders = query({
   ),
   handler: async (ctx, args) => {
     const limit = args.limit || 50;
-    const allOrgs = await ctx.db.query("organizations").collect();
-    const regionOrgIds = new Set(
-      allOrgs
-        .filter((org) => (org.region || "de").toLowerCase() === args.regionId.toLowerCase())
-        .map((org) => org._id)
+    const allBusinesses = await ctx.db.query("businesses").collect();
+    const regionBusinessIds = new Set(
+      allBusinesses
+        .filter((biz) => (biz.region || "de").toLowerCase() === args.regionId.toLowerCase())
+        .map((biz) => biz._id)
     );
 
     const allOrders = await ctx.db.query("orders").order("desc").take(limit * 2);
     return allOrders
-      .filter((o) => regionOrgIds.has(o.organizationId))
+      .filter((o) => regionBusinessIds.has(o.businessId))
       .slice(0, limit)
       .map((o) => ({
         _id: o._id,
         _creationTime: o._creationTime,
-        organizationId: o.organizationId,
+        businessId: o.businessId,
         tableNumber: o.tableNumber,
         type: o.type,
         items: o.items,

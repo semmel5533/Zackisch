@@ -6,7 +6,7 @@
  */
 
 export function subscribeToOrders(
-  _organizationId: string,
+  _businessId: string,
   _callback: (event: any) => void
 ) {
   return () => {};
@@ -19,8 +19,8 @@ export function subscribeToOrder(
   return () => {};
 }
 
-export function subscribeToOrganization(
-  _organizationId: string,
+export function subscribeToBusiness(
+  _businessId: string,
   _callback: (event: any) => void
 ) {
   return () => {};

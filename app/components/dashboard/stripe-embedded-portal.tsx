@@ -21,14 +21,14 @@ import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
 
 interface StripeEmbeddedPortalProps {
-  organizationId: string;
+  businessId: string;
   stripeAccountId?: string;
   stripeOnboardingComplete?: boolean;
   onStatusUpdated?: () => void;
 }
 
 export function StripeEmbeddedPortal({
-  organizationId,
+  businessId,
   stripeAccountId,
   stripeOnboardingComplete,
   onStatusUpdated,
@@ -57,7 +57,7 @@ export function StripeEmbeddedPortal({
     try {
       if (!stripeAccountId) {
         const created = await createConnectV2AccountAction(
-          organizationId,
+          businessId,
           "none",
         );
         if (created.error) {
@@ -68,7 +68,7 @@ export function StripeEmbeddedPortal({
       }
 
       const fetchClientSecret = async () => {
-        const res = await createEmbeddedAccountSessionAction(organizationId);
+        const res = await createEmbeddedAccountSessionAction(businessId);
         if (res.error || !res.clientSecret) {
           throw new Error(
             res.error || "Konnte keine Stripe Account Session erzeugen.",
@@ -112,7 +112,7 @@ export function StripeEmbeddedPortal({
   }, [stripeAccountId]);
 
   const handleSyncStatus = async () => {
-    const res = await getStripeAccountStatusAction(organizationId);
+    const res = await getStripeAccountStatusAction(businessId);
     if (res.error) {
       toast.error(res.error);
       return;

@@ -14,12 +14,12 @@ import { getOrderBySessionAction } from "@/actions/checkout-actions";
 export function PaymentSuccessPoller({
   sessionId,
   paymentIntentId,
-  organizationId,
+  businessId,
   type,
 }: {
   sessionId?: string;
   paymentIntentId?: string;
-  organizationId: string;
+  businessId: string;
   type: "takeaway" | "dine-in";
 }) {
   const router = useRouter();
@@ -38,11 +38,11 @@ export function PaymentSuccessPoller({
   useEffect(() => {
     if (order === null && stripeIdentifier) {
       const timer = setTimeout(() => {
-        getOrderBySessionAction(stripeIdentifier, organizationId).catch(console.error);
+        getOrderBySessionAction(stripeIdentifier, businessId).catch(console.error);
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [order, stripeIdentifier, organizationId]);
+  }, [order, stripeIdentifier, businessId]);
 
   useEffect(() => {
     if (order) {
@@ -50,12 +50,12 @@ export function PaymentSuccessPoller({
       toast.success(t("orderPlaced" as any));
 
       if (type === "takeaway") {
-        router.replace(`/pickup/${organizationId}?order=${order._id}`);
+        router.replace(`/pickup/${businessId}?order=${order._id}`);
       } else {
-        router.replace(`/table/${organizationId}?table=${order.tableNumber || ""}&order=${order._id}`);
+        router.replace(`/table/${businessId}?table=${order.tableNumber || ""}&order=${order._id}`);
       }
     }
-  }, [order, organizationId, type, router, clearCart, t]);
+  }, [order, businessId, type, router, clearCart, t]);
 
   // Fallback safety timeout (45s) in case webhook fails completely
   useEffect(() => {
@@ -63,12 +63,12 @@ export function PaymentSuccessPoller({
       if (!order) {
         setTimedOut(true);
         toast.error(t("error"));
-        router.replace(`/${type === "takeaway" ? "pickup" : "table"}/${organizationId}`);
+        router.replace(`/${type === "takeaway" ? "pickup" : "table"}/${businessId}`);
       }
     }, 45000);
 
     return () => clearTimeout(timer);
-  }, [order, organizationId, type, router, t]);
+  }, [order, businessId, type, router, t]);
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center space-y-4 p-6 bg-background">

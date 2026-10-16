@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/convex/auth";
-import { getOrganization } from "@/lib/convex/database";
+import { getBusiness } from "@/lib/convex/database";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 
 export default async function DashboardLayout({
@@ -8,7 +8,7 @@ export default async function DashboardLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
 }) {
   const user = await getUser();
 
@@ -16,25 +16,25 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  const { organizationId } = await params;
-  let organization = null;
+  const { businessId } = await params;
+  let business = null;
 
-  if (organizationId !== "new") {
-    organization = await getOrganization(organizationId);
+  if (businessId !== "new") {
+    business = await getBusiness(businessId);
 
-    if (!organization) {
+    if (!business) {
       redirect("/sign-in");
     }
 
     // Verify ownership
-    if (organization.ownerId !== user.$id && organization.ownerId !== user._id) {
+    if (business.ownerId !== user.$id && business.ownerId !== user._id) {
       redirect("/sign-in");
     }
   }
 
   return (
     <DashboardShell
-      organization={organization ? structuredClone(organization) : null}
+      business={business ? structuredClone(business) : null}
       user={structuredClone(user)}
     >
       {children}

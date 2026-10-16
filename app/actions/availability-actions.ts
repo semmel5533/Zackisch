@@ -9,15 +9,15 @@ import {
 import { requireOwner } from "@/lib/convex/auth";
 
 export async function generateAvailabilitySessionAction(
-  organizationId: string,
+  businessId: string,
 ) {
   try {
-    const { user } = await requireOwner(organizationId);
+    const { user } = await requireOwner(businessId);
 
-    const existing = await getAvailabilitySessions(organizationId);
+    const existing = await getAvailabilitySessions(businessId);
     await Promise.all(existing.map((s) => deleteAvailabilitySession(s.$id)));
-    const session = await createAvailabilitySession(organizationId, user.$id || user._id);
-    revalidatePath(`/dashboard/${organizationId}/overview`);
+    const session = await createAvailabilitySession(businessId, user.$id || user._id);
+    revalidatePath(`/dashboard/${businessId}/overview`);
     return { success: true, session: structuredClone(session) };
   } catch (error: unknown) {
     console.error(

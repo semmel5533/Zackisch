@@ -20,29 +20,29 @@ import {
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
-import type { Organization } from "@/lib/types";
+import type { Business } from "@/lib/types";
 
 interface SetupAndBillingPanelProps {
-  organization: Organization;
+  business: Business;
   userEmail?: string;
   userName?: string;
 }
 
 export function SetupAndBillingPanel({
-  organization,
+  business,
 }: SetupAndBillingPanelProps) {
   const { locale } = useTranslation();
   const isDe = locale.startsWith("de");
-  const orgId = organization.$id as Id<"organizations">;
+  const businessId = business.$id as Id<"businesses">;
 
   const readiness = useQuery(api.setup.getSetupReadiness, {
-    organizationId: orgId,
+    businessId,
   });
   const posSummary = useQuery(api.orders.getPosReconciliationSummary, {
-    organizationId: orgId,
+    businessId,
   });
   const feeStatements = useQuery(api.setup.getFeeStatements, {
-    organizationId: orgId,
+    businessId,
   });
 
   const recordLegalAcceptance = useMutation(api.setup.recordLegalAcceptance);
@@ -53,19 +53,19 @@ export function SetupAndBillingPanel({
     api.setup.generateMonthlyFeeStatement,
   );
   const createSupportToken = useMutation(api.support.createCrossAppToken);
-  const updateOrg = useMutation(api.organizations.update);
+  const updateBusinessMutation = useMutation(api.businesses.update);
 
   const [posSystemName, setPosSystemName] = useState(
-    organization.posSystemName || "Bestehende Restaurantkasse (TSE)",
+    business.posSystemName || "Bestehende Restaurantkasse (TSE)",
   );
   const [posExternalPaymentLabel, setPosExternalPaymentLabel] = useState(
-    organization.posExternalPaymentLabel || "Online bezahlt – Zackisch",
+    business.posExternalPaymentLabel || "Online bezahlt – Zackisch",
   );
   const [legalName, setLegalName] = useState(
-    organization.legalName || organization.name || "",
+    business.legalName || business.name || "",
   );
   const [vatId, setVatId] = useState(
-    organization.vatId || organization.taxId || "",
+    business.vatId || business.taxId || "",
   );
   const [savingSeller, setSavingSeller] = useState(false);
   const [savingPos, setSavingPos] = useState(false);
@@ -84,8 +84,8 @@ export function SetupAndBillingPanel({
     }
     setSavingSeller(true);
     try {
-      await updateOrg({
-        id: orgId,
+      await updateBusinessMutation({
+        id: businessId,
         legalName: legalName.trim(),
         vatId: vatId.trim(),
         taxId: vatId.trim(),
@@ -105,7 +105,7 @@ export function SetupAndBillingPanel({
   const handleAcceptContracts = async () => {
     try {
       await recordLegalAcceptance({
-        organizationId: orgId,
+        businessId,
         documentSlugs: ["gtc", "data-processing", "fee-model"],
         userAgent:
           typeof navigator !== "undefined" ? navigator.userAgent : "browser",
@@ -124,7 +124,7 @@ export function SetupAndBillingPanel({
     setSavingPos(true);
     try {
       await recordLegalAcceptance({
-        organizationId: orgId,
+        businessId,
         documentSlugs: ["pos-workflow"],
         context: `${posSystemName.trim()} | ${posExternalPaymentLabel.trim()}`,
         userAgent:
@@ -146,7 +146,7 @@ export function SetupAndBillingPanel({
     setCreatingTestOrder(true);
     try {
       const res = await createControlledTestOrder({
-        organizationId: orgId,
+        businessId,
       });
       toast.success(
         isDe
@@ -163,7 +163,7 @@ export function SetupAndBillingPanel({
   const handleGenerateStatement = async () => {
     try {
       await generateFeeStatement({
-        organizationId: orgId,
+        businessId,
         period: currentPeriodMonth,
       });
       toast.success(
@@ -193,7 +193,7 @@ export function SetupAndBillingPanel({
   const handleOpenSupportPortal = async () => {
     try {
       const res = await createSupportToken({
-        organizationId: orgId,
+        businessId,
       });
       const supportBase =
         process.env.NEXT_PUBLIC_SUPPORT_URL || "https://support.zackisch.com";

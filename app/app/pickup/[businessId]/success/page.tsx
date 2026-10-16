@@ -16,21 +16,21 @@ export default async function PickupSuccessPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
   searchParams: Promise<{ payment_intent?: string; session_id?: string }>;
 }) {
-  const { organizationId } = await params;
+  const { businessId } = await params;
   const { payment_intent, session_id } = await searchParams;
 
   if (!payment_intent && !session_id) {
-    redirect(`/pickup/${organizationId}`);
+    redirect(`/pickup/${businessId}`);
   }
 
   return (
     <PaymentSuccessPoller
       sessionId={session_id}
       paymentIntentId={payment_intent}
-      organizationId={organizationId}
+      businessId={businessId}
       type="takeaway"
     />
   );

@@ -1,5 +1,5 @@
 import {
-  getOrganization,
+  getBusiness,
   getMenuCategories,
   getAvailableMenuItems,
   getOrder,
@@ -15,22 +15,22 @@ export async function generateMetadata({
   params,
   searchParams,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
   searchParams: Promise<{ table?: string; order?: string }>;
 }) {
-  const [{ organizationId }, { table, order }] = await Promise.all([
+  const [{ businessId }, { table, order }] = await Promise.all([
     params,
     searchParams,
   ]);
   const cookieStore = await cookies();
   const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "de";
   const dict = translations[locale] || translations.de;
-  const organization = await getOrganization(organizationId);
-  const orgName = organization?.name || "";
+  const business = await getBusiness(businessId);
+  const businessName = business?.name || "";
 
   if (order) {
     return {
-      title: orgName ? `${dict.orderStatus} - ${orgName}` : dict.orderStatus,
+      title: businessName ? `${dict.orderStatus} - ${businessName}` : dict.orderStatus,
     };
   }
 
@@ -40,7 +40,7 @@ export async function generateMetadata({
     : dict.titleToStayNoTable;
 
   return {
-    title: orgName ? `${prefix} ${orgName}` : prefix,
+    title: businessName ? `${prefix} ${businessName}` : prefix,
   };
 }
 
@@ -48,29 +48,29 @@ export default async function TablePage({
   params,
   searchParams,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
   searchParams: Promise<{ table?: string; order?: string }>;
 }) {
-  const [{ organizationId }, { table, order }] = await Promise.all([
+  const [{ businessId }, { table, order }] = await Promise.all([
     params,
     searchParams,
   ]);
 
-  const [organization, categories, items, initialOrder] = await Promise.all([
-    getOrganization(organizationId),
-    getMenuCategories(organizationId),
-    getAvailableMenuItems(organizationId),
+  const [business, categories, items, initialOrder] = await Promise.all([
+    getBusiness(businessId),
+    getMenuCategories(businessId),
+    getAvailableMenuItems(businessId),
     order ? getOrder(order) : Promise.resolve(null),
   ]);
 
-  if (!organization)
+  if (!business)
     return (
       <div className="p-8 text-center">
-        <LocalizedText tKey="orgNotFound" />
+        <LocalizedText tKey="businessNotFound" />
       </div>
     );
 
-  if (organization.isToStayEnabled === false && !order) {
+  if (business.isToStayEnabled === false && !order) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-background text-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -84,7 +84,7 @@ export default async function TablePage({
         </h1>
         <LocalizedText
           tKey="notAcceptingOrders"
-          params={{ name: organization.name }}
+          params={{ name: business.name }}
           className="text-muted-foreground max-w-sm"
           as="p"
         />
@@ -92,7 +92,7 @@ export default async function TablePage({
     );
   }
 
-  if (!organization.stripeOnboardingComplete && !order) {
+  if (!business.stripeOnboardingComplete && !order) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-background text-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -113,15 +113,15 @@ export default async function TablePage({
     );
   }
 
-  const publicOrganization = {
-    ...organization,
+  const publicBusiness = {
+    ...business,
     stripeAccountId: undefined,
     taxId: undefined,
     ownerId: "",
   };
 
   const sanitizedInitialOrder =
-    initialOrder && initialOrder.organizationId === organizationId
+    initialOrder && initialOrder.businessId === businessId
       ? {
           ...initialOrder,
           stripePaymentId: undefined,
@@ -135,7 +135,7 @@ export default async function TablePage({
 
   return (
     <GuestFrontend
-      organization={structuredClone(publicOrganization)}
+      business={structuredClone(publicBusiness)}
       categories={structuredClone(categories)}
       items={structuredClone(items)}
       type="dine-in"

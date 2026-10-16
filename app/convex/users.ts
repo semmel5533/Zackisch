@@ -531,13 +531,13 @@ export const confirmAccountDeletion = mutation({
     }
 
     const org = await ctx.db
-      .query("organizations")
+      .query("businesses")
       .withIndex("by_ownerId", (q) => q.eq("ownerId", args.userId))
       .first();
 
     if (org) {
-      await ctx.runMutation(internal.organizations.cascadeDelete, {
-        organizationId: org._id,
+      await ctx.runMutation(internal.businesses.cascadeDelete, {
+        businessId: org._id,
       });
     }
 

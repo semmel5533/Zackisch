@@ -31,25 +31,25 @@ export async function createCategoryAction(
   _prevState: MenuActionState,
   formData: FormData,
 ): Promise<MenuActionState> {
-  const organizationId = formData.get("organizationId") as string;
+  const businessId = formData.get("businessId") as string;
   const name = formData.get("name") as string;
   const sortOrder = parseInt(formData.get("sortOrder") as string) || 0;
 
-  if (!organizationId) return { error: "Betriebs-ID fehlt." };
+  if (!businessId) return { error: "Betriebs-ID fehlt." };
   if (!name) return { error: "Name ist erforderlich." };
   if (name.length > 100) return { error: "Der Kategoriename darf maximal 100 Zeichen lang sein." };
 
   try {
-    const { user } = await requireOwner(organizationId);
+    const { user } = await requireOwner(businessId);
 
     const newDoc = await createMenuCategory({
-      organizationId,
+      businessId,
       name,
       sortOrder,
       ownerId: user.$id || user._id,
     });
 
-    revalidatePath(`/dashboard/${organizationId}/menu`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
     return { success: true, categoryId: newDoc.$id };
   } catch (error: unknown) {
     const message =
@@ -67,16 +67,16 @@ export async function updateCategoryAction(
   const categoryId = formData.get("categoryId") as string;
   const name = formData.get("name") as string;
   const sortOrder = parseInt(formData.get("sortOrder") as string);
-  const organizationId = formData.get("organizationId") as string;
+  const businessId = formData.get("businessId") as string;
 
-  if (!organizationId) return { error: "Betriebs-ID fehlt." };
+  if (!businessId) return { error: "Betriebs-ID fehlt." };
   if (!name) return { error: "Name ist erforderlich." };
   if (name.length > 100) return { error: "Der Kategoriename darf maximal 100 Zeichen lang sein." };
 
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
-    const categories = await getMenuCategories(organizationId);
+    const categories = await getMenuCategories(businessId);
     if (!categories.some((c) => c.$id === categoryId)) {
       return { error: "Kategorie nicht gefunden oder unberechtigt." };
     }
@@ -86,7 +86,7 @@ export async function updateCategoryAction(
       ...(isNaN(sortOrder) ? {} : { sortOrder }),
     });
 
-    revalidatePath(`/dashboard/${organizationId}/menu`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -99,18 +99,18 @@ export async function updateCategoryAction(
 
 export async function deleteCategoryAction(
   categoryId: string,
-  organizationId: string,
+  businessId: string,
 ) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
-    const categories = await getMenuCategories(organizationId);
+    const categories = await getMenuCategories(businessId);
     if (!categories.some((c) => c.$id === categoryId)) {
       return { error: "Kategorie nicht gefunden oder unberechtigt." };
     }
 
     await deleteMenuCategory(categoryId);
-    revalidatePath(`/dashboard/${organizationId}/menu`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -122,18 +122,18 @@ export async function deleteCategoryAction(
 }
 
 export async function reorderCategoriesAction(
-  organizationId: string,
+  businessId: string,
   orderedIds: string[],
 ) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const updates = orderedIds.map((id, index) => ({
       id,
       sortOrder: index,
     }));
     await updateCategorySortOrders(updates);
-    revalidatePath(`/dashboard/${organizationId}/menu`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -145,13 +145,13 @@ export async function reorderCategoriesAction(
 }
 
 export async function reorderItemsAction(
-  organizationId: string,
+  businessId: string,
   itemsPayload: (
     string | { id: string; sortOrder: number; categoryId?: string }
   )[],
 ) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const updates = itemsPayload.map((item, index) => {
       if (typeof item === "string") {
@@ -160,10 +160,10 @@ export async function reorderItemsAction(
       return item;
     });
     await updateItemSortOrders(updates);
-    revalidatePath(`/dashboard/${organizationId}/menu`);
-    revalidatePath(`/pickup/${organizationId}`);
-    revalidatePath(`/table/${organizationId}`);
-    revalidatePath(`/availability/${organizationId}`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
+    revalidatePath(`/pickup/${businessId}`);
+    revalidatePath(`/table/${businessId}`);
+    revalidatePath(`/availability/${businessId}`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -180,7 +180,7 @@ export async function createMenuItemAction(
   _prevState: MenuActionState,
   formData: FormData,
 ): Promise<MenuActionState> {
-  const organizationId = formData.get("organizationId") as string;
+  const businessId = formData.get("businessId") as string;
   const categoryId = formData.get("categoryId") as string;
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
@@ -191,7 +191,7 @@ export async function createMenuItemAction(
   const rawSortOrder = formData.get("sortOrder") as string;
   let sortOrder = parseInt(rawSortOrder);
   if (isNaN(sortOrder)) {
-    const existingItems = await getMenuItems(organizationId);
+    const existingItems = await getMenuItems(businessId);
     const categoryItems = existingItems.filter(
       (i) => i.categoryId === categoryId,
     );
@@ -207,7 +207,7 @@ export async function createMenuItemAction(
   const imageFile = formData.get("image") as File | null;
   const customizations = (formData.get("customizations") as string) || "[]";
 
-  if (!organizationId) return { error: "Betriebs-ID fehlt." };
+  if (!businessId) return { error: "Betriebs-ID fehlt." };
   if (!name || isNaN(price)) {
     return { error: "Name und Preis sind erforderlich." };
   }
@@ -231,9 +231,9 @@ export async function createMenuItemAction(
   }
 
   try {
-    const { user } = await requireOwner(organizationId);
+    const { user } = await requireOwner(businessId);
 
-    const categories = await getMenuCategories(organizationId);
+    const categories = await getMenuCategories(businessId);
     if (!categories.some((c) => c.$id === categoryId)) {
       return { error: "Kategorie nicht gefunden oder unberechtigt." };
     }
@@ -244,7 +244,7 @@ export async function createMenuItemAction(
     }
 
     await createMenuItem({
-      organizationId,
+      businessId,
       categoryId,
       name,
       description,
@@ -257,7 +257,7 @@ export async function createMenuItemAction(
       customizations,
     });
 
-    revalidatePath(`/dashboard/${organizationId}/menu`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -273,7 +273,7 @@ export async function updateMenuItemAction(
   formData: FormData,
 ): Promise<MenuActionState> {
   const itemId = formData.get("itemId") as string;
-  const organizationId = formData.get("organizationId") as string;
+  const businessId = formData.get("businessId") as string;
   const categoryId = formData.get("categoryId") as string;
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
@@ -288,7 +288,7 @@ export async function updateMenuItemAction(
   const removeExistingImage = formData.get("removeImage") === "true";
   const customizations = (formData.get("customizations") as string) || "[]";
 
-  if (!organizationId) return { error: "Betriebs-ID fehlt." };
+  if (!businessId) return { error: "Betriebs-ID fehlt." };
   if (!name || isNaN(price)) {
     return { error: "Name und Preis sind erforderlich." };
   }
@@ -312,15 +312,15 @@ export async function updateMenuItemAction(
   }
 
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const existingItem = await getMenuItem(itemId);
-    if (!existingItem || existingItem.organizationId !== organizationId) {
+    if (!existingItem || existingItem.businessId !== businessId) {
       return { error: "Artikel nicht gefunden oder unberechtigt." };
     }
 
     if (categoryId) {
-      const categories = await getMenuCategories(organizationId);
+      const categories = await getMenuCategories(businessId);
       if (!categories.some((c) => c.$id === categoryId)) {
         return { error: "Kategorie nicht gefunden oder unberechtigt." };
       }
@@ -328,7 +328,7 @@ export async function updateMenuItemAction(
 
     let sortOrder = existingItem.sortOrder;
     if (categoryId && categoryId !== existingItem.categoryId) {
-      const existingItems = await getMenuItems(organizationId);
+      const existingItems = await getMenuItems(businessId);
       const targetCategoryItems = existingItems.filter(
         (i) => i.categoryId === categoryId,
       );
@@ -364,10 +364,10 @@ export async function updateMenuItemAction(
       customizations,
     });
 
-    revalidatePath(`/dashboard/${organizationId}/menu`);
-    revalidatePath(`/pickup/${organizationId}`);
-    revalidatePath(`/table/${organizationId}`);
-    revalidatePath(`/availability/${organizationId}`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
+    revalidatePath(`/pickup/${businessId}`);
+    revalidatePath(`/table/${businessId}`);
+    revalidatePath(`/availability/${businessId}`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -380,19 +380,19 @@ export async function updateMenuItemAction(
 
 export async function deleteMenuItemAction(
   itemId: string,
-  organizationId: string,
+  businessId: string,
   _imageId?: string,
 ) {
   try {
-    await requireOwner(organizationId);
+    await requireOwner(businessId);
 
     const existingItem = await getMenuItem(itemId);
-    if (!existingItem || existingItem.organizationId !== organizationId) {
+    if (!existingItem || existingItem.businessId !== businessId) {
       return { error: "Artikel nicht gefunden oder unberechtigt." };
     }
 
     await deleteMenuItem(itemId);
-    revalidatePath(`/dashboard/${organizationId}/menu`);
+    revalidatePath(`/dashboard/${businessId}/menu`);
     return { success: true };
   } catch (error: unknown) {
     const message =
@@ -406,17 +406,17 @@ export async function deleteMenuItemAction(
 export async function toggleMenuItemAvailability(
   itemId: string,
   available: boolean,
-  organizationId?: string,
+  businessId?: string,
 ) {
   try {
     const item = await getMenuItem(itemId);
     if (!item) return { error: "Artikel nicht gefunden." };
-    if (organizationId && item.organizationId !== organizationId) {
+    if (businessId && item.businessId !== businessId) {
       return { error: "Nicht berechtigt." };
     }
-    const orgId = item.organizationId;
+    const resolvedBusinessId = item.businessId;
 
-    await requireStaffOrOwner(orgId);
+    await requireStaffOrOwner(resolvedBusinessId);
 
     const updates: Partial<MenuItem> = { available };
 
@@ -440,9 +440,9 @@ export async function toggleMenuItemAvailability(
     }
 
     await updateMenuItem(itemId, updates);
-    if (orgId) {
-      revalidatePath(`/dashboard/${orgId}/menu`);
-      revalidatePath(`/availability/${orgId}`);
+    if (resolvedBusinessId) {
+      revalidatePath(`/dashboard/${resolvedBusinessId}/menu`);
+      revalidatePath(`/availability/${resolvedBusinessId}`);
     }
     return { success: true };
   } catch (error: unknown) {
@@ -459,17 +459,17 @@ export async function toggleCustomizationAvailabilityAction(
   stepId: string,
   optionId: string | null,
   available: boolean,
-  organizationId?: string,
+  businessId?: string,
 ) {
   try {
     const item = await getMenuItem(itemId);
     if (!item) return { error: "Artikel nicht gefunden." };
-    if (organizationId && item.organizationId !== organizationId) {
+    if (businessId && item.businessId !== businessId) {
       return { error: "Nicht berechtigt." };
     }
-    const orgId = item.organizationId;
+    const resolvedBusinessId = item.businessId;
 
-    await requireStaffOrOwner(orgId);
+    await requireStaffOrOwner(resolvedBusinessId);
 
     let steps: CustomizationStep[] = [];
     try {
@@ -502,9 +502,9 @@ export async function toggleCustomizationAvailabilityAction(
     await updateMenuItem(itemId, {
       customizations: JSON.stringify(updatedSteps),
     });
-    if (orgId) {
-      revalidatePath(`/dashboard/${orgId}/menu`);
-      revalidatePath(`/availability/${orgId}`);
+    if (resolvedBusinessId) {
+      revalidatePath(`/dashboard/${resolvedBusinessId}/menu`);
+      revalidatePath(`/availability/${resolvedBusinessId}`);
     }
     return { success: true };
   } catch (error: unknown) {

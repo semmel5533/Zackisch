@@ -19,7 +19,7 @@ export const listPartners = query({
       iban: v.optional(v.string()),
       taxId: v.optional(v.string()),
       createdAt: v.number(),
-      referredOrganizationsCount: v.number(),
+      referredBusinessesCount: v.number(),
     })
   ),
   handler: async (ctx, args) => {
@@ -28,10 +28,10 @@ export const listPartners = query({
       .withIndex("by_regionId", (q) => q.eq("regionId", args.regionId))
       .collect();
 
-    const allOrgs = await ctx.db.query("organizations").collect();
+    const allBusinesses = await ctx.db.query("businesses").collect();
 
     return partners.map((p) => {
-      const referredOrgs = allOrgs.filter((o) => o.partnerCode === p.code);
+      const referredBusinesses = allBusinesses.filter((b) => b.partnerCode === p.code);
       return {
         _id: p._id,
         _creationTime: p._creationTime,
@@ -46,7 +46,7 @@ export const listPartners = query({
         iban: p.iban,
         taxId: p.taxId,
         createdAt: p.createdAt,
-        referredOrganizationsCount: referredOrgs.length,
+        referredBusinessesCount: referredBusinesses.length,
       };
     });
   },

@@ -1,6 +1,6 @@
 import {
   getOrders,
-  getOrganization,
+  getBusiness,
   getMenuCategories,
   getMenuItems,
 } from "@/lib/convex/database";
@@ -25,29 +25,29 @@ export default async function StaffTerminalPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ organizationId: string }>;
+  params: Promise<{ businessId: string }>;
   searchParams: Promise<{ token?: string; tab?: string }>;
 }) {
-  const [{ organizationId }, { token, tab }] = await Promise.all([
+  const [{ businessId }, { token, tab }] = await Promise.all([
     params,
     searchParams,
   ]);
   const cookieStore = await cookies();
-  const cookieName = `staff_session_${organizationId}`;
+  const cookieName = `staff_session_${businessId}`;
   const cookieToken =
     cookieStore.get(cookieName)?.value ||
-    cookieStore.get(`order_session_${organizationId}`)?.value ||
-    cookieStore.get(`availability_session_${organizationId}`)?.value;
+    cookieStore.get(`order_session_${businessId}`)?.value ||
+    cookieStore.get(`availability_session_${businessId}`)?.value;
 
-  const [organization, user] = await Promise.all([
-    getOrganization(organizationId),
+  const [business, user] = await Promise.all([
+    getBusiness(businessId),
     getUser(),
   ]);
 
-  if (!organization) {
+  if (!business) {
     return (
       <div className="p-8 text-center">
-        <LocalizedText tKey="orgNotFound" />
+        <LocalizedText tKey="businessNotFound" />
       </div>
     );
   }
@@ -55,14 +55,14 @@ export default async function StaffTerminalPage({
   // Allow if owner is logged in
   const isOwner = Boolean(
     user &&
-    (user._id === organization.ownerId || user.$id === organization.ownerId),
+    (user._id === business.ownerId || user.$id === business.ownerId),
   );
 
   // Verification via query token or persistent session cookie
   const tokenToVerify = token || cookieToken;
   const isStaffSessionValid = tokenToVerify
     ? await convexServer.query(api.sessions.verifyTerminalSession, {
-        organizationId: organizationId as any,
+        businessId: businessId as any,
         token: tokenToVerify,
         type: "staff",
       })
@@ -90,9 +90,9 @@ export default async function StaffTerminalPage({
   }
 
   const [initialOrders, categories, items] = await Promise.all([
-    getOrders(organizationId),
-    getMenuCategories(organizationId),
-    getMenuItems(organizationId),
+    getOrders(businessId),
+    getMenuCategories(businessId),
+    getMenuItems(businessId),
   ]);
 
   const validTab: "current-orders" | "all-orders" | "availability" =
@@ -100,7 +100,7 @@ export default async function StaffTerminalPage({
 
   return (
     <StaffTerminalShell
-      organization={structuredClone(organization)}
+      business={structuredClone(business)}
       initialOrders={structuredClone(initialOrders)}
       categories={structuredClone(categories)}
       items={structuredClone(items)}

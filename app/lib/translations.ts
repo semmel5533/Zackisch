@@ -610,9 +610,9 @@ export const translations = {
     moveDown: "Nach unten verschieben",
     trackingActiveRemaining: "Tracking-Link aktiv für noch {time}",
     trackingMinutes: "{count} Min.",
-    pickupUrl: "/pickup/{organizationId}",
-    pickupSuccessUrl: "/pickup/{organizationId}/success",
-    tableSuccessUrl: "/table/{organizationId}/success",
+    pickupUrl: "/pickup/{businessId}",
+    pickupSuccessUrl: "/pickup/{businessId}/success",
+    tableSuccessUrl: "/table/{businessId}/success",
     accountDataInfo:
       "Aus Sicherheitsgründen kann die verknüpfte E-Mail-Adresse nur manuell von uns geändert werden. Bitte sende dazu eine E-Mail von deiner aktuell verknüpften Adresse an selim@zackisch.com mit dem Betreff 'Zackisch Konto Email Adresse ändern' und nenne uns in der Nachricht die neue gewünschte E-Mail-Adresse. Die Änderung dauert im Schnitt bis zu 7 Tage.",
     invalidToken: "Ungültiger oder abgelaufener Token.",
@@ -620,7 +620,7 @@ export const translations = {
       "{name} nimmt momentan keine Tisch-Bestellungen über das Smartphone entgegen.",
     notAcceptingToGoOrders:
       "{name} nimmt momentan keine To-Go-Bestellungen entgegen. Bitte versuche es später noch einmal.",
-    orgNotFound: "Organisation nicht gefunden.",
+    businessNotFound: "Betrieb nicht gefunden.",
     noToken: "Kein Token angegeben. Zugriff verweigert.",
     ordersPaused: "Bestellungen pausiert",
     pickupPaused: "Abholung pausiert",
@@ -1250,9 +1250,9 @@ export const translations = {
     moveDown: "Move down",
     trackingActiveRemaining: "Tracking link active for {time}",
     trackingMinutes: "{count} min.",
-    pickupUrl: "/pickup/{organizationId}",
-    pickupSuccessUrl: "/pickup/{organizationId}/success",
-    tableSuccessUrl: "/table/{organizationId}/success",
+    pickupUrl: "/pickup/{businessId}",
+    pickupSuccessUrl: "/pickup/{businessId}/success",
+    tableSuccessUrl: "/table/{businessId}/success",
     accountDataInfo:
       "For security reasons, the linked email address can only be changed manually by us. Please send an email from your currently linked address to selim@zackisch.com with the subject 'Zackisch Change Account Email Address' and specify the new desired email address in the message. The change takes up to 7 days on average.",
     invalidToken: "Invalid or expired token.",
@@ -1260,7 +1260,7 @@ export const translations = {
       "{name} is currently not accepting table orders via smartphone.",
     notAcceptingToGoOrders:
       "{name} is currently not accepting To-Go orders. Please try again later.",
-    orgNotFound: "Organization not found.",
+    businessNotFound: "Business not found.",
     noToken: "No token provided. Access denied.",
     ordersPaused: "Orders paused",
     pickupPaused: "Pickup paused",

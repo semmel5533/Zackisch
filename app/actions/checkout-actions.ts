@@ -6,7 +6,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { headers } from "next/headers";
 
 interface CreateCheckoutSessionParams {
-  organizationId: string;
+  businessId: string;
   type: "dine-in" | "takeaway";
   tableNumber?: string;
   items: any[];
@@ -17,7 +17,7 @@ interface CreateCheckoutSessionParams {
 }
 
 export async function createCheckoutSessionAction(params: CreateCheckoutSessionParams) {
-  if (!params.organizationId) {
+  if (!params.businessId) {
     return { error: "Betriebs-ID fehlt." };
   }
   const cleanEmail = params.email?.trim() || "";
@@ -38,7 +38,7 @@ export async function createCheckoutSessionAction(params: CreateCheckoutSessionP
     const origin = reqHeaders.get("origin") || `${proto}://${host}`;
 
     const res = await convexServer.action(api.stripe.createCheckoutSession, {
-      organizationId: params.organizationId as Id<"organizations">,
+      businessId: params.businessId as Id<"businesses">,
       type: params.type,
       tableNumber: params.tableNumber,
       items: JSON.stringify(params.items),
@@ -69,7 +69,7 @@ export const createPaymentIntentAction = createCheckoutSessionAction;
 
 export async function getOrderBySessionAction(
   identifier: string,
-  organizationId?: string,
+  businessId?: string,
 ) {
   if (!identifier) {
     return { error: "Keine Sitzungs-ID angegeben.", order: null };
@@ -94,7 +94,7 @@ export async function getOrderBySessionAction(
     const orderId = await convexServer.action(api.stripe.verifyPaymentAndCreateOrder, {
       sessionId: identifier.startsWith("cs_") ? identifier : undefined,
       paymentIntentId: identifier.startsWith("pi_") ? identifier : undefined,
-      organizationId: organizationId ? (organizationId as Id<"organizations">) : undefined,
+      businessId: businessId ? (businessId as Id<"businesses">) : undefined,
     });
 
     if (orderId) {
