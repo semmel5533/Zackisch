@@ -1,6 +1,6 @@
 {
   "name": "@zackisch/design-system",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Unified accessible design system for Zackisch hospitality platform",
   "type": "module",
   "main": "./src/index.ts",
