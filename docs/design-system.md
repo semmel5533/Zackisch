@@ -71,6 +71,15 @@ Implement accessible wrappers around Base UI where supported: `Button`, `LinkBut
 
 Each component has specified: anatomy, usage, variants, touch targets, loading/disabled/invalid/focus/hover/pressed states, keyboard interactions, localized copy and visual regressions. Provide a runnable story/demo page or isolated test fixture when cost-effective. Use design tokens in Tailwind utilities rather than hardcoded HEX repeated across apps. Do not force every app to use visually identical components when the task requires a special layout; shared semantics are mandatory, uniform density is not.
 
+### Verified package implementation (`@zackisch/design-system`)
+
+The design system is implemented in `packages/design-system/` and linked across `app`, `root`, `support`, and `internal`:
+- **Tokens:** Semantic color, spacing, radius, typography (Poppins & Inter), and shadow tokens exported via CSS variables and typed constants.
+- **Component Primitives (21):** Base UI-backed primitives including `Button`, `Input`, `Card`, `Modal`, `Table`, `Tabs`, `Badge`, `Toast`, `Dropdown`, `Accordion`, `Tooltip`, `Switch`, `Checkbox`, `Radio`, `Skeleton`, `Avatar`, `Separator`, `Popover`, `Slider`, `Progress`, and `Alert`.
+- **Domain Components:** `Price` (enforcing strict German/European currency formatting with tabular figures) and `QrSignageCard` (for physical table and counter signage).
+- **Brand Assets:** Canonical SVG/PNG assets hosted exclusively on `https://zackisch.com/*` (`root/public/`) and consumed via typed `BRAND_ASSETS` constants.
+- **Site Metadata:** `createSiteMetadata` utility ensuring consistent canonical links, OpenGraph properties, Twitter cards, and multi-lingual hreflang annotations.
+
 ## 6. Website IA and editorial compositions
 
 1. **Hero:** Real owner/team or welcoming venue photograph with adequate text contrast; H1 `Deine Kasse bleibt. Deine Gäste bestellen selbst.`; two sentences max about optional QR orders, existing tablet and no monthly fee; primary `Kostenlos registrieren`, secondary `Voraussetzungen prüfen`; a small explicit `2 % ... zzgl. Zahlungsanbietergebühren` line.

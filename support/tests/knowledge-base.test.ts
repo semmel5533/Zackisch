@@ -54,4 +54,26 @@ describe("support knowledge base", () => {
       }
     }
   });
+
+  it("generates comprehensive support sitemap excluding private ticket routes", async () => {
+    const sitemapModule = await import("../app/sitemap");
+    const sitemap = sitemapModule.default();
+    expect(sitemap.length).toBeGreaterThanOrEqual(98); // 2 home + 10 cat + 86 art = 98
+
+    // Verify all URLs start with support domain and have no ticket routes
+    for (const entry of sitemap) {
+      expect(entry.url).toMatch(/^https:\/\/support\.zackisch\.com\/(de-de|de-en)/);
+      expect(entry.url).not.toContain("/tickets");
+    }
+  });
+
+  it("configures robots.txt disallowing private ticket routes and specifying sitemap", async () => {
+    const robotsModule = await import("../app/robots");
+    const robots = robotsModule.default();
+    expect(robots.sitemap).toBe("https://support.zackisch.com/sitemap.xml");
+
+    const rules = Array.isArray(robots.rules) ? robots.rules[0] : robots.rules;
+    expect(rules.disallow).toContain("/de-de/tickets");
+    expect(rules.disallow).toContain("/de-en/tickets");
+  });
 });

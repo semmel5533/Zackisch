@@ -1,53 +1,167 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { SupportShell } from "@/components/SupportShell";
 import {
+  SUPPORT_ARTICLES,
   getArticleBySlug,
   getCategoryBySlug,
   type SupportLocale,
 } from "@/lib/knowledge-base";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 import {
-  ArrowLeft,
   CheckCircle2,
   ListChecks,
   ShieldCheck,
   Ticket,
 } from "lucide-react";
 
-export default function ArticlePage() {
-  const params = useParams();
-  const locale: SupportLocale =
-    params?.locale === "de-en" ? "de-en" : "de-de";
-  const articleSlug = String(params?.articleSlug || "");
+export function generateStaticParams() {
+  const locales = ["de-de", "de-en"];
+  const params: { locale: string; articleSlug: string }[] = [];
+  for (const locale of locales) {
+    for (const art of SUPPORT_ARTICLES) {
+      params.push({ locale, articleSlug: art.slug });
+    }
+  }
+  return params;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; articleSlug: string }>;
+}): Promise<Metadata> {
+  const { locale, articleSlug } = await params;
+  if (locale !== "de-de" && locale !== "de-en") {
+    return {};
+  }
+  const article = getArticleBySlug(articleSlug);
+  if (!article) {
+    return {};
+  }
+  const isDe = locale === "de-de";
+  const title = `${article.title[locale]} — ${
+    isDe ? "Zackisch Hilfe & Support" : "Zackisch Help & Support"
+  }`;
+  const description = article.summary[locale];
+  const canonicalUrl = `https://support.zackisch.com/${locale}/articles/${articleSlug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        "de-DE": `https://support.zackisch.com/de-de/articles/${articleSlug}`,
+        "en-DE": `https://support.zackisch.com/de-en/articles/${articleSlug}`,
+        "x-default": `https://support.zackisch.com/de-de/articles/${articleSlug}`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: "Zackisch",
+      images: [BRAND_ASSETS.ogImage],
+      locale: isDe ? "de_DE" : "en_US",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [BRAND_ASSETS.ogImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+export default async function ArticlePage({
+  params,
+}: {
+  params: Promise<{ locale: string; articleSlug: string }>;
+}) {
+  const { locale: rawLocale, articleSlug } = await params;
+  if (rawLocale !== "de-de" && rawLocale !== "de-en") {
+    notFound();
+  }
+  const locale: SupportLocale = rawLocale;
   const isDe = locale === "de-de";
 
   const article = getArticleBySlug(articleSlug);
-  const category = article ? getCategoryBySlug(article.categorySlug) : undefined;
-
   if (!article) {
-    return (
-      <SupportShell locale={locale}>
-        <div className="max-w-3xl mx-auto px-4 py-16 text-center space-y-4">
-          <h1 className="text-2xl font-bold">
-            {isDe ? "Anleitung nicht gefunden" : "Article not found"}
-          </h1>
-          <Link
-            href={`/${locale}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#173C2B] hover:underline"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>{isDe ? "Zurück zum Hilfe-Center" : "Back to Help Center"}</span>
-          </Link>
-        </div>
-      </SupportShell>
-    );
+    notFound();
   }
+  const category = getCategoryBySlug(article.categorySlug);
+
+  const breadcrumbsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: isDe ? "Hilfe-Center" : "Help Center",
+        item: `https://support.zackisch.com/${locale}`,
+      },
+      ...(category
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: category.title[locale],
+              item: `https://support.zackisch.com/${locale}/categories/${category.slug}`,
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: article.title[locale],
+              item: `https://support.zackisch.com/${locale}/articles/${article.slug}`,
+            },
+          ]
+        : [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: article.title[locale],
+              item: `https://support.zackisch.com/${locale}/articles/${article.slug}`,
+            },
+          ]),
+    ],
+  };
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title[locale],
+    description: article.summary[locale],
+    mainEntityOfPage: `https://support.zackisch.com/${locale}/articles/${article.slug}`,
+    publisher: {
+      "@type": "Organization",
+      name: "Zackisch",
+      url: "https://zackisch.com",
+      logo: {
+        "@type": "ImageObject",
+        url: BRAND_ASSETS.combinationMarkSvg,
+      },
+    },
+  };
 
   return (
     <SupportShell locale={locale}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8">
         <div className="flex items-center gap-2 text-xs font-semibold text-[#495A52]">
           <Link href={`/${locale}`} className="hover:text-[#14231D]">
@@ -156,7 +270,7 @@ export default function ArticlePage() {
         {/* Escalation to Support Ticket */}
         <div className="bg-white rounded-3xl border border-[#DDD7CA] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="text-sm font-bold">
+            <h3 className="text-sm font-bold text-[#14231D]">
               {isDe
                 ? "Frage noch nicht geklärt?"
                 : "Still need help with this topic?"}

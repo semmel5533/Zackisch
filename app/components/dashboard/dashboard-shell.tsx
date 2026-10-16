@@ -23,6 +23,7 @@ import { useTranslation } from "@/lib/i18n";
 import { useLanguageStore } from "@/store/language-store";
 import { useSidebarStore } from "@/store/sidebar-store";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 import type { Business } from "@/lib/types";
 import Image from "next/image";
 import { getImagePreviewUrl } from "@/lib/convex/client";
@@ -128,7 +129,7 @@ export function DashboardShell({
           >
             <div className="overflow-hidden">
               <Image
-                src="/combination_mark.svg"
+                src={BRAND_ASSETS.combinationMarkSvg}
                 alt="Zackisch logo"
                 width={100}
                 height={24}
@@ -339,8 +340,8 @@ export function DashboardShell({
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-canvas text-foreground">
           <div className="flex items-center">
             <Image
-              src="/combination_mark.svg"
-              alt="Zakkig"
+              src={BRAND_ASSETS.combinationMarkSvg}
+              alt="Zackisch"
               width={100}
               height={24}
               priority

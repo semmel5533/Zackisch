@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { SupportLocale } from "@/lib/knowledge-base";
 import { BookOpen, Ticket, ExternalLink, Globe } from "lucide-react";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 
 export function SupportShell({
   locale,
@@ -27,7 +28,7 @@ export function SupportShell({
           <div className="flex items-center gap-6">
             <Link href={`/${locale}`} className="flex items-center gap-2.5">
               <img
-                src="/combination_mark.svg"
+                src={BRAND_ASSETS.combinationMarkSvg}
                 alt="Zackisch"
                 className="h-7 w-auto"
               />

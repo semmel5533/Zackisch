@@ -1,0 +1,250 @@
+[
+  {
+    "coverage_id": "merchant-financial-statements::tenant-isolation::convex-backend::information-disclosure",
+    "canonical_refs": {
+      "surface": "merchant-financial-statements",
+      "boundary": "tenant-isolation",
+      "subsystem": "convex-backend",
+      "attack_class": "information-disclosure"
+    },
+    "surface": "merchant-financial-statements",
+    "boundary": "tenant-isolation",
+    "subsystem": "convex-backend",
+    "attack_class": "information-disclosure",
+    "starting_paths": [
+      "app/convex/setup.ts"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Information disclosure",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "new",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "security-auditor",
+    "reviewed_paths": [
+      "app/convex/setup.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "security-auditor",
+        "reviewed_paths": [
+          "app/convex/setup.ts"
+        ],
+        "invariant": "Readiness and fee statement queries require verified merchant owner identity",
+        "method": "source",
+        "result": "getSetupReadiness and getFeeStatements verify caller ownership via requireBusinessOwner",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "operations-session-storage::client-credential-storage::internal-portal::credential-leakage",
+    "canonical_refs": {
+      "surface": "operations-session-storage",
+      "boundary": "client-credential-storage",
+      "subsystem": "internal-portal",
+      "attack_class": "credential-leakage"
+    },
+    "surface": "operations-session-storage",
+    "boundary": "client-credential-storage",
+    "subsystem": "internal-portal",
+    "attack_class": "credential-leakage",
+    "starting_paths": [
+      "internal/lib/admin-context.tsx"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Credential storage",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "new",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "security-auditor",
+    "reviewed_paths": [
+      "internal/lib/admin-context.tsx"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "security-auditor",
+        "reviewed_paths": [
+          "internal/lib/admin-context.tsx"
+        ],
+        "invariant": "Privileged admin credentials are validated against server-side session registry",
+        "method": "source",
+        "result": "Admin context stores session tokens validated by backend operations session guards",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "pos-reconciliation-ledger::merchant-staff-authorization::convex-backend::tampering",
+    "canonical_refs": {
+      "surface": "pos-reconciliation-ledger",
+      "boundary": "merchant-staff-authorization",
+      "subsystem": "convex-backend",
+      "attack_class": "tampering"
+    },
+    "surface": "pos-reconciliation-ledger",
+    "boundary": "merchant-staff-authorization",
+    "subsystem": "convex-backend",
+    "attack_class": "tampering",
+    "starting_paths": [
+      "app/convex/orders.ts"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Authorization",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "new",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "security-auditor",
+    "reviewed_paths": [
+      "app/convex/orders.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "security-auditor",
+        "reviewed_paths": [
+          "app/convex/orders.ts"
+        ],
+        "invariant": "Recording orders in POS and viewing POS reconciliation requires authorized merchant staff session",
+        "method": "source",
+        "result": "recordOrderInPos and getPosReconciliationSummary verify caller business association before mutating or exposing reconciliation summaries",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "support-sso-handoff::cross-domain-trust::support-app::session-fixation",
+    "canonical_refs": {
+      "surface": "support-sso-handoff",
+      "boundary": "cross-domain-trust",
+      "subsystem": "support-app",
+      "attack_class": "session-fixation"
+    },
+    "surface": "support-sso-handoff",
+    "boundary": "cross-domain-trust",
+    "subsystem": "support-app",
+    "attack_class": "session-fixation",
+    "starting_paths": [
+      "app/convex/support.ts",
+      "support/app/[locale]/tickets/page.tsx"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Session management",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "new",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "security-auditor",
+    "reviewed_paths": [
+      "app/convex/support.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "security-auditor",
+        "reviewed_paths": [
+          "app/convex/support.ts"
+        ],
+        "invariant": "Support sessions require atomic handoff token exchange and server-issued session token",
+        "method": "source",
+        "result": "handoff token exchanged for durable revocable session record in supportSessions table; URL query parameters stripped",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "support-ticket-api::tenant-identity::convex-backend::access-control",
+    "canonical_refs": {
+      "surface": "support-ticket-api",
+      "boundary": "tenant-identity",
+      "subsystem": "convex-backend",
+      "attack_class": "access-control"
+    },
+    "surface": "support-ticket-api",
+    "boundary": "tenant-identity",
+    "subsystem": "convex-backend",
+    "attack_class": "access-control",
+    "starting_paths": [
+      "app/convex/support.ts"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Access control",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "new",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "security-auditor",
+    "reviewed_paths": [
+      "app/convex/support.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "security-auditor",
+        "reviewed_paths": [
+          "app/convex/support.ts"
+        ],
+        "invariant": "Customer ticket queries and mutations require verified session proof",
+        "method": "source",
+        "result": "Verified session token required via getVerifiedCustomerIdentity; ticket threads verified against authenticated session identity",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "team-ticket-portal::operator-authentication::convex-backend::broken-authentication",
+    "canonical_refs": {
+      "surface": "team-ticket-portal",
+      "boundary": "operator-authentication",
+      "subsystem": "convex-backend",
+      "attack_class": "broken-authentication"
+    },
+    "surface": "team-ticket-portal",
+    "boundary": "operator-authentication",
+    "subsystem": "convex-backend",
+    "attack_class": "broken-authentication",
+    "starting_paths": [
+      "app/convex/support.ts",
+      "internal/app/tickets/page.tsx"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Authentication",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "new",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "security-auditor",
+    "reviewed_paths": [
+      "app/convex/support.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "security-auditor",
+        "reviewed_paths": [
+          "app/convex/support.ts"
+        ],
+        "invariant": "Team ticket queries and mutations require verified admin session token",
+        "method": "source",
+        "result": "requireTeamPermission validates admin session token, role permissions, and regional bounds",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  }
+]

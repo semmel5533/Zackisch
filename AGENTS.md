@@ -8,17 +8,18 @@ Zackisch supplements, rather than replaces, the existing hospitality POS. Guests
 
 ## Canonical topology
 
-- `root/` (`name: root`): static/public `zackisch.com`.
+- `root/` (`name: root`): static/public `zackisch.com` (`output: "export"`), host of canonical brand assets under `public/`.
 - `app/` (`name: app`): `app.zackisch.com`, merchant, guest, staff, sole Convex project under `app/convex/`.
-- `support/` (`name: support`): `support.zackisch.com`, public localized help and private tickets.
-- `internal/` (`name: internal`): `internal.zackisch.com`, Team Dashboard for authorized Zackisch personnel.
-- `docs/`: canonical English technical, brand and operational documentation.
+- `support/` (`name: support`): `support.zackisch.com`, public localized SSR help center and private tickets.
+- `internal/` (`name: internal`): `internal.zackisch.com`, Team Dashboard for authorized Zackisch personnel (`noindex`).
+- `packages/design-system/` (`@zackisch/design-system`): shared tokens, Base UI primitives, domain components (`Price`, `QrSignageCard`), and metadata utilities.
+- `docs/`: canonical English technical, brand, operational, and tooling documentation (including `agent-tooling.md`).
 
-No second Convex project or database. Do not create more global packages than the actual implementation can justify. Maintain clear dependencies: UI -> validated application boundary -> authenticated/authorized domain operation -> Convex persistence/provider integration. Business rules, pricing and ownership checks belong on trusted server boundaries; a client business ID, region ID or menu price is never authority. All client-triggered Convex mutations must follow the established Next.js Server Action boundary; exceptions require security-reviewed architecture decision and tests.
+No second Convex project or database. All brand assets are canonically hosted under `https://zackisch.com/*` (`root/public/`) and imported via `BRAND_ASSETS` in `@zackisch/design-system`; duplicate binary assets must not be added to client apps. Maintain clear dependencies: UI -> validated application boundary -> authenticated/authorized domain operation -> Convex persistence/provider integration. Business rules, pricing and ownership checks belong on trusted server boundaries; a client business ID, region ID or menu price is never authority. All client-triggered Convex mutations must follow the established Next.js Server Action boundary; exceptions require security-reviewed architecture decision and tests.
 
 ## Framework and UI
 
-Before changing Next.js code, read version-matched guidance from installed `node_modules/next/dist/docs/` and verify that APIs work with Cloudflare Workers/vinext. Follow the active Next.js 16 `proxy.ts` convention where applicable, not obsolete middleware guidance. Prefer ESM, strict TypeScript, narrow domain modules and explicit contracts. For interactive primitives use Base UI; add accessible Zackisch design wrappers rather than mixing uncontrolled UI libraries. Tailwind-first presentation with shared semantic tokens; no arbitrary duplicated CSS systems. Use Phosphor for UI icons where supported, avoid emoji in code/product documentation. All visible UI strings, ARIA text, notices and localized links use `next-intl` keys; do not hardcode German/English strings in components. Region and language are different concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere.
+Before changing Next.js code, read version-matched guidance from installed `node_modules/next/dist/docs/` and verify that APIs work with Cloudflare Workers/vinext. Follow the active Next.js 16 `proxy.ts` convention where applicable, not obsolete middleware guidance. Prefer ESM, strict TypeScript, narrow domain modules and explicit contracts. For UI primitives, import from `@zackisch/design-system` built on Base UI; add accessible Zackisch design wrappers rather than mixing uncontrolled UI libraries. Tailwind-first presentation with shared semantic tokens; no arbitrary duplicated CSS systems. Use Phosphor for UI icons where supported, avoid emoji in code/product documentation. All visible UI strings, ARIA text, notices and localized links use `next-intl` keys; do not hardcode German/English strings in components. Region and language are different concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere. Support pages use React Server Components (SSR) with dynamic `generateMetadata`, `sitemap.ts`, and Schema.org JSON-LD.
 
 Maintain predictable interaction: explicit action labels, keyboard focus, logical tab order, clearly visible validation, proper empty/loading/error/offline states, WCAG 2.2 AA objective, responsive container-aware dashboards. Never modify real checkout disclosure or button wording solely for styling without testing applicable consumer purchase requirements.
 

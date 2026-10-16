@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { ReactQRCode } from "@lglab/react-qr-code";
 import { generateStaffSessionAction } from "@/actions/staff-actions";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 
 export function StaffSessionCard({
   staffToken: initialStaffToken,
@@ -116,7 +117,7 @@ export function StaffSessionCard({
                     style: "square",
                   }}
                   imageSettings={{
-                    src: "/combination_mark_qr.png",
+                    src: BRAND_ASSETS.combinationMarkQr,
                     height: 42,
                     width: 133,
                     excavate: true,

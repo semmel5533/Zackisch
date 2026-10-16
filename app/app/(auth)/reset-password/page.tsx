@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { resetPasswordAction } from "@/actions/auth-actions";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 import { useTranslation } from "@/lib/i18n";
 import { PaperPlaneRight, CircleNotch, ArrowLeft } from "@phosphor-icons/react";
 import { toast } from "sonner";
@@ -64,8 +65,8 @@ export default function ResetPasswordPage() {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src="/combination_mark.svg"
-            alt="zakkig"
+            src={BRAND_ASSETS.combinationMarkSvg}
+            alt="Zackisch"
             width={120}
             height={40}
             priority

@@ -10,7 +10,7 @@ Das Personal-Tablet zeigt eingehende Bestellungen und deren eindeutige Statusfol
 
 ## Technik
 
-Next.js 16, React 19, TypeScript, Tailwind CSS 4, `next-intl`, Base UI, Cloudflare Workers mit vinext. `convex/` ist die **einzige** Backend-Quelle für alle vier Zackisch-Anwendungen. Authentifizierung, Berechtigungen, Regions- und Betriebsisolation, Daten, Echtzeitfunktionen und Storage sind zentral. Zahlungsabwicklung über Stripe Connect; ausgehende System-E-Mails über Google Workspace und dafür geeignete serverseitige Convex-Actions.
+Next.js 16, React 19, TypeScript, Tailwind CSS 4, `next-intl`, `@zackisch/design-system` mit Base UI und Poppins-Tokens, Cloudflare Workers mit vinext. Alle Marken-Assets werden zentral über `https://zackisch.com/*` eingebunden. `convex/` ist die **einzige** Backend-Quelle für alle vier Zackisch-Anwendungen. Authentifizierung, Berechtigungen, Regions- und Betriebsisolation, Daten, Echtzeitfunktionen und Storage sind zentral. Setup-Readiness und Gebührenabrechnungen erzwingen serverseitig Betriebsinhaberschaft (`requireBusinessOwner`). Support-Übergaben erzeugen einmalige, atomar eingelöste Sitzungstokens (`supportSessions`). Zahlungsabwicklung über Stripe Connect; ausgehende System-E-Mails über Google Workspace und dafür geeignete serverseitige Convex-Actions.
 
 ## Entwicklung und Tests
 

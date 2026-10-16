@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { translations } from "./translations";
 import { ALL_LOCALES, parseLocale } from "./regions";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 
 export type LegalKind =
   | "legal"
@@ -62,14 +63,14 @@ export function legalMetadata(locale: string, kind: LegalKind): Metadata {
       description: t(`${kind}Description`),
       url: `https://zackisch.com${t(urlKey)}`,
       locale: t("openGraphLocale"),
-      images: ["/og_image.png"],
+      images: [BRAND_ASSETS.ogImage],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: t(`${kind}Title`),
       description: t(`${kind}Description`),
-      images: ["/og_image.png"],
+      images: [BRAND_ASSETS.ogImage],
     },
   };
 }

@@ -61,4 +61,10 @@ Customer-visible replies and internal notes **must be different server operation
 
 Confirmed critical/high findings block release until remediated and independently retested. A scanner output is a *lead*, not proof of exploitability; Cloudflare's skill has separate `confirmed`, `needs_validation`, and `rejected` classes. Unresolved security facts remain blockers when impact could be severe. Do not run offensive tests against production or unrelated systems; use isolated test deployment and explicit scopes. Keep actionable vulnerability details out of public marketing and screenshots. Publish only factual, conservative security language: `Zugriffe werden rollen- und betriebsbezogen geprüft` when verified, never `100 % sicher`.
 
+Audited artifacts for the current release candidate:
+- Cloudflare Coverage Ledger: [`docs/security-audit-coverage-ledger.json`](security-audit-coverage-ledger.json)
+- Cloudflare Findings Register: [`docs/security-audit-findings.json`](security-audit-findings.json)
+- Cursor Thermos Dual Review: [`docs/thermos-review.md`](thermos-review.md)
+- Agent Tooling & Security Framework: [`docs/agent-tooling.md`](agent-tooling.md)
+
 References: https://owasp.org/www-project-application-security-verification-standard/ ; https://github.com/cloudflare/security-audit-skill ; https://docs.convex.dev/ ; https://developers.cloudflare.com/workers/ .

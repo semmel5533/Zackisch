@@ -1,17 +1,16 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { SupportShell } from "@/components/SupportShell";
+import { SupportSearch } from "@/components/SupportSearch";
 import {
   SUPPORT_CATEGORIES,
   getFeaturedArticles,
-  searchArticles,
   type SupportLocale,
 } from "@/lib/knowledge-base";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 import {
-  Search,
   ArrowRight,
   CheckCircle2,
   Receipt,
@@ -19,15 +18,73 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export default function SupportHomePage() {
-  const params = useParams();
-  const locale: SupportLocale =
-    params?.locale === "de-en" ? "de-en" : "de-de";
+export function generateStaticParams() {
+  return [{ locale: "de-de" }, { locale: "de-en" }];
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (locale !== "de-de" && locale !== "de-en") {
+    return {};
+  }
   const isDe = locale === "de-de";
 
-  const [query, setQuery] = useState("");
+  const title = isDe
+    ? "Zackisch Hilfe & Support — Wissensdatenbank & Anleitungen"
+    : "Zackisch Help & Support — Knowledge Base & Guides";
+  const description = isDe
+    ? "Schritt-für-Schritt-Anleitungen zur einfachen Einrichtung, zur einmaligen Kassenerfassung (POS) und zu Stripe Connect Direktzahlungen."
+    : "Step-by-step guides for simple onboarding, single-entry POS recording, and Stripe Connect direct charges.";
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `https://support.zackisch.com/${locale}`,
+      languages: {
+        "de-DE": "https://support.zackisch.com/de-de",
+        "en-DE": "https://support.zackisch.com/de-en",
+        "x-default": "https://support.zackisch.com/de-de",
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://support.zackisch.com/${locale}`,
+      siteName: "Zackisch",
+      images: [BRAND_ASSETS.ogImage],
+      locale: isDe ? "de_DE" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [BRAND_ASSETS.ogImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+export default async function SupportHomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: rawLocale } = await params;
+  if (rawLocale !== "de-de" && rawLocale !== "de-en") {
+    notFound();
+  }
+  const locale: SupportLocale = rawLocale;
+  const isDe = locale === "de-de";
   const featured = getFeaturedArticles();
-  const searchResults = query.trim() ? searchArticles(locale, query) : [];
 
   return (
     <SupportShell locale={locale}>
@@ -49,101 +106,15 @@ export default function SupportHomePage() {
           </h1>
           <p className="text-sm sm:text-base text-[#DCEFE5]/90 max-w-2xl mx-auto">
             {isDe
-              ? "Schritt-für-Schritt-Anleitungen zur Einrichtung in 15 Minuten, zur einmaligen Kassenerfassung (POS) und zu Stripe Connect Direktzahlungen."
-              : "Step-by-step guides for 15-minute setup, single-entry POS recording, and Stripe Connect direct charges."}
+              ? "Schritt-für-Schritt-Anleitungen zur einfachen Einrichtung, zur einmaligen Kassenerfassung (POS) und zu Stripe Connect Direktzahlungen."
+              : "Step-by-step guides for simple onboarding, single-entry POS recording, and Stripe Connect direct charges."}
           </p>
 
-          <div className="max-w-2xl mx-auto relative">
-            <Search className="w-5 h-5 text-[#495A52] absolute left-4 top-1/2 -translate-y-1/2" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={
-                isDe
-                  ? "Suche nach Kasse, POS, TSE, Stripe, Trinkgeld, QR-Druck, Tablet..."
-                  : "Search for POS, receipt, Stripe, tips, QR printing, tablet..."
-              }
-              className="w-full h-13 pl-12 pr-4 rounded-full bg-white text-[#14231D] placeholder:text-[#6C7B73] text-sm font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-[#DCEFE5]"
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[#DCEFE5]">
-            <span>{isDe ? "Häufig gesucht:" : "Popular searches:"}</span>
-            {["Kasse erfassen", "Kein Kassenbeleg", "2 % Provision", "QR Ruhezone", "Tablet koppeln"].map(
-              (term) => (
-                <button
-                  key={term}
-                  type="button"
-                  onClick={() => setQuery(term)}
-                  className="px-3 py-1 rounded-full bg-[#245740]/80 hover:bg-[#245740] transition-colors cursor-pointer"
-                >
-                  {term}
-                </button>
-              )
-            )}
-          </div>
+          <SupportSearch locale={locale} />
         </div>
       </section>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-14">
-        {/* Live Search Results */}
-        {query.trim() !== "" && (
-          <section className="bg-white rounded-3xl border border-[#DDD7CA] p-6 sm:p-8 space-y-4 shadow-xs">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold">
-                {isDe
-                  ? `Suchergebnisse für „${query}“ (${searchResults.length})`
-                  : `Search results for "${query}" (${searchResults.length})`}
-              </h2>
-              <button
-                type="button"
-                onClick={() => setQuery("")}
-                className="text-xs font-semibold text-[#173C2B] hover:underline"
-              >
-                {isDe ? "Suche zurücksetzen" : "Clear search"}
-              </button>
-            </div>
-
-            {searchResults.length === 0 ? (
-              <div className="py-8 text-center space-y-3">
-                <p className="text-sm text-[#495A52]">
-                  {isDe
-                    ? "Kein passender Artikel gefunden. Unser Team hilft dir gerne direkt per Support-Ticket weiter."
-                    : "No matching article found. Our team is happy to help you via a support ticket."}
-                </p>
-                <Link
-                  href={`/${locale}/tickets`}
-                  className="inline-flex h-10 px-5 rounded-full bg-[#173C2B] text-white text-xs font-semibold items-center gap-2"
-                >
-                  <Ticket className="w-4 h-4" />
-                  <span>{isDe ? "Support-Ticket erstellen" : "Create Support Ticket"}</span>
-                </Link>
-              </div>
-            ) : (
-              <div className="divide-y divide-[#DDD7CA]">
-                {searchResults.map((article) => (
-                  <Link
-                    key={article.slug}
-                    href={`/${locale}/articles/${article.slug}`}
-                    className="py-4 flex items-start justify-between gap-4 hover:bg-[#F7F5EF]/60 px-3 rounded-2xl transition-colors"
-                  >
-                    <div className="space-y-1">
-                      <h3 className="text-sm font-semibold text-[#14231D]">
-                        {article.title[locale]}
-                      </h3>
-                      <p className="text-xs text-[#495A52]">
-                        {article.summary[locale]}
-                      </p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-[#245740] shrink-0 mt-1" />
-                  </Link>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
-
         {/* Critical POS & Fiscal Clarity Callout */}
         <section className="bg-[#DCEFE5]/60 border border-[#BFC8BE] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-3xl">
@@ -178,7 +149,7 @@ export default function SupportHomePage() {
         {/* Categories Grid */}
         <section className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold">
+            <h2 className="text-xl font-bold text-[#14231D]">
               {isDe ? "Themenbereiche" : "Browse by Category"}
             </h2>
             <span className="text-xs font-medium text-[#495A52]">
@@ -217,7 +188,7 @@ export default function SupportHomePage() {
 
         {/* Featured Tutorials */}
         <section className="space-y-6">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-bold text-[#14231D]">
             {isDe
               ? "Wichtigste Anleitungen für den Start"
               : "Most Important Guides to Get Started"}
@@ -250,7 +221,7 @@ export default function SupportHomePage() {
         {/* Direct Ticket Support CTA */}
         <section className="bg-white rounded-3xl border border-[#DDD7CA] p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="space-y-1.5">
-            <h2 className="text-lg font-bold">
+            <h2 className="text-lg font-bold text-[#14231D]">
               {isDe
                 ? "Du hast eine individuelle Frage zu deinem Betrieb?"
                 : "Need personalized help with your venue?"}

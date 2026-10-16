@@ -26,6 +26,12 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@zackisch/design-system": [
+        "../packages/design-system/src/index.ts"
+      ],
+      "@zackisch/design-system/*": [
+        "../packages/design-system/src/*"
       ]
     }
   },

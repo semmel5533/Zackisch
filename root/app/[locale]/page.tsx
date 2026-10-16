@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { MainPage } from "@/components/MainPage";
 import { translations } from "@/lib/translations";
 import { ALL_LOCALES, parseLocale } from "@/lib/regions";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 
 export function generateStaticParams() {
   return ALL_LOCALES.map((locale) => ({ locale }));
@@ -34,13 +35,13 @@ export async function generateMetadata({
       locale: lang === "de" ? "de_DE" : "en_US",
       siteName: "Zackisch",
       type: "website",
-      images: ["/og_image.png"],
+      images: [BRAND_ASSETS.ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title: t.metaTitle,
       description: t.metaDescription,
-      images: ["/og_image.png"],
+      images: [BRAND_ASSETS.ogImage],
     },
     robots: {
       index: true,
@@ -108,7 +109,7 @@ export default async function Page({
         "@id": "https://zackisch.com/#organization",
         "name": "Zackisch",
         "url": "https://zackisch.com",
-        "logo": "https://zackisch.com/combination_mark.svg",
+        "logo": BRAND_ASSETS.combinationMarkSvg,
         "sameAs": ["https://launchtomars.de"],
       },
       {

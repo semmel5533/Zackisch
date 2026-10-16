@@ -10,7 +10,9 @@ Der Ticketbereich führt offene und zugewiesene Fälle, Antworten, interne Notiz
 
 ## Technik und Entwicklung
 
-Next.js 16, React 19, TypeScript, Tailwind CSS 4, Base UI, lokalisierte UI-Texte und Cloudflare Workers/vinext. Backend ist die gemeinsame Convex-Instanz in `../app/convex`. In `internal/`: `npm ci` und die verfügbaren `dev`, `typecheck`, `test`, `build:cloudflare`, `check:cloudflare`-Kommandos aus `package.json`. Interne Funktionen dürfen nie öffentlich indexiert werden. Siehe [Architektur](../docs/architecture.md), [Berechtigungen](../docs/security.md), [Betrieb](../docs/operations.md).
+Next.js 16, React 19, TypeScript, Tailwind CSS 4, `@zackisch/design-system` mit Base UI und Poppins-Tokens, lokalisierte UI-Texte und Cloudflare Workers/vinext. Marken-Assets werden zentral über `https://zackisch.com/*` bezogen. Alle internen Seiten sind mit `robots: { index: false, follow: false }` gegen Suchmaschinen-Indexierung geschützt.
+
+Backend ist die gemeinsame Convex-Instanz in `../app/convex`. Alle Team- und Ticket-Operationen erfordern kryptografisch geprüfte Sitzungstokens (`requireTeamPermission`) und validieren Berechtigungsrollen sowie regionale Grenzen serverseitig. In `internal/`: `npm ci` und die verfügbaren `dev`, `typecheck`, `test`, `build:cloudflare`, `check:cloudflare`-Kommandos aus `package.json`. Siehe [Architektur](../docs/architecture.md), [Berechtigungen](../docs/security.md), [Betrieb](../docs/operations.md).
 
 ## Rechtliches und Datenschutz
 

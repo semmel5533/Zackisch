@@ -4,7 +4,7 @@ Die öffentliche Website unter `https://zackisch.com` erklärt Zackisch für Gas
 
 ## Technik
 
-Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, `next-intl`, zugängliche Base-UI-Primitiven und das gemeinsame Zackisch-Designsystem. Die Website wird über Cloudflare Workers mit vinext und überwiegend statisch vorgerenderten Inhalten ausgeliefert. Newsletter und andere dynamische Aktionen werden über bestehende zulässige Backend-Endpunkte abgewickelt; keine geheimen Schlüssel im statischen Frontend.
+Next.js 16 App Router mit statischem Export (`output: "export"`), React 19, TypeScript, Tailwind CSS 4, `next-intl`, `@zackisch/design-system` mit zugänglichen Base-UI-Primitiven und Poppins-Tokens. Die Anwendung hostet unter `public/` alle kanonischen Marken-Assets (`https://zackisch.com/*`), auf die alle Zackisch-Anwendungen zentral zugreifen. Newsletter und andere dynamische Aktionen werden über bestehende zulässige Backend-Endpunkte abgewickelt; keine geheimen Schlüssel im statischen Frontend.
 
 ## Regionen und Inhalte
 

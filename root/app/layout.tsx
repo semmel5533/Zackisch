@@ -2,6 +2,7 @@ import { Metadata, Viewport } from "next";
 import { Poppins, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { translations } from "@/lib/translations";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 
 const t = translations.de;
 
@@ -12,15 +13,15 @@ export const metadata: Metadata = {
     template: "Zackisch: %s",
   },
   icons: {
-    icon: "/icon.png",
-    apple: "/apple-touch-icon.png",
+    icon: BRAND_ASSETS.brandMark512,
+    apple: BRAND_ASSETS.appleTouchIcon,
   },
   openGraph: {
     title: t.metaTitle,
     description: t.metaDescription,
     url: "https://zackisch.com",
     siteName: "Zackisch",
-    images: ["/og_image.png"],
+    images: [BRAND_ASSETS.ogImage],
     locale: "de_DE",
     type: "website",
   },
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: t.metaTitle,
     description: t.metaDescription,
-    images: ["/og_image.png"],
+    images: [BRAND_ASSETS.ogImage],
   },
   other: {
     "geo.region": "DE",

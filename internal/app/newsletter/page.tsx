@@ -19,6 +19,7 @@ import {
   MoveDown,
 } from "lucide-react";
 import { toast } from "sonner";
+import { BRAND_ASSETS } from "@zackisch/design-system";
 
 interface ContentBlock {
   id: string;
@@ -458,7 +459,7 @@ export default function NewsletterHubPage() {
 
             <div className="bg-white rounded-2xl p-8 shadow-xs border border-zinc-200/80 max-w-md mx-auto space-y-6">
               <img
-                src="/combination_mark.svg"
+                src={BRAND_ASSETS.combinationMarkSvg}
                 alt="Zackisch"
                 className="h-7 w-auto block mb-6"
               />
