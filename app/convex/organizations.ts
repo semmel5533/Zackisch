@@ -1,0 +1,495 @@
+import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
+import { v } from "convex/values";
+
+const organizationObjectValidator = v.object({
+  _id: v.id("organizations"),
+  _creationTime: v.number(),
+  name: v.string(),
+  address: v.optional(v.string()),
+  logoStorageId: v.optional(v.union(v.id("_storage"), v.null())),
+  logoUrl: v.union(v.string(), v.null()),
+  bannerStorageId: v.optional(v.union(v.id("_storage"), v.null())),
+  bannerUrl: v.union(v.string(), v.null()),
+  ownerId: v.string(),
+  stripeAccountId: v.optional(v.string()),
+  stripeOnboardingComplete: v.optional(v.boolean()),
+  stripeChargesEnabled: v.optional(v.boolean()),
+  stripePayoutsEnabled: v.optional(v.boolean()),
+  stripeRequirementsStatus: v.optional(v.string()),
+  stripeCurrentlyDue: v.optional(v.array(v.string())),
+  stripePastDue: v.optional(v.array(v.string())),
+  stripeDisabledReason: v.optional(v.string()),
+  stripeFeeCollector: v.optional(v.string()),
+  stripeLossCollector: v.optional(v.string()),
+  stripeDashboardType: v.optional(v.string()),
+  stripeConnectedAt: v.optional(v.number()),
+  stripeLastSyncedAt: v.optional(v.number()),
+  isToGoEnabled: v.optional(v.boolean()),
+  isToStayEnabled: v.optional(v.boolean()),
+  legalName: v.optional(v.string()),
+  taxId: v.optional(v.string()),
+  vatId: v.optional(v.string()),
+  contactEmail: v.optional(v.string()),
+  contactPhone: v.optional(v.string()),
+  currency: v.optional(v.string()),
+  region: v.optional(v.string()),
+  partnerCode: v.optional(v.string()),
+  deletionRequested: v.optional(v.boolean()),
+  tables: v.optional(v.array(v.string())),
+  isPaused: v.optional(v.boolean()),
+  pauseReason: v.optional(v.string()),
+  posWorkflowConfirmedAt: v.optional(v.number()),
+  testOrderCompletedAt: v.optional(v.number()),
+  setupDismissedAt: v.optional(v.number()),
+});
+
+export const get = query({
+  args: { id: v.id("organizations") },
+  returns: v.union(v.null(), organizationObjectValidator),
+  handler: async (ctx, args) => {
+    const org = await ctx.db.get(args.id);
+    if (!org) return null;
+
+    let logoUrl: string | null = null;
+    if (org.logoStorageId) {
+      logoUrl = await ctx.storage.getUrl(org.logoStorageId);
+    }
+    let bannerUrl: string | null = null;
+    if (org.bannerStorageId) {
+      bannerUrl = await ctx.storage.getUrl(org.bannerStorageId);
+    }
+
+    return {
+      ...org,
+      logoUrl,
+      bannerUrl,
+    };
+  },
+});
+
+export const getByStripeAccountInternal = internalQuery({
+  args: { stripeAccountId: v.string() },
+  returns: v.union(v.null(), v.id("organizations")),
+  handler: async (ctx, args) => {
+    const org = await ctx.db
+      .query("organizations")
+      .withIndex("by_stripeAccountId", (q) =>
+        q.eq("stripeAccountId", args.stripeAccountId)
+      )
+      .first();
+    return org ? org._id : null;
+  },
+});
+
+export const getPublicRestaurant = query({
+  args: { id: v.id("organizations") },
+  returns: v.union(
+    v.null(),
+    v.object({
+      _id: v.id("organizations"),
+      name: v.string(),
+      legalName: v.optional(v.string()),
+      address: v.optional(v.string()),
+      taxId: v.optional(v.string()),
+      vatId: v.optional(v.string()),
+      contactEmail: v.optional(v.string()),
+      contactPhone: v.optional(v.string()),
+      logoUrl: v.union(v.string(), v.null()),
+      bannerUrl: v.union(v.string(), v.null()),
+      isToGoEnabled: v.optional(v.boolean()),
+      isToStayEnabled: v.optional(v.boolean()),
+      isPaused: v.optional(v.boolean()),
+      pauseReason: v.optional(v.string()),
+      stripeOnboardingComplete: v.optional(v.boolean()),
+      stripeChargesEnabled: v.optional(v.boolean()),
+      currency: v.optional(v.string()),
+      region: v.optional(v.string()),
+      tables: v.optional(v.array(v.string())),
+    })
+  ),
+  handler: async (ctx, args) => {
+    const org = await ctx.db.get(args.id);
+    if (!org) return null;
+    let logoUrl: string | null = null;
+    if (org.logoStorageId) {
+      logoUrl = await ctx.storage.getUrl(org.logoStorageId);
+    }
+    let bannerUrl: string | null = null;
+    if (org.bannerStorageId) {
+      bannerUrl = await ctx.storage.getUrl(org.bannerStorageId);
+    }
+    return {
+      _id: org._id,
+      name: org.name,
+      legalName: org.legalName || org.name,
+      address: org.address,
+      taxId: org.taxId,
+      vatId: org.vatId,
+      contactEmail: org.contactEmail,
+      contactPhone: org.contactPhone,
+      logoUrl,
+      bannerUrl,
+      isToGoEnabled: org.isToGoEnabled,
+      isToStayEnabled: org.isToStayEnabled,
+      isPaused: org.isPaused ?? false,
+      pauseReason: org.pauseReason,
+      stripeOnboardingComplete: org.stripeOnboardingComplete ?? false,
+      stripeChargesEnabled:
+        org.stripeChargesEnabled ?? org.stripeOnboardingComplete ?? false,
+      currency: org.currency || "EUR",
+      region: org.region || "de",
+      tables: org.tables,
+    };
+  },
+});
+
+export const getByOwner = query({
+  args: { ownerId: v.string() },
+  returns: v.union(v.null(), organizationObjectValidator),
+  handler: async (ctx, args) => {
+    const org = await ctx.db
+      .query("organizations")
+      .withIndex("by_ownerId", (q) => q.eq("ownerId", args.ownerId))
+      .first();
+
+    if (!org) return null;
+
+    let logoUrl: string | null = null;
+    if (org.logoStorageId) {
+      logoUrl = await ctx.storage.getUrl(org.logoStorageId);
+    }
+    let bannerUrl: string | null = null;
+    if (org.bannerStorageId) {
+      bannerUrl = await ctx.storage.getUrl(org.bannerStorageId);
+    }
+
+    return {
+      ...org,
+      logoUrl,
+      bannerUrl,
+    };
+  },
+});
+
+export const create = mutation({
+  args: {
+    name: v.string(),
+    ownerId: v.string(),
+    address: v.optional(v.string()),
+    logoStorageId: v.optional(v.union(v.id("_storage"), v.null())),
+    bannerStorageId: v.optional(v.union(v.id("_storage"), v.null())),
+    legalName: v.optional(v.string()),
+    taxId: v.optional(v.string()),
+    vatId: v.optional(v.string()),
+    contactEmail: v.optional(v.string()),
+    contactPhone: v.optional(v.string()),
+    currency: v.optional(v.string()),
+    region: v.optional(v.string()),
+    tables: v.optional(v.array(v.string())),
+  },
+  returns: v.id("organizations"),
+  handler: async (ctx, args) => {
+    const trimmedName = args.name.trim();
+    if (trimmedName.length === 0 || trimmedName.length > 100) {
+      throw new Error("Invalid organization name");
+    }
+    if (args.address && args.address.length > 200) {
+      throw new Error("Address too long");
+    }
+    if (args.tables) {
+      if (args.tables.length > 100) {
+        throw new Error("Too many tables");
+      }
+      for (const table of args.tables) {
+        const trimmed = table.trim();
+        if (trimmed.length < 1 || trimmed.length > 4) {
+          throw new Error("Table name must be between 1 and 4 characters");
+        }
+      }
+    }
+
+    const orgId = await ctx.db.insert("organizations", {
+      name: trimmedName,
+      ownerId: args.ownerId,
+      address: args.address,
+      logoStorageId: args.logoStorageId || undefined,
+      bannerStorageId: args.bannerStorageId || undefined,
+      stripeAccountId: undefined,
+      stripeOnboardingComplete: false,
+      stripeChargesEnabled: false,
+      stripePayoutsEnabled: false,
+      stripeRequirementsStatus: "unlinked",
+      isToGoEnabled: false,
+      isToStayEnabled: false,
+      legalName: args.legalName,
+      taxId: args.taxId,
+      vatId: args.vatId,
+      contactEmail: args.contactEmail,
+      contactPhone: args.contactPhone,
+      currency: args.currency ?? "EUR",
+      region: args.region || "de",
+      deletionRequested: false,
+      isPaused: false,
+      tables: args.tables ?? [],
+    });
+
+    return orgId;
+  },
+});
+
+export const update = mutation({
+  args: {
+    id: v.id("organizations"),
+    name: v.optional(v.string()),
+    address: v.optional(v.string()),
+    logoStorageId: v.optional(v.union(v.id("_storage"), v.null())),
+    clearLogo: v.optional(v.boolean()),
+    bannerStorageId: v.optional(v.union(v.id("_storage"), v.null())),
+    clearBanner: v.optional(v.boolean()),
+    stripeAccountId: v.optional(v.string()),
+    stripeOnboardingComplete: v.optional(v.boolean()),
+    stripeChargesEnabled: v.optional(v.boolean()),
+    stripePayoutsEnabled: v.optional(v.boolean()),
+    stripeRequirementsStatus: v.optional(v.string()),
+    stripeCurrentlyDue: v.optional(v.array(v.string())),
+    stripePastDue: v.optional(v.array(v.string())),
+    stripeDisabledReason: v.optional(v.string()),
+    stripeFeeCollector: v.optional(v.string()),
+    stripeLossCollector: v.optional(v.string()),
+    stripeDashboardType: v.optional(v.string()),
+    stripeConnectedAt: v.optional(v.number()),
+    stripeLastSyncedAt: v.optional(v.number()),
+    isToGoEnabled: v.optional(v.boolean()),
+    isToStayEnabled: v.optional(v.boolean()),
+    legalName: v.optional(v.string()),
+    taxId: v.optional(v.string()),
+    vatId: v.optional(v.string()),
+    contactEmail: v.optional(v.string()),
+    contactPhone: v.optional(v.string()),
+    currency: v.optional(v.string()),
+    region: v.optional(v.string()),
+    deletionRequested: v.optional(v.boolean()),
+    tables: v.optional(v.array(v.string())),
+    isPaused: v.optional(v.boolean()),
+    pauseReason: v.optional(v.string()),
+    posWorkflowConfirmedAt: v.optional(v.number()),
+    testOrderCompletedAt: v.optional(v.number()),
+    setupDismissedAt: v.optional(v.number()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const { id, clearLogo, clearBanner, ...patchData } = args;
+    if (patchData.name !== undefined) {
+      const trimmedName = patchData.name.trim();
+      if (trimmedName.length === 0 || trimmedName.length > 100) {
+        throw new Error("Invalid organization name");
+      }
+      patchData.name = trimmedName;
+    }
+    if (patchData.address !== undefined && patchData.address.length > 200) {
+      throw new Error("Address too long");
+    }
+    if (patchData.tables !== undefined) {
+      if (patchData.tables.length > 100) {
+        throw new Error("Too many tables");
+      }
+      for (const table of patchData.tables) {
+        const trimmed = table.trim();
+        if (trimmed.length < 1 || trimmed.length > 4) {
+          throw new Error("Table name must be between 1 and 4 characters");
+        }
+      }
+    }
+    const existing = await ctx.db.get(id);
+    if (!existing) throw new Error("Organization not found");
+
+    if (clearLogo && existing.logoStorageId) {
+      try {
+        await ctx.storage.delete(existing.logoStorageId);
+      } catch {
+        // ignore if already deleted
+      }
+      patchData.logoStorageId = undefined;
+    } else if (
+      args.logoStorageId &&
+      existing.logoStorageId &&
+      existing.logoStorageId !== args.logoStorageId
+    ) {
+      try {
+        await ctx.storage.delete(existing.logoStorageId);
+      } catch {
+        // ignore if already deleted
+      }
+    }
+
+    if (patchData.logoStorageId === null) {
+      patchData.logoStorageId = undefined;
+    }
+
+    if (clearBanner && existing.bannerStorageId) {
+      try {
+        await ctx.storage.delete(existing.bannerStorageId);
+      } catch {
+        // ignore if already deleted
+      }
+      patchData.bannerStorageId = undefined;
+    } else if (
+      args.bannerStorageId &&
+      existing.bannerStorageId &&
+      existing.bannerStorageId !== args.bannerStorageId
+    ) {
+      try {
+        await ctx.storage.delete(existing.bannerStorageId);
+      } catch {
+        // ignore if already deleted
+      }
+    }
+
+    if (patchData.bannerStorageId === null) {
+      patchData.bannerStorageId = undefined;
+    }
+
+    await ctx.db.patch(id, patchData);
+    return null;
+  },
+});
+
+export const syncStripeAccountStatusInternal = internalMutation({
+  args: {
+    organizationId: v.id("organizations"),
+    stripeAccountId: v.string(),
+    stripeOnboardingComplete: v.boolean(),
+    stripeChargesEnabled: v.boolean(),
+    stripePayoutsEnabled: v.boolean(),
+    stripeRequirementsStatus: v.string(),
+    stripeCurrentlyDue: v.array(v.string()),
+    stripePastDue: v.array(v.string()),
+    stripeDisabledReason: v.optional(v.string()),
+    stripeFeeCollector: v.string(),
+    stripeLossCollector: v.string(),
+    stripeDashboardType: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const existing = await ctx.db.get(args.organizationId);
+    if (!existing) return null;
+
+    const shouldPauseForRestriction =
+      existing.stripeOnboardingComplete && !args.stripeChargesEnabled;
+
+    await ctx.db.patch(args.organizationId, {
+      stripeAccountId: args.stripeAccountId,
+      stripeOnboardingComplete: args.stripeOnboardingComplete,
+      stripeChargesEnabled: args.stripeChargesEnabled,
+      stripePayoutsEnabled: args.stripePayoutsEnabled,
+      stripeRequirementsStatus: args.stripeRequirementsStatus,
+      stripeCurrentlyDue: args.stripeCurrentlyDue,
+      stripePastDue: args.stripePastDue,
+      stripeDisabledReason: args.stripeDisabledReason,
+      stripeFeeCollector: args.stripeFeeCollector,
+      stripeLossCollector: args.stripeLossCollector,
+      stripeDashboardType: args.stripeDashboardType,
+      stripeLastSyncedAt: Date.now(),
+      ...(shouldPauseForRestriction
+        ? {
+            isPaused: true,
+            pauseReason:
+              args.stripeDisabledReason ||
+              "Stripe-Auszahlungs- oder Zahlungsberechtigung eingeschränkt (KYC/Nachweise erforderlich).",
+          }
+        : {}),
+    });
+    return null;
+  },
+});
+
+export const cascadeDelete = internalMutation({
+  args: { organizationId: v.id("organizations") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const org = await ctx.db.get(args.organizationId);
+    if (!org) return null;
+
+    if (org.logoStorageId) {
+      await ctx.storage.delete(org.logoStorageId);
+    }
+    if (org.bannerStorageId) {
+      await ctx.storage.delete(org.bannerStorageId);
+    }
+
+    // Delete categories
+    const categories = await ctx.db
+      .query("menuCategories")
+      .withIndex("by_organizationId", (q) =>
+        q.eq("organizationId", args.organizationId)
+      )
+      .collect();
+    for (const cat of categories) {
+      await ctx.db.delete(cat._id);
+    }
+
+    // Delete items & their images
+    const items = await ctx.db
+      .query("menuItems")
+      .withIndex("by_organizationId", (q) =>
+        q.eq("organizationId", args.organizationId)
+      )
+      .collect();
+    for (const item of items) {
+      if (item.imageStorageId) {
+        await ctx.storage.delete(item.imageStorageId);
+      }
+      await ctx.db.delete(item._id);
+    }
+
+    // Preserve statutory order accounting data for §147 AO / GoBD retention by anonymizing guest email if orders exist
+    const orders = await ctx.db
+      .query("orders")
+      .withIndex("by_organizationId", (q) =>
+        q.eq("organizationId", args.organizationId)
+      )
+      .collect();
+    for (const order of orders) {
+      await ctx.db.patch(order._id, {
+        email: "anonymized-retention@zackisch.com",
+      });
+    }
+
+    // Delete order sessions
+    const orderSessions = await ctx.db
+      .query("orderSessions")
+      .withIndex("by_organizationId", (q) =>
+        q.eq("organizationId", args.organizationId)
+      )
+      .collect();
+    for (const s of orderSessions) {
+      await ctx.db.delete(s._id);
+    }
+
+    // Delete availability sessions
+    const availSessions = await ctx.db
+      .query("availabilitySessions")
+      .withIndex("by_organizationId", (q) =>
+        q.eq("organizationId", args.organizationId)
+      )
+      .collect();
+    for (const s of availSessions) {
+      await ctx.db.delete(s._id);
+    }
+
+    // Delete staff sessions
+    const staffSessions = await ctx.db
+      .query("staffSessions")
+      .withIndex("by_organizationId", (q) =>
+        q.eq("organizationId", args.organizationId)
+      )
+      .collect();
+    for (const s of staffSessions) {
+      await ctx.db.delete(s._id);
+    }
+
+    // Delete the organization itself
+    await ctx.db.delete(args.organizationId);
+    return null;
+  },
+});

@@ -1,0 +1,213 @@
+export const landingTranslations = {
+  de: {
+    heroLeft: "Deine Kasse bleibt.",
+    heroRight: "Deine Gäste bestellen selbst.",
+    heroFirst: "Deine Kasse bleibt.",
+    heroLast: "Deine Gäste bestellen selbst.",
+    heroSummary:
+      "Mit Zackisch bestellen und bezahlen deine Gäste per QR-Code – einfach auf dem Smartphone. Du richtest alles selbst ein, nutzt ein geeignetes vorhandenes Tablet und behältst deine gewohnte Kasse.",
+    navFlow: "So funktioniert’s",
+    navPricing: "Kosten",
+    navFaq: "FAQ",
+    signIn: "Anmelden",
+    signInUrl: "https://app.zackisch.com/sign-in",
+    flowUrl: "/de-de#ablauf",
+    pricingUrl: "/de-de#kosten",
+    faqUrl: "/de-de#faq",
+    logoAlt: "Zackisch – zur Startseite",
+    menuLabel: "Navigation öffnen",
+    closeMenu: "Navigation schließen",
+    flowTitle: "Du musst nichts ersetzen, was schon funktioniert.",
+    flowScan: "Scannen & auswählen",
+    flowScanText: "Das Menü öffnet sich direkt im Browser.",
+    flowPay: "Bestellen & bezahlen",
+    flowPayText: "Deine Gäste bestellen selbst. Am Tisch oder zum Abholen. Zackisch verbindet sich nicht automatisch mit deinem Kassensystem – du erfasst bezahlte Bestellungen weiterhin einfach in deiner vorhandenen Kasse.",
+    flowKitchen: "Vorbereiten",
+    flowKitchenText: "Die Bestellung erscheint auf deinem Personal-Tablet.",
+    benefitTitle: "Mehr Raum für Umsatz.",
+    benefitService:
+      "Deine Kunden bestellen und bezahlen selbst. Dein Team hat mehr Zeit für den Service – und dafür, dass Kunden gerne wiederkommen.",
+    benefitPrefix: "Bis zu",
+    benefitNumber: "30%",
+    benefitMetric: "mehr Umsatz im Branchenbeispiel",
+    benefitSource: "Quelle: me&u",
+    benefitSourceUrl:
+      "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
+    feePromise:
+      "Du zahlst keine Einrichtungspauschale und keine monatliche Zackisch-Grundgebühr. Für über Zackisch abgewickelte Bestellungen berechnen wir 2 % Plattformgebühr (inkl. USt. auf unsere Leistung, 0 % auf freiwilliges Trinkgeld), zzgl. Gebühren des Zahlungsdienstleisters. Keine Bestellung über Zackisch? Keine prozentuale Zackisch-Gebühr.",
+    setupTitle: "Ruckzuck eingerichtet.",
+    setupFirst: "Menü anlegen",
+    setupSecond: "QR-Codes ausdrucken und anbringen",
+    setupThird: "Personalsitzung öffnen",
+    setupNote:
+      "Ein Tablet, Internet und dein Angebot. Mehr brauchst du zum Start nicht.",
+    feeTitle: "Nur wenn bestellt wird.",
+    feeNumber: "2",
+    feeUnit: "%",
+    feeLabel: "Gebühr pro Bestellung",
+    feeNote: "2 % Zackisch-Plattformgebühr je abgewickelter Bestellung (inkl. USt. auf unsere Leistung, freiwilliges Trinkgeld ausgenommen), zzgl. Gebühren des Zahlungsdienstleisters.",
+    feeNoSetup: "Keine Einrichtungsgebühr",
+    feeNoMonthly: "Keine Monatsgebühr",
+    faqTitle: "Noch Fragen?",
+    faqApp: "Brauchen meine Kunden eine App?",
+    faqAppAnswer:
+      "Nein. Der QR-Code öffnet dein Menü direkt im Browser. Dort können deine Kunden bestellen und bezahlen.",
+    faqDevices: "Welche Geräte brauche ich?",
+    faqDevicesAnswer:
+      "Ein normales Tablet mit Browser und eine stabile Internetverbindung für das Personal. Deine Kunden nutzen ihr eigenes Handy.",
+    faqPickup: "Kann ich auch Bestellungen zum Abholen anbieten?",
+    faqPickupAnswer:
+      "Ja. Du kannst Bestellungen am Tisch, zum Abholen oder beides anbieten. Abholbestellungen erscheinen ebenfalls auf deinem Personal-Tablet.",
+    faqMenu: "Kann ich mein Menü selbst ändern?",
+    faqMenuAnswer:
+      "Ja. Du verwaltest Kategorien, Gerichte, Bilder und Preise in deinem Dashboard. Deine Kunden sehen das aktuelle Menü über denselben QR-Code.",
+    faqUnavailable: "Was mache ich, wenn ein Gericht ausverkauft ist?",
+    faqUnavailableAnswer:
+      "Du kannst Artikel als nicht verfügbar markieren und später wieder freigeben. So bestellen Kunden nur das, was du gerade anbieten kannst.",
+    faqOptions: "Sind Extras und Auswahlmöglichkeiten möglich?",
+    faqOptionsAnswer:
+      "Ja. Du kannst Auswahlmöglichkeiten und Extras mit eigenen Aufpreisen anlegen. Deine Kunden wählen sie direkt beim Bestellen.",
+    faqPayment: "Welche Zahlungsarten stehen meinen Kunden zur Verfügung?",
+    faqPaymentAnswer:
+      "Kunden können direkt über Apple Pay, Google Pay, Kreditkarte und weitere gängige Online-Zahlungsmethoden bezahlen. Die Abwicklung läuft sicher über Stripe.",
+    faqTips: "Können Kunden Trinkgeld geben?",
+    faqTipsAnswer:
+      "Ja. Deine Kunden können beim Bezahlen ganz einfach ein Trinkgeld mit vorgegebenen Beträgen oder einem freien Wunschbetrag hinzufügen.",
+    faqStart: "Was brauche ich, um Bestellungen anzunehmen?",
+    faqStartAnswer:
+      "Lege dein Konto und dein Menü an, richte den Zahlungsanbieter ein und verteile deine QR-Codes. Öffne anschließend die Personalsitzung auf deinem Tablet.",
+    faqPos: "Wie funktioniert das mit meiner Kasse?",
+    faqPosAnswer:
+      "Bestellungen überträgst du manuell als unbaren Umsatz in dein Kassensystem. Deine Transaktionen kannst du exportieren.",
+    faqPayout: "Wann und wie erhalte ich meine Auszahlungen?",
+    faqPayoutAnswer:
+      "Deine Einnahmen werden über dein verknüpftes Stripe-Konto automatisch und regelmäßig auf dein Bankkonto überwiesen.",
+    faqContract: "Gibt es eine Vertragslaufzeit oder Kündigungsfrist?",
+    faqContractAnswer:
+      "Nein. Es gibt keine Mindestvertragslaufzeit und keine Bindung. Du kannst Zackisch jederzeit nutzen, pausieren oder beenden.",
+    faqCosts: "Was kostet Zackisch?",
+    faqCostsAnswer:
+      "Die Registrierung ist kostenlos. Es gibt keine Einrichtungs- oder Monatsgebühr. Pro Bestellung berechnet Zackisch 2 % zzgl. der variablen Gebühren des Zahlungsanbieters.",
+    closingTitle: "Einfach ausprobieren.\nKostet ja nichts.",
+    contactLabel: "Irgendwas unklar?",
+    contactEmail: "selim@zackisch.com",
+    contactUrl: "mailto:selim@zackisch.com",
+    supportedBy: "Unterstützt durch",
+    marsUrl: "https://launchtomars.de",
+    regionDisplay: "Deutschland · Deutsch",
+    qrDemoUrl: "https://app.zackisch.com/",
+    qrDemoLabel: "Beispiel-QR-Code: öffnet Zackisch",
+    skipContent: "Zum Inhalt",
+    mainNavigation: "Hauptnavigation",
+    footerNavigation: "Rechtliche Informationen",
+    newsletterSectionTitle: "Zackisch Updates & Neuigkeiten",
+    newsletterSectionDesc:
+      "Erfahre zuerst von neuen Funktionen, Gastronomie-Tipps und regionalen Updates direkt per E-Mail.",
+  },
+  en: {
+    heroLeft: "Keep your register.",
+    heroRight: "Your guests order themselves.",
+    heroFirst: "Keep your register.",
+    heroLast: "Your guests order themselves.",
+    heroSummary:
+      "With Zackisch, your guests order and pay via QR code directly on their smartphone. You set everything up yourself, use an existing tablet, and keep your familiar POS.",
+    navFlow: "How it works",
+    navPricing: "Pricing",
+    navFaq: "FAQ",
+    signIn: "Sign in",
+    signInUrl: "https://app.zackisch.com/sign-in",
+    flowUrl: "/de-en#ablauf",
+    pricingUrl: "/de-en#kosten",
+    faqUrl: "/de-en#faq",
+    logoAlt: "Zackisch – home",
+    menuLabel: "Open navigation",
+    closeMenu: "Close navigation",
+    flowTitle: "No need to replace what already works.",
+    demoLabel: "Example screens with demo data",
+    flowScan: "Scan & choose",
+    flowScanText: "The menu opens right in the browser.",
+    flowPay: "Order & pay",
+    flowPayText: "Your guests order themselves. At the table or for pickup. Zackisch does not connect automatically to your till – you record paid orders in your existing POS.",
+    flowKitchen: "Prepare",
+    flowKitchenText: "The order appears on your staff tablet.",
+    benefitTitle: "More room for revenue.",
+    benefitService:
+      "Customers order and pay themselves. Your team has more time for service – and giving customers a reason to come back.",
+    benefitPrefix: "Up to",
+    benefitNumber: "30%",
+    benefitMetric: "more revenue in an industry example",
+    benefitSource: "Source: me&u",
+    benefitSourceUrl:
+      "https://news.microsoft.com/en-au/features/meu-helps-grow-revenues-for-hospitality-operators-and-provide-better-experiences-for-customers/",
+    feePromise:
+      "No setup fee, no monthly Zackisch base fee. For orders processed via Zackisch, we charge a 2% platform fee (VAT-inclusive, 0% on voluntary tips), plus payment provider fees. No orders through Zackisch? No Zackisch percentage fee.",
+    setupTitle: "Effortless setup.",
+    setupFirst: "Add your menu",
+    setupSecond: "Print and place QR codes",
+    setupThird: "Open staff session",
+    setupNote:
+      "A tablet, internet and your menu. That’s all you need to get started.",
+    feeTitle: "Only when orders come in.",
+    feeNumber: "2",
+    feeUnit: "%",
+    feeLabel: "Fee per order",
+    feeNote: "2% Zackisch platform fee per processed order (inclusive of VAT on our service, tips excluded), plus payment provider fees.",
+    feeNoSetup: "No setup fee",
+    feeNoMonthly: "No monthly fee",
+    faqTitle: "Any questions?",
+    faqApp: "Do my customers need an app?",
+    faqAppAnswer:
+      "No. The QR code opens your menu directly in the browser, where customers can order and pay.",
+    faqDevices: "What devices do I need?",
+    faqDevicesAnswer:
+      "A regular tablet with a browser and a stable internet connection for your staff. Customers use their own phones.",
+    faqPickup: "Can I also offer pickup orders?",
+    faqPickupAnswer:
+      "Yes. You can offer table ordering, pickup or both. Pickup orders also appear on your staff tablet.",
+    faqMenu: "Can I update the menu myself?",
+    faqMenuAnswer:
+      "Yes. Manage categories, dishes, photos and prices in your dashboard. Customers see the current menu through the same QR code.",
+    faqUnavailable: "What if a dish sells out?",
+    faqUnavailableAnswer:
+      "You can mark items as unavailable and enable them again later, so customers only order what you can currently offer.",
+    faqOptions: "Can customers choose extras and options?",
+    faqOptionsAnswer:
+      "Yes. You can set up options and extras with their own surcharges. Customers select them when ordering.",
+    faqPayment: "What payment methods can my customers use?",
+    faqPaymentAnswer:
+      "Customers can pay directly using Apple Pay, Google Pay, credit card and other popular online payment methods. Payments are processed securely via Stripe.",
+    faqTips: "Can customers leave a tip?",
+    faqTipsAnswer:
+      "Yes. When paying, customers can easily add a tip using preset amounts or a custom amount.",
+    faqStart: "What do I need to start taking orders?",
+    faqStartAnswer:
+      "Create your account and menu, set up your payment provider and put out your QR codes. Then open the staff session on your tablet.",
+    faqPos: "How does this work with my till?",
+    faqPosAnswer:
+      "You manually enter orders into your till as cashless sales. You can export your transactions.",
+    faqPayout: "When and how do I receive payouts?",
+    faqPayoutAnswer:
+      "Your revenue is automatically and regularly transferred to your bank account via your connected Stripe account.",
+    faqContract: "Is there a contract term or cancellation period?",
+    faqContractAnswer:
+      "No. There is no minimum contract term and no commitment. You can use, pause or stop using Zackisch at any time.",
+    faqCosts: "How much does Zackisch cost?",
+    faqCostsAnswer:
+      "Registration is free. There are no setup or monthly fees. Zackisch charges 2% per order, plus the payment provider’s variable fees.",
+    closingTitle: "Give it a spin.\nIt’s free to start.",
+    contactLabel: "Anything unclear?",
+    contactEmail: "selim@zackisch.com",
+    contactUrl: "mailto:selim@zackisch.com",
+    supportedBy: "Supported by",
+    marsUrl: "https://launchtomars.de",
+    regionDisplay: "Deutschland · English",
+    qrDemoUrl: "https://app.zackisch.com/",
+    qrDemoLabel: "Example QR code: opens Zackisch",
+    skipContent: "Skip to content",
+    mainNavigation: "Main navigation",
+    footerNavigation: "Legal information",
+    newsletterSectionTitle: "Zackisch Updates & News",
+    newsletterSectionDesc:
+      "Be the first to learn about new features, hospitality insights, and regional updates directly by email.",
+  },
+} as const;

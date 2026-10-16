@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --brand-ink: #192C25;
+  --brand-deep: #173C2B;
+  --brand-forest: #245740;
+  --brand-mint: #DCEFE5;
+  --brand-cream: #F7F5EF;
+  --brand-sand: #ECE7DC;
+  --brand-paper: #FFFFFF;
+  --brand-amber: #C97A10;
+  --brand-coral: #B42318;
+  --text-primary: #14231D;
+  --text-secondary: #495A52;
+  --text-muted: #6C7B73;
+  --border-subtle: #DDD7CA;
+  --border-strong: #BFC8BE;
+}
+
+body {
+  font-family: var(--font-poppins-variable), sans-serif;
+  background-color: var(--brand-cream);
+  color: var(--text-primary);
+}
+
+.font-num {
+  font-family: var(--font-inter-variable), sans-serif;
+  font-variant-numeric: tabular-nums;
+}

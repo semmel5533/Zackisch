@@ -1,0 +1,38 @@
+# Zackisch
+
+Zackisch ist eine moderne, digitale Bestell- und Bezahlplattform für die Gastronomie.
+Gäste bestellen und bezahlen per QR-Code direkt am Tisch oder zur Abholung im Smartphone-Browser — ohne App-Download und ohne Austausch des bestehenden Kassensystems.
+
+## Vision & Produkt
+
+- **Fokus:** Keine App-Downloads, schnelle Ladezeiten, einfache Bedienung im Browser und volle Kompatibilität mit dem vorhandenen Kassensystem (POS) und einem bestehenden Tablet.
+- **Mehrwert für Gastronomen:** Das Personal wird entlastet, jede bereits über Zackisch bezahlte Bestellung wird einmalig im vorhandenen Kassensystem erfasst.
+- **Mehrwert für Gäste:** Sofortige Speisekarte per QR-Code, direkte Online-Zahlung und herunterladbare Bestell- und Zahlungsbestätigung (kein Kassenbeleg und keine Rechnung).
+- **Faire Konditionen:** Keine Einrichtungsgebühr, keine monatliche Grundgebühr. 2 % Zackisch-Provision vom bezahlten Bruttowarenwert (ohne freiwilliges Trinkgeld, inklusive der auf unsere eigene Leistung gegebenenfalls entfallenden Umsatzsteuer) zzgl. der direkt von Stripe erhobenen Zahlungsgebühren.
+
+## Architektur & Technischer Stack
+
+Das Gesamtsystem besteht aus vier Webanwendungen und einem gemeinsamen reaktiven Backend:
+- **root/ (`https://zackisch.com`):** Öffentliche mehrsprachige Marketing- und Rechtswebsite (Next.js 16, Cloudflare Workers).
+- **app/ (`https://app.zackisch.com`):** Restaurant-Dashboard, Setup-Assistent, Personal-Ansicht, Verfügbarkeitsmanager und digitaler Gäste-Web-Checkout (Next.js 16, Cloudflare Workers).
+- **support/ (`https://support.zackisch.com`):** Öffentliches Hilfe-Center (`/de-de`, `/de-en`) und authentifiziertes Support-Ticket-System für Gastronomen (Next.js 16, Cloudflare Workers).
+- **internal/ (`https://internal.zackisch.com`):** Internes Team Dashboard für Regional-Admins und Mitarbeiter (Betriebe, Bestellungen, Support-Tickets, Partner-Provisionen, Newsletter, E-Mail-Log, Audit-Trail, 2FA-gesichert).
+- **Backend & Realtime-Datenbank:** Convex (`app/convex/` als gemeinsames Backend aller vier Apps) mit reaktiven Queries, Mutationen, kryptografischer Token-Sicherheit und serverseitiger Regions- und Mandantenisolation.
+- **E-Mail-Infrastruktur:** Google Workspace SMTP-Relay (`noreply@zackisch.com`, Reply-To `selim@zackisch.com`, persönlicher Support `selim@zackisch.com`).
+- **Zahlungsabwicklung:** Stripe Connect mit Direct Charges auf dem verbundenen Konto des Gastronomiebetriebs (Seller of Record) sowie eingebetteten Stripe-Connect-Komponenten.
+
+## Wichtige URLs
+
+- Startseite (Deutsch): https://zackisch.com/de-de
+- Homepage (English): https://zackisch.com/de-en
+- Hilfe & Support (DE): https://support.zackisch.com/de-de
+- Help & Support (EN): https://support.zackisch.com/de-en
+- Impressum (DE): https://zackisch.com/de-de/legal-notice
+- Datenschutzerklärung (DE): https://zackisch.com/de-de/privacy-policy
+- AGB (DE): https://zackisch.com/de-de/gtc
+- Auftragsverarbeitung (DE): https://zackisch.com/de-de/data-processing
+- Barrierefreiheit (DE): https://zackisch.com/de-de/accessibility
+
+## Kontakt & Förderung
+
+Kontakt: selim@zackisch.com. Unterstützt von MARS, dem Gründungszentrum der Technischen Hochschule Mannheim (https://launchtomars.de/startup/zakkig/).

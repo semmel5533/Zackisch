@@ -1,114 +1,116 @@
-# Design-System-Referenz
+# Zackisch design system
 
-Dies ist die quellcodebezogene Implementierungsreferenz für [DESIGN.md](../DESIGN.md). [AGENTS.md](../AGENTS.md) definiert verbindliche Zielvorgaben; die untenstehenden Quellverweise beschreiben den implementierten Stand. [UX-Forschung](ux-research.md) begründet die Richtlinien für Klarheit, Zugänglichkeit und Wiederherstellbarkeit.
+## 1. Design intent
 
-| ID | Bereich | Quelle |
+**Familiar hospitality, digital convenience without operational upheaval.** The system must feel capable and dependable but never like a dense enterprise POS. Visual simplicity means a small number of meaningful components, legible information hierarchy and understandable status—not empty whitespace at the expense of functionality. Four distinct contexts share accessibility, tokens, typography and interaction principles:
+
+- `root`: human, editorial, photographic, friendly and credible owner acquisition; show kitchens, cafes and real people in actual workflows rather than technology effects.
+- `app` owner: pragmatic, predictable, task-guided setup and management, especially on ordinary laptops and tablets.
+- `app` guest: restaurant-first, appetizing photographs, readable menu, no-account checkout, unmistakable payable total and order status.
+- `app` staff: fast at a glance, robust on older tablets, large controls, high-contrast order statuses, clear escalation when offline.
+- `support`: reader-first editorial layout, search and sequential tutorials with screenshots and deep links.
+- `internal`: professional, compact but readable Team Dashboard; information density is appropriate, not identical to the marketing page.
+
+Reference inspirations: PayPal's clear transactional communication; me&u's venue-oriented ordering and physical table signage; sunday's simple optional guest action; German competitors for buyer objections. **Do not copy trade dress, visual identity or proprietary assets**. No invented reviews/photography of fictitious Zackisch customers. Prefer real licensed shoots with venue/model consent; maintain asset attribution and rights internally.
+
+## 2. Identity and color decisions
+
+Preserve original Zackisch wordmark and symbol (`brand_mark`, `combination_mark`), subject to actual asset/licensing checks. Replace current generic purely monochrome tone with restrained **hospitality warmth** without losing monochrome legibility. This is a proposed implementable token specification—validate actual contrast and print tests before shipping.
+
+| Token | Proposed HEX | Usage |
 | --- | --- | --- |
-| [DS-01](#ds-tokens) | Gemeinsame Tokens | [webapp CSS](../webapp/app/globals.css), [website CSS](../website/app/globals.css) |
-| [DS-02](#ds-primitives) | Buttons, Felder, Karten | [webapp UI](../webapp/components/ui/), [website-Varianten](../website/components/ui/button-variants.ts) |
-| [DS-03](#ds-overlays) | Dialoge, Popups, Feedback | [dialog](../webapp/components/ui/dialog.tsx), [select](../webapp/components/ui/select.tsx), [website-Modal](../website/components/RegionLanguageModal.tsx) |
-| [DS-04](#ds-shells) | Dashboard- und Terminal-Shells | [dashboard](../webapp/components/dashboard/dashboard-shell.tsx), [staff](../webapp/components/staff/staff-terminal-shell.tsx) |
-| [DS-05](#ds-guest) | Gäste-Bestellablauf und Zahlung | [guest](../webapp/components/guest/guest-frontend.tsx), [cart](../webapp/components/guest/cart-sheet.tsx) |
-| [DS-06](#ds-qr) | QR, Druck, Ziffern | [overview](../webapp/components/dashboard/overview-content.tsx), [website QR](../website/components/QrCodeShowcase.tsx) |
-| [DS-07](#ds-website) | Marketing-Website | [page](../website/components/MainPage.tsx), [header](../website/components/Header.tsx) |
-| [DS-08](#ds-i18n) | Lokalisierung und Barrierefreiheit | [Regeln](../AGENTS.md), [Forschung](ux-research.md) |
-| [DS-09](#ds-decisions) | Evidenz und Design-Entscheidungen | [Audit](documentation-audit.md) |
-| [DS-10](#ds-more-primitives) | Zusätzliche Primitive | [webapp UI](../webapp/components/ui/) |
-| [DS-11](#ds-auth) | Authentifizierungsformulare | [auth layout](../webapp/app/%28auth%29/layout.tsx) |
-| [DS-12](#ds-menu) | Speisekarte und Verfügbarkeiten | [menu](../webapp/components/dashboard/menu-content.tsx), [availability](../webapp/components/availability/availability-content.tsx) |
-| [DS-13](#ds-overview) | Übersicht, Bestellarchiv, QR-Verwaltung | [overview](../webapp/components/dashboard/overview-content.tsx), [archive](../webapp/components/dashboard/all-orders-content.tsx) |
-| [DS-14](#ds-region) | Region und Sprache | [webapp](../webapp/components/region-language-dialog.tsx), [website](../website/components/RegionLanguageModal.tsx) |
-| [DS-15](#ds-15-tailwind-first-authoring) | Tailwind-Entwicklung | [Regeln](../AGENTS.md), [CSS-Quellen](../webapp/app/globals.css) |
+| `--brand-ink` | `#192C25` | Key headings, logo-adjacent text, primary action foreground in light contexts |
+| `--brand-deep` | `#173C2B` | Sparing action/identity green, hero overlay where contrast holds |
+| `--brand-cream` | `#F7F5EF` | Website/editorial warm background, QR premium paper |
+| `--brand-paper` | `#FFFFFF` | Cards, forms, print QR quiet zone |
+| `--brand-text` | `#1A2721` | Primary text on white |
+| `--brand-subtle` | `#53665B` | Secondary text after verified >=4.5:1 where normal text |
+| `--brand-line` | `#D6DED7` | Dividers; not sole focus indicator |
+| `--brand-success` | `#17643B` | Success with label and icon; contrast verification required |
+| `--brand-warning` | `#885200` | Warning with label; noncolor signal required |
+| `--brand-danger` | `#B42318` | Error/destructive; error text plus clear label |
+| `--brand-focus` | `#1E66B5` | Explicit focus outline, visible against light and dark surfaces |
 
-<a id="ds-tokens"></a>
-## DS-01: Tokens und berechnetes Rastersystem
+**Color policy:** A single semantic palette, not separate ad hoc CSS values in each app. Use green as a recognizable brand cue, not as universal card chrome. On guest surfaces, venue logos/food photos may dominate; Zackisch identity remains discreet but trustworthy. On staff screens, preserve high contrast and distinct textual statuses; avoid red/green alone. All text/background/active/hover/disability states must pass measured contrast, not just look good in Figma. Avoid trendy gradients, glass effects and saturated floating badges without a functional purpose. Use meaningful shadow only for layered elements.
 
-Beide Stylesheets nutzen eine schwarz-weiße semantische Basis mit gedämpfter Oberfläche `oklch(0.97 0 0)`, gedämpftem Text `oklch(0.5 0 0)`, subtilem Standard-Rahmen für Container und Steuerelemente `oklch(0.922 0 0)` (`--border` und webapp `--input`) sowie dezentem Seitenhintergrund `oklch(0.982 0 0)` (`--canvas`). Destruktives Rot ist `oklch(0.577 0.245 27.325)`. Website `--site-muted`, `--site-line` und `--site-soft` spiegeln jeweils gedämpften Text, Rahmen und gedämpfte Oberflächen wider. Die Webapp definiert helle Sidebar-Rollen (`--sidebar` in reinem Weiß `oklch(1 0 0)`): [Webapp Tokens](../webapp/app/globals.css), [Website Tokens](../website/app/globals.css).
+## 3. Typography
 
-Das gemeinsame Tailwind `--spacing` beträgt `0.25rem`: Bei 16px Basisschriftgröße entspricht `p-2 = 8px`, `p-4 = 16px`, `h-9 = 36px`, `h-11 = 44px` und `h-12 = 48px`. Die expliziten Eckenradien lauten `sm 4px`, `md 8px`, `lg 12px`, `xl 20px` und `2xl` bis `4xl 24px`. Es werden stets die definierten Tokens verwendet: [Webapp CSS](../webapp/app/globals.css), [Website CSS](../website/app/globals.css).
+**Poppins must remain part of Zackisch's permanent visual identity** because it underpins the existing logotype. Preserve approved `brand_mark` and `combination_mark` exactly—do not rebuild letters in text, stretch the icon, swap logo fonts or alter clear-space proportions. Use Poppins for logo-adjacent brand signatures, marketing/display headings and selected prominent app headings. Use **Inter selectively for dense UI body, tables and tabular amounts** if it improves working readability, but ensure consistent optical weight, line height and spacing with Poppins. A Poppins-only UI is also permitted after readability/performance validation; **eliminating Poppins or changing the mark is not an option**. Avoid per-digit font switching inside numbers. Introduce typography tokens (`font-brand`, `font-ui`, `font-numeric`) and test both families against actual German, English and print examples. Brand-aware color changes must respect the verified logo in mono/light/dark/real photography environments. Body text should normally be at least 16 CSS pixels on reading surfaces; 14px only for short, genuinely secondary UI labels with valid contrast. Avoid all-uppercase navigation by default and all-caps paragraphs. Use German sentence case; reserve striking capitals for short physical QR signage only if user tests support it.
 
-Reguläre Theme-Schatten nutzen den transparenten Standardwert `0 0 #0000`. Sichtbare Popups oder Dialoge erhalten gezielte Oberflächenschatten gemäß [Webapp Theme](../webapp/app/globals.css). Das [QR-Papier](../website/components/QrCodeShowcase.tsx) der Website verwendet einen bewussten physischen Schattenwurf.
+Suggested responsive hierarchy (adjust in implementation, preserve scale and WCAG):
 
-Sowohl die [Root-Layouts](../webapp/app/layout.tsx) als auch das [Website-Layout](../website/app/layout.tsx) laden Poppins und Inter. Poppins trägt Text und Wortmarken; Inter mit Tabellenziffern (`tabular-nums`) dient isolierten Ziffern und Dezimaltrennern. Die Webapp-Komponente [Price](../webapp/components/ui/price.tsx) hält Währungszeichen und Präfix außerhalb des Inter-Ziffern-Spans. Reine Versalschrift (All-Caps) ist strikt reserviert: Auf der Website wird sie exklusiv für Navigation und rechtliche Links ([Header](../website/components/Header.tsx), [SiteFooter](../website/components/SiteFooter.tsx)) für eine klare architektonische Strukturierung eingesetzt; in der Webapp ausschließlich für physische QR-Code-Beschriftungen ([Overview](../webapp/components/dashboard/overview-content.tsx)), um maximale Fernwirkung auf gedruckten Aufstellern und Stickern zu gewährleisten. Alle übrigen Benutzeroberflächen-Überschriften, Tabellenköpfe, Badges und Steuerelemente verwenden natürliche Groß-/Kleinschreibung in fetter Poppins (`text-sm font-bold text-foreground`).
+| Role | Desktop | Small viewport | Leading | Notes |
+| --- | --- | --- | --- | --- |
+| Marketing H1 | clamp(2.6rem, 5vw, 4.75rem) | 2.4rem min | 1.06–1.15 | Short, approximately 2 lines where possible |
+| Marketing H2 | clamp(2rem, 3.5vw, 3.25rem) | 2rem | 1.15–1.2 | Explanatory not abstract |
+| App page H1 | 1.5–1.75rem | 1.375rem | 1.25 | Stable page identity |
+| Article H1 | 2.25rem | 1.9rem | 1.2 | Reader-first |
+| Body/description | 1rem–1.125rem | 1rem | 1.5–1.65 | Paragraph width 60–75 characters |
+| Operational UI | 0.875–1rem | >=0.875rem | 1.35–1.5 | Prioritize fast scan |
+| Amounts/order IDs | 1.125–2rem | Responsive | 1.2 | `font-variant-numeric: tabular-nums` |
 
-<a id="ds-primitives"></a>
-## DS-02: Buttons, Felder und Karten
+Loading: prefer locally optimized font assets and `font-display: swap`, avoid unnecessary multiple weights/fonts, measure CLS and contrast. Never deliver license-restricted font files publicly unless licensing explicitly permits it.
 
-Der [Webapp-Button](../webapp/components/ui/button.tsx) und die [Website-Button-Varianten](../website/components/ui/button-variants.ts) teilen dieselbe Aktionshierarchie: schwarzer Standard (Default/Primary), weiße konturierte Schaltfläche (Outline), dezente Geister-Schaltfläche (Ghost) und roter destruktiver Button. `secondary` fungiert als kompatibler Alias für Outline. Standard-Buttons haben `h-11` (44px), kompakte `h-9` (36px), prominente Checkout-Buttons `h-12` (48px) und Icon-Controls 44px; kompakte Touch-Ziele vergrößern sich für grobe Zeiger auf mindestens 44px. Beschriftungen sind in 14px Semibold gehalten. Hover, aktive Skalierung (.98), Deaktivierungs-Deckkraft, 2px Fokusring mit 2px Versatz und `prefers-reduced-motion` sind zentral definiert.
+### Logo-integrity acceptance tests
 
-Das [Webapp-Input](../webapp/components/ui/input.tsx) ist ein mindestens 44px hohes weißes Eingabefeld mit 12px Eckenradius, dezentem `border-border`, klaren Fokus- und Fehlerzuständen und einer Standardbegrenzung auf 255 Zeichen. Die [Card](../webapp/components/ui/card.tsx) verwendet helle Oberflächen und einheitliche 20px Eckenradien.
+Verify true existing SVG/PNG assets as the source, light/dark/monochrome versions, accessible contrast in every background, consistent icon-to-wordmark proportion, sharp output from 1x through retina and A4 print, safe clearance around QR quiet zones, and documented licensed asset provenance. No AI-generated reconstruction of the Zackisch logo. New hospitality palette is a proposal only until demonstrated to harmonize with the source brand symbol and actual website/product screens.
 
-<a id="ds-overlays"></a>
-## DS-03: Overlays, Modals und Feedback
+## 4. Grid, spacing and shape
 
-Das [Webapp-Dialog](../webapp/components/ui/dialog.tsx) bietet einen hellen Rahmen (20px mobil, 24px Desktop) mit durchgehenden Trennlinien in Kopf- und Fußzeile. Alle Dialog- und Sheet-Köpfe mit Schließen-Aktion richten das 'X'-Icon vertikal exakt auf der Mittelachse des Titels aus (`flex items-center justify-between`). [Select](../webapp/components/ui/select.tsx) und [Dropdown](../webapp/components/ui/dropdown-menu.tsx) nutzen 20px Außenradien, 8px Innenabstand und 12px Zielbereiche für Einträge.
+- Spacing base: 4px scale; consistent 8, 12, 16, 24, 32, 48, 64px increments. Never cram touch targets to fit a card.
+- Page content: marketing up to 1200–1280px with deliberate visual pacing; support article text 720–800px max; dashboard content adapts to **container** width excluding sidebar.
+- Input: 44–48px minimum comfortable target height, visible permanent label, clear affordance and focus.
+- Buttons: primary/secondary/tertiary/quiet/destructive; choose one prominent action per task, not one per card indiscriminately. Pill shape may be used in marketing but operational control grouping requires visible alignment.
+- Cards: roughly 12–20px corners; dialogues 16–24px. Avoid nested cards on cards, strong outlines around every element and mystery click targets.
+- Shadows: almost none for routine content. Use a restrained elevation cue for menus, popovers, dialogs and physical product mockups.
+- No excessive fixed header covering focused fields; CSS `scroll-margin-top` and focus-aware scrolling.
 
-Das [RegionLanguageModal](../website/components/RegionLanguageModal.tsx) der Website nutzt natives `<dialog>` mit `showModal()`, Auswahlspeicherung, übersetzten Zielen, Klick-ins-Freie-/Escape-Schließen und Fokus-Wiederherstellung.
+## 5. Component catalogue and states
 
-[Sonner](../webapp/components/ui/sonner.tsx) stellt Toast-Benachrichtigungen dar. Diese erscheinen oben zentriert mit Icon links. Inline-Fehler werden linksbündig direkt am betroffenen Feld dargestellt; ein Toast dupliziert keine Fehlermeldung, die bereits im Formular sichtbar ist.
+Implement accessible wrappers around Base UI where supported: `Button`, `LinkButton`, `TextField`, `TextArea`, `Checkbox`, `RadioGroup`, `Switch`, `Select`, `Combobox`, `Tabs`, `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu`, `Toast`, `Alert`, `StatusBadge`, `ProgressList`, `EmptyState`, `Skeleton`, `DataTable`, `Pagination`, `Stepper`, `FileUpload`, `QRCodePrintPreview`, `RestaurantMenuItem`, `OrderCard`, `TicketThread`. Do not build abstract wrappers around components that are only used once without a concrete reason. Maintain consistent `aria-*`, Escape, focus trapping/return, keyboard activation and tap interaction.
 
-<a id="ds-shells"></a>
-## DS-04: Dashboard- und Terminal-Shells
+Each component has specified: anatomy, usage, variants, touch targets, loading/disabled/invalid/focus/hover/pressed states, keyboard interactions, localized copy and visual regressions. Provide a runnable story/demo page or isolated test fixture when cost-effective. Use design tokens in Tailwind utilities rather than hardcoded HEX repeated across apps. Do not force every app to use visually identical components when the task requires a special layout; shared semantics are mandatory, uniform density is not.
 
-Das [Dashboard](../webapp/components/dashboard/dashboard-shell.tsx) und die [Staff-Shell](../webapp/components/staff/staff-terminal-shell.tsx) bieten vollständig helle Flächen (`bg-sidebar text-sidebar-foreground` mit reinweißer Sidebar, `bg-canvas` mit dezentem `oklch(0.982 0 0)` für Seitenhintergründe und `bg-card` für Inhaltskarten), eine Breite von 288px (`w-72`), damit Einträge wie „Aktuelle Bestellungen“ ungekürzt dargestellt werden, schwarze Wortmarken (`brightness-0`), kontraststarke aktive Navigations-Pills (`bg-primary text-primary-foreground`) und eine durchgehende vertikale Trennlinie (`border-r border-border`). Auf Desktop-Bildschirmen teilen sich alle Dashboard-Header und die Sidebar-Kopfzeile eine Höhe von exakt 64px (`h-16`) mit vertikaler Mittelachse bei $y = 31.5\,\text{px}$, wodurch das Zackisch-Logo und die `h1`-Hauptüberschrift horizontal exakt fluchten. Die Zackisch-Wortmarke wird als nicht-klickbares statisches Branding dargestellt.
+## 6. Website IA and editorial compositions
 
-In der [Live-Bestellansicht](../webapp/components/dashboard/current-orders-content.tsx) teilen sich beide Spaltenköpfe („In Bearbeitung“ und „Abholbereit“) sowie der Kopf der ausgewählten Bestellkarte eine identische Höhe von exakt 60px (`h-[60px]`), sodass alle horizontalen Trennlinien über alle drei Spalten auf einer durchgehenden Achse liegen.
+1. **Hero:** Real owner/team or welcoming venue photograph with adequate text contrast; H1 `Deine Kasse bleibt. Deine Gäste bestellen selbst.`; two sentences max about optional QR orders, existing tablet and no monthly fee; primary `Kostenlos registrieren`, secondary `Voraussetzungen prüfen`; a small explicit `2 % ... zzgl. Zahlungsanbietergebühren` line.
+2. **How it complements service:** side-by-side existing POS and Zackisch staff-tablet workflow. Use true screenshot with explainers; never imply direct POS sync.
+3. **DIY in simple stages:** register; connect payments and menu; pair tablet; print/scan QR; supervised test; open. Each step links to current help.
+4. **Use your own devices:** clear compatibility list and printer examples, with unsupported cases and fallback.
+5. **Price:** 0€ setup, 0€ Zackisch monthly base, 2% per eligible processed order plus Stripe/provider fees. A realistic fee example only if verified; footnote refunds/taxes.
+6. **Voluntary guest ordering:** guests may still order traditionally; staff workload and guest choice, no false claims about adoption rates.
+7. **Security and continuity:** modest factual statements after audit: `Zugriffe sind rollen- und betriebsbezogen geschützt. Bei einer Störung bleibt deine bisherige Kasse nutzbar.` Not high-availability SLA unless contracted and measured.
+8. **FAQ:** core merchant objections; detailed tutorials live on support. Footer region/language, legal, privacy, accessibility where required and verified external links.
 
-<a id="ds-guest"></a>
-## DS-05: Gäste-Bestellablauf und Checkout
+Use editorial pace: alternating narrow explanatory copy, useful photos, real UI/product screenshot and whitespace. Avoid massive feature grids, fake KPI counters, generic gradient spheres, animation walls and enterprise acronyms.
 
-Das [Gäste-Frontend](../webapp/components/guest/guest-frontend.tsx) bündelt Speisekarte und Warenkorb in einer fokussierten Spalte und blendet nach Hinzufügen eines Artikels ein fixiertes unteres Warenkorb-Banner ein. Eine charakteristische schwarze Wellenlinie ([WaveLine](../webapp/components/ui/wave-line.tsx), `strokeWidth={2.25}`, einheitliche $16\,\text{px}$ Wellenlänge, $12\,\text{px}$ Höhe, $4.5\,\text{px}$ Amplitude) im Zackisch-QR-Stil trennt das Kopfprofil von der fixierten Kategorienleiste. Auf Mobilgeräten berücksichtigen Header und Footers die iOS-Safe-Areas (`pt-[max(1.5rem,env(safe-area-inset-top))]`, `pb-[max(1.5rem,env(safe-area-inset-bottom))]`).
+## 7. Guest UI specification
 
-Im [Warenkorb](../webapp/components/guest/cart-sheet.tsx) nutzen Mengensteuerungen kompakte Stepper (`h-7`, `p-0.5`, `size-6` Buttons, `min-w-[18px]` Ziffer, ca. 72px Breite). Im [Kassendialog](../webapp/components/guest/checkout-form.tsx) ist die E-Mail-Angabe optional: Eine standardmäßig deaktivierte Checkbox („Bestell- und Zahlungsbestätigung per E-Mail erhalten“) blendet bei Bedarf das E-Mail-Feld ein. Gäste können direkt nach der Zahlung eine eigenständige Bestell- und Zahlungsbestätigung als druckoptimierte HTML-Datei ([confirmation-generator](../webapp/lib/confirmation-generator.ts), `bestell-und-zahlungsbestaetigung-{orderNumber}.html`) herunterladen. Zackisch fungiert hierbei als technischer Vermittler der Zahlungsbestätigung; steuerliche Bewirtungsbelege stellt der gastronomische Betrieb aus.
+Guest journey: scan or open fallback URL -> venue identity/table or pickup context -> category and item selection -> clear option/price impacts -> cart review with taxes/fees and total -> payment method -> unmistakable payment commitment -> Stripe payment -> verified result and order tracker. Keep the venue recognizable; surface allergies/dietary info where legally and operationally appropriate and ensure the business can maintain it accurately. Item pictures must be genuine and not obscure prices. Show unavailable items plainly and prevent stale cart checkout with server revalidation. No mandatory account, no dark-pattern tip selection. Clear recovery from payment failure and loss of connectivity; never send duplicate order from repeated clicks.
 
-<a id="ds-qr"></a>
-## DS-06: QR-Codes, Druck und Ziffern
+## 8. Merchant and wizard UI specification
 
-Das [Website-QR-Showcase](../website/components/QrCodeShowcase.tsx) visualisiert einen echten, kontraststarken QR-Code auf einem leicht geneigten Blatt mit der einheitlichen [WaveLine](../website/components/WaveLine.tsx). Auf Mobilgeräten passt sich die Höhe dynamisch an (`max-[600px]:min-h-0 max-[600px]:px-[22px] max-[600px]:py-6`), um vertikale Verzerrungen zu vermeiden. Die QR-Code-Verwaltung und der Ausdruck erfolgen direkt über das [Dashboard](../webapp/components/dashboard/overview-content.tsx) per nativem Browser-Druckdialog (`window.print`). Physische Druckschilder nutzen kräftige Versalien für Fernwirkung und Lesbarkeit am Tisch.
+Owner home prioritizes `Ready to accept orders?` and a **persistent checklist** rather than sales-oriented dashboard charts. Show `Required`, `Recommended`, `Complete`, `Blocked`, `Needs attention`; reason and direct action for each item. Status computed server-side. Offer contextual help, explicit return to dashboard, ability to switch between setup and regular work, and straightforward way to pause QR ordering. Avoid mandatory onboarding tours and punitive progress gamification. The owner understands why a step matters and how to verify it.
 
-<a id="ds-website"></a>
-## DS-07: Marketing-Website
+## 9. Staff and internal operations
 
-Die Startseite ([MainPage](../website/components/MainPage.tsx)) führt durch Editorial Hero, QR-Showcase, Produktablauf („So einfach funktioniert's“), Einrichtungsablauf („Ruckzuck eingerichtet“, zentriert), Umsatzpotenzial („Mehr Raum für Umsatz“, linksbündig), Preismodell („Nur wenn bestellt wird“, linksbündig), FAQ-Akkordeon und Registrierungs-CTA. Der [Header](../website/components/Header.tsx) nutzt lokalisierte Hash-Links und ein tastaturbedienbares Mobilmenü mit Escape-Unterstützung.
+Staff order queue visible at actual working distance: large ticket number/table, item list, order time/status, payment verification and clear one-step transitions; prevent accidental premature completion through affordance and reversible behavior as appropriate. No hidden essential action behind hover; touch targets >=44px for primary work, typography readable at a distance. On connection loss show prominent last-sync status and no false live indicator.
 
-Die charakteristische schwarze [WaveLine](../website/components/WaveLine.tsx) liegt exklusiv direkt über dem Footer. Die Bereiche „Mehr Raum für Umsatz“ und „Nur wenn bestellt wird“ nutzen den Steinstruktur-Hintergrund des Hero-Bereichs (`bg-[#e7e7e7] bg-[url('/hero-stone-bg.webp')]`) mit oberen und unteren Trennlinien (`border-y border-[var(--site-line)]`), einer inneren Trennlinie (`border-black/20`) und kontraststarkem Fließtext (`text-black/75` für WCAG AAA Lesbarkeit). Alle übrigen Abschnittsübergänge werden durch standardmäßige feine Rahmen getrennt. Zwischen dem FAQ-Akkordeon und dem Footer ist ein eigenständiger Newsletter-Bereich mit Double-Opt-In platziert. Im [Footer](../website/components/SiteFooter.tsx) sitzt das Eichhörnchen-Maskottchen ungestört an der unteren Blattkante, während Navigations- und Rechtslinks spationierte Versalien (`uppercase tracking-[0.08em]`) nutzen. Das Brand-Mark-Icon wird zur Gewährleistung bester Lesbarkeit auf Dark-Mode-Browserleisten in einem reinweißen, abgerundeten Container ausgeliefert.
+Team Dashboard offers dense, consistent grids, strong keyboard/focus, reliable region and permission context, query filters that persist through ticket detail navigation and overt difference between `Antwort an Betrieb` and `Interne Notiz`. Keep escalation and assignment comprehensible; no visual redesign that breaks current newsletter/partner flows.
 
-<a id="ds-i18n"></a>
-## DS-08: Lokalisierung und Barrierefreiheit
+## 10. Support and physical QR
 
-[AGENTS.md](../AGENTS.md) verlangt vollständig übersetzte Benutzeroberflächen, muttersprachliche Regionsbezeichnungen (Endonyme), Phosphor-Icons und sichtbares visuelles Feedback. Beide Button-Fundamente definieren Tastaturfokus und Reduzierte-Bewegung-Regeln. [UX-Forschung](ux-research.md) deckt Kontraste, Tastaturfokus, Mindestzielgrößen, Reflow und Fehlerbehandlung ab.
+Support landing centers the search box and popular owner questions. Every tutorial uses a consistent sidebar/TOC, prerequisites, numbered steps, current screenshots with text alternatives and next links. Ticket UI shows organization and response visibility.
 
-<a id="ds-decisions"></a>
-## DS-09: Evidenz und Design-Entscheidungen
+Physical QR template is a **product touchpoint** not a marketing poster. Short actionable headline, a large high-contrast actual QR, recognizable table identifier, venue name and visible fallback address. Unnecessary decorative marks must not touch the QR quiet zone. See `qr-and-print.md` for dimensions, reproducible printing and device scan tests.
 
-Das 4px-Raster, die schwarzen Primäraktionen, die Trennung zwischen Poppins und Inter sowie die spezifischen Radien sind konsistente Markenentscheidungen für Zackisch. Das [Dokumentations-Audit](documentation-audit.md) erfasst den verifizierten Implementierungsstand.
+## 11. Design review acceptance
 
-<a id="ds-more-primitives"></a>
-## DS-10: Zusätzliche UI-Primitive
+- Measured contrast for all tokens/variants including image overlays and forms; WCAG 2.2 AA passes in automated and manual review.
+- Test mobile 320/360/390, tablets 768/1024, desktop 1440, 200–400% zoom/reflow, motion reduction, dark/OS settings if supported.
+- Keyboard-only traversal of registration, wizard, checkout, article search/tickets and internal response; screen-reader sanity tests with NVDA or VoiceOver.
+- Usability tasks completed with representative real users when available, observations recorded and prioritized; do not fabricate usability research outcomes.
+- Actual scans and print tests with A4 home printer and external printing variant; no ornamental demo QR in production.
+- Copy reviewed for owner understanding of POS, fees, DIY and failure fallback; release screenshots match implemented UI.
 
-[Checkbox](../webapp/components/ui/checkbox.tsx), [Switch](../webapp/components/ui/switch.tsx), [Tabs](../webapp/components/ui/tabs.tsx), [Textarea](../webapp/components/ui/textarea.tsx), [OTP-Eingabe](../webapp/components/ui/input-otp.tsx), [Table](../webapp/components/ui/table.tsx), [Pagination](../webapp/components/ui/pagination.tsx), [Avatar](../webapp/components/ui/avatar.tsx), [Tooltip](../webapp/components/ui/tooltip.tsx), [Popover](../webapp/components/ui/popover.tsx) und [ScrollArea](../webapp/components/ui/scroll-area.tsx) kapseln ihr lokales Verhalten. Der Tooltip unterstützt zusätzlich zum Hover auch Tap/Click-Toggling für mobile Geräte.
-
-<a id="ds-auth"></a>
-## DS-11: Authentifizierungsformulare
-
-Das [Auth-Layout](../webapp/app/%28auth%29/layout.tsx) zentriert helle Karten und Eingabefelder. Die [Anmeldung](../webapp/app/%28auth%29/sign-in/page.tsx) leitet von Zugangsdaten zum OTP-Code über, begleitet von Timer und Fehleranzeigen. Eingegebene Werte, Ladezustände und linksbündige Korrekturhinweise bleiben konsistent erhalten.
-
-<a id="ds-menu"></a>
-## DS-12: Speisekarte und Verfügbarkeiten
-
-Die [Kartenverwaltung](../webapp/components/dashboard/menu-content.tsx) koordiniert Kategorien und Artikel. Innerhalb von Kategorien werden Artikel über Pfeil-Schaltflächen neu geordnet. Der [ItemWorkspace](../webapp/components/dashboard/menu/item-workspace.tsx) und der [CustomizationBuilder](../webapp/components/dashboard/menu/customization-builder.tsx) ermöglichen die Bearbeitung von Bildern, Optionen, Freimengen und Preisen. [Verfügbarkeiten](../webapp/components/availability/availability-content.tsx) bietet Schnellschalter für den operativen Betrieb.
-
-<a id="ds-overview"></a>
-## DS-13: Übersicht, Bestellarchiv und QR-Verwaltung
-
-Die [Übersicht](../webapp/components/dashboard/overview-content.tsx) bündelt Kennzahlenkarten, Diagramme und die Tischverwaltung. Das [Bestellarchiv](../webapp/components/dashboard/all-orders-content.tsx) enthält Suche, Filter, Bestelltabelle und Paginierung. Ein Klick auf eine Bestellnummer kopiert diese in die Zwischenablage und bestätigt den Vorgang per Toast.
-
-<a id="ds-region"></a>
-## DS-14: Region und Sprache
-
-Der [Webapp-Auswahldialog](../webapp/components/region-language-dialog.tsx) und das [Website-Modal](../website/components/RegionLanguageModal.tsx) ermöglichen die Auswahl von Region und Sprache über Modals mit muttersprachlichen Länderendonymen und Bestätigung.
-
-<a id="ds-15-tailwind-first-authoring"></a>
-## DS-15: Tailwind-First-Entwicklung
-
-Die Richtlinien verlangen Tailwind-Utilities für alle Gestaltungsaufgaben: Layout, Abstände, Typografie, Varianten für Viewports und Container, Pseudoklassen und Übergänge. Benutzerdefiniertes CSS ist reserviert für Tokens, Webfonts, Resets, Keyframes und plattformspezifische Randbedingungen.
+Primary accessibility source: https://www.w3.org/TR/WCAG22/ . Related principles: https://www.nngroup.com/articles/progressive-disclosure/ ; https://www.nngroup.com/articles/recognition-and-recall/ .
