@@ -47,7 +47,9 @@ Die Anwendungen besitzen eigene `package.json` und `package-lock.json` mit unabh
 
 Vor einem Release werden Builds und Typprüfung aller vier Anwendungen, Convex-Verträge, Zahlungs- und Rechte-Tests, Barrierefreiheit, Security-Audit, Qualitätsreview und browserbasierte End-to-End-Tests durchgeführt. Testergebnisse müssen tatsächlich reproduzierbar sein. Die wichtigsten Qualitätsgrenzen stehen unter [docs/testing-and-release.md](docs/testing-and-release.md).
 
-## Commit- und Versionierungsregeln
+## Commit-, Branching- und Versionierungsregeln
+
+Fürs Erste erfolgen alle Entwicklungsarbeiten und Commits direkt auf dem `main`-Branch und werden direkt auf `main` gepusht, ohne separate Feature-Branches anzulegen.
 
 Commit-Texte sind natürliches Englisch, vollständig kleingeschrieben, in der Vergangenheitsform, ohne Präfixe wie `feat:` und ohne abschließende Satzzeichen. Betroffene Projekte werden konkret benannt. Zusammengehörende Schritte dürfen mit `and` verbunden werden. Die hinterlegte Commit-Identität lautet `Selim Eser <semmel5533@gmail.com>`.
 

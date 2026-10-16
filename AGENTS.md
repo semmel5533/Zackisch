@@ -47,6 +47,7 @@ Read and update the relevant German README and English `docs/*.md` in the same c
 
 ## Commits and Semantic Versioning — preserve repository convention
 
+- Branching and integration: for now, all work is committed directly on the `main` branch and pushed directly to `main`; do not create separate feature branches.
 - Commit messages: English, 100% lowercase, past-tense action, concise technical scope, no terminal punctuation, no emoji, no Conventional Commit prefix; join related actions with `and`.
 - Examples: `added support ticket replies on internal and updated authorization tests`; `updated qr print templates on app and corrected locale links`.
 - Commit identity: `Selim Eser <semmel5533@gmail.com>` as specified by repository owner; verify configured identity.
