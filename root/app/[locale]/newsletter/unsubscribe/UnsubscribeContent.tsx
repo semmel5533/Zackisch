@@ -64,29 +64,29 @@ export function UnsubscribeContent({ locale }: { locale: string }) {
     <div className="w-full max-w-md bg-white border border-black/10 rounded-3xl p-8 sm:p-10 shadow-sm text-center flex flex-col items-center">
       {status === "success" ? (
         <>
-          <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
-            <CheckCircle size={36} weight="fill" />
+          <div className="w-14 h-14 rounded-full bg-[#161616] text-white flex items-center justify-center mb-4">
+            <CheckCircle size={32} weight="fill" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight mb-2">
+          <h1 className="text-2xl font-bold tracking-tight mb-2 text-[#0A0A0A] font-brand">
             {isDe ? "Erfolgreich abgemeldet" : "Successfully unsubscribed"}
           </h1>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+          <p className="text-sm text-[#525252] leading-relaxed mb-6">
             {isDe
               ? "Du wurdest aus dem Newsletter-Verteiler ausgetragen und erhältst keine Marketing-E-Mails mehr von Zackisch."
               : "You have been removed from the newsletter list and will no longer receive marketing emails from Zackisch."}
           </p>
           <Link href={`/${locale}`}>
-            <Button className="rounded-full px-6 h-11 text-sm font-semibold">
+            <Button className="rounded-full px-6 h-11 text-sm font-semibold bg-[#161616] text-white hover:bg-[#252525]">
               {isDe ? "Zurück zur Startseite" : "Back to Home"}
             </Button>
           </Link>
         </>
       ) : (
         <>
-          <h1 className="text-2xl font-bold tracking-tight mb-2">
+          <h1 className="text-2xl font-bold tracking-tight mb-2 text-[#0A0A0A] font-brand">
             {isDe ? "Newsletter abmelden" : "Unsubscribe from Newsletter"}
           </h1>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+          <p className="text-sm text-[#525252] leading-relaxed mb-6">
             {token
               ? isDe
                 ? "Möchtest du dich wirklich vom Zackisch-Newsletter abmelden?"
@@ -97,7 +97,7 @@ export function UnsubscribeContent({ locale }: { locale: string }) {
           </p>
 
           {status === "error" && (
-            <div className="w-full flex items-center gap-2 p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-600 font-medium mb-4 text-left">
+            <div className="w-full flex items-center gap-2 p-3 bg-[#FFF1EF] border border-[#FECDCA] rounded-xl text-xs text-[#B42318] font-medium mb-4 text-left">
               <WarningCircle size={16} weight="bold" className="shrink-0" />
               <span>{errorMessage}</span>
             </div>
@@ -108,7 +108,7 @@ export function UnsubscribeContent({ locale }: { locale: string }) {
               <Button
                 onClick={() => handleUnsubscribe()}
                 disabled={status === "loading"}
-                className="w-full h-11 rounded-full text-sm font-semibold inline-flex items-center justify-center gap-2"
+                className="w-full h-11 rounded-full text-sm font-semibold bg-[#161616] text-white hover:bg-[#252525] inline-flex items-center justify-center gap-2"
               >
                 {status === "loading" ? (
                   <CircleNotch size={16} className="animate-spin" />
@@ -117,7 +117,7 @@ export function UnsubscribeContent({ locale }: { locale: string }) {
                 )}
               </Button>
               <Link href={`/${locale}`} className="w-full">
-                <Button variant="outline" className="w-full h-11 rounded-full text-sm font-semibold">
+                <Button variant="outline" className="w-full h-11 rounded-full text-sm font-semibold border-[#E0E0E0] text-[#161616] hover:bg-[#F7F7F7]">
                   {isDe ? "Abbrechen" : "Cancel"}
                 </Button>
               </Link>
@@ -130,12 +130,12 @@ export function UnsubscribeContent({ locale }: { locale: string }) {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={isDe ? "deine@email.de" : "you@company.com"}
                 required
-                className="h-11 rounded-full border border-black/15 bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black text-center"
+                className="h-11 rounded-full border border-[#E0E0E0] bg-white px-4 text-sm text-[#161616] placeholder:text-[#959595] focus-visible:border-[#161616] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#161616] text-center"
               />
               <Button
                 type="submit"
                 disabled={status === "loading"}
-                className="w-full h-11 rounded-full text-sm font-semibold inline-flex items-center justify-center gap-2"
+                className="w-full h-11 rounded-full text-sm font-semibold bg-[#161616] text-white hover:bg-[#252525] inline-flex items-center justify-center gap-2"
               >
                 {status === "loading" ? (
                   <CircleNotch size={16} className="animate-spin" />
