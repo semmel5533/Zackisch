@@ -15,23 +15,26 @@ Reference inspirations: PayPal's clear transactional communication; me&u's venue
 
 ## 2. Identity and color decisions
 
-Preserve original Zackisch wordmark and symbol (`brand_mark`, `combination_mark`), subject to actual asset/licensing checks. Replace current generic purely monochrome tone with restrained **hospitality warmth** without losing monochrome legibility. This is a proposed implementable token specification—validate actual contrast and print tests before shipping.
+Preserve original Zackisch wordmark and symbol (`brand_mark`, `combination_mark`) and **Poppins** typography. The design system is built upon a **strictly monochrome** canvas: pure white (`#FFFFFF`), pure black (`#0A0A0A` / `#161616`), and nuanced neutral grays (`#F7F7F7` to `#252525`). Sparing functional status colors provide feedback for payment confirmations, alert states, and operational queues without distracting from venue content.
 
-| Token | Proposed HEX | Usage |
-| --- | --- | --- |
-| `--brand-ink` | `#192C25` | Key headings, logo-adjacent text, primary action foreground in light contexts |
-| `--brand-deep` | `#173C2B` | Sparing action/identity green, hero overlay where contrast holds |
-| `--brand-cream` | `#F7F5EF` | Website/editorial warm background, QR premium paper |
-| `--brand-paper` | `#FFFFFF` | Cards, forms, print QR quiet zone |
-| `--brand-text` | `#1A2721` | Primary text on white |
-| `--brand-subtle` | `#53665B` | Secondary text after verified >=4.5:1 where normal text |
-| `--brand-line` | `#D6DED7` | Dividers; not sole focus indicator |
-| `--brand-success` | `#17643B` | Success with label and icon; contrast verification required |
-| `--brand-warning` | `#885200` | Warning with label; noncolor signal required |
-| `--brand-danger` | `#B42318` | Error/destructive; error text plus clear label |
-| `--brand-focus` | `#1E66B5` | Explicit focus outline, visible against light and dark surfaces |
+| Token | Semantic Role | Value | Notes |
+| --- | --- | --- | --- |
+| `--zds-color-neutral-0` | Paper / Surface | `#FFFFFF` | Primary cards, forms, QR quiet zone |
+| `--zds-color-neutral-25` | Subtle Surface | `#FCFCFC` | Elevated card surfaces |
+| `--zds-color-neutral-50` | Muted Background | `#F7F7F7` | Public sections, support body background |
+| `--zds-color-neutral-100` | Border Subtle | `#F2F2F2` | Dividers, badge backgrounds |
+| `--zds-color-neutral-150` | Input Border | `#EAEAEA` | Form control outlines |
+| `--zds-color-neutral-200` | Border Strong | `#E0E0E0` | Standard component border |
+| `--zds-color-neutral-400` | Placeholder / Disabled | `#959595` | Muted hints, secondary icons |
+| `--zds-color-neutral-600` | Secondary Text | `#525252` | Body copy, subtitles (contrast >= 4.5:1) |
+| `--zds-color-neutral-900` | Primary Text | `#161616` | Key headings, primary action background |
+| `--zds-color-neutral-950` | Brand Ink | `#0A0A0A` | Display headings, logo-adjacent brand text |
+| `--zds-color-status-success` | Success Action | `#12744B` | Verified payment, completed step |
+| `--zds-color-status-warning` | Warning Action | `#8B5D08` | Requires review, non-blocking attention |
+| `--zds-color-status-danger` | Destructive Action | `#B42318` | Validation errors, refund action |
+| `--zds-color-status-info` | Information | `#225CB0` | Non-fiscal callouts, guidance notes |
 
-**Color policy:** A single semantic palette, not separate ad hoc CSS values in each app. Use green as a recognizable brand cue, not as universal card chrome. On guest surfaces, venue logos/food photos may dominate; Zackisch identity remains discreet but trustworthy. On staff screens, preserve high contrast and distinct textual statuses; avoid red/green alone. All text/background/active/hover/disability states must pass measured contrast, not just look good in Figma. Avoid trendy gradients, glass effects and saturated floating badges without a functional purpose. Use meaningful shadow only for layered elements.
+**Color policy:** A single central monochrome token architecture exported from `packages/design-system/src/styles/tokens.css`. Functional status colors are used strictly with semantic icons and clear labels, never through color alone. Real photography from `root/public/media/` provides authentic hospitality atmosphere. Real venue branding and culinary dish photography dominate on guest surfaces.
 
 ## 3. Typography
 
@@ -74,10 +77,19 @@ Each component has specified: anatomy, usage, variants, touch targets, loading/d
 ### Verified package implementation (`@zackisch/design-system`)
 
 The design system is implemented in `packages/design-system/` and linked across `app`, `root`, `support`, and `internal`:
-- **Tokens:** Semantic color, spacing, radius, typography (Poppins & Inter), and shadow tokens exported via CSS variables and typed constants.
-- **Component Primitives (21):** Base UI-backed primitives including `Button`, `Input`, `Card`, `Modal`, `Table`, `Tabs`, `Badge`, `Toast`, `Dropdown`, `Accordion`, `Tooltip`, `Switch`, `Checkbox`, `Radio`, `Skeleton`, `Avatar`, `Separator`, `Popover`, `Slider`, `Progress`, and `Alert`.
-- **Domain Components:** `Price` (enforcing strict German/European currency formatting with tabular figures) and `QrSignageCard` (for physical table and counter signage).
-- **Brand Assets:** Canonical SVG/PNG assets hosted exclusively on `https://zackisch.com/*` (`root/public/`) and consumed via typed `BRAND_ASSETS` constants.
+- **Tokens:** Semantic monochrome color scale (`neutral.n0`–`neutral.n950`), functional status tokens, touch targets, spacing, radius, and typography tokens exported via CSS variables and typed constants.
+- **Component Primitives (24):** Accessible Base UI-backed primitives:
+  - Form Controls: `Button`, `IconButton`, `Input`, `Textarea`, `Field`, `Select`, `Checkbox`, `Radio`, `Switch`
+  - Feedback & Display: `Badge`, `StatusBadge`, `Card`, `Dialog`, `Drawer`, `Tabs`, `Accordion`, `Popover`, `Breadcrumbs`, `Pagination`, `LoadingIndicator`, `DataTable`, `EmptyState`, `PhotoFigure`, `Stepper`
+- **Layout Templates (9):**
+  - Public & Editorial: `PageContainer`, `PublicSection`, `EditorialHero`, `ReadingLayout`
+  - Applications & Ops: `AuthLayout`, `WorkspaceLayout`, `OpsLayout`, `ShopLayout`, `SystemLayout`
+- **Domain Patterns (4):**
+  - `Price`: German/European currency formatting with tabular numerals
+  - `QrSignageCard`: Physical QR table and counter display with verified quiet zone
+  - `PaymentVerification`: Non-fiscal digital payment verification banner
+  - `PosReconciliationSummary`: Daily register reconciliation summary for cash registers
+- **Brand & Media Assets:** Canonical SVG/PNG assets and verified licensed photography hosted on `https://zackisch.com/*` (`root/public/media/`) and registered in `root/public/media/register.csv`.
 - **Site Metadata:** `createSiteMetadata` utility ensuring consistent canonical links, OpenGraph properties, Twitter cards, and multi-lingual hreflang annotations.
 
 ## 6. Website IA and editorial compositions
