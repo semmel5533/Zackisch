@@ -13,7 +13,6 @@ import {
   Plus,
   ArrowRight,
   Clock,
-  CheckCircle2,
   Building2,
 } from "lucide-react";
 
@@ -162,20 +161,20 @@ export default function SupportTicketsPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-bold">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#0A0A0A] font-brand">
               {isDe
                 ? "Support-Tickets für Gastronomen"
                 : "Merchant Support Tickets"}
             </h1>
-            <p className="text-sm text-[#495A52]">
+            <p className="text-sm text-[#525252]">
               {isDe
                 ? "Erstelle ein neues Ticket oder verfolge den Status deiner laufenden Anfragen."
                 : "Create a new support ticket or track your existing requests."}
             </p>
           </div>
           {businessName && (
-            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-[#DCEFE5] text-[#173C2B] text-xs font-semibold">
-              <Building2 className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F2F2F2] border border-[#E0E0E0] text-[#161616] text-xs font-semibold">
+              <Building2 className="w-4 h-4 text-[#161616]" />
               <span>{businessName}</span>
             </div>
           )}
@@ -183,9 +182,9 @@ export default function SupportTicketsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left: Create Ticket Form */}
-          <div className="lg:col-span-7 bg-white rounded-3xl border border-[#DDD7CA] p-6 sm:p-8 space-y-6 shadow-xs">
-            <div className="flex items-center gap-2 text-base font-bold">
-              <Plus className="w-5 h-5 text-[#245740]" />
+          <div className="lg:col-span-7 bg-white rounded-2xl border border-[#E0E0E0] p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="flex items-center gap-2 text-base font-bold text-[#0A0A0A] font-brand">
+              <Plus className="w-5 h-5 text-[#161616]" />
               <h2>
                 {isDe ? "Neues Support-Ticket eröffnen" : "Open a New Support Ticket"}
               </h2>
@@ -194,7 +193,7 @@ export default function SupportTicketsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold block">
+                  <label className="text-xs font-semibold block text-[#383838]">
                     {isDe ? "Deine geschäftliche E-Mail" : "Your Business Email"}
                   </label>
                   <input
@@ -203,11 +202,11 @@ export default function SupportTicketsPage() {
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
                     placeholder="inhaber@mein-restaurant.de"
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#DDD7CA] text-sm focus:outline-none focus:ring-2 focus:ring-[#173C2B]"
+                    className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold block">
+                  <label className="text-xs font-semibold block text-[#383838]">
                     {isDe ? "Name / Betrieb" : "Name / Venue"}
                   </label>
                   <input
@@ -216,20 +215,20 @@ export default function SupportTicketsPage() {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     placeholder={isDe ? "Muster Bistro" : "Sample Bistro"}
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#DDD7CA] text-sm focus:outline-none focus:ring-2 focus:ring-[#173C2B]"
+                    className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold block">
+                  <label className="text-xs font-semibold block text-[#383838]">
                     {isDe ? "Themenbereich" : "Category"}
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#DDD7CA] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#173C2B]"
+                    className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] bg-white text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
                   >
                     <option value="pos_reconciliation">
                       {isDe
@@ -268,13 +267,13 @@ export default function SupportTicketsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold block">
+                  <label className="text-xs font-semibold block text-[#383838]">
                     {isDe ? "Dringlichkeit" : "Priority"}
                   </label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as any)}
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#DDD7CA] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#173C2B]"
+                    className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] bg-white text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
                   >
                     <option value="low">{isDe ? "Niedrig" : "Low"}</option>
                     <option value="normal">{isDe ? "Normal" : "Normal"}</option>
@@ -287,7 +286,7 @@ export default function SupportTicketsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold block">
+                <label className="text-xs font-semibold block text-[#383838]">
                   {isDe ? "Betreff" : "Subject"}
                 </label>
                 <input
@@ -300,12 +299,12 @@ export default function SupportTicketsPage() {
                       ? "z. B. Frage zum Tagesabgleich in unserer Kasse"
                       : "e.g. Question about daily POS reconciliation"
                   }
-                  className="w-full h-11 px-3.5 rounded-xl border border-[#DDD7CA] text-sm focus:outline-none focus:ring-2 focus:ring-[#173C2B]"
+                  className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold block">
+                <label className="text-xs font-semibold block text-[#383838]">
                   {isDe ? "Beschreibung deines Anliegens" : "Description"}
                 </label>
                 <textarea
@@ -318,14 +317,14 @@ export default function SupportTicketsPage() {
                       ? "Beschreibe kurz dein Anliegen (gerne mit Bestellnummer oder Tischnummer)..."
                       : "Describe your question (include order or table number if applicable)..."
                   }
-                  className="w-full p-3.5 rounded-xl border border-[#DDD7CA] text-sm focus:outline-none focus:ring-2 focus:ring-[#173C2B]"
+                  className="w-full p-3.5 rounded-xl border border-[#E0E0E0] text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-11 rounded-full bg-[#173C2B] text-white hover:bg-[#245740] text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-50"
+                className="w-full h-11 rounded-full bg-[#161616] text-white hover:bg-[#252525] text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-50"
               >
                 <Ticket className="w-4 h-4" />
                 <span>
@@ -342,24 +341,24 @@ export default function SupportTicketsPage() {
           </div>
 
           {/* Right: Existing Tickets List */}
-          <div className="lg:col-span-5 bg-white rounded-3xl border border-[#DDD7CA] p-6 sm:p-8 space-y-5 shadow-xs">
+          <div className="lg:col-span-5 bg-white rounded-2xl border border-[#E0E0E0] p-6 sm:p-8 space-y-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold">
+              <h2 className="text-base font-bold text-[#0A0A0A] font-brand">
                 {isDe ? "Deine bisherigen Tickets" : "Your Existing Tickets"}
               </h2>
-              <span className="text-xs font-num text-[#495A52]">
+              <span className="text-xs font-num text-[#525252] px-2 py-0.5 rounded-full bg-[#F2F2F2]">
                 {tickets ? tickets.length : 0}
               </span>
             </div>
 
             {!customerEmail.includes("@") ? (
-              <p className="text-xs text-[#495A52] leading-relaxed">
+              <p className="text-xs text-[#525252] leading-relaxed">
                 {isDe
                   ? "Gib links deine geschäftliche E-Mail-Adresse ein oder öffne das Support-Center direkt aus deinem Restaurant-Dashboard, um deine bestehenden Tickets einzusehen."
                   : "Enter your business email on the left or open the Support Center directly from your restaurant dashboard to view your existing tickets."}
               </p>
             ) : !tickets || tickets.length === 0 ? (
-              <p className="text-xs text-[#495A52]">
+              <p className="text-xs text-[#525252]">
                 {isDe
                   ? "Für diese E-Mail-Adresse liegen noch keine Support-Tickets vor."
                   : "No support tickets found for this email address yet."}
@@ -370,33 +369,33 @@ export default function SupportTicketsPage() {
                   <Link
                     key={t._id}
                     href={`/${locale}/tickets/${t._id}?email=${encodeURIComponent(customerEmail.trim().toLowerCase())}`}
-                    className="block p-4 rounded-2xl border border-[#DDD7CA] hover:border-[#245740] transition-all space-y-2"
+                    className="block p-4 rounded-xl border border-[#E0E0E0] hover:border-[#161616] transition-all space-y-2"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold font-num text-[#173C2B]">
+                      <span className="text-xs font-bold font-num text-[#161616]">
                         {t.ticketNumber}
                       </span>
                       <span
-                        className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
+                        className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
                           t.status === "resolved" || t.status === "closed"
-                            ? "bg-[#DCEFE5] text-[#173C2B]"
-                            : "bg-[#ECE7DC] text-[#14231D]"
+                            ? "bg-[#F2F2F2] border-[#E0E0E0] text-[#525252]"
+                            : "bg-[#161616] border-[#161616] text-white"
                         }`}
                       >
                         {t.status}
                       </span>
                     </div>
-                    <h3 className="text-sm font-semibold text-[#14231D] line-clamp-1">
+                    <h3 className="text-sm font-semibold text-[#0A0A0A] line-clamp-1">
                       {t.subject}
                     </h3>
-                    <div className="flex items-center justify-between text-[11px] text-[#6C7B73]">
+                    <div className="flex items-center justify-between text-[11px] text-[#525252]">
                       <span className="inline-flex items-center gap-1 font-num">
                         <Clock className="w-3 h-3" />
                         {new Date(t.updatedAt).toLocaleDateString(
                           isDe ? "de-DE" : "en-US"
                         )}
                       </span>
-                      <span className="inline-flex items-center gap-1 font-semibold text-[#173C2B]">
+                      <span className="inline-flex items-center gap-1 font-semibold text-[#161616]">
                         {isDe ? "Verlauf öffnen" : "Open thread"}
                         <ArrowRight className="w-3 h-3" />
                       </span>

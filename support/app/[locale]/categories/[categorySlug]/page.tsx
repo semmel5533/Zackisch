@@ -123,43 +123,43 @@ export default async function CategoryPage({
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-8">
         <Link
           href={`/${locale}`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#495A52] hover:text-[#14231D]"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#525252] hover:text-[#0A0A0A] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>{isDe ? "Alle Themenbereiche" : "All Categories"}</span>
         </Link>
 
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#245740]">
-            <BookOpen className="w-4 h-4" />
-            <span>{category.badge[locale]}</span>
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#161616]">
+            <BookOpen className="w-4 h-4 text-[#161616]" />
+            <span className="px-2.5 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E0E0E0]">{category.badge[locale]}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#14231D]">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#0A0A0A] font-brand">
             {category.title[locale]}
           </h1>
-          <p className="text-sm text-[#495A52]">{category.description[locale]}</p>
+          <p className="text-sm text-[#525252]">{category.description[locale]}</p>
         </div>
 
-        <div className="bg-white rounded-3xl border border-[#DDD7CA] divide-y divide-[#DDD7CA] overflow-hidden shadow-xs">
+        <div className="bg-white rounded-2xl border border-[#E0E0E0] divide-y divide-[#E0E0E0] overflow-hidden shadow-xs">
           {articles.map((art) => (
             <Link
               key={art.slug}
               href={`/${locale}/articles/${art.slug}`}
-              className="p-6 flex items-start justify-between gap-4 hover:bg-[#F7F5EF]/60 transition-colors block"
+              className="p-6 flex items-start justify-between gap-4 hover:bg-[#F7F7F7] transition-colors block"
             >
               <div className="space-y-1.5 max-w-2xl">
-                <h2 className="text-base font-bold text-[#14231D]">
+                <h2 className="text-base font-bold text-[#0A0A0A]">
                   {art.title[locale]}
                 </h2>
-                <p className="text-xs text-[#495A52] leading-relaxed">
+                <p className="text-xs text-[#525252] leading-relaxed">
                   {art.summary[locale]}
                 </p>
-                <div className="text-[11px] text-[#245740] font-semibold pt-1">
+                <div className="text-[11px] text-[#525252] font-semibold pt-1">
                   {art.steps[locale].length}{" "}
                   {isDe ? "Schritte zur Umsetzung" : "Implementation Steps"}
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-[#245740] shrink-0 mt-1" />
+              <ArrowRight className="w-4 h-4 text-[#161616] shrink-0 mt-1" />
             </Link>
           ))}
         </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { SupportShell } from "@/components/SupportShell";
@@ -71,20 +71,20 @@ export default function CustomerTicketThreadPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-6">
         <Link
           href={`/${locale}/tickets`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#495A52] hover:text-[#14231D]"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#525252] hover:text-[#0A0A0A] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>{isDe ? "Zurück zu allen Tickets" : "Back to all tickets"}</span>
         </Link>
 
         {!sessionToken ? (
-          <div className="bg-white rounded-3xl border border-[#DDD7CA] p-8 space-y-4">
-            <h1 className="text-lg font-bold text-[#14231D]">
+          <div className="bg-white rounded-2xl border border-[#E0E0E0] p-8 space-y-4 shadow-sm">
+            <h1 className="text-lg font-bold text-[#0A0A0A] font-brand">
               {isDe
                 ? "Anmeldung erforderlich"
                 : "Authentication Required"}
             </h1>
-            <p className="text-xs text-[#495A52]">
+            <p className="text-xs text-[#525252]">
               {isDe
                 ? "Um auf dieses Ticket zuzugreifen, musst du mit deinem Betriebskonto angemeldet sein."
                 : "To access this ticket, please sign in with your verified merchant account."}
@@ -92,35 +92,35 @@ export default function CustomerTicketThreadPage() {
             <div className="pt-2">
               <Link
                 href={`/${locale}/tickets`}
-                className="h-10 px-5 rounded-full bg-[#173C2B] text-white hover:bg-[#245740] text-xs font-semibold inline-flex items-center gap-2"
+                className="h-10 px-5 rounded-full bg-[#161616] text-white hover:bg-[#252525] text-xs font-semibold inline-flex items-center gap-2 transition-colors"
               >
                 <span>{isDe ? "Zu meinen Tickets" : "Go to my tickets"}</span>
               </Link>
             </div>
           </div>
         ) : !thread ? (
-          <div className="bg-white rounded-3xl border border-[#DDD7CA] p-8 space-y-4">
-            <h1 className="text-lg font-bold text-[#14231D]">
+          <div className="bg-white rounded-2xl border border-[#E0E0E0] p-8 space-y-4 shadow-sm">
+            <h1 className="text-lg font-bold text-[#0A0A0A] font-brand">
               {isDe ? "Ticket wird geladen..." : "Loading ticket..."}
             </h1>
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border border-[#DDD7CA] p-6 sm:p-8 space-y-6 shadow-xs">
-            <header className="border-b border-[#DDD7CA] pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-white rounded-2xl border border-[#E0E0E0] p-6 sm:p-8 space-y-6 shadow-sm">
+            <header className="border-b border-[#E0E0E0] pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold font-num px-2.5 py-0.5 rounded-full bg-[#DCEFE5] text-[#173C2B]">
+                  <span className="text-xs font-bold font-num px-2.5 py-0.5 rounded-full bg-[#161616] text-white">
                     {thread.ticket.ticketNumber}
                   </span>
-                  <span className="text-xs font-semibold text-[#495A52]">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E0E0E0] text-[#525252]">
                     {thread.ticket.status}
                   </span>
                 </div>
-                <h1 className="text-xl font-bold text-[#14231D]">
+                <h1 className="text-xl font-bold text-[#0A0A0A] font-brand">
                   {thread.ticket.subject}
                 </h1>
               </div>
-              <div className="text-xs text-[#6C7B73] font-num">
+              <div className="text-xs text-[#525252] font-num">
                 {new Date(thread.ticket.createdAt).toLocaleString(
                   isDe ? "de-DE" : "en-US"
                 )}
@@ -134,31 +134,31 @@ export default function CustomerTicketThreadPage() {
                 return (
                   <div
                     key={msg._id}
-                    className={`p-4 rounded-2xl border ${
+                    className={`p-4 rounded-xl border ${
                       isStaff
-                        ? "bg-[#DCEFE5]/40 border-[#BFC8BE]"
-                        : "bg-[#F7F5EF] border-[#DDD7CA]"
+                        ? "bg-[#F7F7F7] border-[#C4C4C4]"
+                        : "bg-white border-[#E0E0E0]"
                     } space-y-2`}
                   >
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold inline-flex items-center gap-1.5">
+                      <span className="font-bold inline-flex items-center gap-1.5 text-[#0A0A0A]">
                         {isStaff ? (
-                          <ShieldCheck className="w-4 h-4 text-[#173C2B]" />
+                          <ShieldCheck className="w-4 h-4 text-[#161616]" />
                         ) : (
-                          <User className="w-4 h-4 text-[#495A52]" />
+                          <User className="w-4 h-4 text-[#525252]" />
                         )}
                         <span>
                           {msg.authorName}{" "}
                           {isStaff ? "(Zackisch Support)" : ""}
                         </span>
                       </span>
-                      <span className="text-[#6C7B73] font-num">
+                      <span className="text-[#525252] font-num">
                         {new Date(msg.createdAt).toLocaleString(
                           isDe ? "de-DE" : "en-US"
                         )}
                       </span>
                     </div>
-                    <p className="text-sm text-[#14231D] whitespace-pre-wrap leading-relaxed">
+                    <p className="text-sm text-[#383838] whitespace-pre-wrap leading-relaxed">
                       {msg.body}
                     </p>
                   </div>
@@ -169,9 +169,9 @@ export default function CustomerTicketThreadPage() {
             {/* Reply Form */}
             <form
               onSubmit={handleSendReply}
-              className="pt-4 border-t border-[#DDD7CA] space-y-3"
+              className="pt-4 border-t border-[#E0E0E0] space-y-3"
             >
-              <label className="text-xs font-semibold block">
+              <label className="text-xs font-semibold block text-[#383838]">
                 {isDe ? "Antwort hinzufügen" : "Add a reply"}
               </label>
               <textarea
@@ -184,12 +184,12 @@ export default function CustomerTicketThreadPage() {
                     ? "Schreibe eine Nachricht an das Zackisch Support-Team..."
                     : "Write a reply to the Zackisch support team..."
                 }
-                className="w-full p-3.5 rounded-xl border border-[#DDD7CA] text-sm focus:outline-none focus:ring-2 focus:ring-[#173C2B]"
+                className="w-full p-3.5 rounded-xl border border-[#E0E0E0] text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
               />
               <button
                 type="submit"
                 disabled={isSending}
-                className="h-10 px-5 rounded-full bg-[#173C2B] text-white hover:bg-[#245740] text-xs font-semibold inline-flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                className="h-10 px-5 rounded-full bg-[#161616] text-white hover:bg-[#252525] text-xs font-semibold inline-flex items-center gap-2 cursor-pointer disabled:opacity-50 transition-colors"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>
