@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
@@ -10,25 +10,37 @@ import type { SupportLocale } from "@/lib/knowledge-base";
 import { toast } from "sonner";
 import { ArrowLeft, Send, ShieldCheck, User } from "lucide-react";
 
+const STORAGE_KEY = "zackisch_support_customer_ctx";
+
 export default function CustomerTicketThreadPage() {
   const params = useParams();
-  const searchParams = useSearchParams();
   const locale: SupportLocale =
     params?.locale === "de-en" ? "de-en" : "de-de";
   const isDe = locale === "de-de";
   const ticketId = String(params?.ticketId || "");
-  const emailParam = searchParams.get("email") || "";
 
-  const [emailInput, setEmailInput] = useState(emailParam);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [replyBody, setReplyBody] = useState("");
   const [isSending, setIsSending] = useState(false);
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.sessionToken) setSessionToken(parsed.sessionToken);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   const thread = useQuery(
     api.support.getCustomerTicketThread,
-    ticketId
+    ticketId && sessionToken
       ? {
           ticketId: ticketId as any,
-          requesterEmail: emailInput || undefined,
+          sessionToken,
         }
       : "skip"
   );
@@ -37,12 +49,12 @@ export default function CustomerTicketThreadPage() {
 
   const handleSendReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!replyBody.trim() || !thread) return;
+    if (!replyBody.trim() || !thread || !sessionToken) return;
     setIsSending(true);
     try {
       await addReply({
         ticketId: thread.ticket._id,
-        requesterEmail: emailInput || thread.ticket.requesterEmail,
+        sessionToken,
         body: replyBody.trim(),
       });
       setReplyBody("");
@@ -65,25 +77,32 @@ export default function CustomerTicketThreadPage() {
           <span>{isDe ? "Zurück zu allen Tickets" : "Back to all tickets"}</span>
         </Link>
 
-        {!thread ? (
+        {!sessionToken ? (
           <div className="bg-white rounded-3xl border border-[#DDD7CA] p-8 space-y-4">
-            <h1 className="text-lg font-bold">
+            <h1 className="text-lg font-bold text-[#14231D]">
               {isDe
-                ? "Ticket-Verifizierung erforderlich"
-                : "Ticket Verification Required"}
+                ? "Anmeldung erforderlich"
+                : "Authentication Required"}
             </h1>
             <p className="text-xs text-[#495A52]">
               {isDe
-                ? "Bitte gib die E-Mail-Adresse ein, mit der dieses Ticket erstellt wurde."
-                : "Please enter the email address used to create this ticket."}
+                ? "Um auf dieses Ticket zuzugreifen, musst du mit deinem Betriebskonto angemeldet sein."
+                : "To access this ticket, please sign in with your verified merchant account."}
             </p>
-            <input
-              type="email"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-              placeholder="inhaber@mein-restaurant.de"
-              className="w-full max-w-md h-11 px-3.5 rounded-xl border border-[#DDD7CA] text-sm"
-            />
+            <div className="pt-2">
+              <Link
+                href={`/${locale}/tickets`}
+                className="h-10 px-5 rounded-full bg-[#173C2B] text-white hover:bg-[#245740] text-xs font-semibold inline-flex items-center gap-2"
+              >
+                <span>{isDe ? "Zu meinen Tickets" : "Go to my tickets"}</span>
+              </Link>
+            </div>
+          </div>
+        ) : !thread ? (
+          <div className="bg-white rounded-3xl border border-[#DDD7CA] p-8 space-y-4">
+            <h1 className="text-lg font-bold text-[#14231D]">
+              {isDe ? "Ticket wird geladen..." : "Loading ticket..."}
+            </h1>
           </div>
         ) : (
           <div className="bg-white rounded-3xl border border-[#DDD7CA] p-6 sm:p-8 space-y-6 shadow-xs">

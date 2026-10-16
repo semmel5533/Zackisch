@@ -25,6 +25,7 @@ interface AdminContextType {
   isLoading: boolean;
   adminUser: AdminUser | null;
   adminEmail: string;
+  sessionToken: string | null;
   currentRegion: string;
   currentLocale: "de" | "en";
   setCurrentRegion: (region: string) => void;
@@ -85,6 +86,7 @@ const AdminContext = createContext<AdminContextType>({
   isLoading: true,
   adminUser: null,
   adminEmail: "",
+  sessionToken: null,
   currentRegion: "de",
   currentLocale: "de",
   setCurrentRegion: () => {},
@@ -290,6 +292,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         isLoading,
         adminUser,
         adminEmail,
+        sessionToken,
         currentRegion,
         currentLocale,
         setCurrentRegion,

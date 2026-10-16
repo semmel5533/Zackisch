@@ -608,9 +608,11 @@ export const recordOrderInPos = mutation({
       order.businessId,
       args.sessionToken
     );
+    if (!access.authorized) {
+      throw new Error("Nicht berechtigt, diese Kassen-Erfassung durchzuführen.");
+    }
     const actor =
-      args.recordedByLabel?.trim() ||
-      (access.authorized ? access.actorLabel : "staff");
+      args.recordedByLabel?.trim() || access.actorLabel;
 
     if (order.posRecordingStatus === "recorded" && !args.allowUpdateReference) {
       return {
@@ -661,26 +663,39 @@ export const recordOrderInPos = mutation({
 export const getPosReconciliationSummary = query({
   args: {
     businessId: v.id("businesses"),
+    sessionToken: v.optional(v.string()),
   },
-  returns: v.object({
-    unrecordedCount: v.number(),
-    recordedCount: v.number(),
-    unrecordedOrders: v.array(orderObjectValidator),
-    totals: v.object({
-      grossTotalCents: v.number(),
-      eligibleSubtotalCents: v.number(),
-      tipCents: v.number(),
-      refundedAmountCents: v.number(),
-      platformFeeGrossCents: v.number(),
-      platformFeeNetCents: v.number(),
-      platformFeeVatCents: v.number(),
-      tax7NetCents: v.number(),
-      tax7VatCents: v.number(),
-      tax19NetCents: v.number(),
-      tax19VatCents: v.number(),
-    }),
-  }),
+  returns: v.union(
+    v.null(),
+    v.object({
+      unrecordedCount: v.number(),
+      recordedCount: v.number(),
+      unrecordedOrders: v.array(orderObjectValidator),
+      totals: v.object({
+        grossTotalCents: v.number(),
+        eligibleSubtotalCents: v.number(),
+        tipCents: v.number(),
+        refundedAmountCents: v.number(),
+        platformFeeGrossCents: v.number(),
+        platformFeeNetCents: v.number(),
+        platformFeeVatCents: v.number(),
+        tax7NetCents: v.number(),
+        tax7VatCents: v.number(),
+        tax19NetCents: v.number(),
+        tax19VatCents: v.number(),
+      }),
+    })
+  ),
   handler: async (ctx, args) => {
+    const access = await verifyBusinessOrSessionAccess(
+      ctx,
+      args.businessId,
+      args.sessionToken
+    );
+    if (!access.authorized) {
+      return null;
+    }
+
     const orders = await ctx.db
       .query("orders")
       .withIndex("by_businessId", (q) =>

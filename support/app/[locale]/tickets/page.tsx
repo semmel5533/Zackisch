@@ -30,6 +30,7 @@ export default function SupportTicketsPage() {
   const exchangeToken = useMutation(api.support.exchangeCrossAppToken);
   const createTicket = useMutation(api.support.createTicket);
 
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [businessId, setBusinessId] = useState<string | undefined>(
@@ -54,17 +55,17 @@ export default function SupportTicketsPage() {
   const [body, setBody] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Restore saved customer context or exchange cross-subdomain handoff token
+  // Restore saved customer session or exchange cross-subdomain handoff token
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        if (parsed.sessionToken) setSessionToken(parsed.sessionToken);
         if (parsed.email) setCustomerEmail(parsed.email);
         if (parsed.name) setCustomerName(parsed.name);
         if (parsed.businessId) setBusinessId(parsed.businessId);
-        if (parsed.businessName)
-          setBusinessName(parsed.businessName);
+        if (parsed.businessName) setBusinessName(parsed.businessName);
       }
     } catch {
       // ignore
@@ -75,11 +76,20 @@ export default function SupportTicketsPage() {
       exchangeToken({ token: handoff })
         .then((res) => {
           if (res) {
+            setSessionToken(res.sessionToken);
             setCustomerEmail(res.email);
             setCustomerName(res.name);
             setBusinessId(res.businessId as any);
             setBusinessName(res.businessName);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(res));
+
+            // Remove handoff token from history immediately (P0-05)
+            if (typeof window !== "undefined") {
+              const url = new URL(window.location.href);
+              url.searchParams.delete("handoff");
+              window.history.replaceState({}, "", url.toString());
+            }
+
             toast.success(
               isDe
                 ? `Angemeldet als ${res.businessName || res.email}`
@@ -91,12 +101,30 @@ export default function SupportTicketsPage() {
     }
   }, [searchParams, exchangeToken, isDe]);
 
+  // Verify support session server-side
+  const verifiedSession = useQuery(
+    api.support.verifySupportSession,
+    sessionToken ? { sessionToken } : "skip"
+  );
+
+  useEffect(() => {
+    if (verifiedSession) {
+      setCustomerEmail(verifiedSession.email);
+      setCustomerName(verifiedSession.name);
+      setBusinessId(verifiedSession.businessId as any);
+      setBusinessName(verifiedSession.businessName);
+    } else if (verifiedSession === null && sessionToken) {
+      // Session expired
+      setSessionToken(null);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [verifiedSession, sessionToken]);
+
   const tickets = useQuery(
     api.support.getCustomerTickets,
-    customerEmail.includes("@")
+    sessionToken
       ? {
-          requesterEmail: customerEmail,
-          businessId: businessId as any,
+          sessionToken,
         }
       : "skip"
   );
@@ -106,6 +134,7 @@ export default function SupportTicketsPage() {
     setIsSubmitting(true);
     try {
       const res = await createTicket({
+        sessionToken: sessionToken || undefined,
         businessId: businessId as any,
         requesterEmail: customerEmail.trim(),
         requesterName: customerName.trim() || customerEmail.trim(),
@@ -115,24 +144,12 @@ export default function SupportTicketsPage() {
         body,
       });
 
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          email: customerEmail.trim().toLowerCase(),
-          name: customerName.trim(),
-          businessId,
-          businessName,
-        })
-      );
-
       toast.success(
         isDe
           ? `Support-Ticket ${res.ticketNumber} wurde erstellt.`
           : `Support ticket ${res.ticketNumber} created.`
       );
-      router.push(
-        `/${locale}/tickets/${res.ticketId}?email=${encodeURIComponent(customerEmail.trim().toLowerCase())}`
-      );
+      router.push(`/${locale}/tickets/${res.ticketId}`);
     } catch (err: any) {
       toast.error(err.message || "Fehler beim Erstellen des Tickets.");
     } finally {

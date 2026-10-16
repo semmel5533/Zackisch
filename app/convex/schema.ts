@@ -446,6 +446,21 @@ export default defineSchema({
     expiresAt: v.number(),
   }).index("by_token", ["token"]),
 
+  // Authenticated Support Sessions (issued upon cross-subdomain handoff or direct merchant auth)
+  supportSessions: defineTable({
+    token: v.string(),
+    userId: v.string(),
+    businessId: v.optional(v.id("businesses")),
+    businessName: v.optional(v.string()),
+    email: v.string(),
+    name: v.string(),
+    regionId: v.string(),
+    expiresAt: v.number(),
+  })
+    .index("by_token", ["token"])
+    .index("by_userId", ["userId"])
+    .index("by_email", ["email"]),
+
   // Complete Audit Trail of team and merchant compliance actions within their region
   auditLogs: defineTable({
     actorId: v.string(),

@@ -25,7 +25,7 @@ type TicketStatus =
   | "closed";
 
 export default function TeamTicketsPage() {
-  const { currentRegion, adminEmail, adminUser, currentLocale } = useAdmin();
+  const { currentRegion, adminEmail, adminUser, sessionToken, currentLocale } = useAdmin();
   const isDe = currentLocale !== "en";
 
   const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all");
@@ -45,8 +45,9 @@ export default function TeamTicketsPage() {
 
   const tickets = useQuery(
     (anyApi as any).support.listTicketsForTeam,
-    adminEmail
+    sessionToken
       ? {
+          sessionToken,
           regionId: currentRegion,
           actorEmail: adminEmail,
           status: statusFilter === "all" ? undefined : statusFilter,
@@ -56,8 +57,9 @@ export default function TeamTicketsPage() {
 
   const ticketDetail = useQuery(
     (anyApi as any).support.getTicketForTeam,
-    selectedTicketId && adminEmail
+    selectedTicketId && sessionToken
       ? {
+          sessionToken,
           ticketId: selectedTicketId,
           actorEmail: adminEmail,
           regionId: currentRegion,
@@ -82,6 +84,7 @@ export default function TeamTicketsPage() {
     try {
       if (composerMode === "public") {
         await addPublicReply({
+          sessionToken: sessionToken || undefined,
           ticketId: selectedTicketId,
           actorEmail: adminEmail,
           regionId: currentRegion,
@@ -94,6 +97,7 @@ export default function TeamTicketsPage() {
         );
       } else {
         await addInternalNote({
+          sessionToken: sessionToken || undefined,
           ticketId: selectedTicketId,
           actorEmail: adminEmail,
           regionId: currentRegion,
@@ -117,6 +121,7 @@ export default function TeamTicketsPage() {
     if (!selectedTicketId) return;
     try {
       await updateStatusAndAssignee({
+        sessionToken: sessionToken || undefined,
         ticketId: selectedTicketId,
         actorEmail: adminEmail,
         regionId: currentRegion,
@@ -134,6 +139,7 @@ export default function TeamTicketsPage() {
     if (!selectedTicketId || !ticketDetail?.ticket) return;
     try {
       await updateStatusAndAssignee({
+        sessionToken: sessionToken || undefined,
         ticketId: selectedTicketId,
         actorEmail: adminEmail,
         regionId: currentRegion,
@@ -150,11 +156,13 @@ export default function TeamTicketsPage() {
     if (!selectedTicketId || !ticketDetail?.ticket) return;
     try {
       await updateStatusAndAssignee({
+        sessionToken: sessionToken || undefined,
         ticketId: selectedTicketId,
         actorEmail: adminEmail,
         regionId: currentRegion,
         status: ticketDetail.ticket.status,
-        assignedStaffEmail: adminEmail,
+        assignedToEmail: adminEmail,
+        assignedToName: adminUser?.name || adminEmail,
       });
       toast.success(isDe ? "Ticket dir zugewiesen." : "Assigned to you.");
     } catch (err: any) {

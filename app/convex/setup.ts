@@ -34,8 +34,13 @@ export const getSetupReadiness = query({
     })
   ),
   handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
     const org = await ctx.db.get(args.businessId);
     if (!org) return null;
+
+    if (!userId || org.ownerId !== userId) {
+      return null;
+    }
 
     const categories = await ctx.db
       .query("menuCategories")
@@ -389,6 +394,12 @@ export const getFeeStatements = query({
     })
   ),
   handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    const org = await ctx.db.get(args.businessId);
+    if (!org || !userId || org.ownerId !== userId) {
+      return [];
+    }
+
     return await ctx.db
       .query("merchantFeeStatements")
       .withIndex("by_businessId", (q) =>
@@ -406,8 +417,17 @@ export const generateMonthlyFeeStatement = mutation({
   },
   returns: v.id("merchantFeeStatements"),
   handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
     const org = await ctx.db.get(args.businessId);
     if (!org) throw new Error("Betrieb nicht gefunden.");
+    if (!userId || org.ownerId !== userId) {
+      throw new Error("Nicht berechtigt: Nur der Betriebsinhaber kann Gebührenabrechnungen erstellen.");
+    }
+
+    const merchantTaxId = org.vatId?.trim() || org.taxId?.trim();
+    if (!merchantTaxId) {
+      throw new Error("Steuernummer oder USt-IdNr. des Betriebs erforderlich für die Gebührenabrechnung.");
+    }
 
     const existing = await ctx.db
       .query("merchantFeeStatements")
@@ -449,7 +469,7 @@ export const generateMonthlyFeeStatement = mutation({
       );
       const feeGross = Math.max(
         0,
-        (o.platformFeeGrossCents ?? o.zackischFee ?? o.zakkigFee) -
+        (o.platformFeeGrossCents ?? o.zackischFee ?? 0) -
           (o.refundedPlatformFeeCents ?? 0)
       );
 
@@ -478,7 +498,7 @@ export const generateMonthlyFeeStatement = mutation({
       period: args.period,
       merchantName: org.legalName || org.name,
       merchantAddress: org.address || "Deutschland",
-      merchantTaxId: org.vatId || org.taxId || "DE000000000",
+      merchantTaxId,
       eligibleTurnoverCents,
       platformFeeGrossCents,
       platformFeeNetCents,

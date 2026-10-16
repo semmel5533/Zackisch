@@ -1,5 +1,6 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation, query } from "./_generated/server";
+import { Doc, Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
 const ticketCategoryValidator = v.union(
@@ -69,32 +70,94 @@ const messageObjectValidator = v.object({
 
 async function requireTeamPermission(
   ctx: { db: any },
-  adminEmail: string,
+  credentials: {
+    sessionToken?: string;
+    adminEmail?: string;
+    actorEmail?: string;
+  },
   regionId: string,
   requiredPermission: "tickets:read" | "tickets:write" | "tickets:note"
-) {
-  const cleanEmail = adminEmail.trim().toLowerCase();
-  const admin = await ctx.db
-    .query("adminUsers")
-    .withIndex("by_email", (q: any) => q.eq("email", cleanEmail))
+): Promise<Doc<"adminUsers">> {
+  const token = credentials.sessionToken?.trim();
+  if (!token) {
+    throw new Error("Authentifizierung erforderlich: Kein Team-Sitzungstoken angegeben.");
+  }
+
+  const session = await ctx.db
+    .query("verificationCodes")
+    .withIndex("by_identifier", (q: any) => q.eq("identifier", token))
     .first();
 
+  if (!session || Date.now() > session.expires) {
+    throw new Error("Sitzung ist abgelaufen oder ungültig. Bitte erneut anmelden.");
+  }
+
+  const admin = (await ctx.db.get(session.code as Id<"adminUsers">)) as (Doc<"adminUsers"> | null);
   if (!admin || !admin.isActive) {
     throw new Error("Kein aktives Team-Dashboard-Konto.");
   }
 
-  if (admin.regionId !== regionId) {
-    throw new Error("Zugriff auf fremde Region verweigert.");
-  }
-
-  if (
-    admin.role !== "regional_admin" &&
-    !admin.permissions.includes(requiredPermission)
-  ) {
-    throw new Error(`Fehlende Berechtigung: ${requiredPermission}`);
+  if (admin.role !== "regional_admin") {
+    if (admin.regionId !== regionId) {
+      throw new Error("Kein Zugriff auf Tickets außerhalb der zugewiesenen Region.");
+    }
+    if (!admin.permissions.includes(requiredPermission)) {
+      throw new Error(`Berechtigung '${requiredPermission}' fehlt.`);
+    }
   }
 
   return admin;
+}
+
+async function getVerifiedCustomerIdentity(
+  ctx: { db: any; auth: any },
+  sessionToken?: string
+): Promise<{
+  userId?: string;
+  email: string;
+  name?: string;
+  businessId?: Id<"businesses">;
+  businessName?: string;
+  regionId: string;
+} | null> {
+  const userId = await getAuthUserId(ctx as any);
+  if (userId) {
+    const user: any = await ctx.db.get(userId);
+    if (user) {
+      const email = (user.email || "").toLowerCase();
+      const org = await ctx.db
+        .query("businesses")
+        .withIndex("by_ownerId", (q: any) => q.eq("ownerId", userId))
+        .first();
+      return {
+        userId: String(userId),
+        email,
+        name: user.name || org?.name,
+        businessId: org?._id,
+        businessName: org?.name,
+        regionId: org?.region || "de",
+      };
+    }
+  }
+
+  if (sessionToken && sessionToken.trim().length > 0) {
+    const session = await ctx.db
+      .query("supportSessions")
+      .withIndex("by_token", (q: any) => q.eq("token", sessionToken.trim()))
+      .first();
+    if (session && Date.now() <= session.expiresAt) {
+      return {
+        userId: session.userId,
+        email: session.email.toLowerCase(),
+        name: session.name,
+        businessId: session.businessId,
+        businessName: session.businessName,
+        regionId: session.regionId,
+      };
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -161,6 +224,7 @@ export const exchangeCrossAppToken = mutation({
   returns: v.union(
     v.null(),
     v.object({
+      sessionToken: v.string(),
       userId: v.string(),
       email: v.string(),
       name: v.string(),
@@ -182,7 +246,26 @@ export const exchangeCrossAppToken = mutation({
       return null;
     }
 
+    const sessionBytes = new Uint8Array(24);
+    crypto.getRandomValues(sessionBytes);
+    const sessionToken = Array.from(sessionBytes, (b) =>
+      b.toString(16).padStart(2, "0")
+    ).join("");
+    const sessionExpiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
+
+    await ctx.db.insert("supportSessions", {
+      token: sessionToken,
+      userId: row.userId,
+      businessId: row.businessId,
+      businessName: row.businessName,
+      email: row.email,
+      name: row.name,
+      regionId: row.regionId,
+      expiresAt: sessionExpiresAt,
+    });
+
     return {
+      sessionToken,
       userId: row.userId,
       email: row.email,
       name: row.name,
@@ -193,8 +276,44 @@ export const exchangeCrossAppToken = mutation({
   },
 });
 
+export const verifySupportSession = query({
+  args: {
+    sessionToken: v.string(),
+  },
+  returns: v.union(
+    v.null(),
+    v.object({
+      userId: v.string(),
+      email: v.string(),
+      name: v.string(),
+      businessId: v.optional(v.id("businesses")),
+      businessName: v.optional(v.string()),
+      regionId: v.string(),
+    })
+  ),
+  handler: async (ctx, args) => {
+    if (!args.sessionToken || args.sessionToken.trim().length === 0) return null;
+    const session = await ctx.db
+      .query("supportSessions")
+      .withIndex("by_token", (q) => q.eq("token", args.sessionToken.trim()))
+      .first();
+    if (!session || Date.now() > session.expiresAt) {
+      return null;
+    }
+    return {
+      userId: session.userId,
+      email: session.email,
+      name: session.name,
+      businessId: session.businessId,
+      businessName: session.businessName,
+      regionId: session.regionId,
+    };
+  },
+});
+
 export const createTicket = mutation({
   args: {
+    sessionToken: v.optional(v.string()),
     businessId: v.optional(v.id("businesses")),
     requesterEmail: v.string(),
     requesterName: v.string(),
@@ -223,18 +342,24 @@ export const createTicket = mutation({
       throw new Error("Nachricht muss zwischen 5 und 5000 Zeichen lang sein.");
     }
 
-    const userId = await getAuthUserId(ctx);
-    let org: any = null;
-    if (args.businessId) {
-      org = await ctx.db.get(args.businessId);
-    } else if (userId) {
-      org = await ctx.db
-        .query("businesses")
-        .withIndex("by_ownerId", (q) => q.eq("ownerId", userId))
-        .first();
+    const identity = await getVerifiedCustomerIdentity(ctx, args.sessionToken);
+
+    let verifiedEmail = cleanEmail;
+    let verifiedName = cleanName;
+    let boundBusinessId = undefined;
+    let boundBusinessName = undefined;
+    let regionId = "de";
+    let requesterUserId = undefined;
+
+    if (identity) {
+      verifiedEmail = identity.email;
+      verifiedName = identity.name || cleanName;
+      boundBusinessId = identity.businessId;
+      boundBusinessName = identity.businessName;
+      regionId = identity.regionId || "de";
+      requesterUserId = identity.userId;
     }
 
-    const regionId = org?.region || "de";
     const recentTickets = await ctx.db
       .query("supportTickets")
       .withIndex("by_regionId_and_updatedAt", (q) => q.eq("regionId", regionId))
@@ -253,11 +378,11 @@ export const createTicket = mutation({
 
     const ticketId = await ctx.db.insert("supportTickets", {
       ticketNumber,
-      businessId: org?._id,
-      businessName: org?.name,
-      requesterUserId: userId ? String(userId) : undefined,
-      requesterEmail: cleanEmail,
-      requesterName: cleanName || org?.name || cleanEmail,
+      businessId: boundBusinessId,
+      businessName: boundBusinessName,
+      requesterUserId,
+      requesterEmail: verifiedEmail,
+      requesterName: verifiedName || verifiedEmail,
       regionId,
       category: args.category,
       priority: args.priority || "normal",
@@ -272,15 +397,15 @@ export const createTicket = mutation({
       ticketId,
       regionId,
       authorType: "merchant",
-      authorId: userId ? String(userId) : cleanEmail,
-      authorName: cleanName || org?.name || cleanEmail,
+      authorId: requesterUserId || verifiedEmail,
+      authorName: verifiedName || verifiedEmail,
       visibility: "public",
       body: cleanBody,
       createdAt: now,
     });
 
     await ctx.db.insert("emailLogs", {
-      recipient: cleanEmail,
+      recipient: verifiedEmail,
       type: "support_ticket",
       subject: `[${ticketNumber}] Support-Anfrage eingegangen: ${cleanSubject}`,
       status: "sent",
@@ -289,7 +414,7 @@ export const createTicket = mutation({
     });
 
     await ctx.db.insert("auditLogs", {
-      actorId: userId ? String(userId) : cleanEmail,
+      actorId: requesterUserId || verifiedEmail,
       actorRole: "merchant",
       action: "ticket.created",
       entityType: "ticket",
@@ -309,35 +434,31 @@ export const createTicket = mutation({
 
 export const getCustomerTickets = query({
   args: {
+    sessionToken: v.optional(v.string()),
     requesterEmail: v.optional(v.string()),
     businessId: v.optional(v.id("businesses")),
   },
   returns: v.array(ticketObjectValidator),
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    let email = args.requesterEmail?.trim().toLowerCase();
-
-    if (userId && !email) {
-      const user: any = await ctx.db.get(userId);
-      email = user?.email?.toLowerCase();
+    const identity = await getVerifiedCustomerIdentity(ctx, args.sessionToken);
+    if (!identity) {
+      return [];
     }
 
-    if (args.businessId) {
+    if (identity.businessId) {
       const byOrg = await ctx.db
         .query("supportTickets")
         .withIndex("by_businessId", (q) =>
-          q.eq("businessId", args.businessId)
+          q.eq("businessId", identity.businessId!)
         )
         .order("desc")
         .collect();
       if (byOrg.length > 0) return byOrg;
     }
 
-    if (!email) return [];
-
     return await ctx.db
       .query("supportTickets")
-      .withIndex("by_requesterEmail", (q) => q.eq("requesterEmail", email!))
+      .withIndex("by_requesterEmail", (q) => q.eq("requesterEmail", identity.email))
       .order("desc")
       .collect();
   },
@@ -351,6 +472,7 @@ export const getCustomerTickets = query({
 export const getCustomerTicketThread = query({
   args: {
     ticketId: v.id("supportTickets"),
+    sessionToken: v.optional(v.string()),
     requesterEmail: v.optional(v.string()),
   },
   returns: v.union(
@@ -361,21 +483,20 @@ export const getCustomerTicketThread = query({
     })
   ),
   handler: async (ctx, args) => {
+    const identity = await getVerifiedCustomerIdentity(ctx, args.sessionToken);
+    if (!identity) {
+      return null;
+    }
+
     const ticket = await ctx.db.get(args.ticketId);
     if (!ticket) return null;
 
-    const userId = await getAuthUserId(ctx);
-    const cleanEmail = args.requesterEmail?.trim().toLowerCase();
-
     let authorized = false;
-    if (userId && ticket.requesterUserId === String(userId)) {
+    if (identity.userId && ticket.requesterUserId === identity.userId) {
       authorized = true;
-    } else if (userId && ticket.businessId) {
-      const org = await ctx.db.get(ticket.businessId);
-      if (org && org.ownerId === userId) {
-        authorized = true;
-      }
-    } else if (cleanEmail && ticket.requesterEmail === cleanEmail) {
+    } else if (identity.businessId && ticket.businessId === identity.businessId) {
+      authorized = true;
+    } else if (ticket.requesterEmail.toLowerCase() === identity.email.toLowerCase()) {
       authorized = true;
     }
 
@@ -404,22 +525,31 @@ export const getCustomerTicketThread = query({
 export const addCustomerReply = mutation({
   args: {
     ticketId: v.id("supportTickets"),
-    requesterEmail: v.string(),
+    sessionToken: v.optional(v.string()),
+    requesterEmail: v.optional(v.string()),
     requesterName: v.optional(v.string()),
     body: v.string(),
   },
   returns: v.id("supportMessages"),
   handler: async (ctx, args) => {
+    const identity = await getVerifiedCustomerIdentity(ctx, args.sessionToken);
+    if (!identity) {
+      throw new Error("Authentifizierung erforderlich, um auf dieses Support-Ticket zu antworten.");
+    }
+
     const ticket = await ctx.db.get(args.ticketId);
     if (!ticket) throw new Error("Ticket nicht gefunden.");
 
-    const cleanEmail = args.requesterEmail.trim().toLowerCase();
-    const userId = await getAuthUserId(ctx);
+    let authorized = false;
+    if (identity.userId && ticket.requesterUserId === identity.userId) {
+      authorized = true;
+    } else if (identity.businessId && ticket.businessId === identity.businessId) {
+      authorized = true;
+    } else if (ticket.requesterEmail.toLowerCase() === identity.email.toLowerCase()) {
+      authorized = true;
+    }
 
-    const isOwnerMatch =
-      (userId && ticket.requesterUserId === String(userId)) ||
-      ticket.requesterEmail === cleanEmail;
-    if (!isOwnerMatch) {
+    if (!authorized) {
       throw new Error("Keine Berechtigung für dieses Support-Ticket.");
     }
 
@@ -433,15 +563,15 @@ export const addCustomerReply = mutation({
       ticketId: args.ticketId,
       regionId: ticket.regionId,
       authorType: "merchant",
-      authorId: userId ? String(userId) : cleanEmail,
-      authorName: args.requesterName?.trim() || ticket.requesterName,
+      authorId: identity.userId || identity.email,
+      authorName: identity.name || args.requesterName?.trim() || ticket.requesterName,
       visibility: "public",
       body: cleanBody,
       createdAt: now,
     });
 
     await ctx.db.patch(args.ticketId, {
-      status: ticket.status === "closed" ? "open" : "open",
+      status: "open",
       updatedAt: now,
       lastMessageAt: now,
     });
@@ -456,7 +586,9 @@ export const addCustomerReply = mutation({
 
 export const getTeamTickets = query({
   args: {
-    adminEmail: v.string(),
+    sessionToken: v.optional(v.string()),
+    adminEmail: v.optional(v.string()),
+    actorEmail: v.optional(v.string()),
     regionId: v.string(),
     status: v.optional(ticketStatusValidator),
   },
@@ -464,7 +596,11 @@ export const getTeamTickets = query({
   handler: async (ctx, args) => {
     await requireTeamPermission(
       ctx,
-      args.adminEmail,
+      {
+        sessionToken: args.sessionToken,
+        adminEmail: args.adminEmail,
+        actorEmail: args.actorEmail,
+      },
       args.regionId,
       "tickets:read"
     );
@@ -491,7 +627,9 @@ export const getTeamTickets = query({
 
 export const getTeamTicketThread = query({
   args: {
-    adminEmail: v.string(),
+    sessionToken: v.optional(v.string()),
+    adminEmail: v.optional(v.string()),
+    actorEmail: v.optional(v.string()),
     regionId: v.string(),
     ticketId: v.id("supportTickets"),
   },
@@ -505,7 +643,11 @@ export const getTeamTicketThread = query({
   handler: async (ctx, args) => {
     await requireTeamPermission(
       ctx,
-      args.adminEmail,
+      {
+        sessionToken: args.sessionToken,
+        adminEmail: args.adminEmail,
+        actorEmail: args.actorEmail,
+      },
       args.regionId,
       "tickets:read"
     );
@@ -527,7 +669,9 @@ export const getTeamTicketThread = query({
 
 export const addTeamPublicReply = mutation({
   args: {
-    adminEmail: v.string(),
+    sessionToken: v.optional(v.string()),
+    adminEmail: v.optional(v.string()),
+    actorEmail: v.optional(v.string()),
     regionId: v.string(),
     ticketId: v.id("supportTickets"),
     body: v.string(),
@@ -537,7 +681,11 @@ export const addTeamPublicReply = mutation({
   handler: async (ctx, args) => {
     const admin = await requireTeamPermission(
       ctx,
-      args.adminEmail,
+      {
+        sessionToken: args.sessionToken,
+        adminEmail: args.adminEmail,
+        actorEmail: args.actorEmail,
+      },
       args.regionId,
       "tickets:write"
     );
@@ -606,7 +754,9 @@ export const addTeamPublicReply = mutation({
  */
 export const addTeamInternalNote = mutation({
   args: {
-    adminEmail: v.string(),
+    sessionToken: v.optional(v.string()),
+    adminEmail: v.optional(v.string()),
+    actorEmail: v.optional(v.string()),
     regionId: v.string(),
     ticketId: v.id("supportTickets"),
     body: v.string(),
@@ -615,7 +765,11 @@ export const addTeamInternalNote = mutation({
   handler: async (ctx, args) => {
     const admin = await requireTeamPermission(
       ctx,
-      args.adminEmail,
+      {
+        sessionToken: args.sessionToken,
+        adminEmail: args.adminEmail,
+        actorEmail: args.actorEmail,
+      },
       args.regionId,
       "tickets:note"
     );
@@ -665,7 +819,9 @@ export const addTeamInternalNote = mutation({
 
 export const updateTicketStatusAndAssignee = mutation({
   args: {
-    adminEmail: v.string(),
+    sessionToken: v.optional(v.string()),
+    adminEmail: v.optional(v.string()),
+    actorEmail: v.optional(v.string()),
     regionId: v.string(),
     ticketId: v.id("supportTickets"),
     status: v.optional(ticketStatusValidator),
@@ -677,7 +833,11 @@ export const updateTicketStatusAndAssignee = mutation({
   handler: async (ctx, args) => {
     const admin = await requireTeamPermission(
       ctx,
-      args.adminEmail,
+      {
+        sessionToken: args.sessionToken,
+        adminEmail: args.adminEmail,
+        actorEmail: args.actorEmail,
+      },
       args.regionId,
       "tickets:write"
     );
@@ -718,3 +878,7 @@ export const updateTicketStatusAndAssignee = mutation({
     return null;
   },
 });
+
+// Backward-compatible named aliases matching internal app tickets page contract
+export const listTicketsForTeam = getTeamTickets;
+export const getTicketForTeam = getTeamTicketThread;
