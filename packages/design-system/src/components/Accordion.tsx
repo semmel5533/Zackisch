@@ -11,7 +11,7 @@ export const Accordion = {
     return (
       <BaseAccordion.Item
         className={cn(
-          "border-b border-[#D6DED7] last:border-b-0 py-3",
+          "border-b border-[#E0E0E0] last:border-b-0 py-3",
           className
         )}
         {...props}
@@ -28,18 +28,19 @@ export const Accordion = {
       <BaseAccordion.Header className="flex">
         <BaseAccordion.Trigger
           className={cn(
-            "flex flex-1 items-center justify-between py-2 text-sm font-bold text-[#1A2721] text-left transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E66B5] rounded-lg group",
+            "flex flex-1 items-center justify-between py-2 text-sm font-semibold text-[#161616] text-left transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2359CE] rounded-lg group",
             className
           )}
           {...props}
         >
           {children}
           <svg
-            className="w-4 h-4 shrink-0 text-[#53665B] transition-transform duration-200 group-data-[panel-open]:rotate-180"
+            className="w-4 h-4 shrink-0 text-[#525252] transition-transform duration-200 group-data-[panel-open]:rotate-180"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
+            aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
@@ -54,7 +55,7 @@ export const Accordion = {
     return (
       <BaseAccordion.Panel
         className={cn(
-          "text-xs text-[#53665B] leading-relaxed pt-1 pb-3 overflow-hidden transition-all duration-200",
+          "text-xs sm:text-sm text-[#525252] leading-relaxed pt-1 pb-3 overflow-hidden transition-all duration-200",
           className
         )}
         {...props}

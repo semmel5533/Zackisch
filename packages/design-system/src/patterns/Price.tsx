@@ -32,7 +32,7 @@ export function Price({
 }: PriceProps) {
   if (showZeroAsFree && cents === 0) {
     return (
-      <span className={cn("font-bold text-[#17643B]", className)} {...props}>
+      <span className={cn("font-semibold text-[#12744B]", className)} {...props}>
         {locale.startsWith("de") ? "Kostenlos" : "Free"}
       </span>
     );
@@ -42,7 +42,7 @@ export function Price({
 
   return (
     <span
-      className={cn("font-num font-semibold text-[#1A2721] tabular-nums", className)}
+      className={cn("font-numeric font-semibold text-[#161616] tabular-nums", className)}
       {...props}
     >
       {formatted}

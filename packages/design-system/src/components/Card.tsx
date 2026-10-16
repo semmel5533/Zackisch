@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "../utils/cn";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "elevated" | "muted";
+  variant?: "default" | "elevated" | "muted" | "flat";
 }
 
 export function Card({ className, variant = "default", children, ...props }: CardProps) {
@@ -10,9 +10,10 @@ export function Card({ className, variant = "default", children, ...props }: Car
     <div
       className={cn(
         "rounded-2xl border transition-shadow duration-150",
-        variant === "default" && "bg-white border-[#D6DED7] shadow-xs",
-        variant === "elevated" && "bg-white border-[#D6DED7] shadow-md",
-        variant === "muted" && "bg-[#F7F5EF] border-[#D6DED7]",
+        variant === "default" && "bg-white border-[#E0E0E0] shadow-xs",
+        variant === "elevated" && "bg-white border-[#E0E0E0] shadow-md",
+        variant === "muted" && "bg-[#F7F7F7] border-[#E0E0E0]",
+        variant === "flat" && "bg-white border-[#E0E0E0]",
         className
       )}
       {...props}
@@ -42,7 +43,7 @@ export function CardTitle({
   return (
     <h3
       className={cn(
-        "text-base sm:text-lg font-bold text-[#1A2721] tracking-tight leading-snug",
+        "text-base sm:text-lg font-semibold text-[#161616] tracking-tight leading-snug",
         className
       )}
       {...props}
@@ -58,7 +59,7 @@ export function CardDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn("text-xs text-[#53665B] leading-normal", className)} {...props}>
+    <p className={cn("text-xs sm:text-sm text-[#525252] leading-relaxed", className)} {...props}>
       {children}
     </p>
   );

@@ -36,9 +36,9 @@ export function Pagination({
         {previousLabel}
       </Button>
 
-      <div className="text-xs text-[#53665B] font-num">
-        Seite <span className="font-bold text-[#1A2721]">{currentPage}</span> von{" "}
-        <span className="font-bold text-[#1A2721]">{totalPages}</span>
+      <div className="text-xs text-[#525252] font-numeric tabular-nums">
+        Seite <span className="font-semibold text-[#161616]">{currentPage}</span> von{" "}
+        <span className="font-semibold text-[#161616]">{totalPages}</span>
       </div>
 
       <Button

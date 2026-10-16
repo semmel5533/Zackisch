@@ -13,7 +13,7 @@ export const Drawer = {
     return (
       <BaseDrawer.Backdrop
         className={cn(
-          "fixed inset-0 z-50 bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in-0",
+          "fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in-0",
           className
         )}
         {...props}
@@ -30,12 +30,12 @@ export const Drawer = {
         <Drawer.Backdrop />
         <BaseDrawer.Popup
           className={cn(
-            "fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-white rounded-t-3xl border-t border-[#D6DED7] shadow-2xl p-6 sm:p-8 space-y-5 overflow-y-auto animate-in slide-in-from-bottom duration-200",
+            "fixed inset-x-0 bottom-0 z-50 max-h-[90vh] bg-white rounded-t-3xl border-t border-[#E0E0E0] shadow-2xl p-6 sm:p-8 space-y-5 overflow-y-auto animate-in slide-in-from-bottom duration-200",
             className
           )}
           {...props}
         >
-          <div className="mx-auto w-12 h-1.5 rounded-full bg-[#D6DED7] mb-2" />
+          <div className="mx-auto w-12 h-1.5 rounded-full bg-[#E0E0E0] mb-2" />
           {children}
         </BaseDrawer.Popup>
       </BaseDrawer.Portal>
@@ -48,7 +48,7 @@ export const Drawer = {
     return (
       <BaseDrawer.Title
         className={cn(
-          "text-lg sm:text-xl font-bold text-[#1A2721] tracking-tight leading-snug",
+          "text-lg sm:text-xl font-semibold text-[#161616] tracking-tight leading-snug",
           className
         )}
         {...props}
@@ -61,7 +61,7 @@ export const Drawer = {
   }: React.ComponentProps<typeof BaseDrawer.Description>) {
     return (
       <BaseDrawer.Description
-        className={cn("text-xs text-[#53665B] leading-relaxed", className)}
+        className={cn("text-xs sm:text-sm text-[#525252] leading-relaxed", className)}
         {...props}
       />
     );

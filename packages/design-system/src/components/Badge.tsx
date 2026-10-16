@@ -3,15 +3,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn";
 
 export const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 font-semibold text-xs rounded-full px-2.5 py-0.5 select-none transition-colors",
+  "inline-flex items-center gap-1.5 font-semibold text-xs rounded-full px-2.5 py-0.5 select-none transition-colors border",
   {
     variants: {
       variant: {
-        default: "bg-[#F0EFEA] text-[#1A2721] border border-[#D6DED7]",
-        positive: "bg-[#DCEFE5] text-[#173C2B] border border-[#B2DEC8]",
-        attention: "bg-[#FFF7EB] text-[#885200] border border-[#F5D699]",
-        negative: "bg-[#FEF3F2] text-[#B42318] border border-[#FECDCA]",
-        info: "bg-[#EBF3FF] text-[#1E66B5] border border-[#BFDBFE]",
+        default: "bg-[#F2F2F2] text-[#161616] border-[#E0E0E0]",
+        neutral: "bg-[#F2F2F2] text-[#161616] border-[#E0E0E0]",
+        positive: "bg-[#EAF7F0] text-[#12744B] border-[#A3D9BD]",
+        success: "bg-[#EAF7F0] text-[#12744B] border-[#A3D9BD]",
+        attention: "bg-[#FFF6E5] text-[#8B5D08] border-[#F5D699]",
+        warning: "bg-[#FFF6E5] text-[#8B5D08] border-[#F5D699]",
+        negative: "bg-[#FFF1EF] text-[#B42318] border-[#FECDCA]",
+        danger: "bg-[#FFF1EF] text-[#B42318] border-[#FECDCA]",
+        critical: "bg-[#FFF1EF] text-[#B42318] border-[#FECDCA]",
+        info: "bg-[#EDF4FF] text-[#225CB0] border-[#BFDBFE]",
+        pending: "bg-[#FFF6E5] text-[#8B5D08] border-[#F5D699]",
       },
       size: {
         sm: "text-[11px] px-2 py-0.5",
@@ -38,19 +44,50 @@ export function Badge({ className, variant, size, children, ...props }: BadgePro
   );
 }
 
+export type StatusTone = "neutral" | "success" | "warning" | "danger" | "info";
+
+export interface StatusBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  tone?: StatusTone;
+}
+
+/**
+ * StatusBadge with visible non-color bullet indicator for accessibility
+ */
+export function StatusBadge({ tone = "neutral", className, children, ...props }: StatusBadgeProps) {
+  const toneToVariant = {
+    neutral: "neutral" as const,
+    success: "positive" as const,
+    warning: "attention" as const,
+    danger: "negative" as const,
+    info: "info" as const,
+  };
+
+  return (
+    <span
+      className={cn(badgeVariants({ variant: toneToVariant[tone], className }))}
+      data-tone={tone}
+      {...props}
+    >
+      <span aria-hidden="true" className="text-[8px] leading-none">●</span>
+      <span>{children}</span>
+    </span>
+  );
+}
+
 export const alertVariants = cva(
   "p-4 rounded-2xl border text-sm flex items-start gap-3 w-full",
   {
     variants: {
       variant: {
-        info: "bg-[#F7F5EF] border-[#D6DED7] text-[#1A2721]",
-        positive: "bg-[#EBF7EE] border-[#A6D5B8] text-[#17643B]",
-        attention: "bg-[#FFF7EB] border-[#F5D699] text-[#885200]",
-        negative: "bg-[#FEF3F2] border-[#FECDCA] text-[#B42318]",
+        neutral: "bg-[#F2F2F2] border-[#E0E0E0] text-[#161616]",
+        info: "bg-[#EDF4FF] border-[#BFDBFE] text-[#161616]",
+        positive: "bg-[#EAF7F0] border-[#A3D9BD] text-[#161616]",
+        attention: "bg-[#FFF6E5] border-[#F5D699] text-[#161616]",
+        negative: "bg-[#FFF1EF] border-[#FECDCA] text-[#161616]",
       },
     },
     defaultVariants: {
-      variant: "info",
+      variant: "neutral",
     },
   }
 );
@@ -78,8 +115,8 @@ export function Alert({
     >
       {icon && <div className="shrink-0 mt-0.5">{icon}</div>}
       <div className="space-y-1 w-full">
-        {title && <h4 className="font-bold text-sm leading-snug">{title}</h4>}
-        <div className="text-xs leading-relaxed opacity-95">{children}</div>
+        {title && <h4 className="font-semibold text-sm leading-snug text-[#0A0A0A]">{title}</h4>}
+        <div className="text-xs leading-relaxed text-[#525252]">{children}</div>
       </div>
     </div>
   );

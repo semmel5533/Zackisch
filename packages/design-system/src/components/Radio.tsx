@@ -16,17 +16,17 @@ export function Radio({ className, label, id, ...props }: RadioProps) {
       <BaseRadio.Root
         id={radioId}
         className={cn(
-          "size-5 rounded-full border border-[#D6DED7] bg-white transition-colors duration-150 flex items-center justify-center cursor-pointer data-[checked]:border-[#173C2B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E66B5] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "size-5 rounded-full border border-[#C4C4C4] bg-white transition-colors duration-150 flex items-center justify-center cursor-pointer data-[checked]:border-[#161616] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2359CE] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         {...props}
       >
-        <BaseRadio.Indicator className="size-2.5 rounded-full bg-[#173C2B]" />
+        <BaseRadio.Indicator className="size-2.5 rounded-full bg-[#161616]" />
       </BaseRadio.Root>
       {label && (
         <label
           htmlFor={radioId}
-          className="text-xs font-semibold text-[#1A2721] cursor-pointer select-none"
+          className="text-xs font-semibold text-[#161616] cursor-pointer select-none"
         >
           {label}
         </label>

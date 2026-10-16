@@ -1,27 +1,82 @@
 export * from "./brand";
 
 /**
- * Core primitive color tokens
- * Hospitality warmth palette designed for readability and WCAG 2.2 AA compliance
+ * Clean-sheet immutable token references from /tokens/primitives.json
+ */
+export const neutral = {
+  n0: "#FFFFFF",
+  n25: "#FCFCFC",
+  n50: "#F7F7F7",
+  n100: "#F2F2F2",
+  n150: "#EAEAEA",
+  n200: "#E0E0E0",
+  n300: "#C4C4C4",
+  n400: "#959595",
+  n500: "#6A6A6A",
+  n600: "#525252",
+  n700: "#383838",
+  n800: "#252525",
+  n900: "#161616",
+  n950: "#0A0A0A",
+} as const;
+
+export const status = {
+  success: "#12744B",
+  successBackground: "#EAF7F0",
+  successBorder: "#A3D9BD",
+  warning: "#8B5D08",
+  warningBackground: "#FFF6E5",
+  warningBorder: "#F5D699",
+  danger: "#B42318",
+  dangerBackground: "#FFF1EF",
+  dangerBorder: "#FECDCA",
+  info: "#225CB0",
+  infoBackground: "#EDF4FF",
+  infoBorder: "#BFDBFE",
+  focus: "#2359CE",
+} as const;
+
+export const brandAssets = {
+  origin: "https://zackisch.com",
+  symbol: "https://zackisch.com/brand_mark.svg",
+  wordmark: "https://zackisch.com/word_mark.svg",
+  combination: "https://zackisch.com/combination_mark.svg",
+  og: "https://zackisch.com/og_image.png",
+  appleTouchIcon: "https://zackisch.com/apple-touch-icon.png",
+} as const;
+
+export const touch = {
+  min: 44,
+  staff: 48,
+} as const;
+
+/**
+ * Core primitive color tokens (Zackisch Monochrome Design System)
+ * Strictly monochrome (neutral scale) with functional status colors.
  */
 export const CORE_COLORS = {
-  ink: "#192C25",
-  deepForest: "#173C2B",
-  forestHover: "#245740",
-  forestMuted: "#DCEFE5",
-  cream: "#F7F5EF",
-  paper: "#FFFFFF",
-  charcoal: "#1A2721",
-  subtle: "#53665B",
-  line: "#D6DED7",
-  lineLight: "#E8EFE9",
-  success: "#17643B",
-  successBg: "#EBF7EE",
-  warning: "#885200",
-  warningBg: "#FFF7EB",
-  danger: "#B42318",
-  dangerBg: "#FEF3F2",
-  focus: "#1E66B5",
+  ink: neutral.n900, // #161616
+  inkStrong: neutral.n950, // #0A0A0A
+  muted: neutral.n600, // #525252
+  subtle: neutral.n500, // #6A6A6A
+  canvas: neutral.n50, // #F7F7F7
+  canvasPublic: neutral.n0, // #FFFFFF
+  paper: neutral.n0, // #FFFFFF
+  line: neutral.n300, // #C4C4C4
+  lineLight: neutral.n200, // #E0E0E0
+  lineStrong: neutral.n800, // #252525
+  charcoal: neutral.n900,
+  warmPaper: "#F5F3F0",
+  warmLine: "#E9E6E2",
+  success: status.success,
+  successBg: status.successBackground,
+  warning: status.warning,
+  warningBg: status.warningBackground,
+  danger: status.danger,
+  dangerBg: status.dangerBackground,
+  info: status.info,
+  infoBg: status.infoBackground,
+  focus: status.focus,
 } as const;
 
 /**
@@ -29,69 +84,74 @@ export const CORE_COLORS = {
  */
 export const SEMANTIC_TOKENS = {
   surface: {
-    page: CORE_COLORS.cream,
+    page: CORE_COLORS.canvas,
+    public: CORE_COLORS.canvasPublic,
     card: CORE_COLORS.paper,
     raised: CORE_COLORS.paper,
-    muted: "#F0EFEA",
-    highlight: CORE_COLORS.forestMuted,
+    muted: neutral.n100,
+    inverse: neutral.n900,
+    editorial: CORE_COLORS.warmPaper,
   },
   text: {
-    primary: CORE_COLORS.charcoal,
-    secondary: CORE_COLORS.subtle,
-    brand: CORE_COLORS.deepForest,
-    inverse: "#FFFFFF",
-    onBrand: "#FFFFFF",
+    primary: neutral.n900,
+    strong: neutral.n950,
+    secondary: neutral.n600,
+    muted: neutral.n500,
+    inverse: neutral.n0,
+    link: neutral.n900,
   },
   border: {
-    default: CORE_COLORS.line,
-    subtle: CORE_COLORS.lineLight,
-    strong: CORE_COLORS.subtle,
-    brand: CORE_COLORS.deepForest,
+    default: neutral.n300,
+    subtle: neutral.n200,
+    strong: neutral.n800,
   },
   action: {
-    primaryBg: CORE_COLORS.deepForest,
-    primaryHoverBg: CORE_COLORS.forestHover,
-    primaryText: "#FFFFFF",
-    secondaryBg: CORE_COLORS.paper,
-    secondaryBorder: CORE_COLORS.line,
-    secondaryText: CORE_COLORS.charcoal,
-    destructiveBg: CORE_COLORS.danger,
-    destructiveText: "#FFFFFF",
-    focusRing: CORE_COLORS.focus,
+    primaryBg: neutral.n900,
+    primaryHoverBg: neutral.n800,
+    primaryPressedBg: neutral.n950,
+    primaryText: neutral.n0,
+    secondaryBg: neutral.n0,
+    secondaryBorder: neutral.n300,
+    secondaryText: neutral.n900,
+    ghostHoverBg: neutral.n100,
+    destructiveBg: status.danger,
+    destructiveHoverBg: "#982016",
+    destructiveText: neutral.n0,
+    focusRing: status.focus,
   },
   status: {
     positive: {
-      text: CORE_COLORS.success,
-      bg: CORE_COLORS.successBg,
-      border: "#A6D5B8",
+      text: status.success,
+      bg: status.successBackground,
+      border: status.successBorder,
     },
     attention: {
-      text: CORE_COLORS.warning,
-      bg: CORE_COLORS.warningBg,
-      border: "#F5D699",
+      text: status.warning,
+      bg: status.warningBackground,
+      border: status.warningBorder,
     },
     negative: {
-      text: CORE_COLORS.danger,
-      bg: CORE_COLORS.dangerBg,
-      border: "#FECDCA",
+      text: status.danger,
+      bg: status.dangerBackground,
+      border: status.dangerBorder,
     },
     info: {
-      text: CORE_COLORS.deepForest,
-      bg: CORE_COLORS.forestMuted,
-      border: "#B2DEC8",
+      text: status.info,
+      bg: status.infoBackground,
+      border: status.infoBorder,
     },
   },
 } as const;
 
 /**
  * Typography Tokens
- * Poppins is the non-negotiable principal brand font.
- * Inter / system-ui is optional for high-density tabular numbers.
+ * Poppins is the principal brand and UI font.
+ * Inter / system-ui is for high-density tabular numbers.
  */
 export const TYPOGRAPHY_TOKENS = {
-  fontBrand: "Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-  fontUi: "Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-  fontNumeric: "var(--font-poppins, Poppins), tabular-nums",
+  fontBrand: "var(--font-poppins-variable, Poppins), system-ui, -apple-system, sans-serif",
+  fontUi: "var(--font-poppins-variable, Poppins), system-ui, -apple-system, sans-serif",
+  fontNumeric: "var(--font-inter-variable, Inter), var(--font-poppins-variable, Poppins), tabular-nums, sans-serif",
   weights: {
     regular: 400,
     medium: 500,
@@ -117,25 +177,25 @@ export const TYPOGRAPHY_TOKENS = {
 } as const;
 
 /**
- * Touch target & layout increments (4px base)
+ * Touch target & layout increments
  */
 export const LAYOUT_TOKENS = {
   spacingBase: 4,
   touchTargetMin: "44px",
   touchTargetComfort: "48px",
   radii: {
-    sm: "0.375rem", // 6px
-    md: "0.5rem", // 8px
-    lg: "0.75rem", // 12px
-    xl: "1rem", // 16px
-    "2xl": "1.25rem", // 20px
-    "3xl": "1.5rem", // 24px
+    none: "0px",
+    sm: "6px",
+    md: "10px",
+    lg: "12px",
+    xl: "16px",
+    "2xl": "20px",
     full: "9999px",
   },
   maxWidths: {
     marketing: "1280px",
-    article: "768px",
-    dashboard: "1440px",
+    article: "72ch",
+    dashboard: "1600px",
     modal: "540px",
   },
 } as const;

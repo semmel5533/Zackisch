@@ -14,7 +14,7 @@ export function Switch({ className, label, id, ...props }: SwitchProps) {
       <BaseSwitch.Root
         id={switchId}
         className={cn(
-          "w-11 h-6 rounded-full border border-transparent bg-[#D6DED7] transition-colors duration-200 cursor-pointer p-0.5 inline-flex items-center data-[checked]:bg-[#173C2B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E66B5] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "w-11 h-6 rounded-full border border-transparent bg-[#C4C4C4] transition-colors duration-200 cursor-pointer p-0.5 inline-flex items-center data-[checked]:bg-[#161616] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2359CE] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
         {...props}
@@ -24,7 +24,7 @@ export function Switch({ className, label, id, ...props }: SwitchProps) {
       {label && (
         <label
           htmlFor={switchId}
-          className="text-xs font-semibold text-[#1A2721] cursor-pointer select-none"
+          className="text-xs font-semibold text-[#161616] cursor-pointer select-none"
         >
           {label}
         </label>

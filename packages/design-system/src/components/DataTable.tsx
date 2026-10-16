@@ -1,14 +1,15 @@
 import React from "react";
 import { cn } from "../utils/cn";
+export { EmptyState, type EmptyStateProps } from "./EmptyState";
 
 export function Table({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="relative w-full overflow-auto rounded-2xl border border-[#D6DED7]">
+    <div className="relative w-full overflow-auto rounded-2xl border border-[#E0E0E0] bg-white">
       <table
-        className={cn("w-full caption-bottom text-xs text-[#1A2721]", className)}
+        className={cn("w-full caption-bottom text-xs text-[#161616]", className)}
         {...props}
       />
     </div>
@@ -21,7 +22,7 @@ export function TableHeader({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead
-      className={cn("bg-[#F7F5EF] border-b border-[#D6DED7]", className)}
+      className={cn("bg-[#F7F7F7] border-b border-[#E0E0E0]", className)}
       {...props}
     />
   );
@@ -46,7 +47,7 @@ export function TableRow({
   return (
     <tr
       className={cn(
-        "border-b border-[#D6DED7] transition-colors hover:bg-[#F7F5EF]/60 data-[state=selected]:bg-[#DCEFE5]",
+        "border-b border-[#E0E0E0] transition-colors hover:bg-[#F7F7F7] data-[state=selected]:bg-[#F2F2F2]",
         className
       )}
       {...props}
@@ -60,8 +61,9 @@ export function TableHead({
 }: React.ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
+      scope="col"
       className={cn(
-        "h-10 px-4 text-left align-middle font-bold text-[#53665B] select-none",
+        "h-11 px-4 text-left align-middle font-semibold text-[#525252] select-none",
         className
       )}
       {...props}
@@ -75,43 +77,8 @@ export function TableCell({
 }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("p-4 align-middle font-medium", className)}
+      className={cn("p-4 align-middle font-normal text-[#161616]", className)}
       {...props}
     />
-  );
-}
-
-export interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
-  icon?: React.ReactNode;
-  title: string;
-  description?: string;
-  action?: React.ReactNode;
-}
-
-export function EmptyState({
-  icon,
-  title,
-  description,
-  action,
-  className,
-  ...props
-}: EmptyStateProps) {
-  return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-2xl border border-dashed border-[#D6DED7] bg-[#F7F5EF]/50 space-y-3",
-        className
-      )}
-      {...props}
-    >
-      {icon && <div className="text-[#53665B] mb-1">{icon}</div>}
-      <h4 className="text-sm font-bold text-[#1A2721]">{title}</h4>
-      {description && (
-        <p className="text-xs text-[#53665B] max-w-sm leading-relaxed">
-          {description}
-        </p>
-      )}
-      {action && <div className="pt-2">{action}</div>}
-    </div>
   );
 }
