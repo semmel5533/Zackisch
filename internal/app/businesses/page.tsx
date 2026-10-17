@@ -18,12 +18,7 @@ export default function BusinessesPage() {
 
   const businesses = useQuery(
     (anyApi as any).admin.listRegionalBusinesses,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          sessionToken,
-        }
-      : "skip"
+    sessionToken ? { regionId: currentRegion, sessionToken } : "skip"
   );
 
   const filtered = (businesses || []).filter((r: any) =>

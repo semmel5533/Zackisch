@@ -30,22 +30,12 @@ export default function PartnersPage() {
 
   const partners = useQuery(
     (anyApi as any).partners.listPartners,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          sessionToken,
-        }
-      : "skip"
+    sessionToken ? { regionId: currentRegion, sessionToken } : "skip"
   );
 
   const payouts = useQuery(
     (anyApi as any).partners.listPayouts,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          sessionToken,
-        }
-      : "skip"
+    sessionToken ? { regionId: currentRegion, sessionToken } : "skip"
   );
 
   const createPartnerMutation = useMutation((anyApi as any).partners.createPartner);
@@ -67,8 +57,7 @@ export default function PartnersPage() {
         email: partnerEmail,
         regionId: currentRegion,
         iban: partnerIban || undefined,
-        actorEmail: adminEmail,
-        sessionToken: sessionToken || undefined,
+        sessionToken: sessionToken || "",
       });
       toast.success(`Partner ${partnerName} (${partnerCode}) angelegt!`);
       setShowCreateModal(false);
@@ -93,8 +82,7 @@ export default function PartnersPage() {
         amountCents: cents,
         period: payoutPeriod,
         notes: payoutNotes || undefined,
-        actorEmail: adminEmail,
-        sessionToken: sessionToken || undefined,
+        sessionToken: sessionToken || "",
       });
       toast.success("Auszahlung erfolgreich gebucht!");
       setShowPayoutModal(null);

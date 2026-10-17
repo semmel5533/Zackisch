@@ -19,13 +19,7 @@ export default function OrdersPage() {
 
   const orders = useQuery(
     (anyApi as any).admin.listRegionalOrders,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          limit: 100,
-          sessionToken,
-        }
-      : "skip"
+    sessionToken ? { regionId: currentRegion, sessionToken, limit: 100 } : "skip"
   );
 
   const formatEuro = (cents: number) => {

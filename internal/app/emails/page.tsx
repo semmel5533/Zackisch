@@ -27,9 +27,9 @@ export default function EmailLogPage() {
     sessionToken
       ? {
           regionId: currentRegion,
+          sessionToken,
           type: typeFilter === "all" ? undefined : typeFilter,
           limit: 100,
-          sessionToken,
         }
       : "skip"
   );

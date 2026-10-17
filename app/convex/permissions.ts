@@ -1,6 +1,6 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import type { QueryCtx } from "./_generated/server";
-import type { Doc, Id } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
 
 export async function isOwner(
   ctx: QueryCtx,
@@ -59,19 +59,33 @@ export async function verifyTerminal(
   return false;
 }
 
+export type OpsPermission =
+  | "restaurants:read"
+  | "restaurants:write"
+  | "orders:read"
+  | "orders:write"
+  | "tickets:read"
+  | "tickets:write"
+  | "tickets:note"
+  | "newsletter:read"
+  | "newsletter:write"
+  | "newsletter:send"
+  | "partners:read"
+  | "partners:write"
+  | "audit:read"
+  | "staff:read"
+  | "staff:manage"
+  | "emails:read";
+
 export async function requireOpsActor(
   ctx: { db: any },
-  credentials: {
-    sessionToken?: string;
-  },
-  options: {
-    regionId?: string;
-    requiredPermission?: string;
-  } = {}
-): Promise<Doc<"adminUsers">> {
-  const token = credentials.sessionToken?.trim();
+  sessionToken: string | undefined,
+  requiredPermission?: OpsPermission | string,
+  targetRegion?: string
+) {
+  const token = sessionToken?.trim();
   if (!token) {
-    throw new Error("Authentifizierung erforderlich: Kein Team-Sitzungstoken angegeben.");
+    throw new Error("UNAUTHORIZED: Administrator-Session-Token ist erforderlich.");
   }
 
   const session = await ctx.db
@@ -80,21 +94,28 @@ export async function requireOpsActor(
     .first();
 
   if (!session || Date.now() > session.expires) {
-    throw new Error("Sitzung ist abgelaufen oder ungültig. Bitte erneut anmelden.");
+    throw new Error("UNAUTHORIZED: Ungültiges oder abgelaufenes Administrator-Session-Token.");
   }
 
-  const admin = (await ctx.db.get(session.code as Id<"adminUsers">)) as (Doc<"adminUsers"> | null);
+  const admin = await ctx.db.get(session.code as Id<"adminUsers">);
   if (!admin || !admin.isActive) {
-    throw new Error("Kein aktives Team-Dashboard-Konto.");
+    throw new Error("UNAUTHORIZED: Administrator-Account existiert nicht oder ist deaktiviert.");
   }
 
-  if (options.regionId && admin.regionId.toLowerCase() !== options.regionId.toLowerCase()) {
-    throw new Error("Kein Zugriff auf Daten außerhalb der zugewiesenen Region.");
+  // Region enforcement:
+  // A regional_admin is strictly bound to their assigned regionId.
+  if (targetRegion && admin.role === "regional_admin") {
+    if (admin.regionId.toLowerCase() !== targetRegion.toLowerCase()) {
+      throw new Error(
+        `FORBIDDEN: Regionaler Administrator von '${admin.regionId}' hat keinen Zugriff auf Region '${targetRegion}'.`
+      );
+    }
   }
 
-  if (options.requiredPermission && admin.role !== "regional_admin") {
-    if (!admin.permissions || !admin.permissions.includes(options.requiredPermission)) {
-      throw new Error(`Berechtigung '${options.requiredPermission}' fehlt.`);
+  // Permission enforcement
+  if (requiredPermission) {
+    if (!admin.permissions || !admin.permissions.includes(requiredPermission)) {
+      throw new Error(`FORBIDDEN: Fehlende Berechtigung '${requiredPermission}'.`);
     }
   }
 

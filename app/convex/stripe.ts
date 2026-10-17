@@ -191,6 +191,7 @@ export const createEmbeddedAccountSession = action({
         components: {
           account_onboarding: { enabled: true },
           account_management: { enabled: true },
+          notification_banner: { enabled: true },
           payments: { enabled: true },
           payouts: { enabled: true },
         },

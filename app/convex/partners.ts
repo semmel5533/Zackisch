@@ -27,11 +27,7 @@ export const listPartners = query({
     })
   ),
   handler: async (ctx, args) => {
-    await requireOpsActor(
-      ctx,
-      { sessionToken: args.sessionToken },
-      { regionId: args.regionId, requiredPermission: "partners:read" }
-    );
+    await requireOpsActor(ctx, args.sessionToken, "partners:read", args.regionId);
     const partners = await ctx.db
       .query("partners")
       .withIndex("by_regionId", (q) => q.eq("regionId", args.regionId))
@@ -70,16 +66,11 @@ export const createPartner = mutation({
     regionId: v.string(),
     iban: v.optional(v.string()),
     taxId: v.optional(v.string()),
-    actorEmail: v.optional(v.string()),
-    sessionToken: v.optional(v.string()),
+    sessionToken: v.string(),
   },
   returns: v.id("partners"),
   handler: async (ctx, args) => {
-    const actor = await requireOpsActor(
-      ctx,
-      { sessionToken: args.sessionToken },
-      { regionId: args.regionId, requiredPermission: "partners:write" }
-    );
+    const actor = await requireOpsActor(ctx, args.sessionToken, "partners:write", args.regionId);
     const code = args.code.toUpperCase().trim();
     const existing = await ctx.db
       .query("partners")
@@ -129,16 +120,11 @@ export const recordPayout = mutation({
     period: v.string(),
     notes: v.optional(v.string()),
     reference: v.optional(v.string()),
-    actorEmail: v.optional(v.string()),
-    sessionToken: v.optional(v.string()),
+    sessionToken: v.string(),
   },
   returns: v.id("partnerPayouts"),
   handler: async (ctx, args) => {
-    const actor = await requireOpsActor(
-      ctx,
-      { sessionToken: args.sessionToken },
-      { regionId: args.regionId, requiredPermission: "partners:write" }
-    );
+    const actor = await requireOpsActor(ctx, args.sessionToken, "partners:write", args.regionId);
     const partner = await ctx.db.get(args.partnerId);
     if (!partner) throw new Error("Partner not found");
 
@@ -196,11 +182,7 @@ export const listPayouts = query({
     })
   ),
   handler: async (ctx, args) => {
-    await requireOpsActor(
-      ctx,
-      { sessionToken: args.sessionToken },
-      { regionId: args.regionId, requiredPermission: "partners:read" }
-    );
+    await requireOpsActor(ctx, args.sessionToken, "partners:read", args.regionId);
     return await ctx.db
       .query("partnerPayouts")
       .withIndex("by_regionId", (q) => q.eq("regionId", args.regionId))

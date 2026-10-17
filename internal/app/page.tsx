@@ -29,12 +29,7 @@ export default function AdminOverviewPage() {
   // Queries
   const overview = useQuery(
     (anyApi as any).admin.getRegionalOverview,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          sessionToken,
-        }
-      : "skip"
+    sessionToken ? { regionId: currentRegion, sessionToken } : "skip"
   );
 
   const testSmtpAction = useAction((anyApi as any).emails.testSmtpConnection);

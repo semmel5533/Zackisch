@@ -346,7 +346,7 @@ export const createTicket = mutation({
     const identity = await getVerifiedCustomerIdentity(ctx, args.sessionToken);
     if (!identity) {
       throw new Error(
-        "Authentifizierung erforderlich: Nur verifizierte Zackisch-Betriebskonten können Support-Anfragen erstellen."
+        "UNAUTHORIZED: Support-Tickets können ausschließlich von verifizierten Zackisch-Betriebskonten erstellt werden. Bitte melde dich mit deinem Betriebskonto an."
       );
     }
 

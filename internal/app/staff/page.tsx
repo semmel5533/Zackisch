@@ -32,12 +32,7 @@ export default function StaffPage() {
 
   const staffList = useQuery(
     (anyApi as any).admin.listStaff,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          sessionToken,
-        }
-      : "skip"
+    sessionToken ? { regionId: currentRegion, sessionToken } : "skip"
   );
 
   const inviteMutation = useMutation((anyApi as any).admin.inviteStaff);
@@ -81,8 +76,7 @@ export default function StaffPage() {
         role: inviteRole,
         regionId: currentRegion,
         permissions: selectedPermissions,
-        actorEmail: adminEmail,
-        sessionToken: sessionToken || undefined,
+        sessionToken: sessionToken || "",
       });
       toast.success(`Mitarbeiter ${inviteName} erfolgreich angelegt!`);
       setShowInviteModal(false);
@@ -98,9 +92,8 @@ export default function StaffPage() {
       await updateStatusMutation({
         staffId,
         isActive: !currentActive,
-        actorEmail: adminEmail,
         regionId: currentRegion,
-        sessionToken: sessionToken || undefined,
+        sessionToken: sessionToken || "",
       });
       toast.success(currentActive ? "Mitarbeiter deaktiviert." : "Mitarbeiter aktiviert.");
     } catch (err: any) {

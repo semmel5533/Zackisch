@@ -57,13 +57,13 @@ export const updateCampaignSentStats = internalMutation({
   },
 });
 
-// Query for Team Dashboard to list email logs
+// Query for Team Dashboard to list email logs - enforces ops permission and regional scope
 export const listEmailLogs = query({
   args: {
-    regionId: v.optional(v.string()),
+    regionId: v.string(),
+    sessionToken: v.optional(v.string()),
     type: v.optional(v.string()),
     limit: v.optional(v.number()),
-    sessionToken: v.optional(v.string()),
   },
   returns: v.array(
     v.object({
@@ -89,16 +89,12 @@ export const listEmailLogs = query({
     })
   ),
   handler: async (ctx, args) => {
-    await requireOpsActor(
-      ctx,
-      { sessionToken: args.sessionToken },
-      { regionId: args.regionId }
-    );
+    await requireOpsActor(ctx, args.sessionToken, "newsletter:read", args.regionId);
     const limit = args.limit || 100;
     const records = await ctx.db.query("emailLogs").order("desc").take(limit * 2);
     return records
       .filter((r) => {
-        if (args.regionId && r.regionId && r.regionId !== args.regionId) return false;
+        if (r.regionId && r.regionId.toLowerCase() !== args.regionId.toLowerCase()) return false;
         if (args.type && r.type !== args.type && !(args.type === "otp" && r.type === "ops_otp")) return false;
         return true;
       })

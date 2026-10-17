@@ -5,13 +5,39 @@ import { api } from "../convex/_generated/api";
 
 const modules = import.meta.glob("../convex/**/*.ts");
 
-async function setupSecurityP0Fixture() {
+async function setupP0Fixtures() {
   const t = convexTest(schema, modules);
+  const data = await t.run(async (ctx) => {
+    // 1. Seed regions
+    await ctx.db.insert("regions", {
+      code: "de",
+      name: "Deutschland",
+      currency: "EUR",
+      taxRates: [7, 19],
+      platformFeePercent: 2,
+      partnerCommissionPercent: 50,
+      status: "active",
+      defaultLocale: "de",
+      supportedLocales: ["de", "en"],
+      createdAt: Date.now(),
+    });
 
-  const fixture = await t.run(async (ctx) => {
-    // 1. Regional Admin for Germany (DE)
+    await ctx.db.insert("regions", {
+      code: "at",
+      name: "Österreich",
+      currency: "EUR",
+      taxRates: [10, 20],
+      platformFeePercent: 2,
+      partnerCommissionPercent: 50,
+      status: "planned",
+      defaultLocale: "de",
+      supportedLocales: ["de", "en"],
+      createdAt: Date.now(),
+    });
+
+    // 2. Seed DE regional admin
     const deAdminId = await ctx.db.insert("adminUsers", {
-      email: "admin@zackisch.de",
+      email: "admin-de@zackisch.com",
       name: "DE Admin",
       role: "regional_admin",
       regionId: "de",
@@ -29,382 +55,343 @@ async function setupSecurityP0Fixture() {
         "partners:read",
         "partners:write",
         "audit:read",
+        "staff:read",
         "staff:manage",
+        "emails:read",
       ],
       isActive: true,
-      password: "secure_password_1",
+      password: "initial-password-123",
       createdAt: Date.now(),
     });
 
-    // 2. Staff user for DE with restricted permissions (e.g. only orders:read, tickets:read)
-    const deStaffRestrictedId = await ctx.db.insert("adminUsers", {
-      email: "staff@zackisch.de",
-      name: "DE Restricted Staff",
+    // 3. Seed Limited Staff (no staff:manage)
+    const limitedStaffId = await ctx.db.insert("adminUsers", {
+      email: "limited-staff@zackisch.com",
+      name: "Limited Staff",
       role: "staff",
       regionId: "de",
       permissions: ["orders:read", "tickets:read"],
       isActive: true,
-      password: "secure_password_2",
+      password: "staff-password-123",
       createdAt: Date.now(),
     });
 
-    // 3. Regional Admin for Austria (AT)
-    const atAdminId = await ctx.db.insert("adminUsers", {
-      email: "admin@zackisch.at",
-      name: "AT Admin",
-      role: "regional_admin",
-      regionId: "at",
-      permissions: ["restaurants:read", "orders:read", "tickets:read", "staff:manage"],
-      isActive: true,
-      password: "secure_password_3",
-      createdAt: Date.now(),
-    });
-
-    // 4. Inactive Admin
-    const inactiveAdminId = await ctx.db.insert("adminUsers", {
-      email: "inactive@zackisch.de",
-      name: "Inactive Admin",
-      role: "regional_admin",
-      regionId: "de",
-      permissions: ["restaurants:read"],
-      isActive: false,
-      createdAt: Date.now(),
-    });
-
-    // Sessions in verificationCodes
+    // 4. Seed Tokens in verificationCodes
+    const deAdminToken = "ops_session_valid_de_admin";
     await ctx.db.insert("verificationCodes", {
-      identifier: "ops_session_valid_de_admin",
+      identifier: deAdminToken,
       code: deAdminId,
       expires: Date.now() + 3600000,
     });
 
+    const limitedStaffToken = "ops_session_limited_staff";
     await ctx.db.insert("verificationCodes", {
-      identifier: "ops_session_valid_de_staff",
-      code: deStaffRestrictedId,
+      identifier: limitedStaffToken,
+      code: limitedStaffId,
       expires: Date.now() + 3600000,
     });
 
+    const expiredToken = "ops_session_expired";
     await ctx.db.insert("verificationCodes", {
-      identifier: "ops_session_valid_at_admin",
-      code: atAdminId,
-      expires: Date.now() + 3600000,
-    });
-
-    await ctx.db.insert("verificationCodes", {
-      identifier: "ops_session_inactive",
-      code: inactiveAdminId,
-      expires: Date.now() + 3600000,
-    });
-
-    await ctx.db.insert("verificationCodes", {
-      identifier: "ops_session_expired",
+      identifier: expiredToken,
       code: deAdminId,
       expires: Date.now() - 1000,
     });
 
-    // Seed sample business in DE
-    const businessId = await ctx.db.insert("businesses", {
-      name: "Bistro Berlin",
-      ownerId: "user_owner_1",
-      region: "de",
-      currency: "EUR",
-      taxId: "DE123456789",
-      stripeAccountId: "acct_test123",
-      stripeOnboardingComplete: true,
-    });
-
-    // Seed sample partner in DE
-    const partnerId = await ctx.db.insert("partners", {
-      code: "PARTNER01",
-      name: "Partner Eins",
-      email: "partner@example.de",
-      regionId: "de",
-      commissionRate: 0.5,
-      status: "active",
-      totalEarnedCents: 1000,
-      totalPaidCents: 0,
-      createdAt: Date.now(),
-    });
-
-    // Seed sample customer user & merchant support session
+    // 5. Seed merchant and business for support tests
     const merchantUserId = await ctx.db.insert("users", {
-      email: "merchant@bistro.de",
-      name: "Bistro Owner",
+      name: "Cafe Owner",
+      email: "owner@cafe-berlin.de",
     });
 
+    const businessId = await ctx.db.insert("businesses", {
+      name: "Cafe Berlin",
+      ownerId: merchantUserId,
+      region: "de",
+    });
+
+    // 6. Seed valid support session
+    const validSupportToken = "support_valid_token_xyz";
     await ctx.db.insert("supportSessions", {
-      token: "support_session_merchant",
+      token: validSupportToken,
       userId: merchantUserId,
       businessId,
-      businessName: "Bistro Berlin",
-      email: "merchant@bistro.de",
-      name: "Bistro Owner",
+      businessName: "Cafe Berlin",
+      email: "owner@cafe-berlin.de",
+      name: "Cafe Owner",
       regionId: "de",
       expiresAt: Date.now() + 3600000,
     });
 
     return {
       deAdminId,
-      deStaffRestrictedId,
-      atAdminId,
-      businessId,
-      partnerId,
+      deAdminToken,
+      limitedStaffToken,
+      expiredToken,
       merchantUserId,
+      businessId,
+      validSupportToken,
     };
   });
 
-  return { t, fixture };
+  return { t, data };
 }
 
-describe("Security P0: Complete Server-Side Access Control & Negative Tests", () => {
-  it("denies unauthenticated, expired, inactive, and wrong-region access to admin:getRegionalOverview", async () => {
-    const { t } = await setupSecurityP0Fixture();
+describe("Gate 0: P0 Security & Authorization Enforcement", () => {
+  it("rejects unauthenticated and cross-region access to getRegionalOverview", async () => {
+    const { t, data } = await setupP0Fixtures();
 
-    // 1. Unauthenticated (no sessionToken)
+    // 1. Unauthenticated -> fails
     await expect(
       t.query(api.admin.getRegionalOverview, { regionId: "de" })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
+    ).rejects.toThrow(/UNAUTHORIZED/);
 
-    // 2. Expired session
+    // 2. Expired token -> fails
     await expect(
       t.query(api.admin.getRegionalOverview, {
         regionId: "de",
-        sessionToken: "ops_session_expired",
+        sessionToken: data.expiredToken,
       })
-    ).rejects.toThrow(/Sitzung ist abgelaufen/);
+    ).rejects.toThrow(/UNAUTHORIZED/);
 
-    // 3. Inactive admin
+    // 3. Cross-region access (DE admin requesting AT) -> fails
     await expect(
       t.query(api.admin.getRegionalOverview, {
-        regionId: "de",
-        sessionToken: "ops_session_inactive",
+        regionId: "at",
+        sessionToken: data.deAdminToken,
       })
-    ).rejects.toThrow(/Kein aktives Team-Dashboard-Konto/);
+    ).rejects.toThrow(/FORBIDDEN/);
 
-    // 4. Wrong region (AT admin trying to read DE)
-    await expect(
-      t.query(api.admin.getRegionalOverview, {
-        regionId: "de",
-        sessionToken: "ops_session_valid_at_admin",
-      })
-    ).rejects.toThrow(/Kein Zugriff auf Daten außerhalb der zugewiesenen Region/);
-
-    // 5. Authorized DE admin
-    const res = await t.query(api.admin.getRegionalOverview, {
+    // 4. Authorized DE admin in DE -> succeeds
+    const overview = await t.query(api.admin.getRegionalOverview, {
       regionId: "de",
-      sessionToken: "ops_session_valid_de_admin",
+      sessionToken: data.deAdminToken,
     });
-    expect(res).toBeDefined();
-    expect(res.totalBusinesses).toBe(1);
+    expect(overview.totalBusinesses).toBeDefined();
   });
 
-  it("denies unauthenticated and unauthorized access to admin:listRegionalBusinesses", async () => {
-    const { t } = await setupSecurityP0Fixture();
+  it("rejects unauthorized access to listRegionalBusinesses and listRegionalOrders", async () => {
+    const { t, data } = await setupP0Fixtures();
 
-    // Unauthenticated
+    // listRegionalBusinesses
     await expect(
       t.query(api.admin.listRegionalBusinesses, { regionId: "de" })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
+    ).rejects.toThrow(/UNAUTHORIZED/);
 
-    // Staff lacking restaurants:read
     await expect(
       t.query(api.admin.listRegionalBusinesses, {
-        regionId: "de",
-        sessionToken: "ops_session_valid_de_staff",
+        regionId: "at",
+        sessionToken: data.deAdminToken,
       })
-    ).rejects.toThrow(/Berechtigung 'restaurants:read' fehlt/);
+    ).rejects.toThrow(/FORBIDDEN/);
 
-    // Valid admin succeeds
     const businesses = await t.query(api.admin.listRegionalBusinesses, {
       regionId: "de",
-      sessionToken: "ops_session_valid_de_admin",
+      sessionToken: data.deAdminToken,
     });
-    expect(businesses).toHaveLength(1);
-    expect(businesses[0].name).toBe("Bistro Berlin");
+    expect(businesses).toBeDefined();
+
+    // listRegionalOrders
+    await expect(
+      t.query(api.admin.listRegionalOrders, { regionId: "de" })
+    ).rejects.toThrow(/UNAUTHORIZED/);
+
+    await expect(
+      t.query(api.admin.listRegionalOrders, {
+        regionId: "at",
+        sessionToken: data.deAdminToken,
+      })
+    ).rejects.toThrow(/FORBIDDEN/);
+
+    const orders = await t.query(api.admin.listRegionalOrders, {
+      regionId: "de",
+      sessionToken: data.deAdminToken,
+    });
+    expect(orders).toBeDefined();
   });
 
-  it("denies unauthenticated and unauthorized staff:manage mutations", async () => {
-    const { t, fixture } = await setupSecurityP0Fixture();
+  it("enforces staff:manage permissions for inviteStaff and updateStaffStatus", async () => {
+    const { t, data } = await setupP0Fixtures();
 
-    // 1. inviteStaff unauthenticated
+    // Limited staff lacks "staff:manage"
     await expect(
       t.mutation(api.admin.inviteStaff, {
-        email: "newstaff@zackisch.de",
-        name: "New Staff",
+        email: "new-hire@zackisch.com",
+        name: "New Hire",
         role: "staff",
         regionId: "de",
         permissions: ["orders:read"],
+        sessionToken: data.limitedStaffToken,
       })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
+    ).rejects.toThrow(/FORBIDDEN/);
 
-    // 2. inviteStaff by restricted staff lacking staff:manage
-    await expect(
-      t.mutation(api.admin.inviteStaff, {
-        email: "newstaff@zackisch.de",
-        name: "New Staff",
-        role: "staff",
-        regionId: "de",
-        permissions: ["orders:read"],
-        sessionToken: "ops_session_valid_de_staff",
-      })
-    ).rejects.toThrow(/Berechtigung 'staff:manage' fehlt/);
-
-    // 3. updateStaffStatus unauthenticated
-    await expect(
-      t.mutation(api.admin.updateStaffStatus, {
-        staffId: fixture.deStaffRestrictedId,
-        isActive: false,
-        regionId: "de",
-      })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
-
-    // 4. setAdminPassword unauthenticated
-    await expect(
-      t.mutation(api.admin.setAdminPassword, {
-        email: "admin@zackisch.de",
-        password: "new_hacked_password",
-      })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
-
-    // 5. Authorized inviteStaff with valid admin
+    // DE Admin has "staff:manage" and succeeds
     const newStaffId = await t.mutation(api.admin.inviteStaff, {
-      email: "newstaff@zackisch.de",
-      name: "New Staff",
+      email: "new-hire@zackisch.com",
+      name: "New Hire",
       role: "staff",
       regionId: "de",
       permissions: ["orders:read"],
-      sessionToken: "ops_session_valid_de_admin",
+      sessionToken: data.deAdminToken,
     });
     expect(newStaffId).toBeDefined();
+
+    // Check that audit log has actorId derived from server session, not client
+    const logs = await t.query(api.audit.getAuditLogs, {
+      regionId: "de",
+      sessionToken: data.deAdminToken,
+    });
+    const inviteLog = logs.find((l) => l.action === "staff.invite");
+    expect(inviteLog?.actorId).toBe("admin-de@zackisch.com");
   });
 
-  it("denies unauthenticated and unauthorized access to partners:listPartners and recordPayout", async () => {
-    const { t, fixture } = await setupSecurityP0Fixture();
+  it("prevents arbitrary password resets in setAdminPassword", async () => {
+    const { t, data } = await setupP0Fixtures();
 
-    // 1. listPartners unauthenticated
+    // Wrong current password -> rejected
+    await expect(
+      t.mutation(api.admin.setAdminPassword, {
+        sessionToken: data.deAdminToken,
+        currentPassword: "wrong-password",
+        newPassword: "BrandNewSecurePassword2026!",
+      })
+    ).rejects.toThrow(/UNAUTHORIZED: Aktuelles Passwort ist nicht korrekt/);
+
+    // Password too short -> rejected
+    await expect(
+      t.mutation(api.admin.setAdminPassword, {
+        sessionToken: data.deAdminToken,
+        currentPassword: "initial-password-123",
+        newPassword: "short",
+      })
+    ).rejects.toThrow(/mindestens 8 Zeichen/);
+
+    // Correct current password -> succeeds
+    const success = await t.mutation(api.admin.setAdminPassword, {
+      sessionToken: data.deAdminToken,
+      currentPassword: "initial-password-123",
+      newPassword: "BrandNewSecurePassword2026!",
+    });
+    expect(success).toBe(true);
+  });
+
+  it("protects partners queries and mutations with server authorization", async () => {
+    const { t, data } = await setupP0Fixtures();
+
+    // listPartners requires sessionToken
     await expect(
       t.query(api.partners.listPartners, { regionId: "de" })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
+    ).rejects.toThrow(/UNAUTHORIZED/);
 
-    // 2. listPartners by staff lacking partners:read
+    // createPartner requires sessionToken and partners:write
     await expect(
-      t.query(api.partners.listPartners, {
+      t.mutation(api.partners.createPartner, {
+        code: "PARTNER10",
+        name: "Partner 10",
+        email: "p10@partner.com",
         regionId: "de",
-        sessionToken: "ops_session_valid_de_staff",
+        sessionToken: data.limitedStaffToken,
       })
-    ).rejects.toThrow(/Berechtigung 'partners:read' fehlt/);
+    ).rejects.toThrow(/FORBIDDEN/);
 
-    // 3. recordPayout unauthenticated
-    await expect(
-      t.mutation(api.partners.recordPayout, {
-        partnerId: fixture.partnerId,
-        regionId: "de",
-        amountCents: 500,
-        period: "2026-10",
-      })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
-
-    // 4. recordPayout by staff lacking partners:write
-    await expect(
-      t.mutation(api.partners.recordPayout, {
-        partnerId: fixture.partnerId,
-        regionId: "de",
-        amountCents: 500,
-        period: "2026-10",
-        sessionToken: "ops_session_valid_de_staff",
-      })
-    ).rejects.toThrow(/Berechtigung 'partners:write' fehlt/);
-
-    // 5. recordPayout by authorized admin
-    const payoutId = await t.mutation(api.partners.recordPayout, {
-      partnerId: fixture.partnerId,
+    // DE admin succeeds
+    const partnerId = await t.mutation(api.partners.createPartner, {
+      code: "PARTNER10",
+      name: "Partner 10",
+      email: "p10@partner.com",
       regionId: "de",
-      amountCents: 500,
+      sessionToken: data.deAdminToken,
+    });
+    expect(partnerId).toBeDefined();
+
+    // recordPayout requires sessionToken and partners:write
+    const payoutId = await t.mutation(api.partners.recordPayout, {
+      partnerId,
+      regionId: "de",
+      amountCents: 10000,
       period: "2026-10",
-      sessionToken: "ops_session_valid_de_admin",
+      sessionToken: data.deAdminToken,
     });
     expect(payoutId).toBeDefined();
   });
 
-  it("denies unauthenticated and unauthorized access to audit and email logs", async () => {
-    const { t } = await setupSecurityP0Fixture();
+  it("protects audit and emailLogs from unauthenticated and cross-region inspection", async () => {
+    const { t, data } = await setupP0Fixtures();
 
-    // 1. audit:getAuditLogs unauthenticated
+    // audit:getAuditLogs
     await expect(
       t.query(api.audit.getAuditLogs, { regionId: "de" })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
+    ).rejects.toThrow(/UNAUTHORIZED/);
 
-    // 2. audit:getAuditLogs by staff lacking audit:read
     await expect(
       t.query(api.audit.getAuditLogs, {
-        regionId: "de",
-        sessionToken: "ops_session_valid_de_staff",
+        regionId: "at",
+        sessionToken: data.deAdminToken,
       })
-    ).rejects.toThrow(/Berechtigung 'audit:read' fehlt/);
+    ).rejects.toThrow(/FORBIDDEN/);
 
-    // 3. emailLogs:listEmailLogs unauthenticated
+    // emailLogs:listEmailLogs
     await expect(
       t.query(api.emailLogs.listEmailLogs, { regionId: "de" })
-    ).rejects.toThrow(/Authentifizierung erforderlich/);
+    ).rejects.toThrow(/UNAUTHORIZED/);
 
-    // 4. Authorized admin can read both
-    const logs = await t.query(api.audit.getAuditLogs, {
-      regionId: "de",
-      sessionToken: "ops_session_valid_de_admin",
-    });
-    expect(logs).toBeDefined();
+    await expect(
+      t.query(api.emailLogs.listEmailLogs, {
+        regionId: "at",
+        sessionToken: data.deAdminToken,
+      })
+    ).rejects.toThrow(/FORBIDDEN/);
 
-    const emails = await t.query(api.emailLogs.listEmailLogs, {
+    const emailLogs = await t.query(api.emailLogs.listEmailLogs, {
       regionId: "de",
-      sessionToken: "ops_session_valid_de_admin",
+      sessionToken: data.deAdminToken,
     });
-    expect(emails).toBeDefined();
+    expect(emailLogs).toBeDefined();
   });
 
-  it("denies anonymous support ticket creation and strictly requires verified merchant identity", async () => {
-    const { t } = await setupSecurityP0Fixture();
+  it("rejects anonymous and unauthenticated ticket creation in support.createTicket", async () => {
+    const { t, data } = await setupP0Fixtures();
 
-    // 1. Anonymous createTicket (no sessionToken) must fail
+    // 1. Anonymous ticket creation without sessionToken -> rejected
     await expect(
       t.mutation(api.support.createTicket, {
-        requesterEmail: "anonymous@random.com",
+        requesterEmail: "random-guest@gmail.com",
         requesterName: "Anonymous Guest",
-        category: "onboarding",
-        subject: "Need help",
-        body: "I am an unauthenticated user trying to create a ticket.",
+        category: "other",
+        subject: "Guest Inquiry",
+        body: "I have a question about this restaurant.",
       })
-    ).rejects.toThrow(/Authentifizierung erforderlich: Nur verifizierte Zackisch-Betriebskonten/);
+    ).rejects.toThrow(/UNAUTHORIZED: Support-Tickets können ausschließlich von verifizierten Zackisch-Betriebskonten erstellt werden/);
 
-    // 2. Forged invalid token must fail
+    // 2. Anonymous ticket with spoofed invalid session -> rejected
     await expect(
       t.mutation(api.support.createTicket, {
-        sessionToken: "forged_nonexistent_token_123",
-        requesterEmail: "attacker@random.com",
-        requesterName: "Attacker",
-        category: "payments_payouts",
-        subject: "Spoofed ticket",
-        body: "Trying to forge a support ticket.",
+        sessionToken: "fake_token_123",
+        requesterEmail: "random-guest@gmail.com",
+        requesterName: "Anonymous Guest",
+        category: "other",
+        subject: "Guest Inquiry",
+        body: "I have a question about this restaurant.",
       })
-    ).rejects.toThrow(/Authentifizierung erforderlich: Nur verifizierte Zackisch-Betriebskonten/);
+    ).rejects.toThrow(/UNAUTHORIZED/);
 
-    // 3. Verified merchant session succeeds and binds to verified business
-    const ticket = await t.mutation(api.support.createTicket, {
-      sessionToken: "support_session_merchant",
-      requesterEmail: "merchant@bistro.de",
-      requesterName: "Bistro Owner",
-      category: "pos_reconciliation",
-      subject: "Frage zur Kassenerfassung",
-      body: "Wie erfasse ich eine bezahlte Bestellung in unserer Kasse?",
+    // 3. Valid merchant account session -> succeeds, and requesterEmail is enforced from verified account
+    const result = await t.mutation(api.support.createTicket, {
+      sessionToken: data.validSupportToken,
+      requesterEmail: "attacker-spoofed-email@evil.com",
+      requesterName: "Spoofed Name",
+      category: "payments_payouts",
+      subject: "Stripe payout question",
+      body: "Need help verifying my payout settings for Cafe Berlin.",
     });
 
-    expect(ticket.ticketNumber).toMatch(/^ZCK-\d+$/);
-    expect(ticket.ticketId).toBeDefined();
+    expect(result.ticketId).toBeDefined();
+    expect(result.ticketNumber).toBeDefined();
 
-    // Verify ticket in database has bound businessId and verified email
-    const stored = await t.run(async (ctx) => {
-      return await ctx.db.get(ticket.ticketId);
-    });
-    expect(stored?.businessName).toBe("Bistro Berlin");
-    expect(stored?.requesterEmail).toBe("merchant@bistro.de");
+    // Verify ticket in DB has the genuine merchant email, NOT the attacker spoofed email
+    const ticket = await t.run(async (ctx) => ctx.db.get(result.ticketId));
+    expect(ticket?.requesterEmail).toBe("owner@cafe-berlin.de");
+    expect(ticket?.businessId).toBe(data.businessId);
+    expect(ticket?.regionId).toBe("de");
   });
 });

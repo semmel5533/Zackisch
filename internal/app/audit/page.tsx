@@ -23,9 +23,9 @@ export default function AuditTrailPage() {
     sessionToken
       ? {
           regionId: currentRegion,
+          sessionToken,
           entityType: entityFilter === "all" ? undefined : entityFilter,
           limit: 100,
-          sessionToken,
         }
       : "skip"
   );
