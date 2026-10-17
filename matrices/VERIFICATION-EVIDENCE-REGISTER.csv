@@ -1,0 +1,21 @@
+check_id,application,scenario,tool_command,run_environment,version,commit_sha,executed_at,exit_code,actual_result,screenshots_or_logs,reviewer,verified_state
+V-001,all,Typecheck and lint,,,,,,,,,,NOT_RUN
+V-002,all,Four Next/Cloudflare builds,,,,,,,,,,NOT_RUN
+V-003,all,Unit plus integration tests,,,,,,,,,,NOT_RUN
+V-004,all,Browser screenshots every route,,,,,,,,,,NOT_RUN
+V-005,all,axe and keyboard each key flow,,,,,,,,,,NOT_RUN
+V-006,app,Stripe sandbox direct-charge and webhook retries,,,,,,,,,,NOT_RUN
+V-007,app,POS reconciliation after true payment,,,,,,,,,,NOT_RUN
+V-008,app,Merchant region binding after login,,,,,,,,,,NOT_RUN
+V-009,support,App SSO handoff and no anonymous ticket,,,,,,,,,,NOT_RUN
+V-010,support,SEO SSR and two-language alternates,,,,,,,,,,NOT_RUN
+V-011,internal,Admin direct endpoint permission/region matrix,,,,,,,,,,NOT_RUN
+V-012,internal,Partner payout reconciliation,,,,,,,,,,NOT_RUN
+V-013,all,Single tokens/icons/toast/dialog implementation,,,,,,,,,,NOT_RUN
+V-014,root,Photograph rights and local origin,,,,,,,,,,NOT_RUN
+V-015,root,SEO social assets and legal pages,,,,,,,,,,NOT_RUN
+V-016,all,GDPR/TDDDG data storage register,,,,,,,,,,NOT_RUN
+V-017,all,EN16931 external validation and accountant approval,,,,,,,,,,NOT_RUN
+V-018,all,Restore rehearsal / backup check,,,,,,,,,,NOT_RUN
+V-019,all,Remove outdated documentation and dead code,,,,,,,,,,NOT_RUN
+V-020,all,Human product design approval,,,,,,,,,,NOT_RUN

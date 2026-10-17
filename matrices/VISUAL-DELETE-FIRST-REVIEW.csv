@@ -1,0 +1,69 @@
+id,site,screen_or_pattern,primary_user_task,must_show,delete_candidates_badges_cards_metrics_icons_copypaste,keep_with_reason,merge_or_move_to_detail,before_screenshot,after_screenshot,cross_app_comparison,human_review,state
+DEL-001,root,/,,,,,,,,,,NOT_REVIEWED
+DEL-002,root,/[locale],,,,,,,,,,NOT_REVIEWED
+DEL-003,root,/[locale]/legal-notice,,,,,,,,,,NOT_REVIEWED
+DEL-004,root,/[locale]/privacy-policy,,,,,,,,,,NOT_REVIEWED
+DEL-005,root,/[locale]/gtc,,,,,,,,,,NOT_REVIEWED
+DEL-006,root,/[locale]/data-processing,,,,,,,,,,NOT_REVIEWED
+DEL-007,root,/[locale]/accessibility,,,,,,,,,,NOT_REVIEWED
+DEL-008,root,/[locale]/newsletter/confirm,,,,,,,,,,NOT_REVIEWED
+DEL-009,root,/[locale]/newsletter/unsubscribe,,,,,,,,,,NOT_REVIEWED
+DEL-010,app,/,,,,,,,,,,NOT_REVIEWED
+DEL-011,app,/sign-in,,,,,,,,,,NOT_REVIEWED
+DEL-012,app,/sign-up,,,,,,,,,,NOT_REVIEWED
+DEL-013,app,/reset-password,,,,,,,,,,NOT_REVIEWED
+DEL-014,app,/reset-password/confirm,,,,,,,,,,NOT_REVIEWED
+DEL-015,app,/change-email/otp,,,,,,,,,,NOT_REVIEWED
+DEL-016,app,/change-email/confirm,,,,,,,,,,NOT_REVIEWED
+DEL-017,app,/delete-account,,,,,,,,,,NOT_REVIEWED
+DEL-018,app,/dashboard,,,,,,,,,,NOT_REVIEWED
+DEL-019,app,/dashboard/[businessId]/overview,,,,,,,,,,NOT_REVIEWED
+DEL-020,app,/dashboard/[businessId]/current-orders,,,,,,,,,,NOT_REVIEWED
+DEL-021,app,/dashboard/[businessId]/all-orders,,,,,,,,,,NOT_REVIEWED
+DEL-022,app,/dashboard/[businessId]/menu,,,,,,,,,,NOT_REVIEWED
+DEL-023,app,/dashboard/[businessId]/settings,,,,,,,,,,NOT_REVIEWED
+DEL-024,app,/dashboard/[businessId]/settings/stripe-return,,,,,,,,,,NOT_REVIEWED
+DEL-025,app,/staff/[businessId],,,,,,,,,,NOT_REVIEWED
+DEL-026,app,/table/[businessId],,,,,,,,,,NOT_REVIEWED
+DEL-027,app,/table/[businessId]/success,,,,,,,,,,NOT_REVIEWED
+DEL-028,app,/pickup/[businessId],,,,,,,,,,NOT_REVIEWED
+DEL-029,app,/pickup/[businessId]/success,,,,,,,,,,NOT_REVIEWED
+DEL-030,support,/,,,,,,,,,,NOT_REVIEWED
+DEL-031,support,/[locale],,,,,,,,,,NOT_REVIEWED
+DEL-032,support,/[locale]/categories/[categorySlug],,,,,,,,,,NOT_REVIEWED
+DEL-033,support,/[locale]/articles/[articleSlug],,,,,,,,,,NOT_REVIEWED
+DEL-034,support,/[locale]/tickets,,,,,,,,,,NOT_REVIEWED
+DEL-035,support,/[locale]/tickets/[ticketId],,,,,,,,,,NOT_REVIEWED
+DEL-036,internal,/,,,,,,,,,,NOT_REVIEWED
+DEL-037,internal,/sign-in,,,,,,,,,,NOT_REVIEWED
+DEL-038,internal,/businesses,,,,,,,,,,NOT_REVIEWED
+DEL-039,internal,/orders,,,,,,,,,,NOT_REVIEWED
+DEL-040,internal,/staff,,,,,,,,,,NOT_REVIEWED
+DEL-041,internal,/tickets,,,,,,,,,,NOT_REVIEWED
+DEL-042,internal,/partners,,,,,,,,,,NOT_REVIEWED
+DEL-043,internal,/newsletter,,,,,,,,,,NOT_REVIEWED
+DEL-044,internal,/emails,,,,,,,,,,NOT_REVIEWED
+DEL-045,internal,/audit,,,,,,,,,,NOT_REVIEWED
+DEL-046,internal,/settings,,,,,,,,,,NOT_REVIEWED
+DEL-047,cross,Region and language trigger/dialog,,,,,,,,,,NOT_REVIEWED
+DEL-048,cross,Dialog / AlertDialog / Drawer / Popover / Tooltip,,,,,,,,,,NOT_REVIEWED
+DEL-049,cross,Toasts and inline alerts,,,,,,,,,,NOT_REVIEWED
+DEL-050,cross,Navigation and headers,,,,,,,,,,NOT_REVIEWED
+DEL-051,cross,Legal and footer links,,,,,,,,,,NOT_REVIEWED
+DEL-052,cross,BrandAsset and PublicImage,,,,,,,,,,NOT_REVIEWED
+DEL-053,cross,Empty/loading/offline/blocked/error/expired states,,,,,,,,,,NOT_REVIEWED
+DEL-054,cross,Full content and message localization,,,,,,,,,,NOT_REVIEWED
+DEL-055,app,Owner setup wizard states,,,,,,,,,,NOT_REVIEWED
+DEL-056,app,Menu editor drawer/modal,,,,,,,,,,NOT_REVIEWED
+DEL-057,app,Order detail / refund / dispute,,,,,,,,,,NOT_REVIEWED
+DEL-058,app,Cart / modifier sheet / payment element,,,,,,,,,,NOT_REVIEWED
+DEL-059,app,QR printing / signage,,,,,,,,,,NOT_REVIEWED
+DEL-060,app,Staff tablet pairing screen,,,,,,,,,,NOT_REVIEWED
+DEL-061,support,Search autocomplete and zero results,,,,,,,,,,NOT_REVIEWED
+DEL-062,support,Article media block / illustration / screenshots,,,,,,,,,,NOT_REVIEWED
+DEL-063,support,Ticket attachments / audit states,,,,,,,,,,NOT_REVIEWED
+DEL-064,internal,Operations data filters/detail panels,,,,,,,,,,NOT_REVIEWED
+DEL-065,internal,Regional switch and role badges,,,,,,,,,,NOT_REVIEWED
+DEL-066,cross,Cookie preference or consent UI where required,,,,,,,,,,NOT_REVIEWED
+DEL-067,cross,Confirm and destructive actions,,,,,,,,,,NOT_REVIEWED
+DEL-068,cross,Financial figures / tax rows / price copy,,,,,,,,,,NOT_REVIEWED

@@ -1,0 +1,6 @@
+screen_id,owner,golden_screen,purpose,prototype,functional_test,320px,390px,768px,1024px,1440px,1920px,de,en,a11y_keyboard,ux_minimalism,cross_app_consistency,approved_by,evidence_path,result
+GOLD-01,root,Public German homepage,Merchant clarity and accurate conversion,reference-prototypes/marketing.html,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,NOT_APPROVED
+GOLD-02,app,Merchant owner overview,Outstanding work and daily operations,reference-prototypes/owner.html,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,NOT_APPROVED
+GOLD-03,app,Guest checkout,Accurate total and verified payment,reference-prototypes/guest.html,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,NOT_APPROVED
+GOLD-04,support,Help article and authenticated ticket entry,Public answer and account-only escalation,reference-prototypes/support.html,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,NOT_APPROVED
+GOLD-05,internal,Ticket triage workspace,"Authorized role, region, case handling",reference-prototypes/ops.html,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,NOT_RUN,,,NOT_APPROVED

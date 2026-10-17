@@ -85,7 +85,7 @@ export function MainPage() {
 
             {/* Right visuals */}
             <div className="lg:col-span-6 relative">
-              <div className="relative rounded-3xl overflow-hidden border border-[#E0E0E0] shadow-md bg-[#F7F7F7]">
+              <div className="relative rounded-2xl overflow-hidden border border-[#E0E0E0] shadow-md bg-[#F7F7F7]">
                 <img
                   src={resolveMediaAsset("heroHospitality", { site: "root" })}
                   alt={isDe ? "Servicekraft serviert Speisen am Tisch im Restaurant" : "Staff serving dishes at a café table"}
@@ -107,108 +107,150 @@ export function MainPage() {
         </div>
       </section>
 
-      {/* 2. HOW IT WORKS / PROCESS STORY (MKT-02) */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-[#F7F7F7]">
+      {/* 2. HOW IT WORKS / 4-STEP PROCESS TIMELINE (MKT-02, marketing.html) */}
+      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-[#F7F7F7]" id="ablauf">
         <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-20 space-y-3">
-            <h2 id="ablauf" className="scroll-mt-8 text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
-              {t("flowTitle")}
-            </h2>
-            <p className="text-sm sm:text-base text-[#525252] leading-relaxed">
-              {isDe
-                ? "Drei unkomplizierte Schritte von der Tischauswahl bis zur frischen Zubereitung in der Küche."
-                : "Three straightforward steps from table selection to kitchen preparation."}
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-12 sm:mb-16">
+            <div className="lg:col-span-7 space-y-3">
+              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#727272]">
+                {t("flowTitle")}
+              </p>
+              <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
+                {t("flowSubTitle")}
+              </h2>
+            </div>
+            <div className="lg:col-span-5">
+              <p className="text-sm sm:text-base text-[#525252] leading-relaxed">
+                {t("flowSubDesc")}
+              </p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Step 1: Scan */}
-            <div className="bg-white rounded-3xl border border-[#E0E0E0] p-6 sm:p-8 space-y-5 flex flex-col justify-between shadow-xs">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="size-8 rounded-full bg-[#161616] text-white flex items-center justify-center font-semibold text-xs font-numeric">
-                    1
-                  </span>
-                  <span className="text-xs font-semibold text-[#525252] uppercase tracking-wider">
-                    {isDe ? "Am Tisch" : "At Table"}
-                  </span>
-                </div>
-                <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] h-48 bg-[#F7F7F7]">
-                  <img
-                    src={resolveMediaAsset("guestPhoneTable", { site: "root" })}
-                    alt={isDe ? "Gast öffnet Speisekarte mit Smartphone" : "Guest browsing menu on smartphone"}
-                    width={600}
-                    height={400}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="text-lg font-semibold text-[#161616] tracking-tight">
-                  {t("flowScan")}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                  {t("flowScanText")}
-                </p>
+          {/* 4-Step horizontal grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-[#E0E0E0] divide-y sm:divide-y-0 sm:divide-x divide-[#E0E0E0]">
+            {/* Step 1 */}
+            <div className="py-6 sm:px-6 first:sm:pl-0 space-y-3">
+              <span className="text-xs font-mono font-medium text-[#727272] block">
+                {t("flowStep1Role")}
+              </span>
+              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
+                {t("flowStep1Title")}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
+                {t("flowStep1Desc")}
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="py-6 sm:px-6 space-y-3">
+              <span className="text-xs font-mono font-medium text-[#727272] block">
+                {t("flowStep2Role")}
+              </span>
+              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
+                {t("flowStep2Title")}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
+                {t("flowStep2Desc")}
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="py-6 sm:px-6 space-y-3">
+              <span className="text-xs font-mono font-medium text-[#727272] block">
+                {t("flowStep3Role")}
+              </span>
+              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
+                {t("flowStep3Title")}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
+                {t("flowStep3Desc")}
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="py-6 sm:px-6 last:sm:pr-0 space-y-3">
+              <span className="text-xs font-mono font-medium text-[#727272] block">
+                {t("flowStep4Role")}
+              </span>
+              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
+                {t("flowStep4Title")}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
+                {t("flowStep4Desc")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2B. STATE SEPARATION SHOWCASE (marketing.html) */}
+      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-white">
+        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Left copy */}
+            <div className="lg:col-span-6 space-y-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#727272]">
+                {t("posSepLabel")}
+              </p>
+              <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand leading-tight">
+                {t("posSepTitle")}
+              </h2>
+              <p className="text-sm sm:text-base text-[#525252] leading-relaxed pt-2">
+                {t("posSepText")}
+              </p>
+              <div className="pt-4">
+                <a
+                  href={`${t("supportUrl")}/articles/pos-single-entry-workflow`}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#C4C4C4] bg-white px-5 text-sm font-semibold text-[#161616] hover:bg-[#F2F2F2] transition-colors gap-2"
+                >
+                  <span>{t("posSepCta")}</span>
+                  <ArrowRight size={14} aria-hidden="true" />
+                </a>
               </div>
             </div>
 
-            {/* Step 2: Pay */}
-            <div className="bg-white rounded-3xl border border-[#E0E0E0] p-6 sm:p-8 space-y-5 flex flex-col justify-between shadow-xs">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="size-8 rounded-full bg-[#161616] text-white flex items-center justify-center font-semibold text-xs font-numeric">
-                    2
-                  </span>
-                  <span className="text-xs font-semibold text-[#525252] uppercase tracking-wider">
-                    {isDe ? "Online Zahlen" : "Digital Payment"}
-                  </span>
+            {/* Right: State separation card */}
+            <div className="lg:col-span-6">
+              <div className="p-6 sm:p-8 rounded-2xl border border-[#DEDEDE] bg-[#F7F7F7] space-y-4 shadow-xs">
+                <div className="text-xs font-semibold text-[#727272] uppercase tracking-wider">
+                  {t("posSepBoxTitle")}
                 </div>
-                <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] h-48 bg-[#F7F7F7]">
-                  <img
-                    src={isDe ? "/product/de-pay.webp" : "/product/en-pay.webp"}
-                    alt={isDe ? "Sichere Bezahlung via Apple Pay und Karte" : "Secure payment via digital wallet"}
-                    width={600}
-                    height={400}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="text-lg font-semibold text-[#161616] tracking-tight">
-                  {t("flowPay")}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                  {t("flowPayText")}
-                </p>
-              </div>
-            </div>
 
-            {/* Step 3: Kitchen & POS */}
-            <div className="bg-white rounded-3xl border border-[#E0E0E0] p-6 sm:p-8 space-y-5 flex flex-col justify-between shadow-xs">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="size-8 rounded-full bg-[#161616] text-white flex items-center justify-center font-semibold text-xs font-numeric">
-                    3
-                  </span>
-                  <span className="text-xs font-semibold text-[#525252] uppercase tracking-wider">
-                    {isDe ? "Küche & Service" : "Service"}
-                  </span>
+                <div className="space-y-0 divide-y divide-[#D4D4D4] border-y border-[#D4D4D4]">
+                  {/* Item 1 */}
+                  <div className="py-4 flex items-center justify-between">
+                    <span className="font-semibold text-sm sm:text-base text-[#161616]">
+                      {t("posSepOrder")}
+                    </span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#E7F6ED] text-[#116442]">
+                      {t("posSepPaid")}
+                    </span>
+                  </div>
+
+                  {/* Item 2 */}
+                  <div className="py-4 flex items-center justify-between">
+                    <span className="text-xs sm:text-sm text-[#525252]">
+                      {t("posSepStaff")}
+                    </span>
+                    <span className="font-semibold text-xs sm:text-sm text-[#161616]">
+                      {t("posSepActive")}
+                    </span>
+                  </div>
+
+                  {/* Item 3 */}
+                  <div className="py-4 flex items-center justify-between">
+                    <span className="text-xs sm:text-sm text-[#525252]">
+                      {t("posSepPos")}
+                    </span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FFF4E5] text-[#8A5800]">
+                      {t("posSepPending")}
+                    </span>
+                  </div>
                 </div>
-                <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] h-48 bg-[#F7F7F7]">
-                  <img
-                    src={resolveMediaAsset("staffService", { site: "root" })}
-                    alt={isDe ? "Kellner serviert Bestellungen" : "Staff serving ordered dishes"}
-                    width={600}
-                    height={400}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
+
+                <div className="p-3.5 rounded-xl bg-white border-l-4 border-[#161616] text-xs text-[#161616] font-medium leading-relaxed">
+                  {t("posSepNote")}
                 </div>
-                <h3 className="text-lg font-semibold text-[#161616] tracking-tight">
-                  {t("flowKitchen")}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                  {t("flowKitchenText")}
-                </p>
               </div>
             </div>
           </div>
@@ -220,7 +262,7 @@ export function MainPage() {
         <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
-              <div className="rounded-3xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-[#F7F7F7]">
+              <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-[#F7F7F7]">
                 <img
                   src={resolveMediaAsset("posCounter", { site: "root" })}
                   alt={isDe ? "Mitarbeiterin an der Theke mit bestehender Kasse" : "Staff at checkout counter with register"}
@@ -243,7 +285,7 @@ export function MainPage() {
                 {steps.map((step, index) => (
                   <li
                     key={step}
-                    className="flex items-start gap-4 p-4 rounded-2xl border border-[#E0E0E0] bg-[#F7F7F7]"
+                    className="flex items-start gap-4 p-4 rounded-xl border border-[#E0E0E0] bg-[#F7F7F7]"
                   >
                     <span className="size-7 rounded-full bg-[#161616] text-white flex items-center justify-center font-semibold text-xs font-numeric shrink-0 mt-0.5">
                       {index + 1}
@@ -275,7 +317,7 @@ export function MainPage() {
                 {t("benefitService")}
               </p>
 
-              <div className="p-6 rounded-3xl border border-[#E0E0E0] bg-white space-y-2 max-w-md shadow-xs">
+              <div className="p-6 rounded-2xl border border-[#E0E0E0] bg-white space-y-2 max-w-md shadow-xs">
                 <p className="text-xs uppercase tracking-wider text-[#525252] font-semibold">
                   {t("benefitPrefix")}
                 </p>
@@ -298,7 +340,7 @@ export function MainPage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="rounded-3xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-white">
+              <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-white">
                 <img
                   src={resolveMediaAsset("restaurantInterior", { site: "root" })}
                   alt={isDe ? "Gemütliche Restaurant-Atmosphäre" : "Atmospheric dining ambiance"}
@@ -313,10 +355,13 @@ export function MainPage() {
         </div>
       </section>
 
-      {/* 5. PRICING CLARITY (MKT-03) */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-white">
+      {/* 5. PRICING CLARITY (MKT-03, marketing.html) */}
+      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-white" id="preise">
         <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#727272]">
+              {isDe ? "Transparent, bevor du startest" : "Transparent before you start"}
+            </p>
             <h2 id="kosten" className="scroll-mt-8 text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
               {t("feeTitle")}
             </h2>
@@ -327,7 +372,7 @@ export function MainPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Base conditions */}
-            <div className="rounded-3xl border border-[#E0E0E0] bg-[#F7F7F7] p-8 space-y-6 flex flex-col justify-between shadow-xs">
+            <div className="rounded-2xl border border-[#E0E0E0] bg-[#F7F7F7] p-8 space-y-6 flex flex-col justify-between shadow-xs">
               <div className="space-y-4">
                 <span className="inline-block px-3 py-1 rounded-full bg-white border border-[#E0E0E0] text-xs font-semibold text-[#525252]">
                   {isDe ? "Grundkonditionen" : "Base Pricing"}
@@ -355,7 +400,7 @@ export function MainPage() {
             </div>
 
             {/* Variable fee */}
-            <div className="rounded-3xl border-2 border-[#161616] bg-white p-8 space-y-6 flex flex-col justify-between shadow-sm">
+            <div className="rounded-2xl border-2 border-[#161616] bg-white p-8 space-y-6 flex flex-col justify-between shadow-sm">
               <div className="space-y-4">
                 <span className="inline-block px-3 py-1 rounded-full bg-[#161616] text-white text-xs font-semibold">
                   {isDe ? "Bei erfolgreicher Bestellung" : "Per Successful Order"}

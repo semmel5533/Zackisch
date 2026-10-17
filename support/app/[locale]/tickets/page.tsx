@@ -53,9 +53,11 @@ export default function SupportTicketsPage() {
   const [subject, setSubject] = useState(searchParams.get("subject") || "");
   const [body, setBody] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // Restore saved customer session or exchange cross-subdomain handoff token
   useEffect(() => {
+    setMounted(true);
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -198,7 +200,9 @@ export default function SupportTicketsPage() {
             <div className="pt-2">
               <a
                 href={
-                  typeof window !== "undefined" && window.location.hostname.includes("localhost")
+                  mounted &&
+                  typeof window !== "undefined" &&
+                  window.location.hostname.includes("localhost")
                     ? "http://localhost:3001/sign-in"
                     : "https://app.zackisch.com/sign-in"
                 }

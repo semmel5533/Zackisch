@@ -1131,24 +1131,302 @@ export function OverviewContent({
       ? window.location.origin
       : "https://app.zackisch.com";
 
+  const todayOrders = useMemo(() => {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    return (orders || []).filter((o) => {
+      const time = new Date(o.$createdAt || o._creationTime || 0).getTime();
+      return time >= startOfDay.getTime();
+    });
+  }, [orders]);
+
+  const activeOrders = useMemo(() => {
+    return (orders || []).filter(
+      (o) => o.status === "in_progress" || o.status === "ready_for_pickup"
+    );
+  }, [orders]);
+
+  const processedOrders = useMemo(() => {
+    return todayOrders.filter(
+      (o) => o.status === "completed"
+    );
+  }, [todayOrders]);
+
+  const posPendingOrders = useMemo(() => {
+    return todayOrders.filter((o) => !o.posRecordedAt && o.posStatus !== "recorded");
+  }, [todayOrders]);
+
   return (
     <>
-      <div ref={containerRef} className="flex-1 space-y-4 @container">
-        <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">
-              {t("overview")}
+      <div ref={containerRef} className="flex-1 space-y-6 @container">
+        {/* Top Operational Header (owner.html) */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border/60">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-muted-foreground">
+              Betrieb / {business.name}
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mt-0.5">
+              Heute im Betrieb
             </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-xl">
+              Was du jetzt tun kannst. Keine Kennzahlen ohne eine konkrete Bedeutung.
+            </p>
           </div>
+          <Link
+            href={`/dashboard/${business.$id}/current-orders`}
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-foreground px-5 text-sm font-semibold text-background hover:bg-foreground/90 transition-colors shrink-0"
+          >
+            Offene Bestellungen ansehen
+          </Link>
         </div>
 
+        {/* Actionable Setup Blocker Alert (owner.html) */}
         {!business.stripeOnboardingComplete && (
-          <div className="print:hidden">
-            <SetupAndBillingPanel business={business} />
+          <div className="p-4 sm:p-5 rounded-xl border border-amber-200 bg-amber-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-100 text-amber-900">
+                Einrichtung abschließen
+              </span>
+              <p className="text-sm font-semibold text-foreground">
+                Stripe-Verbindung prüfen
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Bevor Gäste bezahlen können, muss dein Auszahlungskonto bereit sein.
+              </p>
+            </div>
+            <Link
+              href={`/dashboard/${business.$id}/settings`}
+              className="inline-flex min-h-[38px] items-center justify-center rounded-full border border-border bg-white px-4 text-xs font-semibold text-foreground hover:bg-muted transition-colors shrink-0 self-start sm:self-center"
+            >
+              Einrichtung fortsetzen →
+            </Link>
           </div>
         )}
 
-        <div className="grid grid-cols-1 @min-[1300px]:grid-cols-2 gap-4 print:block">
+        {/* Two-Pane Operations Workbench (owner.html) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left: Active Orders Table */}
+          <section className="lg:col-span-7 bg-card border border-border rounded-xl flex flex-col justify-between overflow-hidden shadow-xs">
+            <div>
+              <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+                <span className="text-sm font-bold text-foreground">
+                  Offene Bestellungen
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Nur verifizierte Bestellungen
+                </span>
+              </div>
+
+              {activeOrders.length === 0 ? (
+                <div className="p-8 text-center space-y-1">
+                  <p className="text-sm font-semibold text-foreground">
+                    Keine offenen Bestellungen im Moment
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Sobald Gäste bestellen und bezahlen, erscheinen sie hier direkt.
+                  </p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
+                        <th className="py-2.5 px-4">Bestellung</th>
+                        <th className="py-2.5 px-4">Kontext</th>
+                        <th className="py-2.5 px-4">Status</th>
+                        <th className="py-2.5 px-4 text-right">Aktion</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {activeOrders.slice(0, 5).map((order) => {
+                        const timeStr = new Date(
+                          order.$createdAt || order._creationTime || Date.now()
+                        ).toLocaleTimeString("de-DE", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        });
+                        const contextLabel =
+                          order.type === "takeaway"
+                            ? "Abholung"
+                            : `Tisch ${order.tableNumber || "1"}`;
+                        return (
+                          <tr key={order.$id} className="hover:bg-muted/30">
+                            <td className="py-3 px-4">
+                              <span className="font-bold text-foreground">
+                                #{order.$id.slice(-4).toUpperCase()}
+                              </span>
+                              <span className="block text-[11px] text-muted-foreground">
+                                {timeStr}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 font-medium text-foreground">
+                              {contextLabel}
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                {order.status === "ready_for_pickup" ? "Abholbereit" : "In Bearbeitung"}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 text-right">
+                              <Link
+                                href={`/dashboard/${business.$id}/current-orders`}
+                                className="font-semibold text-xs text-foreground hover:underline"
+                              >
+                                Details →
+                              </Link>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            <div className="px-5 py-3 border-t border-border bg-muted/20">
+              <Link
+                href={`/dashboard/${business.$id}/current-orders`}
+                className="text-xs font-semibold text-foreground hover:underline inline-flex items-center gap-1"
+              >
+                Alle Bestellungen ansehen →
+              </Link>
+            </div>
+          </section>
+
+          {/* Right: Setup Checklist (owner.html) */}
+          <section className="lg:col-span-5 bg-card border border-border rounded-xl flex flex-col justify-between overflow-hidden shadow-xs">
+            <div>
+              <div className="px-5 py-4 border-b border-border">
+                <span className="text-sm font-bold text-foreground">
+                  Startklar werden
+                </span>
+              </div>
+              <div className="divide-y divide-border">
+                {/* 1. Profile */}
+                <div className="p-4 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">
+                      Betriebsprofil
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      Grundangaben & Adresse hinterlegt
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-800">
+                    Erledigt
+                  </span>
+                </div>
+
+                {/* 2. Menu */}
+                <div className="p-4 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">
+                      Speisekarte
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      Kategorien & Speisen konfiguriert
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-800">
+                    Erledigt
+                  </span>
+                </div>
+
+                {/* 3. Payments */}
+                <div className="p-4 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">
+                      Zahlungen
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {business.stripeOnboardingComplete
+                        ? "Stripe-Konto verbunden & aktiv"
+                        : "Stripe-Onboarding noch offen"}
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      "inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold",
+                      business.stripeOnboardingComplete
+                        ? "bg-emerald-50 text-emerald-800"
+                        : "bg-amber-100 text-amber-900"
+                    )}
+                  >
+                    {business.stripeOnboardingComplete ? "Erledigt" : "Offen"}
+                  </span>
+                </div>
+
+                {/* 4. Tables / QR */}
+                <div className="p-4 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">
+                      QR-Codes & Tablet
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {(business.tables?.length || 0) > 0
+                        ? `${business.tables?.length} Tische bereit`
+                        : "Bereit für den ersten Test"}
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-800">
+                    Bereit
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="px-5 py-3 border-t border-border bg-muted/20">
+              <Link
+                href={`/dashboard/${business.$id}/settings`}
+                className="text-xs font-semibold text-foreground hover:underline inline-flex items-center gap-1"
+              >
+                Betriebseinstellungen öffnen →
+              </Link>
+            </div>
+          </section>
+        </div>
+
+        {/* Sober Factual Bottom KPIs (owner.html) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border pt-6">
+          <div className="p-4 rounded-xl border border-border bg-card">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground block">
+              Bestellungen heute
+            </span>
+            <strong className="text-2xl sm:text-3xl font-bold font-numeric text-foreground block mt-1">
+              {todayOrders.length}
+            </strong>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Verifizierte Transaktionen
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-border bg-card">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground block">
+              Bereits verarbeitet
+            </span>
+            <strong className="text-2xl sm:text-3xl font-bold font-numeric text-foreground block mt-1">
+              {processedOrders.length}
+            </strong>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Zubereitet & ausgegeben
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-border bg-card">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground block">
+              Kassenerfassung offen
+            </span>
+            <strong className="text-2xl sm:text-3xl font-bold font-numeric text-foreground block mt-1">
+              {posPendingOrders.length}
+            </strong>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Abgleich im Kassensystem erforderlich
+            </p>
+          </div>
+        </div>
+
+        {/* Collapsible Hardware / QR & Statistics Card */}
+        <div className="grid grid-cols-1 @min-[1300px]:grid-cols-2 gap-4 print:block pt-2">
           <StatisticsCard
             orders={orders}
             period={period}

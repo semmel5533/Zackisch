@@ -1,0 +1,17 @@
+source,export_name,kind,risk,required_actor_and_scope,required_negative_test,status
+app/convex/admin.ts,getRegionalOverview,public query,Regional operational data,ops scope region,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/admin.ts,listRegionalBusinesses,public query,"Merchant identity, tax information",ops businesses:read,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/admin.ts,listRegionalOrders,public query,Order/financial data,ops orders:read,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/admin.ts,listStaff,public query,Team identities and permissions,ops staff:read,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/admin.ts,inviteStaff,public mutation,Privilege creation,ops staff:manage,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/admin.ts,updateStaffStatus,public mutation,Privilege changes,ops staff:manage,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/admin.ts,setAdminPassword,public mutation,Password reset/credential tampering,safe dedicated password reset,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/admin.ts,seedInitialAdminAndRegions,public mutation,Dangerous bootstrap,internal-only bootstrap,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/partners.ts,listPartners,public query,Partner PII/IBAN,ops partners:read,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/partners.ts,listPayouts,public query,Finance details,ops partners:read,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/partners.ts,createPartner,public mutation,Partner insertion,ops partners:write,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/partners.ts,recordPayout,public mutation,False payout status/ledger,ops finance:approve,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/audit.ts,recordAction,public mutation,Forged audit history,internal-only/server derived actor,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/audit.ts,getAuditLogs,public query,Audit PII,ops audit:read,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/emailLogs.ts,listEmailLogs,public query,Email PII,ops email:read,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
+app/convex/support.ts,createTicket,public mutation,Anonymous ticket accepted,authenticated app merchant bound user/business,Unauthenticated + forged identity + wrong region + wrong role must be denied,SOURCE_OBSERVED_NOT_LIVE_TESTED
