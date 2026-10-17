@@ -2,7 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @plugin "@tailwindcss/typography";
-@import "../../packages/design-system/src/styles/tokens.css";
+@import "../../design-system/src/styles/tokens.css";
+@source "../../design-system/src";
 
 :root {
   --background: oklch(1 0 0);

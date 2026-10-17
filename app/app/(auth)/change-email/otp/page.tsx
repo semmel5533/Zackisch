@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { resolveBrandAsset } from "@zackisch/design-system";
 import {
   confirmEmailChangeOtpAction,
   sendEmailChangeOtpAction,
@@ -236,7 +236,7 @@ export default function ChangeEmailOtpPage() {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src={BRAND_ASSETS.combinationMarkSvg}
+            src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
             alt="Zackisch"
             width={120}
             height={40}

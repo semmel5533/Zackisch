@@ -270,24 +270,83 @@ export const recordLegalAcceptance = mutation({
   },
 });
 
-function buildEn16931XRechnungXml(params: {
+export interface En16931StatementParams {
   statementNumber: string;
   issueDateIso: string;
   period: string;
   merchantName: string;
   merchantAddress: string;
+  merchantEmail?: string;
   merchantTaxId: string;
+  supplierName?: string;
+  supplierStreet?: string;
+  supplierPostalCode?: string;
+  supplierCity?: string;
+  supplierCountry?: string;
+  supplierEmail?: string;
+  supplierPhone?: string;
+  supplierTaxId?: string;
   eligibleTurnoverCents: number;
   platformFeeGrossCents: number;
   platformFeeNetCents: number;
   platformFeeVatCents: number;
   platformFeeVatRate: number;
   currency: string;
-}): string {
+}
+
+export function validateEn16931Completeness(params: En16931StatementParams): {
+  isComplete: boolean;
+  missingFields: string[];
+} {
+  const missingFields: string[] = [];
+  const supplierTaxId =
+    params.supplierTaxId?.trim() ||
+    (typeof process !== "undefined"
+      ? process.env?.ZACKISCH_SUPPLIER_VAT_ID?.trim() ||
+        process.env?.ZACKISCH_SUPPLIER_TAX_ID?.trim()
+      : undefined);
+
+  if (!params.statementNumber?.trim()) missingFields.push("statementNumber");
+  if (!params.issueDateIso?.trim()) missingFields.push("issueDateIso");
+  if (!params.period?.trim()) missingFields.push("period");
+  if (!params.merchantName?.trim()) missingFields.push("merchantName");
+  if (!params.merchantAddress?.trim()) missingFields.push("merchantAddress");
+  if (!params.merchantTaxId?.trim()) missingFields.push("merchantTaxId");
+  if (!supplierTaxId) missingFields.push("supplierTaxId");
+
+  return {
+    isComplete: missingFields.length === 0,
+    missingFields,
+  };
+}
+
+export function buildEn16931XRechnungXml(params: En16931StatementParams): string {
   const netEur = (params.platformFeeNetCents / 100).toFixed(2);
   const vatEur = (params.platformFeeVatCents / 100).toFixed(2);
   const grossEur = (params.platformFeeGrossCents / 100).toFixed(2);
   const eligibleEur = (params.eligibleTurnoverCents / 100).toFixed(2);
+
+  const supplierName = params.supplierName?.trim() || "Zackisch (Selim Eser)";
+  const supplierStreet =
+    params.supplierStreet?.trim() || "Dannstadter Straße 6-8";
+  const supplierPostalCode = params.supplierPostalCode?.trim() || "68199";
+  const supplierCity = params.supplierCity?.trim() || "Mannheim";
+  const supplierCountry = params.supplierCountry?.trim() || "DE";
+  const supplierEmail = params.supplierEmail?.trim() || "info@zackisch.com";
+  const supplierPhone = params.supplierPhone?.trim() || "+49-621 86037315";
+  const supplierTaxId =
+    params.supplierTaxId?.trim() ||
+    (typeof process !== "undefined"
+      ? process.env?.ZACKISCH_SUPPLIER_VAT_ID?.trim() ||
+        process.env?.ZACKISCH_SUPPLIER_TAX_ID?.trim()
+      : "") ||
+    "";
+
+  const completeness = validateEn16931Completeness({
+    ...params,
+    supplierTaxId,
+  });
+
   const escapeXml = (s: string) =>
     s
       .replace(/&/g, "&amp;")
@@ -295,28 +354,63 @@ function buildEn16931XRechnungXml(params: {
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
 
+  const customizationId = completeness.isComplete
+    ? "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0"
+    : "urn:cen.eu:en16931:2017#draft-pending-supplier-tax-id";
+
+  const draftNoteXml = completeness.isComplete
+    ? ""
+    : `\n  <cbc:Note>VORLÄUFIGER ABRECHNUNGSENTWURF: Pflichtangabe Rechnungsaussteller-Steuernummer/USt-IdNr. (${escapeXml(
+        completeness.missingFields.join(", ")
+      )}) muss vor produktiver steuerlicher Verwendung gemäß § 14 Abs. 4 UStG hinterlegt werden.</cbc:Note>`;
+
+  const supplierTaxSchemeXml = supplierTaxId
+    ? `\n      <cac:PartyTaxScheme>
+        <cbc:CompanyID>${escapeXml(supplierTaxId)}</cbc:CompanyID>
+        <cac:TaxScheme><cbc:ID>${supplierTaxId.startsWith("DE") ? "VAT" : "FC"}</cbc:ID></cac:TaxScheme>
+      </cac:PartyTaxScheme>`
+    : "";
+
+  const buyerEmail = params.merchantEmail?.trim() || "billing@merchant.invalid";
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <ubl:Invoice xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0</cbc:CustomizationID>
+  <cbc:CustomizationID>${customizationId}</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
   <cbc:ID>${escapeXml(params.statementNumber)}</cbc:ID>
   <cbc:IssueDate>${escapeXml(params.issueDateIso)}</cbc:IssueDate>
-  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>${draftNoteXml}
   <cbc:DocumentCurrencyCode>${escapeXml(params.currency)}</cbc:DocumentCurrencyCode>
   <cbc:BuyerReference>${escapeXml(params.period)}</cbc:BuyerReference>
+  <cac:InvoicePeriod>
+    <cbc:DescriptionCode>35</cbc:DescriptionCode>
+  </cac:InvoicePeriod>
   <cac:AccountingSupplierParty>
     <cac:Party>
-      <cac:PartyName><cbc:Name>Zackisch (Selim Eser)</cbc:Name></cac:PartyName>
+      <cbc:EndpointID schemeID="EM">${escapeXml(supplierEmail)}</cbc:EndpointID>
+      <cac:PartyName><cbc:Name>${escapeXml(supplierName)}</cbc:Name></cac:PartyName>
       <cac:PostalAddress>
-        <cbc:CountrySubentity>DE</cbc:CountrySubentity>
-        <cac:Country><cbc:IdentificationCode>DE</cbc:IdentificationCode></cac:Country>
-      </cac:PostalAddress>
+        <cbc:StreetName>${escapeXml(supplierStreet)}</cbc:StreetName>
+        <cbc:CityName>${escapeXml(supplierCity)}</cbc:CityName>
+        <cbc:PostalZone>${escapeXml(supplierPostalCode)}</cbc:PostalZone>
+        <cbc:CountrySubentity>DE-BW</cbc:CountrySubentity>
+        <cac:Country><cbc:IdentificationCode>${escapeXml(supplierCountry)}</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>${supplierTaxSchemeXml}
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>${escapeXml(supplierName)}</cbc:RegistrationName>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>Selim Eser</cbc:Name>
+        <cbc:Telephone>${escapeXml(supplierPhone)}</cbc:Telephone>
+        <cbc:ElectronicMail>${escapeXml(supplierEmail)}</cbc:ElectronicMail>
+      </cac:Contact>
     </cac:Party>
   </cac:AccountingSupplierParty>
   <cac:AccountingCustomerParty>
     <cac:Party>
+      <cbc:EndpointID schemeID="EM">${escapeXml(buyerEmail)}</cbc:EndpointID>
       <cac:PartyName><cbc:Name>${escapeXml(params.merchantName)}</cbc:Name></cac:PartyName>
       <cac:PostalAddress>
         <cbc:StreetName>${escapeXml(params.merchantAddress)}</cbc:StreetName>
@@ -324,10 +418,17 @@ function buildEn16931XRechnungXml(params: {
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
         <cbc:CompanyID>${escapeXml(params.merchantTaxId)}</cbc:CompanyID>
-        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+        <cac:TaxScheme><cbc:ID>${params.merchantTaxId.startsWith("DE") ? "VAT" : "FC"}</cbc:ID></cac:TaxScheme>
       </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>${escapeXml(params.merchantName)}</cbc:RegistrationName>
+      </cac:PartyLegalEntity>
     </cac:Party>
   </cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode>48</cbc:PaymentMeansCode>
+    <cbc:PaymentNote>Bereits per Stripe Connect Application Fee (2 % Plattformprovision) automatisch einbehalten.</cbc:PaymentNote>
+  </cac:PaymentMeans>
   <cac:TaxTotal>
     <cbc:TaxAmount currencyID="${escapeXml(params.currency)}">${vatEur}</cbc:TaxAmount>
     <cac:TaxSubtotal>

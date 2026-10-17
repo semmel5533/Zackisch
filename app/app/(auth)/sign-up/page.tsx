@@ -11,7 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { useRegionStore } from "@/store/region-store";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { resolveBrandAsset } from "@zackisch/design-system";
 import { cn } from "@/lib/utils";
 import {
   signUpAction,
@@ -138,7 +138,7 @@ function OtpForm({ state }: { state: any }) {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src={BRAND_ASSETS.combinationMarkSvg}
+            src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
             alt="Zackisch"
             width={120}
             height={40}
@@ -394,7 +394,7 @@ function SignUpForm({
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src={BRAND_ASSETS.combinationMarkSvg}
+            src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
             alt="Zackisch"
             width={120}
             height={40}

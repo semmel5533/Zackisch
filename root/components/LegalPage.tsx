@@ -2,7 +2,7 @@ import { legalTranslator, type LegalKind } from "@/lib/legal";
 import { numericText } from "@/lib/numeric-text";
 import Link from "next/link";
 import { parseLocale } from "@/lib/regions";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import { PrivacyDocument } from "./privacy/PrivacyDocument";
 import { GtcDocument } from "./gtc/GtcDocument";
 import { DataProcessingDocument } from "./data-processing/DataProcessingDocument";

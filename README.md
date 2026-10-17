@@ -20,7 +20,7 @@ Zackisch ist keine eigenständige Registrierkasse und ersetzt keine betriebliche
 | Betriebs- und Gäste-App | [`app/`](app/README.md) | `https://app.zackisch.com` | Registrierung, Einrichtung, Speisekarten, QR-Code-Druck, Personal-Tablet, Gäste-Bestellung und Checkout |
 | Hilfe-Center | [`support/`](support/README.md) | `https://support.zackisch.com/de-de` | Öffentliche serverseitig gerenderte Schritt-für-Schritt-Anleitungen (SSR), Suche und angemeldete Support-Tickets |
 | Team Dashboard | [`internal/`](internal/README.md) | `https://internal.zackisch.com` | Regionale Teamverwaltung, Betriebe, Aufträge, Partner, Newsletter, E-Mail-/Auditprotokolle und Support-Tickets |
-| Geteiltes Designsystem | [`packages/design-system/`](packages/design-system/) | `@zackisch/design-system` | Wiederverwendbare Base-UI-Primitiven, Poppins-Tokens, Zackisch-Farbwerte und Metadaten-Helfer |
+| Geteiltes Designsystem | [`design-system/`](design-system/) | `@zackisch/design-system` | Wiederverwendbare Base-UI-Primitiven, Poppins-Tokens, Zackisch-Farbwerte, Regions-/Sprachauswahl und Metadaten-Helfer |
 
 Alle dynamischen Produktdaten werden über das gemeinsame Convex-Backend in `app/convex/` verarbeitet. Alle Marken-Assets sind zentral unter `https://zackisch.com/*` (`root/public/`) gehostet und werden über `@zackisch/design-system` importiert. Die verschiedenen Benutzergruppen erhalten nur die für ihre Rolle, ihren Betrieb und ihre Region zulässigen Daten.
 

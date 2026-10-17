@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSidebarStore } from "@/store/sidebar-store";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { resolveBrandAsset } from "@zackisch/design-system";
 import type { Business, Order, MenuCategory, MenuItem } from "@/lib/types";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { useQuery } from "convex/react";
@@ -164,7 +164,7 @@ export function StaffTerminalShell({
           >
             <div className="overflow-hidden">
               <Image
-                src={BRAND_ASSETS.combinationMarkSvg}
+                src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
                 alt="Zackisch logo"
                 width={100}
                 height={24}
@@ -375,7 +375,7 @@ export function StaffTerminalShell({
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-canvas text-foreground">
           <div className="flex items-center">
             <Image
-              src={BRAND_ASSETS.combinationMarkSvg}
+              src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
               alt="Zackisch"
               width={100}
               height={24}

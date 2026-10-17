@@ -65,7 +65,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { Business, Order } from "@/lib/types";
 import { ReactQRCode } from "@lglab/react-qr-code";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { resolveBrandAsset } from "@zackisch/design-system";
 import {
   DndContext,
   closestCenter,
@@ -107,7 +107,7 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
         finderPatternOuterSettings={{ color: "#000000", style: "square" }}
         finderPatternInnerSettings={{ color: "#000000", style: "square" }}
         imageSettings={{
-          src: BRAND_ASSETS.combinationMarkQr,
+          src: resolveBrandAsset("combinationMarkQr", { site: "app" }),
           height: logoHeight,
           width: logoWidth,
           excavate: true,

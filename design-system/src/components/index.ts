@@ -23,3 +23,4 @@ export * from "./EmptyState";
 export * from "./PhotoFigure";
 export * from "./Stepper";
 export * from "./Typography";
+export * from "./Toast";

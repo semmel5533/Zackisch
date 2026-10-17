@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const sharp = require('../../packages/design-system/node_modules/sharp');
+const sharp = require('sharp');
 
 const mediaDir = path.join(__dirname, '../public/media');
 fs.mkdirSync(mediaDir, { recursive: true });

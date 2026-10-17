@@ -44,7 +44,7 @@ export default function TeamTicketsPage() {
     Boolean(adminUser?.permissions?.includes("tickets:note"));
 
   const tickets = useQuery(
-    (anyApi as any).support.listTicketsForTeam,
+    (anyApi as any).support.getTeamTickets,
     sessionToken
       ? {
           sessionToken,
@@ -56,7 +56,7 @@ export default function TeamTicketsPage() {
   );
 
   const ticketDetail = useQuery(
-    (anyApi as any).support.getTicketForTeam,
+    (anyApi as any).support.getTeamTicketThread,
     selectedTicketId && sessionToken
       ? {
           sessionToken,
@@ -249,6 +249,7 @@ export default function TeamTicketsPage() {
             ) : (
               tickets.map((t: any) => {
                 const isSelected = selectedTicketId === String(t._id);
+                const lastActivityTs = t.lastMessageAt ?? t.updatedAt ?? t.createdAt;
                 return (
                   <button
                     key={t._id}
@@ -294,7 +295,11 @@ export default function TeamTicketsPage() {
                     >
                       <span className="truncate">{t.requesterEmail}</span>
                       <span>
-                        {new Date(t.lastActivityAt).toLocaleDateString("de-DE")}
+                        {lastActivityTs
+                          ? new Date(lastActivityTs).toLocaleDateString(
+                              isDe ? "de-DE" : "en-GB",
+                            )
+                          : "—"}
                       </span>
                     </div>
                   </button>
@@ -355,10 +360,18 @@ export default function TeamTicketsPage() {
                         }
                         className="h-8 rounded-full border border-zinc-200 px-3 text-xs font-semibold bg-white text-zinc-900"
                       >
-                        <option value="low">Priorität: Niedrig</option>
-                        <option value="normal">Priorität: Normal</option>
-                        <option value="high">Priorität: Hoch</option>
-                        <option value="urgent">Priorität: Dringend</option>
+                        <option value="low">
+                          {isDe ? "Priorität: Niedrig" : "Priority: Low"}
+                        </option>
+                        <option value="normal">
+                          {isDe ? "Priorität: Normal" : "Priority: Normal"}
+                        </option>
+                        <option value="high">
+                          {isDe ? "Priorität: Hoch" : "Priority: High"}
+                        </option>
+                        <option value="urgent">
+                          {isDe ? "Priorität: Dringend" : "Priority: Urgent"}
+                        </option>
                       </select>
 
                       {canWritePublic && (
@@ -367,7 +380,7 @@ export default function TeamTicketsPage() {
                           onClick={handleAssignToMe}
                           className="h-8 px-3 rounded-full border border-zinc-200 text-xs font-semibold text-zinc-700 hover:bg-zinc-50"
                         >
-                          {ticketDetail.ticket.assignedStaffEmail === adminEmail
+                          {ticketDetail.ticket.assignedToEmail === adminEmail
                             ? isDe
                               ? "Mir zugewiesen"
                               : "Assigned to me"
@@ -389,10 +402,12 @@ export default function TeamTicketsPage() {
                       {ticketDetail.ticket.requesterName} (
                       {ticketDetail.ticket.requesterEmail})
                     </span>
-                    {ticketDetail.businessName && (
+                    {(ticketDetail.ticket.businessName ||
+                      (ticketDetail as any).businessName) && (
                       <span className="inline-flex items-center gap-1 font-medium text-zinc-700">
                         <Store className="w-3.5 h-3.5" />
-                        {ticketDetail.businessName}
+                        {ticketDetail.ticket.businessName ||
+                          (ticketDetail as any).businessName}
                       </span>
                     )}
                   </div>
@@ -401,8 +416,13 @@ export default function TeamTicketsPage() {
                 {/* Message stream */}
                 <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1 mb-5">
                   {ticketDetail.messages.map((msg: any) => {
-                    const isInternal = msg.visibility === "internal_note";
-                    const isCustomer = msg.authorType === "customer";
+                    const isInternal =
+                      msg.visibility === "internal" ||
+                      msg.visibility === "internal_note";
+                    const isCustomer =
+                      msg.authorType === "merchant" ||
+                      msg.authorType === "customer";
+                    const authorIdentifier = msg.authorEmail || msg.authorId;
                     return (
                       <div
                         key={msg._id}
@@ -417,7 +437,11 @@ export default function TeamTicketsPage() {
                         <div className="flex items-center justify-between gap-2 mb-1.5 text-[11px]">
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-zinc-900">
-                              {msg.authorName} ({msg.authorEmail})
+                              {msg.authorName}
+                              {authorIdentifier &&
+                              authorIdentifier !== msg.authorName
+                                ? ` (${authorIdentifier})`
+                                : ""}
                             </span>
                             {isInternal ? (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-950 font-semibold text-[10px]">
@@ -431,7 +455,7 @@ export default function TeamTicketsPage() {
                                 {isCustomer
                                   ? isDe
                                     ? "Kundenanfrage"
-                                    : "Customer"
+                                    : "Merchant"
                                   : isDe
                                     ? "Öffentliche Antwort"
                                     : "Public Reply"}
@@ -439,7 +463,9 @@ export default function TeamTicketsPage() {
                             )}
                           </div>
                           <span className="text-zinc-500">
-                            {new Date(msg.createdAt).toLocaleString("de-DE")}
+                            {new Date(msg.createdAt).toLocaleString(
+                              isDe ? "de-DE" : "en-GB",
+                            )}
                           </span>
                         </div>
                         <p className="text-xs text-zinc-800 whitespace-pre-wrap leading-relaxed">

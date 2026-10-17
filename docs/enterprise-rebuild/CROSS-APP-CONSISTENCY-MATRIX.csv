@@ -1,0 +1,27 @@
+check_id,shared_invariant,where_to_compare,observable_acceptance_criterion,result,evidence,reviewer
+CI01,Brand original logo/Poppins,All shells and overlays,Typography and logo dimensions match original,PASS,design-system/src/tokens/brand.ts; root/tests/design-system.test.ts,Agent + Automated Suite
+CI02,Neutral palette,All app roots and nested surfaces,No private ad-hoc brand colors or divergent themes,PASS,design-system/src/styles/tokens.css; root/app/support/internal globals.css,Agent + Automated Suite
+CI03,Primary Button,root/app/support/internal,"Same shape, hierarchy, semantics and focus treatment",PASS,design-system/src/components/Button.tsx (#161616 pill, 44px min-h, #2359CE focus ring),Agent + Automated Suite
+CI04,Secondary/ghost/destructive buttons,root/app/support/internal,Consistent size variants and destructive warning,PASS,design-system/src/components/Button.tsx (#B42318 destructive, #C4C4C4 secondary border),Agent + Automated Suite
+CI05,Dialog trigger and overlay,root/app/support/internal,"Same trigger/overlay, focus trap, Escape and close",PASS,design-system/src/components/Dialog.tsx (@base-ui/react Dialog),Agent + Automated Suite
+CI06,Region/language selector,root/app/support/internal as context permits,Same visual selector; locale separate from region permission,PASS,design-system/src/patterns/RegionLanguageSelector.tsx used in root/app/support/internal,Agent + Automated Suite
+CI07,Toast/notification provider,root/app/support/internal,Same appear/copy/duration/live-region rule,PASS,design-system/src/components/Toast.tsx (0ms persistent error alert, 5000ms polite status),Agent + Automated Suite
+CI08,Error and validation,Every input and form,"Same labels, inline errors, summary and recovery",PASS,design-system/src/components/Field.tsx (aria-invalid, role=alert FieldError),Agent + Automated Suite
+CI09,Status badge,Money/order/staff/support/ops,Status semantics consistent yet domain-specific,PASS,design-system/src/components/Badge.tsx & StatusBadge.tsx,Agent + Automated Suite
+CI10,Page titles/subtitles,Every page including SEO,"Same type tokens/heading semantics, metadata pattern",PASS,design-system/src/utils/metadata.ts; root & support SSR metadata tests,Agent + Automated Suite
+CI11,Navigation and breadcrumbs,All app shells,"Recognizable style, task-specific structures",PASS,design-system/src/layouts/index.tsx & Breadcrumbs.tsx,Agent + Automated Suite
+CI12,Search/filter/data lists,merchant/support/internal,Same filter controls; dense variant documented,PASS,design-system/src/components/DataTable.tsx; internal/app/tickets/page.tsx,Agent + Automated Suite
+CI13,Loading/empty/offline,All contexts,No spinner-only dead ends or fake data,PASS,design-system/src/components/EmptyState.tsx & LoadingIndicator.tsx,Agent + Automated Suite
+CI14,Confirmation after action,guest/tickets/owner/admin,"Clear record, next step and persistence",PASS,design-system/src/patterns/PaymentVerification.tsx; app/tests/confirmation-generator.test.ts,Agent + Automated Suite
+CI15,Public image and logo origins,root -> all 3 subdomains,"root local assets, other domains origin resolver dev/prod",PASS,design-system/src/tokens/brand.ts (resolveBrandAsset & resolveMediaAsset); root/tests/design-system.test.ts,Agent + Automated Suite
+CI16,Localization and glossary,All DE/EN areas,"Same feature term, no untranslated controls/ARIA",PASS,design-system/src/layouts/index.tsx; app/tests/translations.test.ts,Agent + Automated Suite
+CI17,Focus/keyboard/zoom,All route families,"WCAG 2.2 AA objective and tested",PASS,design-system/src/styles/tokens.css (:focus-visible 2px #2359CE, 44px target),Agent + Automated Suite
+CI18,Responsive geometry,320/390/768/1024/1440/1920,"Same spacing and breakpoints, no overflow",PASS,design-system/src/styles/tokens.css; E2E browser verification,Agent + Automated Suite
+CI19,Monetary formatting,guest/owner/staff/internal,"Exact cents/currency, label order, no fake confirmation",PASS,design-system/src/patterns/Price.tsx; app/tests/platform-fee.test.ts,Agent + Automated Suite
+CI20,Legal links and footers,all -> root,Canonical zackisch.com legal pages and versioning,PASS,root/tests/marketing-and-legal.test.ts; SupportShell.tsx; SiteFooter.tsx,Agent + Automated Suite
+CI21,Private data / tenant isolation,app/support/internal,No private data in another merchant session,PASS,app/tests/security.test.ts; internal/tests/rbac.test.ts,Agent + Automated Suite
+CI22,Iconography,all,"Single icon style/size/stroke semantics, contextual exceptions",PASS,Monochrome stroke icons with aria-hidden=true across all 4 apps,Agent + Automated Suite
+CI23,Photography,root/support primarily,"No fake endorsement, consistent crop/rights/alt",PASS,root/public/media/register.csv (SHA-256 verified, honest release status); PhotoFigure.tsx,Agent + Automated Suite
+CI24,Help entry points,root/merchant/staff/support,Contextual deep link and clear ticket fallback,PASS,support/tests/knowledge-base.test.ts (43 bilingual articles + SSO ticket handoff),Agent + Automated Suite
+CI25,Account/session UX,app/support/internal,Same clarity of expired/denied and safe logout; scope differs,PASS,internal/lib/admin-context.tsx (sessionStorage + no fallback email); app/convex/support.ts,Agent + Automated Suite
+CI26,Tables/dense operations,merchant/internal,"Same DS APIs, supported compact density",PASS,design-system/src/components/DataTable.tsx; internal/app/tickets/page.tsx,Agent + Automated Suite

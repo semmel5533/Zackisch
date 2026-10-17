@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { BRAND_ASSETS, ToastProvider } from "@zackisch/design-system";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
     url: "https://app.zackisch.com",
     siteName: "Zackisch",
-    images: ["https://zackisch.com/og_image.png"],
+    images: [BRAND_ASSETS.ogImage],
     locale: "de_DE",
     type: "website",
   },
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Zackisch",
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
-    images: ["https://zackisch.com/og_image.png"],
+    images: [BRAND_ASSETS.ogImage],
   },
   robots: {
     index: false,
@@ -64,10 +64,12 @@ export default function RootLayout({
       className={cn("light antialiased overflow-x-clip font-sans", poppins.variable, inter.variable)}
     >
       <body className="bg-background text-foreground overflow-x-clip min-h-screen">
-        <ConvexClientProvider>
-          {children}
-        </ConvexClientProvider>
-        <Toaster position="top-center" />
+        <ToastProvider>
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
+          <Toaster position="bottom-right" closeButton />
+        </ToastProvider>
       </body>
     </html>
   );

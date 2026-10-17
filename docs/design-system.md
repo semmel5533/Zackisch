@@ -34,7 +34,7 @@ Preserve original Zackisch wordmark and symbol (`brand_mark`, `combination_mark`
 | `--zds-color-status-danger` | Destructive Action | `#B42318` | Validation errors, refund action |
 | `--zds-color-status-info` | Information | `#225CB0` | Non-fiscal callouts, guidance notes |
 
-**Color policy:** A single central monochrome token architecture exported from `packages/design-system/src/styles/tokens.css`. Functional status colors are used strictly with semantic icons and clear labels, never through color alone. Real photography from `root/public/media/` provides authentic hospitality atmosphere. Real venue branding and culinary dish photography dominate on guest surfaces.
+**Color policy:** A single central monochrome token architecture exported from `design-system/src/styles/tokens.css`. Functional status colors are used strictly with semantic icons and clear labels, never through color alone. Real photography from `root/public/media/` provides authentic hospitality atmosphere. Real venue branding and culinary dish photography dominate on guest surfaces.
 
 ## 3. Typography
 
@@ -76,20 +76,21 @@ Each component has specified: anatomy, usage, variants, touch targets, loading/d
 
 ### Verified package implementation (`@zackisch/design-system`)
 
-The design system is implemented in `packages/design-system/` and linked across `app`, `root`, `support`, and `internal`:
+The design system is implemented in `design-system/` at the repository root and linked across `app`, `root`, `support`, and `internal`:
 - **Tokens:** Semantic monochrome color scale (`neutral.n0`–`neutral.n950`), functional status tokens, touch targets, spacing, radius, and typography tokens exported via CSS variables and typed constants.
-- **Component Primitives (24):** Accessible Base UI-backed primitives:
+- **Component Primitives (26):** Accessible Base UI-backed primitives:
   - Form Controls: `Button`, `IconButton`, `Input`, `Textarea`, `Field`, `Select`, `Checkbox`, `Radio`, `Switch`
-  - Feedback & Display: `Badge`, `StatusBadge`, `Card`, `Dialog`, `Drawer`, `Tabs`, `Accordion`, `Popover`, `Breadcrumbs`, `Pagination`, `LoadingIndicator`, `DataTable`, `EmptyState`, `PhotoFigure`, `Stepper`
+  - Feedback & Display: `Badge`, `StatusBadge`, `Card`, `Dialog`, `Drawer`, `Tabs`, `Accordion`, `Popover`, `Breadcrumbs`, `Pagination`, `LoadingIndicator`, `DataTable`, `EmptyState`, `PhotoFigure`, `Stepper`, `Typography`, `ToastProvider` / `notify`
 - **Layout Templates (9):**
   - Public & Editorial: `PageContainer`, `PublicSection`, `EditorialHero`, `ReadingLayout`
   - Applications & Ops: `AuthLayout`, `WorkspaceLayout`, `OpsLayout`, `ShopLayout`, `SystemLayout`
-- **Domain Patterns (4):**
+- **Domain Patterns (5):**
   - `Price`: German/European currency formatting with tabular numerals
   - `QrSignageCard`: Physical QR table and counter display with verified quiet zone
   - `PaymentVerification`: Non-fiscal digital payment verification banner
   - `PosReconciliationSummary`: Daily register reconciliation summary for cash registers
-- **Brand & Media Assets:** Canonical SVG/PNG assets and verified licensed photography hosted on `https://zackisch.com/*` (`root/public/media/`) and registered in `root/public/media/register.csv`.
+  - `RegionLanguageSelector` & `RegionLanguageTrigger`: Unified cross-app region & display language selector separating operating market from interface language
+- **Brand & Media Assets:** Canonical SVG/PNG assets and verified licensed photography hosted on `https://zackisch.com/*` (`root/public/media/`), resolved via `resolveBrandAsset` and `resolveMediaAsset`, and registered with SHA-256 checksums in `root/public/media/register.csv`.
 - **Site Metadata:** `createSiteMetadata` utility ensuring consistent canonical links, OpenGraph properties, Twitter cards, and multi-lingual hreflang annotations.
 
 ## 6. Website IA and editorial compositions

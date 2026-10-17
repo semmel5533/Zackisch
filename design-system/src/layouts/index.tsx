@@ -61,15 +61,15 @@ export function EditorialHero({
   className?: string;
 }) {
   return (
-    <section className={cn("py-12 sm:py-20 lg:py-28 bg-white", className)}>
+    <section className={cn("py-12 sm:py-20 lg:py-28 bg-(--zds-surface-public)", className)}>
       <PageContainer>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-6 space-y-6">
             {badge && <div>{badge}</div>}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#0A0A0A] leading-[1.08] font-brand">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-(--zds-text-strong) leading-[1.08] font-brand">
               {title}
             </h1>
-            <p className="text-base sm:text-lg text-[#525252] leading-relaxed max-w-xl">
+            <p className="text-base sm:text-lg text-(--zds-text-secondary) leading-relaxed max-w-xl">
               {description}
             </p>
             {action && <div className="pt-2 flex items-center gap-4 flex-wrap">{action}</div>}
@@ -88,6 +88,8 @@ export function ReadingLayout({
   title,
   subtitle,
   toc,
+  tocTitle,
+  locale = "de",
   breadcrumbs,
   children,
   className,
@@ -95,30 +97,33 @@ export function ReadingLayout({
   title: string;
   subtitle?: string;
   toc?: React.ReactNode;
+  tocTitle?: string;
+  locale?: "de" | "en";
   breadcrumbs?: React.ReactNode;
   className?: string;
 }>) {
+  const resolvedTocTitle = tocTitle ?? (locale === "en" ? "Contents" : "Inhalt");
   return (
-    <main id="main" className={cn("min-h-screen bg-white py-10 sm:py-16", className)}>
+    <main id="main" className={cn("min-h-screen bg-(--zds-surface-public) py-10 sm:py-16", className)}>
       <PageContainer>
         {breadcrumbs && <div className="mb-8">{breadcrumbs}</div>}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {toc && (
             <aside className="hidden lg:block lg:col-span-3 sticky top-24 self-start space-y-4">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#525252]">
-                Inhalt
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-(--zds-text-secondary)">
+                {resolvedTocTitle}
               </h4>
-              <nav className="text-xs space-y-2">{toc}</nav>
+              <nav aria-label={resolvedTocTitle} className="text-xs space-y-2">{toc}</nav>
             </aside>
           )}
           <article className={cn("prose prose-neutral max-w-none", toc ? "lg:col-span-9 max-w-[72ch]" : "max-w-[72ch] mx-auto")}>
-            <header className="mb-10 pb-6 border-b border-[#E0E0E0]">
-              <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
+            <header className="mb-10 pb-6 border-b border-(--zds-border-subtle)">
+              <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-(--zds-text-strong) font-brand">
                 {title}
               </h1>
-              {subtitle && <p className="mt-3 text-base text-[#525252]">{subtitle}</p>}
+              {subtitle && <p className="mt-3 text-base text-(--zds-text-secondary)">{subtitle}</p>}
             </header>
-            <div className="text-sm sm:text-base leading-relaxed text-[#161616] space-y-6">
+            <div className="text-sm sm:text-base leading-relaxed text-(--zds-text-primary) space-y-6">
               {children}
             </div>
           </article>
@@ -146,17 +151,17 @@ export function AuthLayout({
   className?: string;
 }>) {
   return (
-    <main id="main" className={cn("min-h-screen flex items-center justify-center p-4 sm:p-6 bg-[#F7F7F7]", className)}>
-      <div className="w-full max-w-md bg-white rounded-3xl border border-[#E0E0E0] shadow-sm p-6 sm:p-10 space-y-6">
+    <main id="main" className={cn("min-h-screen flex items-center justify-center p-4 sm:p-6 bg-(--zds-surface-page)", className)}>
+      <div className="w-full max-w-md bg-(--zds-surface-card) rounded-3xl border border-(--zds-border-subtle) shadow-sm p-6 sm:p-10 space-y-6">
         {logo && <div className="flex justify-center">{logo}</div>}
         <div className="text-center space-y-1.5">
-          <h1 className="text-2xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
+          <h1 className="text-2xl font-semibold tracking-tight text-(--zds-text-strong) font-brand">
             {title}
           </h1>
-          {subtitle && <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">{subtitle}</p>}
+          {subtitle && <p className="text-xs sm:text-sm text-(--zds-text-secondary) leading-relaxed">{subtitle}</p>}
         </div>
         <div className="space-y-4">{children}</div>
-        {footer && <div className="pt-4 border-t border-[#E0E0E0] text-center text-xs text-[#525252]">{footer}</div>}
+        {footer && <div className="pt-4 border-t border-(--zds-border-subtle) text-center text-xs text-(--zds-text-secondary)">{footer}</div>}
       </div>
     </main>
   );
@@ -167,22 +172,28 @@ export function AuthLayout({
  */
 export function WorkspaceLayout({
   navigation,
+  navigationLabel,
+  locale = "de",
   header,
   children,
   className,
 }: {
   navigation: React.ReactNode;
+  navigationLabel?: string;
+  locale?: "de" | "en";
   header: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }) {
+  const resolvedNavLabel =
+    navigationLabel ?? (locale === "en" ? "Main navigation" : "Hauptnavigation");
   return (
-    <div className={cn("min-h-screen bg-[#F7F7F7] flex flex-col lg:flex-row", className)}>
-      <aside aria-label="Navigation" className="w-full lg:w-64 shrink-0 bg-white border-r border-[#E0E0E0] z-20 print:hidden">
+    <div className={cn("min-h-screen bg-(--zds-surface-page) flex flex-col lg:flex-row", className)}>
+      <aside aria-label={resolvedNavLabel} className="w-full lg:w-64 shrink-0 bg-(--zds-surface-card) border-r border-(--zds-border-subtle) z-20 print:hidden">
         {navigation}
       </aside>
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="sticky top-0 z-10 bg-white border-b border-[#E0E0E0] px-4 sm:px-8 py-4">
+        <header className="sticky top-0 z-10 bg-(--zds-surface-card) border-b border-(--zds-border-subtle) px-4 sm:px-8 py-4">
           {header}
         </header>
         <main id="main" className="flex-1 p-4 sm:p-8 min-w-0">
@@ -208,8 +219,8 @@ export function OpsLayout({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-screen bg-[#F7F7F7] flex flex-col font-sans select-none", className)}>
-      <header className="sticky top-0 z-20 bg-[#161616] text-white px-4 sm:px-6 py-3.5 shadow-md">
+    <div className={cn("min-h-screen bg-(--zds-surface-page) flex flex-col font-sans select-none", className)}>
+      <header className="sticky top-0 z-20 bg-(--zds-surface-inverse) text-(--zds-text-inverse) px-4 sm:px-6 py-3.5 shadow-md">
         {header}
       </header>
       {statusBanner && <div className="z-10">{statusBanner}</div>}
@@ -237,8 +248,8 @@ export function ShopLayout({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-screen bg-[#F7F7F7] flex flex-col pb-24", className)}>
-      <header className="bg-white border-b border-[#E0E0E0] sticky top-0 z-10">
+    <div className={cn("min-h-screen bg-(--zds-surface-page) flex flex-col pb-24", className)}>
+      <header className="bg-(--zds-surface-card) border-b border-(--zds-border-subtle) sticky top-0 z-10">
         {merchantHeader}
         {categoryNav}
       </header>
@@ -269,14 +280,14 @@ export function SystemLayout({
   className?: string;
 }) {
   return (
-    <main id="main" className={cn("min-h-screen flex items-center justify-center p-4 bg-[#F7F7F7]", className)}>
-      <div className="w-full max-w-md bg-white rounded-3xl border border-[#E0E0E0] p-8 text-center space-y-5 shadow-xs">
-        {code && <span className="font-mono text-xs font-semibold text-[#525252]">{code}</span>}
-        {icon && <div className="flex justify-center text-[#161616]">{icon}</div>}
-        <h1 className="text-xl sm:text-2xl font-semibold text-[#161616] font-brand tracking-tight">
+    <main id="main" className={cn("min-h-screen flex items-center justify-center p-4 bg-(--zds-surface-page)", className)}>
+      <div className="w-full max-w-md bg-(--zds-surface-card) rounded-3xl border border-(--zds-border-subtle) p-8 text-center space-y-5 shadow-xs">
+        {code && <span className="font-mono text-xs font-semibold text-(--zds-text-secondary)">{code}</span>}
+        {icon && <div className="flex justify-center text-(--zds-text-primary)">{icon}</div>}
+        <h1 className="text-xl sm:text-2xl font-semibold text-(--zds-text-primary) font-brand tracking-tight">
           {title}
         </h1>
-        <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">{description}</p>
+        <p className="text-xs sm:text-sm text-(--zds-text-secondary) leading-relaxed">{description}</p>
         {action && <div className="pt-2 flex justify-center">{action}</div>}
       </div>
     </main>

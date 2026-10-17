@@ -122,15 +122,30 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     sessionToken ? { sessionToken } : "skip"
   );
 
-  // Initialize from localStorage on mount
+  // Initialize from sessionStorage (migrating/clearing any legacy localStorage token) on mount
   useEffect(() => {
     try {
-      const storedToken = localStorage.getItem("zackisch_ops_session");
-      const storedRegion = localStorage.getItem("zackisch_ops_region");
-      const storedLocale = localStorage.getItem("zackisch_ops_locale");
+      const legacyToken =
+        localStorage.getItem("zackisch_ops_session") ||
+        localStorage.getItem("zackisch_admin_session");
+      if (legacyToken) {
+        sessionStorage.setItem("zackisch_ops_session", legacyToken);
+        localStorage.removeItem("zackisch_ops_session");
+        localStorage.removeItem("zackisch_admin_session");
+      }
 
-      if (storedRegion) setCurrentRegionState(storedRegion);
-      if (storedLocale === "de" || storedLocale === "en") setCurrentLocaleState(storedLocale);
+      const storedToken = sessionStorage.getItem("zackisch_ops_session");
+      const storedRegion =
+        localStorage.getItem("zackisch_ops_region") ||
+        localStorage.getItem("zackisch_admin_region");
+      const storedLocale =
+        localStorage.getItem("zackisch_ops_locale") ||
+        localStorage.getItem("zackisch_admin_locale");
+
+      if (storedRegion) setCurrentRegionState(storedRegion.toLowerCase());
+      if (storedLocale === "de" || storedLocale === "en") {
+        setCurrentLocaleState(storedLocale);
+      }
 
       if (storedToken) {
         setSessionToken(storedToken);
@@ -141,6 +156,31 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     }
   }, []);
+
+  const persistSessionToken = (token: string | null) => {
+    try {
+      if (token) {
+        sessionStorage.setItem("zackisch_ops_session", token);
+        localStorage.removeItem("zackisch_ops_session");
+        localStorage.removeItem("zackisch_admin_session");
+        if (typeof document !== "undefined") {
+          const secureFlag =
+            typeof window !== "undefined" && window.location.protocol === "https:"
+              ? "; Secure"
+              : "";
+          document.cookie = `zackisch_ops_session=${encodeURIComponent(token)}; Path=/; SameSite=Strict${secureFlag}`;
+        }
+      } else {
+        sessionStorage.removeItem("zackisch_ops_session");
+        localStorage.removeItem("zackisch_ops_session");
+        localStorage.removeItem("zackisch_admin_session");
+        if (typeof document !== "undefined") {
+          document.cookie =
+            "zackisch_ops_session=; Path=/; Max-Age=0; SameSite=Strict";
+        }
+      }
+    } catch {}
+  };
 
   // Handle session verification query response
   useEffect(() => {
@@ -159,25 +199,24 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         // Invalid or expired token
         setAdminUser(null);
         setSessionToken(null);
-        try {
-          localStorage.removeItem("zackisch_admin_session");
-        } catch {}
+        persistSessionToken(null);
       }
       setIsLoading(false);
     }
   }, [verifiedSessionUser, sessionToken]);
 
   const setCurrentRegion = (region: string) => {
-    setCurrentRegionState(region);
+    const normalized = region.toLowerCase();
+    setCurrentRegionState(normalized);
     try {
-      localStorage.setItem("zackisch_admin_region", region);
+      localStorage.setItem("zackisch_ops_region", normalized);
     } catch {}
   };
 
   const setCurrentLocale = (locale: "de" | "en") => {
     setCurrentLocaleState(locale);
     try {
-      localStorage.setItem("zackisch_admin_locale", locale);
+      localStorage.setItem("zackisch_ops_locale", locale);
     } catch {}
   };
 
@@ -194,9 +233,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         if (res.admin.regionId) {
           setCurrentRegionState(res.admin.regionId);
         }
-        try {
-          localStorage.setItem("zackisch_admin_session", res.admin.sessionToken);
-        } catch {}
+        persistSessionToken(res.admin.sessionToken);
         return { success: true };
       }
       return { success: false, error: res.error || "Anmeldung fehlgeschlagen." };
@@ -236,9 +273,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         if (res.admin.regionId) {
           setCurrentRegionState(res.admin.regionId);
         }
-        try {
-          localStorage.setItem("zackisch_ops_session", res.admin.sessionToken);
-        } catch {}
+        persistSessionToken(res.admin.sessionToken);
         return { success: true, admin: res.admin };
       }
       return { success: false, error: res.error || "Bestätigungscode ungültig." };
@@ -267,20 +302,19 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setAdminUser(null);
     setSessionToken(null);
-    try {
-      localStorage.removeItem("zackisch_ops_session");
-    } catch {}
+    persistSessionToken(null);
   };
 
   const t = (key: string): string => {
     return translations[currentLocale]?.[key] || translations.de[key] || key;
   };
 
-  const isAuthenticated = !!adminUser;
-  const adminEmail = adminUser?.email || "selim@zackisch.com";
+  const isAuthenticated = !!adminUser && !!sessionToken;
+  const adminEmail = adminUser?.email || "";
   const isRegionalAdmin = adminUser?.role === "regional_admin";
   const isStaff = adminUser?.role === "staff";
   const hasPermission = (permission: string) => {
+    if (!isAuthenticated) return false;
     if (isRegionalAdmin) return true;
     return !!adminUser?.permissions?.includes(permission);
   };

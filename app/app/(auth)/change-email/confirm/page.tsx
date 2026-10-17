@@ -13,7 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import { sendEmailChangeOtpAction } from "@/actions/settings-actions";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { resolveBrandAsset } from "@zackisch/design-system";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -216,7 +216,7 @@ export default function ChangeEmailConfirmPage() {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src={BRAND_ASSETS.combinationMarkSvg}
+            src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
             alt="Zackisch"
             width={120}
             height={40}

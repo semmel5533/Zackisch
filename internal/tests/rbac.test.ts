@@ -56,7 +56,7 @@ describe("internal team dashboard RBAC & ticket security", () => {
     expect(canAccessRoute(supportAgent, "de", null, true)).toBe(false);
   });
 
-  it("strips internal_note messages from customer-facing ticket payloads", () => {
+  it("strips internal and internal_note messages from customer-facing ticket payloads", () => {
     const messages = [
       { id: "1", visibility: "public" as const, body: "Hallo, mein Drucker druckt nicht." },
       { id: "2", visibility: "internal_note" as const, body: "Prüfe Stripe Account acct_123" },
@@ -65,5 +65,24 @@ describe("internal team dashboard RBAC & ticket security", () => {
     const customerVisible = filterCustomerVisibleMessages(messages);
     expect(customerVisible).toHaveLength(2);
     expect(customerVisible.some((m) => m.visibility === "internal_note")).toBe(false);
+  });
+
+  it("ensures admin-context has no hardcoded fallback admin email and tickets page calls canonical Convex queries", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const adminContextSrc = fs.readFileSync(
+      path.resolve(__dirname, "../lib/admin-context.tsx"),
+      "utf8",
+    );
+    expect(adminContextSrc).not.toContain('"selim@zackisch.com"');
+    expect(adminContextSrc).toContain("sessionStorage.getItem");
+
+    const ticketsPageSrc = fs.readFileSync(
+      path.resolve(__dirname, "../app/tickets/page.tsx"),
+      "utf8",
+    );
+    expect(ticketsPageSrc).toContain("support.getTeamTickets");
+    expect(ticketsPageSrc).toContain("support.getTeamTicketThread");
+    expect(ticketsPageSrc).toContain('msg.visibility === "internal"');
   });
 });

@@ -15,13 +15,13 @@ export const useRegionStore = create<RegionState>()(
         if (SUPPORTED_REGIONS[region]) {
           set({ region });
           if (typeof document !== "undefined") {
-            document.cookie = `zakkig_region=${region}; path=/; max-age=31536000; SameSite=Lax`;
+            document.cookie = `zackisch_region=${region}; path=/; max-age=31536000; SameSite=Lax`;
           }
         }
       },
     }),
     {
-      name: "zakkig_region_storage",
+      name: "zackisch-region-storage",
       storage: createJSONStorage(() => localStorage),
     },
   ),

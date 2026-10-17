@@ -1,8 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "../../packages/design-system/src/styles/tokens.css";
+@import "../../design-system/src/styles/tokens.css";
 @import "shadcn/tailwind.css";
 
+@source "../../design-system/src";
 @source "../components";
 @source "../lib";
 @source "../tools/marketing-demo";

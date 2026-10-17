@@ -97,10 +97,11 @@ async function requireTeamPermission(
     throw new Error("Kein aktives Team-Dashboard-Konto.");
   }
 
+  if (admin.regionId.toLowerCase() !== regionId.toLowerCase()) {
+    throw new Error("Kein Zugriff auf Tickets außerhalb der zugewiesenen Region.");
+  }
+
   if (admin.role !== "regional_admin") {
-    if (admin.regionId !== regionId) {
-      throw new Error("Kein Zugriff auf Tickets außerhalb der zugewiesenen Region.");
-    }
     if (!admin.permissions.includes(requiredPermission)) {
       throw new Error(`Berechtigung '${requiredPermission}' fehlt.`);
     }

@@ -9,7 +9,7 @@ import { QrCodeShowcase } from "./QrCodeShowcase";
 import { AnimatedBenefitStat } from "./AnimatedBenefitStat";
 import { SiteFooter } from "./SiteFooter";
 import { NewsletterForm } from "./NewsletterForm";
-import { MEDIA_ASSETS } from "@zackisch/design-system";
+import { resolveMediaAsset } from "@zackisch/design-system";
 
 export function MainPage() {
   const { t, locale } = useTranslation();
@@ -87,7 +87,7 @@ export function MainPage() {
             <div className="lg:col-span-6 relative">
               <div className="relative rounded-3xl overflow-hidden border border-[#E0E0E0] shadow-md bg-[#F7F7F7]">
                 <img
-                  src={MEDIA_ASSETS.heroHospitality}
+                  src={resolveMediaAsset("heroHospitality", { site: "root" })}
                   alt={isDe ? "Servicekraft serviert Speisen am Tisch im Restaurant" : "Staff serving dishes at a café table"}
                   width={1400}
                   height={933}
@@ -135,7 +135,7 @@ export function MainPage() {
                 </div>
                 <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] h-48 bg-[#F7F7F7]">
                   <img
-                    src={MEDIA_ASSETS.guestPhoneTable}
+                    src={resolveMediaAsset("guestPhoneTable", { site: "root" })}
                     alt={isDe ? "Gast öffnet Speisekarte mit Smartphone" : "Guest browsing menu on smartphone"}
                     width={600}
                     height={400}
@@ -195,7 +195,7 @@ export function MainPage() {
                 </div>
                 <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] h-48 bg-[#F7F7F7]">
                   <img
-                    src={MEDIA_ASSETS.staffService}
+                    src={resolveMediaAsset("staffService", { site: "root" })}
                     alt={isDe ? "Kellner serviert Bestellungen" : "Staff serving ordered dishes"}
                     width={600}
                     height={400}
@@ -222,7 +222,7 @@ export function MainPage() {
             <div className="lg:col-span-6 space-y-6">
               <div className="rounded-3xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-[#F7F7F7]">
                 <img
-                  src={MEDIA_ASSETS.posCounter}
+                  src={resolveMediaAsset("posCounter", { site: "root" })}
                   alt={isDe ? "Mitarbeiterin an der Theke mit bestehender Kasse" : "Staff at checkout counter with register"}
                   width={1200}
                   height={800}
@@ -300,7 +300,7 @@ export function MainPage() {
             <div className="lg:col-span-6">
               <div className="rounded-3xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-white">
                 <img
-                  src={MEDIA_ASSETS.restaurantInterior}
+                  src={resolveMediaAsset("restaurantInterior", { site: "root" })}
                   alt={isDe ? "Gemütliche Restaurant-Atmosphäre" : "Atmospheric dining ambiance"}
                   width={1200}
                   height={800}

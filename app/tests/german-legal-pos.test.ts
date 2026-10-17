@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { generateOrderConfirmationHtml } from "../lib/confirmation-generator";
 import { translations } from "../lib/translations";
+import {
+  buildEn16931XRechnungXml,
+  validateEn16931Completeness,
+} from "../convex/setup";
 import type { Order, Business } from "../lib/types";
 
 const sampleBusiness: Business = {
@@ -105,9 +109,50 @@ describe("German Legal, Fiscal & POS Single-Entry Matrix (DE-LEGAL-001 to DE-LEG
     expect(() => markRecorded()).toThrow(/Duplicate POS entry is blocked/i);
   });
 
-  it("DE-LEGAL-021 to DE-LEGAL-025: verifies 8-year tax retention alignment (§ 147 AO / GoBD) and B2B EN 16931 / XRechnung 3.0 readiness", () => {
+  it("DE-LEGAL-021 to DE-LEGAL-025: verifies 8-year tax retention alignment (§ 147 AO / GoBD) and B2B EN 16931 / XRechnung 3.0 completeness validation", () => {
     const retentionYears = 8; // § 147 Abs. 3 AO (BEG IV) minimum commercial/tax booking document retention
     expect(retentionYears).toBeGreaterThanOrEqual(8);
     expect(sampleOrder.applicationFeeCents).toBe(40); // 2% of €20.00 eligible goods (excluding €2.00 tip)
+
+    const baseParams = {
+      statementNumber: "ZCK-202610-BIZ1",
+      issueDateIso: "2026-10-17",
+      period: "2026-10",
+      merchantName: "Bella Vista Gastro GmbH",
+      merchantAddress: "Friedrichstraße 100, 10117 Berlin",
+      merchantTaxId: "DE999888777",
+      eligibleTurnoverCents: 100000,
+      platformFeeGrossCents: 2000,
+      platformFeeNetCents: 1681,
+      platformFeeVatCents: 319,
+      platformFeeVatRate: 19,
+      currency: "EUR",
+    };
+
+    // Without supplierTaxId, must flag incomplete mandatory § 14 UStG field and mark XML as draft
+    const draftCheck = validateEn16931Completeness(baseParams);
+    expect(draftCheck.isComplete).toBe(false);
+    expect(draftCheck.missingFields).toContain("supplierTaxId");
+    const draftXml = buildEn16931XRechnungXml(baseParams);
+    expect(draftXml).toContain("urn:cen.eu:en16931:2017#draft-pending-supplier-tax-id");
+    expect(draftXml).toContain("VORLÄUFIGER ABRECHNUNGSENTWURF");
+    expect(draftXml).toContain("Dannstadter Straße 6-8");
+    expect(draftXml).toContain("68199");
+    expect(draftXml).toContain("Mannheim");
+
+    // With supplierTaxId configured, must pass completeness and emit full XRechnung 3.0 UBL
+    const completeParams = {
+      ...baseParams,
+      supplierTaxId: "DE123456789",
+    };
+    const completeCheck = validateEn16931Completeness(completeParams);
+    expect(completeCheck.isComplete).toBe(true);
+    expect(completeCheck.missingFields).toHaveLength(0);
+    const completeXml = buildEn16931XRechnungXml(completeParams);
+    expect(completeXml).toContain(
+      "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+    );
+    expect(completeXml).toContain("<cbc:CompanyID>DE123456789</cbc:CompanyID>");
+    expect(completeXml).toContain("<cbc:PaymentMeansCode>48</cbc:PaymentMeansCode>");
   });
 });

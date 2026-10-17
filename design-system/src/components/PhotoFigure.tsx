@@ -23,6 +23,7 @@ export function PhotoFigure({
   height,
   loading = "lazy",
   aspectRatio,
+  priority = false,
   className,
   ...props
 }: PhotoFigureProps) {
@@ -38,7 +39,7 @@ export function PhotoFigure({
     <figure className={cn("m-0 overflow-hidden", className)} {...props}>
       <div
         className={cn(
-          "overflow-hidden rounded-2xl border border-[#E0E0E0] bg-[#F7F7F7]",
+          "overflow-hidden rounded-2xl border border-(--zds-border-subtle) bg-(--zds-surface-page)",
           aspectRatio && aspectClasses[aspectRatio]
         )}
       >
@@ -47,13 +48,14 @@ export function PhotoFigure({
           alt={alt}
           width={width}
           height={height}
-          loading={loading}
+          loading={priority ? "eager" : loading}
+          fetchPriority={priority ? "high" : undefined}
           decoding="async"
           className="w-full h-full object-cover block transition-transform duration-200"
         />
       </div>
       {caption && (
-        <figcaption className="mt-2.5 text-xs text-[#525252] leading-relaxed">
+        <figcaption className="mt-2.5 text-xs text-(--zds-text-secondary) leading-relaxed">
           {caption}
         </figcaption>
       )}

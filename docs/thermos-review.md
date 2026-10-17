@@ -34,13 +34,13 @@
 ### C. Developer Experience (DevEx) & Breaking Changes
 - Root static export (`output: "export"`) build and preview commands verified with `serve` on port 3000.
 - Standalone `vitest.config.ts` files created in `root`, `support`, and `internal` to prevent Cloudflare Vite plugins from interfering with Vitest RSC testing.
-- Typechecking across all 5 packages (`packages/design-system`, `app`, `root`, `support`, `internal`) passes with 0 TypeScript diagnostics.
+- Typechecking across all 5 packages (`design-system`, `app`, `root`, `support`, `internal`) passes with 0 TypeScript diagnostics.
 
 ---
 
 ## 3. Pass 2: Thermo-Nuclear Code Quality & Architecture Audit
 
-### A. Shared Design System (`packages/design-system`)
+### A. Shared Design System (`design-system`)
 - **Package Architecture:** Created an independent npm package (`@zackisch/design-system`) using Base UI primitives, modern CSS variables, and Poppins font tokens.
 - **Component Primitives:** Implemented 21 accessible components (Button, Input, Card, Modal, Table, Tabs, Badge, Toast, etc.).
 - **Domain Components:** Built `Price` (with strict EUR formatting) and `QrSignageCard` (for merchant counter QR signage).

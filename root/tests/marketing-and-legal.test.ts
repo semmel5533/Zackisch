@@ -76,4 +76,18 @@ describe("Root Marketing, Brand Copy & Legal Pages Verification", () => {
     expect(legalTranslations.de.legalAddress).toContain("Mannheim");
     expect(legalTranslations.de.legalEmailLabel).toBe("E-Mail:");
   });
+
+  it("records honest model/property release status and SHA-256 checksums in media register", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const csv = fs.readFileSync(
+      path.resolve(__dirname, "../public/media/register.csv"),
+      "utf8",
+    );
+    expect(csv).toContain("sha256_webp,sha256_jpg");
+    expect(csv).toContain("model_release_verified,property_release_verified");
+    expect(csv).not.toContain("Agent Verification");
+    expect(csv).not.toContain('"Pexels Standard License - Free Commercial Use"');
+    expect(csv).toContain('"unverified"');
+  });
 });

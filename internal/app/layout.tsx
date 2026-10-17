@@ -5,7 +5,7 @@ import { ConvexClientProvider } from "@/lib/convex";
 import { AdminProvider } from "@/lib/admin-context";
 import { AdminShell } from "@/components/AdminShell";
 import { Toaster } from "sonner";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { BRAND_ASSETS, ToastProvider } from "@zackisch/design-system";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -42,12 +42,14 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${poppins.variable} ${inter.variable}`}>
       <body className="antialiased">
-        <ConvexClientProvider>
-          <AdminProvider>
-            <AdminShell>{children}</AdminShell>
-            <Toaster position="top-right" richColors />
-          </AdminProvider>
-        </ConvexClientProvider>
+        <ToastProvider>
+          <ConvexClientProvider>
+            <AdminProvider>
+              <AdminShell>{children}</AdminShell>
+              <Toaster position="bottom-right" closeButton />
+            </AdminProvider>
+          </ConvexClientProvider>
+        </ToastProvider>
       </body>
     </html>
   );

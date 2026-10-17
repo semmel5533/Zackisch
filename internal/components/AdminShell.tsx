@@ -23,7 +23,7 @@ import {
   LifeBuoy,
 } from "lucide-react";
 import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { resolveBrandAsset } from "@zackisch/design-system";
 
 interface AdminShellProps {
   children: ReactNode;
@@ -197,7 +197,7 @@ export function AdminShell({ children }: AdminShellProps) {
         <div className="p-6 border-b border-zinc-100 flex flex-col gap-2">
           <Link href={defaultRoute} className="inline-block">
             <img
-              src={BRAND_ASSETS.combinationMarkSvg}
+              src={resolveBrandAsset("combinationMarkSvg", { site: "internal" })}
               alt="Zackisch"
               className="h-8 w-auto block"
             />

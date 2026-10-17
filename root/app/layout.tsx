@@ -2,7 +2,7 @@ import { Metadata, Viewport } from "next";
 import { Poppins, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { translations } from "@/lib/translations";
-import { BRAND_ASSETS } from "@zackisch/design-system";
+import { BRAND_ASSETS, ToastProvider } from "@zackisch/design-system";
 
 const t = translations.de;
 
@@ -78,8 +78,10 @@ export default function RootLayout({
       )}
     >
       <body>
-        <Header />
-        {children}
+        <ToastProvider>
+          <Header />
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );
