@@ -128,12 +128,11 @@ export function DashboardShell({
             )}
           >
             <div className="overflow-hidden">
-              <Image
+              <img
                 src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
                 alt="Zackisch logo"
                 width={100}
                 height={24}
-                priority
                 loading="eager"
                 className="h-6 w-auto brightness-0 select-none"
               />
@@ -339,12 +338,11 @@ export function DashboardShell({
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-canvas print:overflow-visible print:block print:bg-white print:shadow-none @container">
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 lg:hidden print:hidden bg-canvas text-foreground">
           <div className="flex items-center">
-            <Image
+            <img
               src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
               alt="Zackisch"
               width={100}
               height={24}
-              priority
               loading="eager"
               className="h-6 w-auto brightness-0 select-none"
             />

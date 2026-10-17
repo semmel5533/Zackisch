@@ -67,7 +67,25 @@ export function StripeEmbeddedPortal({
         }
       }
 
+      const initialSession = await createEmbeddedAccountSessionAction(businessId);
+      if (initialSession.error || !initialSession.clientSecret) {
+        setInitError(
+          initialSession.error ||
+            (isDe
+              ? "Konnte keine Stripe Account Session erzeugen."
+              : "Failed to create Stripe Account Session."),
+        );
+        setIsInitializing(false);
+        return;
+      }
+
+      let cachedSecret: string | null = initialSession.clientSecret;
       const fetchClientSecret = async () => {
+        if (cachedSecret) {
+          const secret = cachedSecret;
+          cachedSecret = null;
+          return secret;
+        }
         const res = await createEmbeddedAccountSessionAction(businessId);
         if (res.error || !res.clientSecret) {
           throw new Error(

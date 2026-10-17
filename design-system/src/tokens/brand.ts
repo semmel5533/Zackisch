@@ -64,9 +64,30 @@ export interface AssetResolveOptions {
   env?: string;
 }
 
-function readEnvVar(name: string): string | undefined {
-  const proc = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process;
-  return proc?.env?.[name];
+declare const process: {
+  env: {
+    NODE_ENV?: string;
+    NEXT_PUBLIC_BRAND_ASSET_ORIGIN?: string;
+  };
+};
+
+function getBundlerEnv(): {
+  nodeEnv?: string;
+  brandAssetOrigin?: string;
+} {
+  let nodeEnv: string | undefined;
+  let brandAssetOrigin: string | undefined;
+  try {
+    nodeEnv = process.env.NODE_ENV;
+  } catch {
+    // ignore ReferenceError in unbundled browser environments
+  }
+  try {
+    brandAssetOrigin = process.env.NEXT_PUBLIC_BRAND_ASSET_ORIGIN;
+  } catch {
+    // ignore ReferenceError in unbundled browser environments
+  }
+  return { nodeEnv, brandAssetOrigin };
 }
 
 /**
@@ -77,12 +98,12 @@ export function getBrandAssetOrigin(options?: AssetResolveOptions): string {
   if (options?.site === "root") {
     return "";
   }
-  const explicitOrigin =
-    options?.origin ?? readEnvVar("NEXT_PUBLIC_BRAND_ASSET_ORIGIN");
+  const { nodeEnv, brandAssetOrigin } = getBundlerEnv();
+  const explicitOrigin = options?.origin ?? brandAssetOrigin;
   if (explicitOrigin && explicitOrigin.trim().length > 0) {
     return explicitOrigin.trim().replace(/\/+$/, "");
   }
-  const env = options?.env ?? readEnvVar("NODE_ENV") ?? "production";
+  const env = options?.env ?? nodeEnv ?? "production";
   if (env === "development") {
     return "http://localhost:3000";
   }

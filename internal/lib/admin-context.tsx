@@ -185,7 +185,6 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   // Handle session verification query response
   useEffect(() => {
     if (!sessionToken) {
-      setIsLoading(false);
       return;
     }
 

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
-import { BRAND_ASSETS, ToastProvider } from "@zackisch/design-system";
+import { BRAND_ASSETS, ToastProvider, resolveBrandAsset } from "@zackisch/design-system";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   },
   description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
   icons: {
-    icon: BRAND_ASSETS.brandMark512,
-    apple: BRAND_ASSETS.appleTouchIcon,
+    icon: resolveBrandAsset("brandMark512", { site: "app" }),
+    apple: resolveBrandAsset("appleTouchIcon", { site: "app" }),
   },
   openGraph: {
     title: "Zackisch",

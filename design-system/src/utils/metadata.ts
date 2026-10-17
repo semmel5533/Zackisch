@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BRAND_ASSETS } from "../tokens/brand";
+import { BRAND_ASSETS, resolveBrandAsset } from "../tokens/brand";
 
 export type SiteTarget = "root" | "app" | "support" | "internal";
 
@@ -45,8 +45,8 @@ export function createSiteMetadata({
     },
     description,
     icons: {
-      icon: BRAND_ASSETS.brandMark512,
-      apple: BRAND_ASSETS.appleTouchIcon,
+      icon: resolveBrandAsset("brandMark512", { site }),
+      apple: resolveBrandAsset("appleTouchIcon", { site }),
     },
     alternates: {
       canonical: canonicalUrl,

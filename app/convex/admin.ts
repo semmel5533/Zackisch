@@ -185,6 +185,36 @@ export const migrateUserEmailToZackisch = mutation({
   },
 });
 
+export const cleanLegacyOrganizationDocs = internalMutation({
+  args: {},
+  returns: v.object({
+    deletedCount: v.number(),
+  }),
+  handler: async (ctx) => {
+    let deletedCount = 0;
+    const tables = [
+      "availabilitySessions",
+      "orderSessions",
+      "staffSessions",
+      "menuCategories",
+      "menuItems",
+      "orders",
+    ] as const;
+
+    for (const table of tables) {
+      const docs = await ctx.db.query(table).collect();
+      for (const doc of docs) {
+        if (!("businessId" in doc) || !(doc as { businessId?: string }).businessId) {
+          await ctx.db.delete(doc._id);
+          deletedCount++;
+        }
+      }
+    }
+
+    return { deletedCount };
+  },
+});
+
 // Get admin user profile by email
 export const getAdminByEmail = query({
   args: { email: v.string() },
@@ -199,17 +229,19 @@ export const getAdminByEmail = query({
       regionId: v.string(),
       permissions: v.array(v.string()),
       isActive: v.boolean(),
-      password: v.optional(v.string()),
       createdAt: v.number(),
       lastLoginAt: v.optional(v.number()),
     })
   ),
   handler: async (ctx, args) => {
     const normalized = args.email.toLowerCase().trim();
-    return await ctx.db
+    const admin = await ctx.db
       .query("adminUsers")
       .withIndex("by_email", (q) => q.eq("email", normalized))
       .first();
+    if (!admin) return null;
+    const { password: _password, ...safeAdmin } = admin;
+    return safeAdmin;
   },
 });
 
@@ -816,10 +848,11 @@ export const listStaff = query({
     })
   ),
   handler: async (ctx, args) => {
-    return await ctx.db
+    const staff = await ctx.db
       .query("adminUsers")
       .withIndex("by_regionId", (q) => q.eq("regionId", args.regionId))
       .collect();
+    return staff.map(({ password: _password, ...member }) => member);
   },
 });
 

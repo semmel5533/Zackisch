@@ -5,6 +5,7 @@ export const seedDemoData = internalMutation({
   args: {},
   returns: v.object({
     businessId: v.id("businesses"),
+    userId: v.optional(v.id("users")),
     categoriesCount: v.number(),
     itemsCount: v.number(),
     ordersCount: v.number(),

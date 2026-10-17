@@ -5,7 +5,7 @@ import { ConvexClientProvider } from "@/lib/convex";
 import { AdminProvider } from "@/lib/admin-context";
 import { AdminShell } from "@/components/AdminShell";
 import { Toaster } from "sonner";
-import { BRAND_ASSETS, ToastProvider } from "@zackisch/design-system";
+import { ToastProvider, resolveBrandAsset } from "@zackisch/design-system";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   title: "Zackisch Team Dashboard — Interne Team-Oberfläche",
   description: "Internes Team- und Verwaltungsdashboard für Zackisch Gastronomie (internal.zackisch.com)",
   icons: {
-    icon: BRAND_ASSETS.brandMark512,
-    apple: BRAND_ASSETS.appleTouchIcon,
+    icon: resolveBrandAsset("brandMark512", { site: "internal" }),
+    apple: resolveBrandAsset("appleTouchIcon", { site: "internal" }),
   },
   robots: {
     index: false,

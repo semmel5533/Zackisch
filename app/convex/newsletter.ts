@@ -228,6 +228,8 @@ export const listCampaigns = query({
       scheduledAt: v.optional(v.number()),
       sentAt: v.optional(v.number()),
       recipientCount: v.optional(v.number()),
+      deliveredCount: v.optional(v.number()),
+      failedCount: v.optional(v.number()),
       createdBy: v.string(),
       createdAt: v.number(),
       updatedAt: v.number(),

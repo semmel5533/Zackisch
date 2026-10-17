@@ -2,7 +2,7 @@ import { Metadata, Viewport } from "next";
 import { Poppins, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { translations } from "@/lib/translations";
-import { BRAND_ASSETS, ToastProvider } from "@zackisch/design-system";
+import { BRAND_ASSETS, ToastProvider, resolveBrandAsset } from "@zackisch/design-system";
 
 const t = translations.de;
 
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     template: "Zackisch: %s",
   },
   icons: {
-    icon: BRAND_ASSETS.brandMark512,
-    apple: BRAND_ASSETS.appleTouchIcon,
+    icon: resolveBrandAsset("brandMark512", { site: "root" }),
+    apple: resolveBrandAsset("appleTouchIcon", { site: "root" }),
   },
   openGraph: {
     title: t.metaTitle,

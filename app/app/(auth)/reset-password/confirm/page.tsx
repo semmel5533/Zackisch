@@ -486,7 +486,9 @@ export default function ResetPasswordConfirmPage() {
             width={120}
             height={40}
             priority
+            unoptimized
             loading="eager"
+            style={{ width: "auto" }}
             className="w-auto h-8 select-none"
           />
         </div>

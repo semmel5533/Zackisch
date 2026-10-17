@@ -1,3 +1,4 @@
+import path from "path";
 import type { NextConfig } from "next";
 
 const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || "";
@@ -11,6 +12,9 @@ try {
 }
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.resolve(__dirname, ".."),
+  },
   images: {
     remotePatterns: [
       ...(convexHostname
@@ -21,6 +25,11 @@ const nextConfig: NextConfig = {
             },
           ]
         : []),
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+      },
       {
         protocol: "https",
         hostname: "*.convex.cloud",
