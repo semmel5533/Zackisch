@@ -1,5 +1,6 @@
 import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { requireOpsActor } from "./permissions";
 
 export const logEmailRecord = internalMutation({
   args: {
@@ -62,6 +63,7 @@ export const listEmailLogs = query({
     regionId: v.optional(v.string()),
     type: v.optional(v.string()),
     limit: v.optional(v.number()),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.array(
     v.object({
@@ -87,6 +89,11 @@ export const listEmailLogs = query({
     })
   ),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId }
+    );
     const limit = args.limit || 100;
     const records = await ctx.db.query("emailLogs").order("desc").take(limit * 2);
     return records

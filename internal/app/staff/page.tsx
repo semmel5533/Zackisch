@@ -16,7 +16,7 @@ import {
 import { toast } from "sonner";
 
 export default function StaffPage() {
-  const { currentRegion, adminEmail } = useAdmin();
+  const { currentRegion, adminEmail, sessionToken } = useAdmin();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
@@ -30,9 +30,15 @@ export default function StaffPage() {
     "newsletter:write",
   ]);
 
-  const staffList = useQuery((anyApi as any).admin.listStaff, {
-    regionId: currentRegion,
-  });
+  const staffList = useQuery(
+    (anyApi as any).admin.listStaff,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          sessionToken,
+        }
+      : "skip"
+  );
 
   const inviteMutation = useMutation((anyApi as any).admin.inviteStaff);
   const updateStatusMutation = useMutation((anyApi as any).admin.updateStaffStatus);
@@ -76,6 +82,7 @@ export default function StaffPage() {
         regionId: currentRegion,
         permissions: selectedPermissions,
         actorEmail: adminEmail,
+        sessionToken: sessionToken || undefined,
       });
       toast.success(`Mitarbeiter ${inviteName} erfolgreich angelegt!`);
       setShowInviteModal(false);
@@ -93,6 +100,7 @@ export default function StaffPage() {
         isActive: !currentActive,
         actorEmail: adminEmail,
         regionId: currentRegion,
+        sessionToken: sessionToken || undefined,
       });
       toast.success(currentActive ? "Mitarbeiter deaktiviert." : "Mitarbeiter aktiviert.");
     } catch (err: any) {

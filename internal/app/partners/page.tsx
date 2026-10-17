@@ -15,7 +15,7 @@ import {
 import { toast } from "sonner";
 
 export default function PartnersPage() {
-  const { currentRegion, adminEmail } = useAdmin();
+  const { currentRegion, adminEmail, sessionToken } = useAdmin();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showPayoutModal, setShowPayoutModal] = useState<any>(null);
 
@@ -28,13 +28,25 @@ export default function PartnersPage() {
   const [payoutPeriod, setPayoutPeriod] = useState("2026-10");
   const [payoutNotes, setPayoutNotes] = useState("");
 
-  const partners = useQuery((anyApi as any).partners.listPartners, {
-    regionId: currentRegion,
-  });
+  const partners = useQuery(
+    (anyApi as any).partners.listPartners,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          sessionToken,
+        }
+      : "skip"
+  );
 
-  const payouts = useQuery((anyApi as any).partners.listPayouts, {
-    regionId: currentRegion,
-  });
+  const payouts = useQuery(
+    (anyApi as any).partners.listPayouts,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          sessionToken,
+        }
+      : "skip"
+  );
 
   const createPartnerMutation = useMutation((anyApi as any).partners.createPartner);
   const recordPayoutMutation = useMutation((anyApi as any).partners.recordPayout);
@@ -56,6 +68,7 @@ export default function PartnersPage() {
         regionId: currentRegion,
         iban: partnerIban || undefined,
         actorEmail: adminEmail,
+        sessionToken: sessionToken || undefined,
       });
       toast.success(`Partner ${partnerName} (${partnerCode}) angelegt!`);
       setShowCreateModal(false);
@@ -81,6 +94,7 @@ export default function PartnersPage() {
         period: payoutPeriod,
         notes: payoutNotes || undefined,
         actorEmail: adminEmail,
+        sessionToken: sessionToken || undefined,
       });
       toast.success("Auszahlung erfolgreich gebucht!");
       setShowPayoutModal(null);

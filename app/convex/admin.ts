@@ -2,6 +2,7 @@ import { query, mutation, internalMutation } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
+import { requireOpsActor } from "./permissions";
 
 // Seed the initial regional admin and default regions if not present
 export const seedInitialAdminAndRegions = mutation({
@@ -112,29 +113,8 @@ export const seedInitialAdminAndRegions = mutation({
       });
       adminCreated = true;
     } else {
-      await ctx.db.patch(existingAdmin._id, {
-        role: "regional_admin",
-        regionId: "de",
-        isActive: true,
-        password: "demo",
-        permissions: [
-          "restaurants:read",
-          "restaurants:write",
-          "orders:read",
-          "orders:write",
-          "tickets:read",
-          "tickets:write",
-          "tickets:note",
-          "newsletter:read",
-          "newsletter:write",
-          "newsletter:send",
-          "partners:read",
-          "partners:write",
-          "audit:read",
-          "staff:manage",
-        ],
-      });
-      adminCreated = true;
+      // Existing admin is preserved without resetting password or permissions
+      adminCreated = false;
     }
 
     return { adminCreated, regionsCreated };
@@ -667,7 +647,10 @@ export const listRegions = query({
 
 // Regional Overview Metrics for Dashboard
 export const getRegionalOverview = query({
-  args: { regionId: v.string() },
+  args: {
+    regionId: v.string(),
+    sessionToken: v.optional(v.string()),
+  },
   returns: v.object({
     totalBusinesses: v.number(),
     activeBusinesses: v.number(),
@@ -678,6 +661,12 @@ export const getRegionalOverview = query({
     subscriberCount: v.number(),
   }),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId }
+    );
+
     // 1. Businesses in region (Restaurants, Cafés, Imbisse, Bars, etc.)
     const allBusinesses = await ctx.db.query("businesses").collect();
     const regionBusinesses = allBusinesses.filter(
@@ -727,7 +716,10 @@ export const getRegionalOverview = query({
 
 // List regional businesses with details (Restaurants, Cafés, Imbisse, Bars, etc.)
 export const listRegionalBusinesses = query({
-  args: { regionId: v.string() },
+  args: {
+    regionId: v.string(),
+    sessionToken: v.optional(v.string()),
+  },
   returns: v.array(
     v.object({
       _id: v.id("businesses"),
@@ -748,6 +740,11 @@ export const listRegionalBusinesses = query({
     })
   ),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "restaurants:read" }
+    );
     const allBusinesses = await ctx.db.query("businesses").collect();
     return allBusinesses
       .filter((biz) => (biz.region || "de").toLowerCase() === args.regionId.toLowerCase())
@@ -776,6 +773,7 @@ export const listRegionalOrders = query({
   args: {
     regionId: v.string(),
     limit: v.optional(v.number()),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.array(
     v.object({
@@ -800,6 +798,11 @@ export const listRegionalOrders = query({
     })
   ),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "orders:read" }
+    );
     const limit = args.limit || 50;
     const allBusinesses = await ctx.db.query("businesses").collect();
     const regionBusinessIds = new Set(
@@ -832,7 +835,10 @@ export const listRegionalOrders = query({
 
 // List regional staff members
 export const listStaff = query({
-  args: { regionId: v.string() },
+  args: {
+    regionId: v.string(),
+    sessionToken: v.optional(v.string()),
+  },
   returns: v.array(
     v.object({
       _id: v.id("adminUsers"),
@@ -848,6 +854,11 @@ export const listStaff = query({
     })
   ),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "staff:manage" }
+    );
     const staff = await ctx.db
       .query("adminUsers")
       .withIndex("by_regionId", (q) => q.eq("regionId", args.regionId))
@@ -864,10 +875,16 @@ export const inviteStaff = mutation({
     role: v.union(v.literal("regional_admin"), v.literal("staff")),
     regionId: v.string(),
     permissions: v.array(v.string()),
-    actorEmail: v.string(),
+    actorEmail: v.optional(v.string()),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.id("adminUsers"),
   handler: async (ctx, args) => {
+    const actor = await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "staff:manage" }
+    );
     const normalized = args.email.toLowerCase().trim();
     const existing = await ctx.db
       .query("adminUsers")
@@ -888,10 +905,10 @@ export const inviteStaff = mutation({
       createdAt: Date.now(),
     });
 
-    // Record audit event
+    // Record audit event with verified actor identity
     await ctx.db.insert("auditLogs", {
-      actorId: args.actorEmail,
-      actorRole: "regional_admin",
+      actorId: actor.email,
+      actorRole: actor.role,
       action: "staff.invite",
       entityType: "staff",
       entityId: staffId,
@@ -909,20 +926,26 @@ export const updateStaffStatus = mutation({
   args: {
     staffId: v.id("adminUsers"),
     isActive: v.boolean(),
-    actorEmail: v.string(),
+    actorEmail: v.optional(v.string()),
     regionId: v.string(),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    const actor = await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "staff:manage" }
+    );
     const staff = await ctx.db.get(args.staffId);
     if (!staff) throw new Error("Staff member not found");
 
     await ctx.db.patch(args.staffId, { isActive: args.isActive });
 
-    // Record audit event
+    // Record audit event with verified actor identity
     await ctx.db.insert("auditLogs", {
-      actorId: args.actorEmail,
-      actorRole: "regional_admin",
+      actorId: actor.email,
+      actorRole: actor.role,
       action: args.isActive ? "staff.activate" : "staff.deactivate",
       entityType: "staff",
       entityId: args.staffId,
@@ -940,10 +963,15 @@ export const setAdminPassword = mutation({
   args: {
     email: v.string(),
     password: v.string(),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.boolean(),
   handler: async (ctx, args) => {
+    const actor = await requireOpsActor(ctx, { sessionToken: args.sessionToken });
     const normalized = args.email.toLowerCase().trim();
+    if (actor.role !== "regional_admin" && actor.email.toLowerCase() !== normalized) {
+      throw new Error("Nicht berechtigt, Passwörter anderer Administratoren zu ändern.");
+    }
     const admin = await ctx.db
       .query("adminUsers")
       .withIndex("by_email", (q) => q.eq("email", normalized))

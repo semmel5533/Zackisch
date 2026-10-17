@@ -1,9 +1,13 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { requireOpsActor } from "./permissions";
 
 // 1. List Partners in Region
 export const listPartners = query({
-  args: { regionId: v.string() },
+  args: {
+    regionId: v.string(),
+    sessionToken: v.optional(v.string()),
+  },
   returns: v.array(
     v.object({
       _id: v.id("partners"),
@@ -23,6 +27,11 @@ export const listPartners = query({
     })
   ),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "partners:read" }
+    );
     const partners = await ctx.db
       .query("partners")
       .withIndex("by_regionId", (q) => q.eq("regionId", args.regionId))
@@ -61,10 +70,16 @@ export const createPartner = mutation({
     regionId: v.string(),
     iban: v.optional(v.string()),
     taxId: v.optional(v.string()),
-    actorEmail: v.string(),
+    actorEmail: v.optional(v.string()),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.id("partners"),
   handler: async (ctx, args) => {
+    const actor = await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "partners:write" }
+    );
     const code = args.code.toUpperCase().trim();
     const existing = await ctx.db
       .query("partners")
@@ -89,10 +104,10 @@ export const createPartner = mutation({
       createdAt: Date.now(),
     });
 
-    // Record audit event
+    // Record audit event with verified actor identity
     await ctx.db.insert("auditLogs", {
-      actorId: args.actorEmail,
-      actorRole: "regional_admin",
+      actorId: actor.email,
+      actorRole: actor.role,
       action: "partner.create",
       entityType: "partner",
       entityId: partnerId,
@@ -114,10 +129,16 @@ export const recordPayout = mutation({
     period: v.string(),
     notes: v.optional(v.string()),
     reference: v.optional(v.string()),
-    actorEmail: v.string(),
+    actorEmail: v.optional(v.string()),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.id("partnerPayouts"),
   handler: async (ctx, args) => {
+    const actor = await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "partners:write" }
+    );
     const partner = await ctx.db.get(args.partnerId);
     if (!partner) throw new Error("Partner not found");
 
@@ -137,10 +158,10 @@ export const recordPayout = mutation({
       totalPaidCents: partner.totalPaidCents + args.amountCents,
     });
 
-    // Record audit event
+    // Record audit event with verified actor identity
     await ctx.db.insert("auditLogs", {
-      actorId: args.actorEmail,
-      actorRole: "regional_admin",
+      actorId: actor.email,
+      actorRole: actor.role,
       action: "partner.payout",
       entityType: "partner",
       entityId: args.partnerId,
@@ -155,7 +176,10 @@ export const recordPayout = mutation({
 
 // 4. List Payouts
 export const listPayouts = query({
-  args: { regionId: v.string() },
+  args: {
+    regionId: v.string(),
+    sessionToken: v.optional(v.string()),
+  },
   returns: v.array(
     v.object({
       _id: v.id("partnerPayouts"),
@@ -172,6 +196,11 @@ export const listPayouts = query({
     })
   ),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "partners:read" }
+    );
     return await ctx.db
       .query("partnerPayouts")
       .withIndex("by_regionId", (q) => q.eq("regionId", args.regionId))

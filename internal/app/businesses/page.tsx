@@ -13,12 +13,18 @@ import {
 } from "lucide-react";
 
 export default function BusinessesPage() {
-  const { currentRegion } = useAdmin();
+  const { currentRegion, sessionToken } = useAdmin();
   const [search, setSearch] = useState("");
 
-  const businesses = useQuery((anyApi as any).admin.listRegionalBusinesses, {
-    regionId: currentRegion,
-  });
+  const businesses = useQuery(
+    (anyApi as any).admin.listRegionalBusinesses,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          sessionToken,
+        }
+      : "skip"
+  );
 
   const filtered = (businesses || []).filter((r: any) =>
     r.name.toLowerCase().includes(search.toLowerCase()) ||

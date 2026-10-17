@@ -1,6 +1,7 @@
 import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { requireOpsActor } from "./permissions";
 
 // Helper to sanitize details and redact any sensitive data (OTPs, passwords, tokens, full cards)
 export function sanitizeAuditDetails(details: Record<string, any>): string {
@@ -63,19 +64,32 @@ export const logInternal = internalMutation({
 // Mutation callable by authenticated operations
 export const recordAction = mutation({
   args: {
-    actorId: v.string(),
-    actorRole: v.string(),
     action: v.string(),
     entityType: v.string(),
     entityId: v.string(),
     regionId: v.string(),
     details: v.string(),
     ipAddress: v.optional(v.string()),
+    actorId: v.optional(v.string()),
+    actorRole: v.optional(v.string()),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.id("auditLogs"),
   handler: async (ctx, args) => {
+    const actor = await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId }
+    );
     return await ctx.db.insert("auditLogs", {
-      ...args,
+      action: args.action,
+      entityType: args.entityType,
+      entityId: args.entityId,
+      regionId: actor.regionId,
+      actorId: actor.email,
+      actorRole: actor.role,
+      details: args.details,
+      ipAddress: args.ipAddress,
       timestamp: Date.now(),
     });
   },
@@ -88,6 +102,7 @@ export const getAuditLogs = query({
     entityType: v.optional(v.string()),
     actorId: v.optional(v.string()),
     limit: v.optional(v.number()),
+    sessionToken: v.optional(v.string()),
   },
   returns: v.array(
     v.object({
@@ -105,6 +120,11 @@ export const getAuditLogs = query({
     })
   ),
   handler: async (ctx, args) => {
+    await requireOpsActor(
+      ctx,
+      { sessionToken: args.sessionToken },
+      { regionId: args.regionId, requiredPermission: "audit:read" }
+    );
     const limit = args.limit || 100;
     const records = await ctx.db
       .query("auditLogs")

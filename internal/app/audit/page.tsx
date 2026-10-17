@@ -14,15 +14,21 @@ import {
 } from "lucide-react";
 
 export default function AuditTrailPage() {
-  const { currentRegion } = useAdmin();
+  const { currentRegion, sessionToken } = useAdmin();
   const [entityFilter, setEntityFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  const auditLogs = useQuery((anyApi as any).audit.getAuditLogs, {
-    regionId: currentRegion,
-    entityType: entityFilter === "all" ? undefined : entityFilter,
-    limit: 100,
-  });
+  const auditLogs = useQuery(
+    (anyApi as any).audit.getAuditLogs,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          entityType: entityFilter === "all" ? undefined : entityFilter,
+          limit: 100,
+          sessionToken,
+        }
+      : "skip"
+  );
 
   const filtered = (auditLogs || []).filter((log: any) =>
     log.actorId.toLowerCase().includes(search.toLowerCase()) ||

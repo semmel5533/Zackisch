@@ -17,16 +17,22 @@ import {
 import { toast } from "sonner";
 
 export default function EmailLogPage() {
-  const { currentRegion, adminEmail } = useAdmin();
+  const { currentRegion, adminEmail, sessionToken } = useAdmin();
   const [typeFilter, setTypeFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [testingSmtp, setTestingSmtp] = useState(false);
 
-  const emailLogs = useQuery((anyApi as any).emailLogs.listEmailLogs, {
-    regionId: currentRegion,
-    type: typeFilter === "all" ? undefined : typeFilter,
-    limit: 100,
-  });
+  const emailLogs = useQuery(
+    (anyApi as any).emailLogs.listEmailLogs,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          type: typeFilter === "all" ? undefined : typeFilter,
+          limit: 100,
+          sessionToken,
+        }
+      : "skip"
+  );
 
   const testSmtpAction = useAction((anyApi as any).emails.testSmtpConnection);
 

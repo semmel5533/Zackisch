@@ -23,13 +23,19 @@ import { toast } from "sonner";
 import Link from "next/link";
 
 export default function AdminOverviewPage() {
-  const { currentRegion, adminEmail } = useAdmin();
+  const { currentRegion, adminEmail, sessionToken } = useAdmin();
   const [testingSmtp, setTestingSmtp] = useState(false);
 
   // Queries
-  const overview = useQuery((anyApi as any).admin.getRegionalOverview, {
-    regionId: currentRegion,
-  });
+  const overview = useQuery(
+    (anyApi as any).admin.getRegionalOverview,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          sessionToken,
+        }
+      : "skip"
+  );
 
   const testSmtpAction = useAction((anyApi as any).emails.testSmtpConnection);
 

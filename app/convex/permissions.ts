@@ -1,6 +1,6 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import type { QueryCtx } from "./_generated/server";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 
 export async function isOwner(
   ctx: QueryCtx,
@@ -57,4 +57,46 @@ export async function verifyTerminal(
       return true;
   }
   return false;
+}
+
+export async function requireOpsActor(
+  ctx: { db: any },
+  credentials: {
+    sessionToken?: string;
+  },
+  options: {
+    regionId?: string;
+    requiredPermission?: string;
+  } = {}
+): Promise<Doc<"adminUsers">> {
+  const token = credentials.sessionToken?.trim();
+  if (!token) {
+    throw new Error("Authentifizierung erforderlich: Kein Team-Sitzungstoken angegeben.");
+  }
+
+  const session = await ctx.db
+    .query("verificationCodes")
+    .withIndex("by_identifier", (q: any) => q.eq("identifier", token))
+    .first();
+
+  if (!session || Date.now() > session.expires) {
+    throw new Error("Sitzung ist abgelaufen oder ungültig. Bitte erneut anmelden.");
+  }
+
+  const admin = (await ctx.db.get(session.code as Id<"adminUsers">)) as (Doc<"adminUsers"> | null);
+  if (!admin || !admin.isActive) {
+    throw new Error("Kein aktives Team-Dashboard-Konto.");
+  }
+
+  if (options.regionId && admin.regionId.toLowerCase() !== options.regionId.toLowerCase()) {
+    throw new Error("Kein Zugriff auf Daten außerhalb der zugewiesenen Region.");
+  }
+
+  if (options.requiredPermission && admin.role !== "regional_admin") {
+    if (!admin.permissions || !admin.permissions.includes(options.requiredPermission)) {
+      throw new Error(`Berechtigung '${options.requiredPermission}' fehlt.`);
+    }
+  }
+
+  return admin;
 }

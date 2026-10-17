@@ -344,22 +344,18 @@ export const createTicket = mutation({
     }
 
     const identity = await getVerifiedCustomerIdentity(ctx, args.sessionToken);
-
-    let verifiedEmail = cleanEmail;
-    let verifiedName = cleanName;
-    let boundBusinessId = undefined;
-    let boundBusinessName = undefined;
-    let regionId = "de";
-    let requesterUserId = undefined;
-
-    if (identity) {
-      verifiedEmail = identity.email;
-      verifiedName = identity.name || cleanName;
-      boundBusinessId = identity.businessId;
-      boundBusinessName = identity.businessName;
-      regionId = identity.regionId || "de";
-      requesterUserId = identity.userId;
+    if (!identity) {
+      throw new Error(
+        "Authentifizierung erforderlich: Nur verifizierte Zackisch-Betriebskonten können Support-Anfragen erstellen."
+      );
     }
+
+    const verifiedEmail = identity.email;
+    const verifiedName = identity.name || cleanName || identity.email;
+    const boundBusinessId = identity.businessId;
+    const boundBusinessName = identity.businessName;
+    const regionId = identity.regionId || "de";
+    const requesterUserId = identity.userId;
 
     const recentTickets = await ctx.db
       .query("supportTickets")

@@ -14,13 +14,19 @@ import {
 } from "lucide-react";
 
 export default function OrdersPage() {
-  const { currentRegion } = useAdmin();
+  const { currentRegion, sessionToken } = useAdmin();
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const orders = useQuery((anyApi as any).admin.listRegionalOrders, {
-    regionId: currentRegion,
-    limit: 100,
-  });
+  const orders = useQuery(
+    (anyApi as any).admin.listRegionalOrders,
+    sessionToken
+      ? {
+          regionId: currentRegion,
+          limit: 100,
+          sessionToken,
+        }
+      : "skip"
+  );
 
   const formatEuro = (cents: number) => {
     return new Intl.NumberFormat("de-DE", {

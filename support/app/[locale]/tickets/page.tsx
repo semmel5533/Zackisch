@@ -180,45 +180,73 @@ export default function SupportTicketsPage() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left: Create Ticket Form */}
-          <div className="lg:col-span-7 bg-white rounded-2xl border border-[#E0E0E0] p-6 sm:p-8 space-y-6 shadow-sm">
-            <div className="flex items-center gap-2 text-base font-bold text-[#0A0A0A] font-brand">
-              <Plus className="w-5 h-5 text-[#161616]" />
-              <h2>
-                {isDe ? "Neues Support-Ticket eröffnen" : "Open a New Support Ticket"}
-              </h2>
+        {!sessionToken ? (
+          <div className="bg-white rounded-2xl border border-[#E0E0E0] p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-6 shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#F2F2F2] flex items-center justify-center mx-auto text-[#161616]">
+              <Ticket className="w-6 h-6" />
             </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold block text-[#383838]">
-                    {isDe ? "Deine geschäftliche E-Mail" : "Your Business Email"}
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={customerEmail}
-                    onChange={(e) => setCustomerEmail(e.target.value)}
-                    placeholder="inhaber@mein-restaurant.de"
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold block text-[#383838]">
-                    {isDe ? "Name / Betrieb" : "Name / Venue"}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    placeholder={isDe ? "Muster Bistro" : "Sample Bistro"}
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] text-sm text-[#161616] focus:outline-none focus:ring-2 focus:ring-[#161616]"
-                  />
-                </div>
+            <div className="space-y-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#0A0A0A] font-brand">
+                {isDe ? "Anmeldung mit Betriebskonto erforderlich" : "Merchant Account Sign-in Required"}
+              </h2>
+              <p className="text-sm text-[#525252] leading-relaxed max-w-lg mx-auto">
+                {isDe
+                  ? "Support-Tickets sind exklusiv für verifizierte Zackisch-Gastronomen verfügbar. Bitte melde dich mit deinem Betriebskonto an, um ein neues Ticket zu erstellen oder deine Anfragen einzusehen."
+                  : "Support tickets are exclusively available for verified Zackisch merchants. Please sign in with your business account to open a new ticket or view your existing requests."}
+              </p>
+            </div>
+            <div className="pt-2">
+              <a
+                href={
+                  typeof window !== "undefined" && window.location.hostname.includes("localhost")
+                    ? "http://localhost:3001/sign-in"
+                    : "https://app.zackisch.com/sign-in"
+                }
+                className="inline-flex items-center justify-center gap-2 px-6 h-11 rounded-full bg-[#161616] text-white hover:bg-[#252525] text-sm font-semibold transition-colors"
+              >
+                <span>{isDe ? "Mit Zackisch-Konto anmelden" : "Sign in with Zackisch"}</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left: Create Ticket Form */}
+            <div className="lg:col-span-7 bg-white rounded-2xl border border-[#E0E0E0] p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="flex items-center gap-2 text-base font-bold text-[#0A0A0A] font-brand">
+                <Plus className="w-5 h-5 text-[#161616]" />
+                <h2>
+                  {isDe ? "Neues Support-Ticket eröffnen" : "Open a New Support Ticket"}
+                </h2>
               </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold block text-[#383838]">
+                      {isDe ? "Deine geschäftliche E-Mail" : "Your Business Email"}
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      readOnly
+                      value={customerEmail}
+                      className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] bg-[#F9F9F9] text-sm text-[#161616] cursor-not-allowed"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold block text-[#383838]">
+                      {isDe ? "Name / Betrieb" : "Name / Venue"}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      readOnly
+                      value={businessName || customerName}
+                      className="w-full h-11 px-3.5 rounded-xl border border-[#E0E0E0] bg-[#F9F9F9] text-sm text-[#161616] cursor-not-allowed"
+                    />
+                  </div>
+                </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
@@ -406,6 +434,7 @@ export default function SupportTicketsPage() {
             )}
           </div>
         </div>
+        )}
       </div>
     </SupportShell>
   );
