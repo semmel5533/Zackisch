@@ -74,14 +74,14 @@ export async function updateBusinessAction(
     if (removeLogo) {
       logoStorageId = undefined;
     } else if (logoFile && logoFile.size > 0) {
-      logoStorageId = await uploadFileToConvex(logoFile);
+      logoStorageId = await uploadFileToConvex(logoFile, businessId);
     }
 
     let bannerStorageId: string | undefined = existingBannerId || undefined;
     if (removeBanner) {
       bannerStorageId = undefined;
     } else if (bannerFile && bannerFile.size > 0) {
-      bannerStorageId = await uploadFileToConvex(bannerFile);
+      bannerStorageId = await uploadFileToConvex(bannerFile, businessId);
     }
 
     await updateBusiness(businessId, {

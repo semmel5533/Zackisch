@@ -1,10 +1,15 @@
 import { mutation, query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { requireOwner } from "./permissions";
 
 export const generateUploadUrl = mutation({
-  args: {},
+  args: {
+    businessId: v.id("businesses"),
+    sessionToken: v.optional(v.string()),
+  },
   returns: v.string(),
-  handler: async (ctx) => {
+  handler: async (ctx, args) => {
+    await requireOwner(ctx, args.businessId, args.sessionToken);
     return await ctx.storage.generateUploadUrl();
   },
 });

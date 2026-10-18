@@ -25,6 +25,10 @@ Every protected operation evaluates actor identity, authentication/session valid
 | Newsletter, partner ledger, staff admin | No | No | Specific operational permission | No |
 | Cross-region private queries | No | No | No by default | No |
 
+`requireOpsActor` checks the persisted administrator account, active status, session expiry and requested permission. When an operation supplies a region, both `staff` and `regional_admin` are restricted to their assigned region. Staff status changes and administrator email lookups additionally compare the loaded account's region with the actor's region, so an allowed request region does not authorize a foreign account ID. Administrative bootstrap and email migration functions are internal Convex mutations and are unavailable through the public client API.
+
+Merchant media upload URLs require `businessId` and verified ownership in `storage.generateUploadUrl`. The server-only upload adapter forwards either the current merchant session token or Convex Auth identity. Settings and menu Server Actions pass the affected business ID; anonymous callers and owners of other businesses cannot obtain an upload URL through this mutation.
+
 ## Sessions and cross-subdomain sign-in
 
 Use the existing trusted merchant identity for `app` and `support`, without duplicate user records or insecure implicit domain cookies. Prefer narrow host-only Secure, HttpOnly, SameSite cookies and a deliberately designed short-lived authorization-code exchange via authenticated redirect if needed. Allowlist callback origins, bind exchange to state/nonce and session, single-use and short TTL; avoid localStorage tokens or leaking bearer credentials through URLs, logs, analytics or `Referer`. Logout and account deletion must revoke both sites. Re-evaluate account recovery, session fixation, multi-device logout and server-side revocation. Do not casually reuse internal Team Dashboard sessions for merchant routes. Existing OTP rules and timeouts need compatibility/regression testing.

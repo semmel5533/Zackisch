@@ -240,7 +240,7 @@ export async function createMenuItemAction(
 
     let imageStorageId: string | undefined = undefined;
     if (imageFile && imageFile.size > 0) {
-      imageStorageId = await uploadFileToConvex(imageFile);
+      imageStorageId = await uploadFileToConvex(imageFile, businessId);
     }
 
     await createMenuItem({
@@ -347,7 +347,7 @@ export async function updateMenuItemAction(
     if (removeExistingImage) {
       imageStorageId = undefined;
     } else if (imageFile && imageFile.size > 0) {
-      imageStorageId = await uploadFileToConvex(imageFile);
+      imageStorageId = await uploadFileToConvex(imageFile, businessId);
     }
 
     await updateMenuItem(itemId, {

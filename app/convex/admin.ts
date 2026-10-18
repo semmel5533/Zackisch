@@ -2,10 +2,10 @@ import { query, mutation, internalMutation } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
-import { requireOpsActor } from "./permissions";
+import { requireOpsActor, requireOpsRegion } from "./permissions";
 
 // Seed the initial regional admin and default regions if not present
-export const seedInitialAdminAndRegions = mutation({
+export const seedInitialAdminAndRegions = internalMutation({
   args: {},
   returns: v.object({
     adminCreated: v.boolean(),
@@ -146,7 +146,7 @@ export const seedInitialAdminAndRegions = mutation({
   },
 });
 
-export const migrateUserEmailToZackisch = mutation({
+export const migrateUserEmailToZackisch = internalMutation({
   args: {},
   returns: v.object({
     usersUpdated: v.number(),
@@ -242,13 +242,14 @@ export const getAdminByEmail = query({
     })
   ),
   handler: async (ctx, args) => {
-    await requireOpsActor(ctx, args.sessionToken, "staff:read");
+    const actor = await requireOpsActor(ctx, args.sessionToken, "staff:read");
     const normalized = args.email.toLowerCase().trim();
     const admin = await ctx.db
       .query("adminUsers")
       .withIndex("by_email", (q) => q.eq("email", normalized))
       .first();
     if (!admin) return null;
+    requireOpsRegion(actor, admin.regionId);
     const { password: _password, ...safeAdmin } = admin;
     return safeAdmin;
   },
@@ -942,6 +943,7 @@ export const updateStaffStatus = mutation({
     const actor = await requireOpsActor(ctx, args.sessionToken, "staff:manage", args.regionId);
     const staff = await ctx.db.get(args.staffId);
     if (!staff) throw new Error("Staff member not found");
+    requireOpsRegion(actor, staff.regionId);
 
     await ctx.db.patch(args.staffId, { isActive: args.isActive });
 

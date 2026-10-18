@@ -14,6 +14,10 @@ Next.js 16, React 19, TypeScript, Tailwind CSS 4, `next-intl`, `@zackisch/design
 
 ## Entwicklung und Tests
 
+Das gemeinsame Backend prüft bei regionsgebundenen Team-Operationen die gespeicherte Region für beide Rollen (`staff` und `regional_admin`). Änderungen am Personalstatus und die Suche nach Teamkonten prüfen zusätzlich die Region des geladenen Zielkontos. Die administrative Ersteinrichtung und E-Mail-Migration sind ausschließlich interne Convex-Mutationen.
+
+Uploads für Logo, Banner und Artikelbilder laufen über Server Actions. Bevor Convex eine Upload-URL ausstellt, prüft es die Inhaberschaft des angegebenen Betriebs anhand der aktuellen Anmeldung.
+
 In `app/`: `npm ci`, `npx convex dev` für eine isolierte Entwicklungsumgebung und die im `package.json` definierten `dev`, `typecheck`, `test`, `build:cloudflare` und `check:cloudflare`-Skripte. Keine produktiven Convex-Restores oder Stripe-Live-Tests ohne Freigabe. Siehe [Architektur](../docs/architecture.md), [Sicherheit](../docs/security.md), [QR & Druck](../docs/qr-and-print.md), [Release-Tests](../docs/testing-and-release.md).
 
 ## Rechtliches und Datenschutz

@@ -78,7 +78,7 @@ export type OpsPermission =
   | "emails:read";
 
 export async function requireOpsActor(
-  ctx: { db: any },
+  ctx: Pick<QueryCtx, "db">,
   sessionToken: string | undefined,
   requiredPermission?: OpsPermission | string,
   targetRegion?: string
@@ -90,10 +90,10 @@ export async function requireOpsActor(
 
   const session = await ctx.db
     .query("verificationCodes")
-    .withIndex("by_identifier", (q: any) => q.eq("identifier", token))
+    .withIndex("by_identifier", (q) => q.eq("identifier", token))
     .first();
 
-  if (!session || Date.now() > session.expires) {
+  if (!session || !Number.isFinite(session.expires) || Date.now() >= session.expires) {
     throw new Error("UNAUTHORIZED: Ungültiges oder abgelaufenes Administrator-Session-Token.");
   }
 
@@ -102,14 +102,9 @@ export async function requireOpsActor(
     throw new Error("UNAUTHORIZED: Administrator-Account existiert nicht oder ist deaktiviert.");
   }
 
-  // Region enforcement:
-  // A regional_admin is strictly bound to their assigned regionId.
-  if (targetRegion && admin.role === "regional_admin") {
-    if (admin.regionId.toLowerCase() !== targetRegion.toLowerCase()) {
-      throw new Error(
-        `FORBIDDEN: Regionaler Administrator von '${admin.regionId}' hat keinen Zugriff auf Region '${targetRegion}'.`
-      );
-    }
+  // Both operations roles are scoped to their persisted region.
+  if (targetRegion !== undefined) {
+    requireOpsRegion(admin, targetRegion);
   }
 
   // Permission enforcement
@@ -120,4 +115,16 @@ export async function requireOpsActor(
   }
 
   return admin;
+}
+
+/** Compare resource scope with the actor's persisted region, never a client claim. */
+export function requireOpsRegion(
+  actor: { regionId: string },
+  targetRegion: string,
+) {
+  const actorRegion = actor.regionId.trim().toLowerCase();
+  const resourceRegion = targetRegion.trim().toLowerCase();
+  if (!actorRegion || !resourceRegion || actorRegion !== resourceRegion) {
+    throw new Error("FORBIDDEN: Kein Zugriff außerhalb der zugewiesenen Region.");
+  }
 }
