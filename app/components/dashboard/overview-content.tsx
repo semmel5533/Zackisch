@@ -51,7 +51,7 @@ import { Price } from "@/components/common/price";
 
 function InfoTooltip({ content }: { content: string }) {
   return (
-    <Tooltip content={content}>
+    <Tooltip content={content} touchTrigger="tap">
       <span className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground cursor-help p-0.5">
         <Info className="size-4" />
       </span>

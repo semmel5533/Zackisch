@@ -296,24 +296,28 @@ export function SetupAndBillingPanel({
                   label={t("sellerLegalName")}
                   value={legalName}
                   onChange={(val) => setLegalName(val)}
+                  size="lg"
                   width="100%"
                 />
                 <TextInput
                   label={t("sellerTaxId")}
                   value={taxId}
                   onChange={(val) => setTaxId(val)}
+                  size="lg"
                   width="100%"
                 />
                 <TextInput
                   label={t("sellerVatId")}
                   value={vatId}
                   onChange={(val) => setVatId(val)}
+                  size="lg"
                   width="100%"
                 />
                 <Button
                   type="button"
                   variant="secondary"
-                  size="md"
+                  size="lg"
+                  width="100%"
                   isDisabled={savingSeller}
                   isLoading={savingSeller}
                   onClick={handleSaveSellerIdentity}
@@ -340,7 +344,7 @@ export function SetupAndBillingPanel({
                 <Button
                   type="button"
                   variant="secondary"
-                  size="md"
+                  size="lg"
                   width="100%"
                   onClick={handleAcceptContracts}
                   icon={<Icon icon={Check} size="sm" />}
@@ -367,6 +371,7 @@ export function SetupAndBillingPanel({
                     value={posSystemName}
                     onChange={(val) => setPosSystemName(val)}
                     placeholder={isDe ? "Kassensystem (z.B. orderbird)" : "POS system"}
+                    size="lg"
                     width="100%"
                   />
                   <TextInput
@@ -378,6 +383,7 @@ export function SetupAndBillingPanel({
                         ? "Zahlungsart in Kasse (Online bezahlt)"
                         : "External payment label in POS"
                     }
+                    size="lg"
                     width="100%"
                   />
                 </VStack>
@@ -385,7 +391,7 @@ export function SetupAndBillingPanel({
                   <Button
                     type="button"
                     variant="secondary"
-                    size="md"
+                    size="lg"
                     width="100%"
                     isDisabled={savingPos}
                     isLoading={savingPos}
@@ -395,7 +401,7 @@ export function SetupAndBillingPanel({
                   <Button
                     type="button"
                     variant="secondary"
-                    size="md"
+                    size="lg"
                     width="100%"
                     isDisabled={creatingTestOrder}
                     isLoading={creatingTestOrder}

@@ -491,7 +491,7 @@ export function CurrentOrdersContent({
                   <span className="text-sm font-bold text-foreground truncate">
                     {t("inProgress")}
                   </span>
-                  <Tooltip content={t("inProgressSubline")}>
+                  <Tooltip content={t("inProgressSubline")} touchTrigger="tap">
                     <span className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help">
                       <Info className="w-3.5 h-3.5" />
                     </span>
@@ -527,7 +527,7 @@ export function CurrentOrdersContent({
                   <span className="text-sm font-bold text-foreground truncate">
                     {t("ready")}
                   </span>
-                  <Tooltip content={t("readySubline")}>
+                  <Tooltip content={t("readySubline")} touchTrigger="tap">
                     <span className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help">
                       <Info className="w-3.5 h-3.5" />
                     </span>
