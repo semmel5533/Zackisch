@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Toaster } from "@/components/ui/sonner";
+import { AstryxToaster } from "@/components/common/toast";
 import { ZackischThemeProvider } from "@/lib/zackisch-theme";
 import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
 
@@ -67,7 +67,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             {children}
           </ConvexClientProvider>
-          <Toaster position="top-center" />
+          <AstryxToaster />
         </ZackischThemeProvider>
       </body>
     </html>

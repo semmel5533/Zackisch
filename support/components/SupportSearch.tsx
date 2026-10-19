@@ -25,6 +25,7 @@ export function SupportSearch({ locale }: { locale: SupportLocale }) {
       <TextInput
         label={isDe ? "Wissensdatenbank durchsuchen" : "Search knowledge base"}
         isLabelHidden
+        size="lg"
         value={query}
         onChange={(val) => setQuery(val)}
         placeholder={

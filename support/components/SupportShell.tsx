@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import type { SupportLocale } from "@/lib/knowledge-base";
 import { AppShell } from "@astryxdesign/core/AppShell";
-import { TopNav } from "@astryxdesign/core/TopNav";
+import { TopNav, TopNavHeading, TopNavItem } from "@astryxdesign/core/TopNav";
 import { Layout, LayoutContent } from "@astryxdesign/core/Layout";
 import { HStack } from "@astryxdesign/core/HStack";
 import { VStack } from "@astryxdesign/core/VStack";
@@ -37,35 +37,40 @@ export function SupportShell({
       topNav={
         <TopNav
           label="Zackisch Support Navigation"
-          startContent={
-            <HStack gap={3} vAlign="center">
-              <a href={`/${locale}`} style={{ display: "flex", alignItems: "center" }}>
+          heading={
+            <TopNavHeading
+              logo={
                 <img
-                  src="/combination_mark.svg"
+                  src="/icon.svg"
                   alt="Zackisch"
-                  style={{ height: 26, width: "auto" }}
+                  style={{ height: 26, width: 26, borderRadius: 4 }}
                 />
-              </a>
-              <Badge
-                label={isDe ? "Hilfe & Support" : "Help & Support"}
-                variant="neutral"
+              }
+              heading="Zackisch Support"
+              headingHref={`/${locale}`}
+              subheading="support.zackisch.com"
+              headerEndContent={
+                <Badge
+                  label={isDe ? "Hilfe & Support" : "Help & Support"}
+                  variant="neutral"
+                />
+              }
+            />
+          }
+          startContent={
+            <HStack gap={1} vAlign="center">
+              <TopNavItem
+                label={isDe ? "Wissensdatenbank" : "Knowledge Base"}
+                href={`/${locale}`}
+                icon={<Icon icon={BookOpen} size="sm" />}
+                isSelected={!isTicketsActive}
               />
-              <HStack gap={1} vAlign="center">
-                <Button
-                  label={isDe ? "Wissensdatenbank" : "Knowledge Base"}
-                  variant={!isTicketsActive ? "secondary" : "ghost"}
-                  size="sm"
-                  href={`/${locale}`}
-                  icon={<Icon icon={BookOpen} size="sm" />}
-                />
-                <Button
-                  label={isDe ? "Support-Tickets" : "Support Tickets"}
-                  variant={isTicketsActive ? "secondary" : "ghost"}
-                  size="sm"
-                  href={`/${locale}/tickets`}
-                  icon={<Icon icon={Ticket} size="sm" />}
-                />
-              </HStack>
+              <TopNavItem
+                label={isDe ? "Support-Tickets" : "Support Tickets"}
+                href={`/${locale}/tickets`}
+                icon={<Icon icon={Ticket} size="sm" />}
+                isSelected={isTicketsActive}
+              />
             </HStack>
           }
           endContent={

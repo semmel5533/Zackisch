@@ -7,13 +7,14 @@ import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { confirmAccountDeletionAction } from "@/actions/settings-actions";
 import { useTranslation } from "@/lib/i18n";
 import { X, ArrowLeft, Trash } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { Card } from "@astryxdesign/core/Card";
 import { VStack } from "@astryxdesign/core/VStack";
 import { HStack } from "@astryxdesign/core/HStack";
 import { Heading } from "@astryxdesign/core/Heading";
 import { Text } from "@astryxdesign/core/Text";
 import { Button } from "@astryxdesign/core/Button";
+import { Banner } from "@astryxdesign/core/Banner";
 import { Divider } from "@astryxdesign/core/Divider";
 import { Spinner } from "@astryxdesign/core/Spinner";
 import { Icon } from "@astryxdesign/core/Icon";
@@ -126,9 +127,10 @@ function DeleteConfirmFormContent({ t, error, isPending, handleSubmit }: any) {
       <form onSubmit={handleSubmit}>
         <VStack gap={4}>
           {error && (
-            <Text color="secondary" weight="semibold">
-              {error}
-            </Text>
+            <Banner
+              status="error"
+              title={error}
+            />
           )}
           <Button
             label={t("deleteAccountConfirmButton" as any)}
@@ -156,7 +158,7 @@ function DeleteConfirmFormContent({ t, error, isPending, handleSubmit }: any) {
 
 export default function DeleteAccountConfirmPage() {
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img

@@ -25,39 +25,39 @@ import {
   CheckSquare,
   Check,
   DotsSixVertical,
+  Info,
 } from "@phosphor-icons/react";
-import { toast } from "sonner";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { InfoTooltip } from "@/components/ui/info-tooltip";
-import { Input } from "@/components/ui/input";
+import { toast } from "@/components/common/toast";
+import { Card } from "@astryxdesign/core/Card";
+import { Button } from "@astryxdesign/core/Button";
+import { Badge } from "@astryxdesign/core/Badge";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { Switch } from "@astryxdesign/core/Switch";
+import { Tooltip } from "@astryxdesign/core/Tooltip";
+import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
+import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
 import {
   DropdownMenu,
-  DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogCloseButton,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@astryxdesign/core/DropdownMenu";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useTranslation } from "@/lib/i18n";
-import { Price } from "@/components/ui/price";
+import { Price } from "@/components/common/price";
+
+function InfoTooltip({ content }: { content: string }) {
+  return (
+    <Tooltip content={content}>
+      <span className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground cursor-help p-0.5">
+        <Info className="size-4" />
+      </span>
+    </Tooltip>
+  );
+}
 import {
   toggleFeatureAction,
   updateTablesAction,
@@ -471,59 +471,41 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   }, [chartData, isMobile]);
 
   return (
-    <Card className="h-full flex flex-col print:hidden">
-      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
+    <Card elevation="low" variant="default" padding={4} className="h-full flex flex-col print:hidden">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-border/40 gap-4 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
-          <h3 className="text-base sm:text-lg font-bold text-foreground leading-none">
-            {t("statistics")}
-          </h3>
+          <Heading level={3}>{t("statistics")}</Heading>
           <InfoTooltip content={t("statisticsDesc" as any)} />
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button
-                variant="outline"
-                className="h-11 rounded-full font-semibold px-4 cursor-pointer active:scale-[0.98]"
-              >
-                {period === "24h"
-                  ? t("last24h")
-                  : period === "30d"
-                    ? t("last30d")
-                    : t("last90d")}
-                <CaretDown className="ml-1 h-4 w-4" weight="bold" />
-              </Button>
-            }
-          />
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setPeriod("24h")}>
-              {t("last24h")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setPeriod("30d")}>
-              {t("last30d")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setPeriod("90d")}>
-              {t("last90d")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+        <DropdownMenu
+          button={{
+            label: period === "24h"
+              ? t("last24h")
+              : period === "30d"
+                ? t("last30d")
+                : t("last90d"),
+            variant: "secondary",
+          }}
+        >
+          <DropdownMenuGroup>
+            <DropdownMenuItem label={t("last24h")} onClick={() => setPeriod("24h")} />
+            <DropdownMenuItem label={t("last30d")} onClick={() => setPeriod("30d")} />
+            <DropdownMenuItem label={t("last90d")} onClick={() => setPeriod("90d")} />
+          </DropdownMenuGroup>
         </DropdownMenu>
-      </CardHeader>
-      <CardContent className="p-6 pt-4 flex-1 flex flex-col min-h-0">
+      </div>
+      <div className="pt-4 flex-1 flex flex-col min-h-0">
         <div className="flex flex-col flex-1 min-h-0">
           <div className="flex flex-wrap gap-12 shrink-0">
             <div className="flex flex-col">
               <div className="text-3xl font-bold font-inter tabular-nums">
                 {totalOrders}
               </div>
-              <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                {t("sales")}
-              </div>
+              <Text color="secondary">{t("sales")}</Text>
             </div>
             <div className="flex flex-col">
               <Price cents={totalRevenue} className="text-3xl font-bold" />
-              <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                {t("revenue")}
-              </div>
+              <Text color="secondary">{t("revenue")}</Text>
             </div>
           </div>
           <div className="flex-1 w-full min-h-[260px] sm:min-h-[280px] min-w-0 mt-4">
@@ -534,7 +516,7 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
             />
           </div>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }
@@ -702,53 +684,39 @@ function QrCodeGeneratorCard({
 
   return (
     <>
-      <Card className="h-full flex flex-col bg-white print:hidden @container">
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 gap-4 shrink-0">
+      <Card elevation="low" variant="default" padding={4} className="h-full flex flex-col bg-white print:hidden @container">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-border/40 gap-4 shrink-0">
           <div className="flex items-center gap-2 min-w-0">
-            <h3 className="text-base sm:text-lg font-bold text-foreground leading-none whitespace-nowrap">
-              {t("qrManagement")}
-            </h3>
+            <Heading level={3}>{t("qrManagement")}</Heading>
             <InfoTooltip content={t("qrManagementDesc" as any)} />
           </div>
 
           <div className="flex items-center gap-3">
             <Switch
-              checked={isActive}
-              onCheckedChange={(checked) =>
+              value={isActive}
+              onChange={(checked) =>
                 handleToggleFeature(qrType, checked)
               }
-              disabled={isPending}
-              aria-label={qrType === "pickup" ? t("toGo") : t("toStay")}
+              isDisabled={isPending}
+              label={qrType === "pickup" ? t("toGo") : t("toStay")}
+              isLabelHidden
             />
 
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button
-                    variant="outline"
-                    className="w-auto h-11 rounded-full font-semibold px-4 shrink-0 cursor-pointer active:scale-[0.98]"
-                  >
-                    {qrType === "pickup" ? t("toGo") : t("toStay")}
-                    <CaretDown
-                      className="ml-2 h-4 w-4 shrink-0"
-                      weight="bold"
-                    />
-                  </Button>
-                }
-              />
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setQrType("pickup")}>
-                  {t("toGo")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setQrType("table")}>
-                  {t("toStay")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+            <DropdownMenu
+              button={{
+                label: qrType === "pickup" ? t("toGo") : t("toStay"),
+                variant: "secondary",
+              }}
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuItem label={t("toGo")} onClick={() => setQrType("pickup")} />
+                <DropdownMenuItem label={t("toStay")} onClick={() => setQrType("table")} />
+              </DropdownMenuGroup>
             </DropdownMenu>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent className="p-6 pt-4 flex-1 flex flex-col min-h-0">
+        <div className="pt-4 flex-1 flex flex-col min-h-0">
           {qrType === "table" ? (
             <div className="grid grid-cols-1 @min-[500px]:grid-cols-2 gap-6 flex-1 min-h-0 items-start">
               {/* Left Column: Table Management */}
@@ -756,8 +724,9 @@ function QrCodeGeneratorCard({
                 <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
                   <Button
                     type="button"
-                    variant="outline"
-                    disabled={tables.length === 0}
+                    variant="secondary"
+                    isDisabled={tables.length === 0}
+                    label={t("selectAll")}
                     onClick={() => {
                       if (tables.length === 0) return;
                       if (selectedTables.length === tables.length) {
@@ -767,28 +736,23 @@ function QrCodeGeneratorCard({
                       }
                     }}
                     className={cn(
-                      "h-11 rounded-full gap-2 font-semibold text-sm border-border text-foreground hover:bg-muted transition-colors w-full cursor-pointer active:scale-[0.98]",
+                      "w-full",
                       selectedTables.length > 0 ? "sm:flex-1" : "",
                     )}
-                  >
-                    <span>{t("selectAll")}</span>
-                  </Button>
+                  />
 
                   {selectedTables.length > 0 && (
                     <Button
-                      variant="outline"
+                      variant="destructive"
                       onClick={handleRemoveSelectedTables}
-                      className="h-11 rounded-full gap-2 text-sm font-semibold border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors w-full sm:flex-1 shrink-0 cursor-pointer active:scale-[0.98]"
-                    >
-                      <Trash className="h-4 w-4 shrink-0" weight="bold" />
-                      <span>
-                        {selectedTables.length} {t("delete")}
-                      </span>
-                    </Button>
+                      icon={<Trash className="size-4" weight="bold" />}
+                      label={`${selectedTables.length} ${t("delete")}`}
+                      className="w-full sm:flex-1"
+                    />
                   )}
                 </div>
 
-                <ScrollArea className="w-full h-[382px]">
+                <div className="w-full h-[382px] overflow-y-auto pr-1">
                   <DndContext
                     id="tables-dnd-context"
                     sensors={sensors}
@@ -818,12 +782,12 @@ function QrCodeGeneratorCard({
                         })()}
                         <div className="col-span-1">
                           {isAddingTable ? (
-                            <Input
-                              autoFocus
+                            <TextInput
+                              label={t("tableNr")}
+                              isLabelHidden
                               placeholder={t("tableNr")}
                               value={newTableInput}
-                              onChange={(e) => {
-                                const val = e.target.value;
+                              onChange={(val) => {
                                 if (val.length <= 4) setNewTableInput(val);
                               }}
                               onKeyDown={(e) => {
@@ -841,30 +805,22 @@ function QrCodeGeneratorCard({
                                   setIsAddingTable(false);
                                 }
                               }}
-                              maxLength={4}
-                              className="w-full h-11 text-center text-sm font-medium border border-dashed border-primary rounded-xl focus-visible:ring-0"
+                              width="100%"
                             />
                           ) : (
                             <Button
-                              type="button"
-                              variant="ghost"
+                              variant="secondary"
                               onClick={() => setIsAddingTable(true)}
-                              className="w-full h-11 border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors rounded-full cursor-pointer active:scale-[0.98]"
-                            >
-                              <Plus
-                                className="h-4 w-4 shrink-0"
-                                weight="bold"
-                              />
-                              <span className="truncate">
-                                {t("addTableFull")}
-                              </span>
-                            </Button>
+                              icon={<Plus className="size-4" weight="bold" />}
+                              label={t("addTableFull")}
+                              width="100%"
+                            />
                           )}
                         </div>
                       </div>
                     </SortableContext>
                   </DndContext>
-                </ScrollArea>
+                </div>
               </div>
 
               {/* Right Column: QR Code Preview + Centered Print Button */}
@@ -872,17 +828,15 @@ function QrCodeGeneratorCard({
                 <div className="w-full flex justify-center items-center">
                   <Button
                     onClick={handlePrint}
-                    variant="default"
-                    disabled={selectedTables.length === 0}
-                    className="w-auto"
-                  >
-                    <Printer className="mr-2 h-4 w-4" />
-                    {selectedTables.length > 1
+                    variant="primary"
+                    isDisabled={selectedTables.length === 0}
+                    icon={<Printer className="size-4" />}
+                    label={selectedTables.length > 1
                       ? t("printMultipleCodes", {
                           count: selectedTables.length,
                         })
                       : t("printQrCode")}
-                  </Button>
+                  />
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
@@ -931,12 +885,10 @@ function QrCodeGeneratorCard({
               <div className="w-full flex justify-center items-center">
                 <Button
                   onClick={handlePrint}
-                  variant="default"
-                  className="w-auto"
-                >
-                  <Printer className="mr-2 h-4 w-4" />
-                  {t("printQrCode")}
-                </Button>
+                  variant="primary"
+                  icon={<Printer className="size-4" />}
+                  label={t("printQrCode")}
+                />
               </div>
 
               <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
@@ -974,7 +926,7 @@ function QrCodeGeneratorCard({
               </div>
             </div>
           )}
-        </CardContent>
+        </div>
       </Card>
 
       <div className="fixed -left-[9999px] top-0 opacity-0 pointer-events-none print:static print:opacity-100 print:pointer-events-auto print:grid print:grid-cols-2 print:gap-y-4 print:gap-x-4 bg-white print:content-start">
@@ -1050,46 +1002,52 @@ function QrCodeGeneratorCard({
       </div>
 
       <Dialog
-        open={deleteTablesDialogOpen}
+        isOpen={deleteTablesDialogOpen}
         onOpenChange={setDeleteTablesDialogOpen}
+        width={440}
+        purpose="required"
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>
-              {selectedTables.length === 1
-                ? t("deleteTableTitle")
-                : t("deleteTablesTitle")}
-            </DialogTitle>
-            <DialogCloseButton />
-          </DialogHeader>
-
-          <DialogBody>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              {selectedTables.length === 1
-                ? t("deleteTableDesc")
-                : t("deleteTablesDesc")}
-            </p>
-          </DialogBody>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setDeleteTablesDialogOpen(false)}
-              className="w-full sm:flex-1 border-border"
-            >
-              {t("cancel")}
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={confirmRemoveTables}
-              className="w-full sm:flex-1"
-            >
-              {t("delete")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        <Layout
+          header={
+            <DialogHeader
+              title={
+                selectedTables.length === 1
+                  ? t("deleteTableTitle")
+                  : t("deleteTablesTitle")
+              }
+              onOpenChange={setDeleteTablesDialogOpen}
+            />
+          }
+          content={
+            <LayoutContent>
+              <div className="p-4">
+                <Text color="secondary">
+                  {selectedTables.length === 1
+                    ? t("deleteTableDesc")
+                    : t("deleteTablesDesc")}
+                </Text>
+              </div>
+            </LayoutContent>
+          }
+          footer={
+            <LayoutFooter>
+              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  label={t("cancel")}
+                  onClick={() => setDeleteTablesDialogOpen(false)}
+                />
+                <Button
+                  variant="destructive"
+                  size="lg"
+                  label={t("delete")}
+                  onClick={confirmRemoveTables}
+                />
+              </div>
+            </LayoutFooter>
+          }
+        />
       </Dialog>
     </>
   );

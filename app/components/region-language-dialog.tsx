@@ -1,35 +1,34 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Check, Globe } from "@phosphor-icons/react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import React, { useState } from "react";
+import { Globe } from "@phosphor-icons/react";
+import { Button } from "@astryxdesign/core/Button";
+import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Text } from "@astryxdesign/core/Text";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Icon } from "@astryxdesign/core/Icon";
+import { SelectableCard } from "@astryxdesign/core/SelectableCard";
+import { SegmentedControl, SegmentedControlItem } from "@astryxdesign/core/SegmentedControl";
 import { useTranslation } from "@/lib/i18n";
 import { SUPPORTED_REGIONS } from "@/lib/regions";
-import { cn } from "@/lib/utils";
 import { useLanguageStore } from "@/store/language-store";
 import { useRegionStore } from "@/store/region-store";
 
 interface RegionLanguageSwitcherProps {
   className?: string;
-  variant?: React.ComponentProps<typeof Button>["variant"];
-  size?: React.ComponentProps<typeof Button>["size"];
+  variant?: "primary" | "secondary" | "ghost" | "destructive";
+  size?: "sm" | "md" | "lg";
+  isFullWidth?: boolean;
 }
 
-export function RegionFlag({ code, className }: { code: string; className?: string }) {
+export function RegionFlag({ code }: { code: string; className?: string }) {
   if (code.toLowerCase() !== "de") return null;
   return (
     <svg
       viewBox="0 0 640 480"
-      className={cn("h-4.5 w-6 shrink-0 overflow-hidden rounded-sm border border-black/10 object-cover", className)}
+      style={{ width: 22, height: 16, borderRadius: 2, flexShrink: 0 }}
       aria-hidden="true"
     >
       <path fill="#000000" d="M0 0h640v160H0z" />
@@ -40,125 +39,130 @@ export function RegionFlag({ code, className }: { code: string; className?: stri
 }
 
 export function RegionLanguageSwitcher({
-  className,
-  variant = "outline",
-  size = "icon",
+  variant = "ghost",
+  size = "lg",
+  isFullWidth = false,
 }: RegionLanguageSwitcherProps) {
   const [open, setOpen] = useState(false);
   const { region, setRegion } = useRegionStore();
   const { locale, setLocale } = useLanguageStore();
   const [draftRegion, setDraftRegion] = useState(region);
   const [draftLocale, setDraftLocale] = useState(locale);
-  const triggerRef = useRef<HTMLButtonElement>(null);
   const { t } = useTranslation();
 
-  function close() {
+  function handleOpen() {
+    setDraftRegion(region);
+    setDraftLocale(locale);
+    setOpen(true);
+  }
+
+  function handleSave() {
+    setRegion(draftRegion);
+    setLocale(draftLocale);
     setOpen(false);
   }
 
-  const languages = [
-    { code: "de" as const, label: t("german") },
-    { code: "en" as const, label: t("english") },
-  ];
+  const currentRegion = SUPPORTED_REGIONS[region] ?? SUPPORTED_REGIONS.DE;
+  const currentLocaleLabel = locale === "de" ? "Deutsch" : "English";
 
   return (
     <>
-      <Button
-        ref={triggerRef}
-        type="button"
-        variant={variant}
-        size={size}
-        className={cn("shrink-0", className)}
-        onClick={() => {
-          setDraftRegion(region);
-          setDraftLocale(locale);
-          setOpen(true);
-        }}
-        aria-label={t("regionSelectorTitle")}
-      >
-        <Globe className="size-5" weight="regular" />
-      </Button>
-      <Dialog open={open} onOpenChange={(nextOpen) => {
-        if (nextOpen) setOpen(true);
-        else close();
-      }}>
-        <DialogContent finalFocus={triggerRef}>
-          <DialogHeader>
-            <DialogTitle>{t("regionSelectorTitle")}</DialogTitle>
-            <DialogDescription>{t("regionSelectorDescription")}</DialogDescription>
-          </DialogHeader>
-          <DialogBody className="space-y-5">
-            <fieldset>
-              <legend className="mb-2.5 text-sm font-bold text-foreground">
-                {t("regionLabel")}
-              </legend>
-              <div className="space-y-2">
-                {Object.values(SUPPORTED_REGIONS).map((option) => {
-                  const selected = draftRegion === option.code;
-                  return (
-                    <button
-                      key={option.code}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => setDraftRegion(option.code)}
-                      className={cn(
-                        "flex min-h-11 w-full items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                        selected
-                          ? "border-foreground bg-muted text-foreground"
-                          : "border-border bg-background text-foreground hover:bg-muted",
-                      )}
-                    >
-                      <span className="flex items-center gap-3">
-                        <RegionFlag code={option.code} />
-                        {option.nativeName}
-                      </span>
-                      {selected && <Check className="size-4 shrink-0" weight="bold" aria-hidden="true" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </fieldset>
-            <fieldset>
-              <legend className="mb-2.5 text-sm font-bold text-foreground">
-                {t("languageLabel")}
-              </legend>
-              <div className="grid grid-cols-2 gap-2.5">
-                {languages.map((language) => {
-                  const selected = draftLocale === language.code;
-                  return (
-                    <button
-                      key={language.code}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => setDraftLocale(language.code)}
-                      className={cn(
-                        "flex min-h-11 items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                        selected
-                          ? "border-foreground bg-muted text-foreground"
-                          : "border-border bg-background text-foreground hover:bg-muted",
-                      )}
-                    >
-                      {language.label}
-                      {selected && <Check className="size-4 shrink-0" weight="bold" aria-hidden="true" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </fieldset>
-          </DialogBody>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={close} className="w-full sm:flex-1 border-border">
-              {t("cancel")}
-            </Button>
-            <Button type="button" onClick={() => {
-              setRegion(draftRegion);
-              setLocale(draftLocale);
-              close();
-            }} className="w-full sm:flex-1">
-              {t("saveAndContinue")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+      {isFullWidth ? (
+        <Button
+          variant={variant}
+          size={size}
+          label={`${currentRegion.nativeName} · ${currentLocaleLabel}`}
+          icon={<Icon icon={Globe} size="sm" />}
+          onClick={handleOpen}
+          width="100%"
+        />
+      ) : (
+        <Button
+          variant={variant}
+          size={size}
+          isIconOnly
+          label={t("regionSelectorTitle")}
+          icon={<Icon icon={Globe} size="sm" />}
+          onClick={handleOpen}
+        />
+      )}
+
+      <Dialog isOpen={open} onOpenChange={setOpen} width={440} purpose="form">
+        <VStack gap={4}>
+          <DialogHeader
+            title={t("regionSelectorTitle")}
+            subtitle={
+              locale === "en"
+                ? "Choose your operating market and interface language"
+                : "Wähle deine Geschäftsregion und die Anzeigesprache"
+            }
+            onOpenChange={setOpen}
+          />
+
+          <VStack gap={2}>
+            <Text type="label" color="secondary">
+              {t("regionLabel")}
+            </Text>
+            <VStack gap={2}>
+              {Object.values(SUPPORTED_REGIONS).map((r) => {
+                const isSelected = draftRegion === r.code;
+                return (
+                  <SelectableCard
+                    key={r.code}
+                    label={r.nativeName}
+                    isSelected={isSelected}
+                    onChange={() => setDraftRegion(r.code)}
+                    padding={3}
+                  >
+                    <HStack justify="between" vAlign="center" gap={2}>
+                      <HStack gap={2} vAlign="center">
+                        <RegionFlag code={r.code} />
+                        <Text weight="semibold">{r.nativeName}</Text>
+                        <Badge
+                          variant="green"
+                          label={locale === "en" ? "Active" : "Aktiv"}
+                        />
+                      </HStack>
+                      <Text color="secondary" type="supporting">
+                        {r.defaultCurrency} (€)
+                      </Text>
+                    </HStack>
+                  </SelectableCard>
+                );
+              })}
+            </VStack>
+          </VStack>
+
+          <VStack gap={2}>
+            <Text type="label" color="secondary">
+              {t("languageLabel")}
+            </Text>
+            <SegmentedControl
+              label={t("languageLabel")}
+              value={draftLocale}
+              onChange={(val) => setDraftLocale(val as "de" | "en")}
+              size="lg"
+            >
+              <SegmentedControlItem value="de" label={t("german")} />
+              <SegmentedControlItem value="en" label={t("english")} />
+            </SegmentedControl>
+          </VStack>
+
+          <HStack justify="end" gap={2}>
+            <Button
+              variant="secondary"
+              label={t("cancel")}
+              size="lg"
+              onClick={() => setOpen(false)}
+            />
+            <Button
+              variant="primary"
+              label={t("saveAndContinue")}
+              size="lg"
+              onClick={handleSave}
+            />
+          </HStack>
+        </VStack>
       </Dialog>
     </>
   );

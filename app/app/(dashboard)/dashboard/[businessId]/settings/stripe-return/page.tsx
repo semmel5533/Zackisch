@@ -1,6 +1,6 @@
 import { getStripeAccountStatusAction } from "@/actions/stripe-actions";
 import { redirect } from "next/navigation";
-import { LocalizedText } from "@/components/ui/localized-text";
+import { LocalizedText } from "@/components/common/localized-text";
 import { SpinnerGap } from "@phosphor-icons/react/dist/ssr";
 
 export default async function StripeReturnPage({

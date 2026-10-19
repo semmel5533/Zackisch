@@ -70,19 +70,28 @@ SETUP (once, in app entry e.g. main.tsx) — without these, components render un
   import "@astryxdesign/core/reset.css";
   import "@astryxdesign/core/astryx.css";
 
-WORKFLOW — start every page from a template, never from scratch:
-1. `astryx build "<idea>"` — names the template to scaffold from and the parts it lacks.
-2. `astryx template <name> <path>` — scaffold it; keep its frame, gap and padding; replace the content.
-3. `astryx template <Block>` for parts it lacks; `astryx component <Name>` to read props before using one.
-Changing an existing page? Keep it: skip step 2 and add blocks/components inside its sections.
+WORKFLOW — Template-first search, never build screens from scratch:
+1. When implementing or adapting ANY feature, screen, modal, or section, ALWAYS check templates first:
+   - Run `astryx template --list` or `astryx search "<use-case>"` (e.g. login, settings, dashboard, dialog, sheet, form).
+   - Scaffold or inspect the template: `astryx template <name> <path>` or `astryx template <Block>`.
+   - Adapt its proven composition, frame, gap, and padding; replace the domain content.
+2. Read component DOs and DONTs and props before using any component:
+   - Run `astryx component <Name>` (e.g. `astryx component Button`, `astryx component Card`, `astryx component TextInput`).
 
-RULES:
-- No <div> — components handle all layout and spacing.
-- Read `astryx docs layout` before changing a template's frame.
-- Dense data = rows (Table, List/Item), not Card-wrapped lists. Badge = counts only.
-- Style with component props first, then tokens (var(--color-*|--spacing-*|--radius-*)). No raw hex/px. No StyleX/Tailwind compiler here — don't use xstyle/utility classes directly. Some templates use StyleX and need a compiler plugin; see `astryx docs styling-overview`.
-- Palettes and custom colors go through the theme, never :root overrides. Run `astryx theme add <slug>` to import; `theme eject <slug>` only forks source. See `astryx docs theme`.
-- SELF-CHECK: re-read the file; replace any raw <div>/<span>, imported .css/@apply, or hardcoded #hex/px with the component or a token.
+STRICT ASTRYX COMPOSITION & DOS/DONTS RULES:
+- Pure Astryx Composition: All screens across `app/`, `internal/`, and `support/` must be composed exclusively from native Astryx components (`AppShell`, `TopNav`, `SideNav`, `Layout`, `Card`, `VStack`, `HStack`, `Grid`, `Heading`, `Text`, `Badge`, `Button`, `TextInput`, `TextArea`, `CheckboxInput`, `SegmentedControl`, `Dialog`, `BottomSheet`, `Table`, `Divider`, `Icon`).
+- Zero Arbitrary Custom Styling: No custom CSS, no rogue utility classes, no inline styles (`style={{ ... }}`). Spacing and layout adjustments are only permitted when strictly justified.
+- Component DOs and DONTs Compliance:
+  - At most ONE primary action button (`variant="primary"`) per screen or modal view. Secondary actions must be `secondary` or `ghost`.
+  - Destructive actions require explicit confirmation dialogs or double-action safeguards (`variant="destructive"`).
+  - Form controls MUST always have accessible labels (`label="..."`, or `isLabelHidden` if visually redundant, but never unlabelled).
+  - Never wrap disabled components in Tooltips; use the built-in `disabledMessage` prop on buttons/actions instead.
+  - Use `SegmentedControl` (or `Selector`) for mutually exclusive choices with 2-5 options (e.g. tip percentages, tabs, views), never loose custom button groups.
+  - Spacing and alignment alone create visual grouping — do NOT wrap everything in cards. Use `Card` only for discrete, reorderable items.
+  - Dense data = rows (`Table`, `List/Item`), not card-wrapped lists. `Badge` = counts and statuses only.
+  - Style with component props first, then theme tokens (`var(--color-*|--spacing-*|--radius-*)`).
+  - Palettes and custom colors go through the theme (`lib/zackisch-theme.tsx`), never `:root` overrides.
+- SELF-CHECK: re-read the file; replace any raw `<div>`/`<span>`, imported `.css`/`@apply`, or hardcoded `#hex`/`px` with the component or a token.
 
 `astryx help` lists every command. Key ones beyond the workflow:
   search "<query>"   find any component / hook / doc / template

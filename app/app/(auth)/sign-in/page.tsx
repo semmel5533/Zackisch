@@ -15,13 +15,15 @@ import { Heading } from "@astryxdesign/core/Heading";
 import { Text } from "@astryxdesign/core/Text";
 import { Button } from "@astryxdesign/core/Button";
 import { TextInput } from "@astryxdesign/core/TextInput";
+import { InputGroup } from "@astryxdesign/core/InputGroup";
+import { Banner } from "@astryxdesign/core/Banner";
 import { Divider } from "@astryxdesign/core/Divider";
 import { Icon } from "@astryxdesign/core/Icon";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@/components/common/input-otp";
 import { useTranslation } from "@/lib/i18n";
 import {
   Eye,
@@ -30,7 +32,7 @@ import {
   PaperPlaneRight,
 } from "@phosphor-icons/react";
 import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 export default function SignInPage() {
   const [state, formAction, isPending] = useActionState(signInAction, {});
@@ -115,7 +117,7 @@ function OtpForm({ state }: { state: any }) {
   };
 
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img
@@ -140,20 +142,25 @@ function OtpForm({ state }: { state: any }) {
         <form onSubmit={handleVerifyOtp} noValidate>
           <VStack gap={4}>
             {isLockedOut && (
-              <Text weight="semibold" color="secondary">
-                {t("otpLockedOut")}
-              </Text>
+              <Banner status="error" title={t("otpLockedOut")} />
             )}
 
             {!isLockedOut &&
               attemptsRemaining !== null &&
               attemptsRemaining < 5 && (
-                <Text weight="semibold" color="secondary">
-                  {attemptsRemaining === 1
-                    ? t("otpRemainingAttemptsOne")
-                    : t("otpRemainingAttempts", { count: attemptsRemaining })}
-                </Text>
+                <Banner
+                  status="warning"
+                  title={
+                    attemptsRemaining === 1
+                      ? t("otpRemainingAttemptsOne")
+                      : t("otpRemainingAttempts", { count: attemptsRemaining })
+                  }
+                />
               )}
+
+            {otpError && (
+              <Banner status="error" title={otpError} />
+            )}
 
             <VStack gap={2} align="center">
               <InputOTP
@@ -200,12 +207,6 @@ function OtpForm({ state }: { state: any }) {
                 </InputOTPGroup>
               </InputOTP>
             </VStack>
-
-            {otpError && (
-              <Text id="sign-in-otp-error" weight="semibold">
-                {otpError}
-              </Text>
-            )}
 
             <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
 
@@ -288,7 +289,7 @@ function SignInForm({
   };
 
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img
@@ -312,9 +313,17 @@ function SignInForm({
 
         <form onSubmit={handleSubmit} noValidate>
           <VStack gap={4}>
+            {state.error && (
+              <Banner
+                status="error"
+                title={t(state.error as any)}
+              />
+            )}
+
             <TextInput
               label={t("email")}
               type="email"
+              size="lg"
               value={email}
               onChange={(val) => {
                 setEmail(val);
@@ -322,14 +331,12 @@ function SignInForm({
               }}
               placeholder={t("emailPlaceholder")}
               isRequired
+              width="100%"
+              autoComplete="email"
+              status={fieldErrors.email ? { type: "error", message: fieldErrors.email } : undefined}
             />
-            {fieldErrors.email && (
-              <Text color="secondary" weight="semibold">
-                {fieldErrors.email}
-              </Text>
-            )}
 
-            <VStack gap={1}>
+            <VStack gap={1} width="100%">
               <HStack justify="between" vAlign="center">
                 <Text weight="semibold">{t("password")}</Text>
                 <Link
@@ -341,10 +348,18 @@ function SignInForm({
                   </Text>
                 </Link>
               </HStack>
-              <HStack gap={2} vAlign="center">
+
+              <InputGroup
+                label={t("password")}
+                isLabelHidden
+                isRequired
+                size="lg"
+                status={fieldErrors.password ? { type: "error", message: fieldErrors.password } : undefined}
+              >
                 <TextInput
                   label={t("password")}
                   isLabelHidden
+                  size="lg"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(val) => {
@@ -352,40 +367,31 @@ function SignInForm({
                     setFieldErrors((errs) => ({ ...errs, password: "" }));
                   }}
                   isRequired
+                  autoComplete="current-password"
                 />
                 <Button
                   label={showPassword ? t("hidePassword") : t("showPassword")}
+                  isIconOnly
                   variant="ghost"
-                  size="md"
+                  size="lg"
                   onClick={() => setShowPassword(!showPassword)}
                   icon={
                     <Icon
                       icon={showPassword ? EyeSlash : Eye}
-                      size="sm"
+                      size="md"
                     />
                   }
                 />
-              </HStack>
-              {fieldErrors.password && (
-                <Text color="secondary" weight="semibold">
-                  {fieldErrors.password}
-                </Text>
-              )}
+              </InputGroup>
             </VStack>
-
-            {state.error && (
-              <Text color="secondary" weight="semibold">
-                {t(state.error as any)}
-              </Text>
-            )}
 
             <Button
               label={t("signIn")}
               variant="primary"
-              size="md"
+              size="lg"
               type="submit"
               isLoading={isPending}
-              icon={<Icon icon={SignIn} size="sm" />}
+              icon={<Icon icon={SignIn} size="md" />}
               onClick={(e: any) => handleSubmit(e)}
             />
           </VStack>

@@ -2,9 +2,13 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Price } from "@/components/ui/price";
+import { Button } from "@astryxdesign/core/Button";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Tooltip } from "@astryxdesign/core/Tooltip";
+import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
+import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Price } from "@/components/common/price";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
 import { useQuery } from "convex/react";
@@ -25,23 +29,8 @@ import {
   ArrowDown,
   ArrowLeft,
 } from "@phosphor-icons/react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogCloseButton,
-} from "@/components/ui/dialog";
 import { playNewOrderSound, initAudioContext } from "@/lib/audio";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import type { Order, OrderItem } from "@/lib/types";
 
 interface CurrentOrdersContentProps {
@@ -394,7 +383,7 @@ export function CurrentOrdersContent({
               }}
               disabled={pendingOrderId !== null}
               className={cn(
-                "w-9 h-9 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-colors duration-150 motion-reduce:transition-none text-foreground border border-border bg-background hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50",
+                "w-8 h-8 -ml-1 rounded-full flex items-center justify-center shrink-0 transition-colors duration-150 text-foreground border border-border bg-background hover:bg-muted disabled:opacity-50",
                 isSelected
                   ? "desktop:hover:bg-white/20 desktop:text-white desktop:border-transparent desktop:bg-transparent"
                   : "desktop:hidden",
@@ -414,42 +403,19 @@ export function CurrentOrdersContent({
           >
             {order.orderNumber}
           </span>
-          <span
-            className={cn(
-              "text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 inline-flex items-center gap-1 border bg-muted text-foreground/80 border-transparent",
-              isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
-            )}
-          >
-            {order.type === "dine-in" || order.tableNumber ? (
-              <>
-                <span>{t("table")}</span>{" "}
-                <span className="font-inter tabular-nums">
-                  {order.tableNumber || ""}
-                </span>
-              </>
-            ) : (
-              t("pickup")
-            )}
-          </span>
+          <Badge
+            variant="neutral"
+            label={order.type === "dine-in" || order.tableNumber ? `${t("table")} ${order.tableNumber || ""}` : t("pickup")}
+          />
         </div>
 
         {/* Right: Time badge */}
         <div className="shrink-0 flex items-center pl-1">
-          <span
-            className={cn(
-              "text-[11px] sm:text-xs font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1 shrink-0 border bg-muted text-foreground/80 border-transparent",
-              isSelected && "desktop:bg-white/15 desktop:text-white desktop:border-white/20",
-            )}
-          >
-            <Clock
-              className={cn(
-                "w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0 text-foreground/80",
-                isSelected && "desktop:text-white",
-              )}
-              weight="bold"
-            />
-            <span className="font-inter tabular-nums">{clockTime}</span>
-          </span>
+          <Badge
+            variant="neutral"
+            icon={<Clock className="w-3 h-3 shrink-0" weight="bold" />}
+            label={clockTime}
+          />
         </div>
       </div>
     );
@@ -460,19 +426,21 @@ export function CurrentOrdersContent({
       {/* Top Header */}
       <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("orders")}</h1>
+          <Heading level={1}>{t("orders")}</Heading>
           {unrecordedActiveCount > 0 && (
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200">
-              {isDe
+            <Badge
+              variant="warning"
+              label={isDe
                 ? `Kassenabgleich offen: ${unrecordedActiveCount}`
                 : `POS pending: ${unrecordedActiveCount}`}
-            </span>
+            />
           )}
         </div>
         <div className="flex items-center gap-2">
           <Button
-            variant="default"
-            size="default"
+            variant={soundEnabled ? "primary" : "secondary"}
+            label={soundEnabled ? t("soundOn") : t("soundOff")}
+            icon={soundEnabled ? <SpeakerHigh className="w-4 h-4" weight="fill" /> : <SpeakerSlash className="w-4 h-4" />}
             onClick={() => {
               initAudioContext();
               const next = !soundEnabled;
@@ -480,19 +448,7 @@ export function CurrentOrdersContent({
               localStorage.setItem("zakkig_kitchen_sound", next ? "1" : "0");
               if (next) playNewOrderSound();
             }}
-          >
-            {soundEnabled ? (
-              <>
-                <SpeakerHigh className="w-4 h-4 text-primary-foreground" weight="fill" />
-                <span>{t("soundOn")}</span>
-              </>
-            ) : (
-              <>
-                <SpeakerSlash className="w-4 h-4 text-primary-foreground/70" />
-                <span>{t("soundOff")}</span>
-              </>
-            )}
-          </Button>
+          />
         </div>
       </div>
 
@@ -507,163 +463,93 @@ export function CurrentOrdersContent({
           {/* Mobile Status Tabs (< 500px) */}
           <div className="flex tablet:hidden gap-2 pb-2 shrink-0">
             <Button
-              variant={mobileTab === "in_progress" ? "default" : "outline"}
-              size="default"
+              variant={mobileTab === "in_progress" ? "primary" : "secondary"}
+              label={`${t("inProgress")} (${inProgressOrders.length})`}
               onClick={() => setMobileTab("in_progress")}
-              className="flex-1 font-semibold gap-2 h-11 text-sm px-4 rounded-full"
-            >
-              <span>{t("inProgress")}</span>
-              <span
-                className={cn(
-                  "h-5 min-w-5 rounded-full flex items-center justify-center text-xs font-bold font-inter tabular-nums leading-none",
-                  inProgressOrders.length > 9
-                    ? "px-1.5"
-                    : "aspect-square p-0",
-                  mobileTab === "in_progress"
-                    ? "bg-primary-foreground text-primary"
-                    : "bg-primary text-primary-foreground",
-                )}
-              >
-                {inProgressOrders.length}
-              </span>
-            </Button>
+              className="flex-1"
+            />
             <Button
-              variant={mobileTab === "ready_for_pickup" ? "default" : "outline"}
-              size="default"
+              variant={mobileTab === "ready_for_pickup" ? "primary" : "secondary"}
+              label={`${t("ready")} (${readyOrders.length})`}
               onClick={() => setMobileTab("ready_for_pickup")}
-              className="flex-1 font-semibold gap-2 h-11 text-sm px-4 rounded-full"
-            >
-              <span>{t("ready")}</span>
-              <span
-                className={cn(
-                  "h-5 min-w-5 rounded-full flex items-center justify-center text-xs font-bold font-inter tabular-nums leading-none",
-                  readyOrders.length > 9
-                    ? "px-1.5"
-                    : "aspect-square p-0",
-                  mobileTab === "ready_for_pickup"
-                    ? "bg-primary-foreground text-primary"
-                    : "bg-primary text-primary-foreground",
-                )}
-              >
-                {readyOrders.length}
-              </span>
-            </Button>
+              className="flex-1"
+            />
           </div>
 
           {/* Dual Columns Side-by-Side */}
-          <TooltipProvider delay={100}>
-            <div className="flex-1 min-h-0 grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-[255px_1fr] gap-3 h-full w-full">
-              {/* Column 1: In Bearbeitung */}
-              <div
-                className={cn(
-                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card overflow-hidden shrink-0",
-                  mobileTab !== "in_progress" && "hidden tablet:flex",
-                )}
-              >
-                {/* Header: Edge-to-Edge Divider */}
-                <div className="h-[60px] px-3 sm:px-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-sm font-bold text-foreground truncate">
-                      {t("inProgress")}
+          <div className="flex-1 min-h-0 grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-[255px_1fr] gap-3 h-full w-full">
+            {/* Column 1: In Bearbeitung */}
+            <div
+              className={cn(
+                "w-full flex flex-col min-h-0 h-full rounded-xl border border-border bg-card overflow-hidden shrink-0",
+                mobileTab !== "in_progress" && "hidden tablet:flex",
+              )}
+            >
+              {/* Header: Edge-to-Edge Divider */}
+              <div className="h-[60px] px-3 sm:px-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-sm font-bold text-foreground truncate">
+                    {t("inProgress")}
+                  </span>
+                  <Tooltip content={t("inProgressSubline")}>
+                    <span className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help">
+                      <Info className="w-3.5 h-3.5" />
                     </span>
-                    <Tooltip
-                      open={inProgressTooltipOpen}
-                      onOpenChange={setInProgressTooltipOpen}
-                    >
-                      <TooltipTrigger
-                        type="button"
-                        onClick={() => setInProgressTooltipOpen((v) => !v)}
-                        className="inline-flex items-center justify-center size-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 shrink-0 cursor-pointer"
-                        aria-label={t("info")}
-                      >
-                        <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" align="start" className="max-w-[240px] p-2.5 text-xs">
-                        <p className="font-medium leading-relaxed">
-                          {t("inProgressSubline")}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <Badge
-                    className={cn(
-                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold font-inter tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
-                      inProgressOrders.length > 9
-                        ? "px-1"
-                        : "aspect-square",
-                    )}
-                  >
-                    {inProgressOrders.length}
-                  </Badge>
+                  </Tooltip>
                 </div>
-
-                <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
-                  {inProgressOrders.length === 0 ? (
-                    <div className="py-3.5 px-3 text-center text-xs text-muted-foreground font-medium border border-dashed border-border/80 rounded-lg">
-                      {t("noInProgressOrders")}
-                    </div>
-                  ) : (
-                    inProgressOrders.map((order) => renderMiniCard(order, false))
-                  )}
-                </div>
+                <Badge
+                  variant="neutral"
+                  label={inProgressOrders.length}
+                />
               </div>
 
-              {/* Column 2: Abholbereit */}
-              <div
-                className={cn(
-                  "w-full flex flex-col min-h-0 h-full rounded-lg sm:rounded-xl border border-border bg-card overflow-hidden shrink-0",
-                  mobileTab !== "ready_for_pickup" && "hidden tablet:flex",
-                )}
-              >
-                {/* Header: Edge-to-Edge Divider */}
-                <div className="h-[60px] px-3 sm:px-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-sm font-bold text-foreground truncate">
-                      {t("ready")}
-                    </span>
-                    <Tooltip
-                      open={readyTooltipOpen}
-                      onOpenChange={setReadyTooltipOpen}
-                    >
-                      <TooltipTrigger
-                        type="button"
-                        onClick={() => setReadyTooltipOpen((v) => !v)}
-                        className="inline-flex items-center justify-center size-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 shrink-0 cursor-pointer"
-                        aria-label={t("info")}
-                      >
-                        <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" align="start" className="max-w-[240px] p-2.5 text-xs">
-                        <p className="font-medium leading-relaxed">
-                          {t("readySubline")}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
+              <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
+                {inProgressOrders.length === 0 ? (
+                  <div className="py-3.5 px-3 text-center text-xs text-muted-foreground font-medium border border-dashed border-border/80 rounded-lg">
+                    {t("noInProgressOrders")}
                   </div>
-                  <Badge
-                    className={cn(
-                      "h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 rounded-full bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold font-inter tabular-nums shrink-0 p-0 flex items-center justify-center leading-none",
-                      readyOrders.length > 9
-                        ? "px-1"
-                        : "aspect-square",
-                    )}
-                  >
-                    {readyOrders.length}
-                  </Badge>
-                </div>
-
-                <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
-                  {readyOrders.length === 0 ? (
-                    <div className="py-3.5 px-3 text-center text-xs text-muted-foreground font-medium border border-dashed border-border/80 rounded-lg">
-                      {t("noReadyOrders")}
-                    </div>
-                  ) : (
-                    readyOrders.map((order) => renderMiniCard(order, true))
-                  )}
-                </div>
+                ) : (
+                  inProgressOrders.map((order) => renderMiniCard(order, false))
+                )}
               </div>
             </div>
-          </TooltipProvider>
+
+            {/* Column 2: Abholbereit */}
+            <div
+              className={cn(
+                "w-full flex flex-col min-h-0 h-full rounded-xl border border-border bg-card overflow-hidden shrink-0",
+                mobileTab !== "ready_for_pickup" && "hidden tablet:flex",
+              )}
+            >
+              {/* Header: Edge-to-Edge Divider */}
+              <div className="h-[60px] px-3 sm:px-4 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-sm font-bold text-foreground truncate">
+                    {t("ready")}
+                  </span>
+                  <Tooltip content={t("readySubline")}>
+                    <span className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help">
+                      <Info className="w-3.5 h-3.5" />
+                    </span>
+                  </Tooltip>
+                </div>
+                <Badge
+                  variant="neutral"
+                  label={readyOrders.length}
+                />
+              </div>
+
+              <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
+                {readyOrders.length === 0 ? (
+                  <div className="py-3.5 px-3 text-center text-xs text-muted-foreground font-medium border border-dashed border-border/80 rounded-lg">
+                    {t("noReadyOrders")}
+                  </div>
+                ) : (
+                  readyOrders.map((order) => renderMiniCard(order, true))
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Right Side: Order Detail Card View */}
@@ -676,14 +562,11 @@ export function CurrentOrdersContent({
           {/* Mobile Back Button (above order card) */}
           <div className="desktop:hidden shrink-0">
             <Button
-              variant="outline"
-              size="default"
-              className="flex items-center"
+              variant="secondary"
+              label={t("backToList")}
+              icon={<ArrowLeft className="w-4 h-4 shrink-0" weight="bold" />}
               onClick={() => setMobileView("list")}
-            >
-              <ArrowLeft className="w-4 h-4 shrink-0" weight="bold" />
-              <span>{t("backToList")}</span>
-            </Button>
+            />
           </div>
 
           {selectedOrder ? (
@@ -696,40 +579,27 @@ export function CurrentOrdersContent({
                   </span>
                   {/* Status Badge directly next to order number */}
                   <Badge
-                    variant="outline"
-                    className="h-7 px-2.5 sm:px-3 rounded-full text-xs font-semibold text-foreground border-border bg-card shrink-0"
-                  >
-                    {selectedOrder.status === "ready_for_pickup"
+                    variant="neutral"
+                    label={selectedOrder.status === "ready_for_pickup"
                       ? t("ready")
                       : t("inProgress")}
-                  </Badge>
+                  />
                 </div>
 
                 {/* Right-aligned Badges: Table or Pickup, and Time */}
                 <div className="flex items-center gap-2 ml-auto sm:ml-0 shrink-0">
                   <Badge
-                    variant="outline"
-                    className="h-7 px-3 rounded-full text-xs font-semibold text-foreground border-border bg-card shrink-0"
-                  >
-                    {selectedOrder.type === "dine-in" || selectedOrder.tableNumber ? (
-                      <>
-                        <span>{t("table")}</span>{" "}
-                        <span className="font-inter tabular-nums">
-                          {selectedOrder.tableNumber || ""}
-                        </span>
-                      </>
-                    ) : (
-                      t("pickup")
-                    )}
-                  </Badge>
+                    variant="neutral"
+                    label={selectedOrder.type === "dine-in" || selectedOrder.tableNumber
+                      ? `${t("table")} ${selectedOrder.tableNumber || ""}`
+                      : t("pickup")}
+                  />
                   {selectedOrderTime && (
                     <Badge
-                      variant="outline"
-                      className="h-7 px-3 rounded-full text-xs font-semibold text-foreground border-border bg-card shrink-0 inline-flex items-center gap-1.5"
-                    >
-                      <Clock className="w-3.5 h-3.5 text-foreground/80 shrink-0" weight="bold" />
-                      <span className="font-inter tabular-nums">{selectedOrderTime}</span>
-                    </Badge>
+                      variant="neutral"
+                      icon={<Clock className="w-3.5 h-3.5 shrink-0" weight="bold" />}
+                      label={selectedOrderTime}
+                    />
                   )}
                 </div>
               </div>
@@ -832,27 +702,27 @@ export function CurrentOrdersContent({
               <div className="p-3.5 sm:p-4 border-t border-border bg-muted/20 shrink-0 flex flex-col gap-3">
                 {/* Payment & Single-Entry POS Reconciliation Row */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border/50">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200">
-                    <Check className="w-3.5 h-3.5 shrink-0" weight="bold" />
-                    {isDe ? "Bereits mit Zackisch bezahlt" : "Already paid via Zackisch"}
-                  </span>
+                  <Badge
+                    variant="success"
+                    icon={<Check className="w-3.5 h-3.5 shrink-0" weight="bold" />}
+                    label={isDe ? "Bereits mit Zackisch bezahlt" : "Already paid via Zackisch"}
+                  />
 
                   {selectedOrder.posStatus === "recorded" ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-zinc-900 text-white">
-                      <Check className="w-3.5 h-3.5 shrink-0" weight="bold" />
-                      {isDe ? "In Kasse erfasst" : "Recorded in POS"}
-                    </span>
+                    <Badge
+                      variant="neutral"
+                      icon={<Check className="w-3.5 h-3.5 shrink-0" weight="bold" />}
+                      label={isDe ? "In Kasse erfasst" : "Recorded in POS"}
+                    />
                   ) : (
                     <Button
                       size="sm"
-                      variant="outline"
-                      disabled={pendingOrderId !== null}
+                      variant="secondary"
+                      isDisabled={pendingOrderId !== null}
                       onClick={() => handleRecordInPos(selectedOrder.$id)}
-                      className="h-9 px-3.5 rounded-full text-xs font-semibold border-border bg-background hover:bg-muted"
-                    >
-                      <Check className="w-3.5 h-3.5 mr-1.5 shrink-0" weight="bold" />
-                      {isDe ? "In Kasse erfasst" : "Record in POS"}
-                    </Button>
+                      icon={<Check className="w-3.5 h-3.5 mr-1.5 shrink-0" weight="bold" />}
+                      label={isDe ? "In Kasse erfasst" : "Record in POS"}
+                    />
                   )}
                 </div>
 
@@ -876,48 +746,40 @@ export function CurrentOrdersContent({
                   {selectedOrder.status === "in_progress" ? (
                     <>
                       <Button
-                        size="default"
-                        variant="outline"
-                        disabled={pendingOrderId !== null}
-                        className="h-11 text-sm font-semibold px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
+                        variant="secondary"
+                        isDisabled={pendingOrderId !== null}
+                        label={t("cancelOrder")}
+                        icon={<ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
                         onClick={() => setOrderToCancel(selectedOrder.$id)}
-                      >
-                        <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-                        {t("cancelOrder")}
-                      </Button>
+                      />
                       <Button
-                        size="default"
-                        disabled={pendingOrderId !== null}
+                        variant="primary"
+                        isDisabled={pendingOrderId !== null}
                         className="flex-1"
+                        label={t("markReady")}
+                        icon={<Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
                         onClick={() =>
                           handleStatusChange(selectedOrder.$id, "ready_for_pickup")
                         }
-                      >
-                        <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-                        {t("markReady")}
-                      </Button>
+                      />
                     </>
                   ) : (
                     <>
                       <Button
-                        size="default"
-                        variant="outline"
-                        disabled={pendingOrderId !== null}
-                        className="h-11 text-sm font-semibold px-4 sm:px-5 rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0 cursor-pointer"
+                        variant="secondary"
+                        isDisabled={pendingOrderId !== null}
+                        label={t("cancelOrder")}
+                        icon={<ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
                         onClick={() => setOrderToCancel(selectedOrder.$id)}
-                      >
-                        <ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-                        {t("cancelOrder")}
-                      </Button>
+                      />
                       <Button
-                        size="default"
-                        disabled={pendingOrderId !== null}
+                        variant="primary"
+                        isDisabled={pendingOrderId !== null}
                         className="flex-1"
+                        label={t("complete")}
+                        icon={<Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
                         onClick={() => setOrderToComplete(selectedOrder.$id)}
-                      >
-                        <Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />
-                        {t("complete")}
-                      </Button>
+                      />
                     </>
                   )}
                 </div>
@@ -937,106 +799,114 @@ export function CurrentOrdersContent({
         </div>
       </div>
 
-
       {/* Cancel Order Confirmation Dialog */}
       <Dialog
-        open={!!orderToCancel}
+        isOpen={!!orderToCancel}
         onOpenChange={(open) => !open && setOrderToCancel(null)}
+        width={460}
+        purpose="required"
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>
-              {targetOrderToCancel
+        <Layout
+          header={
+            <DialogHeader
+              title={targetOrderToCancel
                 ? t("cancelOrderTitle", {
                     orderNumber: targetOrderToCancel.orderNumber,
                   })
                 : t("cancelOrderTitleFallback")}
-            </DialogTitle>
-            <DialogCloseButton />
-          </DialogHeader>
-
-          <DialogBody>
-            <p className="text-sm text-destructive font-medium">
-              {t("cancelOrderWarning")}
-            </p>
-          </DialogBody>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              disabled={pendingOrderId !== null}
-              className="w-full sm:flex-1 border-border"
-              onClick={() => setOrderToCancel(null)}
-            >
-              {t("abortCancel")}
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={pendingOrderId !== null}
-              className="w-full sm:flex-1"
-              onClick={async () => {
-                if (orderToCancel) {
-                  if (await handleStatusChange(orderToCancel, "cancelled")) {
-                    setOrderToCancel(null);
-                    toast.success(t("cancelledOrder"));
-                  }
-                }
-              }}
-            >
-              {t("confirmCancelOrder")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+              onOpenChange={(open: boolean) => !open && setOrderToCancel(null)}
+            />
+          }
+          content={
+            <LayoutContent>
+              <p className="text-sm text-destructive font-medium p-4">
+                {t("cancelOrderWarning")}
+              </p>
+            </LayoutContent>
+          }
+          footer={
+            <LayoutFooter>
+              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  isDisabled={pendingOrderId !== null}
+                  label={t("abortCancel")}
+                  onClick={() => setOrderToCancel(null)}
+                />
+                <Button
+                  variant="destructive"
+                  size="lg"
+                  isDisabled={pendingOrderId !== null}
+                  label={t("confirmCancelOrder")}
+                  onClick={async () => {
+                    if (orderToCancel) {
+                      if (await handleStatusChange(orderToCancel, "cancelled")) {
+                        setOrderToCancel(null);
+                        toast.success(t("cancelledOrder"));
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </LayoutFooter>
+          }
+        />
       </Dialog>
 
       {/* Complete Order Confirmation Dialog */}
       <Dialog
-        open={!!orderToComplete}
+        isOpen={!!orderToComplete}
         onOpenChange={(open) => !open && setOrderToComplete(null)}
+        width={460}
+        purpose="required"
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>
-              {targetOrderToComplete
+        <Layout
+          header={
+            <DialogHeader
+              title={targetOrderToComplete
                 ? t("completeOrderTitle", {
                     orderNumber: targetOrderToComplete.orderNumber,
                   })
                 : t("completeOrderTitleFallback")}
-            </DialogTitle>
-            <DialogCloseButton />
-          </DialogHeader>
-
-          <DialogBody>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {t("completeOrderDesc")}
-            </p>
-          </DialogBody>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              disabled={pendingOrderId !== null}
-              className="w-full sm:flex-1 border-border"
-              onClick={() => setOrderToComplete(null)}
-            >
-              {t("abortCancel")}
-            </Button>
-            <Button
-              disabled={pendingOrderId !== null}
-              className="w-full sm:flex-1"
-              onClick={async () => {
-                if (orderToComplete) {
-                  if (await handleStatusChange(orderToComplete, "completed")) {
-                    setOrderToComplete(null);
-                    toast.success(t("completed"));
-                  }
-                }
-              }}
-            >
-              {t("completeConfirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+              onOpenChange={(open: boolean) => !open && setOrderToComplete(null)}
+            />
+          }
+          content={
+            <LayoutContent>
+              <p className="text-sm text-muted-foreground leading-relaxed p-4">
+                {t("completeOrderDesc")}
+              </p>
+            </LayoutContent>
+          }
+          footer={
+            <LayoutFooter>
+              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  isDisabled={pendingOrderId !== null}
+                  label={t("abortCancel")}
+                  onClick={() => setOrderToComplete(null)}
+                />
+                <Button
+                  variant="primary"
+                  size="lg"
+                  isDisabled={pendingOrderId !== null}
+                  label={t("completeConfirm")}
+                  onClick={async () => {
+                    if (orderToComplete) {
+                      if (await handleStatusChange(orderToComplete, "completed")) {
+                        setOrderToComplete(null);
+                        toast.success(t("completed"));
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </LayoutFooter>
+          }
+        />
       </Dialog>
 
     </div>

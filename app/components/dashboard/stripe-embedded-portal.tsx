@@ -15,9 +15,15 @@ import {
   createEmbeddedAccountSessionAction,
   getStripeAccountStatusAction,
 } from "@/actions/stripe-actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@astryxdesign/core/Button";
+import { Banner } from "@astryxdesign/core/Banner";
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@astryxdesign/core/SegmentedControl";
+import { Icon } from "@astryxdesign/core/Icon";
 import { SpinnerGap, Check, WarningCircle } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { useTranslation } from "@/lib/i18n";
 
 interface StripeEmbeddedPortalProps {
@@ -166,42 +172,39 @@ export function StripeEmbeddedPortal({
             <Button
               type="button"
               size="sm"
-              disabled={isInitializing}
+              variant="primary"
+              isDisabled={isInitializing}
+              isLoading={isInitializing}
               onClick={initializeEmbeddedConnect}
-              className="rounded-full text-xs font-semibold h-9 px-4"
-            >
-              {isInitializing && (
-                <SpinnerGap className="mr-1.5 size-3.5 animate-spin" />
-              )}
-              {stripeAccountId
-                ? isDe
-                  ? "Eingebettetes Stripe-Portal öffnen"
-                  : "Open embedded Stripe portal"
-                : isDe
-                  ? "Stripe Connect v2 Konto jetzt starten"
-                  : "Start Stripe Connect v2 onboarding"}
-            </Button>
+              label={
+                stripeAccountId
+                  ? isDe
+                    ? "Eingebettetes Stripe-Portal öffnen"
+                    : "Open embedded Stripe portal"
+                  : isDe
+                    ? "Stripe Connect v2 Konto jetzt starten"
+                    : "Start Stripe Connect v2 onboarding"
+              }
+            />
           )}
           {stripeAccountId && (
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleSyncStatus}
-              className="rounded-full text-xs font-semibold h-9 px-3.5"
-            >
-              <Check className="mr-1.5 size-3.5" weight="bold" />
-              {isDe ? "Status prüfen" : "Sync status"}
-            </Button>
+              icon={<Icon icon={Check} size="sm" />}
+              label={isDe ? "Status prüfen" : "Sync status"}
+            />
           )}
         </div>
       </div>
 
       {initError && (
-        <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive flex items-center gap-2">
-          <WarningCircle className="size-4 shrink-0" weight="bold" />
-          <span>{initError}</span>
-        </div>
+        <Banner
+          status="error"
+          title={initError}
+        />
       )}
 
       {connectInstance && (
@@ -209,43 +212,29 @@ export function StripeEmbeddedPortal({
           <div className="space-y-3 border border-border rounded-xl p-4 bg-background">
             <ConnectNotificationBanner />
 
-            <div className="flex flex-wrap items-center gap-1.5 border-b border-border pb-3">
-              {(
-                [
-                  {
-                    id: "onboarding",
-                    label: isDe ? "Verifizierung & KYC" : "Onboarding & KYC",
-                  },
-                  {
-                    id: "management",
-                    label: isDe ? "Konto & Bankdaten" : "Account & Bank",
-                  },
-                  {
-                    id: "payments",
-                    label: isDe
-                      ? "Zahlungen & Erstattungen"
-                      : "Payments & Refunds",
-                  },
-                  {
-                    id: "payouts",
-                    label: isDe ? "Auszahlungen (IBAN)" : "Payouts (IBAN)",
-                  },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`h-8 px-3.5 rounded-full text-xs font-semibold transition-colors ${
-                    activeTab === tab.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-foreground/80 hover:text-foreground"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            <SegmentedControl
+              label="Stripe Connect Tab"
+              value={activeTab}
+              onChange={(val) => setActiveTab(val as any)}
+              size="sm"
+            >
+              <SegmentedControlItem
+                value="onboarding"
+                label={isDe ? "Verifizierung & KYC" : "Onboarding & KYC"}
+              />
+              <SegmentedControlItem
+                value="management"
+                label={isDe ? "Konto & Bankdaten" : "Account & Bank"}
+              />
+              <SegmentedControlItem
+                value="payments"
+                label={isDe ? "Zahlungen & Erstattungen" : "Payments & Refunds"}
+              />
+              <SegmentedControlItem
+                value="payouts"
+                label={isDe ? "Auszahlungen (IBAN)" : "Payouts (IBAN)"}
+              />
+            </SegmentedControl>
 
             <div className="min-h-[320px] pt-2">
               {activeTab === "onboarding" && (

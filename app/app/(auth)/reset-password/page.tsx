@@ -6,7 +6,7 @@ import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { resetPasswordAction } from "@/actions/auth-actions";
 import { useTranslation } from "@/lib/i18n";
 import { PaperPlaneRight, ArrowLeft } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { Card } from "@astryxdesign/core/Card";
 import { VStack } from "@astryxdesign/core/VStack";
 import { HStack } from "@astryxdesign/core/HStack";
@@ -14,6 +14,7 @@ import { Heading } from "@astryxdesign/core/Heading";
 import { Text } from "@astryxdesign/core/Text";
 import { Button } from "@astryxdesign/core/Button";
 import { TextInput } from "@astryxdesign/core/TextInput";
+import { Banner } from "@astryxdesign/core/Banner";
 import { Divider } from "@astryxdesign/core/Divider";
 import { Icon } from "@astryxdesign/core/Icon";
 
@@ -55,7 +56,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img
@@ -100,6 +101,13 @@ export default function ResetPasswordPage() {
 
             <form onSubmit={handleSubmit} noValidate>
               <VStack gap={4}>
+                {state.error && (
+                  <Banner
+                    status="error"
+                    title={t(state.error as any)}
+                  />
+                )}
+
                 <TextInput
                   label={t("email")}
                   type="email"
@@ -110,18 +118,10 @@ export default function ResetPasswordPage() {
                   }}
                   placeholder={t("emailPlaceholder")}
                   isRequired
+                  width="100%"
+                  autoComplete="email"
+                  status={fieldErrors.email ? { type: "error", message: fieldErrors.email } : undefined}
                 />
-                {fieldErrors.email && (
-                  <Text color="secondary" weight="semibold">
-                    {fieldErrors.email}
-                  </Text>
-                )}
-
-                {state.error && (
-                  <Text color="secondary" weight="semibold">
-                    {t(state.error as any)}
-                  </Text>
-                )}
 
                 <Button
                   label={t("sendLink")}

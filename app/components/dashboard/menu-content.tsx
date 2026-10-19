@@ -49,29 +49,22 @@ import {
   ArrowUp,
   ArrowDown,
 } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogCloseButton,
-} from "@/components/ui/dialog";
+import { Card } from "@astryxdesign/core/Card";
+import { Button } from "@astryxdesign/core/Button";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Switch } from "@astryxdesign/core/Switch";
+import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
+import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
+import { Text } from "@astryxdesign/core/Text";
 import { ItemWorkspace } from "./menu/item-workspace";
 
 import Image from "next/image";
 import { useTranslation } from "@/lib/i18n";
-import { Price } from "@/components/ui/price";
+import { Price } from "@/components/common/price";
 import { getImagePreviewUrl } from "@/lib/convex/client";
+import { getMenuItemImageUrl } from "@/lib/menu-images";
 import {
   createCategoryAction,
   updateCategoryAction,
@@ -722,14 +715,11 @@ export function MenuContent({
             </p>
           </div>
           <Button
-            type="button"
-            variant="ghost"
+            variant="secondary"
+            label={t("addCategory")}
+            icon={<Plus className="h-4 w-4 shrink-0" weight="bold" />}
             onClick={openNewCategory}
-            className="border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors cursor-pointer mt-2"
-          >
-            <Plus className="h-4 w-4 shrink-0" weight="bold" />
-            <span>{t("addCategory")}</span>
-          </Button>
+          />
         </div>
       ) : (
         <DndContext
@@ -874,57 +864,62 @@ export function MenuContent({
         businessId={businessId}
       />
 
-      {/* Delete Confirmation Dialog */}
       <Dialog
-        open={!!deleteConfirm}
+        isOpen={!!deleteConfirm}
         onOpenChange={(open) => !open && setDeleteConfirm(null)}
+        width={440}
+        purpose="required"
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>
-              {deleteConfirm?.type === "category"
-                ? t("confirmDeleteCategoryTitle", {
-                    name: deleteConfirm?.name || "",
-                  })
-                : t("confirmDeleteItemTitle", {
-                    name: deleteConfirm?.name || "",
-                  })}
-            </DialogTitle>
-            <DialogCloseButton />
-          </DialogHeader>
-
-          <DialogBody>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              {deleteConfirm?.type === "category"
-                ? t("confirmDeleteCategoryDesc", {
-                    name: deleteConfirm?.name || "",
-                  })
-                : t("confirmDeleteItemDesc", {
-                    name: deleteConfirm?.name || "",
-                  })}
-            </p>
-          </DialogBody>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setDeleteConfirm(null)}
-              className="w-full sm:flex-1 border-border"
-            >
-              {t("cancel")}
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={confirmDelete}
-              className="w-full sm:flex-1"
-            >
-              <Trash className="h-4 w-4 shrink-0" weight="bold" />
-              <span>{t("delete")}</span>
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        <Layout
+          header={
+            <DialogHeader
+              title={
+                deleteConfirm?.type === "category"
+                  ? t("confirmDeleteCategoryTitle", {
+                      name: deleteConfirm?.name || "",
+                    })
+                  : t("confirmDeleteItemTitle", {
+                      name: deleteConfirm?.name || "",
+                    })
+              }
+              onOpenChange={(open) => !open && setDeleteConfirm(null)}
+            />
+          }
+          content={
+            <LayoutContent>
+              <div className="p-4">
+                <Text color="secondary">
+                  {deleteConfirm?.type === "category"
+                    ? t("confirmDeleteCategoryDesc", {
+                        name: deleteConfirm?.name || "",
+                      })
+                    : t("confirmDeleteItemDesc", {
+                        name: deleteConfirm?.name || "",
+                      })}
+                </Text>
+              </div>
+            </LayoutContent>
+          }
+          footer={
+            <LayoutFooter>
+              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  label={t("cancel")}
+                  onClick={() => setDeleteConfirm(null)}
+                />
+                <Button
+                  variant="destructive"
+                  size="lg"
+                  label={t("delete")}
+                  icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
+                  onClick={confirmDelete}
+                />
+              </div>
+            </LayoutFooter>
+          }
+        />
       </Dialog>
     </div>
   );
@@ -934,14 +929,12 @@ function AddCategoryCardButton({ onClick }: { onClick: () => void }) {
   const { t } = useTranslation();
   return (
     <Button
-      type="button"
-      variant="ghost"
+      variant="secondary"
+      label={t("addCategory")}
+      icon={<Plus className="h-5 w-5 shrink-0" weight="bold" />}
       onClick={onClick}
-      className="w-full h-[140px] rounded-xl border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm sm:text-base text-muted-foreground hover:text-primary hover:bg-primary/5 gap-2 transition-[color,background-color,border-color,transform] duration-150 motion-reduce:transition-none cursor-pointer active:scale-[0.98] motion-reduce:active:scale-100"
-    >
-      <Plus className="h-5 w-5 shrink-0" weight="bold" />
-      <span>{t("addCategory")}</span>
-    </Button>
+      width="100%"
+    />
   );
 }
 
@@ -1061,7 +1054,9 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
   return (
     <div ref={setNodeRef} style={style}>
       <Card
-        ref={setDroppableRef}
+        elevation="low"
+        variant="default"
+        padding={4}
         className={cn(
           "transition-colors @container",
           isOver &&
@@ -1070,7 +1065,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
             "ring-2 ring-primary bg-primary/5",
         )}
       >
-        <CardHeader className="flex flex-col pb-2 gap-2 w-full">
+        <div className="flex flex-col pb-2 gap-2 w-full">
           <div className="flex items-center gap-3 min-w-0 flex-1 w-full">
             <button
               type="button"
@@ -1083,7 +1078,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
             </button>
             {isEditingName ? (
               <div className="flex items-center gap-1.5 flex-1 max-w-xs">
-                <Input
+                <input
                   value={nameVal}
                   onChange={(e) => setNameVal(e.target.value)}
                   onFocus={(e) => e.target.select()}
@@ -1100,19 +1095,16 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                   autoFocus
                   maxLength={100}
                   disabled={isSavingName}
-                  className="h-8 text-lg font-semibold px-2 py-0"
+                  className="h-8 text-lg font-semibold px-2 py-0 border border-border rounded-lg bg-background text-foreground"
                 />
                 <Button
-                  type="button"
                   variant="ghost"
-                  size="icon-sm"
+                  isIconOnly
+                  label={t("save")}
+                  icon={<Check className="h-4 w-4" weight="bold" />}
                   onClick={handleSaveName}
-                  disabled={isSavingName}
-                  className="rounded-full text-primary hover:text-primary shrink-0"
-                  title={t("save")}
-                >
-                  <Check className="h-4 w-4" weight="bold" />
-                </Button>
+                  isDisabled={isSavingName}
+                />
               </div>
             ) : (
               <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -1124,83 +1116,70 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                   {category.name}
                 </button>
                 <Button
-                  type="button"
                   variant="ghost"
-                  size="icon-sm"
+                  isIconOnly
+                  label={t("editCategory")}
+                  icon={<PencilSimple className="h-4 w-4" />}
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditingName(true);
                   }}
-                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 transition-colors cursor-pointer"
-                  title={t("editCategory")}
-                >
-                  <PencilSimple className="h-4 w-4" />
-                </Button>
+                />
               </div>
             )}
             {!isEditingName && (
-              <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto font-inter tabular-nums leading-none">
-                {categoryItems.length}
-              </Badge>
+              <div className="ml-auto shrink-0">
+                <Badge label={String(categoryItems.length)} variant="neutral" />
+              </div>
             )}
           </div>
 
           <div className="flex items-center justify-between gap-1.5 shrink-0 border-t border-border/40 pt-2 w-full">
             <Button
               variant="ghost"
-              size="icon"
+              isIconOnly
+              label={isCollapsed ? t("expand") : t("collapse")}
+              icon={
+                isCollapsed ? (
+                  <CaretDown className="h-4 w-4" weight="bold" />
+                ) : (
+                  <CaretUp className="h-4 w-4" weight="bold" />
+                )
+              }
               onClick={() => onToggleCollapse(category.$id)}
-              className="rounded-full text-muted-foreground hover:text-foreground shrink-0"
-              title={isCollapsed ? t("expand") : t("collapse")}
-            >
-              {isCollapsed ? (
-                <CaretDown className="h-4 w-4" weight="bold" />
-              ) : (
-                <CaretUp className="h-4 w-4" weight="bold" />
-              )}
-            </Button>
+            />
 
             <div className="flex items-center gap-1.5 shrink-0">
               {canMoveUp && (
                 <Button
                   variant="ghost"
-                  size="icon-sm"
+                  isIconOnly
+                  label={t("moveUp")}
+                  icon={<ArrowUp className="size-4" weight="bold" />}
                   onClick={() => onMoveCategory(category.$id, -1)}
-                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
-                  aria-label={t("moveUp")}
-                  title={t("moveUp")}
-                >
-                  <ArrowUp className="size-4" weight="bold" />
-                </Button>
+                />
               )}
               {canMoveDown && (
                 <Button
                   variant="ghost"
-                  size="icon-sm"
+                  isIconOnly
+                  label={t("moveDown")}
+                  icon={<ArrowDown className="size-4" weight="bold" />}
                   onClick={() => onMoveCategory(category.$id, 1)}
-                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
-                  aria-label={t("moveDown")}
-                  title={t("moveDown")}
-                >
-                  <ArrowDown className="size-4" weight="bold" />
-                </Button>
+                />
               )}
               <Button
-                variant="outline"
-                size="default"
+                variant="destructive"
+                label={t("delete")}
+                icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
                 onClick={() => onDeleteCategory(category)}
-                className="gap-2 font-medium border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
-                title={t("delete")}
-              >
-                <Trash className="h-4 w-4 shrink-0" weight="bold" />
-                <span>{t("delete")}</span>
-              </Button>
+              />
             </div>
           </div>
-        </CardHeader>
+        </div>
 
         {!isCollapsed && (
-          <CardContent className="pt-2 flex flex-col gap-3">
+          <div className="pt-2 flex flex-col gap-3">
             <SortableContext
               items={categoryItems.map((i) => i.$id)}
               strategy={rectSortingStrategy}
@@ -1230,15 +1209,13 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
             </SortableContext>
 
             <Button
-              type="button"
               variant="ghost"
+              label={t("addItem")}
+              icon={<Plus className="h-4 w-4 shrink-0" weight="bold" />}
               onClick={() => onNewItem(category.$id)}
-              className="w-full border border-dashed border-muted-foreground/40 hover:border-primary font-semibold text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 gap-2 transition-colors"
-            >
-              <Plus className="h-4 w-4 shrink-0" weight="bold" />
-              <span>{t("addItem")}</span>
-            </Button>
-          </CardContent>
+              width="100%"
+            />
+          </div>
         )}
       </Card>
     </div>
@@ -1285,8 +1262,8 @@ const ItemRowView = memo(function ItemRowView({
   } catch {}
 
   const imageUrl = useMemo(
-    () => (item.imageId ? getImagePreviewUrl(item.imageId) : null),
-    [item.imageId],
+    () => getMenuItemImageUrl(item),
+    [item],
   );
 
   return (
@@ -1351,17 +1328,17 @@ const ItemRowView = memo(function ItemRowView({
               <div className="flex items-center gap-2 shrink-0 pt-0.5">
                 {customizationStepCount > 0 && (
                   <Badge
-                    variant="outline"
-                    className="text-xs gap-1 border-primary/40 text-primary bg-primary/5 shrink-0 px-2 py-0.5"
-                  >
-                    <SlidersHorizontal className="w-3 h-3" weight="bold" />
-                    <span>{customizationStepCount}</span>
-                  </Badge>
+                    label={String(customizationStepCount)}
+                    variant="info"
+                    icon={<SlidersHorizontal className="w-3 h-3" weight="bold" />}
+                  />
                 )}
                 <Switch
-                  checked={item.available}
-                  onCheckedChange={(checked) => onToggleAvailability(checked)}
-                  title={item.available ? t("itemAvailable") : t("itemSoldOut")}
+                  value={item.available}
+                  onChange={(checked) => onToggleAvailability(checked)}
+                  label=""
+                  isLabelHidden
+                  aria-label={item.available ? t("itemAvailable") : t("itemSoldOut")}
                 />
               </div>
             </div>
@@ -1386,45 +1363,35 @@ const ItemRowView = memo(function ItemRowView({
               {onMove && canMoveUp && (
                 <Button
                   variant="ghost"
-                  size="icon-sm"
+                  isIconOnly
+                  label={t("moveUp")}
+                  icon={<ArrowUp className="size-4" weight="bold" />}
                   onClick={() => onMove(-1)}
-                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
-                  aria-label={t("moveUp")}
-                  title={t("moveUp")}
-                >
-                  <ArrowUp className="size-4" weight="bold" />
-                </Button>
+                />
               )}
               {onMove && canMoveDown && (
                 <Button
                   variant="ghost"
-                  size="icon-sm"
+                  isIconOnly
+                  label={t("moveDown")}
+                  icon={<ArrowDown className="size-4" weight="bold" />}
                   onClick={() => onMove(1)}
-                  className="rounded-full text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 cursor-pointer active:scale-95"
-                  aria-label={t("moveDown")}
-                  title={t("moveDown")}
-                >
-                  <ArrowDown className="size-4" weight="bold" />
-                </Button>
+                />
               )}
               <Button
                 variant="ghost"
-                size="icon-sm"
+                isIconOnly
+                label={t("edit")}
+                icon={<PencilSimple className="h-4 w-4" />}
                 onClick={onEdit}
-                className="rounded-full text-muted-foreground hover:text-foreground shrink-0"
-                title={t("edit")}
-              >
-                <PencilSimple className="h-4 w-4" />
-              </Button>
+              />
               <Button
-                variant="outline"
-                size="icon-sm"
+                variant="destructive"
+                isIconOnly
+                label={t("delete")}
+                icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
                 onClick={onDelete}
-                className="rounded-full border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shrink-0"
-                title={t("delete")}
-              >
-                <Trash className="h-4 w-4 shrink-0" weight="bold" />
-              </Button>
+              />
             </div>
           </div>
         </div>
@@ -1512,8 +1479,8 @@ function CategoryCardOverlay({
   const { t } = useTranslation();
 
   return (
-    <Card className="w-full opacity-95 scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background @container pointer-events-none">
-      <CardHeader className="flex flex-col pb-2 gap-2 w-full">
+    <Card elevation="low" variant="default" padding={4} className="w-full opacity-95 scale-[1.02] border-2 border-primary rounded-xl overflow-hidden bg-background @container pointer-events-none">
+      <div className="flex flex-col pb-2 gap-2 w-full">
         <div className="flex items-center gap-3 min-w-0 flex-1 w-full">
           <button
             type="button"
@@ -1527,50 +1494,37 @@ function CategoryCardOverlay({
               {category.name}
             </span>
             <Button
-              type="button"
               variant="ghost"
-              size="icon-sm"
-              className="rounded-full text-muted-foreground shrink-0"
-              title={t("editCategory")}
-            >
-              <PencilSimple className="h-4 w-4" />
-            </Button>
+              isIconOnly
+              label={t("editCategory")}
+              icon={<PencilSimple className="h-4 w-4" />}
+            />
           </div>
-          <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 ml-auto font-inter tabular-nums leading-none">
-            {categoryItems.length}
-          </Badge>
+          <div className="ml-auto shrink-0">
+            <Badge label={String(categoryItems.length)} variant="neutral" />
+          </div>
         </div>
 
         <div className="flex items-center justify-between gap-1.5 shrink-0 border-t border-border/40 pt-2 w-full">
           <Button
             variant="ghost"
-            size="icon"
-            className="rounded-full text-muted-foreground shrink-0"
-            title={isCollapsed ? "Aufklappen" : "Einklappen"}
-          >
-            {isCollapsed ? (
-              <CaretDown className="h-4 w-4" weight="bold" />
-            ) : (
-              <CaretUp className="h-4 w-4" weight="bold" />
-            )}
-          </Button>
+            isIconOnly
+            label={isCollapsed ? t("expand") : t("collapse")}
+            icon={isCollapsed ? <CaretDown className="h-4 w-4" weight="bold" /> : <CaretUp className="h-4 w-4" weight="bold" />}
+          />
 
           <div className="flex items-center gap-1.5 shrink-0">
             <Button
-              variant="outline"
-              size="default"
-              className="gap-2 font-medium border-border text-foreground shrink-0"
-              title={t("delete")}
-            >
-              <Trash className="h-4 w-4 shrink-0" weight="bold" />
-              <span>{t("delete")}</span>
-            </Button>
+              variant="destructive"
+              label={t("delete")}
+              icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
+            />
           </div>
         </div>
-      </CardHeader>
+      </div>
 
       {!isCollapsed && (
-        <CardContent className="pt-2 flex flex-col gap-3">
+        <div className="pt-2 flex flex-col gap-3">
           <div className="grid grid-cols-1 @min-[1500px]:grid-cols-2 gap-2.5 min-h-[60px] p-1.5 transition-colors rounded-lg">
             {categoryItems.length === 0 ? (
               <div className="col-span-full py-6 text-center flex flex-col items-center justify-center gap-1 border border-dashed rounded-lg bg-muted/10">
@@ -1592,14 +1546,12 @@ function CategoryCardOverlay({
           </div>
 
           <Button
-            type="button"
             variant="ghost"
-            className="w-full border border-dashed border-muted-foreground/40 font-semibold text-sm text-muted-foreground gap-2"
-          >
-            <Plus className="h-4 w-4 shrink-0" weight="bold" />
-            <span>{t("addItem")}</span>
-          </Button>
-        </CardContent>
+            label={t("addItem")}
+            icon={<Plus className="h-4 w-4 shrink-0" weight="bold" />}
+            width="100%"
+          />
+        </div>
       )}
     </Card>
   );

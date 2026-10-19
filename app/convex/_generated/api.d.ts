@@ -19,6 +19,8 @@ import type * as emailLogs from "../emailLogs.js";
 import type * as emails from "../emails.js";
 import type * as http from "../http.js";
 import type * as menu from "../menu.js";
+import type * as menuValidators from "../menuValidators.js";
+import type * as merchantMedia from "../merchantMedia.js";
 import type * as newsletter from "../newsletter.js";
 import type * as orders from "../orders.js";
 import type * as partners from "../partners.js";
@@ -50,6 +52,8 @@ declare const fullApi: ApiFromModules<{
   emails: typeof emails;
   http: typeof http;
   menu: typeof menu;
+  menuValidators: typeof menuValidators;
+  merchantMedia: typeof merchantMedia;
   newsletter: typeof newsletter;
   orders: typeof orders;
   partners: typeof partners;

@@ -19,12 +19,13 @@ import { Heading } from "@astryxdesign/core/Heading";
 import { Text } from "@astryxdesign/core/Text";
 import { Button } from "@astryxdesign/core/Button";
 import { TextInput } from "@astryxdesign/core/TextInput";
+import { Banner } from "@astryxdesign/core/Banner";
 import { Divider } from "@astryxdesign/core/Divider";
 import { Spinner } from "@astryxdesign/core/Spinner";
 import { Icon } from "@astryxdesign/core/Icon";
 import { useTranslation } from "@/lib/i18n";
 import { X, EnvelopeSimple } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 function ChangeEmailConfirmForm() {
   const searchParams = useSearchParams();
@@ -102,6 +103,13 @@ function ChangeEmailConfirmForm() {
 
       <form onSubmit={handleSubmit} noValidate>
         <VStack gap={4}>
+          {state.error && (
+            <Banner
+              status="error"
+              title={state.error}
+            />
+          )}
+
           <TextInput
             label={t("email")}
             type="email"
@@ -112,18 +120,10 @@ function ChangeEmailConfirmForm() {
             }}
             placeholder={t("emailPlaceholder")}
             isRequired
+            width="100%"
+            autoComplete="email"
+            status={fieldError ? { type: "error", message: fieldError } : undefined}
           />
-          {fieldError && (
-            <Text color="secondary" weight="semibold">
-              {fieldError}
-            </Text>
-          )}
-
-          {state.error && (
-            <Text color="secondary" weight="semibold">
-              {state.error}
-            </Text>
-          )}
 
           <Button
             label={t("requestVerificationCode" as any)}
@@ -170,7 +170,7 @@ function InvalidLinkState() {
 
 export default function ChangeEmailConfirmPage() {
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img

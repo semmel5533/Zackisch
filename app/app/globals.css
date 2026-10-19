@@ -8,71 +8,22 @@
 @import "@astryxdesign/core/tailwind-theme.css";
 @import "tailwindcss/utilities.css" layer(utilities);
 
-@custom-variant dark (&:is(.dark *));
-@custom-variant desktop (@container (width >= 1066px));
-@custom-variant tablet (@container (width >= 500px));
-
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0 0 0);
-  --primary: oklch(0 0 0);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.50 0 0);
-  --accent: oklch(0 0 0);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --canvas: oklch(0.982 0 0);
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0 0 0);
-  --sidebar-primary: oklch(0 0 0);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0 0 0);
-
-  --font-sans: var(--font-poppins-variable), Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-serif: var(--font-sans);
-  --font-mono: var(--font-inter-variable), monospace;
-  --shadow-2xs: 0 0 #0000;
-  --shadow-xs: 0 0 #0000;
-  --shadow-sm: 0 0 #0000;
-  --shadow: 0 0 #0000;
-  --shadow-md: 0 0 #0000;
-  --shadow-lg: 0 0 #0000;
-  --shadow-xl: 0 0 #0000;
-  --shadow-2xl: 0 0 #0000;
-  --surface-shadow-popup: 0 8px 24px rgb(0 0 0 / 0.08);
-  --surface-shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.14);
+  --font-sans: var(--font-poppins-variable), 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-inter-variable), 'Inter', ui-monospace, SFMono-Regular, monospace;
 }
 
-@layer base {
-  body {
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background-body, #F7F7F8);
+  color: var(--color-text-primary, #0A0A0B);
+  -webkit-font-smoothing: antialiased;
+}
 
-  .font-num,
-  [data-tabular-nums="true"],
-  .tabular-nums {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
-  }
+.font-num,
+[data-tabular-nums="true"],
+.tabular-nums {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }

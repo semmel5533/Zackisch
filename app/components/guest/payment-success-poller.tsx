@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { LocalizedText } from "@/components/ui/localized-text";
+import { LocalizedText } from "@/components/common/localized-text";
 import { SpinnerGap } from "@phosphor-icons/react";
 import { useCartStore } from "@/store/cart-store";
 import { useTranslation } from "@/lib/i18n";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { getOrderBySessionAction } from "@/actions/checkout-actions";
 
 export function PaymentSuccessPoller({

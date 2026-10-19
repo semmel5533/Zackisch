@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { PaymentElement, useCheckoutElements } from "@stripe/react-stripe-js/checkout";
-import { Button } from "@/components/ui/button";
-import { SheetFooter } from "@/components/ui/sheet";
+import { Button } from "@astryxdesign/core/Button";
 import { useTranslation } from "@/lib/i18n";
-import { SpinnerGap } from "@phosphor-icons/react";
 
 export function CheckoutForm({ returnUrl }: { returnUrl: string }) {
   const checkoutState = useCheckoutElements();
@@ -47,17 +45,22 @@ export function CheckoutForm({ returnUrl }: { returnUrl: string }) {
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6">
         <PaymentElement options={{ layout: "tabs" }} />
       </div>
-      <SheetFooter className="shrink-0">
+      <div className="p-4 border-t border-border shrink-0 bg-background space-y-2">
         {error && (
           <p role="alert" className="w-full text-left text-sm font-medium text-destructive">
             {error}
           </p>
         )}
-        <Button type="submit" size="lg" disabled={!isReady || isProcessing} className="w-full">
-          {isProcessing && <SpinnerGap data-icon="inline-start" className="size-5 animate-spin" />}
-          {isProcessing ? t("processingPayment" as any) : t("orderAndPay" as any)}
-        </Button>
-      </SheetFooter>
+        <Button
+          type="submit"
+          size="lg"
+          variant="primary"
+          width="100%"
+          label={isProcessing ? t("processingPayment" as any) : t("orderAndPay" as any)}
+          isDisabled={!isReady || isProcessing}
+          isLoading={isProcessing}
+        />
+      </div>
     </form>
   );
 }

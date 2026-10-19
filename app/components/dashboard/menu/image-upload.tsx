@@ -5,7 +5,7 @@ import { Trash, UploadSimple, PencilSimple } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { MAX_IMAGE_SIZE_BYTES, isAllowedImageFile } from "@/lib/constants";
 
 interface ImageUploadProps {

@@ -5,10 +5,11 @@ import { Plus, Minus, DownloadSimple, Check, ArrowRight, Sparkle } from "@phosph
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
+import { getMenuItemImageUrl } from "@/lib/menu-images";
 import { MAX_CART_ITEM_QUANTITY, useCartStore } from "@/store/cart-store";
-import { Button } from "@/components/ui/button";
+import { Button } from "@astryxdesign/core/Button";
 import { CartSheet } from "@/components/guest/cart-sheet";
-import { Price } from "@/components/ui/price";
+import { Price } from "@/components/common/price";
 import { OrderTracker } from "@/components/guest/order-tracker";
 import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header";
 import Image from "next/image";
@@ -80,14 +81,13 @@ function GuestOrderSuccess({
         {order && (
           <div className="w-full flex flex-col items-center gap-2">
             <Button
-              type="button"
-              variant="outline"
-              className="w-full min-h-[44px] rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
+              label={t("downloadConfirmation")}
+              icon={<DownloadSimple className="size-4 shrink-0" weight="bold" />}
+              variant="secondary"
+              width="100%"
+              size="lg"
               onClick={() => downloadOrderConfirmation(order, business, locale)}
-            >
-              <DownloadSimple className="size-4 shrink-0" weight="bold" />
-              <span>{t("downloadConfirmation")}</span>
-            </Button>
+            />
             <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
               {t("confirmationDisclaimerPrefix")}
               <a
@@ -104,8 +104,10 @@ function GuestOrderSuccess({
         )}
 
         <Button
-          variant="outline"
-          className="w-full min-h-[44px] rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
+          label={t("orderAgain")}
+          variant="secondary"
+          width="100%"
+          size="lg"
           onClick={() => {
             setDineInSuccess(null);
             useCartStore.getState().clearCart();
@@ -115,9 +117,7 @@ function GuestOrderSuccess({
               window.history.replaceState(null, "", url.toString());
             }
           }}
-        >
-          {t("orderAgain")}
-        </Button>
+        />
       </main>
 
       <footer className="p-4 text-center max-w-[520px] mx-auto w-full shrink-0">
@@ -154,27 +154,17 @@ function FloatingCartBanner({
   return (
     <aside
       aria-label={t("cart")}
-      className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-center p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden pointer-events-none"
+      className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-center p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none"
     >
-      <div className="w-full max-w-[500px] pointer-events-auto">
-        <Button variant="ghost"
-          type="button"
-          id="floating-cart-banner"
+      <div className="w-full max-w-[500px] pointer-events-auto px-2">
+        <Button
+          label={`${count} · ${t("viewCart")} · ${(total() / 100).toFixed(2).replace(".", ",")} €`}
+          variant="primary"
+          size="lg"
+          width="100%"
+          elevation="high"
           onClick={onOpenCart}
-          className="w-full min-h-[48px] rounded-lg bg-foreground text-background px-4 py-2 flex items-center justify-between font-semibold hover:bg-foreground/90 transition-colors cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
-        >
-          <div className="flex items-center gap-2.5">
-            <span className="size-6 rounded-full bg-background text-foreground text-xs flex items-center justify-center font-bold tabular-nums">
-              {count}
-            </span>
-            <span className="text-sm font-semibold">{t("viewCart")}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Price cents={total()} className="text-sm font-bold text-background" />
-            <ArrowRight className="size-4 shrink-0" weight="bold" aria-hidden="true" />
-          </div>
-        </Button>
+        />
       </div>
     </aside>
   );
@@ -202,6 +192,7 @@ export function GuestFrontend({
 
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [cartSheetStep, setCartSheetStep] = useState<"cart" | "checkout">("cart");
   const [customizationItem, setCustomizationItem] = useState<MenuItem | null>(null);
 
   const [dineInSuccess, setDineInSuccess] = useState<{
@@ -299,7 +290,7 @@ export function GuestFrontend({
 
           {/* Category navigation */}
           <div className="tabline border-b border-border flex items-center gap-6 overflow-x-auto no-scrollbar pt-2">
-            <Button variant="ghost"
+            <button
               type="button"
               onClick={() => scrollToCategory("all")}
               aria-pressed={activeCategory === "all"}
@@ -311,9 +302,9 @@ export function GuestFrontend({
               )}
             >
               {t("allCategories")}
-            </Button>
+            </button>
             {isPopularEnabled && (
-              <Button variant="ghost"
+              <button
                 type="button"
                 onClick={() => scrollToCategory("popular")}
                 aria-pressed={activeCategory === "popular"}
@@ -324,12 +315,12 @@ export function GuestFrontend({
                     : "font-medium text-muted-foreground hover:text-foreground"
                 )}
               >
-                <Sparkle className="size-3.5 text-primary" weight="fill" />
+                <Sparkle className="size-3.5 text-foreground" weight="fill" />
                 <span>{isDe ? "Beliebteste" : "Most Popular"}</span>
-              </Button>
+              </button>
             )}
             {categories.map((c) => (
-              <Button variant="ghost"
+              <button
                 key={c.$id}
                 type="button"
                 onClick={() => scrollToCategory(c.$id)}
@@ -342,7 +333,7 @@ export function GuestFrontend({
                 )}
               >
                 {c.name}
-              </Button>
+              </button>
             ))}
           </div>
 
@@ -394,10 +385,10 @@ export function GuestFrontend({
                         </div>
 
                         <div className="flex flex-col items-end gap-3 shrink-0">
-                          {(item.imageUrl || item.imageId) && (
+                          {getMenuItemImageUrl(item) && (
                             <div className="food-thumb relative size-24 sm:size-32 rounded-lg overflow-hidden bg-muted shrink-0">
                               <Image
-                                src={item.imageUrl || getImagePreviewUrl(item.imageId!)}
+                                src={getMenuItemImageUrl(item)!}
                                 alt=""
                                 fill
                                 className="object-cover"
@@ -408,9 +399,7 @@ export function GuestFrontend({
 
                           {totalQuantity > 0 ? (
                             <div className="flex items-center bg-muted/80 p-0.5 min-h-11 rounded-lg border border-border shrink-0">
-                              <Button
-                                variant="ghost"
-                                size="icon"
+                              <button
                                 type="button"
                                 className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                                 onClick={() => {
@@ -420,30 +409,26 @@ export function GuestFrontend({
                                 aria-label={`${t("decreaseQuantity")}: ${item.name}`}
                               >
                                 <Minus weight="bold" className="size-3.5" />
-                              </Button>
+                              </button>
                               <span className="text-xs sm:text-sm font-bold tabular-nums px-2 min-w-[24px] text-center font-inter">
                                 {totalQuantity}
                               </span>
-                              <Button
-                                variant="ghost"
-                                size="icon"
+                              <button
                                 type="button"
                                 className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                                 onClick={() => handleAddClick(item)}
                                 aria-label={`${t("increaseQuantity")}: ${item.name}`}
                               >
                                 <Plus weight="bold" className="size-3.5" />
-                              </Button>
+                              </button>
                             </div>
                           ) : (
                             <Button
-                              variant="ghost"
-                              type="button"
+                              label={t("addToCart")}
+                              variant="secondary"
+                              size="lg"
                               onClick={() => handleAddClick(item)}
-                              className="min-h-11 px-4 rounded-lg border border-border bg-white text-foreground hover:bg-muted text-xs sm:text-sm font-semibold transition-colors cursor-pointer shrink-0 shadow-2xs"
-                            >
-                              {t("addToCart")}
-                            </Button>
+                            />
                           )}
                         </div>
                       </div>
@@ -495,10 +480,10 @@ export function GuestFrontend({
                           </div>
 
                           <div className="flex flex-col items-end gap-3 shrink-0">
-                            {item.imageId && (
+                            {getMenuItemImageUrl(item) && (
                               <div className="food-thumb relative size-24 sm:size-32 rounded-lg overflow-hidden bg-muted shrink-0">
                                 <Image
-                                  src={getImagePreviewUrl(item.imageId)}
+                                  src={getMenuItemImageUrl(item)!}
                                   alt=""
                                   fill
                                   className="object-cover"
@@ -509,7 +494,7 @@ export function GuestFrontend({
 
                             {totalQuantity > 0 ? (
                               <div className="flex items-center bg-muted/80 p-0.5 min-h-11 rounded-lg border border-border shrink-0">
-                                <Button variant="ghost" size="icon"
+                                <button
                                   type="button"
                                   className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                                   onClick={() => {
@@ -519,27 +504,26 @@ export function GuestFrontend({
                                   aria-label={`${t("decreaseQuantity")}: ${item.name}`}
                                 >
                                   <Minus weight="bold" className="size-3.5" />
-                                </Button>
+                                </button>
                                 <span className="text-xs sm:text-sm font-bold tabular-nums px-2 min-w-[24px] text-center font-inter">
                                   {totalQuantity}
                                 </span>
-                                <Button variant="ghost" size="icon"
+                                <button
                                   type="button"
                                   className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                                   onClick={() => handleAddClick(item)}
                                   aria-label={`${t("increaseQuantity")}: ${item.name}`}
                                 >
                                   <Plus weight="bold" className="size-3.5" />
-                                </Button>
+                                </button>
                               </div>
                             ) : (
-                              <Button variant="ghost"
-                                type="button"
+                              <Button
+                                label={t("addToCart")}
+                                variant="secondary"
+                                size="lg"
                                 onClick={() => handleAddClick(item)}
-                                className="min-h-11 px-4 rounded-lg border border-border bg-white text-foreground hover:bg-muted text-xs sm:text-sm font-semibold transition-colors cursor-pointer shrink-0 shadow-2xs"
-                              >
-                                {t("addToCart")}
-                              </Button>
+                              />
                             )}
                           </div>
                         </div>
@@ -586,16 +570,16 @@ export function GuestFrontend({
                       <div className="text-right shrink-0 flex flex-col items-end gap-1">
                         <Price cents={item.price * item.quantity} className="font-bold text-foreground" />
                         <div className="flex items-center bg-muted/60 p-0.5 min-h-11 rounded-lg border border-border/60">
-                          <Button variant="ghost" size="icon"
+                          <button
                             type="button"
                             className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                             aria-label={`${t("decreaseQuantity")}: ${item.name}`}
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           >
                             <Minus weight="bold" className="size-4" />
-                          </Button>
+                          </button>
                           <span className="text-[11px] font-bold tabular-nums px-1.5 font-inter">{item.quantity}</span>
-                          <Button variant="ghost" size="icon"
+                          <button
                             type="button"
                             className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                             aria-label={`${t("increaseQuantity")}: ${item.name}`}
@@ -603,7 +587,7 @@ export function GuestFrontend({
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           >
                             <Plus weight="bold" className="size-4" />
-                          </Button>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -625,13 +609,16 @@ export function GuestFrontend({
                   <Price cents={total()} className="text-xl font-bold text-foreground" />
                 </div>
 
-                <Button variant="ghost"
-                  type="button"
-                  onClick={() => setCheckoutOpen(true)}
-                  className="w-full min-h-[44px] rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors flex items-center justify-center cursor-pointer shadow-xs"
-                >
-                  {t("continueToPayment")} →
-                </Button>
+                <Button
+                  label={t("continueToPayment")}
+                  variant="primary"
+                  size="lg"
+                  width="100%"
+                  onClick={() => {
+                    setCartSheetStep("checkout");
+                    setCheckoutOpen(true);
+                  }}
+                />
 
 
               </div>
@@ -640,9 +627,12 @@ export function GuestFrontend({
         </aside>
       </main>
 
-      {/* Floating Cart for Mobile */}
+      {/* Floating Cart for Mobile & Desktop Dock */}
       <FloatingCartBanner
-        onOpenCart={() => setCheckoutOpen(true)}
+        onOpenCart={() => {
+          setCartSheetStep("cart");
+          setCheckoutOpen(true);
+        }}
       />
 
       {/* Customization Modal */}
@@ -653,13 +643,14 @@ export function GuestFrontend({
         onAddToCart={handleCustomizationAdd}
       />
 
-      {/* Checkout Sheet */}
+      {/* Checkout / Cart Sheet */}
       <CartSheet
         open={checkoutOpen}
         onOpenChange={setCheckoutOpen}
         business={business}
         type={type}
         tableNumber={tableNumber}
+        initialStep={cartSheetStep}
         onOrderSuccess={(newOrderId, orderNumber) => {
           setCheckoutOpen(false);
           useCartStore.getState().clearCart();

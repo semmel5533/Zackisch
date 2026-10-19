@@ -9,7 +9,7 @@ import { convexServer } from "@/lib/convex/server";
 import { api } from "@/convex/_generated/api";
 import { StaffTerminalShell } from "@/components/staff/staff-terminal-shell";
 import { cookies } from "next/headers";
-import { LocalizedText } from "@/components/ui/localized-text";
+import { LocalizedText } from "@/components/common/localized-text";
 import { translations, Locale } from "@/lib/translations";
 
 export async function generateMetadata() {

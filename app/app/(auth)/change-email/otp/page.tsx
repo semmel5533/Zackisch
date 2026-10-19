@@ -14,6 +14,7 @@ import { HStack } from "@astryxdesign/core/HStack";
 import { Heading } from "@astryxdesign/core/Heading";
 import { Text } from "@astryxdesign/core/Text";
 import { Button } from "@astryxdesign/core/Button";
+import { Banner } from "@astryxdesign/core/Banner";
 import { Divider } from "@astryxdesign/core/Divider";
 import { Spinner } from "@astryxdesign/core/Spinner";
 import { Icon } from "@astryxdesign/core/Icon";
@@ -21,11 +22,11 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@/components/common/input-otp";
 import { useTranslation } from "@/lib/i18n";
 import { PaperPlaneRight } from "@phosphor-icons/react";
 import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 function ChangeEmailOtpForm() {
   const searchParams = useSearchParams();
@@ -158,9 +159,10 @@ function ChangeEmailOtpForm() {
           </VStack>
 
           {error && (
-            <Text color="secondary" weight="semibold">
-              {error}
-            </Text>
+            <Banner
+              status="error"
+              title={error}
+            />
           )}
 
           <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
@@ -209,7 +211,7 @@ function ChangeEmailOtpForm() {
 
 export default function ChangeEmailOtpPage() {
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img

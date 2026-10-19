@@ -5,22 +5,19 @@ import {
   Copy,
   ArrowsClockwise,
   QrCode,
+  Info,
 } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { useTranslation } from "@/lib/i18n";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { InfoTooltip } from "@/components/ui/info-tooltip";
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogCloseButton,
-} from "@/components/ui/dialog";
+import { Card } from "@astryxdesign/core/Card";
+import { Button } from "@astryxdesign/core/Button";
+import { Tooltip } from "@astryxdesign/core/Tooltip";
+import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
+import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
+import { VStack, HStack } from "@astryxdesign/core/Layout";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { Icon } from "@astryxdesign/core/Icon";
 import { ReactQRCode } from "@lglab/react-qr-code";
 import { generateStaffSessionAction } from "@/actions/staff-actions";
 
@@ -62,140 +59,164 @@ export function StaffSessionCard({
   }
 
   return (
-    <Card className="h-full flex flex-col justify-between @container bg-card border-border">
-      <CardHeader className="flex flex-col gap-2 pb-3">
-        <div className="flex items-center gap-2 min-w-0 w-full">
-          <span className="font-semibold text-base sm:text-lg leading-normal text-foreground truncate">
-            {t("staffSession")}
-          </span>
-          <InfoTooltip content={t("staffSessionDesc")} />
-        </div>
-      </CardHeader>
+    <Card variant="default" padding={5} elevation="low" width="100%">
+      <VStack gap={4} justify="between" height="100%">
+        <HStack justify="between" vAlign="center">
+          <HStack gap={2} vAlign="center">
+            <Heading level={4}>{t("staffSession")}</Heading>
+            <Tooltip content={t("staffSessionDesc")}>
+              <span style={{ cursor: "pointer", display: "inline-flex" }}>
+                <Icon icon={Info} size="sm" color="secondary" />
+              </span>
+            </Tooltip>
+          </HStack>
+        </HStack>
 
-      <CardContent className="flex flex-col gap-2.5 pt-0">
-        <Dialog open={staffQrOpen} onOpenChange={setStaffQrOpen}>
-          <DialogTrigger
-            render={
-              <Button
-                variant="default"
-                className="w-full h-11 rounded-full font-semibold cursor-pointer active:scale-[0.98]"
-              />
-            }
-          >
-            <QrCode className="h-4 w-4 mr-2 shrink-0" weight="bold" />
-            <span>{t("scan")}</span>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[380px]">
-            <DialogHeader className="flex flex-row items-center justify-between">
-              <DialogTitle>{t("staffSession")}</DialogTitle>
-              <DialogCloseButton />
-            </DialogHeader>
-            <DialogBody className="flex flex-col items-center gap-3.5 overflow-hidden py-4 px-5 sm:px-6">
-              <a
-                href={getLink(staffToken)}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full aspect-square flex items-center justify-center bg-white cursor-pointer group rounded-xl p-5 border border-border"
-              >
-                <ReactQRCode
-                  value={getLink(staffToken)}
-                  size={360}
-                  level="H"
-                  background="#FFFFFF"
-                  marginSize={0}
-                  dataModulesSettings={{
-                    color: "#000000",
-                    style: "square-sm",
-                  }}
-                  finderPatternOuterSettings={{
-                    color: "#000000",
-                    style: "square",
-                  }}
-                  finderPatternInnerSettings={{
-                    color: "#000000",
-                    style: "square",
-                  }}
-                  imageSettings={{
-                    src: "/combination_mark_qr.png",
-                    height: 42,
-                    width: 133,
-                    excavate: true,
-                  }}
-                  svgProps={{
-                    className: "w-full h-auto aspect-square block [shape-rendering:crispEdges]",
-                  }}
-                />
-              </a>
-              <p className="w-full text-left text-sm font-medium text-destructive">
-                {t("staffQrWarning")}
-              </p>
-            </DialogBody>
-          </DialogContent>
-        </Dialog>
-
-        <div className="grid grid-cols-2 gap-2.5 w-full">
+        <VStack gap={3} width="100%">
           <Button
-            variant="outline"
-            onClick={() => copyLinkText(staffToken)}
-            className="w-full border-border"
-            disabled={isPending}
-          >
-            <Copy className="h-4 w-4 mr-2 shrink-0" weight="bold" />
-            <span className="truncate">{t("copyLink")}</span>
-          </Button>
+            label={t("scan")}
+            variant="primary"
+            size="md"
+            width="100%"
+            onClick={() => setStaffQrOpen(true)}
+            icon={<Icon icon={QrCode} size="sm" />}
+          />
 
-          <Button
-            variant="outline"
-            onClick={() => setRegenerateStaffOpen(true)}
-            className="w-full border-border hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
-            disabled={isPending}
-            title={t("createSession")}
-          >
-            <ArrowsClockwise className="h-4 w-4 mr-2 shrink-0" weight="bold" />
-            <span className="truncate">{t("createSession")}</span>
-          </Button>
-        </div>
-      </CardContent>
+          <HStack gap={2} width="100%">
+            <Button
+              label={t("copyLink")}
+              variant="secondary"
+              size="md"
+              width="50%"
+              isDisabled={isPending}
+              onClick={() => copyLinkText(staffToken)}
+              icon={<Icon icon={Copy} size="sm" />}
+            />
+            <Button
+              label={t("createSession")}
+              variant="secondary"
+              size="md"
+              width="50%"
+              isDisabled={isPending}
+              onClick={() => setRegenerateStaffOpen(true)}
+              icon={<Icon icon={ArrowsClockwise} size="sm" />}
+            />
+          </HStack>
+        </VStack>
+      </VStack>
+
+      {/* Staff QR Dialog */}
+      <Dialog
+        isOpen={staffQrOpen}
+        onOpenChange={setStaffQrOpen}
+        width={400}
+        purpose="info"
+      >
+        <Layout
+          header={
+            <DialogHeader
+              title={t("staffSession")}
+              onOpenChange={setStaffQrOpen}
+            />
+          }
+          content={
+            <LayoutContent>
+              <VStack gap={4} hAlign="center" padding={4}>
+                <a
+                  href={getLink(staffToken)}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#FFFFFF",
+                    padding: 20,
+                    borderRadius: 12,
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    width: "100%",
+                    maxWidth: 320,
+                  }}
+                >
+                  <ReactQRCode
+                    value={getLink(staffToken)}
+                    size={280}
+                    level="H"
+                    background="#FFFFFF"
+                    marginSize={0}
+                    dataModulesSettings={{
+                      color: "#000000",
+                      style: "square-sm",
+                    }}
+                    finderPatternOuterSettings={{
+                      color: "#000000",
+                      style: "square",
+                    }}
+                    finderPatternInnerSettings={{
+                      color: "#000000",
+                      style: "square",
+                    }}
+                    imageSettings={{
+                      src: "/combination_mark_qr.png",
+                      height: 42,
+                      width: 133,
+                      excavate: true,
+                    }}
+                  />
+                </a>
+                <Text color="secondary" size="sm">
+                  {t("staffQrWarning")}
+                </Text>
+              </VStack>
+            </LayoutContent>
+          }
+        />
+      </Dialog>
 
       {/* Regenerate Staff Session Confirmation Dialog */}
       <Dialog
-        open={regenerateStaffOpen}
+        isOpen={regenerateStaffOpen}
         onOpenChange={setRegenerateStaffOpen}
+        width={440}
+        purpose="required"
       >
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>
-              {t("regenerateStaffTitle")}
-            </DialogTitle>
-            <DialogCloseButton />
-          </DialogHeader>
-
-          <DialogBody>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              {t("regenerateStaffDesc")}
-            </p>
-          </DialogBody>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setRegenerateStaffOpen(false)}
-              className="w-full sm:flex-1 border-border"
-            >
-              {t("cancel")}
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={confirmRegenerateStaff}
-              disabled={isPending}
-              className="w-full sm:flex-1"
-            >
-              {t("regenerateConfirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        <Layout
+          header={
+            <DialogHeader
+              title={t("regenerateStaffTitle")}
+              onOpenChange={setRegenerateStaffOpen}
+            />
+          }
+          content={
+            <LayoutContent>
+              <VStack gap={3} padding={4}>
+                <Text color="secondary">
+                  {t("regenerateStaffDesc")}
+                </Text>
+              </VStack>
+            </LayoutContent>
+          }
+          footer={
+            <LayoutFooter>
+              <HStack gap={2} justify="end" padding={3}>
+                <Button
+                  label={t("cancel")}
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => setRegenerateStaffOpen(false)}
+                />
+                <Button
+                  label={t("regenerateConfirm")}
+                  variant="destructive"
+                  size="lg"
+                  isLoading={isPending}
+                  isDisabled={isPending}
+                  onClick={confirmRegenerateStaff}
+                />
+              </HStack>
+            </LayoutFooter>
+          }
+        />
       </Dialog>
     </Card>
   );

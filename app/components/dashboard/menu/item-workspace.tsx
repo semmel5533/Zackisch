@@ -1,36 +1,16 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { CheckboxInput } from "@astryxdesign/core/CheckboxInput";
 import { DIETARY_LABELS, DIETARY_LABEL_KEYS, type DietaryLabel } from "@/lib/dietary-labels";
-import { useState, useEffect, useRef, startTransition } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogCloseButton,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { useState, useEffect, useRef } from "react";
+import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
+import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
+import { Button } from "@astryxdesign/core/Button";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { TextArea } from "@astryxdesign/core/TextArea";
+import { Switch } from "@astryxdesign/core/Switch";
+import { Selector } from "@astryxdesign/core/Selector";
+import { Divider } from "@astryxdesign/core/Divider";
 import {
   CircleNotch,
   SlidersHorizontal,
@@ -39,7 +19,7 @@ import {
   Info,
 } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 import { ImageUpload } from "./image-upload";
 import { CustomizationBuilder } from "./customization-builder";
 
@@ -219,31 +199,36 @@ export function ItemWorkspace({
 
   return (
     <Dialog
-      open={open}
+      isOpen={open}
       onOpenChange={(newOpen) => {
         if (!isSubmitting) {
           onOpenChange(newOpen);
         }
       }}
+      width={560}
+      purpose="form"
     >
-      <DialogContent className="w-[calc(100%-1.25rem)] sm:w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] sm:h-[90vh] max-h-[820px]">
-        <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle>
-            {editingItem ? t("editItem") : t("addItem")}
-          </DialogTitle>
-          <DialogCloseButton />
-        </DialogHeader>
-
-        <form
-          id="workspace-item-form"
-          noValidate
-          onSubmit={handleSubmit}
-          className="flex-1 flex flex-col min-h-0 overflow-hidden"
-        >
-          <ScrollArea className="flex-1 min-h-0 w-full">
-            <div className="px-3.5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5">
-              {/* SECTION 1: DETAILS */}
-              <div className="space-y-3.5 sm:space-y-4">
+      <Layout
+        header={
+          <DialogHeader
+            title={editingItem ? t("editItem") : t("addItem")}
+            onOpenChange={(newOpen) => {
+              if (!isSubmitting) {
+                onOpenChange(newOpen);
+              }
+            }}
+          />
+        }
+        content={
+          <LayoutContent>
+            <form
+              id="workspace-item-form"
+              noValidate
+              onSubmit={handleSubmit}
+              className="flex-1 flex flex-col min-h-0 overflow-y-auto"
+            >
+              <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                {/* SECTION 1: DETAILS */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* Left Column (Bild) */}
                   <div className="flex flex-col gap-2 h-full">
@@ -278,251 +263,185 @@ export function ItemWorkspace({
                     </div>
 
                     {/* Category Select */}
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-sm font-semibold text-foreground">
-                        {t("category")} <span className="text-destructive">*</span>
-                      </Label>
-                      <Select
-                        value={categoryId}
-                        onValueChange={(val) => {
-                          if (val) {
-                            setCategoryId(val);
-                            categoryIdRef.current = val;
-                          }
-                        }}
-                        items={categories.map((cat) => ({
-                          label: cat.name,
-                          value: cat.$id,
-                        }))}
-                      >
-                        <SelectTrigger className="w-full bg-background border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground rounded-full h-11 px-4 cursor-pointer transition-all font-semibold active:scale-[0.98]">
-                          <SelectValue placeholder={t("category")}>
-                            {(value: string | null) =>
-                              categories.find((c) => c.$id === value)?.name ||
-                              t("category")
-                            }
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map((cat) => (
-                            <SelectItem key={cat.$id} value={cat.$id}>
-                              {cat.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Selector
+                      label={t("category")}
+                      isRequired
+                      value={categoryId}
+                      onChange={(val) => {
+                        if (val) {
+                          setCategoryId(val);
+                          categoryIdRef.current = val;
+                        }
+                      }}
+                      options={categories.map((cat) => ({
+                        label: cat.name,
+                        value: cat.$id,
+                      }))}
+                      width="100%"
+                    />
 
-                    <div className="flex flex-col gap-1.5">
-                      <Label
-                        htmlFor="ws-item-name"
-                        className={`text-sm font-semibold ${errors.name ? "text-destructive" : "text-foreground"}`}
-                      >
-                        {t("itemName")}{" "}
-                        <span className="text-destructive">*</span>
-                      </Label>
-                      <Input
-                        id="ws-item-name"
-                        value={name}
-                        onChange={(e) => {
-                          setName(e.target.value);
-                          if (errors.name)
-                            setErrors((prev) => ({ ...prev, name: undefined }));
-                        }}
-                        onKeyDown={(e) => e.stopPropagation()}
-                        placeholder={t("itemNamePlaceholder")}
-                        maxLength={100}
-                        className={`h-11 rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground ${errors.name ? "border-destructive" : ""}`}
-                      />
-                      {errors.name && (
-                        <span className="text-sm text-destructive">
-                          {errors.name}
-                        </span>
-                      )}
-                    </div>
+                    <TextInput
+                      label={t("itemName")}
+                      isRequired
+                      value={name}
+                      onChange={(val) => {
+                        setName(val.slice(0, 100));
+                        if (errors.name)
+                          setErrors((prev) => ({ ...prev, name: undefined }));
+                      }}
+                      placeholder={t("itemNamePlaceholder")}
+                      status={
+                        errors.name
+                          ? { type: "error", message: errors.name }
+                          : undefined
+                      }
+                      width="100%"
+                    />
 
-                    <div className="flex flex-col gap-1.5">
-                      <Label
-                        htmlFor="ws-item-desc"
-                        className="text-sm font-semibold text-foreground"
-                      >
-                        {t("description")}
-                      </Label>
-                      <Textarea
-                        id="ws-item-desc"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder={t("itemDescPlaceholder")}
-                        rows={3}
-                        maxLength={500}
-                        className="resize-none rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground min-h-[96px]"
-                      />
-                    </div>
+                    <TextArea
+                      label={t("description")}
+                      value={description}
+                      onChange={setDescription}
+                      placeholder={t("itemDescPlaceholder")}
+                      rows={3}
+                      maxLength={500}
+                      width="100%"
+                    />
 
                     <fieldset aria-describedby="ws-dietary-help" className="space-y-2">
-                      <legend className="text-sm font-semibold">{t("dietaryLabelsTitle")}</legend>
-                      <p id="ws-dietary-help" className="text-sm text-muted-foreground">{t("dietaryLabelsHelp")}</p>
+                      <legend className="text-sm font-semibold text-foreground">
+                        {t("dietaryLabelsTitle")}
+                      </legend>
+                      <p id="ws-dietary-help" className="text-sm text-muted-foreground">
+                        {t("dietaryLabelsHelp")}
+                      </p>
                       <div className="flex flex-wrap gap-x-5 gap-y-2">
-                        {DIETARY_LABELS.map(label => (
-                          <div key={label} className="flex min-h-11 items-center">
-                            <label htmlFor={`ws-dietary-${label}`} className="flex items-center gap-2 text-sm cursor-pointer"><Checkbox id={`ws-dietary-${label}`} checked={dietaryLabels.includes(label)} disabled={isSubmitting} onCheckedChange={checked => setDietaryLabels(current => checked ? [...current, label] : current.filter(value => value !== label))} /><span>{t(DIETARY_LABEL_KEYS[label])}</span></label>
-                          </div>
+                        {DIETARY_LABELS.map((label) => (
+                          <CheckboxInput
+                            key={label}
+                            label={t(DIETARY_LABEL_KEYS[label])}
+                            value={dietaryLabels.includes(label)}
+                            isDisabled={isSubmitting}
+                            onChange={(checked) =>
+                              setDietaryLabels((current) =>
+                                checked
+                                  ? [...current, label]
+                                  : current.filter((value) => value !== label),
+                              )
+                            }
+                          />
                         ))}
                       </div>
                     </fieldset>
 
-                    <div className="flex flex-col gap-1.5">
-                      <Label
-                        htmlFor="ws-item-price"
-                        className={`text-sm font-semibold flex items-center gap-1.5 ${errors.price ? "text-destructive" : "text-foreground"}`}
-                      >
-                        <span>{t("basePrice")}</span>
-                        <span className="text-destructive">*</span>
-                        <TooltipProvider delay={100}>
-                          <Tooltip>
-                            <TooltipTrigger
-                              type="button"
-                              className="hidden sm:inline-flex items-center"
-                            >
-                              <Info
-                                className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors cursor-help"
-                                weight="fill"
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent side="right" className="max-w-[260px]">
-                              <p>{t("basePriceDesc")}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="ws-item-price"
-                          type="text"
-                          inputMode="decimal"
-                          value={price}
-                          onChange={(e) => {
-                            let val = e.target.value;
-                            if (val === "") {
-                              setPrice("");
-                              if (errors.price)
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  price: undefined,
-                                }));
-                              return;
-                            }
-                            const separators = val.match(/[.,]/g);
-                            if (separators && separators.length > 1) return;
-                            if (!/^[\d]*[.,]?[\d]*$/.test(val)) return;
-                            if (val.length > 10) return;
+                    <TextInput
+                      label={t("basePrice")}
+                      isRequired
+                      value={price}
+                      onChange={(val) => {
+                        if (val === "") {
+                          setPrice("");
+                          if (errors.price)
+                            setErrors((prev) => ({ ...prev, price: undefined }));
+                          return;
+                        }
+                        const separators = val.match(/[.,]/g);
+                        if (separators && separators.length > 1) return;
+                        if (!/^[\d]*[.,]?[\d]*$/.test(val)) return;
+                        if (val.length > 10) return;
 
-                            setPrice(val);
-                            if (errors.price)
-                              setErrors((prev) => ({
-                                ...prev,
-                                price: undefined,
-                              }));
-                          }}
-                          onBlur={() => {
-                            if (!price.trim()) return;
-                            const normalized = price.trim().replace(",", ".");
-                            const num = parseFloat(normalized);
-                            if (!isNaN(num) && num >= 0) {
-                              const formatted = num.toFixed(2);
-                              setPrice(
-                                price.includes(",")
-                                  ? formatted.replace(".", ",")
-                                  : formatted,
-                              );
-                            }
-                          }}
-                          placeholder="0.00"
-                          className={`pr-8 h-11 rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground font-inter tabular-nums ${errors.price ? "border-destructive" : ""}`}
-                        />
-                        <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">
-                          €
-                        </span>
-                      </div>
-                      {errors.price && (
-                        <span className="text-sm text-destructive">
-                          {errors.price}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* SECTION 2: ZUSAMMENSTELLUNG & PRESETS */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-muted/30 border border-border/70">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-background border border-border/80 flex items-center justify-center shrink-0">
-                      <SlidersHorizontal className="w-5 h-5 text-foreground" weight="bold" />
-                    </div>
-                    <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                      <span className="text-sm font-bold text-foreground">
-                        {t("customization")}
-                      </span>
-                      <span className="text-xs text-muted-foreground font-medium line-clamp-2 sm:line-clamp-none">
-                        {t("customizationDesc")}
-                      </span>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={enableCustomizations}
-                    onCheckedChange={setEnableCustomizations}
-                    className="shrink-0"
-                  />
-                </div>
-
-                {enableCustomizations && (
-                  <div className="space-y-4 pt-1">
-                    <CustomizationBuilder
-                      steps={customizationSteps}
-                      onChange={setCustomizationSteps}
-                      itemAvailable={editingItem ? editingItem.available : true}
+                        setPrice(val);
+                        if (errors.price)
+                          setErrors((prev) => ({ ...prev, price: undefined }));
+                      }}
+                      onBlur={() => {
+                        if (!price.trim()) return;
+                        const normalized = price.trim().replace(",", ".");
+                        const num = parseFloat(normalized);
+                        if (!isNaN(num) && num >= 0) {
+                          const formatted = num.toFixed(2);
+                          setPrice(
+                            price.includes(",")
+                              ? formatted.replace(".", ",")
+                              : formatted,
+                          );
+                        }
+                      }}
+                      placeholder="0.00"
+                      status={
+                        errors.price
+                          ? { type: "error", message: errors.price }
+                          : undefined
+                      }
+                      width="100%"
                     />
                   </div>
-                )}
-              </div>
-            </div>
-          </ScrollArea>
+                </div>
 
-          {/* Fixed Footer Action Buttons */}
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
-              className="w-full sm:flex-1 border-border"
-            >
-              {t("cancel")}
-            </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full sm:flex-1"
-            >
-              {isSubmitting ? (
-                <>
-                  <CircleNotch
-                    className="w-5 h-5 animate-spin mr-2"
-                    weight="bold"
-                  />
-                  {t("saving")}
-                </>
-              ) : (
-                t("save")
-              )}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
+                <Divider />
+
+                {/* SECTION 2: ZUSAMMENSTELLUNG & PRESETS */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-muted/30 border border-border/70">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-background border border-border/80 flex items-center justify-center shrink-0">
+                        <SlidersHorizontal className="w-5 h-5 text-foreground" weight="bold" />
+                      </div>
+                      <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                        <span className="text-sm font-bold text-foreground">
+                          {t("customization")}
+                        </span>
+                        <span className="text-xs text-muted-foreground font-medium line-clamp-2 sm:line-clamp-none">
+                          {t("customizationDesc")}
+                        </span>
+                      </div>
+                    </div>
+                    <Switch
+                      value={enableCustomizations}
+                      onChange={setEnableCustomizations}
+                      label=""
+                      isLabelHidden
+                      aria-label={t("customization")}
+                    />
+                  </div>
+
+                  {enableCustomizations && (
+                    <div className="space-y-4 pt-1">
+                      <CustomizationBuilder
+                        steps={customizationSteps}
+                        onChange={setCustomizationSteps}
+                        itemAvailable={editingItem ? editingItem.available : true}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </form>
+          </LayoutContent>
+        }
+        footer={
+          <LayoutFooter>
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
+              <Button
+                variant="secondary"
+                size="lg"
+                label={t("cancel")}
+                isDisabled={isSubmitting}
+                onClick={() => onOpenChange(false)}
+              />
+              <Button
+                variant="primary"
+                size="lg"
+                type="submit"
+                form="workspace-item-form"
+                label={isSubmitting ? t("saving") : t("save")}
+                isLoading={isSubmitting}
+                isDisabled={isSubmitting}
+              />
+            </div>
+          </LayoutFooter>
+        }
+      />
     </Dialog>
   );
 }

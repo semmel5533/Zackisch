@@ -8,17 +8,18 @@ import {
   useRef,
 } from "react";
 import Image from "next/image";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Switch } from "@astryxdesign/core/Switch";
+import { Card } from "@astryxdesign/core/Card";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Button } from "@astryxdesign/core/Button";
 import { CaretDown, CaretUp, SlidersHorizontal } from "@phosphor-icons/react";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
-import { Price } from "@/components/ui/price";
-import { toast } from "sonner";
+import { Price } from "@/components/common/price";
+import { toast } from "@/components/common/toast";
 import { getImagePreviewUrl } from "@/lib/convex/client";
+import { getMenuItemImageUrl } from "@/lib/menu-images";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -301,8 +302,8 @@ function CategorySection({
   const { t } = useTranslation();
 
   return (
-    <Card className="transition-colors">
-      <CardHeader className="flex flex-row items-center justify-between pb-2 gap-4 w-full">
+    <Card elevation="low" variant="default" padding={4} className="transition-colors">
+      <div className="flex flex-row items-center justify-between pb-2 gap-4 w-full">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <button
             type="button"
@@ -311,31 +312,25 @@ function CategorySection({
           >
             {category.name}
           </button>
-          <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 font-inter tabular-nums leading-none">
-            {items.length}
-          </Badge>
+          <div className="shrink-0">
+            <Badge label={String(items.length)} variant="neutral" />
+          </div>
         </div>
 
         <div className="flex items-center justify-end gap-1.5 shrink-0">
           <Button
             variant="ghost"
-            size="icon"
+            isIconOnly
+            label={isExpanded ? t("collapse") : t("expand")}
+            icon={isExpanded ? <CaretUp className="h-4 w-4" weight="bold" /> : <CaretDown className="h-4 w-4" weight="bold" />}
             onClick={() => setIsExpanded(!isExpanded)}
-            className="rounded-full text-muted-foreground hover:text-foreground shrink-0"
-            title={isExpanded ? t("collapse") : t("expand")}
-          >
-            {isExpanded ? (
-              <CaretUp className="h-4 w-4" weight="bold" />
-            ) : (
-              <CaretDown className="h-4 w-4" weight="bold" />
-            )}
-          </Button>
+          />
         </div>
-      </CardHeader>
+      </div>
 
       {isExpanded && (
-        <CardContent className="pt-0 p-3 sm:p-4 sm:pt-0">
-          <div className="flex flex-col gap-2.5 p-1.5 rounded-lg">
+        <div className="pt-2 p-1.5">
+          <div className="flex flex-col gap-2.5 rounded-lg">
             {items.length === 0 ? (
               <div className="py-6 text-center flex flex-col items-center justify-center gap-1 border border-dashed rounded-lg bg-muted/10">
                 <p className="text-sm font-medium text-muted-foreground">
@@ -351,7 +346,7 @@ function CategorySection({
               />
             )}
           </div>
-        </CardContent>
+        </div>
       )}
     </Card>
   );
@@ -409,8 +404,8 @@ function ItemCardView({
   const { t } = useTranslation();
 
   const imageUrl = useMemo(
-    () => item.imageUrl || (item.imageId ? getImagePreviewUrl(item.imageId) : null),
-    [item.imageUrl, item.imageId]
+    () => getMenuItemImageUrl(item),
+    [item]
   );
 
   return (
@@ -469,18 +464,18 @@ function ItemCardView({
           <div className="flex items-center gap-2 shrink-0 pt-0.5">
             {steps.length > 0 && (
               <Badge
-                variant="outline"
-                className="text-xs gap-1 border-primary/40 text-primary bg-primary/5 shrink-0"
-              >
-                <SlidersHorizontal className="w-3 h-3" weight="bold" />
-                <span className="font-inter tabular-nums">{steps.length}</span>
-              </Badge>
+                label={String(steps.length)}
+                variant="info"
+                icon={<SlidersHorizontal className="w-3 h-3" weight="bold" />}
+              />
             )}
             <Switch
-              checked={item.available}
-              disabled={pending}
-              onCheckedChange={(checked) => onToggleItem(item.$id, checked)}
-              title={item.available ? t("itemAvailable") : t("itemSoldOut")}
+              value={item.available}
+              isDisabled={pending}
+              onChange={(checked) => onToggleItem(item.$id, checked)}
+              label=""
+              isLabelHidden
+              aria-label={item.available ? t("itemAvailable") : t("itemSoldOut")}
             />
           </div>
         </div>
@@ -517,9 +512,9 @@ function ItemCardView({
                       </span>
                       <div className="flex items-center shrink-0">
                         <Switch
-                          checked={stepAvailable}
-                          disabled={pending || !item.available}
-                          onCheckedChange={(checked) =>
+                          value={stepAvailable}
+                          isDisabled={pending || !item.available}
+                          onChange={(checked) =>
                             onToggleCustomization(
                               item.$id,
                               stepId,
@@ -527,7 +522,9 @@ function ItemCardView({
                               checked,
                             )
                           }
-                          title={t("toggleStepAvailability")}
+                          label=""
+                          isLabelHidden
+                          aria-label={t("toggleStepAvailability")}
                         />
                       </div>
                     </div>
@@ -573,9 +570,9 @@ function ItemCardView({
 
                             <div className="flex items-center shrink-0">
                               <Switch
-                                checked={optAvailable}
-                                disabled={pending || !item.available || !stepAvailable}
-                                onCheckedChange={(checked) =>
+                                value={optAvailable}
+                                isDisabled={pending || !item.available || !stepAvailable}
+                                onChange={(checked) =>
                                   onToggleCustomization(
                                     item.$id,
                                     stepId,
@@ -583,7 +580,9 @@ function ItemCardView({
                                     checked,
                                   )
                                 }
-                                title={t("toggleOptionAvailability")}
+                                label=""
+                                isLabelHidden
+                                aria-label={t("toggleOptionAvailability")}
                               />
                             </div>
                           </div>

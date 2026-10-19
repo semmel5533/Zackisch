@@ -29,8 +29,8 @@ export const zackischTheme = defineTheme({
     },
   },
   radius: {
-    base: 4,
-    multiplier: 1,
+    base: 8,
+    multiplier: 1.25,
   },
   tokens: {
     "--color-accent": ["#111111", "#FAFAFA"],
@@ -43,9 +43,10 @@ export const zackischTheme = defineTheme({
     "--color-background-card": ["#FFFFFF", "#161618"],
     "--color-text-primary": ["#0A0A0B", "#FAFAFA"],
     "--color-text-secondary": ["#52525B", "#A1A1AA"],
-    "--radius-inner": "0.375rem",
-    "--radius-element": "0.5rem",
-    "--radius-container": "0.75rem",
+    "--radius-inner": "0.5rem",
+    "--radius-element": "0.75rem",
+    "--radius-container": "1rem",
+    "--radius-page": "1.25rem",
   },
 });
 

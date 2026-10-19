@@ -25,7 +25,7 @@ import { Badge } from "@astryxdesign/core/Badge";
 import { StatusDot } from "@astryxdesign/core/StatusDot";
 import { List, ListItem } from "@astryxdesign/core/List";
 import { useAdmin } from "@/lib/admin-context";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 export default function AdminOverviewPage() {
   const { currentRegion, adminEmail, sessionToken } = useAdmin();

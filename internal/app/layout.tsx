@@ -5,7 +5,7 @@ import { ZackischThemeProvider } from "@/lib/zackisch-theme";
 import { ConvexClientProvider } from "@/lib/convex";
 import { AdminProvider } from "@/lib/admin-context";
 import { AdminShell } from "@/components/AdminShell";
-import { Toaster } from "sonner";
+import { AstryxToaster } from "@/components/common/toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -46,7 +46,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             <AdminProvider>
               <AdminShell>{children}</AdminShell>
-              <Toaster position="top-right" richColors />
+              <AstryxToaster />
             </AdminProvider>
           </ConvexClientProvider>
         </ZackischThemeProvider>

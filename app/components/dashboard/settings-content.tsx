@@ -1,22 +1,26 @@
 "use client";
 
 import { useActionState, useEffect, useState, useRef } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { InfoTooltip } from "@/components/ui/info-tooltip";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { WarningCircle, UploadSimple, X, SpinnerGap, PencilSimple, Trash, Plus } from "@phosphor-icons/react";
+import { Card } from "@astryxdesign/core/Card";
+import { Button } from "@astryxdesign/core/Button";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { TextArea } from "@astryxdesign/core/TextArea";
+import { Switch } from "@astryxdesign/core/Switch";
+import { Divider } from "@astryxdesign/core/Divider";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Tooltip } from "@astryxdesign/core/Tooltip";
+import { Banner } from "@astryxdesign/core/Banner";
+import { VStack, HStack } from "@astryxdesign/core/Layout";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { toast } from "@/components/common/toast";
 import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+  WarningCircle,
+  UploadSimple,
+  PencilSimple,
+  Trash,
+  Info,
+} from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { cn } from "@/lib/utils";
@@ -41,6 +45,16 @@ interface SettingsContentProps {
   user: { name?: string; email?: string; [key: string]: any };
 }
 
+function InfoTooltip({ content }: { content: string }) {
+  return (
+    <Tooltip content={content}>
+      <span className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground cursor-help p-0.5">
+        <Info className="size-4" />
+      </span>
+    </Tooltip>
+  );
+}
+
 export function SettingsContent({ business, user }: SettingsContentProps) {
   const { t, locale } = useTranslation();
 
@@ -49,25 +63,18 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
     {},
   );
 
+  const [businessName, setBusinessName] = useState(business.name || "");
+  const [userName, setUserName] = useState(user.name || "");
+  const [address, setAddress] = useState(business.address || "");
+
   const logoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
-  const addressRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const adjustAddressHeight = (el: HTMLTextAreaElement | null) => {
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${Math.max(el.scrollHeight, 44)}px`;
-  };
 
   const [logoPreview, setLogoPreview] = useState<string | null>(
-    business.logoFileId
-      ? getImagePreviewUrl(business.logoFileId)
-      : null,
+    business.logoUrl || (business.logoFileId ? getImagePreviewUrl(business.logoFileId) : null),
   );
   const [bannerPreview, setBannerPreview] = useState<string | null>(
-    business.bannerFileId
-      ? getImagePreviewUrl(business.bannerFileId)
-      : null,
+    business.bannerUrl || (business.bannerFileId ? getImagePreviewUrl(business.bannerFileId) : null),
   );
 
   const [removeLogo, setRemoveLogo] = useState(false);
@@ -104,14 +111,7 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
     if (businessState.success) {
       toast.success(t("saved"));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [businessState]);
-
-  useEffect(() => {
-    if (addressRef.current) {
-      adjustAddressHeight(addressRef.current);
-    }
-  }, [business.address]);
+  }, [businessState, t]);
 
   const handleLogoFile = (file: File) => {
     if (!isAllowedImageFile(file)) {
@@ -166,29 +166,26 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
   };
 
   return (
-    <div className="flex-1 space-y-4 @container">
+    <div className="flex-1 space-y-6 @container">
       <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
-        <div className="flex items-center">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground leading-none">{t("settings")}</h1>
-        </div>
+        <Heading level={1}>{t("settings")}</Heading>
       </div>
 
       <div className="flex flex-col gap-6 w-full">
-        {/* Business & Stripe Settings */}
-        <Card className="w-full flex flex-col">
-          <CardHeader className="flex-row items-center justify-between pb-4">
-            <div className="flex items-center gap-2 min-w-0">
-              <h3 className="text-base sm:text-lg font-bold text-foreground leading-none">
-                {t("businessSettings")}
-              </h3>
-              <InfoTooltip content={t("businessSettingsDescription" as any)} />
+        {/* Business & Stripe Settings Card */}
+        <Card elevation="low" variant="default" padding={4}>
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between pb-3 border-b border-border/40">
+              <div className="flex items-center gap-2">
+                <Heading level={3}>{t("businessSettings")}</Heading>
+                <InfoTooltip content={t("businessSettingsDescription" as any)} />
+              </div>
             </div>
-          </CardHeader>
-          <CardContent className="flex-1 flex flex-col">
+
             <form
               action={businessAction}
               noValidate
-              className="flex flex-col gap-6 flex-1"
+              className="flex flex-col gap-6"
             >
               <input
                 type="hidden"
@@ -240,94 +237,63 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                 }}
               />
 
-              {/* Form Fields: 2 Columns on container >= 480px, 1 Column on narrow mobile */}
+              {/* Form Fields: 2 Columns on >= 480px, 1 Column on narrow mobile */}
               <div className="grid grid-cols-1 @min-[480px]:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="business-name"
-                    className="text-sm font-semibold text-foreground"
-                  >
-                    {t("restaurantName")} <span className="text-destructive">*</span>
-                  </label>
-                  <Input
-                    id="business-name"
-                    name="businessName"
-                    defaultValue={business.name}
-                    required
-                    maxLength={80}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="business-user-name" className="text-sm font-semibold text-foreground">
-                    {t("name")} <span className="text-destructive">*</span>
-                  </label>
-                  <Input
-                    id="business-user-name"
-                    name="userName"
-                    defaultValue={user.name || ""}
-                    maxLength={128}
-                    required
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="business-address"
-                    className="text-sm font-semibold text-foreground"
-                  >
-                    {t("address")}
-                  </label>
-                  <Textarea
-                    ref={(el) => {
-                      addressRef.current = el;
-                      adjustAddressHeight(el);
-                    }}
-                    id="business-address"
-                    name="address"
-                    defaultValue={business.address}
-                    rows={1}
-                    maxLength={300}
-                    onInput={(e) => adjustAddressHeight(e.currentTarget)}
-                    className="min-h-11 py-2.5 resize-none leading-relaxed md:text-sm"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="business-email" className="text-sm font-semibold text-foreground">
-                    {t("email")}{" "}
-                    <span className="text-destructive">*</span>
-                  </label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <div className="w-full cursor-not-allowed" />
-                        }
-                      >
-                        <Input
-                          id="business-email"
-                          value={user.email}
-                          disabled
-                          className="pointer-events-none"
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {t("changeEmailTooltip" as any)}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
+                <TextInput
+                  label={t("restaurantName")}
+                  isRequired
+                  size="lg"
+                  value={businessName}
+                  onChange={(val) => setBusinessName(val.slice(0, 80))}
+                  htmlName="businessName"
+                  id="business-name"
+                  width="100%"
+                />
+                <TextInput
+                  label={t("name")}
+                  isRequired
+                  size="lg"
+                  value={userName}
+                  onChange={(val) => setUserName(val.slice(0, 128))}
+                  htmlName="userName"
+                  id="business-user-name"
+                  width="100%"
+                />
+                <TextArea
+                  label={t("address")}
+                  size="lg"
+                  value={address}
+                  onChange={setAddress}
+                  htmlName="address"
+                  id="business-address"
+                  width="100%"
+                  rows={2}
+                  maxLength={300}
+                />
+                <TextInput
+                  label={t("email")}
+                  isRequired
+                  size="lg"
+                  value={user.email || ""}
+                  isDisabled
+                  disabledMessage={t("changeEmailTooltip" as any)}
+                  htmlName="userEmail"
+                  id="business-email"
+                  width="100%"
+                />
               </div>
 
-              {/* Visual Media & Stripe Integration: 2 Columns on container >= 600px, 1 Column on mobile/narrow */}
-              <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6 items-stretch">
+              {/* Visual Media & Stripe Integration: 2 Columns on >= 600px, 1 Column on mobile */}
+              <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-6 items-stretch">
                 {/* Brand Media Column */}
                 <div className="flex flex-col justify-between gap-4">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <label className="text-sm font-bold text-foreground">{t("brandMedia")}</label>
-                      <span className="text-xs text-muted-foreground">{t("bannerRecommended")}</span>
+                      <Text weight="bold">{t("brandMedia")}</Text>
+                      <Text color="secondary">{t("bannerRecommended")}</Text>
                     </div>
 
-                    <div className="relative isolate w-full aspect-[2.3/1] rounded-xl sm:rounded-2xl overflow-hidden border border-border bg-muted/40 group/banner transition-colors">
+                    <div className="relative isolate w-full aspect-[2.3/1] rounded-xl overflow-hidden border border-border bg-muted/40 group/banner transition-colors">
                       {/* Banner Area */}
                       <div
                         role="button"
@@ -370,10 +336,10 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                                   e.stopPropagation();
                                   bannerInputRef.current?.click();
                                 }}
-                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95 shadow-md"
+                                className="pointer-events-auto inline-flex size-10 items-center justify-center rounded-full bg-black/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white text-white transition-colors cursor-pointer hover:bg-black active:scale-95 shadow-md"
                                 title={t("changeBanner")}
                               >
-                                <PencilSimple className="size-4.5" weight="bold" />
+                                <PencilSimple className="size-4" weight="bold" />
                               </button>
                               <button
                                 type="button"
@@ -384,10 +350,10 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                                   setRemoveBanner(true);
                                   if (bannerInputRef.current) bannerInputRef.current.value = "";
                                 }}
-                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95 shadow-md"
+                                className="pointer-events-auto inline-flex size-10 items-center justify-center rounded-full bg-black/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white hover:bg-destructive text-white transition-colors cursor-pointer active:scale-95 shadow-md"
                                 title={t("removeBanner")}
                               >
-                                <Trash className="size-4.5" weight="bold" />
+                                <Trash className="size-4" weight="bold" />
                               </button>
                             </div>
                           </>
@@ -395,7 +361,7 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                           <>
                             <div className="w-full h-full bg-muted/40" />
                             <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
-                              <span className="text-white font-medium text-xs bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                              <span className="text-white font-medium text-xs bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
                                 <UploadSimple className="w-3.5 h-3.5" />
                                 {t("uploadBanner")}
                               </span>
@@ -436,8 +402,8 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                           if (file) handleLogoFile(file);
                         }}
                         className={cn(
-                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-xl sm:rounded-2xl bg-muted border transition-colors cursor-pointer flex items-center justify-center overflow-hidden group/logo",
-                          (bannerPreview || logoPreview) ? "border-neutral-600" : "border-border",
+                          "absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-background border transition-colors cursor-pointer flex items-center justify-center overflow-hidden group/logo shadow-md",
+                          (bannerPreview || logoPreview) ? "border-border" : "border-border",
                           isDraggingLogo && "border-primary ring-2 ring-primary/20",
                         )}
                         title={logoPreview ? t("changeLogo") : t("uploadLogo")}
@@ -450,17 +416,17 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                               alt="Logo"
                               className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center gap-2.5 pointer-events-none">
+                            <div className="absolute inset-0 flex items-center justify-center gap-2 pointer-events-none">
                               <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   logoInputRef.current?.click();
                                 }}
-                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-black/80 text-white transition-colors cursor-pointer active:scale-95 shadow-md"
+                                className="pointer-events-auto inline-flex size-8 items-center justify-center rounded-full bg-black/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white text-white transition-colors cursor-pointer hover:bg-black active:scale-95 shadow-md"
                                 title={t("changeLogo")}
                               >
-                                <PencilSimple className="size-4.5" weight="bold" />
+                                <PencilSimple className="size-3.5" weight="bold" />
                               </button>
                               <button
                                 type="button"
@@ -471,150 +437,131 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                                   setRemoveLogo(true);
                                   if (logoInputRef.current) logoInputRef.current.value = "";
                                 }}
-                                className="pointer-events-auto inline-flex size-10 pointer-coarse:size-11 items-center justify-center rounded-full bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white backdrop-blur-sm hover:bg-destructive hover:text-white text-white transition-colors cursor-pointer active:scale-95 shadow-md"
+                                className="pointer-events-auto inline-flex size-8 items-center justify-center rounded-full bg-black/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white hover:bg-destructive text-white transition-colors cursor-pointer active:scale-95 shadow-md"
                                 title={t("removeLogo")}
                               >
-                                <Trash className="size-4.5" weight="bold" />
+                                <Trash className="size-3.5" weight="bold" />
                               </button>
                             </div>
                           </>
                         ) : (
-                          <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover/logo:opacity-100 transition-opacity flex items-center justify-center">
-                              <span className="text-white bg-black/60 backdrop-blur-sm p-2 rounded-full flex items-center justify-center">
-                                <UploadSimple className="w-4 h-4" />
-                              </span>
-                            </div>
+                          <div className="w-full h-full bg-muted/50 flex items-center justify-center">
+                            <UploadSimple className="size-5 text-muted-foreground" />
                           </div>
                         )}
                       </div>
                     </div>
 
-                    {/* Helper Subtext */}
-                    <span className="text-xs text-muted-foreground px-1 mt-0.5">
+                    <Text color="secondary" className="px-1 mt-0.5">
                       {t("brandMediaDesc")}
-                    </span>
+                    </Text>
                   </div>
 
                   {/* Smart Menu & Checkout Feature Toggles */}
-                  <div className="flex flex-col gap-4 p-4 border border-border rounded-xl bg-background">
+                  <div className="flex flex-col gap-4 p-4 border border-border/70 rounded-xl bg-canvas">
                     <div className="flex flex-col gap-0.5">
-                      <h4 className="text-sm font-bold text-foreground">
+                      <Heading level={4}>
                         {locale.startsWith("de") ? "Smart Menu & Bezahlung" : "Smart Menu & Payment"}
-                      </h4>
-                      <p className="text-xs text-muted-foreground">
+                      </Heading>
+                      <Text color="secondary">
                         {locale.startsWith("de")
                           ? "Datensparsame, automatisierte Verkaufsförderung auf Basis verifizierter Restaurant-Bestellungen."
                           : "Privacy-first, automated sales optimization based on verified venue orders."}
-                      </p>
+                      </Text>
                     </div>
 
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-foreground">
-                          {locale.startsWith("de") ? "Intelligente Empfehlungen & Upselling" : "Smart Recommendations & Upselling"}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {locale.startsWith("de")
-                            ? "Häufig zusammen bestellte Artikel und kleine Zusatzartikel vor der Zahlung vorschlagen."
-                            : "Recommend frequently ordered together items and small add-ons before checkout."}
-                        </span>
-                      </div>
-                      <input type="hidden" name="isUpsellingEnabled" value={String(isUpsellingEnabled)} />
-                      <Switch
-                        checked={isUpsellingEnabled}
-                        onCheckedChange={setIsUpsellingEnabled}
-                      />
-                    </div>
+                    <input type="hidden" name="isUpsellingEnabled" value={String(isUpsellingEnabled)} />
+                    <Switch
+                      label={locale.startsWith("de") ? "Intelligente Empfehlungen & Upselling" : "Smart Recommendations & Upselling"}
+                      description={locale.startsWith("de")
+                        ? "Häufig zusammen bestellte Artikel und kleine Zusatzartikel vor der Zahlung vorschlagen."
+                        : "Recommend frequently ordered together items and small add-ons before checkout."}
+                      value={isUpsellingEnabled}
+                      onChange={setIsUpsellingEnabled}
+                      labelPosition="start"
+                      labelSpacing="spread"
+                      width="100%"
+                    />
 
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-foreground">
-                          {locale.startsWith("de") ? "Freiwilliges Trinkgeld" : "Voluntary Tipping"}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {locale.startsWith("de")
-                            ? "Trinkgeld-Auswahl im Bezahlprozess anbieten (100 % für das Team, 0 % Zackisch-Gebühr)."
-                            : "Offer tipping at checkout (100% to venue, 0% Zackisch fee)."}
-                        </span>
-                      </div>
-                      <input type="hidden" name="isTippingEnabled" value={String(isTippingEnabled)} />
-                      <Switch
-                        checked={isTippingEnabled}
-                        onCheckedChange={setIsTippingEnabled}
-                      />
-                    </div>
+                    <Divider />
 
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-foreground">
-                          {locale.startsWith("de") ? "Kategorie „Beliebteste“" : "Category 'Most Popular'"}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {locale.startsWith("de")
-                            ? "Automatisch generierte Bestseller-Kategorie ganz oben in der Speisekarte anzeigen."
-                            : "Display an automatically generated bestsellers category at the top of the menu."}
-                        </span>
-                      </div>
-                      <input type="hidden" name="isPopularCategoryEnabled" value={String(isPopularCategoryEnabled)} />
-                      <Switch
-                        checked={isPopularCategoryEnabled}
-                        onCheckedChange={setIsPopularCategoryEnabled}
-                      />
-                    </div>
+                    <input type="hidden" name="isTippingEnabled" value={String(isTippingEnabled)} />
+                    <Switch
+                      label={locale.startsWith("de") ? "Freiwilliges Trinkgeld" : "Voluntary Tipping"}
+                      description={locale.startsWith("de")
+                        ? "Trinkgeld-Auswahl im Bezahlprozess anbieten (100 % für das Team, 0 % Zackisch-Gebühr)."
+                        : "Offer tipping at checkout (100% to venue, 0% Zackisch fee)."}
+                      value={isTippingEnabled}
+                      onChange={setIsTippingEnabled}
+                      labelPosition="start"
+                      labelSpacing="spread"
+                      width="100%"
+                    />
+
+                    <Divider />
+
+                    <input type="hidden" name="isPopularCategoryEnabled" value={String(isPopularCategoryEnabled)} />
+                    <Switch
+                      label={locale.startsWith("de") ? "Kategorie „Beliebteste“" : "Category 'Most Popular'"}
+                      description={locale.startsWith("de")
+                        ? "Automatisch generierte Bestseller-Kategorie ganz oben in der Speisekarte anzeigen."
+                        : "Display an automatically generated bestsellers category at the top of the menu."}
+                      value={isPopularCategoryEnabled}
+                      onChange={setIsPopularCategoryEnabled}
+                      labelPosition="start"
+                      labelSpacing="spread"
+                      width="100%"
+                    />
                   </div>
 
                   {businessState.error && (
-                    <p className="text-sm text-destructive font-medium">
-                      {businessState.error}
-                    </p>
+                    <Banner status="error" title={businessState.error} />
                   )}
 
                   <div className="pt-2 w-full mt-auto">
                     <Button
                       type="submit"
-                      variant="outline"
-                      disabled={isBusinessPending}
-                      className="w-full border-border"
-                    >
-                      {isBusinessPending ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
-                      {t("save")}
-                    </Button>
+                      variant="primary"
+                      size="lg"
+                      label={t("save")}
+                      isLoading={isBusinessPending}
+                      isDisabled={isBusinessPending}
+                      width="100%"
+                    />
                   </div>
                 </div>
 
                 {/* Stripe Settings Column / Panel */}
-                <div className="h-full flex flex-col justify-between gap-4 p-4 sm:p-5 border border-border rounded-xl sm:rounded-2xl bg-muted/20">
+                <div className="h-full flex flex-col justify-between gap-4 p-5 border border-border/70 rounded-xl bg-canvas">
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <h4 className="text-sm font-bold text-foreground">
-                          {t("stripeSettings")}{" "}
-                          <span className="text-destructive">*</span>
-                        </h4>
+                        <Heading level={4}>{t("stripeSettings")}</Heading>
                         {!business.stripeOnboardingComplete && (
                           business.stripeAccountId ? (
-                            <Badge variant="outline" className="font-semibold px-2.5 py-0.5 rounded-full text-foreground border-border text-xs">
-                              {t("stripeOnboardingIncomplete" as any)}
-                            </Badge>
+                            <Badge
+                              variant="warning"
+                              label={t("stripeOnboardingIncomplete" as any)}
+                            />
                           ) : (
-                            <Badge variant="secondary" className="font-semibold px-2.5 py-0.5 rounded-full text-xs">
-                              {t("stripeNotConnected")}
-                            </Badge>
+                            <Badge
+                              variant="neutral"
+                              label={t("stripeNotConnected")}
+                            />
                           )
                         )}
                       </div>
 
-                      <p className="text-sm text-muted-foreground">
+                      <Text color="secondary">
                         {business.stripeOnboardingComplete
                           ? t("stripeConnectedDesc" as any)
                           : t("stripeDescription" as any)}
-                      </p>
+                      </Text>
                     </div>
 
                     {business.stripeAccountId && (
-                      <div className="bg-background/80 p-2.5 rounded-lg border text-xs flex flex-col gap-1">
-                        <span className="font-medium text-foreground">{t("stripeAccountIdLabel" as any)}</span>
+                      <div className="bg-muted/40 p-3 rounded-lg border border-border text-xs flex flex-col gap-1">
+                        <Text weight="medium">{t("stripeAccountIdLabel" as any)}</Text>
                         <code className="font-mono text-muted-foreground select-all break-all text-[11px]">
                           {business.stripeAccountId}
                         </code>
@@ -625,8 +572,15 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                   <div className="flex flex-col gap-2 pt-2 mt-auto">
                     <Button
                       type="button"
-                      variant="outline"
-                      disabled={isStripeLoading}
+                      variant={business.stripeOnboardingComplete ? "secondary" : "primary"}
+                      label={business.stripeOnboardingComplete
+                        ? t("openStripeDashboard" as any)
+                        : business.stripeAccountId
+                        ? t("continueOnboarding" as any)
+                        : t("connectStripeWithIban" as any)}
+                      isLoading={isStripeLoading}
+                      isDisabled={isStripeLoading}
+                      width="100%"
                       onClick={async () => {
                         const newTab = window.open("about:blank", "_blank");
                         setIsStripeLoading(true);
@@ -663,15 +617,7 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                           setIsStripeLoading(false);
                         }
                       }}
-                      className="w-full border-border"
-                    >
-                      {isStripeLoading ? <SpinnerGap className="mr-2 animate-spin" weight="bold" /> : null}
-                      {business.stripeOnboardingComplete
-                        ? t("openStripeDashboard" as any)
-                        : business.stripeAccountId
-                        ? t("continueOnboarding" as any)
-                        : t("connectStripeWithIban" as any)}
-                    </Button>
+                    />
 
                     <StripeEmbeddedPortal
                       businessId={business.$id}
@@ -684,8 +630,8 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="text-xs text-muted-foreground hover:text-foreground h-9 rounded-full cursor-pointer"
-                        disabled={isStripeLoading}
+                        label={t("testOnboardingHelper" as any)}
+                        isDisabled={isStripeLoading}
                         onClick={async () => {
                           setIsStripeLoading(true);
                           try {
@@ -699,128 +645,116 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                             setIsStripeLoading(false);
                           }
                         }}
-                      >
-                        {t("testOnboardingHelper" as any)}
-                      </Button>
+                      />
                     )}
                   </div>
                 </div>
               </div>
             </form>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Self-Service Setup Wizard & B2B Monthly Fee Statements */}
         <SetupAndBillingPanel business={business} userEmail={user.email} userName={user.name} />
 
         {/* Danger Zone */}
-        <Card className="w-full flex flex-col border-destructive/50 border">
-            <CardHeader className="flex-row items-center justify-between pb-4">
-              <div className="flex items-center gap-2 min-w-0">
-                <h3 className="text-base sm:text-lg font-bold text-destructive leading-none">
+        <Card elevation="low" variant="default" padding={4} className="border-destructive/40">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between pb-3 border-b border-destructive/20">
+              <div className="flex items-center gap-2">
+                <Heading level={3} className="text-destructive">
                   {t("dangerZone" as any)}
-                </h3>
+                </Heading>
                 <InfoTooltip content={t("dangerZoneDescription" as any)} />
               </div>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-6 items-stretch">
-              <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-4 @min-[600px]:gap-6">
-                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-xl">
-                  <div className="flex flex-col gap-1">
-                    <h4 className="text-sm font-bold text-foreground">{t("logoutAllDevices")}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      {t("logoutAllDevicesDescription")}
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    disabled={isLoggingOutAll}
-                    onClick={async () => {
-                      setIsLoggingOutAll(true);
-                      try {
-                        await logoutAllDevicesAction();
-                        // Redirection is handled by the action
-                      } catch (error) {
-                        setIsLoggingOutAll(false);
-                      }
-                    }}
-                    className="w-full mt-auto border-border"
-                  >
-                    {isLoggingOutAll ? (
-                      <SpinnerGap className="mr-2 animate-spin" weight="bold" />
-                    ) : null}
-                    {t("logoutAllDevices")}
-                  </Button>
-                </div>
+            </div>
 
-                <div className="h-full flex flex-col justify-between gap-4 p-4 border border-border rounded-xl">
-                  <div className="flex flex-col gap-1">
-                    <h4 className="text-sm font-bold text-foreground">{t("changeEmailAddress" as any)}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      {t("changeEmailDescription" as any)}
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    disabled={isEmailChanging}
-                    onClick={async () => {
-                      setIsEmailChanging(true);
-                      try {
-                        const res = await requestEmailChangeAction();
-                        if (res?.error) {
-                          toast.error(res.error);
-                        } else {
-                          toast.success(t("changeEmailRequestSent" as any));
-                        }
-                      } finally {
-                        setIsEmailChanging(false);
-                      }
-                    }}
-                    className="w-full mt-auto border-border"
-                  >
-                    {isEmailChanging ? (
-                      <SpinnerGap className="mr-2 animate-spin" weight="bold" />
-                    ) : null}
-                    {t("changeEmailButton" as any)}
-                  </Button>
-                </div>
-              </div>
-
-              <div className="w-full flex flex-col justify-between gap-4 p-4 border border-border rounded-xl">
+            <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-6">
+              <div className="h-full flex flex-col justify-between gap-4 p-5 border border-border/70 rounded-xl bg-canvas">
                 <div className="flex flex-col gap-1">
-                  <h4 className="text-sm font-bold text-destructive">{t("deleteAccount")}</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {t("deleteAccountDescription")}
-                  </p>
+                  <Heading level={4}>{t("logoutAllDevices")}</Heading>
+                  <Text color="secondary">
+                    {t("logoutAllDevicesDescription")}
+                  </Text>
                 </div>
                 <Button
-                  variant="outline"
-                  disabled={isDeleting}
+                  variant="secondary"
+                  label={t("logoutAllDevices")}
+                  isLoading={isLoggingOutAll}
+                  isDisabled={isLoggingOutAll}
+                  width="100%"
                   onClick={async () => {
-                    setIsDeleting(true);
+                    setIsLoggingOutAll(true);
                     try {
-                      const res = await requestAccountDeletionAction();
+                      await logoutAllDevicesAction();
+                    } catch (error) {
+                      setIsLoggingOutAll(false);
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="h-full flex flex-col justify-between gap-4 p-5 border border-border/70 rounded-xl bg-canvas">
+                <div className="flex flex-col gap-1">
+                  <Heading level={4}>{t("changeEmailAddress" as any)}</Heading>
+                  <Text color="secondary">
+                    {t("changeEmailDescription" as any)}
+                  </Text>
+                </div>
+                <Button
+                  variant="secondary"
+                  label={t("changeEmailButton" as any)}
+                  isLoading={isEmailChanging}
+                  isDisabled={isEmailChanging}
+                  width="100%"
+                  onClick={async () => {
+                    setIsEmailChanging(true);
+                    try {
+                      const res = await requestEmailChangeAction();
                       if (res?.error) {
                         toast.error(res.error);
                       } else {
-                        toast.success(t("deletionRequestSent"));
+                        toast.success(t("changeEmailRequestSent" as any));
                       }
                     } finally {
-                      setIsDeleting(false);
+                      setIsEmailChanging(false);
                     }
                   }}
-                  className="w-full mt-auto border-border text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors"
-                >
-                  {isDeleting ? (
-                    <SpinnerGap className="mr-2 animate-spin" weight="bold" />
-                  ) : (
-                    <WarningCircle className="mr-2" weight="bold" />
-                  )}
-                  {t("requestDeletion")}
-                </Button>
+                />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+
+            <div className="w-full flex flex-col justify-between gap-4 p-5 border border-destructive/30 rounded-xl bg-canvas">
+              <div className="flex flex-col gap-1">
+                <Heading level={4} className="text-destructive">{t("deleteAccount")}</Heading>
+                <Text color="secondary">
+                  {t("deleteAccountDescription")}
+                </Text>
+              </div>
+              <Button
+                variant="destructive"
+                label={t("requestDeletion")}
+                isLoading={isDeleting}
+                isDisabled={isDeleting}
+                icon={<WarningCircle className="size-4" weight="bold" />}
+                width="100%"
+                onClick={async () => {
+                  setIsDeleting(true);
+                  try {
+                    const res = await requestAccountDeletionAction();
+                    if (res?.error) {
+                      toast.error(res.error);
+                    } else {
+                      toast.success(t("deletionRequestSent"));
+                    }
+                  } finally {
+                    setIsDeleting(false);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );

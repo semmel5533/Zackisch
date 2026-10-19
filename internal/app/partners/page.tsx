@@ -21,7 +21,7 @@ import { Divider } from "@astryxdesign/core/Divider";
 import { EmptyState } from "@astryxdesign/core/EmptyState";
 import { Spinner } from "@astryxdesign/core/Spinner";
 import { useAdmin } from "@/lib/admin-context";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 export default function PartnersPage() {
   const { currentRegion, sessionToken } = useAdmin();

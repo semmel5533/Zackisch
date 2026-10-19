@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { Card } from "@astryxdesign/core/Card";
+import { Button } from "@astryxdesign/core/Button";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
@@ -72,16 +72,15 @@ export function OrderTracker({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center">
-        <h1 className="text-xl font-bold mb-2">{t("error")}</h1>
-        <p className="text-muted-foreground mb-6">{t("trackingExpired")}</p>
+      <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center space-y-4">
+        <Heading level={1}>{t("error")}</Heading>
+        <Text type="supporting">{t("trackingExpired")}</Text>
         <Button
-          variant="outline"
-          className="h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
+          label={t("orderAgain")}
+          variant="primary"
+          size="lg"
           onClick={() => (window.location.href = t("pickupUrl", { businessId: business.$id }))}
-        >
-          {t("orderAgain")}
-        </Button>
+        />
       </div>
     );
   }
@@ -107,16 +106,14 @@ export function OrderTracker({
           showOrderingSubtitle={false}
         />
         <main className="flex-1 px-4 py-6 max-w-[500px] mx-auto w-full flex flex-col items-center justify-center">
-          <Card className="w-full p-6 text-center space-y-4 border-destructive/20 bg-destructive/5 rounded-xl">
-            <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
-              <X className="size-6" weight="bold" />
+          <Card padding={6} variant="muted" width="100%">
+            <div className="text-center space-y-4">
+              <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                <X className="size-6" weight="bold" />
+              </div>
+              <Heading level={2}>{t("orderCancelledTitle")}</Heading>
+              <Text type="supporting">{t("orderCancelledDesc")}</Text>
             </div>
-            <h2 className="text-xl font-bold text-foreground">
-              {t("orderCancelledTitle")}
-            </h2>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              {t("orderCancelledDesc")}
-            </p>
           </Card>
         </main>
         <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
@@ -126,7 +123,7 @@ export function OrderTracker({
               href={t("homepageUrl")}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 text-black font-medium hover:opacity-80 transition-opacity"
+              className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
             >
               zackisch.com
             </a>
@@ -143,10 +140,11 @@ export function OrderTracker({
       : order.status === "ready_for_pickup"
       ? 1
       : 0;
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
       <RestaurantHeroHeader
-          className="max-w-[500px] mx-auto px-4 pt-6"
+        className="max-w-[500px] mx-auto px-4 pt-6"
         business={business}
         type="takeaway"
         showOrderingSubtitle={false}
@@ -154,57 +152,45 @@ export function OrderTracker({
 
       <main className="flex-1 px-4 py-6 max-w-[500px] mx-auto w-full flex flex-col items-center space-y-6">
         <div className="text-center space-y-2">
-          <p className="text-sm font-medium text-muted-foreground">{t("yourOrderNumber")}</p>
-          <div className="text-7xl sm:text-8xl font-black tracking-wider text-primary font-inter tabular-nums">
+          <Text type="supporting" weight="medium">{t("yourOrderNumber")}</Text>
+          <div className="text-7xl sm:text-8xl font-black tracking-wider text-foreground font-inter tabular-nums">
             {order.orderNumber}
           </div>
         </div>
 
         {order.status === "in_progress" && (
-          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-            <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3">
+            <div className="size-12 rounded-full bg-foreground text-background flex items-center justify-center mx-auto">
               <CookingPot className="size-6" weight="bold" />
             </div>
-            <h2 className="text-xl font-bold text-foreground">
-              {t("inProgress")}
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {t("inProgressDesc" as any)}
-            </p>
+            <Heading level={2}>{t("inProgress")}</Heading>
+            <Text type="supporting">{t("inProgressDesc" as any)}</Text>
           </div>
         )}
 
         {order.status === "ready_for_pickup" && (
-          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-            <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3">
+            <div className="size-12 rounded-full bg-foreground text-background flex items-center justify-center mx-auto">
               <Check className="size-6" weight="bold" />
             </div>
-            <h2 className="text-xl font-bold text-foreground">
-              {t("orderReadyForPickup")}
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {t("orderReadyDesc")}
-            </p>
+            <Heading level={2}>{t("orderReadyForPickup")}</Heading>
+            <Text type="supporting">{t("orderReadyDesc")}</Text>
           </div>
         )}
 
         {order.status === "completed" && (
-          <div className="w-full bg-muted/30 border border-border rounded-xl p-6 text-center space-y-3 animate-in fade-in zoom-in-95 duration-300 motion-reduce:animate-none">
-            <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto">
+          <div className="w-full bg-muted/30 border border-border rounded-xl p-6 text-center space-y-3">
+            <div className="size-12 rounded-full bg-foreground text-background flex items-center justify-center mx-auto">
               <Check className="size-6" weight="bold" />
             </div>
-            <h2 className="text-xl font-bold text-foreground">
-              {t("orderPickedUp")}
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {t("orderPickedUpDesc")}
-            </p>
+            <Heading level={2}>{t("orderPickedUp")}</Heading>
+            <Text type="supporting">{t("orderPickedUpDesc")}</Text>
           </div>
         )}
 
-        <Card className="w-full p-5 sm:p-6">
-          <div>
-            <h2 className="font-semibold text-lg mb-6">{t("orderStatus")}</h2>
+        <Card padding={5} width="100%">
+          <div className="space-y-6">
+            <Heading level={3}>{t("orderStatus")}</Heading>
 
             <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted before:to-transparent">
               {statusSteps.map((step, index) => {
@@ -214,44 +200,44 @@ export function OrderTracker({
                 return (
                   <div
                     key={step.id}
-                    className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
+                    className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse"
                   >
                     <div
                       className={cn(
-                        "flex items-center justify-center w-10 h-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-inter tabular-nums transition-colors",
+                        "flex items-center justify-center size-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-inter tabular-nums transition-colors",
                         isDone
-                          ? "border-primary bg-primary text-primary-foreground"
+                          ? "border-foreground bg-foreground text-background"
                           : isCurrent
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-muted text-muted-foreground bg-background",
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border text-muted-foreground bg-background"
                       )}
                     >
                       {isDone ? (
-                        <Check className="w-5 h-5" weight="bold" />
+                        <Check className="size-5" weight="bold" />
                       ) : (
                         <span className="text-sm font-bold">{index + 1}</span>
                       )}
                     </div>
                     <div
                       className={cn(
-                        "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border transition-colors",
+                        "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-lg border transition-colors",
                         isCurrent || (order.status === "completed" && index === 2)
-                          ? "border-primary/50 bg-primary/5"
-                          : "bg-background",
+                          ? "border-border bg-muted/40 font-bold"
+                          : "bg-background"
                       )}
                     >
-                      <h3
+                      <span
                         className={cn(
                           "font-bold text-sm sm:text-base",
                           isCurrent || (order.status === "completed" && index === 2)
-                            ? "text-primary"
+                            ? "text-foreground"
                             : isDone
                             ? "text-foreground"
-                            : "text-muted-foreground",
+                            : "text-muted-foreground"
                         )}
                       >
                         {t(step.labelKey as any)}
-                      </h3>
+                      </span>
                     </div>
                   </div>
                 );
@@ -263,21 +249,20 @@ export function OrderTracker({
         {/* Download Order & Payment Confirmation Action */}
         <div className="w-full flex flex-col items-center gap-2">
           <Button
-            type="button"
-            variant="outline"
-            className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer gap-2"
+            label={t("downloadConfirmation")}
+            icon={<DownloadSimple className="size-4 shrink-0" weight="bold" />}
+            variant="secondary"
+            width="100%"
+            size="lg"
             onClick={() => downloadOrderConfirmation(order, business, locale)}
-          >
-            <DownloadSimple className="size-4 shrink-0" weight="bold" />
-            <span>{t("downloadConfirmation")}</span>
-          </Button>
+          />
           <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
             {t("confirmationDisclaimerPrefix")}
             <a
               href={t("homepageUrl")}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
+              className="text-foreground font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
             >
               zackisch.com
             </a>
@@ -287,14 +272,14 @@ export function OrderTracker({
 
         {order.status === "completed" && (
           <Button
-            variant="outline"
-            className="w-full h-11 rounded-full font-semibold border-border text-foreground hover:bg-muted cursor-pointer"
+            label={t("orderAgain")}
+            variant="secondary"
+            width="100%"
+            size="lg"
             onClick={() =>
               (window.location.href = t("pickupUrl", { businessId: business.$id }))
             }
-          >
-            {t("orderAgain")}
-          </Button>
+          />
         )}
       </main>
 
@@ -305,7 +290,7 @@ export function OrderTracker({
             href={t("homepageUrl")}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-4 text-black font-medium hover:opacity-80 transition-opacity"
+            className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
           >
             zackisch.com
           </a>

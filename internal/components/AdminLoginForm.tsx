@@ -28,7 +28,7 @@ import { StatusDot } from "@astryxdesign/core/StatusDot";
 import { Divider } from "@astryxdesign/core/Divider";
 import { useAdmin } from "@/lib/admin-context";
 import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -250,6 +250,7 @@ export function AdminLoginForm() {
                     <VStack gap={3}>
                       <TextInput
                         type="email"
+                        size="lg"
                         label={isDe ? "E-Mail-Adresse" : "Email Address"}
                         value={email}
                         onChange={(val) => setEmail(val)}
@@ -261,6 +262,7 @@ export function AdminLoginForm() {
 
                       <TextInput
                         type="password"
+                        size="lg"
                         label={isDe ? "Administrator-Passwort" : "Password"}
                         value={password}
                         onChange={(val) => setPassword(val)}
@@ -273,6 +275,7 @@ export function AdminLoginForm() {
                       <Button
                         type="submit"
                         variant="primary"
+                        size="lg"
                         width="100%"
                         isLoading={isSubmitting}
                         endContent={<Icon icon={ArrowRight} size="sm" />}
@@ -287,6 +290,7 @@ export function AdminLoginForm() {
                     <VStack gap={3}>
                       <TextInput
                         type="text"
+                        size="lg"
                         label={
                           isDe
                             ? "6-stelliger Bestätigungscode"
@@ -309,6 +313,7 @@ export function AdminLoginForm() {
                       <Button
                         type="submit"
                         variant="primary"
+                        size="lg"
                         width="100%"
                         isLoading={isSubmitting}
                         isDisabled={otp.length !== 6}

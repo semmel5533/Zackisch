@@ -17,6 +17,8 @@ import { Heading } from "@astryxdesign/core/Heading";
 import { Text } from "@astryxdesign/core/Text";
 import { Button } from "@astryxdesign/core/Button";
 import { TextInput } from "@astryxdesign/core/TextInput";
+import { InputGroup } from "@astryxdesign/core/InputGroup";
+import { Banner } from "@astryxdesign/core/Banner";
 import { CheckboxInput } from "@astryxdesign/core/CheckboxInput";
 import { Divider } from "@astryxdesign/core/Divider";
 import { Icon } from "@astryxdesign/core/Icon";
@@ -24,7 +26,7 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@/components/common/input-otp";
 import { useTranslation } from "@/lib/i18n";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import {
@@ -38,7 +40,7 @@ import {
   ArrowRight,
 } from "@phosphor-icons/react";
 import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 export default function SignUpPage() {
   const [state, formAction, isPending] = useActionState(signUpAction, {});
@@ -127,7 +129,7 @@ function OtpForm({ state }: { state: any }) {
   };
 
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img
@@ -150,20 +152,25 @@ function OtpForm({ state }: { state: any }) {
         <form onSubmit={handleVerifyOtp} noValidate>
           <VStack gap={4}>
             {isLockedOut && (
-              <Text weight="semibold" color="secondary">
-                {t("otpLockedOut")}
-              </Text>
+              <Banner status="error" title={t("otpLockedOut")} />
             )}
 
             {!isLockedOut &&
               attemptsRemaining !== null &&
               attemptsRemaining < 5 && (
-                <Text weight="semibold" color="secondary">
-                  {attemptsRemaining === 1
-                    ? t("otpRemainingAttemptsOne")
-                    : t("otpRemainingAttempts", { count: attemptsRemaining })}
-                </Text>
+                <Banner
+                  status="warning"
+                  title={
+                    attemptsRemaining === 1
+                      ? t("otpRemainingAttemptsOne")
+                      : t("otpRemainingAttempts", { count: attemptsRemaining })
+                  }
+                />
               )}
+
+            {otpError && (
+              <Banner status="error" title={otpError} />
+            )}
 
             <VStack gap={2} align="center">
               <InputOTP
@@ -210,12 +217,6 @@ function OtpForm({ state }: { state: any }) {
                 </InputOTPGroup>
               </InputOTP>
             </VStack>
-
-            {otpError && (
-              <Text id="sign-up-otp-error" weight="semibold">
-                {otpError}
-              </Text>
-            )}
 
             <OtpValidityTimer
               expiresAt={otpExpiresAt}
@@ -376,7 +377,7 @@ function SignUpForm({
   };
 
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img
@@ -413,11 +414,19 @@ function SignUpForm({
 
         <form onSubmit={handleSubmit} noValidate>
           <VStack gap={4}>
+            {state.error && (
+              <Banner
+                status="error"
+                title={t(state.error as any)}
+              />
+            )}
+
             {/* Step 1: Restaurant Name & Name */}
             {step === 1 && (
               <>
                 <TextInput
                   label={t("restaurantName")}
+                  size="lg"
                   value={restaurantName}
                   onChange={(val) => {
                     setRestaurantName(val);
@@ -425,18 +434,17 @@ function SignUpForm({
                   }}
                   placeholder={t("businessPlaceholder")}
                   isRequired
+                  width="100%"
+                  status={fieldErrors.restaurantName ? { type: "error", message: fieldErrors.restaurantName } : undefined}
                 />
-                {fieldErrors.restaurantName && (
-                  <Text color="secondary" weight="semibold">
-                    {fieldErrors.restaurantName}
-                  </Text>
-                )}
 
                 <TextInput
                   label={t("name")}
+                  size="lg"
                   value={name}
                   onChange={(val) => setName(val)}
                   placeholder={t("namePlaceholder")}
+                  width="100%"
                 />
               </>
             )}
@@ -447,6 +455,7 @@ function SignUpForm({
                 <TextInput
                   label={t("email")}
                   type="email"
+                  size="lg"
                   value={email}
                   onChange={(val) => {
                     setEmail(val);
@@ -454,19 +463,22 @@ function SignUpForm({
                   }}
                   placeholder={t("emailPlaceholder")}
                   isRequired
+                  width="100%"
+                  autoComplete="email"
+                  status={fieldErrors.email ? { type: "error", message: fieldErrors.email } : undefined}
                 />
-                {fieldErrors.email && (
-                  <Text color="secondary" weight="semibold">
-                    {fieldErrors.email}
-                  </Text>
-                )}
 
-                <VStack gap={1}>
-                  <Text weight="semibold">{t("password")}</Text>
-                  <HStack gap={2} vAlign="center">
+                <VStack gap={1} width="100%">
+                  <InputGroup
+                    label={t("password")}
+                    isRequired
+                    size="lg"
+                    status={fieldErrors.password ? { type: "error", message: fieldErrors.password } : undefined}
+                  >
                     <TextInput
                       label={t("password")}
                       isLabelHidden
+                      size="lg"
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(val) => {
@@ -474,22 +486,24 @@ function SignUpForm({
                         setFieldErrors((errs) => ({ ...errs, password: "" }));
                       }}
                       isRequired
+                      autoComplete="new-password"
                     />
                     <Button
                       label={
                         showPassword ? t("hidePassword") : t("showPassword")
                       }
+                      isIconOnly
                       variant="ghost"
-                      size="md"
+                      size="lg"
                       onClick={() => setShowPassword(!showPassword)}
                       icon={
                         <Icon
                           icon={showPassword ? EyeSlash : Eye}
-                          size="sm"
+                          size="md"
                         />
                       }
                     />
-                  </HStack>
+                  </InputGroup>
                 </VStack>
 
                 {/* Password Requirements */}
@@ -556,24 +570,23 @@ function SignUpForm({
                     </Text>
                   </HStack>
                 </VStack>
-
-                {fieldErrors.password && (
-                  <Text color="secondary" weight="semibold">
-                    {fieldErrors.password}
-                  </Text>
-                )}
               </>
             )}
 
             {/* Step 3: Confirm Password & Terms */}
             {step === 3 && (
               <>
-                <VStack gap={1}>
-                  <Text weight="semibold">{t("confirmPassword")}</Text>
-                  <HStack gap={2} vAlign="center">
+                <VStack gap={1} width="100%">
+                  <InputGroup
+                    label={t("confirmPassword")}
+                    isRequired
+                    size="lg"
+                    status={fieldErrors.confirmPassword ? { type: "error", message: fieldErrors.confirmPassword } : undefined}
+                  >
                     <TextInput
                       label={t("confirmPassword")}
                       isLabelHidden
+                      size="lg"
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(val) => {
@@ -584,31 +597,28 @@ function SignUpForm({
                         }));
                       }}
                       isRequired
+                      autoComplete="new-password"
                     />
                     <Button
                       label={
                         showConfirmPassword
-                          ? t("hidePassword")
+                           ? t("hidePassword")
                           : t("showPassword")
                       }
+                      isIconOnly
                       variant="ghost"
-                      size="md"
+                      size="lg"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
                       icon={
                         <Icon
                           icon={showConfirmPassword ? EyeSlash : Eye}
-                          size="sm"
+                          size="md"
                         />
                       }
                     />
-                  </HStack>
-                  {fieldErrors.confirmPassword && (
-                    <Text color="secondary" weight="semibold">
-                      {fieldErrors.confirmPassword}
-                    </Text>
-                  )}
+                  </InputGroup>
                 </VStack>
 
                 <VStack gap={1}>
@@ -643,18 +653,10 @@ function SignUpForm({
                     {t("termsAgreementSuffix")}
                   </Text>
                   {fieldErrors.terms && (
-                    <Text color="secondary" weight="semibold">
-                      {fieldErrors.terms}
-                    </Text>
+                    <Banner status="error" title={fieldErrors.terms} />
                   )}
                 </VStack>
               </>
-            )}
-
-            {state.error && (
-              <Text color="secondary" weight="semibold">
-                {t(state.error as any)}
-              </Text>
             )}
 
             {/* Navigation Buttons */}
@@ -663,10 +665,10 @@ function SignUpForm({
                 <Button
                   label={t("back")}
                   variant="secondary"
-                  size="md"
+                  size="lg"
                   onClick={handleBack}
                   isDisabled={isPending || isCheckingEmail}
-                  icon={<Icon icon={ArrowLeft} size="sm" />}
+                  icon={<Icon icon={ArrowLeft} size="md" />}
                 />
               )}
 
@@ -674,23 +676,23 @@ function SignUpForm({
                 <Button
                   label={t("next")}
                   variant="primary"
-                  size="md"
+                  size="lg"
                   type="button"
                   isLoading={isCheckingEmail}
                   isDisabled={isCheckingEmail}
                   onClick={handleNext}
-                  icon={<Icon icon={ArrowRight} size="sm" />}
+                  icon={<Icon icon={ArrowRight} size="md" />}
                 />
               ) : (
                 <Button
                   label={t("signUp")}
                   variant="primary"
-                  size="md"
+                  size="lg"
                   type="submit"
                   isLoading={isPending}
                   isDisabled={isPending}
                   onClick={(e: any) => handleSubmit(e)}
-                  icon={<Icon icon={UserPlus} size="sm" />}
+                  icon={<Icon icon={UserPlus} size="md" />}
                 />
               )}
             </HStack>

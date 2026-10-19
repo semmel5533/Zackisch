@@ -13,18 +13,12 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Button } from "@astryxdesign/core/Button";
+import { Switch } from "@astryxdesign/core/Switch";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Card } from "@astryxdesign/core/Card";
+import { Divider } from "@astryxdesign/core/Divider";
+import { Tooltip } from "@astryxdesign/core/Tooltip";
 import type { CustomizationStep, CustomizationOption } from "@/lib/types";
 
 import {
@@ -226,14 +220,12 @@ export function CustomizationBuilder({
       )}
 
       <Button
-        type="button"
-        variant="ghost"
+        variant="secondary"
         onClick={addStep}
-        className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-card hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-colors active:scale-[0.98] flex items-center justify-center cursor-pointer"
-      >
-        <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
-        <span>{t("addStep")}</span>
-      </Button>
+        label={t("addStep")}
+        icon={<Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />}
+        width="100%"
+      />
     </div>
   );
 }
@@ -375,7 +367,7 @@ function SortableStepCard({
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
               >
-                <Input
+                <input
                   autoFocus
                   value={step.name}
                   onChange={(e) => onUpdate({ name: e.target.value })}
@@ -387,25 +379,19 @@ function SortableStepCard({
                     if (e.key === "Escape") finishEditingName();
                   }}
                   maxLength={100}
-                  className="h-8 text-sm font-medium bg-background border-border text-foreground px-2.5 rounded-lg flex-1 min-w-0"
+                  className="h-8 text-sm font-medium bg-background border border-border text-foreground px-2.5 rounded-lg flex-1 min-w-0"
                   placeholder={t("stepName")}
                 />
                 <Button
-                  type="button"
                   variant="ghost"
-                  size="icon-sm"
+                  isIconOnly
+                  label={t("save")}
+                  icon={<Check className="w-4 h-4 text-foreground" weight="bold" />}
                   onClick={(e) => {
                     e.stopPropagation();
                     finishEditingName();
                   }}
-                  className="rounded-full text-foreground hover:text-foreground hover:bg-muted shrink-0 transition-colors"
-                  title={t("save")}
-                >
-                  <Check
-                    className="w-4 h-4 text-foreground"
-                    weight="bold"
-                  />
-                </Button>
+                />
               </div>
             ) : (
               <div className="flex items-center gap-1.5 min-w-0 group flex-1">
@@ -413,18 +399,15 @@ function SortableStepCard({
                   {step.name || t("stepName")}
                 </span>
                 <Button
-                  type="button"
                   variant="ghost"
-                  size="icon-sm"
-                  className="opacity-70 sm:opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground hover:bg-muted rounded-full shrink-0"
+                  isIconOnly
+                  label={t("edit")}
+                  icon={<PencilSimple className="size-4" />}
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditingName(true);
                   }}
-                  title={t("edit")}
-                >
-                  <PencilSimple className="size-4" />
-                </Button>
+                />
               </div>
             )}
           </div>
@@ -436,27 +419,24 @@ function SortableStepCard({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <Badge className="w-6 h-6 min-w-6 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-xs shrink-0 font-inter tabular-nums leading-none">
-              {step.options.length}
-            </Badge>
+            <Badge label={String(step.options.length)} variant="neutral" />
             <Switch
-              checked={step.available ?? true}
-              disabled={itemAvailable === false}
-              onCheckedChange={(checked) => onUpdate({ available: checked })}
-              className="shrink-0"
+              value={step.available ?? true}
+              isDisabled={itemAvailable === false}
+              onChange={(checked) => onUpdate({ available: checked })}
+              label=""
+              isLabelHidden
+              aria-label={t("available")}
             />
           </div>
 
           <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
+            variant="destructive"
+            isIconOnly
+            label={t("delete")}
+            icon={<Trash className="w-4 h-4" weight="bold" />}
             onClick={onRemove}
-            className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
-            title={t("delete")}
-          >
-            <Trash className="w-4 h-4" weight="bold" />
-          </Button>
+          />
         </div>
 
         {/* Mobile Controls (below sm: clean second row with full space) */}
@@ -465,29 +445,26 @@ function SortableStepCard({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-            <Badge className="w-5 h-5 min-w-5 aspect-square rounded-full p-0 flex items-center justify-center bg-primary text-secondary font-bold text-[11px] shrink-0 font-inter tabular-nums leading-none">
-              {step.options.length}
-            </Badge>
+            <Badge label={String(step.options.length)} variant="neutral" />
             <span>{step.options.length === 1 ? t("option") : t("options")}</span>
           </div>
 
           <div className="flex items-center gap-2.5">
             <Switch
-              checked={step.available ?? true}
-              disabled={itemAvailable === false}
-              onCheckedChange={(checked) => onUpdate({ available: checked })}
-              className="shrink-0"
+              value={step.available ?? true}
+              isDisabled={itemAvailable === false}
+              onChange={(checked) => onUpdate({ available: checked })}
+              label=""
+              isLabelHidden
+              aria-label={t("available")}
             />
             <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
+              variant="destructive"
+              isIconOnly
+              label={t("delete")}
+              icon={<Trash className="w-4 h-4" weight="bold" />}
               onClick={onRemove}
-              className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
-              title={t("delete")}
-            >
-              <Trash className="w-4 h-4" weight="bold" />
-            </Button>
+            />
           </div>
         </div>
       </div>
@@ -503,18 +480,13 @@ function SortableStepCard({
                 className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("minSelections")}
-                <TooltipProvider delay={200}>
-                  <Tooltip>
-                    <TooltipTrigger className="hidden sm:inline-flex items-center">
-                      <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      <p className="text-xs">{t("minSelectionsDesc" as any)}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip content={t("minSelectionsDesc" as any)}>
+                  <span className="hidden sm:inline-flex items-center">
+                    <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                  </span>
+                </Tooltip>
               </label>
-              <Input
+              <input
                 id={`step-min-${step.id}`}
                 type="number"
                 min={0}
@@ -538,7 +510,7 @@ function SortableStepCard({
                     onUpdate({ minSelections: 0 });
                   }
                 }}
-                className="w-full text-center bg-background border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
+                className="w-full text-center bg-background border border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -547,18 +519,13 @@ function SortableStepCard({
                 className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("maxSelections")}
-                <TooltipProvider delay={200}>
-                  <Tooltip>
-                    <TooltipTrigger className="hidden sm:inline-flex items-center">
-                      <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      <p className="text-xs">{t("maxSelectionsDesc" as any)}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip content={t("maxSelectionsDesc" as any)}>
+                  <span className="hidden sm:inline-flex items-center">
+                    <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                  </span>
+                </Tooltip>
               </label>
-              <Input
+              <input
                 id={`step-max-${step.id}`}
                 type="number"
                 min={1}
@@ -582,7 +549,7 @@ function SortableStepCard({
                     onUpdate({ maxSelections: 1 });
                   }
                 }}
-                className="w-full text-center bg-background border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
+                className="w-full text-center bg-background border border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -591,20 +558,13 @@ function SortableStepCard({
                 className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("includedInPrice")}
-                <TooltipProvider delay={200}>
-                  <Tooltip>
-                    <TooltipTrigger className="hidden sm:inline-flex items-center">
-                      <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      <p className="text-xs">
-                        {t("includedInPriceDesc" as any)}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip content={t("includedInPriceDesc" as any)}>
+                  <span className="hidden sm:inline-flex items-center">
+                    <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                  </span>
+                </Tooltip>
               </label>
-              <Input
+              <input
                 id={`step-inc-${step.id}`}
                 type="number"
                 min={0}
@@ -623,12 +583,12 @@ function SortableStepCard({
                     onUpdate({ includedCount: 0 });
                   }
                 }}
-                className="w-full text-center bg-background border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
+                className="w-full text-center bg-background border border-border text-foreground placeholder:text-muted-foreground h-9 sm:h-8 font-inter tabular-nums rounded-lg font-medium"
               />
             </div>
           </div>
 
-          <Separator />
+          <Divider />
 
           {/* Options */}
           <div className="flex flex-col gap-2.5">
@@ -687,14 +647,12 @@ function SortableStepCard({
               </DndContext>
             )}
             <Button
-              type="button"
-              variant="ghost"
-              className="w-full h-11 rounded-full border border-dashed border-border hover:border-foreground/30 bg-background hover:bg-muted/40 text-foreground font-semibold text-sm gap-2 transition-colors active:scale-[0.98] flex items-center justify-center cursor-pointer"
+              variant="secondary"
+              label={t("addOption")}
+              icon={<Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />}
               onClick={onAddOption}
-            >
-              <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
-              <span>{t("addOption")}</span>
-            </Button>
+              width="100%"
+            />
           </div>
         </div>
       )}
@@ -768,7 +726,7 @@ function OptionRow({
             weight="bold"
           />
         </div>
-        <Input
+        <input
           autoFocus={autoFocusName}
           value={option.name}
           onChange={(e) => onUpdate({ name: e.target.value })}
@@ -783,7 +741,7 @@ function OptionRow({
           onMouseDown={(e) => e.stopPropagation()}
           placeholder={t("optionName")}
           maxLength={100}
-          className="h-9 sm:h-8 text-sm bg-background border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground rounded-lg flex-1 min-w-0"
+          className="h-9 sm:h-8 text-sm bg-background border border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground rounded-lg flex-1 min-w-0 px-2.5"
         />
       </div>
 
@@ -794,7 +752,7 @@ function OptionRow({
           <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-semibold select-none pointer-events-none">
             +
           </span>
-          <Input
+          <input
             type="text"
             inputMode="decimal"
             value={priceInput}
@@ -840,7 +798,7 @@ function OptionRow({
             }}
             onKeyDown={(e) => e.stopPropagation()}
             placeholder="0.00"
-            className="h-9 sm:h-8 text-sm pl-6 pr-6 bg-background border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground w-full font-inter tabular-nums rounded-lg text-right sm:text-left"
+            className="h-9 sm:h-8 text-sm pl-6 pr-6 bg-background border border-border hover:border-foreground/30 focus-visible:border-foreground text-foreground placeholder:text-muted-foreground w-full font-inter tabular-nums rounded-lg text-right sm:text-left"
           />
           <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium select-none pointer-events-none">
             €
@@ -849,23 +807,22 @@ function OptionRow({
 
         {/* Switch */}
         <Switch
-          checked={option.available ?? true}
-          disabled={disabled}
-          onCheckedChange={(checked) => onUpdate({ available: checked })}
-          className="shrink-0"
+          value={option.available ?? true}
+          isDisabled={disabled}
+          onChange={(checked) => onUpdate({ available: checked })}
+          label=""
+          isLabelHidden
+          aria-label={t("available")}
         />
 
         {/* Delete Icon Button */}
         <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
+          variant="destructive"
+          isIconOnly
+          label={t("delete")}
+          icon={<Trash className="w-4 h-4" weight="bold" />}
           onClick={onRemove}
-          className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
-          title={t("delete")}
-        >
-          <Trash className="w-4 h-4" weight="bold" />
-        </Button>
+        />
       </div>
     </div>
   );

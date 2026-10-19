@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import React from "react";
+import { usePathname } from "next/navigation";
 import {
   ChartBar,
   ClipboardText,
@@ -18,7 +17,6 @@ import {
   SideNavSection,
   SideNavItem,
 } from "@astryxdesign/core/SideNav";
-import { TopNav } from "@astryxdesign/core/TopNav";
 import { Layout, LayoutContent } from "@astryxdesign/core/Layout";
 import { HStack } from "@astryxdesign/core/HStack";
 import { VStack } from "@astryxdesign/core/VStack";
@@ -47,7 +45,6 @@ export function DashboardShell({
   children,
 }: DashboardShellProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const { t } = useTranslation();
 
   const liveOrders = useQuery(
@@ -97,52 +94,6 @@ export function DashboardShell({
     <AppShell
       height="fill"
       variant="elevated"
-      topNav={
-        <TopNav
-          label="Zackisch Merchant Header"
-          startContent={
-            <HStack gap={3} vAlign="center">
-              <Heading level={4}>{currentTitle}</Heading>
-              {business?.name && (
-                <Badge
-                  label={business.name}
-                  variant="neutral"
-                />
-              )}
-              {activeOrdersCount > 0 && (
-                <Badge
-                  label={`${activeOrdersCount} aktiv`}
-                  variant="info"
-                />
-              )}
-            </HStack>
-          }
-          endContent={
-            <HStack gap={2} vAlign="center">
-              {business?.$id && (
-                <Button
-                  label="Live-Terminal"
-                  variant="secondary"
-                  size="sm"
-                  href={`/staff/${business.$id}`}
-                  target="_blank"
-                  endContent={<Icon icon="externalLink" size="xsm" />}
-                />
-              )}
-              <RegionLanguageSwitcher />
-              <form action={signOutAction}>
-                <Button
-                  label={t("signOut")}
-                  variant="ghost"
-                  size="sm"
-                  type="submit"
-                  icon={<Icon icon={SignOut} size="sm" />}
-                />
-              </form>
-            </HStack>
-          }
-        />
-      }
       sideNav={
         <SideNav
           collapsible
@@ -158,6 +109,37 @@ export function DashboardShell({
               heading={business?.name || "Zackisch"}
               subheading={business?.legalName || "Gastronomie"}
             />
+          }
+          footer={
+            <VStack gap={2} padding={3} width="100%">
+              {business?.$id && (
+                <Button
+                  label="Live-Terminal"
+                  variant="secondary"
+                  size="lg"
+                  href={`/staff/${business.$id}`}
+                  target="_blank"
+                  endContent={<Icon icon="externalLink" size="sm" />}
+                  width="100%"
+                />
+              )}
+              <RegionLanguageSwitcher variant="secondary" size="lg" isFullWidth />
+              <form action={signOutAction} style={{ width: "100%" }}>
+                <Button
+                  label={t("signOut")}
+                  variant="ghost"
+                  size="lg"
+                  type="submit"
+                  icon={<Icon icon={SignOut} size="sm" />}
+                  width="100%"
+                />
+              </form>
+              {user?.email && (
+                <Text color="secondary" type="supporting" justify="center">
+                  {user.email}
+                </Text>
+              )}
+            </VStack>
           }
         >
           <SideNavSection title="Navigation">
@@ -188,6 +170,23 @@ export function DashboardShell({
       <Layout>
         <LayoutContent>
           <VStack gap={6} width="100%">
+            <HStack justify="between" vAlign="center" width="100%">
+              <HStack gap={3} vAlign="center">
+                <Heading level={3}>{currentTitle}</Heading>
+                {business?.name && (
+                  <Badge
+                    label={business.name}
+                    variant="neutral"
+                  />
+                )}
+                {activeOrdersCount > 0 && (
+                  <Badge
+                    label={`${activeOrdersCount} aktiv`}
+                    variant="info"
+                  />
+                )}
+              </HStack>
+            </HStack>
             {children}
           </VStack>
         </LayoutContent>

@@ -18,6 +18,8 @@ import { Heading } from "@astryxdesign/core/Heading";
 import { Text } from "@astryxdesign/core/Text";
 import { Button } from "@astryxdesign/core/Button";
 import { TextInput } from "@astryxdesign/core/TextInput";
+import { InputGroup } from "@astryxdesign/core/InputGroup";
+import { Banner } from "@astryxdesign/core/Banner";
 import { Divider } from "@astryxdesign/core/Divider";
 import { Spinner } from "@astryxdesign/core/Spinner";
 import { Icon } from "@astryxdesign/core/Icon";
@@ -29,7 +31,7 @@ import {
   X,
   ArrowLeft,
 } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "@/components/common/toast";
 
 function ResetPasswordConfirmForm() {
   const searchParams = useSearchParams();
@@ -112,11 +114,19 @@ function ResetPasswordConfirmForm() {
 
       <form onSubmit={handleSubmit} noValidate>
         <VStack gap={4}>
-          <VStack gap={1}>
-            <HStack justify="between" vAlign="center">
-              <Text weight="semibold">{t("newPasswordLabel")}</Text>
-            </HStack>
-            <HStack gap={2} vAlign="center">
+          {state.error && (
+            <Banner
+              status="error"
+              title={t(state.error as any)}
+            />
+          )}
+
+          <VStack gap={1} width="100%">
+            <InputGroup
+              label={t("newPasswordLabel")}
+              isRequired
+              status={fieldErrors.password ? { type: "error", message: fieldErrors.password } : undefined}
+            >
               <TextInput
                 label={t("newPasswordLabel")}
                 isLabelHidden
@@ -127,9 +137,11 @@ function ResetPasswordConfirmForm() {
                   setFieldErrors((errs) => ({ ...errs, password: "" }));
                 }}
                 isRequired
+                autoComplete="new-password"
               />
               <Button
                 label={showPassword ? t("hidePassword") : t("showPassword")}
+                isIconOnly
                 variant="ghost"
                 size="md"
                 onClick={() => setShowPassword(!showPassword)}
@@ -140,7 +152,7 @@ function ResetPasswordConfirmForm() {
                   />
                 }
               />
-            </HStack>
+            </InputGroup>
 
             <VStack gap={1}>
               <HStack gap={1} vAlign="center">
@@ -186,17 +198,14 @@ function ResetPasswordConfirmForm() {
                 <Text color="secondary">{t("passwordReqNumberOrSpecial" as any)}</Text>
               </HStack>
             </VStack>
-
-            {fieldErrors.password && (
-              <Text color="secondary" weight="semibold">
-                {fieldErrors.password}
-              </Text>
-            )}
           </VStack>
 
-          <VStack gap={1}>
-            <Text weight="semibold">{t("confirmPassword")}</Text>
-            <HStack gap={2} vAlign="center">
+          <VStack gap={1} width="100%">
+            <InputGroup
+              label={t("confirmPassword")}
+              isRequired
+              status={fieldErrors.confirmPassword ? { type: "error", message: fieldErrors.confirmPassword } : undefined}
+            >
               <TextInput
                 label={t("confirmPassword")}
                 isLabelHidden
@@ -207,11 +216,13 @@ function ResetPasswordConfirmForm() {
                   setFieldErrors((errs) => ({ ...errs, confirmPassword: "" }));
                 }}
                 isRequired
+                autoComplete="new-password"
               />
               <Button
                 label={
                   showConfirmPassword ? t("hidePassword") : t("showPassword")
                 }
+                isIconOnly
                 variant="ghost"
                 size="md"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -222,19 +233,8 @@ function ResetPasswordConfirmForm() {
                   />
                 }
               />
-            </HStack>
-            {fieldErrors.confirmPassword && (
-              <Text color="secondary" weight="semibold">
-                {fieldErrors.confirmPassword}
-              </Text>
-            )}
+            </InputGroup>
           </VStack>
-
-          {state.error && (
-            <Text color="secondary" weight="semibold">
-              {t(state.error as any)}
-            </Text>
-          )}
 
           <Button
             label={t("changePassword")}
@@ -300,7 +300,7 @@ function SuccessState({ locale, t }: { locale: string; t: any }) {
 
 export default function ResetPasswordConfirmPage() {
   return (
-    <Card variant="default" padding={6}>
+    <Card variant="default" padding={6} elevation="med" width="100%">
       <VStack gap={6}>
         <HStack justify="between" vAlign="center">
           <img
