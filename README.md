@@ -59,9 +59,9 @@ Jede Anwendung führt eigene `MAJOR.MINOR.PATCH`-Versionsnummern in Manifest und
 
 Die fünf `README.md` sind auf Deutsch und richten sich an Menschen, die Zackisch betreiben oder entwickeln. Die fünf `AGENTS.md` sowie sämtliche vertiefenden Dokumente unter `docs/` sind auf Englisch. Aktuelle, überprüfte Implementierungen sind maßgeblich: Dokumentation enthält keine veralteten Projektbezeichnungen oder Änderungsgeschichten und keine unbewiesenen Betriebsbehauptungen.
 
-- [Produkt- und Markeninhalte](docs/brand-content.md)
-- [Designsystem](docs/design-system.md) und [UX/Barrierefreiheit](docs/ux-and-accessibility.md)
-- [Architektur](docs/architecture.md), [Sicherheit](docs/security.md) und [Backups & Recovery](docs/backups-and-recovery.md)
+- [Produktfakten und Textregeln](docs/product-facts-and-copy.md) und [Produkt-Anforderungen](docs/product-requirements.md)
+- [Designsystem-Status](design-system/README.md) und [UX/Barrierefreiheit](docs/ux-and-accessibility.md)
+- [Architektur](docs/architecture.md), [Routen-Inventar](docs/functional-route-inventory.md), [Sicherheit](docs/security.md) und [Backups & Recovery](docs/backups-and-recovery.md)
 - [QR-Codes und Druck](docs/qr-and-print.md)
 - [Hilfe-Center](docs/support-content.md)
 - [Regionen, SEO und Recht](docs/localization-and-compliance.md)
@@ -70,7 +70,8 @@ Die fünf `README.md` sind auf Deutsch und richten sich an Menschen, die Zackisc
 - [Deutscher Rechtsrahmen](docs/germany-legal-and-regulatory.md), [Stripe Connect und Zahlungsflüsse](docs/payments-and-stripe.md)
 - [Steuern, E-Rechnungen und Kassenführung](docs/tax-invoicing-and-fiscalization.md), [DSGVO und Datenlebenszyklus](docs/privacy-and-data-governance.md)
 - [Legal Pages, Verträge und Einwilligungen](docs/legal-pages-consents-and-contracts.md)
-- [Quellen und technische Entscheidungen](docs/research-and-decisions.md)
+- [Quellen und technische Entscheidungen](docs/product-decisions.md)
+- [Design-Cleanup-Protokoll](docs/design-reset-deletion-ledger.md)
 
 ## Zahlungsmodell und Kassenabgleich
 

@@ -1,35 +1,32 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Plus, Minus, ShoppingCart, DownloadSimple, Check, ArrowRight } from "@phosphor-icons/react";
+import { useState, useEffect } from "react";
+import { Plus, Minus, DownloadSimple, Check, ArrowRight } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { MAX_CART_ITEM_QUANTITY, useCartStore } from "@/store/cart-store";
-import { Button } from "@/components/ui/button";
+import { Button } from "@zackisch/design-system";
 import { CartSheet } from "@/components/guest/cart-sheet";
 import { Price } from "@/components/ui/price";
 import { OrderTracker } from "@/components/guest/order-tracker";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header";
 import Image from "next/image";
 import { CustomizationModal } from "@/components/guest/customization-modal";
+import { cartVariantId } from "@/lib/cart-variant";
+import { DIETARY_LABEL_KEYS } from "@/lib/dietary-labels";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
-import type { Business, MenuCategory, MenuItem, Order } from "@/lib/types";
+import type { PublicRestaurant, MenuCategory, MenuItem, Order, CartItem } from "@/lib/types";
 
 interface GuestFrontendProps {
-  business: Business;
+  business: PublicRestaurant;
   categories: MenuCategory[];
   items: MenuItem[];
   type: "dine-in" | "takeaway";
   tableNumber?: string;
   orderId?: string;
   initialOrder?: Order | null;
-  initialActiveTab?: "menu" | "cart";
-  initialCheckoutOpen?: boolean;
-  initialSendEmailConfirmation?: boolean;
-  initialEmail?: string;
-  initialDineInSuccess?: { orderNumber: string; order?: Order | null } | null;
 }
 
 function GuestOrderSuccess({
@@ -41,7 +38,7 @@ function GuestOrderSuccess({
 }: {
   orderNumber: string;
   order?: Order | null;
-  business: Business;
+  business: PublicRestaurant;
   tableNumber?: string;
   setDineInSuccess: (val: null) => void;
 }) {
@@ -50,8 +47,7 @@ function GuestOrderSuccess({
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border px-4 sm:px-8 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-lg tracking-tight text-foreground">zackisch</span>
-          <span className="text-xs text-muted-foreground font-normal"> · {t("orderingBrandSubtitle")}</span>
+          <span className="font-semibold text-lg tracking-tight text-foreground">{business.name}</span>
         </div>
         <span className="text-xs font-medium text-muted-foreground">
           {tableNumber ? `${t("tableLabel")} ${tableNumber}` : t("pickupLabel")} · {locale.toUpperCase()}
@@ -160,11 +156,11 @@ function FloatingCartBanner({
       className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-center p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden pointer-events-none"
     >
       <div className="w-full max-w-[500px] pointer-events-auto">
-        <button
+        <Button variant="ghost"
           type="button"
           id="floating-cart-banner"
           onClick={onOpenCart}
-          className="w-full min-h-[48px] rounded-full bg-foreground text-background px-4 py-2 flex items-center justify-between font-semibold shadow-lg hover:bg-foreground/90 transition-all cursor-pointer select-none active:scale-[0.98]"
+          className="w-full min-h-[48px] rounded-lg bg-foreground text-background px-4 py-2 flex items-center justify-between font-semibold hover:bg-foreground/90 transition-colors cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
         >
           <div className="flex items-center gap-2.5">
             <span className="size-6 rounded-full bg-background text-foreground text-xs flex items-center justify-center font-bold tabular-nums">
@@ -177,7 +173,7 @@ function FloatingCartBanner({
             <Price cents={total()} className="text-sm font-bold text-background" />
             <ArrowRight className="size-4 shrink-0" weight="bold" aria-hidden="true" />
           </div>
-        </button>
+        </Button>
       </div>
     </aside>
   );
@@ -191,26 +187,19 @@ export function GuestFrontend({
   tableNumber,
   orderId,
   initialOrder,
-  initialActiveTab = "menu",
-  initialCheckoutOpen = false,
-  initialSendEmailConfirmation = false,
-  initialEmail = "",
-  initialDineInSuccess = null,
 }: GuestFrontendProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
   const { items: cartItems, updateQuantity, addItem, total } = useCartStore();
 
-  const [activeTab, setActiveTab] = useState<"menu" | "cart">(initialActiveTab);
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [checkoutOpen, setCheckoutOpen] = useState(initialCheckoutOpen);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [customizationItem, setCustomizationItem] = useState<MenuItem | null>(null);
 
   const [dineInSuccess, setDineInSuccess] = useState<{
     orderNumber: string;
     order?: Order | null;
   } | null>(() => {
-    if (initialDineInSuccess) return initialDineInSuccess;
     if (initialOrder && type === "dine-in") {
       return {
         orderNumber: initialOrder.orderNumber,
@@ -220,13 +209,11 @@ export function GuestFrontend({
     return null;
   });
 
-  const isClickScrolling = useRef(false);
-  const clickScrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const businessName = business.name;
     if (orderId && type === "takeaway") {
-      document.title = `Zackisch: ${t("orderStatus")} - ${businessName}`;
+      document.title = `${t("orderStatus")} – ${businessName}`;
       return;
     }
     const prefix =
@@ -235,19 +222,14 @@ export function GuestFrontend({
         : tableNumber
         ? t("titleToStay", { table: tableNumber })
         : t("titleToStayNoTable");
-    document.title = `Zackisch: ${prefix} ${businessName}`;
+    document.title = `${prefix} – ${businessName}`;
   }, [locale, business.name, type, tableNumber, orderId, t]);
 
   const scrollToCategory = (categoryId: string) => {
     setActiveCategory(categoryId);
-    isClickScrolling.current = true;
-    if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
-    clickScrollTimeout.current = setTimeout(() => {
-      isClickScrolling.current = false;
-    }, 800);
-
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
     if (categoryId === "all") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior });
       return;
     }
 
@@ -255,7 +237,7 @@ export function GuestFrontend({
     if (el) {
       const offset = 75;
       const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
-      window.scrollTo({ top: y, behavior: "smooth" });
+      window.scrollTo({ top: y, behavior });
     }
   };
 
@@ -267,10 +249,8 @@ export function GuestFrontend({
     }
   };
 
-  const handleCustomizationAdd = (item: MenuItem, selections: any[], totalPrice: number) => {
-    const confString = selections.map((s: any) => `${s.stepName}:${s.optionName}`).join("|");
-    const hash = btoa(encodeURIComponent(confString)).slice(0, 10);
-    const cartItemId = `${item.$id}-${hash}`;
+  const handleCustomizationAdd = (item: MenuItem, selections: NonNullable<CartItem["customizations"]>, totalPrice: number) => {
+    const cartItemId = cartVariantId(item.$id, selections);
     addItem({ id: cartItemId, menuItemId: item.$id, name: item.name, price: totalPrice, customizations: selections });
   };
 
@@ -299,76 +279,50 @@ export function GuestFrontend({
     );
   }
 
-  const contextLabel =
-    type === "dine-in" && tableNumber
-      ? `${t("tableLabel")} ${tableNumber}`
-      : t("pickupLabel");
-
   return (
     <div className="guest-page min-h-screen bg-background flex flex-col">
-      {/* Top Bar (guest.html) */}
-      <header className="guest-top sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-lg tracking-tight text-foreground">zackisch</span>
-          <span className="text-xs text-muted-foreground font-normal"> · {t("orderingBrandSubtitle")}</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-muted-foreground">
-            {contextLabel} · {locale.toUpperCase()}
-          </span>
-          <LanguageSwitcher variant="outline" className="h-8 text-xs px-2.5 rounded-full" />
-        </div>
-      </header>
-
-      {/* Main Two-Column Layout (guest.html) */}
+      {/* Menu and desktop cart */}
       <main className="guest-layout max-w-[1120px] mx-auto w-full px-4 sm:px-6 py-6 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 flex-1 pb-24 lg:pb-12">
         {/* Left Section: Menu */}
         <section className="lg:col-span-7 xl:col-span-8 space-y-6">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {contextLabel} · {business.name}
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mt-2">
-              {t("guestHeadline")}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-2 max-w-xl leading-relaxed">
-              {t("guestSubtitle")}
-            </p>
-          </div>
+          <RestaurantHeroHeader business={business} type={type} tableNumber={tableNumber} />
 
-          {/* Category Tabline (guest.html .tabline) */}
+          {/* Category navigation */}
           <div className="tabline border-b border-border flex items-center gap-6 overflow-x-auto no-scrollbar pt-2">
-            <button
+            <Button variant="ghost"
               type="button"
               onClick={() => scrollToCategory("all")}
+              aria-pressed={activeCategory === "all"}
               className={cn(
-                "pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer",
+                "min-h-11 pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
                 activeCategory === "all"
                   ? "font-bold text-foreground border-b-2 border-foreground -mb-px"
                   : "font-medium text-muted-foreground hover:text-foreground"
               )}
             >
-              {locale === "de" ? "Alle" : "All"}
-            </button>
+              {t("allCategories")}
+            </Button>
             {categories.map((c) => (
-              <button
+              <Button variant="ghost"
                 key={c.$id}
                 type="button"
                 onClick={() => scrollToCategory(c.$id)}
+                aria-pressed={activeCategory === c.$id}
                 className={cn(
-                  "pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer",
+                  "min-h-11 pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
                   activeCategory === c.$id
                     ? "font-bold text-foreground border-b-2 border-foreground -mb-px"
                     : "font-medium text-muted-foreground hover:text-foreground"
                 )}
               >
                 {c.name}
-              </button>
+              </Button>
             ))}
           </div>
 
-          {/* Categories & Food Rows (guest.html .food-row) */}
+          {/* Menu categories */}
           <div className="space-y-10 pt-2">
+            {items.length === 0 && <p className="py-6 text-muted-foreground">{t("menuEmpty")}</p>}
             {categories.map((category) => {
               const categoryItems = items.filter((i) => i.categoryId === category.$id);
               if (categoryItems.length === 0) return null;
@@ -392,8 +346,13 @@ export function GuestFrontend({
                             <h3 className="font-semibold text-base sm:text-lg text-foreground leading-snug">
                               {item.name}
                             </h3>
+                            {Boolean(item.dietaryLabels?.length) && (
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                {item.dietaryLabels!.map(label => t(DIETARY_LABEL_KEYS[label])).join(" · ")}
+                              </p>
+                            )}
                             {item.description && (
-                              <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-md line-clamp-2">
+                              <p className="text-sm text-muted-foreground mt-1 max-w-md leading-relaxed">
                                 {item.description}
                               </p>
                             )}
@@ -406,24 +365,24 @@ export function GuestFrontend({
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex flex-col items-end gap-3 shrink-0">
                             {item.imageId && (
-                              <div className="food-thumb relative w-16 h-14 sm:w-20 sm:h-18 rounded-lg overflow-hidden bg-muted border border-border shrink-0 hidden xs:block">
+                              <div className="food-thumb relative size-24 sm:size-32 rounded-lg overflow-hidden bg-muted shrink-0">
                                 <Image
                                   src={getImagePreviewUrl(item.imageId)}
-                                  alt={item.name}
+                                  alt=""
                                   fill
                                   className="object-cover"
-                                  sizes="80px"
+                                  sizes="(min-width: 640px) 128px, 96px"
                                 />
                               </div>
                             )}
 
                             {totalQuantity > 0 ? (
-                              <div className="flex items-center bg-muted/80 p-0.5 h-9 rounded-full border border-border shrink-0">
-                                <button
+                              <div className="flex items-center bg-muted/80 p-0.5 min-h-11 rounded-lg border border-border shrink-0">
+                                <Button variant="ghost" size="icon"
                                   type="button"
-                                  className="size-8 rounded-full flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                                  className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                                   onClick={() => {
                                     const cartEntry = cartItems.find((ci) => ci.menuItemId === item.$id);
                                     if (cartEntry) updateQuantity(cartEntry.id, cartEntry.quantity - 1);
@@ -431,27 +390,27 @@ export function GuestFrontend({
                                   aria-label={`${t("decreaseQuantity")}: ${item.name}`}
                                 >
                                   <Minus weight="bold" className="size-3.5" />
-                                </button>
+                                </Button>
                                 <span className="text-xs sm:text-sm font-bold tabular-nums px-2 min-w-[24px] text-center font-inter">
                                   {totalQuantity}
                                 </span>
-                                <button
+                                <Button variant="ghost" size="icon"
                                   type="button"
-                                  className="size-8 rounded-full flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                                  className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                                   onClick={() => handleAddClick(item)}
                                   aria-label={`${t("increaseQuantity")}: ${item.name}`}
                                 >
                                   <Plus weight="bold" className="size-3.5" />
-                                </button>
+                                </Button>
                               </div>
                             ) : (
-                              <button
+                              <Button variant="ghost"
                                 type="button"
                                 onClick={() => handleAddClick(item)}
-                                className="min-h-[36px] px-4 rounded-full border border-border bg-white text-foreground hover:bg-muted text-xs sm:text-sm font-semibold transition-colors cursor-pointer shrink-0 shadow-2xs"
+                                className="min-h-11 px-4 rounded-lg border border-border bg-white text-foreground hover:bg-muted text-xs sm:text-sm font-semibold transition-colors cursor-pointer shrink-0 shadow-2xs"
                               >
                                 {t("addToCart")}
-                              </button>
+                              </Button>
                             )}
                           </div>
                         </div>
@@ -464,13 +423,10 @@ export function GuestFrontend({
           </div>
         </section>
 
-        {/* Right Section: Desktop Sticky Cart Pane (guest.html .pane.cart) */}
+        {/* Desktop cart */}
         <aside className="hidden lg:block lg:col-span-5 xl:col-span-4">
-          <div className="pane cart sticky top-20 bg-card border border-border rounded-xl p-6 shadow-xs space-y-5">
+          <div className="sticky top-6 border-l border-border pl-6 space-y-5">
             <div>
-              <p className="label text-[11px] font-semibold uppercase tracking-[.08em] text-muted-foreground">
-                {t("yourOrder")}
-              </p>
               <h2 className="text-xl font-bold text-foreground mt-0.5">
                 {t("cart")}
               </h2>
@@ -500,22 +456,25 @@ export function GuestFrontend({
                       </div>
                       <div className="text-right shrink-0 flex flex-col items-end gap-1">
                         <Price cents={item.price * item.quantity} className="font-bold text-foreground" />
-                        <div className="flex items-center bg-muted/60 p-0.5 h-6 rounded-full border border-border/60">
-                          <button
+                        <div className="flex items-center bg-muted/60 p-0.5 min-h-11 rounded-lg border border-border/60">
+                          <Button variant="ghost" size="icon"
                             type="button"
-                            className="size-5 rounded-full flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                            className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                            aria-label={`${t("decreaseQuantity")}: ${item.name}`}
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           >
-                            <Minus weight="bold" className="size-2.5" />
-                          </button>
+                            <Minus weight="bold" className="size-4" />
+                          </Button>
                           <span className="text-[11px] font-bold tabular-nums px-1.5 font-inter">{item.quantity}</span>
-                          <button
+                          <Button variant="ghost" size="icon"
                             type="button"
-                            className="size-5 rounded-full flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                            className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                            aria-label={`${t("increaseQuantity")}: ${item.name}`}
+                            disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           >
-                            <Plus weight="bold" className="size-2.5" />
-                          </button>
+                            <Plus weight="bold" className="size-4" />
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -537,17 +496,15 @@ export function GuestFrontend({
                   <Price cents={total()} className="text-xl font-bold text-foreground" />
                 </div>
 
-                <button
+                <Button variant="ghost"
                   type="button"
                   onClick={() => setCheckoutOpen(true)}
-                  className="btn w-full min-h-[44px] rounded-full bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors flex items-center justify-center cursor-pointer shadow-xs"
+                  className="w-full min-h-[44px] rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors flex items-center justify-center cursor-pointer shadow-xs"
                 >
                   {t("continueToPayment")} →
-                </button>
+                </Button>
 
-                <p className="rtext text-[11px] text-muted-foreground text-center leading-relaxed">
-                  {t("stripePaymentReassurance")}
-                </p>
+
               </div>
             )}
           </div>
@@ -574,8 +531,6 @@ export function GuestFrontend({
         business={business}
         type={type}
         tableNumber={tableNumber}
-        initialSendEmailConfirmation={initialSendEmailConfirmation}
-        initialEmail={initialEmail}
         onOrderSuccess={(newOrderId, orderNumber) => {
           setCheckoutOpen(false);
           useCartStore.getState().clearCart();

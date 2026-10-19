@@ -2,7 +2,7 @@
 
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
-import { buttonVariants } from "./ui/button-variants";
+import { buttonVariants } from "@zackisch/design-system";
 import { cn } from "@/lib/utils";
 
 interface RegisterCtaProps {
@@ -23,7 +23,7 @@ export function RegisterCta({
       href={t("registerUrl")}
       className={cn(
         buttonVariants({
-          variant: variant === "inverse" ? "outline" : "default",
+          variant: variant === "inverse" ? "outline" : "primary",
           size,
         }),
         variant === "inverse" && "border-background focus-visible:ring-white",

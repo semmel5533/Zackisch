@@ -15,7 +15,7 @@ function formatCents(cents: number): string {
 
 export function generateOrderConfirmationHtml(
   order: Order,
-  business: Business,
+  business: Pick<Business, "name" | "legalName" | "address" | "vatId">,
   locale: string = "de",
 ): string {
   const isDe = locale.startsWith("de");
@@ -91,7 +91,7 @@ export function generateOrderConfirmationHtml(
 
   const tipCents = Math.max(0, Math.round(order.tipCents || 0));
   const sellerName = business.legalName || business.name;
-  const sellerTaxId = business.vatId || business.taxId;
+  const sellerTaxId = business.vatId;
   const safeReference = `ZK-${order.orderNumber}-${String(order._id || order.$id || "REF")
     .replace(/[^a-zA-Z0-9]/g, "")
     .slice(-6)
@@ -324,7 +324,7 @@ export function generateOrderConfirmationHtml(
         <span class="meta-value">${escapeHtml(business.name)}</span>
         ${sellerName !== business.name ? `<span style="font-size:11px;color:#444;margin-top:2px;">${escapeHtml(sellerName)}</span>` : ""}
         ${business.address ? `<span style="font-size:11px;color:#666;margin-top:2px;">${escapeHtml(business.address)}</span>` : ""}
-        ${sellerTaxId ? `<span style="font-size:11px;color:#666;margin-top:2px;">${isDe ? "USt-IdNr./St.-Nr.:" : "VAT/Tax ID:"} ${escapeHtml(sellerTaxId)}</span>` : ""}
+        ${sellerTaxId ? `<span style="font-size:11px;color:#666;margin-top:2px;">${isDe ? "USt-IdNr.:" : "VAT ID:"} ${escapeHtml(sellerTaxId)}</span>` : ""}
       </div>
       <div class="meta-item">
         <span class="meta-label">${isDe ? "Bestellart" : "Order Type"}</span>
@@ -399,7 +399,7 @@ export function generateOrderConfirmationHtml(
 
 export function downloadOrderConfirmation(
   order: Order,
-  business: Business,
+  business: Pick<Business, "name" | "legalName" | "address" | "vatId">,
   locale: string = "de",
 ): void {
   const html = generateOrderConfirmationHtml(order, business, locale);

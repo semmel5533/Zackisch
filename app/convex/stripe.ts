@@ -131,6 +131,7 @@ async function createConnectV2Account(
 export const createEmbeddedAccountSession = action({
   args: {
     businessId: v.id("businesses"),
+    sessionToken: v.optional(v.string()),
     dashboardMode: v.optional(v.union(v.literal("none"), v.literal("full"))),
   },
   returns: v.object({
@@ -153,8 +154,9 @@ export const createEmbeddedAccountSession = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.businesses.get, {
+      const org: any = await ctx.runQuery(internal.businesses.getForOwnerInternal, {
         id: args.businessId,
+        sessionToken: args.sessionToken,
       });
       if (!org) throw new Error("Betrieb nicht gefunden.");
 
@@ -164,7 +166,7 @@ export const createEmbeddedAccountSession = action({
       let feeCollector: string = org.stripeFeeCollector || "stripe";
       let lossCollector: string = org.stripeLossCollector || "stripe";
 
-      if (!accountId || accountId.startsWith("acct_test_")) {
+      if (!accountId) {
         const created = await createConnectV2Account(
           stripe,
           org,
@@ -175,14 +177,12 @@ export const createEmbeddedAccountSession = action({
         feeCollector = created.feeCollector;
         lossCollector = created.lossCollector;
 
-        await ctx.runMutation(api.businesses.update, {
+        await ctx.runMutation(internal.businesses.bindStripeAccountInternal, {
           id: args.businessId,
           stripeAccountId: accountId,
           stripeDashboardType: dashboardType,
           stripeFeeCollector: feeCollector,
           stripeLossCollector: lossCollector,
-          stripeConnectedAt: Date.now(),
-          stripeRequirementsStatus: "currently_due",
         });
       }
 
@@ -218,6 +218,7 @@ export const createEmbeddedAccountSession = action({
 export const connectStripe = action({
   args: {
     businessId: v.id("businesses"),
+    sessionToken: v.optional(v.string()),
     origin: v.string(),
   },
   returns: v.object({
@@ -230,25 +231,25 @@ export const connectStripe = action({
     args,
   ): Promise<{ url?: string; accountId?: string; error?: string }> => {
     try {
-      const org: any = await ctx.runQuery(api.businesses.get, {
+      const org: any = await ctx.runQuery(internal.businesses.getForOwnerInternal, {
         id: args.businessId,
+        sessionToken: args.sessionToken,
       });
       if (!org) throw new Error("Betrieb nicht gefunden.");
 
       const stripe = getStripeClient();
       let accountId: string | undefined = org.stripeAccountId;
 
-      if (!accountId || accountId.startsWith("acct_test_")) {
+      if (!accountId) {
         const created = await createConnectV2Account(stripe, org, "none");
         accountId = created.accountId;
 
-        await ctx.runMutation(api.businesses.update, {
+        await ctx.runMutation(internal.businesses.bindStripeAccountInternal, {
           id: args.businessId,
           stripeAccountId: accountId,
           stripeDashboardType: created.dashboardType,
           stripeFeeCollector: created.feeCollector,
           stripeLossCollector: created.lossCollector,
-          stripeConnectedAt: Date.now(),
         });
       }
 
@@ -268,7 +269,7 @@ export const connectStripe = action({
 });
 
 export const getStripeAccountStatus = action({
-  args: { businessId: v.id("businesses") },
+  args: { businessId: v.id("businesses"), sessionToken: v.optional(v.string()) },
   returns: v.object({
     isConnected: v.boolean(),
     isOnboardingComplete: v.boolean(),
@@ -299,84 +300,53 @@ export const getStripeAccountStatus = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.businesses.get, {
+      const org: any = await ctx.runQuery(internal.businesses.getForOwnerInternal, {
         id: args.businessId,
+        sessionToken: args.sessionToken,
       });
       if (!org || !org.stripeAccountId) {
         return { isConnected: false, isOnboardingComplete: false };
       }
 
       const stripe = getStripeClient();
-      let chargesEnabled = false;
-      let payoutsEnabled = false;
-      let requirementsStatus = "currently_due";
-      let currentlyDue: string[] = [];
-      let pastDue: string[] = [];
-      let disabledReason: string | undefined;
-      let feeCollector = org.stripeFeeCollector || "stripe";
-      let lossCollector = org.stripeLossCollector || "stripe";
-      let dashboardType = org.stripeDashboardType || "none";
-
-      try {
-        const v2Acc = await stripe.v2.core.accounts.retrieve(
-          org.stripeAccountId,
-          {
-            include: [
-              "configuration.merchant",
-              "identity",
-              "requirements",
-              "defaults",
-            ],
-          },
-        );
-        const cardStatus =
-          v2Acc.configuration?.merchant?.capabilities?.card_payments?.status;
-        const payoutStatus =
-          v2Acc.configuration?.merchant?.capabilities?.stripe_balance?.payouts
-            ?.status;
-        chargesEnabled = cardStatus === "active";
-        payoutsEnabled = payoutStatus === "active";
-        const minDeadline =
-          v2Acc.requirements?.summary?.minimum_deadline?.status;
-        const entries = v2Acc.requirements?.entries || [];
-        currentlyDue = entries
-          .filter((e: any) => e.minimum_deadline?.status === "currently_due")
-          .map((e: any) => String(e.description || e.reference || "kyc_field"));
-        pastDue = entries
-          .filter((e: any) => e.minimum_deadline?.status === "past_due")
-          .map((e: any) => String(e.description || e.reference || "kyc_field"));
-        requirementsStatus = chargesEnabled
-          ? "active"
-          : minDeadline || (pastDue.length > 0 ? "past_due" : "currently_due");
-        feeCollector =
-          v2Acc.defaults?.responsibilities?.fees_collector || "stripe";
-        lossCollector =
-          v2Acc.defaults?.responsibilities?.losses_collector || "stripe";
-        dashboardType = v2Acc.dashboard || dashboardType;
-      } catch {
-        const account = await stripe.accounts.retrieve(org.stripeAccountId);
-        chargesEnabled = Boolean(
-          account.charges_enabled ||
-            account.capabilities?.card_payments === "active",
-        );
-        payoutsEnabled = Boolean(
-          account.payouts_enabled ||
-            account.capabilities?.transfers === "active",
-        );
-        currentlyDue = account.requirements?.currently_due || [];
-        pastDue = account.requirements?.past_due || [];
-        disabledReason = account.requirements?.disabled_reason || undefined;
-        requirementsStatus = chargesEnabled
-          ? "active"
-          : disabledReason
-            ? "restricted"
-            : pastDue.length > 0
-              ? "past_due"
-              : "currently_due";
-      }
+      const v2Acc = await stripe.v2.core.accounts.retrieve(
+        org.stripeAccountId,
+        {
+          include: [
+            "configuration.merchant",
+            "requirements",
+            "defaults",
+          ],
+        },
+      );
+      const cardStatus =
+        v2Acc.configuration?.merchant?.capabilities?.card_payments?.status;
+      const payoutStatus =
+        v2Acc.configuration?.merchant?.capabilities?.stripe_balance?.payouts
+          ?.status;
+      const chargesEnabled = cardStatus === "active";
+      const payoutsEnabled = payoutStatus === "active";
+      const minDeadline =
+        v2Acc.requirements?.summary?.minimum_deadline?.status;
+      const entries = v2Acc.requirements?.entries || [];
+      const currentlyDue = entries
+        .filter((e: any) => e.minimum_deadline?.status === "currently_due")
+        .map((e: any) => String(e.description || e.reference || "kyc_field"));
+      const pastDue = entries
+        .filter((e: any) => e.minimum_deadline?.status === "past_due")
+        .map((e: any) => String(e.description || e.reference || "kyc_field"));
+      const requirementsStatus = chargesEnabled && payoutsEnabled
+        ? "active"
+        : minDeadline || (pastDue.length > 0 ? "past_due" : "currently_due");
+      const feeCollector =
+        v2Acc.defaults?.responsibilities?.fees_collector || "unknown";
+      const lossCollector =
+        v2Acc.defaults?.responsibilities?.losses_collector || "unknown";
+      const dashboardType = v2Acc.dashboard || "unknown";
 
       const isComplete = Boolean(
-        chargesEnabled || org.stripeOnboardingComplete,
+        chargesEnabled && payoutsEnabled &&
+        feeCollector === "stripe" && lossCollector === "stripe" && pastDue.length === 0,
       );
 
       await ctx.runMutation(
@@ -385,12 +355,12 @@ export const getStripeAccountStatus = action({
           businessId: args.businessId,
           stripeAccountId: org.stripeAccountId,
           stripeOnboardingComplete: isComplete,
-          stripeChargesEnabled: chargesEnabled || isComplete,
-          stripePayoutsEnabled: payoutsEnabled || isComplete,
-          stripeRequirementsStatus: isComplete ? "active" : requirementsStatus,
+          stripeChargesEnabled: chargesEnabled,
+          stripePayoutsEnabled: payoutsEnabled,
+          stripeRequirementsStatus: requirementsStatus,
           stripeCurrentlyDue: currentlyDue,
           stripePastDue: pastDue,
-          stripeDisabledReason: disabledReason,
+          stripeDisabledReason: undefined,
           stripeFeeCollector: feeCollector,
           stripeLossCollector: lossCollector,
           stripeDashboardType: dashboardType,
@@ -400,9 +370,9 @@ export const getStripeAccountStatus = action({
       return {
         isConnected: true,
         isOnboardingComplete: isComplete,
-        chargesEnabled: chargesEnabled || isComplete,
-        payoutsEnabled: payoutsEnabled || isComplete,
-        requirementsStatus: isComplete ? "active" : requirementsStatus,
+        chargesEnabled,
+        payoutsEnabled,
+        requirementsStatus,
         currentlyDue,
         pastDue,
         feeCollector,
@@ -423,6 +393,7 @@ export const getStripeAccountStatus = action({
 export const createStripeDashboardLink = action({
   args: {
     businessId: v.id("businesses"),
+    sessionToken: v.optional(v.string()),
     origin: v.string(),
   },
   returns: v.object({
@@ -431,8 +402,9 @@ export const createStripeDashboardLink = action({
   }),
   handler: async (ctx, args): Promise<{ url?: string; error?: string }> => {
     try {
-      const org: any = await ctx.runQuery(api.businesses.get, {
+      const org: any = await ctx.runQuery(internal.businesses.getForOwnerInternal, {
         id: args.businessId,
+        sessionToken: args.sessionToken,
       });
       if (!org || !org.stripeAccountId)
         throw new Error("No Stripe account connected");
@@ -460,7 +432,7 @@ export const createStripeDashboardLink = action({
 });
 
 export const completeTestStripeOnboarding = action({
-  args: { businessId: v.id("businesses") },
+  args: { businessId: v.id("businesses"), sessionToken: v.optional(v.string()) },
   returns: v.object({
     success: v.boolean(),
     accountId: v.optional(v.string()),
@@ -471,6 +443,12 @@ export const completeTestStripeOnboarding = action({
     args,
   ): Promise<{ success: boolean; accountId?: string; error?: string }> => {
     try {
+      const org: any = await ctx.runQuery(internal.businesses.getForOwnerInternal, {
+        id: args.businessId,
+        sessionToken: args.sessionToken,
+      });
+      if (!org) throw new Error("Betrieb nicht gefunden.");
+
       const isTestMode = process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
       if (!isTestMode) {
         return {
@@ -480,18 +458,13 @@ export const completeTestStripeOnboarding = action({
         };
       }
 
-      const org: any = await ctx.runQuery(api.businesses.get, {
-        id: args.businessId,
-      });
-      if (!org) throw new Error("Betrieb nicht gefunden.");
-
       const stripe = getStripeClient();
       let accountId = org.stripeAccountId;
       let dashboardType = org.stripeDashboardType || "none";
       let feeCollector = org.stripeFeeCollector || "stripe";
       let lossCollector = org.stripeLossCollector || "stripe";
 
-      if (!accountId || accountId.startsWith("acct_test_")) {
+      if (!accountId) {
         const created = await createConnectV2Account(stripe, org, "none");
         accountId = created.accountId;
         dashboardType = created.dashboardType;
@@ -499,21 +472,18 @@ export const completeTestStripeOnboarding = action({
         lossCollector = created.lossCollector;
       }
 
-      await ctx.runMutation(api.businesses.update, {
+      await ctx.runMutation(internal.businesses.bindStripeAccountInternal, {
         id: args.businessId,
         stripeAccountId: accountId,
-        stripeOnboardingComplete: true,
-        stripeChargesEnabled: true,
-        stripePayoutsEnabled: true,
-        stripeRequirementsStatus: "active",
         stripeDashboardType: dashboardType,
         stripeFeeCollector: feeCollector,
         stripeLossCollector: lossCollector,
-        stripeConnectedAt: org.stripeConnectedAt || Date.now(),
-        stripeLastSyncedAt: Date.now(),
       });
-
-      return { success: true, accountId };
+      const status = await ctx.runAction(api.stripe.getStripeAccountStatus, {
+        businessId: args.businessId,
+        sessionToken: args.sessionToken,
+      });
+      return { success: status.isOnboardingComplete, accountId, error: status.error };
     } catch (e: any) {
       console.error("completeTestStripeOnboarding error:", e);
       return { success: false, error: e.message };
@@ -584,7 +554,7 @@ export const createCheckoutSession = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.businesses.get, {
+      const org: any = await ctx.runQuery(internal.businesses.getInternal, {
         id: args.businessId,
       });
       if (!org) return { error: "Gastronomiebetrieb nicht gefunden." };
@@ -770,7 +740,7 @@ export const createPaymentIntent = action({
     error?: string;
   }> => {
     try {
-      const org: any = await ctx.runQuery(api.businesses.get, {
+      const org: any = await ctx.runQuery(internal.businesses.getInternal, {
         id: args.businessId,
       });
       if (!org) return { error: "Gastronomiebetrieb nicht gefunden." };
@@ -926,7 +896,7 @@ export const refundOrder = action({
         };
       }
 
-      const org: any = await ctx.runQuery(api.businesses.get, {
+      const org: any = await ctx.runQuery(internal.businesses.getInternal, {
         id: order.businessId,
       });
       const stripeAccountId = order.connectedAccountId || org?.stripeAccountId;
@@ -1014,7 +984,7 @@ export const verifyPaymentAndCreateOrder = action({
       let stripeAccountId: string | undefined;
 
       if (args.businessId) {
-        const org: any = await ctx.runQuery(api.businesses.get, {
+        const org: any = await ctx.runQuery(internal.businesses.getInternal, {
           id: args.businessId,
         });
         stripeAccountId = org?.stripeAccountId;

@@ -394,4 +394,36 @@ describe("Gate 0: P0 Security & Authorization Enforcement", () => {
     expect(ticket?.businessId).toBe(data.businessId);
     expect(ticket?.regionId).toBe("de");
   });
+
+  it("hashes admin passwords with PBKDF2, rejects demo fallback, and keeps createOrder internal", async () => {
+    const { t, data } = await setupP0Fixtures();
+    const { createOrder } = await import("../convex/orders");
+    expect((createOrder as { isInternal?: boolean }).isInternal).toBe(true);
+
+    // Reject setting "demo" as password
+    await expect(
+      t.mutation(api.admin.setAdminPassword, {
+        sessionToken: data.deAdminToken,
+        currentPassword: "initial-password-123",
+        newPassword: "demo",
+      })
+    ).rejects.toThrow(/mindestens 8 Zeichen/);
+
+    // Set a new password and verify stored value is PBKDF2 hash
+    await t.mutation(api.admin.setAdminPassword, {
+      sessionToken: data.deAdminToken,
+      currentPassword: "initial-password-123",
+      newPassword: "StrongOpsPassword#2026",
+    });
+
+    const updatedAdmin = await t.run(async (ctx) => ctx.db.get(data.deAdminId));
+    expect(updatedAdmin?.password).toMatch(/^pbkdf2\$100000\$[0-9a-f]{32}\$[0-9a-f]{64}$/);
+
+    // Verify "demo" login attempt is rejected
+    const demoAttempt = await t.mutation(api.admin.initiateAdminLogin, {
+      email: "admin-de@zackisch.com",
+      password: "demo",
+    });
+    expect(demoAttempt.success).toBe(false);
+  });
 });

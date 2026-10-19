@@ -1,3 +1,6 @@
+"use client";
+
+import { Button as BaseButton } from "@base-ui/react/button";
 import React, { forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn";
@@ -43,7 +46,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, isLoading, busy, busyText, children, disabled, type = "button", ...props }, ref) => {
     const isBusy = Boolean(isLoading || busy);
     return (
-      <button
+      <BaseButton
         ref={ref}
         type={type}
         disabled={disabled || isBusy}
@@ -79,7 +82,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           children
         )}
-      </button>
+      </BaseButton>
     );
   }
 );

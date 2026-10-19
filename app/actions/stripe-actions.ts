@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { convexServer } from "@/lib/convex/server";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { getAuthenticatedConvexClient, requireOwner } from "@/lib/convex/auth";
+import { getAuthenticatedConvexClient, getOwnerCredentials, requireOwner } from "@/lib/convex/auth";
 
 export async function createConnectV2AccountAction(
   businessId: string,
@@ -16,6 +16,7 @@ export async function createConnectV2AccountAction(
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.createEmbeddedAccountSession, {
       businessId: businessId as Id<"businesses">,
+      ...(await getOwnerCredentials()),
       dashboardMode: dashboardAccess,
     });
     if (res.error) return { error: res.error };
@@ -40,6 +41,7 @@ export async function createEmbeddedAccountSessionAction(
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.createEmbeddedAccountSession, {
       businessId: businessId as Id<"businesses">,
+      ...(await getOwnerCredentials()),
     });
     if (res.error) return { error: res.error };
     return {
@@ -65,6 +67,7 @@ export async function connectStripeAction(businessId: string) {
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.connectStripe, {
       businessId: businessId as Id<"businesses">,
+      ...(await getOwnerCredentials()),
       origin,
     });
 
@@ -83,6 +86,7 @@ export async function getStripeAccountStatusAction(businessId: string) {
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.getStripeAccountStatus, {
       businessId: businessId as Id<"businesses">,
+      ...(await getOwnerCredentials()),
     });
 
     if (res.error) return { error: res.error };
@@ -117,6 +121,7 @@ export async function createStripeDashboardLinkAction(businessId: string) {
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.createStripeDashboardLink, {
       businessId: businessId as Id<"businesses">,
+      ...(await getOwnerCredentials()),
       origin,
     });
 
@@ -135,6 +140,7 @@ export async function completeTestStripeOnboardingAction(businessId: string) {
     const client = await getAuthenticatedConvexClient();
     const res = await client.action(api.stripe.completeTestStripeOnboarding, {
       businessId: businessId as Id<"businesses">,
+      ...(await getOwnerCredentials()),
     });
 
     if (res.error) return { error: res.error };

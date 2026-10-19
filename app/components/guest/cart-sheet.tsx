@@ -21,16 +21,14 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Business } from "@/lib/types";
+import type { PublicRestaurant } from "@/lib/types";
 
 interface CartSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  business: Business;
+  business: PublicRestaurant;
   type: "dine-in" | "takeaway";
   tableNumber?: string;
-  initialSendEmailConfirmation?: boolean;
-  initialEmail?: string;
   onOrderSuccess: (orderId: string, orderNumber: string) => void;
 }
 
@@ -59,8 +57,6 @@ export function CartSheet({
   business,
   type,
   tableNumber,
-  initialSendEmailConfirmation = false,
-  initialEmail = "",
 }: CartSheetProps) {
   const { t, locale } = useTranslation();
   const isDe = locale.startsWith("de");
@@ -71,10 +67,8 @@ export function CartSheet({
     revision: string;
     stripeAccountId?: string;
   } | null>(null);
-  const [email, setEmail] = useState(initialEmail);
-  const [sendEmailConfirmation, setSendEmailConfirmation] = useState(
-    initialSendEmailConfirmation,
-  );
+  const [email, setEmail] = useState("");
+  const [sendEmailConfirmation, setSendEmailConfirmation] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -99,7 +93,7 @@ export function CartSheet({
       : null;
 
   const activeStripeAccountId =
-    checkoutSession?.stripeAccountId || business.stripeAccountId;
+    checkoutSession?.stripeAccountId;
 
   const stripePromise = useMemo(() => {
     const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!;
@@ -225,8 +219,7 @@ export function CartSheet({
           </div>
         </SheetHeader>
 
-        {!business.stripeOnboardingComplete ||
-        business.orderingPaused ? (
+        {!business.canOrder ? (
           <div className="flex-1 px-5 py-5 sm:px-6">
             <p className="w-full text-left text-sm font-medium text-destructive">
               {t("onlineOrderingUnavailable" as any)}
@@ -377,10 +370,10 @@ export function CartSheet({
                     )}
                   </div>
                 )}
-                {(business.vatId || business.taxId) && (
+                {business.vatId && (
                   <p className="text-[11px] text-muted-foreground pt-0.5">
-                    {isDe ? "USt-IdNr. / Steuernummer:" : "VAT / Tax ID:"}{" "}
-                    {business.vatId || business.taxId}
+                    {t("sellerVatId")}{" "}
+                    {business.vatId}
                   </p>
                 )}
               </div>

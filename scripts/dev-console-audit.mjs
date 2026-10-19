@@ -4,20 +4,8 @@ import { execSync } from "child_process";
 async function run() {
   console.log("=== STARTING FULL DEV CONSOLE AUDIT ===");
 
-  // 1. Get valid admin session token from Convex
-  let adminToken = "";
-  try {
-    const loginRes = JSON.parse(
-      execSync("npx convex run admin:loginAdmin '{\"email\":\"selim@zackisch.com\",\"password\":\"demo\"}'", {
-        cwd: "/Users/selim/dev/Zackisch/app",
-        stdio: ["ignore", "pipe", "ignore"],
-      }).toString()
-    );
-    adminToken = loginRes.admin?.sessionToken || "";
-    console.log("Got admin session token:", adminToken ? "YES" : "NO");
-  } catch (e) {
-    console.error("Failed to login admin:", e.message);
-  }
+  // 1. Read optional admin session token from environment (never use hardcoded passwords)
+  const adminToken = process.env.ZACKISCH_OPS_SESSION_TOKEN || "";
 
   // 2. Get owner business ID
   let businessId = "ns7b4cvnvbqabsjv76aeajvnch8gecnz"; // fallback from previous logs

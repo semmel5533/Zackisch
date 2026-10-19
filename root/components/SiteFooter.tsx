@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Globe } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
-import { RegisterCta } from "./RegisterCta";
 import { RegionLanguageModal } from "./RegionLanguageModal";
 import { WaveLine } from "./WaveLine";
 
@@ -85,101 +84,91 @@ export function SiteFooter({
     );
   }
 
+  const productLinks = [
+    { href: t("flowUrl"), label: t("navFlow") },
+    { href: t("pricingUrl"), label: t("navPricing") },
+    { href: t("faqUrl"), label: t("navFaq") },
+    { href: t("registerUrl"), label: t("registerCta"), external: true },
+  ];
+  const legalLinks = [
+    { href: t("legalUrl"), label: t("legalLink") },
+    { href: t("privacyUrl"), label: t("privacyLink") },
+    { href: t("gtcUrl"), label: t("gtcLink") },
+    { href: t("dataProcessingUrl"), label: t("dataProcessingLink") },
+    { href: t("accessibilityUrl"), label: t("accessibilityLink") },
+  ];
+
   return (
     <>
       <footer className="relative overflow-hidden bg-background text-foreground">
         <WaveLine className="w-[calc(100%-2*var(--site-gutter))] text-black max-w-[1200px] mx-auto mb-10 sm:mb-14" />
-        <div className="mx-auto grid w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] grid-cols-[1.15fr_.85fr] grid-rows-[auto_auto_1fr_auto] items-start gap-x-12 gap-y-7 [grid-template-areas:'title_.'_'cta_contact'_'mascot_mars'_'mascot_bottom'] max-[900px]:grid-cols-1 max-[900px]:grid-rows-none max-[900px]:gap-8 max-[900px]:[grid-template-areas:'title'_'cta'_'contact'_'mars'_'bottom'_'mascot']">
-          <div className="text-left [grid-area:title]">
-            <h2 className="whitespace-pre-line text-[clamp(32px,4vw,52px)] font-semibold leading-[1.17] tracking-[-.035em] text-balance">{t("closingTitle")}</h2>
-          </div>
-          <div className="flex items-center [grid-area:cta]">
-            <RegisterCta />
-          </div>
-          <div className="flex flex-col items-end justify-self-end gap-2 pt-2 text-right [grid-area:contact] max-md:pt-0">
-            <h3 className="m-0 text-2xl font-semibold leading-[1.1]">{t("contactLabel")}</h3>
-            <a
-              className="inline-block text-right text-[clamp(24px,3.8vw,46px)] font-semibold leading-[1.1] tracking-tight hover:underline hover:underline-offset-4 max-md:text-[clamp(26px,7.8vw,36px)]"
-              href={t("contactUrl")}
-            >
-              <span className="link-label">{t("contactEmail")}</span>
-            </a>
-          </div>
-          <div className="flex justify-end justify-self-end [grid-area:mars] max-md:mb-2">
-            <a
-              className="group inline-flex items-center justify-end gap-1.5 text-[15px] whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground motion-reduce:transition-none"
-              href={t("marsUrl")}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>{t("supportedBy")}</span>
-              <img
-                src="/mars_full.svg"
-                width="180"
-                height="58"
-                alt={t("marsLogoAlt")}
-                className="w-[150px] shrink-0 h-auto block"
-              />
-              <ArrowUpRight
-                size={14}
-                className="shrink-0"
-                aria-hidden="true"
-              />
-            </a>
-          </div>
-          <div className="flex items-end justify-self-start mt-[clamp(48px,6vw,96px)] mb-[-95px] [grid-area:mascot] max-md:-mt-6 max-md:mb-[-65px]">
-            <img
-              className="block h-auto w-[clamp(260px,22vw,330px)] object-contain brightness-0 max-md:w-[clamp(200px,48vw,260px)]"
-              src="/brand_mark.svg"
-              alt=""
-              aria-hidden="true"
-              width="420"
-              height="420"
-            />
-          </div>
-          <div className="flex flex-col items-end self-end gap-3 py-7 [grid-area:bottom] max-md:pt-11 max-md:pb-0">
-            <nav
-              className="flex gap-6 max-md:gap-5 text-[13px] font-bold uppercase tracking-[0.08em] max-md:w-full max-md:justify-end max-md:flex-nowrap"
-              aria-label={t("footerNavigation")}
-            >
-              {(
-                [
-                  "legal",
-                  "privacy",
-                  "gtc",
-                  "dataProcessing",
-                  "accessibility",
-                ] as const
-              ).map((key) => (
-                <Link
-                  key={key}
-                  href={t(`${key}Url`)}
-                  className="group relative flex min-h-11 items-center max-md:justify-end max-md:whitespace-nowrap max-md:text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-                >
-                  <span className="link-label relative py-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-250 after:ease-out group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 motion-reduce:after:transition-none">
-                    {t(`${key}Link`)}
-                  </span>
-                </Link>
-              ))}
-              <a
-                href={t("supportUrl")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative flex min-h-11 items-center max-md:justify-end max-md:whitespace-nowrap max-md:text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-              >
-                <span className="link-label relative py-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-250 after:ease-out group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 motion-reduce:after:transition-none">
-                  {t("supportLink")}
-                </span>
-              </a>
-            </nav>
+        <div className="mx-auto grid w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_.8fr_.8fr_.8fr]">
+          <div>
+            <Link href={t("homeUrl")} className="inline-block" aria-label={t("logoAlt")}>
+              <img src="/combination_mark.svg" width="122" height="40" alt={t("logoAlt")} loading="lazy" className="h-auto w-[122px]" />
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">{t("footerTagline")}</p>
             <button
               type="button"
-              className="inline-flex min-h-11 items-center gap-2.5 border-0 bg-transparent text-[13px] font-semibold leading-none text-inherit transition-opacity duration-150 hover:opacity-80 motion-reduce:transition-none cursor-pointer"
+              className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-border px-4 text-[13px] font-semibold transition-colors hover:bg-muted motion-reduce:transition-none"
               onClick={() => setIsModalOpen(true)}
             >
-              <Globe size={20} aria-hidden="true" />
+              <Globe size={16} aria-hidden="true" />
               <span>{t("regionDisplay")}</span>
             </button>
+          </div>
+          <nav aria-label={t("footerProductTitle")}>
+            <h2 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{t("footerProductTitle")}</h2>
+            <ul className="mt-4 space-y-1">
+              {productLinks.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href} {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="inline-flex min-h-9 items-center gap-1 text-[15px] hover:underline hover:underline-offset-4">
+                    {link.label}
+                    {link.external && <ArrowUpRight size={14} aria-hidden="true" />}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <nav aria-label={t("footerLegalTitle")}>
+            <h2 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{t("footerLegalTitle")}</h2>
+            <ul className="mt-4 space-y-1">
+              {legalLinks.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="inline-flex min-h-9 items-center text-[15px] hover:underline hover:underline-offset-4">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <nav aria-label={t("footerHelpTitle")}>
+            <h2 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{t("footerHelpTitle")}</h2>
+            <ul className="mt-4 space-y-1">
+              <li>
+                <a href={t("supportUrl")} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1 text-[15px] hover:underline hover:underline-offset-4">
+                  {t("supportLink")}
+                  <ArrowUpRight size={14} aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a href={t("contactUrl")} className="inline-flex min-h-9 items-center text-[15px] hover:underline hover:underline-offset-4">
+                  {t("contactEmail")}
+                </a>
+              </li>
+              <li>
+                <a href={t("marsUrl")} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1 text-[15px] text-muted-foreground hover:text-foreground">
+                  {t("supportedBy")}
+                  <ArrowUpRight size={14} aria-hidden="true" />
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div className="border-t border-border">
+          <div className="mx-auto flex w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] flex-wrap items-center justify-between gap-3 py-5 text-[13px] text-muted-foreground">
+            <p>© {new Date().getFullYear()} Zackisch · {t("footerRights")}</p>
+            <p className="tabular-nums">{t("feeRowBase")} · {t("feeRowTips")}</p>
           </div>
         </div>
       </footer>

@@ -59,8 +59,9 @@ export async function requireOwner(businessId: string) {
     throw new Error("Nicht authentifiziert.");
   }
 
-  const business = await convexServer.query(api.businesses.get, {
+  const business = await (await getAuthenticatedConvexClient()).query(api.businesses.get, {
     id: businessId as any,
+    ...(await getOwnerCredentials()),
   });
 
   if (!business) {
@@ -89,10 +90,15 @@ async function requireTerminalOrOwner(
 ) {
   const user = await getUser();
   if (user) {
-    const business = await convexServer.query(api.businesses.get, {
-      id: businessId as any,
-    });
-    if (business?.ownerId === user._id) return { type: "owner" as const, user, business, org: business };
+    try {
+      const business = await (await getAuthenticatedConvexClient()).query(api.businesses.get, {
+        id: businessId as any,
+        ...(await getOwnerCredentials()),
+      });
+      if (business) return { type: "owner" as const, user, business, org: business };
+    } catch {
+      // An authenticated non-owner may still hold a separately scoped terminal session.
+    }
   }
   const cookieStore = await cookies();
   for (const name of [

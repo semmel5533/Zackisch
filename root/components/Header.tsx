@@ -1,11 +1,14 @@
 "use client";
 
+import { resolveBrandAsset } from "@zackisch/design-system";
+
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Globe, List, X } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegionLanguageModal } from "./RegionLanguageModal";
+import { RegisterCta } from "./RegisterCta";
 import { buttonVariants } from "./ui/button-variants";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +31,18 @@ export function Header() {
   }, [locale]);
 
   useEffect(() => setMenuOpen(false), [pathname]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      headerRef.current?.setAttribute(
+        "data-scrolled",
+        window.scrollY > 8 ? "true" : "false",
+      );
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -56,9 +71,10 @@ export function Header() {
       >
         {t("skipContent")}
       </a>
-      <header ref={headerRef} className="mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] relative z-20 flex min-h-[72px] items-center justify-between gap-3 min-[721px]:min-h-[104px] min-[721px]:gap-6">
+      <div className="site-header sticky top-0 z-40 bg-background/95">
+      <header ref={headerRef} data-scrolled="false" className="site-header mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px] relative z-20 flex min-h-[72px] items-center justify-between gap-3 min-[721px]:min-h-[76px] min-[721px]:gap-6">
         <Link href={t("homeUrl")} className="shrink-0" onClick={() => setMenuOpen(false)}>
-          <img src="/combination_mark.svg" width="122" height="40" alt={t("logoAlt")} fetchPriority="high" className="h-auto w-[96px] min-[721px]:w-[122px] max-[359px]:w-[76px]" />
+          <img src={resolveBrandAsset("combinationMarkSvg", { site: "root" })} width="122" height="40" alt={t("logoAlt")} fetchPriority="high" className="h-auto w-[96px] min-[721px]:w-[122px] max-[359px]:w-[76px]" />
         </Link>
         <nav
           id="main-navigation"
@@ -70,7 +86,7 @@ export function Header() {
               key={url}
               href={t(url)}
               onClick={() => setMenuOpen(false)}
-              className="group relative flex min-h-11 items-center rounded-[12px] px-3.5 text-sm font-semibold uppercase tracking-[.08em] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-[721px]:min-h-9 min-[721px]:px-0 min-[721px]:text-[13px] min-[721px]:hover:bg-transparent"
+              className="group relative flex min-h-11 items-center rounded-[12px] px-3.5 text-sm font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-[721px]:min-h-9 min-[721px]:px-0 min-[721px]:text-[13px] min-[721px]:hover:bg-transparent"
             >
               <span className="relative py-0.5 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-250 after:ease-out group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100 motion-reduce:after:transition-none">
                 {t(label)}
@@ -88,7 +104,8 @@ export function Header() {
           </div>
         </nav>
         <div className="flex items-center gap-2">
-          <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden min-[721px]:inline-flex")}>
+          <RegisterCta size="sm" className="hidden rounded-full min-[721px]:inline-flex" />
+          <a href={t("signInUrl")} className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden min-[721px]:inline-flex")}>
             <span>{t("signIn")}</span>
             <ArrowUpRight size={16} className="shrink-0" aria-hidden="true" />
           </a>
@@ -101,6 +118,7 @@ export function Header() {
           </button>
         </div>
       </header>
+      </div>
       {isModalOpen && <RegionLanguageModal isOpen onClose={() => setIsModalOpen(false)} />}
     </>
   );

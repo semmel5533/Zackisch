@@ -2,11 +2,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import type { QueryCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 
-export async function isOwner(
-  ctx: QueryCtx,
-  businessId: Id<"businesses">,
-  sessionToken?: string,
-) {
+export async function getMerchantUserId(ctx: QueryCtx, sessionToken?: string) {
   let userId = await getAuthUserId(ctx);
   if (sessionToken) {
     const session = await ctx.db
@@ -15,11 +11,21 @@ export async function isOwner(
         q.eq("identifier", `session_${sessionToken}`),
       )
       .first();
-    if (session && session.expires > Date.now()) {
-      const user = await ctx.db.get(session.code as Id<"users">);
+    if (session && Number.isFinite(session.expires) && session.expires > Date.now()) {
+      const id = ctx.db.normalizeId("users", session.code);
+      const user = id ? await ctx.db.get(id) : null;
       if (user) userId = user._id;
     }
   }
+  return userId;
+}
+
+export async function isOwner(
+  ctx: QueryCtx,
+  businessId: Id<"businesses">,
+  sessionToken?: string,
+) {
+  const userId = await getMerchantUserId(ctx, sessionToken);
   const business = await ctx.db.get(businessId);
   return !!userId && !!business && business.ownerId === userId;
 }

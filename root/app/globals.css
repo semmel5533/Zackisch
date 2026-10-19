@@ -100,4 +100,37 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
 }
+
+/* PayPal-grade restrained scroll motion: short rise + fade, once per section. */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Sticky header elevation on scroll (toggled via JS). */
+.site-header { transition: border-color 0.2s ease, background-color 0.2s ease; border-bottom: 1px solid transparent; }
+.site-header[data-scrolled="true"] {
+  border-bottom-color: var(--border);
+  background-color: color-mix(in oklch, var(--background) 92%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+/* Phone mockup: physical product cue without heavy shadows. */
+.phone-frame {
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.18);
+}
+
+/* Editorial band texture: flat warm paper, no gradients. */
+.band-warm { background-color: var(--zds-warm-paper, #f5f3f0); }
+.band-inverse { background-color: var(--zds-neutral-950, #0a0a0a); color: #fff; }

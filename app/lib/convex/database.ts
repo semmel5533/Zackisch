@@ -6,6 +6,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import type {
   Business,
+  PublicRestaurant,
   MenuCategory,
   MenuItem,
   Order,
@@ -15,7 +16,6 @@ import type {
   CreateBusinessData,
   CreateMenuCategoryData,
   CreateMenuItemData,
-  CreateOrderData,
 } from "@/lib/types";
 
 // Helper to normalize Convex documents with $id and $createdAt aliases
@@ -79,7 +79,7 @@ export async function getBusinessByOwner(
 ): Promise<Business | null> {
   const doc = await (
     await getAuthenticatedConvexClient()
-  ).query(api.businesses.getByOwner, { ownerId });
+  ).query(api.businesses.getByOwner, { ownerId, ...(await getOwnerCredentials()) });
   return doc ? toBusiness(doc) : null;
 }
 
@@ -91,11 +91,18 @@ export async function getBusiness(
       await getAuthenticatedConvexClient()
     ).query(api.businesses.get, {
       id: id as Id<"businesses">,
+      ...(await getOwnerCredentials()),
     });
     return doc ? toBusiness(doc) : null;
   } catch {
     return null;
   }
+}
+
+export async function getPublicRestaurant(id: string): Promise<PublicRestaurant | null> {
+  const client = await getAuthenticatedConvexClient();
+  const doc = await client.query(api.businesses.getPublicRestaurant, { id: id as Id<"businesses"> });
+  return doc ? { ...doc, $id: doc._id } : null;
 }
 
 export async function createBusiness(
@@ -104,6 +111,7 @@ export async function createBusiness(
   const id = await (
     await getAuthenticatedConvexClient()
   ).mutation(api.businesses.create, {
+    ...(await getOwnerCredentials()),
     name: data.name,
     ownerId: data.ownerId,
     address: data.address,
@@ -117,32 +125,33 @@ export async function createBusiness(
 
   const created = await (
     await getAuthenticatedConvexClient()
-  ).query(api.businesses.get, { id });
+  ).query(api.businesses.get, { id, ...(await getOwnerCredentials()) });
   return toBusiness(created!);
 }
 
 export async function updateBusiness(
   id: string,
-  data: Partial<Business> & { clearLogo?: boolean; clearBanner?: boolean },
+  data: Partial<Pick<Business,
+    "name" | "address" | "logoStorageId" | "logoFileId" | "bannerStorageId" | "bannerFileId" |
+    "isToGoEnabled" | "isToStayEnabled" | "legalName" | "taxId" | "vatId" | "tables"
+  >> & { clearLogo?: boolean; clearBanner?: boolean },
 ) {
   return await (
     await getAuthenticatedConvexClient()
   ).mutation(api.businesses.update, {
     id: id as Id<"businesses">,
+    ...(await getOwnerCredentials()),
     name: data.name,
     address: data.address,
     logoStorageId: toStorageId(data.logoStorageId || data.logoFileId),
     clearLogo: data.clearLogo,
     bannerStorageId: toStorageId(data.bannerStorageId || data.bannerFileId),
     clearBanner: data.clearBanner,
-    stripeAccountId: data.stripeAccountId,
-    stripeOnboardingComplete: data.stripeOnboardingComplete,
     isToGoEnabled: data.isToGoEnabled,
     isToStayEnabled: data.isToStayEnabled,
     legalName: data.legalName,
     taxId: data.taxId,
-    currency: data.currency,
-    deletionRequested: data.deletionRequested,
+    vatId: data.vatId,
     tables: data.tables,
   });
 }
@@ -277,6 +286,7 @@ export async function createMenuItem(
     sortOrder: data.sortOrder ?? 0,
     taxRate: data.taxRate ?? 19.0,
     customizations: data.customizations ?? "[]",
+    dietaryLabels: data.dietaryLabels,
   });
 
   const doc = await (
@@ -311,6 +321,7 @@ export async function updateMenuItem(
     sortOrder: data.sortOrder,
     taxRate: data.taxRate,
     customizations: data.customizations,
+    dietaryLabels: data.dietaryLabels,
   });
 }
 
@@ -375,29 +386,6 @@ export async function getOrderByPaymentIntent(
     stripePaymentId,
   });
   return doc ? toOrder(doc) : null;
-}
-
-export async function createOrder(data: CreateOrderData): Promise<Order> {
-  const res = await (
-    await getAuthenticatedConvexClient()
-  ).mutation(api.orders.createOrder, {
-    businessId: data.businessId as Id<"businesses">,
-    tableNumber: data.tableNumber,
-    type: data.type,
-    items: JSON.stringify(data.items),
-    total: data.total,
-    email: data.email,
-    stripePaymentId: data.stripePaymentId,
-    zakkigFee: data.zakkigFee,
-    stripeFee: data.stripeFee,
-    netAmount: data.netAmount,
-    currency: data.currency,
-  });
-
-  const doc = await (
-    await getAuthenticatedConvexClient()
-  ).query(api.orders.getOrder, { id: res._id });
-  return toOrder(doc!);
 }
 
 export async function updateOrderStatus(

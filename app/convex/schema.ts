@@ -1,6 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { authTables } from "@convex-dev/auth/server";
 import { v } from "convex/values";
+import { dietaryLabelsValidator } from "./menuValidators";
 
 export default defineSchema({
   ...authTables,
@@ -37,6 +38,17 @@ export default defineSchema({
   })
     .index("by_email", ["email"])
     .index("by_regionId", ["regionId"]),
+
+  merchantMedia: defineTable({
+    businessId: v.id("businesses"),
+    storageId: v.id("_storage"),
+  }).index("by_storageId", ["storageId"]),
+
+  mediaUploadLimits: defineTable({
+    businessId: v.id("businesses"),
+    windowStart: v.number(),
+    count: v.number(),
+  }).index("by_businessId", ["businessId"]),
 
   // Restaurants & Merchants
   businesses: defineTable({
@@ -99,11 +111,13 @@ export default defineSchema({
     sortOrder: v.number(),
     taxRate: v.number(),
     customizations: v.string(), // JSON stringified CustomizationStep[]
+    dietaryLabels: v.optional(dietaryLabelsValidator),
     allergens: v.optional(v.array(v.string())),
     additives: v.optional(v.array(v.string())),
   })
     .index("by_businessId", ["businessId"])
     .index("by_businessId_and_available", ["businessId", "available"])
+    .index("by_imageStorageId", ["imageStorageId"])
     .index("by_categoryId", ["categoryId"]),
 
   orders: defineTable({

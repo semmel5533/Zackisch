@@ -1,6 +1,9 @@
 import { query, mutation } from "./_generated/server";
+import { requireOwnedMedia, deleteUnusedMedia } from "./merchantMedia";
 import { isOwner, requireOwner, verifyTerminal } from "./permissions";
 import { v } from "convex/values";
+import { dietaryLabelsValidator } from "./menuValidators";
+import { parseDietaryLabels } from "../lib/dietary-labels";
 
 export const getCategories = query({
   args: { businessId: v.id("businesses") },
@@ -40,6 +43,7 @@ export const getItems = query({
       sortOrder: v.number(),
       taxRate: v.number(),
       customizations: v.string(),
+      dietaryLabels: v.optional(dietaryLabelsValidator),
       allergens: v.optional(v.array(v.string())),
       additives: v.optional(v.array(v.string())),
     }),
@@ -86,6 +90,7 @@ export const getAvailableItems = query({
       sortOrder: v.number(),
       taxRate: v.number(),
       customizations: v.string(),
+      dietaryLabels: v.optional(dietaryLabelsValidator),
       allergens: v.optional(v.array(v.string())),
       additives: v.optional(v.array(v.string())),
     }),
@@ -133,6 +138,7 @@ export const getItem = query({
       sortOrder: v.number(),
       taxRate: v.number(),
       customizations: v.string(),
+      dietaryLabels: v.optional(dietaryLabelsValidator),
       allergens: v.optional(v.array(v.string())),
       additives: v.optional(v.array(v.string())),
     }),
@@ -217,10 +223,8 @@ export const deleteCategory = mutation({
       .collect();
 
     for (const item of items) {
-      if (item.imageStorageId) {
-        await ctx.storage.delete(item.imageStorageId);
-      }
       await ctx.db.delete(item._id);
+      await deleteUnusedMedia(ctx, item.businessId, item.imageStorageId);
     }
 
     await ctx.db.delete(args.id);
@@ -241,6 +245,7 @@ export const createItem = mutation({
     sortOrder: v.number(),
     taxRate: v.number(),
     customizations: v.string(),
+    dietaryLabels: v.optional(dietaryLabelsValidator),
     allergens: v.optional(v.array(v.string())),
     additives: v.optional(v.array(v.string())),
   },
@@ -261,9 +266,11 @@ export const createItem = mutation({
     const category = await ctx.db.get(args.categoryId);
     if (category?.businessId !== args.businessId)
       throw new Error("Invalid category");
+    if (args.imageStorageId) await requireOwnedMedia(ctx, args.businessId, args.imageStorageId);
     const itemData = {
       ...data,
       name: trimmed,
+      dietaryLabels: parseDietaryLabels(args.dietaryLabels ?? []),
       imageStorageId: args.imageStorageId || undefined,
     };
     return await ctx.db.insert("menuItems", itemData);
@@ -285,6 +292,7 @@ export const updateItem = mutation({
     sortOrder: v.optional(v.number()),
     taxRate: v.optional(v.number()),
     customizations: v.optional(v.string()),
+    dietaryLabels: v.optional(dietaryLabelsValidator),
     allergens: v.optional(v.array(v.string())),
     additives: v.optional(v.array(v.string())),
   },
@@ -332,6 +340,7 @@ export const updateItem = mutation({
         current.businessId
     )
       throw new Error("Invalid category");
+    if (patch.dietaryLabels !== undefined) patch.dietaryLabels = parseDietaryLabels(patch.dietaryLabels);
     if (patch.name !== undefined) {
       const trimmed = patch.name.trim();
       if (trimmed.length === 0 || trimmed.length > 100) {
@@ -351,22 +360,13 @@ export const updateItem = mutation({
     const existing = await ctx.db.get(id);
     if (!existing) throw new Error("Item not found");
 
-    if (clearImage && existing.imageStorageId) {
-      await ctx.storage.delete(existing.imageStorageId);
-      patch.imageStorageId = undefined;
-    } else if (
-      args.imageStorageId &&
-      existing.imageStorageId &&
-      existing.imageStorageId !== args.imageStorageId
-    ) {
-      await ctx.storage.delete(existing.imageStorageId);
+    if (patch.imageStorageId && patch.imageStorageId !== existing.imageStorageId) {
+      await requireOwnedMedia(ctx, current.businessId, patch.imageStorageId);
     }
-
-    if (patch.imageStorageId === null) {
-      patch.imageStorageId = undefined;
-    }
+    if (clearImage || patch.imageStorageId === null) patch.imageStorageId = undefined;
 
     await ctx.db.patch(id, patch);
+    await deleteUnusedMedia(ctx, current.businessId, existing.imageStorageId);
     return null;
   },
 });
@@ -383,10 +383,8 @@ export const deleteItem = mutation({
     const item = await ctx.db.get(args.id);
     if (!item) return null;
 
-    if (item.imageStorageId) {
-      await ctx.storage.delete(item.imageStorageId);
-    }
     await ctx.db.delete(args.id);
+    await deleteUnusedMedia(ctx, item.businessId, item.imageStorageId);
     return null;
   },
 });

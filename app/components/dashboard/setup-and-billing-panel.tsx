@@ -5,8 +5,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button, Input } from "@zackisch/design-system";
 import { Badge } from "@/components/ui/badge";
 import { Price } from "@/components/ui/price";
 import {
@@ -20,6 +19,7 @@ import {
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
+import { updateSellerIdentityAction } from "@/actions/settings-actions";
 import type { Business } from "@/lib/types";
 
 interface SetupAndBillingPanelProps {
@@ -31,7 +31,7 @@ interface SetupAndBillingPanelProps {
 export function SetupAndBillingPanel({
   business,
 }: SetupAndBillingPanelProps) {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const isDe = locale.startsWith("de");
   const businessId = business.$id as Id<"businesses">;
 
@@ -53,7 +53,6 @@ export function SetupAndBillingPanel({
     api.setup.generateMonthlyFeeStatement,
   );
   const createSupportToken = useMutation(api.support.createCrossAppToken);
-  const updateBusinessMutation = useMutation(api.businesses.update);
 
   const [posSystemName, setPosSystemName] = useState(
     business.posSystemName || "Bestehende Restaurantkasse (TSE)",
@@ -65,8 +64,9 @@ export function SetupAndBillingPanel({
     business.legalName || business.name || "",
   );
   const [vatId, setVatId] = useState(
-    business.vatId || business.taxId || "",
+    business.vatId || "",
   );
+  const [taxId, setTaxId] = useState(business.taxId || "");
   const [savingSeller, setSavingSeller] = useState(false);
   const [savingPos, setSavingPos] = useState(false);
   const [creatingTestOrder, setCreatingTestOrder] = useState(false);
@@ -74,29 +74,20 @@ export function SetupAndBillingPanel({
   const currentPeriodMonth = new Date().toISOString().slice(0, 7);
 
   const handleSaveSellerIdentity = async () => {
-    if (!legalName.trim() || !vatId.trim()) {
-      toast.error(
-        isDe
-          ? "Bitte gib den gesetzlichen Firmennamen und deine USt-IdNr. bzw. Steuernummer an."
-          : "Please enter the legal business name and VAT/Tax ID.",
-      );
+    if (!legalName.trim() || (!taxId.trim() && !vatId.trim())) {
+      toast.error(t("sellerIdentityInvalid"));
       return;
     }
     setSavingSeller(true);
     try {
-      await updateBusinessMutation({
-        id: businessId,
-        legalName: legalName.trim(),
-        vatId: vatId.trim(),
-        taxId: vatId.trim(),
-      });
-      toast.success(
-        isDe
-          ? "Verkäufer- und Steuerdaten gespeichert."
-          : "Seller and tax details saved.",
-      );
-    } catch (err: any) {
-      toast.error(err?.message || "Fehler beim Speichern");
+      const result = await updateSellerIdentityAction(businessId, { legalName, taxId, vatId });
+      if (!result.success) {
+        toast.error(t(result.error ?? "sellerIdentitySaveFailed"));
+        return;
+      }
+      toast.success(t("sellerIdentitySaved"));
+    } catch {
+      toast.error(t("sellerIdentitySaveFailed"));
     } finally {
       setSavingSeller(false);
     }
@@ -290,43 +281,23 @@ export function SetupAndBillingPanel({
 
           {/* Quick Seller & Tax Identity + Legal Acceptance + POS Workflow Controls */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2 border-t border-border">
-            {/* Box 1: Seller of Record & Tax ID */}
-            <div className="rounded-xl border border-border p-4 space-y-3 bg-muted/10">
-              <div className="text-xs font-bold text-foreground">
-                {isDe
-                  ? "1. Gesetzlicher Verkäufer & Steuernummer"
-                  : "1. Seller of Record & Tax ID"}
-              </div>
-              <div className="space-y-2">
-                <Input
-                  value={legalName}
-                  onChange={(e) => setLegalName(e.target.value)}
-                  placeholder={
-                    isDe
-                      ? "Gesetzlicher Firmenname / Inhaber"
-                      : "Legal business name"
-                  }
-                  className="h-9 text-xs"
-                />
-                <Input
-                  value={vatId}
-                  onChange={(e) => setVatId(e.target.value)}
-                  placeholder={
-                    isDe
-                      ? "USt-IdNr. (DE...) oder Steuernummer"
-                      : "VAT ID or Tax ID"
-                  }
-                  className="h-9 text-xs"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={savingSeller}
-                  onClick={handleSaveSellerIdentity}
-                  className="w-full h-9 rounded-full text-xs font-semibold"
-                >
-                  {isDe ? "Verkäuferdaten speichern" : "Save seller details"}
+            <div className="rounded-xl border border-border p-4 space-y-3">
+              <h4 className="text-sm font-semibold">{t("sellerIdentityTitle")}</h4>
+              <div className="space-y-3">
+                <label className="block space-y-1 text-sm">
+                  <span>{t("sellerLegalName")}</span>
+                  <Input value={legalName} onChange={e => setLegalName(e.target.value)} maxLength={200} />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span>{t("sellerTaxId")}</span>
+                  <Input value={taxId} onChange={e => setTaxId(e.target.value)} maxLength={40} />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span>{t("sellerVatId")}</span>
+                  <Input value={vatId} onChange={e => setVatId(e.target.value)} maxLength={40} />
+                </label>
+                <Button type="button" variant="outline" disabled={savingSeller} onClick={handleSaveSellerIdentity}>
+                  {t(savingSeller ? "sellerIdentitySaving" : "sellerIdentitySave")}
                 </Button>
               </div>
             </div>

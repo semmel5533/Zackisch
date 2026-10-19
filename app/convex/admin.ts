@@ -4,6 +4,100 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { requireOpsActor, requireOpsRegion } from "./permissions";
 
+const PBKDF2_ITERATIONS = 100_000;
+
+function bytesToHex(bytes: Uint8Array): string {
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function hexToBytes(hex: string): Uint8Array {
+  const clean = hex.trim();
+  const out = new Uint8Array(clean.length / 2);
+  for (let i = 0; i < out.length; i++) {
+    out[i] = parseInt(clean.slice(i * 2, i * 2 + 2), 16);
+  }
+  return out;
+}
+
+function timingSafeEqualBytes(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a[i] ^ b[i];
+  }
+  return diff === 0;
+}
+
+export async function hashAdminPassword(password: string): Promise<string> {
+  const salt = new Uint8Array(16);
+  crypto.getRandomValues(salt);
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(password),
+    "PBKDF2",
+    false,
+    ["deriveBits"]
+  );
+  const derived = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt: salt.buffer as ArrayBuffer,
+      iterations: PBKDF2_ITERATIONS,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    256
+  );
+  return `pbkdf2$${PBKDF2_ITERATIONS}$${bytesToHex(salt)}$${bytesToHex(new Uint8Array(derived))}`;
+}
+
+export async function verifyAdminPassword(
+  candidate: string | undefined,
+  storedSecret: string | undefined
+): Promise<boolean> {
+  if (!candidate || !storedSecret) return false;
+  const trimmedStored = storedSecret.trim();
+  if (!trimmedStored || trimmedStored === "demo" || candidate === "demo") {
+    return false;
+  }
+  const enc = new TextEncoder();
+  if (trimmedStored.startsWith("pbkdf2$")) {
+    const parts = trimmedStored.split("$");
+    if (parts.length !== 4) return false;
+    const iterations = parseInt(parts[1], 10);
+    if (!Number.isFinite(iterations) || iterations < 10_000) return false;
+    const salt = hexToBytes(parts[2]);
+    const expected = hexToBytes(parts[3]);
+    const keyMaterial = await crypto.subtle.importKey(
+      "raw",
+      enc.encode(candidate),
+      "PBKDF2",
+      false,
+      ["deriveBits"]
+    );
+    const derived = await crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        salt: salt.buffer as ArrayBuffer,
+        iterations,
+        hash: "SHA-256",
+      },
+      keyMaterial,
+      expected.length * 8
+    );
+    return timingSafeEqualBytes(new Uint8Array(derived), expected);
+  }
+  const [candidateDigest, storedDigest] = await Promise.all([
+    crypto.subtle.digest("SHA-256", enc.encode(candidate)),
+    crypto.subtle.digest("SHA-256", enc.encode(trimmedStored)),
+  ]);
+  return timingSafeEqualBytes(
+    new Uint8Array(candidateDigest),
+    new Uint8Array(storedDigest)
+  );
+}
+
 // Seed the initial regional admin and default regions if not present
 export const seedInitialAdminAndRegions = internalMutation({
   args: {},
@@ -79,7 +173,7 @@ export const seedInitialAdminAndRegions = internalMutation({
       regionsCreated++;
     }
 
-    // 2. Seed Initial Regional Admin
+    // 2. Seed Initial Regional Admin (without hardcoded fallback password)
     const existingAdmin = await ctx.db
       .query("adminUsers")
       .withIndex("by_email", (q) => q.eq("email", "selim@zackisch.com"))
@@ -110,16 +204,17 @@ export const seedInitialAdminAndRegions = internalMutation({
           "emails:read",
         ],
         isActive: true,
-        password: "demo",
         createdAt: Date.now(),
       });
       adminCreated = true;
     } else {
+      const cleanedPassword =
+        existingAdmin.password === "demo" ? undefined : existingAdmin.password;
       await ctx.db.patch(existingAdmin._id, {
         role: "regional_admin",
         regionId: "de",
         isActive: true,
-        password: existingAdmin.password || "demo",
+        password: cleanedPassword,
         permissions: [
           "restaurants:read",
           "restaurants:write",
@@ -295,9 +390,8 @@ export const initiateAdminLogin = mutation({
       };
     }
 
-    // Verify password: check if matches admin.password or default "demo"
-    const expectedPassword = admin.password || "demo";
-    if (args.password !== expectedPassword) {
+    const passwordValid = await verifyAdminPassword(args.password, admin.password);
+    if (!passwordValid) {
       return {
         success: false,
         error: "Ungültiges Administrator-Passwort.",
@@ -550,30 +644,39 @@ export const loginAdmin = mutation({
       };
     }
 
-    // Verify password if provided
-    const expectedPassword = admin.password || "demo";
-    if (args.password && args.password !== expectedPassword) {
+    const passwordValid = await verifyAdminPassword(args.password, admin.password);
+    if (!passwordValid) {
       return {
         success: false,
         error: "Ungültiges Administrator-Passwort.",
       };
     }
 
-    // Verify OTP if OTP provided
-    if (args.otp) {
-      const codeRecord = await ctx.db
+    const cleanOtp = args.otp?.replace(/\D/g, "").trim() || "";
+    if (cleanOtp.length !== 6) {
+      return {
+        success: false,
+        error: "Ungültiger oder abgelaufener Einmalcode.",
+      };
+    }
+
+    const codeRecord =
+      (await ctx.db
         .query("verificationCodes")
         .withIndex("by_identifier", (q) => q.eq("identifier", `admin_otp_${normalized}`))
-        .first();
+        .first()) ??
+      (await ctx.db
+        .query("verificationCodes")
+        .withIndex("by_identifier", (q) => q.eq("identifier", `ops_otp_${normalized}`))
+        .first());
 
-      if (!codeRecord || codeRecord.code !== args.otp || Date.now() > codeRecord.expires) {
-        return {
-          success: false,
-          error: "Ungültiger oder abgelaufener Einmalcode.",
-        };
-      }
-      await ctx.db.delete(codeRecord._id);
+    if (!codeRecord || codeRecord.code !== cleanOtp || Date.now() > codeRecord.expires) {
+      return {
+        success: false,
+        error: "Ungültiger oder abgelaufener Einmalcode.",
+      };
     }
+    await ctx.db.delete(codeRecord._id);
 
     // Generate secure session token
     const sessionToken = `admin_session_${crypto.randomUUID()}`;
@@ -973,14 +1076,15 @@ export const setAdminPassword = mutation({
   returns: v.boolean(),
   handler: async (ctx, args) => {
     const admin = await requireOpsActor(ctx, args.sessionToken);
-    const expectedPassword = admin.password || "demo";
-    if (args.currentPassword !== expectedPassword) {
+    const currentValid = await verifyAdminPassword(args.currentPassword, admin.password);
+    if (!currentValid) {
       throw new Error("UNAUTHORIZED: Aktuelles Passwort ist nicht korrekt.");
     }
-    if (!args.newPassword || args.newPassword.length < 8) {
+    if (!args.newPassword || args.newPassword.length < 8 || args.newPassword === "demo") {
       throw new Error("Das neue Passwort muss mindestens 8 Zeichen lang sein.");
     }
-    await ctx.db.patch(admin._id, { password: args.newPassword });
+    const passwordHash = await hashAdminPassword(args.newPassword);
+    await ctx.db.patch(admin._id, { password: passwordHash });
     await ctx.db.insert("auditLogs", {
       actorId: admin.email,
       actorRole: admin.role,

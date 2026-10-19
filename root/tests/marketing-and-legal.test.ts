@@ -10,9 +10,7 @@ describe("Root Marketing, Brand Copy & Legal Pages Verification", () => {
     expect(landingTranslations.de.heroRight).toBe(
       "Deine Gäste bestellen selbst.",
     );
-    expect(landingTranslations.de.heroSummary).toContain(
-      "gewohnte Kasse",
-    );
+    expect(landingTranslations.de.heroSummary).toContain("Kasse bleibt");
 
     // English equivalent
     expect(landingTranslations.en.heroLeft).toBe("Keep your register.");
@@ -22,24 +20,22 @@ describe("Root Marketing, Brand Copy & Legal Pages Verification", () => {
   });
 
   it("verifies truthfulness of pricing claims (2% fee, transparent VAT, 0% on tips)", () => {
-    // German fee disclosure
+    // German fee disclosure (long note + explicit pricing rows)
     expect(landingTranslations.de.feeNote).toContain("2 %");
-    expect(landingTranslations.de.feeNote).toContain(
-      "inkl. USt. auf unsere Leistung",
-    );
-    expect(landingTranslations.de.feeNote).toContain(
-      "freiwilliges Trinkgeld ausgenommen",
-    );
+    expect(landingTranslations.de.feeNote).toContain("Umsatzsteuer");
+    expect(landingTranslations.de.feeNote).toContain("Zahlungsanbieter");
+    expect(landingTranslations.de.feeRowBase).toContain("2 %");
+    expect(landingTranslations.de.feeRowTips).toContain("Trinkgeld");
+    expect(landingTranslations.de.feeRowVat).toContain("USt.");
     expect(landingTranslations.de.feePromise).toContain(
-      "Keine Bestellung über Zackisch? Keine prozentuale Zackisch-Gebühr",
+      "keine monatliche Zackisch-Grundgebühr",
     );
 
     // English fee disclosure
     expect(landingTranslations.en.feeNote).toContain("2%");
-    expect(landingTranslations.en.feeNote).toContain(
-      "inclusive of VAT on our service",
-    );
-    expect(landingTranslations.en.feeNote).toContain("tips excluded");
+    expect(landingTranslations.en.feeNote).toContain("VAT");
+    expect(landingTranslations.en.feeRowTips).toContain("tips");
+    expect(landingTranslations.en.feeRowVat).toContain("VAT");
   });
 
   it("clarifies POS workflow without false automatic synchronization claims", () => {

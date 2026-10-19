@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Check, CaretDown, CaretUp } from "@phosphor-icons/react";
 import { formatPrice, useTranslation } from "@/lib/i18n";
 import { Price } from "@/components/ui/price";
+import { DIETARY_LABEL_KEYS } from "@/lib/dietary-labels";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import type { MenuItem, CustomizationStep } from "@/lib/types";
 
@@ -243,6 +244,11 @@ export function CustomizationModal({
               className="text-base font-bold text-foreground"
             />
           </div>
+          {Boolean(item.dietaryLabels?.length) && (
+            <p className="text-sm text-muted-foreground">
+              {item.dietaryLabels!.map(label => t(DIETARY_LABEL_KEYS[label])).join(" · ")}
+            </p>
+          )}
           {item.description && (
             <button
               type="button"

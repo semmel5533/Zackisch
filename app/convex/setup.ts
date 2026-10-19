@@ -98,7 +98,9 @@ export const getSetupReadiness = query({
     const hasStripeConnected = Boolean(
       org.stripeAccountId &&
         !org.stripeAccountId.startsWith("acct_test_") &&
-        (org.stripeOnboardingComplete || org.stripeChargesEnabled)
+        org.stripeOnboardingComplete &&
+        org.stripeChargesEnabled &&
+        org.stripePayoutsEnabled
     );
 
     const hasMenuConfigured =

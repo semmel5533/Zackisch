@@ -14,11 +14,11 @@ import { CookingPot, X, Check, DownloadSimple } from "@phosphor-icons/react";
 import { playOrderReadySound, initAudioContext } from "@/lib/audio";
 import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
 import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header";
-import type { Business, Order } from "@/lib/types";
+import type { PublicRestaurant, Order } from "@/lib/types";
 
 interface OrderTrackerProps {
   orderId: string;
-  business: Business;
+  business: PublicRestaurant;
   initialOrder?: Order | null;
 }
 
@@ -101,6 +101,7 @@ export function OrderTracker({
     return (
       <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
         <RestaurantHeroHeader
+          className="max-w-[500px] mx-auto px-4 pt-6"
           business={business}
           type="takeaway"
           showOrderingSubtitle={false}
@@ -145,6 +146,7 @@ export function OrderTracker({
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
       <RestaurantHeroHeader
+          className="max-w-[500px] mx-auto px-4 pt-6"
         business={business}
         type="takeaway"
         showOrderingSubtitle={false}

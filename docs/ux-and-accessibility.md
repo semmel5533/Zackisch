@@ -2,7 +2,7 @@
 
 ## Evidence classification
 
-This document distinguishes **normative standards**, **strong usability recommendations**, **contextual heuristics**, and **unverified product hypotheses**. Never describe Hick's, Fitts's, Jakob's, Gestalt principles, a three-click rule or Miller's 7±2 as universally predictive laws for sales conversion. Validate decisions with actual task success, errors, accessibility testing and representative users. Cite reliable sources in `research-and-decisions.md`.
+This document distinguishes **normative standards**, **strong usability recommendations**, **contextual heuristics**, and **unverified product hypotheses**. Never describe Hick's, Fitts's, Jakob's, Gestalt principles, a three-click rule or Miller's 7±2 as universally predictive laws for sales conversion. Validate decisions with actual task success, errors, accessibility testing and representative users. Cite reliable sources in `product-decisions.md`.
 
 ## Five experience contexts
 
@@ -38,7 +38,7 @@ Use familiar e-commerce cart, payment review, search, sign-in, and form patterns
 
 ### Gestalt grouping and information hierarchy
 
-Group labels with fields, totals with payment CTA, status with order/ticket and resolution with corresponding action. DOM order and accessibility semantics must reflect visual grouping. Use whitespace for comprehension rather than massive empty hero sections.
+Group labels with fields, totals with payment CTA, status with order/ticket and resolution with corresponding action. DOM order and accessibility semantics must reflect visual grouping. Use whitespace for comprehension rather than decorative empty sections.
 
 ### Error prevention and recoverability
 
@@ -46,7 +46,7 @@ Do not allow checkout at stale prices, ambiguous guest charge, invalid region or
 
 ### Aesthetic-usability and trust
 
-Warm photography, real screenshots, consistent design and predictable language improve perceived approachability, but appearance cannot replace observed success. Avoid invented positive social proof, meaningless ratings or unverified “up 30%” claims. Source: https://www.nngroup.com/articles/aesthetic-usability-effect/ .
+Consistent visual hierarchy, authentic media, and predictable language support comprehension, but appearance cannot replace observed task success. Avoid invented positive social proof, meaningless ratings or unverified “up 30%” claims. Source: https://www.nngroup.com/articles/aesthetic-usability-effect/ .
 
 ## WCAG 2.2 AA engineering checklist
 

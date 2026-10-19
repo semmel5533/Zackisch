@@ -62,7 +62,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: "5mb",
+      bodySizeLimit: "11mb",
       allowedOrigins: [
         "app.zackisch.com",
         "app.zackisch.de",

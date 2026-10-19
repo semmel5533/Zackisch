@@ -1,12 +1,12 @@
 import {
   getOrders,
   getBusiness,
+  getPublicRestaurant,
   getMenuCategories,
   getMenuItems,
 } from "@/lib/convex/database";
 import { convexServer } from "@/lib/convex/server";
 import { api } from "@/convex/_generated/api";
-import { getUser } from "@/lib/convex/auth";
 import { StaffTerminalShell } from "@/components/staff/staff-terminal-shell";
 import { cookies } from "next/headers";
 import { LocalizedText } from "@/components/ui/localized-text";
@@ -39,9 +39,9 @@ export default async function StaffTerminalPage({
     cookieStore.get(`order_session_${businessId}`)?.value ||
     cookieStore.get(`availability_session_${businessId}`)?.value;
 
-  const [business, user] = await Promise.all([
+  const [business, ownerBusiness] = await Promise.all([
+    getPublicRestaurant(businessId),
     getBusiness(businessId),
-    getUser(),
   ]);
 
   if (!business) {
@@ -53,10 +53,7 @@ export default async function StaffTerminalPage({
   }
 
   // Allow if owner is logged in
-  const isOwner = Boolean(
-    user &&
-    (user._id === business.ownerId || user.$id === business.ownerId),
-  );
+  const isOwner = Boolean(ownerBusiness);
 
   // Verification via query token or persistent session cookie
   const tokenToVerify = token || cookieToken;

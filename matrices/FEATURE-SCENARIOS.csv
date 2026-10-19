@@ -1,0 +1,41 @@
+test_id,area,scenario,setup,observable_expected_result,evidence_status
+F01,settings,merchant toggles all three independently,authenticated owner; valid DE business,three controls persist; all three API effects honored when disabled,NOT_EXECUTED
+F02,settings,unauthorized update,foreign business or logged-out client,server denies changes; no cross-tenant leakage,NOT_EXECUTED
+F03,settings,reload/2 tabs,owner changed toggle in other session,server source of truth refreshed; stale UI not active,NOT_EXECUTED
+F04,recommendation,pair counted once,webhook paid order A+B replayed twice,one paid order pair event counted once,NOT_EXECUTED
+F05,recommendation,pair frequency vs quantity,A*2 and B*1 in same paid order,"pair n(A,B)=1; popularity A units=2",NOT_EXECUTED
+F06,recommendation,no data,brand-new restaurant,no fabricated recommendation or popularity label,NOT_EXECUTED
+F07,recommendation,small sample,below threshold paid orders,hide suggestions quietly,NOT_EXECUTED
+F08,recommendation,business isolation,X and Y share identical item names,no X orders/items in Y suggestions,NOT_EXECUTED
+F09,recommendation,unavailable product,B unavailable or deleted,B not shown,NOT_EXECUTED
+F10,recommendation,already in cart,A+B in cart,do not cross-sell B again,NOT_EXECUTED
+F11,recommendation,required customizations,B has required options,open normal variant selection; no silent add,NOT_EXECUTED
+F12,recommendation,disabled mid checkout,owner turns flag off,"requery returns empty, inline UI disappears, pay remains",NOT_EXECUTED
+F13,recommendation,paid-only source,created checkout unpaid or client order forged paid,zero statistics changes,NOT_EXECUTED
+F14,recommendation,paid refund chargeback,full and partial refunds,reverse or conservatively exclude attributed item counts,NOT_EXECUTED
+F15,recommendation,out-of-order webhook,refund arrives before replayed success,idempotent final aggregate consistent,NOT_EXECUTED
+F16,recommendation,legacy JSON order items,item ID missing or corrupt JSON,"skip safely, log aggregate error; no made-up matching",NOT_EXECUTED
+F17,recommendation,cart add-on optional,low priced relevant B,0-3 items; no forced step; total updates only when clicked,NOT_EXECUTED
+F18,recommendation,insufficient relevance,low lift or unrelated item,show no suggestion,NOT_EXECUTED
+F19,popular,virtual only,merchant has 15 paid orders and sufficient items,"popular appears as tab, no `menuCategories` new row",NOT_EXECUTED
+F20,popular,disabled,owner turns off,category disappears without modifying menu categories,NOT_EXECUTED
+F21,popular,menu item update,item price or availability changed,single real ID remains source of truth,NOT_EXECUTED
+F22,popular,wrong tenant,guest guesses other business item ID,no visible item leakage,NOT_EXECUTED
+F23,tip,tip disabled,cart had old 10% tip and merchant disabled it,"server charge excludes tip, Stripe session refreshed",NOT_EXECUTED
+F24,tip,tip enabled,"guest selects 0%, 10%",tip optional; Zackisch 2% excludes tip,NOT_EXECUTED
+F25,payment,truthful successful order,Stripe test webhook says paid,order is paid; POS still pending; stats updated,NOT_EXECUTED
+F26,payment,failed or disputed,"Stripe fails, cancels or disputes",no sale-count inflation; financial records unaffected,NOT_EXECUTED
+F27,performance,large order history,"10k+ orders, many items","guest query index/aggregate bounded, no unbounded collect",NOT_EXECUTED
+F28,accessibility,keyboard checkout,narrow viewport and screen reader,suggestions do not trap focus or cover pay button,NOT_EXECUTED
+F29,security,staff cross-region,AT staff token querying DE orders,server rejects independently of UI permission,NOT_EXECUTED
+F30,security,password reset/login,legacy demo fallback or plaintext secrets,real secure hashing/auth; no fallback,NOT_EXECUTED
+F31,support,merchant-only ticket,anonymous visitor on public article,read public article; cannot create ticket without app login,NOT_EXECUTED
+F32,region,post-login locked region,merchant and admin authenticated,only language can change; backend enforces account region,NOT_EXECUTED
+F33,seo,root and support locales,SSR crawlers no JS,valid titles canonical hreflang JSON-LD matched on-page,NOT_EXECUTED
+F34,design,root proposal gate,"three live concepts, no approval",wait; no productive JSX rewrite,NOT_EXECUTED
+F35,design,app proposal gate,three real owner/guest/staff concepts,wait; no change to live package,NOT_EXECUTED
+F36,design,anti slop,human inspection of actual target state,delete redundant UI; no fabricated scorecard passes,NOT_EXECUTED
+F37,cleanup,old documents removed,docs cleanup diff + link check,"legal/data/brand files remain, stale visual docs gone",NOT_EXECUTED
+F38,evidence,wrong screenshot state,owner screen redirected sign in,"capture test fails, no APPROVED",NOT_EXECUTED
+F39,copy,feature claims,recommendations not shipped or sample small,no fake recommendation result or sales uplift on marketing,NOT_EXECUTED
+F40,backfill,scheduled feature build,bounded data with snapshots and checkpoint,safe restart and no production mutation without approval,NOT_EXECUTED

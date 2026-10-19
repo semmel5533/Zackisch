@@ -124,7 +124,7 @@ export function CurrentOrdersContent({
   const liveOrders = useQuery(api.orders.getLiveOrders, {
     businessId: businessId as Id<"businesses">,
   });
-  const business = useQuery(api.businesses.get, {
+  const business = useQuery(api.businesses.getPublicRestaurant, {
     id: businessId as Id<"businesses">,
   });
 

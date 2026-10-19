@@ -1,5 +1,5 @@
 import {
-  getBusiness,
+  getPublicRestaurant,
   getMenuCategories,
   getAvailableMenuItems,
   getOrder,
@@ -25,7 +25,7 @@ export async function generateMetadata({
   const cookieStore = await cookies();
   const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "de";
   const dict = translations[locale] || translations.de;
-  const business = await getBusiness(businessId);
+  const business = await getPublicRestaurant(businessId);
   const businessName = business?.name || "";
 
   if (order) {
@@ -57,7 +57,7 @@ export default async function TablePage({
   ]);
 
   const [business, categories, items, initialOrder] = await Promise.all([
-    getBusiness(businessId),
+    getPublicRestaurant(businessId),
     getMenuCategories(businessId),
     getAvailableMenuItems(businessId),
     order ? getOrder(order) : Promise.resolve(null),
@@ -92,7 +92,7 @@ export default async function TablePage({
     );
   }
 
-  if (!business.stripeOnboardingComplete && !order) {
+  if (!business.canOrder && !order) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-6 bg-background text-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
@@ -113,13 +113,6 @@ export default async function TablePage({
     );
   }
 
-  const publicBusiness = {
-    ...business,
-    stripeAccountId: undefined,
-    taxId: undefined,
-    ownerId: "",
-  };
-
   const sanitizedInitialOrder =
     initialOrder && initialOrder.businessId === businessId
       ? {
@@ -135,7 +128,7 @@ export default async function TablePage({
 
   return (
     <GuestFrontend
-      business={structuredClone(publicBusiness)}
+      business={structuredClone(business)}
       categories={structuredClone(categories)}
       items={structuredClone(items)}
       type="dine-in"

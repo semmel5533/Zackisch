@@ -1,5 +1,7 @@
 "use client";
 
+import { Checkbox } from "@zackisch/design-system";
+import { DIETARY_LABELS, DIETARY_LABEL_KEYS, type DietaryLabel } from "@/lib/dietary-labels";
 import { useState, useEffect, useRef, startTransition } from "react";
 import {
   Dialog,
@@ -75,6 +77,7 @@ export function ItemWorkspace({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [dietaryLabels, setDietaryLabels] = useState<DietaryLabel[]>([]);
   const selectedFileRef = useRef<File | null>(null);
   const removeImageRef = useRef(false);
   const [enableCustomizations, setEnableCustomizations] = useState(false);
@@ -96,6 +99,7 @@ export function ItemWorkspace({
         categoryIdRef.current = catId;
         setName(editingItem.name);
         setDescription(editingItem.description || "");
+        setDietaryLabels(editingItem.dietaryLabels ?? []);
         setPrice((Math.round(editingItem.price) / 100).toFixed(2));
         selectedFileRef.current = null;
         removeImageRef.current = false;
@@ -128,6 +132,7 @@ export function ItemWorkspace({
         categoryIdRef.current = initialCat;
         setName("");
         setDescription("");
+        setDietaryLabels([]);
         setPrice("");
         selectedFileRef.current = null;
         removeImageRef.current = false;
@@ -171,6 +176,7 @@ export function ItemWorkspace({
     formData.append("categoryId", categoryId || categoryIdRef.current);
     formData.append("name", name.trim());
     formData.append("description", description);
+    dietaryLabels.forEach(label => formData.append("dietaryLabels", label));
     formData.append("price", normalizedPrice);
     formData.append("taxRate", "19.0");
     formData.append(
@@ -197,7 +203,9 @@ export function ItemWorkspace({
     try {
       const action = editingItem ? updateMenuItemAction : createMenuItemAction;
       const res = await action({}, formData);
-      if (res?.error) {
+      if (res?.errorKey) {
+        toast.error(t(res.errorKey));
+      } else if (res?.error) {
         toast.error(res.error);
       } else if (res?.success) {
         onOpenChange(false);
@@ -350,6 +358,20 @@ export function ItemWorkspace({
                         className="resize-none rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground min-h-[96px]"
                       />
                     </div>
+
+                    <fieldset aria-describedby="ws-dietary-help" className="space-y-2">
+                      <legend className="text-sm font-semibold">{t("dietaryLabelsTitle")}</legend>
+                      <p id="ws-dietary-help" className="text-sm text-muted-foreground">{t("dietaryLabelsHelp")}</p>
+                      <div className="flex flex-wrap gap-x-5 gap-y-2">
+                        {DIETARY_LABELS.map(label => (
+                          <div key={label} className="flex min-h-11 items-center">
+                            <Checkbox id={`ws-dietary-${label}`} label={t(DIETARY_LABEL_KEYS[label])}
+                              checked={dietaryLabels.includes(label)} disabled={isSubmitting}
+                              onCheckedChange={checked => setDietaryLabels(current => checked ? [...current, label] : current.filter(value => value !== label))} />
+                          </div>
+                        ))}
+                      </div>
+                    </fieldset>
 
                     <div className="flex flex-col gap-1.5">
                       <Label

@@ -1,144 +1,85 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, CheckCircle, WarningCircle, CircleNotch } from "@phosphor-icons/react";
+import { useId, useRef, useState, type FormEvent } from "react";
+import { Button, Input } from "@zackisch/design-system";
+import { newsletterResult, type NewsletterResult } from "@/lib/newsletter";
 import { useTranslation } from "@/lib/i18n";
-import { Button } from "@/components/ui/button";
 
 const CONVEX_SITE_URL =
   process.env.NEXT_PUBLIC_CONVEX_SITE_URL ||
   "https://silent-narwhal-392.eu-west-1.convex.site";
 
-interface NewsletterFormProps {
-  showHeader?: boolean;
-}
+type SubmissionState = "idle" | "loading" | NewsletterResult;
 
-export function NewsletterForm({ showHeader = true }: NewsletterFormProps) {
+export function NewsletterForm({ showHeader = true }: { showHeader?: boolean }) {
   const { t, locale } = useTranslation();
+  const id = useId();
+  const submitting = useRef(false);
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const [state, setState] = useState<SubmissionState>("idle");
+  const hasError = state === "invalid_email" || state === "error";
+  const succeeded = state === "pending" || state === "already_confirmed";
 
-  const isDe = locale !== "en";
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email || !email.includes("@")) {
-      setStatus("error");
-      setMessage(isDe ? "Bitte gib eine gültige E-Mail-Adresse ein." : "Please enter a valid email address.");
-      return;
-    }
-
-    setStatus("loading");
-    setMessage("");
-
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
+    setState("loading");
     try {
-      const res = await fetch(`${CONVEX_SITE_URL}/api/newsletter/subscribe`, {
+      const response = await fetch(`${CONVEX_SITE_URL}/api/newsletter/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim(),
-          regionId: "de",
-          locale: isDe ? "de" : "en",
-          source: "website_footer",
-        }),
+        body: JSON.stringify({ email: email.trim(), regionId: "de", locale, source: "website_footer" }),
       });
-
-      const data = await res.json();
-      if (data.success) {
-        setStatus("success");
-        setMessage(
-          isDe
-            ? "Fast geschafft! Bitte bestätige die E-Mail in deinem Posteingang."
-            : "Almost there! Please check your inbox to confirm your subscription."
-        );
-        setEmail("");
-      } else {
-        setStatus("error");
-        setMessage(data.message || (isDe ? "Anmeldung fehlgeschlagen." : "Subscription failed."));
-      }
+      const data: unknown = await response.json();
+      const result = newsletterResult(response.ok, data);
+      setState(result);
+      if (result === "pending" || result === "already_confirmed") setEmail("");
     } catch {
-      setStatus("error");
-      setMessage(isDe ? "Verbindungsfehler. Bitte versuche es später erneut." : "Network error. Please try again later.");
+      setState("error");
+    } finally {
+      submitting.current = false;
     }
   }
 
   return (
-    <div className="w-full max-w-[460px] flex flex-col gap-3">
+    <div className="w-full max-w-lg">
       {showHeader && (
-        <div className="flex flex-col gap-1">
-          <h4 className="text-base font-semibold text-foreground">
-            {isDe ? "Zackisch Updates & Neuigkeiten" : "Zackisch Updates & News"}
-          </h4>
-          <p className="text-[13px] text-muted-foreground leading-normal">
-            {isDe
-              ? "Erfahre zuerst von neuen Funktionen, Gastronomie-Tipps und regionalen Updates."
-              : "Be the first to learn about new features, hospitality insights, and regional updates."}
-          </p>
+        <div className="mb-5">
+          <h2 className="text-lg font-semibold">{t("newsletterSectionTitle")}</h2>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground">{t("newsletterSectionDesc")}</p>
         </div>
       )}
-
-      {status === "success" ? (
-        <div className="flex items-start gap-2.5 rounded-2xl bg-black/5 p-3.5 text-sm text-foreground">
-          <CheckCircle size={20} className="shrink-0 text-emerald-600 mt-0.5" weight="fill" />
-          <div className="leading-snug">{message}</div>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <input
+      {!succeeded && (
+        <form onSubmit={handleSubmit} aria-busy={state === "loading"}>
+          <label htmlFor={id} className="mb-2 block text-sm font-medium">{t("newsletterEmailLabel")}</label>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Input
+              id={id}
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={isDe ? "deine@email.de" : "you@company.com"}
+              autoComplete="email"
               required
-              aria-label={isDe ? "E-Mail-Adresse für Newsletter" : "Email address for newsletter"}
-              className="h-11 flex-1 rounded-full border border-black/15 bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black"
+              value={email}
+              disabled={state === "loading"}
+              hasError={hasError}
+              aria-describedby={`${id}-notice${hasError ? ` ${id}-status` : ""}`}
+              onChange={event => { setEmail(event.target.value); if (hasError) setState("idle"); }}
+              className="min-w-0 flex-1 rounded-lg text-base"
             />
-            <Button
-              type="submit"
-              disabled={status === "loading"}
-              className="h-11 rounded-full px-5 text-sm font-semibold inline-flex items-center gap-1.5 shrink-0"
-            >
-              {status === "loading" ? (
-                <CircleNotch size={16} className="animate-spin" />
-              ) : (
-                <>
-                  <span>{isDe ? "Anmelden" : "Subscribe"}</span>
-                  <ArrowRight size={14} weight="bold" />
-                </>
-              )}
+            <Button type="submit" busy={state === "loading"} busyText={t("newsletterSubmitting")} className="shrink-0 rounded-lg">
+              {t("newsletterSubmit")}
             </Button>
           </div>
-
-          {status === "error" && (
-            <div className="flex items-center gap-1.5 text-xs text-rose-600 font-medium">
-              <WarningCircle size={14} weight="bold" />
-              <span>{message}</span>
-            </div>
-          )}
-
-          <p className="text-[11px] text-muted-foreground leading-tight">
-            {isDe ? (
-              <>
-                Double-Opt-In. Abmeldung jederzeit mit einem Klick möglich. Details in unserer{" "}
-                <a href={t("privacyUrl")} className="underline hover:text-foreground">
-                  Datenschutzerklärung
-                </a>
-                .
-              </>
-            ) : (
-              <>
-                Double opt-in. Unsubscribe at any time with one click. Read our{" "}
-                <a href={t("privacyUrl")} className="underline hover:text-foreground">
-                  Privacy Policy
-                </a>
-                .
-              </>
-            )}
+          <p id={`${id}-notice`} className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            {t("newsletterConsentNote")} {" "}
+            <a href={t("privacyUrl")} className="underline underline-offset-4">{t("privacyLink")}</a>
           </p>
         </form>
       )}
+      <p id={`${id}-status`} role="status" aria-live="polite" aria-atomic="true" className="mt-3 text-sm leading-relaxed">
+        {state === "pending" ? t("newsletterPending") : state === "already_confirmed" ? t("newsletterAlreadyConfirmed") : state === "invalid_email" ? t("newsletterInvalidEmail") : state === "error" ? t("newsletterError") : ""}
+      </p>
     </div>
   );
 }

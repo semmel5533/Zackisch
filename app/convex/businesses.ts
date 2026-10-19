@@ -1,5 +1,9 @@
 import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { requireOwnedMedia, deleteUnusedMedia } from "./merchantMedia";
+import { getMerchantUserId, requireOwner } from "./permissions";
+import type { QueryCtx } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
 
 const businessObjectValidator = v.object({
   _id: v.id("businesses"),
@@ -43,27 +47,47 @@ const businessObjectValidator = v.object({
   setupDismissedAt: v.optional(v.number()),
 });
 
+async function loadBusiness(ctx: QueryCtx, id: Id<"businesses">) {
+  const business = await ctx.db.get(id);
+  if (!business) return null;
+
+  let logoUrl: string | null = null;
+  if (business.logoStorageId) {
+    logoUrl = await ctx.storage.getUrl(business.logoStorageId);
+  }
+  let bannerUrl: string | null = null;
+  if (business.bannerStorageId) {
+    bannerUrl = await ctx.storage.getUrl(business.bannerStorageId);
+  }
+
+  return {
+    ...business,
+    logoUrl,
+    bannerUrl,
+  };
+}
+
 export const get = query({
-  args: { id: v.id("businesses") },
+  args: { id: v.id("businesses"), sessionToken: v.optional(v.string()) },
   returns: v.union(v.null(), businessObjectValidator),
   handler: async (ctx, args) => {
-    const business = await ctx.db.get(args.id);
-    if (!business) return null;
+    await requireOwner(ctx, args.id, args.sessionToken);
+    return loadBusiness(ctx, args.id);
+  },
+});
 
-    let logoUrl: string | null = null;
-    if (business.logoStorageId) {
-      logoUrl = await ctx.storage.getUrl(business.logoStorageId);
-    }
-    let bannerUrl: string | null = null;
-    if (business.bannerStorageId) {
-      bannerUrl = await ctx.storage.getUrl(business.bannerStorageId);
-    }
+export const getInternal = internalQuery({
+  args: { id: v.id("businesses") },
+  returns: v.union(v.null(), businessObjectValidator),
+  handler: (ctx, args) => loadBusiness(ctx, args.id),
+});
 
-    return {
-      ...business,
-      logoUrl,
-      bannerUrl,
-    };
+export const getForOwnerInternal = internalQuery({
+  args: { id: v.id("businesses"), sessionToken: v.optional(v.string()) },
+  returns: v.union(v.null(), businessObjectValidator),
+  handler: async (ctx, args) => {
+    await requireOwner(ctx, args.id, args.sessionToken);
+    return loadBusiness(ctx, args.id);
   },
 });
 
@@ -82,7 +106,7 @@ export const getByStripeAccountInternal = internalQuery({
 });
 
 export const getPublicRestaurant = query({
-  args: { id: v.id("businesses") },
+  args: { id: v.string() },
   returns: v.union(
     v.null(),
     v.object({
@@ -90,7 +114,6 @@ export const getPublicRestaurant = query({
       name: v.string(),
       legalName: v.optional(v.string()),
       address: v.optional(v.string()),
-      taxId: v.optional(v.string()),
       vatId: v.optional(v.string()),
       contactEmail: v.optional(v.string()),
       contactPhone: v.optional(v.string()),
@@ -98,17 +121,17 @@ export const getPublicRestaurant = query({
       bannerUrl: v.union(v.string(), v.null()),
       isToGoEnabled: v.optional(v.boolean()),
       isToStayEnabled: v.optional(v.boolean()),
-      isPaused: v.optional(v.boolean()),
-      pauseReason: v.optional(v.string()),
-      stripeOnboardingComplete: v.optional(v.boolean()),
-      stripeChargesEnabled: v.optional(v.boolean()),
+      isPaused: v.boolean(),
+      canOrder: v.boolean(),
       currency: v.optional(v.string()),
       region: v.optional(v.string()),
       tables: v.optional(v.array(v.string())),
     })
   ),
   handler: async (ctx, args) => {
-    const org = await ctx.db.get(args.id);
+    const id = ctx.db.normalizeId("businesses", args.id);
+    if (!id) return null;
+    const org = await ctx.db.get(id);
     if (!org) return null;
     let logoUrl: string | null = null;
     if (org.logoStorageId) {
@@ -123,7 +146,6 @@ export const getPublicRestaurant = query({
       name: org.name,
       legalName: org.legalName || org.name,
       address: org.address,
-      taxId: org.taxId,
       vatId: org.vatId,
       contactEmail: org.contactEmail,
       contactPhone: org.contactPhone,
@@ -132,10 +154,9 @@ export const getPublicRestaurant = query({
       isToGoEnabled: org.isToGoEnabled,
       isToStayEnabled: org.isToStayEnabled,
       isPaused: org.isPaused ?? false,
-      pauseReason: org.pauseReason,
-      stripeOnboardingComplete: org.stripeOnboardingComplete ?? false,
-      stripeChargesEnabled:
-        org.stripeChargesEnabled ?? org.stripeOnboardingComplete ?? false,
+      canOrder: Boolean(!org.isPaused && !org.deletionRequested && org.stripeAccountId &&
+        !org.stripeAccountId.startsWith("acct_test_") &&
+        org.stripeOnboardingComplete && org.stripeChargesEnabled && org.stripePayoutsEnabled),
       currency: org.currency || "EUR",
       region: org.region || "de",
       tables: org.tables,
@@ -144,30 +165,14 @@ export const getPublicRestaurant = query({
 });
 
 export const getByOwner = query({
-  args: { ownerId: v.string() },
+  args: { ownerId: v.string(), sessionToken: v.optional(v.string()) },
   returns: v.union(v.null(), businessObjectValidator),
   handler: async (ctx, args) => {
-    const business = await ctx.db
-      .query("businesses")
-      .withIndex("by_ownerId", (q) => q.eq("ownerId", args.ownerId))
-      .first();
-
-    if (!business) return null;
-
-    let logoUrl: string | null = null;
-    if (business.logoStorageId) {
-      logoUrl = await ctx.storage.getUrl(business.logoStorageId);
-    }
-    let bannerUrl: string | null = null;
-    if (business.bannerStorageId) {
-      bannerUrl = await ctx.storage.getUrl(business.bannerStorageId);
-    }
-
-    return {
-      ...business,
-      logoUrl,
-      bannerUrl,
-    };
+    const userId = await getMerchantUserId(ctx, args.sessionToken);
+    if (!userId || userId !== args.ownerId) throw new Error("Unauthorized");
+    const business = await ctx.db.query("businesses")
+      .withIndex("by_ownerId", q => q.eq("ownerId", userId)).first();
+    return business ? loadBusiness(ctx, business._id) : null;
   },
 });
 
@@ -175,6 +180,7 @@ export const create = mutation({
   args: {
     name: v.string(),
     ownerId: v.string(),
+    sessionToken: v.optional(v.string()),
     address: v.optional(v.string()),
     logoStorageId: v.optional(v.union(v.id("_storage"), v.null())),
     bannerStorageId: v.optional(v.union(v.id("_storage"), v.null())),
@@ -189,6 +195,9 @@ export const create = mutation({
   },
   returns: v.id("businesses"),
   handler: async (ctx, args) => {
+    const ownerId = await getMerchantUserId(ctx, args.sessionToken);
+    if (!ownerId || ownerId !== args.ownerId) throw new Error("Unauthorized");
+    if (args.logoStorageId || args.bannerStorageId) throw new Error("UPLOAD_MEDIA_AFTER_CREATION");
     const trimmedName = args.name.trim();
     if (trimmedName.length === 0 || trimmedName.length > 100) {
       throw new Error("Invalid business name");
@@ -210,7 +219,7 @@ export const create = mutation({
 
     const businessId = await ctx.db.insert("businesses", {
       name: trimmedName,
-      ownerId: args.ownerId,
+      ownerId,
       address: args.address,
       logoStorageId: args.logoStorageId || undefined,
       bannerStorageId: args.bannerStorageId || undefined,
@@ -240,25 +249,13 @@ export const create = mutation({
 export const update = mutation({
   args: {
     id: v.id("businesses"),
+    sessionToken: v.optional(v.string()),
     name: v.optional(v.string()),
     address: v.optional(v.string()),
     logoStorageId: v.optional(v.union(v.id("_storage"), v.null())),
     clearLogo: v.optional(v.boolean()),
     bannerStorageId: v.optional(v.union(v.id("_storage"), v.null())),
     clearBanner: v.optional(v.boolean()),
-    stripeAccountId: v.optional(v.string()),
-    stripeOnboardingComplete: v.optional(v.boolean()),
-    stripeChargesEnabled: v.optional(v.boolean()),
-    stripePayoutsEnabled: v.optional(v.boolean()),
-    stripeRequirementsStatus: v.optional(v.string()),
-    stripeCurrentlyDue: v.optional(v.array(v.string())),
-    stripePastDue: v.optional(v.array(v.string())),
-    stripeDisabledReason: v.optional(v.string()),
-    stripeFeeCollector: v.optional(v.string()),
-    stripeLossCollector: v.optional(v.string()),
-    stripeDashboardType: v.optional(v.string()),
-    stripeConnectedAt: v.optional(v.number()),
-    stripeLastSyncedAt: v.optional(v.number()),
     isToGoEnabled: v.optional(v.boolean()),
     isToStayEnabled: v.optional(v.boolean()),
     legalName: v.optional(v.string()),
@@ -266,25 +263,29 @@ export const update = mutation({
     vatId: v.optional(v.string()),
     contactEmail: v.optional(v.string()),
     contactPhone: v.optional(v.string()),
-    currency: v.optional(v.string()),
-    region: v.optional(v.string()),
-    deletionRequested: v.optional(v.boolean()),
     tables: v.optional(v.array(v.string())),
     isPaused: v.optional(v.boolean()),
     pauseReason: v.optional(v.string()),
-    posWorkflowConfirmedAt: v.optional(v.number()),
-    testOrderCompletedAt: v.optional(v.number()),
-    setupDismissedAt: v.optional(v.number()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const { id, clearLogo, clearBanner, ...patchData } = args;
+    await requireOwner(ctx, args.id, args.sessionToken);
+    const { id, sessionToken: _sessionToken, clearLogo, clearBanner, ...patchData } = args;
     if (patchData.name !== undefined) {
       const trimmedName = patchData.name.trim();
       if (trimmedName.length === 0 || trimmedName.length > 100) {
         throw new Error("Invalid business name");
       }
       patchData.name = trimmedName;
+    }
+    for (const field of ["legalName", "taxId", "vatId"] as const) {
+      if (patchData[field] !== undefined) {
+        const value = patchData[field]!.trim();
+        if (value.length > (field === "legalName" ? 200 : 40)) {
+          throw new Error("Invalid seller identity");
+        }
+        patchData[field] = value;
+      }
     }
     if (patchData.address !== undefined && patchData.address.length > 200) {
       throw new Error("Address too long");
@@ -303,53 +304,41 @@ export const update = mutation({
     const existing = await ctx.db.get(id);
     if (!existing) throw new Error("Business not found");
 
-    if (clearLogo && existing.logoStorageId) {
-      try {
-        await ctx.storage.delete(existing.logoStorageId);
-      } catch {
-        // ignore if already deleted
-      }
-      patchData.logoStorageId = undefined;
-    } else if (
-      args.logoStorageId &&
-      existing.logoStorageId &&
-      existing.logoStorageId !== args.logoStorageId
-    ) {
-      try {
-        await ctx.storage.delete(existing.logoStorageId);
-      } catch {
-        // ignore if already deleted
+    for (const field of ["logoStorageId", "bannerStorageId"] as const) {
+      if (patchData[field] && patchData[field] !== existing[field]) {
+        await requireOwnedMedia(ctx, id, patchData[field]);
       }
     }
-
-    if (patchData.logoStorageId === null) {
-      patchData.logoStorageId = undefined;
-    }
-
-    if (clearBanner && existing.bannerStorageId) {
-      try {
-        await ctx.storage.delete(existing.bannerStorageId);
-      } catch {
-        // ignore if already deleted
-      }
-      patchData.bannerStorageId = undefined;
-    } else if (
-      args.bannerStorageId &&
-      existing.bannerStorageId &&
-      existing.bannerStorageId !== args.bannerStorageId
-    ) {
-      try {
-        await ctx.storage.delete(existing.bannerStorageId);
-      } catch {
-        // ignore if already deleted
-      }
-    }
-
-    if (patchData.bannerStorageId === null) {
-      patchData.bannerStorageId = undefined;
-    }
+    if (clearLogo || patchData.logoStorageId === null) patchData.logoStorageId = undefined;
+    if (clearBanner || patchData.bannerStorageId === null) patchData.bannerStorageId = undefined;
 
     await ctx.db.patch(id, patchData);
+    await deleteUnusedMedia(ctx, id, existing.logoStorageId);
+    await deleteUnusedMedia(ctx, id, existing.bannerStorageId);
+    return null;
+  },
+});
+
+export const bindStripeAccountInternal = internalMutation({
+  args: {
+    id: v.id("businesses"),
+    stripeAccountId: v.string(),
+    stripeDashboardType: v.string(),
+    stripeFeeCollector: v.string(),
+    stripeLossCollector: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const existing = await ctx.db.get(args.id);
+    if (!existing) throw new Error("Business not found");
+    if (existing.stripeAccountId && existing.stripeAccountId !== args.stripeAccountId) {
+      throw new Error("Stripe account already bound");
+    }
+    const { id, ...account } = args;
+    await ctx.db.patch(id, {
+      ...account,
+      stripeConnectedAt: existing.stripeConnectedAt ?? Date.now(),
+    });
     return null;
   },
 });
@@ -373,6 +362,9 @@ export const syncStripeAccountStatusInternal = internalMutation({
   handler: async (ctx, args) => {
     const existing = await ctx.db.get(args.businessId);
     if (!existing) return null;
+    if (existing.stripeAccountId !== args.stripeAccountId) {
+      throw new Error("Stripe account binding mismatch");
+    }
 
     const shouldPauseForRestriction =
       existing.stripeOnboardingComplete && !args.stripeChargesEnabled;

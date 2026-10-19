@@ -306,7 +306,7 @@ function computeNextOrderNumber(recentOrders: Array<{ orderNumber: string }>): s
   return String(nextNum).padStart(3, "0");
 }
 
-export const createOrder = mutation({
+export const createOrder = internalMutation({
   args: {
     businessId: v.id("businesses"),
     tableNumber: v.optional(v.string()),

@@ -1,3 +1,5 @@
+import type { DietaryLabel } from "./dietary-labels";
+
 // Convex Document Base
 
 export interface ConvexDocument {
@@ -53,6 +55,11 @@ export interface Business extends ConvexDocument {
   tables?: string[];
 }
 
+export type PublicRestaurant = Pick<Business,
+  "_id" | "$id" | "name" | "legalName" | "address" | "vatId" | "logoUrl" | "bannerUrl" |
+  "currency" | "region" | "isToGoEnabled" | "isToStayEnabled" | "tables"
+> & { canOrder: boolean; isPaused: boolean; contactEmail?: string; contactPhone?: string };
+
 export interface CreateBusinessData {
   name: string;
   address?: string;
@@ -107,6 +114,7 @@ export interface CustomizationStep {
 }
 
 export interface MenuItem extends ConvexDocument {
+  dietaryLabels?: DietaryLabel[];
   businessId: string;
   categoryId: string;
   name: string;
@@ -122,6 +130,7 @@ export interface MenuItem extends ConvexDocument {
 }
 
 export interface CreateMenuItemData {
+  dietaryLabels?: DietaryLabel[];
   businessId: string;
   categoryId: string;
   name: string;

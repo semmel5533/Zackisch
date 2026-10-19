@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { convexTest } from "convex-test";
 import schema from "../convex/schema";
-import { api } from "../convex/_generated/api";
+import { api, internal } from "../convex/_generated/api";
 
 const modules = import.meta.glob("../convex/**/*.ts");
 
@@ -26,23 +26,23 @@ async function fixtures() {
 
 describe("merchant media upload authorization", () => {
   it.each([undefined, "invalid", "stranger", "expired"])(
-    "refuses upload URLs without current ownership (%s)", async sessionToken => {
+    "refuses upload authorization without current ownership (%s)", async sessionToken => {
       const { t, businessId } = await fixtures();
-      await expect(t.mutation(api.storage.generateUploadUrl, { businessId, sessionToken }))
+      await expect(t.mutation(internal.storage.authorizeMediaUploadInternal, { businessId, sessionToken }))
         .rejects.toThrow("Unauthorized");
     },
   );
 
   it("allows the owner's current cookie session", async () => {
     const { t, businessId } = await fixtures();
-    const url = await t.mutation(api.storage.generateUploadUrl, { businessId, sessionToken: "owner" });
-    expect(new URL(url).protocol).toBe("https:");
+    const result = await t.mutation(internal.storage.authorizeMediaUploadInternal, { businessId, sessionToken: "owner" });
+    expect(result).toBeNull();
   });
 
   it("allows the owner's Convex Auth identity", async () => {
     const { t, businessId, owner } = await fixtures();
     const authenticated = t.withIdentity({ subject: `${owner}|fixture-session` });
-    const url = await authenticated.mutation(api.storage.generateUploadUrl, { businessId });
-    expect(new URL(url).protocol).toBe("https:");
+    const result = await authenticated.mutation(internal.storage.authorizeMediaUploadInternal, { businessId });
+    expect(result).toBeNull();
   });
 });

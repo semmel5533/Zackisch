@@ -16,6 +16,27 @@ export interface SettingsActionState {
   success?: boolean;
 }
 
+export async function updateSellerIdentityAction(
+  businessId: string,
+  values: { legalName: string; taxId: string; vatId: string },
+): Promise<{ success: boolean; error?: "sellerIdentityInvalid" | "sellerIdentitySaveFailed" }> {
+  try {
+    await requireOwner(businessId);
+    const legalName = values.legalName.trim();
+    const taxId = values.taxId.trim();
+    const vatId = values.vatId.trim();
+    if (!legalName || legalName.length > 200 || (!taxId && !vatId) || taxId.length > 40 || vatId.length > 40) {
+      return { success: false, error: "sellerIdentityInvalid" };
+    }
+    await updateBusiness(businessId, { legalName, taxId, vatId });
+    revalidatePath(`/dashboard/${businessId}/settings`);
+    revalidatePath(`/dashboard/${businessId}/overview`);
+    return { success: true };
+  } catch {
+    return { success: false, error: "sellerIdentitySaveFailed" };
+  }
+}
+
 export async function logoutAllDevicesAction(): Promise<void> {
   redirect("/sign-in");
 }

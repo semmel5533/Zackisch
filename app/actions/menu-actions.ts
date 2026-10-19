@@ -17,10 +17,12 @@ import {
 import { uploadFileToConvex } from "@/lib/convex/storage";
 import { getUser, requireOwner, requireStaffOrOwner } from "@/lib/convex/auth";
 import { MAX_IMAGE_SIZE_BYTES, isAllowedImageFile } from "@/lib/constants";
+import { parseDietaryLabels } from "@/lib/dietary-labels";
 import type { CustomizationStep, MenuItem } from "@/lib/types";
 
 export interface MenuActionState {
   error?: string;
+  errorKey?: "invalidDietaryLabels";
   success?: boolean;
   categoryId?: string;
 }
@@ -238,6 +240,8 @@ export async function createMenuItemAction(
       return { error: "Kategorie nicht gefunden oder unberechtigt." };
     }
 
+    const dietaryLabels = parseDietaryLabels(formData.getAll("dietaryLabels"));
+
     let imageStorageId: string | undefined = undefined;
     if (imageFile && imageFile.size > 0) {
       imageStorageId = await uploadFileToConvex(imageFile, businessId);
@@ -255,11 +259,13 @@ export async function createMenuItemAction(
       ownerId: user.$id || user._id,
       taxRate,
       customizations,
+      dietaryLabels,
     });
 
     revalidatePath(`/dashboard/${businessId}/menu`);
     return { success: true };
   } catch (error: unknown) {
+    if (error instanceof Error && error.message === "INVALID_DIETARY_LABELS") return { errorKey: "invalidDietaryLabels" };
     const message =
       error instanceof Error
         ? error.message
@@ -342,6 +348,8 @@ export async function updateMenuItemAction(
       sortOrder = maxSortOrder + 1;
     }
 
+    const dietaryLabels = parseDietaryLabels(formData.getAll("dietaryLabels"));
+
     let imageStorageId: string | undefined = existingImageId || undefined;
 
     if (removeExistingImage) {
@@ -362,6 +370,7 @@ export async function updateMenuItemAction(
       clearImage: removeExistingImage,
       taxRate,
       customizations,
+      dietaryLabels,
     });
 
     revalidatePath(`/dashboard/${businessId}/menu`);
@@ -370,6 +379,7 @@ export async function updateMenuItemAction(
     revalidatePath(`/availability/${businessId}`);
     return { success: true };
   } catch (error: unknown) {
+    if (error instanceof Error && error.message === "INVALID_DIETARY_LABELS") return { errorKey: "invalidDietaryLabels" };
     const message =
       error instanceof Error
         ? error.message

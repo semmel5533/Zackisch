@@ -8,6 +8,12 @@ Der persistente Einrichtungsassistent unterscheidet erforderliche, empfohlene un
 
 Das Personal-Tablet zeigt eingehende Bestellungen und deren eindeutige Statusfolge in Echtzeit. Stripe-Zahlungen und Bestellpreise werden serverseitig validiert, Zahlungsereignisse idempotent verarbeitet. Die Erfassung digitaler Umsätze im bestehenden Kassensystem bleibt erforderlich, soweit im betrieblichen Rechtsrahmen vorgesehen.
 
+Die Gäste-Speisekarte zeigt den Namen und die hinterlegten Bilder des Restaurants. Logo und Banner erscheinen nur, wenn sie vorhanden sind; Artikelfotos sind auch für kleine Displays vorgesehen. Die Speisekarte trägt keine Zackisch-Kopfzeile. Warenkorb, Artikelauswahl und Stripe-Checkout verwenden die Anwendungsfunktionen und gespeicherten Betriebsdaten.
+
+Im Artikel-Editor können Betreiber optional „Vegan“, „Vegetarisch“ und „Halal“ hinterlegen und wieder entfernen. Die Angaben werden gespeichert und in der Speisekarte sowie bei der Artikelauswahl angezeigt. Sie stammen vom Gastronomiebetrieb, gelten laut Eingabehinweis für alle angebotenen Varianten und sind keine Zackisch-Zertifizierung. Personal mit Verfügbarkeitszugriff kann diese Angaben nicht bearbeiten.
+
+Unterschiedliche Artikelkonfigurationen erhalten getrennte Warenkorbpositionen. Die Variantenkennung berücksichtigt alle ausgewählten Schritte und Optionen; die Reihenfolge der Auswahl ändert die Zuordnung nicht. Verbindliche Preise werden weiterhin beim Checkout im Backend ermittelt.
+
 ## Technik
 
 Next.js 16, React 19, TypeScript, Tailwind CSS 4, `next-intl`, `@zackisch/design-system` mit Base UI und Poppins-Tokens, Cloudflare Workers mit vinext. Alle Marken-Assets werden zentral über `https://zackisch.com/*` eingebunden. `convex/` ist die **einzige** Backend-Quelle für alle vier Zackisch-Anwendungen. Authentifizierung, Berechtigungen, Regions- und Betriebsisolation, Daten, Echtzeitfunktionen und Storage sind zentral. Setup-Readiness und Gebührenabrechnungen erzwingen serverseitig Betriebsinhaberschaft (`requireBusinessOwner`). Support-Übergaben erzeugen einmalige, atomar eingelöste Sitzungstokens (`supportSessions`). Zahlungsabwicklung über Stripe Connect; ausgehende System-E-Mails über Google Workspace und dafür geeignete serverseitige Convex-Actions.
@@ -16,7 +22,13 @@ Next.js 16, React 19, TypeScript, Tailwind CSS 4, `next-intl`, `@zackisch/design
 
 Das gemeinsame Backend prüft bei regionsgebundenen Team-Operationen die gespeicherte Region für beide Rollen (`staff` und `regional_admin`). Änderungen am Personalstatus und die Suche nach Teamkonten prüfen zusätzlich die Region des geladenen Zielkontos. Die administrative Ersteinrichtung und E-Mail-Migration sind ausschließlich interne Convex-Mutationen.
 
-Uploads für Logo, Banner und Artikelbilder laufen über Server Actions. Bevor Convex eine Upload-URL ausstellt, prüft es die Inhaberschaft des angegebenen Betriebs anhand der aktuellen Anmeldung.
+Uploads für Logo, Banner und Artikelbilder laufen über Server Actions und einen authentifizierten Convex-HTTP-Endpunkt. Das Backend prüft Inhaberschaft, JPEG-/PNG-Dateisignatur und maximal 10 MiB; pro Betrieb sind höchstens 20 Uploadversuche pro Minute möglich. Neue Dateien erhalten eine betriebsgebundene Zuordnung. Gemeinsam verwendete Bilder bleiben gespeichert, bis ihre letzte Referenz entfernt wurde. Bei selbst gehostetem Convex muss `NEXT_PUBLIC_CONVEX_SITE_URL` auf den HTTP-Endpunkt zeigen.
+
+Vollständige Betriebsdaten und die Betriebsliste eines Kontos erfordern im Backend die Anmeldung des Inhabers. Bei der Betriebsanlage muss die angegebene Inhaber-ID mit der angemeldeten Identität übereinstimmen. Gäste- und Personaloberflächen laden eine gesonderte öffentliche Darstellung ohne Inhaber-ID, Steuernummer, Stripe-Kontodaten oder interne Pausierungsgründe. Eine Personalsitzung berechtigt nicht zum Abruf des privaten Betriebsprofils. Ungültige öffentliche Betriebs-IDs liefern keinen Treffer.
+
+Die Stripe-Kontoverwaltung prüft die Inhaberschaft zusätzlich im Convex-Backend, bevor sie Onboarding, Kontostatus oder Dashboard-Zugriff beim Zahlungsanbieter anfordert. Das gilt auch für das Sandbox-Onboarding.
+
+Verkäuferdaten werden über eine Server Action gespeichert; Steuernummer und USt-IdNr. sind getrennte Felder. Profiländerungen können keinen Zahlungsstatus und keine erledigten Einrichtungsschritte setzen. Der Sandbox-Helfer fragt den Stripe-Status ab. Zahlungs- und Auszahlungsberechtigung werden unabhängig aus der aktuellen Accounts-v2-Antwort übernommen.
 
 In `app/`: `npm ci`, `npx convex dev` für eine isolierte Entwicklungsumgebung und die im `package.json` definierten `dev`, `typecheck`, `test`, `build:cloudflare` und `check:cloudflare`-Skripte. Keine produktiven Convex-Restores oder Stripe-Live-Tests ohne Freigabe. Siehe [Architektur](../docs/architecture.md), [Sicherheit](../docs/security.md), [QR & Druck](../docs/qr-and-print.md), [Release-Tests](../docs/testing-and-release.md).
 

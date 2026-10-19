@@ -1,510 +1,412 @@
 "use client";
 
-import React from "react";
-import { numericText } from "@/lib/numeric-text";
-import { Plus, Check, ArrowRight } from "@phosphor-icons/react";
+import {
+  Accordion,
+  buttonVariants,
+  resolveMediaAsset,
+} from "@zackisch/design-system";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  DeviceTablet,
+  Pause,
+  QrCode,
+  Receipt,
+} from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { RegisterCta } from "./RegisterCta";
-import { QrCodeShowcase } from "./QrCodeShowcase";
-import { AnimatedBenefitStat } from "./AnimatedBenefitStat";
 import { SiteFooter } from "./SiteFooter";
 import { NewsletterForm } from "./NewsletterForm";
-import { resolveMediaAsset } from "@zackisch/design-system";
+import { Reveal } from "./Reveal";
+import { cn } from "@/lib/utils";
+
+const questions = [
+  "faqApp",
+  "faqDevices",
+  "faqPickup",
+  "faqMenu",
+  "faqUnavailable",
+  "faqOptions",
+  "faqPayment",
+  "faqTips",
+  "faqStart",
+  "faqPos",
+  "faqPayout",
+  "faqContract",
+  "faqCosts",
+] as const;
+
+const container =
+  "mx-auto w-[calc(100%-2*var(--site-gutter))] max-w-[1200px]";
+const eyebrow =
+  "text-[13px] font-semibold uppercase tracking-[0.12em] text-muted-foreground";
+const h2 =
+  "font-poppins text-3xl font-semibold leading-[1.15] tracking-tight text-balance sm:text-4xl";
+const lead = "mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg";
 
 export function MainPage() {
   const { t, locale } = useTranslation();
-  const isDe = locale.startsWith("de");
-
-  const steps = ["setupFirst", "setupSecond", "setupThird"] as const;
-
-  const questions = [
-    "faqApp",
-    "faqDevices",
-    "faqPickup",
-    "faqMenu",
-    "faqUnavailable",
-    "faqOptions",
-    "faqPayment",
-    "faqTips",
-    "faqStart",
-    "faqPos",
-    "faqPayout",
-    "faqContract",
-    "faqCosts",
-  ] as const;
+  const shot = (name: "scan" | "pay" | "kitchen") =>
+    `/product/${locale}-${name}.webp`;
 
   return (
-    <main id="content" className="min-h-screen bg-white text-[#161616] font-sans">
-      {/* 1. HERO SECTION (MKT-01) */}
-      <section className="relative pt-6 sm:pt-10 lg:pt-14 pb-16 sm:pb-24 border-b border-[#E0E0E0] overflow-hidden bg-white">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* Left copy */}
-            <div className="lg:col-span-6 space-y-6 sm:space-y-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F2F2F2] border border-[#E0E0E0] text-[11px] font-semibold uppercase tracking-[.08em] text-[#525252]">
-                <span className="size-1.5 rounded-full bg-[#161616]" aria-hidden="true" />
-                {isDe ? "Zackisch Gastronomie-System" : "Zackisch Hospitality System"}
-              </div>
+    <main id="content" className="bg-background text-foreground">
+      {/* 1 — Hero: one promise, one primary action (Hick), product proof beside copy (Proximity) */}
+      <section className={cn(container, "grid items-center gap-12 pb-14 pt-10 sm:pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pb-20 lg:pt-16")}>
+        <Reveal>
+          <p className={eyebrow}>{t("heroEyebrow")}</p>
+          <h1 className="mt-4 font-poppins text-4xl font-semibold leading-[1.06] tracking-tight text-balance sm:text-5xl xl:text-[4.25rem]">
+            {t("heroHeading")}
+          </h1>
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {t("heroSummary")}
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <RegisterCta size="lg" className="min-h-12 rounded-full px-7" />
+            <a
+              href={t("flowUrl")}
+              className={buttonVariants({
+                variant: "outline",
+                size: "lg",
+                className: "min-h-12 rounded-full px-7",
+              })}
+            >
+              {t("navFlow")}
+              <ArrowRight size={16} aria-hidden="true" className="shrink-0" />
+            </a>
+          </div>
+          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            {[t("heroTrust1"), t("heroTrust2"), t("heroTrust3")].map((item) => (
+              <li key={item} className="inline-flex items-center gap-2">
+                <Check size={16} weight="bold" aria-hidden="true" className="text-foreground" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-sm text-muted-foreground">{t("guestAccessNote")}</p>
+        </Reveal>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#0A0A0A] leading-[1.08] font-brand">
-                <span className="block">{t("heroLeft")}</span>
-                <span className="block mt-1 sm:mt-2 text-[#525252]">{t("heroRight")}</span>
-              </h1>
-
-              <p className="text-base sm:text-lg text-[#525252] leading-relaxed max-w-xl">
-                {t("heroSummary")}
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
-                <RegisterCta size="lg" />
-                <a
-                  href={t("flowUrl")}
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#C4C4C4] bg-white px-6 text-sm font-semibold text-[#161616] hover:bg-[#F2F2F2] transition-colors"
-                >
-                  {t("navFlow")}
-                </a>
-              </div>
-
-              <div className="pt-2 flex items-center gap-3 text-xs text-[#525252] flex-wrap">
-                <span className="inline-flex items-center gap-1.5">
-                  <Check size={14} className="text-[#12744B]" aria-hidden="true" />
-                  0 € Einrichtung
-                </span>
-                <span>•</span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Check size={14} className="text-[#12744B]" aria-hidden="true" />
-                  0 € Grundgebühr
-                </span>
-                <span>•</span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Check size={14} className="text-[#12744B]" aria-hidden="true" />
-                  Keine Vertragslaufzeit
-                </span>
-              </div>
-            </div>
-
-            {/* Right visuals */}
-            <div className="lg:col-span-6 relative">
-              <div className="relative rounded-2xl overflow-hidden border border-[#E0E0E0] shadow-md bg-[#F7F7F7]">
+        <Reveal delay={120} className="relative">
+          <div className="grid grid-cols-[1fr_1fr] gap-4">
+            <figure className="col-span-1">
+              <div className="phone-frame overflow-hidden rounded-[28px] bg-white">
                 <img
-                  src={resolveMediaAsset("heroHospitality", { site: "root" })}
-                  alt={isDe ? "Servicekraft serviert Speisen am Tisch im Restaurant" : "Staff serving dishes at a café table"}
-                  width={1400}
-                  height={933}
+                  src={shot("scan")}
+                  alt={t("flowShot1Alt")}
+                  width={600}
+                  height={1200}
                   fetchPriority="high"
-                  className="w-full h-[360px] sm:h-[480px] object-cover block"
+                  className="aspect-[9/16] w-full object-cover object-top"
                 />
-                {/* Floating physical table tent QR card preview */}
-                <div className="absolute right-4 bottom-4 sm:right-6 sm:bottom-6 scale-90 sm:scale-95 origin-bottom-right drop-shadow-xl hidden min-[480px]:block">
-                  <QrCodeShowcase />
-                </div>
               </div>
-              <div className="min-[480px]:hidden mt-6 flex justify-center">
-                <QrCodeShowcase />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. HOW IT WORKS / 4-STEP PROCESS TIMELINE (MKT-02, marketing.html) */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-[#F7F7F7]" id="ablauf">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-12 sm:mb-16">
-            <div className="lg:col-span-7 space-y-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#727272]">
-                {t("flowTitle")}
-              </p>
-              <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
-                {t("flowSubTitle")}
-              </h2>
-            </div>
-            <div className="lg:col-span-5">
-              <p className="text-sm sm:text-base text-[#525252] leading-relaxed">
-                {t("flowSubDesc")}
-              </p>
-            </div>
-          </div>
-
-          {/* 4-Step horizontal grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-[#E0E0E0] divide-y sm:divide-y-0 sm:divide-x divide-[#E0E0E0]">
-            {/* Step 1 */}
-            <div className="py-6 sm:px-6 first:sm:pl-0 space-y-3">
-              <span className="text-xs font-mono font-medium text-[#727272] block">
-                {t("flowStep1Role")}
-              </span>
-              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
-                {t("flowStep1Title")}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                {t("flowStep1Desc")}
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="py-6 sm:px-6 space-y-3">
-              <span className="text-xs font-mono font-medium text-[#727272] block">
-                {t("flowStep2Role")}
-              </span>
-              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
-                {t("flowStep2Title")}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                {t("flowStep2Desc")}
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="py-6 sm:px-6 space-y-3">
-              <span className="text-xs font-mono font-medium text-[#727272] block">
-                {t("flowStep3Role")}
-              </span>
-              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
-                {t("flowStep3Title")}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                {t("flowStep3Desc")}
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="py-6 sm:px-6 last:sm:pr-0 space-y-3">
-              <span className="text-xs font-mono font-medium text-[#727272] block">
-                {t("flowStep4Role")}
-              </span>
-              <h3 className="text-base sm:text-lg font-semibold text-[#161616]">
-                {t("flowStep4Title")}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                {t("flowStep4Desc")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2B. STATE SEPARATION SHOWCASE (marketing.html) */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-white">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Left copy */}
-            <div className="lg:col-span-6 space-y-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#727272]">
-                {t("posSepLabel")}
-              </p>
-              <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand leading-tight">
-                {t("posSepTitle")}
-              </h2>
-              <p className="text-sm sm:text-base text-[#525252] leading-relaxed pt-2">
-                {t("posSepText")}
-              </p>
-              <div className="pt-4">
-                <a
-                  href={`${t("supportUrl")}/articles/pos-single-entry-workflow`}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#C4C4C4] bg-white px-5 text-sm font-semibold text-[#161616] hover:bg-[#F2F2F2] transition-colors gap-2"
-                >
-                  <span>{t("posSepCta")}</span>
-                  <ArrowRight size={14} aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-
-            {/* Right: State separation card */}
-            <div className="lg:col-span-6">
-              <div className="p-6 sm:p-8 rounded-2xl border border-[#DEDEDE] bg-[#F7F7F7] space-y-4 shadow-xs">
-                <div className="text-xs font-semibold text-[#727272] uppercase tracking-wider">
-                  {t("posSepBoxTitle")}
-                </div>
-
-                <div className="space-y-0 divide-y divide-[#D4D4D4] border-y border-[#D4D4D4]">
-                  {/* Item 1 */}
-                  <div className="py-4 flex items-center justify-between">
-                    <span className="font-semibold text-sm sm:text-base text-[#161616]">
-                      {t("posSepOrder")}
-                    </span>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#E7F6ED] text-[#116442]">
-                      {t("posSepPaid")}
-                    </span>
-                  </div>
-
-                  {/* Item 2 */}
-                  <div className="py-4 flex items-center justify-between">
-                    <span className="text-xs sm:text-sm text-[#525252]">
-                      {t("posSepStaff")}
-                    </span>
-                    <span className="font-semibold text-xs sm:text-sm text-[#161616]">
-                      {t("posSepActive")}
-                    </span>
-                  </div>
-
-                  {/* Item 3 */}
-                  <div className="py-4 flex items-center justify-between">
-                    <span className="text-xs sm:text-sm text-[#525252]">
-                      {t("posSepPos")}
-                    </span>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FFF4E5] text-[#8A5800]">
-                      {t("posSepPending")}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-white border-l-4 border-[#161616] text-xs text-[#161616] font-medium leading-relaxed">
-                  {t("posSepNote")}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. SETUP IN 3 STEPS (SET-01) */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-white">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-6 space-y-6">
-              <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-[#F7F7F7]">
+            </figure>
+            <div className="flex flex-col gap-4">
+              <figure className="overflow-hidden rounded-[20px] border border-border">
                 <img
-                  src={resolveMediaAsset("posCounter", { site: "root" })}
-                  alt={isDe ? "Mitarbeiterin an der Theke mit bestehender Kasse" : "Staff at checkout counter with register"}
-                  width={1200}
-                  height={800}
-                  loading="lazy"
-                  className="w-full h-[320px] sm:h-[400px] object-cover block"
+                  src={resolveMediaAsset("guestPhoneTable", { site: "root" })}
+                  alt={t("heroPhotoAlt")}
+                  width={800}
+                  height={600}
+                  fetchPriority="high"
+                  className="aspect-[4/3] w-full object-cover"
                 />
-              </div>
-            </div>
-            <div className="lg:col-span-6 space-y-6">
-              <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
-                {t("setupTitle")}
-              </h2>
-              <p className="text-sm sm:text-base text-[#525252] leading-relaxed">
-                {t("setupNote")}
-              </p>
-
-              <ol className="space-y-4 pt-2">
-                {steps.map((step, index) => (
-                  <li
-                    key={step}
-                    className="flex items-start gap-4 p-4 rounded-xl border border-[#E0E0E0] bg-[#F7F7F7]"
-                  >
-                    <span className="size-7 rounded-full bg-[#161616] text-white flex items-center justify-center font-semibold text-xs font-numeric shrink-0 mt-0.5">
-                      {index + 1}
-                    </span>
-                    <h3 className="text-sm sm:text-base font-semibold text-[#161616] leading-snug">
-                      {t(step)}
-                    </h3>
-                  </li>
-                ))}
-              </ol>
-
-              <div className="pt-2">
-                <RegisterCta size="default" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. BENEFIT / STATS SECTION */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-[#F7F7F7]">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-6 space-y-6">
-              <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
-                {t("benefitTitle")}
-              </h2>
-              <p className="text-sm sm:text-base text-[#525252] leading-relaxed">
-                {t("benefitService")}
-              </p>
-
-              <div className="p-6 rounded-2xl border border-[#E0E0E0] bg-white space-y-2 max-w-md shadow-xs">
-                <p className="text-xs uppercase tracking-wider text-[#525252] font-semibold">
-                  {t("benefitPrefix")}
+              </figure>
+              <div className="rounded-[20px] border border-border bg-card p-5">
+                <p className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-semibold">
+                  <QrCode size={14} aria-hidden="true" />
+                  {t("heroCardTable")}
                 </p>
-                <div className="text-4xl sm:text-5xl font-bold font-numeric text-[#161616] tracking-tight">
-                  <AnimatedBenefitStat target={30} unit="%" />
-                </div>
-                <h3 className="text-base font-semibold text-[#161616]">
-                  {t("benefitMetric")}
-                </h3>
-                <a
-                  href={t("benefitSourceUrl")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-[#525252] hover:text-[#161616] underline underline-offset-4 pt-1"
-                >
-                  <span>{t("benefitSource")}</span>
-                  <ArrowRight size={12} aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6">
-              <div className="rounded-2xl overflow-hidden border border-[#E0E0E0] shadow-sm bg-white">
-                <img
-                  src={resolveMediaAsset("restaurantInterior", { site: "root" })}
-                  alt={isDe ? "Gemütliche Restaurant-Atmosphäre" : "Atmospheric dining ambiance"}
-                  width={1200}
-                  height={800}
-                  loading="lazy"
-                  className="w-full h-[320px] sm:h-[420px] object-cover block"
-                />
+                <p className="mt-3 text-sm font-medium leading-snug">{t("heroCardOrder")}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t("guestAccessNote")}</p>
               </div>
             </div>
           </div>
+          <figcaption className="mt-3 text-xs text-muted-foreground">
+            {t("heroDemoCaption")} · {t("illustrativePhoto")}
+          </figcaption>
+        </Reveal>
+      </section>
+
+      {/* 2 — Proof strip: three calm reasons, no invented metrics (Miller chunking) */}
+      <section className="border-y border-border bg-muted/60">
+        <div className={cn(container, "py-12 sm:py-14")}>
+          <Reveal>
+            <h2 className="max-w-3xl font-poppins text-2xl font-semibold leading-snug tracking-tight text-balance sm:text-3xl">
+              {t("proofTitle")}
+            </h2>
+          </Reveal>
+          <ul className="mt-8 grid gap-8 md:grid-cols-3 md:gap-10">
+            {(
+              [
+                { icon: Receipt, title: "proof1Title", desc: "proof1Desc" },
+                { icon: DeviceTablet, title: "proof2Title", desc: "proof2Desc" },
+                { icon: Pause, title: "proof3Title", desc: "proof3Desc" },
+              ] as const
+            ).map(({ icon: Icon, title, desc }, i) => (
+              <Reveal as="li" key={title} delay={i * 90}>
+                <span className="inline-flex size-11 items-center justify-center rounded-full border border-border bg-background">
+                  <Icon size={20} aria-hidden="true" />
+                </span>
+                <h3 className="mt-4 font-poppins text-lg font-semibold">{t(title)}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">{t(desc)}</p>
+              </Reveal>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* 5. PRICING CLARITY (MKT-03, marketing.html) */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-white" id="preise">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#727272]">
-              {isDe ? "Transparent, bevor du startest" : "Transparent before you start"}
+      {/* 3 — Flow: headline → explanation → real screens → one CTA (PayPal section rhythm) */}
+      <section id="ablauf" className={cn(container, "scroll-mt-24 py-14 sm:py-20")}>
+        <Reveal>
+          <p className={eyebrow}>{t("flowEyebrow")}</p>
+          <div className="mt-4 grid gap-6 lg:grid-cols-2 lg:gap-16">
+            <h2 className={h2}>{t("flowSubTitle")}</h2>
+            <p className="text-base leading-relaxed text-muted-foreground">{t("flowSubDesc")}</p>
+          </div>
+        </Reveal>
+        <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {(
+            [
+              { role: "flowStep1Role", title: "flowStep1Title", desc: "flowStep1Desc", img: shot("scan"), alt: "flowShot1Alt" },
+              { role: "flowStep2Role", title: "flowStep2Title", desc: "flowStep2Desc", img: shot("pay"), alt: "flowShot2Alt" },
+              { role: "flowStep3Role", title: "flowStep3Title", desc: "flowStep3Desc", img: shot("kitchen"), alt: "flowShot3Alt" },
+              { role: "flowStep4Role", title: "flowStep4Title", desc: "flowStep4Desc", img: null, alt: null },
+            ] as const
+          ).map((step, i) => (
+            <Reveal as="li" key={step.title} delay={i * 80} className="flex flex-col border-t-2 border-foreground pt-5">
+              <p className="text-[13px] font-medium text-muted-foreground">{t(step.role)}</p>
+              <h3 className="mt-2 font-poppins text-lg font-semibold">{t(step.title)}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">{t(step.desc)}</p>
+              {step.img ? (
+                <div className="phone-frame mt-5 overflow-hidden rounded-[20px] bg-white">
+                  <img
+                    src={step.img}
+                    alt={t(step.alt)}
+                    width={500}
+                    height={900}
+                    loading="lazy"
+                    className="aspect-[9/14] w-full object-cover object-top"
+                  />
+                </div>
+              ) : (
+                <div className="mt-5 rounded-[20px] border border-border bg-muted/60 p-5">
+                  <p className="inline-flex items-center gap-2 text-sm font-semibold">
+                    <Receipt size={18} aria-hidden="true" />
+                    {t("flowStep4Title")}
+                  </p>
+                  <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <Check size={15} weight="bold" aria-hidden="true" className="text-[#12744B]" />
+                      {t("posCheck1")}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check size={15} weight="bold" aria-hidden="true" className="text-[#12744B]" />
+                      {t("posCheck2")}
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </Reveal>
+          ))}
+        </ol>
+      </section>
+
+      {/* 4 — POS band: dark inverse module, honest fiscal boundary */}
+      <section className="band-inverse" data-dark-surface>
+        <div className={cn(container, "grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16")}>
+          <Reveal>
+            <figure className="overflow-hidden rounded-[20px]">
+              <img
+                src={resolveMediaAsset("posCounter", { site: "root" })}
+                alt={t("posPhotoAlt")}
+                width={1200}
+                height={900}
+                loading="lazy"
+                className="aspect-[4/3] w-full object-cover"
+              />
+            </figure>
+            <p className="mt-3 text-xs text-white/60">{t("illustrativePhoto")}</p>
+          </Reveal>
+          <Reveal delay={100}>
+            <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-white/60">
+              {t("posEyebrow")}
             </p>
-            <h2 id="kosten" className="scroll-mt-8 text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
+            <h2 className="mt-4 font-poppins text-3xl font-semibold leading-[1.15] tracking-tight text-balance sm:text-4xl">
+              {t("posSepTitle")}
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/75">{t("posSepText")}</p>
+            <ul className="mt-6 space-y-3 text-[15px] text-white/85">
+              {[t("posCheck1"), t("posCheck2"), t("posCheck3")].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check size={17} weight="bold" aria-hidden="true" className="mt-0.5 shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 max-w-xl text-sm leading-relaxed text-white/60">{t("posSepNote")}</p>
+            <a
+              href={t("supportUrl")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex min-h-11 items-center gap-1.5 font-medium text-white underline underline-offset-4"
+            >
+              {t("supportLink")}
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 5 — Setup: numbered editorial list beside real interior (Tesler: who does what) */}
+      <section className={cn(container, "grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16")}>
+        <Reveal>
+          <p className={eyebrow}>{t("setupEyebrow")}</p>
+          <h2 className="mt-4 font-poppins text-3xl font-semibold leading-[1.15] tracking-tight text-balance sm:text-4xl">
+            {t("setupTitle")}
+          </h2>
+          <p className="mt-5 text-base leading-relaxed text-muted-foreground">{t("setupNote")}</p>
+          <ol className="mt-8 divide-y divide-border border-y border-border">
+            {(["setupFirst", "setupSecond", "setupThird"] as const).map((step, index) => (
+              <li key={step} className="flex gap-5 py-5">
+                <span className="font-poppins text-lg font-semibold tabular-nums" aria-hidden="true">
+                  0{index + 1}
+                </span>
+                <span className="text-[15px] leading-relaxed">{t(step)}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-4 text-sm text-muted-foreground">{t("setupStepNote")}</p>
+          <RegisterCta className="mt-7 rounded-full" />
+        </Reveal>
+        <Reveal delay={100}>
+          <figure className="overflow-hidden rounded-[20px] border border-border">
+            <img
+              src={resolveMediaAsset("restaurantInterior", { site: "root" })}
+              alt={t("interiorPhotoAlt")}
+              width={1200}
+              height={900}
+              loading="lazy"
+              className="aspect-[4/3] w-full object-cover"
+            />
+          </figure>
+          <p className="mt-3 text-xs text-muted-foreground">{t("illustrativePhoto")}</p>
+        </Reveal>
+      </section>
+
+      {/* 6 — Pricing: one big number (Von Restorff), truth table below */}
+      <section id="preise" className="band-warm border-y border-[#e9e6e2]">
+        <div className={cn(container, "grid gap-10 py-14 sm:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16")}>
+          <Reveal>
+            <p className={eyebrow}>{t("feeEyebrow")}</p>
+            <h2 id="kosten" className={cn(h2, "mt-4 scroll-mt-24")}>
               {t("feeTitle")}
             </h2>
-            <p className="text-sm sm:text-base text-[#525252] leading-relaxed">
-              {t("feePromise")}
+            <p className={lead}>{t("feePromise")}</p>
+            <p className="mt-6 font-poppins text-7xl font-semibold tracking-tight tabular-nums sm:text-8xl">
+              {t("feeNumber")}
+              <span className="text-4xl align-top">{t("feeUnit")}</span>
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Base conditions */}
-            <div className="rounded-2xl border border-[#E0E0E0] bg-[#F7F7F7] p-8 space-y-6 flex flex-col justify-between shadow-xs">
-              <div className="space-y-4">
-                <span className="inline-block px-3 py-1 rounded-full bg-white border border-[#E0E0E0] text-xs font-semibold text-[#525252]">
-                  {isDe ? "Grundkonditionen" : "Base Pricing"}
-                </span>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Check size={20} className="text-[#12744B] shrink-0" aria-hidden="true" />
-                    <p className="text-xl sm:text-2xl font-semibold text-[#161616]">
-                      {t("feeNoSetup")}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check size={20} className="text-[#12744B] shrink-0" aria-hidden="true" />
-                    <p className="text-xl sm:text-2xl font-semibold text-[#161616]">
-                      {t("feeNoMonthly")}
-                    </p>
-                  </div>
+            <p className="mt-2 text-lg font-medium">{t("feeLabel")}</p>
+          </Reveal>
+          <Reveal delay={100} className="lg:pt-14">
+            <dl className="divide-y divide-[#e9e6e2] border-y border-[#e9e6e2] bg-white/60">
+              {(
+                [
+                  ["feeRowBase", true],
+                  ["feeRowTips", false],
+                  ["feeRowVat", false],
+                  ["feeRowProvider", false],
+                ] as const
+              ).map(([key, strong]) => (
+                <div key={key} className="flex items-start gap-3 px-5 py-4">
+                  <Check
+                    size={17}
+                    weight="bold"
+                    aria-hidden="true"
+                    className="mt-0.5 shrink-0 text-[#12744B]"
+                  />
+                  <dt className={strong ? "text-[15px] font-semibold" : "text-[15px] text-foreground/90"}>
+                    {t(key)}
+                  </dt>
                 </div>
-              </div>
-              <p className="text-xs text-[#525252] leading-relaxed">
-                {isDe
-                  ? "Keine Mindestumsätze, keine Einrichtungsgebühr, keine Bindung. Du zahlst nur, wenn Gäste tatsächlich bestellen."
-                  : "No minimum revenue, no setup fee, no lock-in. You only pay when guests actually place orders."}
-              </p>
-            </div>
-
-            {/* Variable fee */}
-            <div className="rounded-2xl border-2 border-[#161616] bg-white p-8 space-y-6 flex flex-col justify-between shadow-sm">
-              <div className="space-y-4">
-                <span className="inline-block px-3 py-1 rounded-full bg-[#161616] text-white text-xs font-semibold">
-                  {isDe ? "Bei erfolgreicher Bestellung" : "Per Successful Order"}
-                </span>
-                <div>
-                  <div className="text-4xl sm:text-5xl font-bold font-numeric text-[#161616] tracking-tight">
-                    <span>{t("feeNumber")}</span>
-                    <span>{t("feeUnit")}</span>
-                  </div>
-                  <p className="text-sm font-semibold text-[#525252] mt-1">
-                    {t("feeLabel")}
-                  </p>
-                </div>
-                <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-                  {t("feeNote")}
-                </p>
-              </div>
-              <div className="pt-2">
-                <RegisterCta size="default" />
-              </div>
-            </div>
-          </div>
-
-          {/* POS Clarification Banner */}
-          <div className="mt-8 max-w-4xl mx-auto p-5 rounded-2xl border border-[#E0E0E0] bg-[#F7F7F7] flex items-start gap-4">
-            <div className="size-6 rounded-full bg-[#161616] text-white flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold" aria-hidden="true">
-              i
-            </div>
-            <p className="text-xs sm:text-sm text-[#525252] leading-relaxed">
-              <strong className="text-[#161616]">
-                {isDe ? "Kassenunabhängig: " : "Register-independent: "}
-              </strong>
-              {t("flowPayText")}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FAQ SECTION */}
-      <section className="py-16 sm:py-24 border-b border-[#E0E0E0] bg-[#F7F7F7]">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            <div className="lg:col-span-5 space-y-4">
-              <h2 id="faq" className="scroll-mt-8 text-2xl sm:text-4xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
-                {t("faqTitle")}
-              </h2>
-              <p className="text-sm text-[#525252] leading-relaxed">
-                {isDe
-                  ? "Häufige Fragen von Gastronomen rund um Betrieb, Hardware, Kasse und Zahlungsabwicklung."
-                  : "Common questions from restaurateurs regarding operation, hardware, register and payouts."}
-              </p>
-              <div className="pt-2">
-                <a
-                  href={t("supportUrl")}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#161616] underline underline-offset-4 hover:text-[#525252]"
-                >
-                  <span>{isDe ? "Zum Hilfe-Center" : "Visit Support Center"}</span>
-                  <ArrowRight size={14} aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7 space-y-3">
-              {questions.map((question) => (
-                <details
-                  key={question}
-                  className="group rounded-2xl border border-[#E0E0E0] bg-white p-5 transition-colors"
-                >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-[#161616] [&::-webkit-details-marker]:hidden">
-                    <span>{t(question)}</span>
-                    <Plus
-                      size={18}
-                      aria-hidden="true"
-                      className="shrink-0 text-[#525252] transition-transform duration-150 group-open:rotate-45"
-                    />
-                  </summary>
-                  <div className="pt-3 text-xs sm:text-sm text-[#525252] leading-relaxed border-t border-[#E0E0E0] mt-3">
-                    {numericText(t(`${question}Answer`))}
-                  </div>
-                </details>
               ))}
-            </div>
-          </div>
+            </dl>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{t("feeNote")}</p>
+            <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-[15px] font-medium">
+              <li>{t("feeNoSetup")}</li>
+              <li>{t("feeNoMonthly")}</li>
+            </ul>
+          </Reveal>
         </div>
       </section>
 
-      {/* 7. NEWSLETTER SECTION */}
-      <section className="py-14 sm:py-20 border-b border-[#E0E0E0] bg-white">
-        <div className="mx-auto w-[calc(100%-2*clamp(20px,4vw,64px))] max-w-[1280px]">
-          <div className="max-w-xl mx-auto text-center space-y-6">
-            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#0A0A0A] font-brand">
-              {t("newsletterSectionTitle")}
-            </h3>
-            <p className="text-sm text-[#525252] leading-relaxed">
+      {/* 7 — FAQ */}
+      <section id="faq" className={cn(container, "grid scroll-mt-24 gap-8 py-14 sm:py-20 lg:grid-cols-3 lg:gap-16")}>
+        <Reveal>
+          <p className={eyebrow}>{t("faqEyebrow")}</p>
+          <h2 className={cn(h2, "mt-4")}>{t("faqTitle")}</h2>
+        </Reveal>
+        <Reveal delay={80} className="lg:col-span-2">
+          <Accordion.Root>
+            {questions.map((question) => (
+              <Accordion.Item key={question} value={question}>
+                <Accordion.Trigger className="min-h-11 gap-5 rounded-sm text-left text-base">
+                  {t(question)}
+                </Accordion.Trigger>
+                <Accordion.Panel className="text-[15px] leading-relaxed motion-reduce:transition-none">
+                  {t(`${question}Answer`)}
+                </Accordion.Panel>
+              </Accordion.Item>
+            ))}
+          </Accordion.Root>
+        </Reveal>
+      </section>
+
+      {/* 8 — Closing (Peak-End): what happens next, no pressure */}
+      <section className="band-inverse" data-dark-surface>
+        <div className={cn(container, "py-14 text-center sm:py-20")}>
+          <Reveal>
+            <h2 className="mx-auto max-w-2xl font-poppins text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
+              {t("closingTitle")}
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/70">{t("closingSub")}</p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <RegisterCta
+                variant="inverse"
+                size="lg"
+                className="min-h-12 rounded-full border-white/40 px-7 text-white hover:bg-white/10"
+              />
+              <a
+                href={t("supportUrl")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-12 items-center gap-1.5 rounded-full px-7 text-[15px] font-medium text-white/85 underline underline-offset-4 hover:text-white"
+              >
+                {t("contactLabel")} {t("supportLink")}
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </a>
+            </div>
+            <p className="mt-5 text-sm text-white/55">{t("closingNote")}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 9 — Newsletter */}
+      <section className="border-b border-border">
+        <div className={cn(container, "grid gap-8 py-12 sm:py-16 lg:grid-cols-2 lg:gap-16")}>
+          <Reveal>
+            <h2 className="font-poppins text-2xl font-semibold tracking-tight">{t("newsletterSectionTitle")}</h2>
+            <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-muted-foreground">
               {t("newsletterSectionDesc")}
             </p>
-            <div className="pt-2">
-              <NewsletterForm showHeader={false} />
-            </div>
-          </div>
+          </Reveal>
+          <Reveal delay={80}>
+            <NewsletterForm showHeader={false} />
+          </Reveal>
         </div>
       </section>
 
-      {/* 8. FOOTER */}
       <SiteFooter variant="full" />
     </main>
   );

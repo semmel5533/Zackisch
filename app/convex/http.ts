@@ -4,10 +4,12 @@ import { registerRoutes } from "@convex-dev/stripe";
 import { httpAction } from "./_generated/server";
 import { auth } from "./auth";
 import type Stripe from "stripe";
+import { uploadMerchantMedia } from "./storage";
 
 const http = httpRouter();
 
 auth.addHttpRoutes(http);
+http.route({ path: "/merchant-media", method: "POST", handler: uploadMerchantMedia });
 
 function extractItemsFromMetadata(meta: Record<string, any>): string {
   if (meta.items) return meta.items;

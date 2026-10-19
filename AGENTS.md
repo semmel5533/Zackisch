@@ -33,7 +33,7 @@ Never trust browser totals or order IDs; reconstruct price from canonical menu d
 
 Read `docs/germany-legal-and-regulatory.md`, `docs/payments-and-stripe.md`, `docs/tax-invoicing-and-fiscalization.md`, `docs/privacy-and-data-governance.md` and `docs/legal-pages-consents-and-contracts.md` for any change involving payment, company legal content, personal data, tax, menus, receipts, merchant signup, guest purchase, tickets, analytics, retention or invoices. No approved lawyer opinion can be inferred from technical tests. Require evidence of seller/merchant-of-record identity, checkout button and price disclosure, Stripe account capability, 2% tax treatment, refunds, accounting and effective contract version. German food/drink VAT, fiscalization and e-invoice requirements are not interchangeable with Zackisch's B2B invoice obligations. Do not store card PAN/CVC, identification docs or secrets. Never create a new payment charge type as an invisible refactor.
 
-Poppins is an integral, non-removable brand typeface; preserve the original logo and style coherently with it. Support fonts may be used for UI legibility subject to `docs/design-system.md`.
+Poppins is an integral, non-removable brand typeface; preserve the original logo and style coherently with it. Support fonts may be used for UI legibility subject to `design-system/README.md`.
 
 ## Quality and architecture
 
@@ -43,7 +43,7 @@ For every substantive change add/adjust unit, integration and E2E coverage; incl
 
 ## Documentation and maintenance
 
-Read and update the relevant German README and English `docs/*.md` in the same change as behavior. The sole design reference is `docs/design-system.md`, brand reference `docs/brand-content.md` and architecture reference `docs/architecture.md`. Remove obsolete active docs, dead imports, assets, duplicate strings, redirects or packages only after checking references and deployment contracts. Do not keep “used to”, “renamed from”, deprecated-route histories or unimplemented features in released product docs. Maintain vendor license and security-sensitive system artifacts as required.
+Read and update the relevant German README and English `docs/*.md` in the same change as behavior. The design system status is in `design-system/README.md`, product facts and copy boundaries in `docs/product-facts-and-copy.md`, requirements in `docs/product-requirements.md`, and architecture reference in `docs/architecture.md`. Remove obsolete active docs, dead imports, assets, duplicate strings, redirects or packages only after checking references and deployment contracts. Do not keep “used to”, “renamed from”, deprecated-route histories or unimplemented features in released product docs. Maintain vendor license and security-sensitive system artifacts as required.
 
 ## Commits and Semantic Versioning — preserve repository convention
 

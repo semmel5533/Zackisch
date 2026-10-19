@@ -1,34 +1,30 @@
 import "server-only";
-import { getAuthenticatedConvexClient, getOwnerCredentials } from "./auth";
-import { api } from "@/convex/_generated/api";
-import type { Id } from "@/convex/_generated/dataModel";
-import { MAX_IMAGE_SIZE_BYTES, isAllowedImageFile } from "@/lib/constants";
+import { getOwnerCredentials, requireOwner } from "./auth";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+import { MAX_IMAGE_SIZE_BYTES } from "@/lib/constants";
 
 export async function uploadFileToConvex(file: File, businessId: string): Promise<string> {
-  if (!isAllowedImageFile(file)) {
-    throw new Error("Only JPG and PNG images are allowed.");
+  if (!["image/jpeg", "image/png"].includes(file.type)) throw new Error("INVALID_IMAGE_TYPE");
+  if (file.size === 0 || file.size > MAX_IMAGE_SIZE_BYTES) throw new Error("INVALID_IMAGE_SIZE");
+  await requireOwner(businessId);
+  const configuredSite = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
+  const deployment = new URL(process.env.NEXT_PUBLIC_CONVEX_URL!);
+  if (!configuredSite && !deployment.hostname.endsWith(".convex.cloud")) {
+    throw new Error("CONVEX_SITE_URL_REQUIRED");
   }
-  if (file.size > MAX_IMAGE_SIZE_BYTES) {
-    throw new Error(`File exceeds maximum allowed size of 10 MB`);
-  }
-  const client = await getAuthenticatedConvexClient();
-  const uploadUrl = await client.mutation(api.storage.generateUploadUrl, {
-    businessId: businessId as Id<"businesses">,
-    ...(await getOwnerCredentials()),
+  const site = configuredSite || `https://${deployment.hostname.replace(/\.convex\.cloud$/, ".convex.site")}`;
+  const headers = new Headers({ "Content-Type": file.type, "X-Business-Id": businessId });
+  const { sessionToken } = await getOwnerCredentials();
+  if (sessionToken) headers.set("X-Merchant-Session", sessionToken);
+  const token = await convexAuthNextjsToken();
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const response = await fetch(new URL("/merchant-media", site), {
+    method: "POST", headers, body: file, cache: "no-store", redirect: "error",
   });
-  const arrayBuffer = await file.arrayBuffer();
-  const response = await fetch(uploadUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": file.type || "application/octet-stream",
-    },
-    body: arrayBuffer,
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to upload to Convex storage: ${response.statusText}`);
+  if (!response.ok) throw new Error(`MEDIA_UPLOAD_FAILED_${response.status}`);
+  const result: unknown = await response.json();
+  if (!result || typeof result !== "object" || !("storageId" in result) || typeof result.storageId !== "string") {
+    throw new Error("INVALID_UPLOAD_RESPONSE");
   }
-
-  const { storageId } = await response.json();
-  return storageId;
+  return result.storageId;
 }

@@ -86,7 +86,7 @@ export function AvailabilityContent({
   }, [categories]);
 
   const business = useQuery(
-    api.businesses.get,
+    api.businesses.getPublicRestaurant,
     businessId ? { id: businessId as Id<"businesses"> } : "skip"
   );
 

@@ -118,14 +118,6 @@ export default async function Page({
         "name": "Zackisch",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "All (Web-based)",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "EUR",
-          "description": lang === "de"
-            ? "Kostenlose Registrierung, 2 % Gebühr pro Bestellung zzgl. Zahlungsanbietergebühren."
-            : "Free registration, 2% fee per order plus payment provider fees.",
-        },
         "description": t.metaDescription,
       },
       {
