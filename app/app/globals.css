@@ -1,11 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "../../design-system/src/styles/tokens.css";
 @import "shadcn/tailwind.css";
 
-@source "../../design-system/src";
 @source "../components";
 @source "../lib";
+@source "../tools/marketing-demo";
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant desktop (@container (width >= 1066px));

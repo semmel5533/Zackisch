@@ -5,7 +5,6 @@ import { ConvexClientProvider } from "@/lib/convex";
 import { AdminProvider } from "@/lib/admin-context";
 import { AdminShell } from "@/components/AdminShell";
 import { Toaster } from "sonner";
-import { ToastProvider, resolveBrandAsset } from "@zackisch/design-system";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,8 +24,8 @@ export const metadata: Metadata = {
   title: "Zackisch Team Dashboard — Interne Team-Oberfläche",
   description: "Internes Team- und Verwaltungsdashboard für Zackisch Gastronomie (internal.zackisch.com)",
   icons: {
-    icon: resolveBrandAsset("brandMark512", { site: "internal" }),
-    apple: resolveBrandAsset("appleTouchIcon", { site: "internal" }),
+    icon: "/brand_mark_512.png",
+    apple: "/apple-touch-icon.png",
   },
   robots: {
     index: false,
@@ -42,14 +41,12 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${poppins.variable} ${inter.variable}`}>
       <body className="antialiased">
-        <ToastProvider>
-          <ConvexClientProvider>
-            <AdminProvider>
-              <AdminShell>{children}</AdminShell>
-              <Toaster position="bottom-right" closeButton />
-            </AdminProvider>
-          </ConvexClientProvider>
-        </ToastProvider>
+        <ConvexClientProvider>
+          <AdminProvider>
+            <AdminShell>{children}</AdminShell>
+            <Toaster position="top-right" richColors />
+          </AdminProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );

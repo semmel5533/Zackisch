@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@zackisch/design-system";
+import { Checkbox } from "@/components/ui/checkbox";
 import { DIETARY_LABELS, DIETARY_LABEL_KEYS, type DietaryLabel } from "@/lib/dietary-labels";
 import { useState, useEffect, useRef, startTransition } from "react";
 import {
@@ -365,9 +365,7 @@ export function ItemWorkspace({
                       <div className="flex flex-wrap gap-x-5 gap-y-2">
                         {DIETARY_LABELS.map(label => (
                           <div key={label} className="flex min-h-11 items-center">
-                            <Checkbox id={`ws-dietary-${label}`} label={t(DIETARY_LABEL_KEYS[label])}
-                              checked={dietaryLabels.includes(label)} disabled={isSubmitting}
-                              onCheckedChange={checked => setDietaryLabels(current => checked ? [...current, label] : current.filter(value => value !== label))} />
+                            <label htmlFor={`ws-dietary-${label}`} className="flex items-center gap-2 text-sm cursor-pointer"><Checkbox id={`ws-dietary-${label}`} checked={dietaryLabels.includes(label)} disabled={isSubmitting} onCheckedChange={checked => setDietaryLabels(current => checked ? [...current, label] : current.filter(value => value !== label))} /><span>{t(DIETARY_LABEL_KEYS[label])}</span></label>
                           </div>
                         ))}
                       </div>

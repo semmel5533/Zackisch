@@ -1,19 +1,9 @@
 # Support app — agent rules
 
-Inherit `../AGENTS.md`. Scope: `support/`; Cloudflare Workers/vinext, Next.js 16, React 19, Tailwind CSS 4, `@zackisch/design-system` (Base UI, Poppins tokens), and `next-intl`. Use shared `../app/convex` only. Brand assets are loaded exclusively from `https://zackisch.com/*`. Public knowledge-base content (`/de-de` and `/de-en`, categories, articles) is fully server-rendered (SSR) with dynamic `generateMetadata`, `generateStaticParams`, Breadcrumb/Article JSON-LD, and an automated `sitemap.ts` containing all 98 localized pages.
+Inherit `../AGENTS.md`. Scope: `support/`; Cloudflare Workers/vinext, Next.js 16, React, Tailwind, Base UI and `next-intl`. Use shared `../app/convex` only. Public regional knowledge-base content at `/de-de` and `/de-en` is readable without login and crawlable where appropriate. Private `/tickets` routes require the existing account's secure identity, verified business ownership and a region match; no second user store. Ensure deep links retain locale and return safely after login.
 
-Private `/tickets` routes enforce `robots: { index: false, follow: false }` and require an authenticated session token validated against `supportSessions`; never trust client email query parameters. Ensure deep links retain locale and return safely after login. Each article has verified current UI steps, prerequisites, check result, troubleshooting, ownership and update policy without unsubstantiated setup time claims. Search is interactive and client-side via `SupportSearch`. Ticket threads, attachments and notifications are private; customer queries must never include team-only notes. Validate rich text, file type/size, rate limits, spam and cross-tenant access.
+Each article has verified current UI steps, prerequisites, check result, troubleshooting, ownership and update policy. Search handles synonyms, spelling variants, empty results and keyboard navigation. Ticket thread, attachments and notifications are private; customer queries must never include team-only notes. Validate rich text, file type/size, rate limits, spam and cross-tenant access. Test authenticated cross-subdomain transitions, revocation and open redirects, plus noindex of ticket URLs.
 
 ## Legal, payment and privacy guardrails
 
 Follow root `AGENTS.md` and canonical `docs/germany-legal-and-regulatory.md`, `docs/privacy-and-data-governance.md`, and `docs/legal-pages-consents-and-contracts.md`. If this application handles checkout, Stripe, merchant registration, tax receipts or billing, also follow `docs/payments-and-stripe.md` and `docs/tax-invoicing-and-fiscalization.md`. Never assume a draft agreement is approved, or publish an unverified legal guarantee. Original Poppins-based wordmark and logo assets remain authoritative.
-
-<!-- BEGIN:nextjs-agent-rules -->
-
-## This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->

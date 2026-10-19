@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
 import { toast } from "sonner";
-import { resolveBrandAsset } from "@zackisch/design-system";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -181,7 +180,7 @@ export function AdminLoginForm() {
       <div className="w-full max-w-5xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img
-            src={resolveBrandAsset("brandMarkSvg", { site: "internal" })}
+            src="/icon.svg"
             alt="Zackisch"
             className="w-8 h-8 rounded-lg shadow-2xs border border-zinc-200"
           />

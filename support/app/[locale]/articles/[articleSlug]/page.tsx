@@ -3,16 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SupportShell } from "@/components/SupportShell";
-import { SupportSearch } from "@/components/SupportSearch";
 import {
   SUPPORT_ARTICLES,
   getArticleBySlug,
   getCategoryBySlug,
   type SupportLocale,
 } from "@/lib/knowledge-base";
-import { BRAND_ASSETS } from "@zackisch/design-system";
 import {
-  ArrowRight,
+  CheckCircle2,
   ListChecks,
   ShieldCheck,
   Ticket,
@@ -65,7 +63,7 @@ export async function generateMetadata({
       description,
       url: canonicalUrl,
       siteName: "Zackisch",
-      images: [BRAND_ASSETS.ogImage],
+      images: ["/og_image.png"],
       locale: isDe ? "de_DE" : "en_US",
       type: "article",
     },
@@ -73,7 +71,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [BRAND_ASSETS.ogImage],
+      images: ["/og_image.png"],
     },
     robots: {
       index: true,
@@ -148,7 +146,7 @@ export default async function ArticlePage({
       url: "https://zackisch.com",
       logo: {
         "@type": "ImageObject",
-        url: BRAND_ASSETS.combinationMarkSvg,
+        url: "/combination_mark.svg",
       },
     },
   };
@@ -163,119 +161,65 @@ export default async function ArticlePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-
-      {/* Top Search Banner (support.html .help-search) */}
-      <section className="bg-[#171717] text-white py-10 sm:py-12 border-b border-[#252525]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#959595]">
-              {isDe ? "Zackisch Hilfe" : "Zackisch Help"}
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mt-1">
-              {isDe ? "Was möchtest du erledigen?" : "What do you want to achieve?"}
-            </h2>
-            <p className="text-xs sm:text-sm text-[#C4C4C4] mt-1 max-w-xl">
-              {isDe
-                ? "Antworten zur Einrichtung, Zahlung und Arbeit mit deiner bestehenden Kasse."
-                : "Answers for onboarding, payments, and working alongside your existing cash register."}
-            </p>
-          </div>
-          <div className="pt-2">
-            <SupportSearch locale={locale} />
-          </div>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8">
+        <div className="flex items-center gap-2 text-xs font-semibold text-[#495A52]">
+          <Link href={`/${locale}`} className="hover:text-[#14231D]">
+            {isDe ? "Hilfe-Center" : "Help Center"}
+          </Link>
+          <span>/</span>
+          {category && (
+            <Link
+              href={`/${locale}/categories/${category.slug}`}
+              className="hover:text-[#14231D]"
+            >
+              {category.title[locale]}
+            </Link>
+          )}
         </div>
-      </section>
 
-      {/* Three-Column Article Grid (support.html .articlegrid) */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 flex-1">
-        {/* Left TOC Rail (support.html aside.toc) */}
-        <aside className="hidden lg:block lg:col-span-2">
-          <div className="sticky top-24 space-y-3">
-            <b className="text-xs font-bold uppercase tracking-wider text-foreground block">
-              {isDe ? "Auf dieser Seite" : "On this page"}
-            </b>
-            <nav className="flex flex-col space-y-2 text-xs font-medium text-muted-foreground">
-              <a href="#voraussetzungen" className="hover:text-foreground transition-colors">
-                {isDe ? "Voraussetzungen" : "Prerequisites"}
-              </a>
-              <a href="#anleitung" className="hover:text-foreground transition-colors">
-                {isDe ? "Schritt-für-Schritt" : "Step-by-Step"}
-              </a>
-              <a href="#erfolgskontrolle" className="hover:text-foreground transition-colors">
-                {isDe ? "Erfolgskontrolle" : "Verification"}
-              </a>
-              <a href="#support" className="hover:text-foreground transition-colors">
-                {isDe ? "Weitere Hilfe" : "Further Help"}
-              </a>
-            </nav>
-          </div>
-        </aside>
-
-        {/* Center Article Content (support.html article.article) */}
-        <article className="lg:col-span-7 space-y-8 min-w-0">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground mb-3">
-              <Link href={`/${locale}`} className="hover:text-foreground transition-colors">
-                {isDe ? "Hilfe-Center" : "Help Center"}
-              </Link>
-              <span>/</span>
-              {category && (
-                <Link
-                  href={`/${locale}/categories/${category.slug}`}
-                  className="hover:text-foreground transition-colors"
-                >
-                  {category.title[locale]}
-                </Link>
-              )}
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-tight">
+        <div className="bg-white rounded-3xl border border-[#DDD7CA] p-6 sm:p-10 space-y-8 shadow-xs">
+          <header className="space-y-3 border-b border-[#DDD7CA] pb-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#14231D] leading-tight">
               {article.title[locale]}
             </h1>
-            <p className="text-base text-muted-foreground mt-2 leading-relaxed">
+            <p className="text-sm text-[#495A52] leading-relaxed">
               {article.summary[locale]}
             </p>
-
-            {/* Note (support.html .note) */}
-            <div className="p-4 sm:p-5 rounded-xl border border-amber-200 bg-amber-50/70 text-amber-900 mt-6 text-xs sm:text-sm leading-relaxed">
-              <b>{isDe ? "Wichtig:" : "Important:"}</b>{" "}
-              {isDe
-                ? "Zackisch überträgt Bestellungen nicht automatisch in die Kasse. Du musst jede Bestellung nach deinen betrieblichen Verfahren erfassen."
-                : "Zackisch does not automatically transmit orders to your cash register. You must record each order according to your operational procedures."}
-            </div>
-          </div>
+          </header>
 
           {/* Prerequisites */}
-          <section id="voraussetzungen" className="scroll-mt-24 space-y-3">
-            <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
-              <ListChecks className="w-5 h-5 text-foreground" />
-              <span>{isDe ? "Bevor du beginnst" : "Before you begin"}</span>
+          <section className="bg-[#F7F5EF] rounded-2xl p-5 space-y-2.5">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-[#173C2B] flex items-center gap-2">
+              <ListChecks className="w-4 h-4" />
+              <span>{isDe ? "Voraussetzungen" : "Prerequisites"}</span>
             </h2>
-            <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground bg-muted/30 border border-border rounded-xl p-4 sm:p-5">
+            <ul className="space-y-1.5 text-xs sm:text-sm text-[#14231D]">
               {article.prerequisites[locale].map((req, idx) => (
-                <li key={idx} className="flex items-start gap-2.5">
-                  <span className="font-bold text-foreground">•</span>
-                  <span className="leading-relaxed">{req}</span>
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="text-[#245740] font-bold">•</span>
+                  <span>{req}</span>
                 </li>
               ))}
             </ul>
           </section>
 
           {/* Step-by-Step Instructions */}
-          <section id="anleitung" className="scroll-mt-24 space-y-4">
-            <h2 className="text-base sm:text-lg font-bold text-foreground">
-              {isDe ? "Schritt-für-Schritt-Anleitung" : "Step-by-Step Instructions"}
+          <section className="space-y-4">
+            <h2 className="text-base font-bold text-[#14231D]">
+              {isDe
+                ? "Schritt-für-Schritt-Anleitung"
+                : "Step-by-Step Instructions"}
             </h2>
             <ol className="space-y-3">
               {article.steps[locale].map((step, idx) => (
                 <li
                   key={idx}
-                  className="flex items-start gap-3.5 p-4 rounded-xl border border-border bg-card shadow-2xs"
+                  className="flex items-start gap-3.5 p-4 rounded-2xl border border-[#DDD7CA]/80 bg-white"
                 >
-                  <span className="w-6 h-6 rounded-full bg-foreground text-background text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 font-inter tabular-nums">
+                  <span className="w-6 h-6 rounded-full bg-[#173C2B] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 font-num">
                     {idx + 1}
                   </span>
-                  <span className="text-xs sm:text-sm text-foreground leading-relaxed">
+                  <span className="text-sm text-[#14231D] leading-relaxed">
                     {step}
                   </span>
                 </li>
@@ -284,52 +228,25 @@ export default async function ArticlePage({
           </section>
 
           {/* Verification Check */}
-          <section
-            id="erfolgskontrolle"
-            className="scroll-mt-24 bg-card border border-border rounded-xl p-5 flex items-start gap-3.5 shadow-2xs"
-          >
-            <ShieldCheck className="w-5 h-5 text-foreground shrink-0 mt-0.5" />
+          <section className="bg-[#DCEFE5]/70 border border-[#BFC8BE] rounded-2xl p-5 flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-[#173C2B] shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#173C2B]">
                 {isDe ? "Erfolgskontrolle" : "Expected Result"}
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#14231D]">
                 {article.verification[locale]}
               </p>
             </div>
           </section>
 
-          {/* Escalation / Auth gate (support.html #support) */}
-          <section
-            id="support"
-            className="scroll-mt-24 rounded-xl border border-border bg-card p-6 space-y-3 shadow-xs"
-          >
-            <h2 className="text-base sm:text-lg font-bold text-foreground">
-              {isDe ? "Kommst du nicht weiter?" : "Need further help?"}
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              {isDe
-                ? "Die Anleitungen sind öffentlich. Für ein Ticket musst du dich mit deinem Zackisch-Betriebskonto anmelden."
-                : "These guides are public. To open a ticket, please sign in with your Zackisch merchant account."}
-            </p>
-            <Link
-              href={`/${locale}/tickets?category=${category?.ticketCategory || "other"}&subject=${encodeURIComponent(article.title[locale])}`}
-              className="inline-flex min-h-[40px] items-center justify-center rounded-full bg-foreground px-5 text-xs sm:text-sm font-semibold text-background hover:bg-foreground/90 transition-colors gap-2"
-            >
-              <Ticket className="w-3.5 h-3.5" />
-              <span>{isDe ? "Mit Zackisch anmelden →" : "Sign in with Zackisch →"}</span>
-            </Link>
-          </section>
-        </article>
-
-        {/* Right Rail: Related Articles (support.html aside .pane) */}
-        <aside className="hidden lg:block lg:col-span-3">
-          <div className="sticky top-24 bg-card border border-border rounded-xl p-5 space-y-4 shadow-xs">
-            <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-muted-foreground">
-              {isDe ? "Dazugehörig" : "Related"}
-            </p>
-            {article.relatedSlugs.length > 0 ? (
-              <div className="divide-y divide-border/60">
+          {/* Related Articles */}
+          {article.relatedSlugs.length > 0 && (
+            <section className="pt-4 border-t border-[#DDD7CA] space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#495A52]">
+                {isDe ? "Weiterführende Artikel" : "Related Guides"}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {article.relatedSlugs.map((relSlug) => {
                   const rel = getArticleBySlug(relSlug);
                   if (!rel) return null;
@@ -337,22 +254,41 @@ export default async function ArticlePage({
                     <Link
                       key={relSlug}
                       href={`/${locale}/articles/${relSlug}`}
-                      className="py-3 flex items-center justify-between gap-2 text-xs font-medium text-foreground hover:text-primary transition-colors group"
+                      className="p-3 rounded-xl border border-[#DDD7CA] hover:border-[#245740] text-xs font-semibold text-[#14231D] flex items-center gap-2"
                     >
-                      <span className="line-clamp-2">{rel.title[locale]}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#245740] shrink-0" />
+                      <span className="truncate">{rel.title[locale]}</span>
                     </Link>
                   );
                 })}
               </div>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                {isDe ? "Keine weiteren Artikel." : "No related guides."}
-              </p>
-            )}
+            </section>
+          )}
+        </div>
+
+        {/* Escalation to Support Ticket */}
+        <div className="bg-white rounded-3xl border border-[#DDD7CA] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold text-[#14231D]">
+              {isDe
+                ? "Frage noch nicht geklärt?"
+                : "Still need help with this topic?"}
+            </h3>
+            <p className="text-xs text-[#495A52]">
+              {isDe
+                ? "Erstelle ein Support-Ticket zu diesem Thema — unser Team hilft dir direkt weiter."
+                : "Create a support ticket on this topic and our team will assist you directly."}
+            </p>
           </div>
-        </aside>
-      </main>
+          <Link
+            href={`/${locale}/tickets?category=${category?.ticketCategory || "other"}&subject=${encodeURIComponent(article.title[locale])}`}
+            className="h-10 px-5 rounded-full bg-[#173C2B] text-white hover:bg-[#245740] text-xs font-semibold inline-flex items-center gap-2 shrink-0"
+          >
+            <Ticket className="w-3.5 h-3.5" />
+            <span>{isDe ? "Ticket zu diesem Thema öffnen" : "Open Ticket on This Topic"}</span>
+          </Link>
+        </div>
+      </article>
     </SupportShell>
   );
 }

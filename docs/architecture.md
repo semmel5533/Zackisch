@@ -2,7 +2,6 @@
 
 ## Architecture at a glance
 
-Zackisch is a region-aware B2B2C platform with four Next.js applications and a single Convex backend. Product context is in the German root README, design system governance in `../design-system/README.md`, security in `security.md`, operations in `operations.md`. Never create competing per-app backend deployments or account stores.
 
 | Domain | Directory / npm name | Execution | Primary actors |
 | --- | --- | --- | --- |
@@ -97,7 +96,6 @@ Maintain separate development, preview and production configs with secrets manag
 
 ## Architecture decision records
 
-Important decisions must be captured succinctly in `product-decisions.md` with context, alternatives, security/operational consequences, verification link and current decision. This file records the **active decisions only**, not an accumulating migration history. Staging PRs may include implementation rationale separately.
 
 ## Payment, fiscal and data-protection invariants
 

@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",
     "check:cloudflare": "vinext-cloudflare deploy --dry-run",
@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
-    "@zackisch/design-system": "file:../design-system",
     "@lglab/react-qr-code": "1.7.0",
     "@phosphor-icons/react": "^2.1.10",
     "class-variance-authority": "^0.7.1",

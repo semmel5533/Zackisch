@@ -4,7 +4,6 @@ import { useActionState, useState, startTransition, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
-import { resolveBrandAsset } from "@zackisch/design-system";
 import {
   signInAction,
   verifyOtpAction,
@@ -123,13 +122,11 @@ function OtpForm({ state }: { state: any }) {
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
-            alt="Zackisch"
+            src="/combination_mark.svg"
+            alt="zakkig"
             width={120}
             height={40}
             priority
-            unoptimized
-            style={{ width: "auto" }}
             className="w-auto h-8 select-none"
           />
         </div>
@@ -311,14 +308,12 @@ function SignInForm({
       <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
         <div className="flex items-center">
           <Image
-            src={resolveBrandAsset("combinationMarkSvg", { site: "app" })}
-            alt="Zackisch"
+            src="/combination_mark.svg"
+            alt="zakkig"
             width={120}
             height={40}
             priority
-            unoptimized
             loading="eager"
-            style={{ width: "auto" }}
             className="w-auto h-8 select-none"
           />
         </div>

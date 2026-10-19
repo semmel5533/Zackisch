@@ -3,7 +3,6 @@ import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "@/lib/convex";
 import { Toaster } from "sonner";
-import { resolveBrandAsset } from "@zackisch/design-system";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -24,8 +23,8 @@ export const metadata: Metadata = {
   description:
     "Schritt-für-Schritt-Anleitungen zur Einrichtung, Kassen-Erfassung (POS), Stripe Connect Direktzahlungen und QR-Bestellungen bei Zackisch.",
   icons: {
-    icon: resolveBrandAsset("brandMark512", { site: "support" }),
-    apple: resolveBrandAsset("appleTouchIcon", { site: "support" }),
+    icon: "/brand_mark_512.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 

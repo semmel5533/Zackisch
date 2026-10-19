@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
 import { MAX_CART_ITEM_QUANTITY, useCartStore } from "@/store/cart-store";
-import { Button } from "@zackisch/design-system";
+import { Button } from "@/components/ui/button";
 import { CartSheet } from "@/components/guest/cart-sheet";
 import { Price } from "@/components/ui/price";
 import { OrderTracker } from "@/components/guest/order-tracker";

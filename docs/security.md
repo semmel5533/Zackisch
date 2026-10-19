@@ -25,18 +25,6 @@ Every protected operation evaluates actor identity, authentication/session valid
 | Newsletter, partner ledger, staff admin | No | No | Specific operational permission | No |
 | Cross-region private queries | No | No | No by default | No |
 
-`requireOpsActor` checks the persisted administrator account, active status, session expiry and requested permission. When an operation supplies a region, both `staff` and `regional_admin` are restricted to their assigned region. Staff status changes and administrator email lookups additionally compare the loaded account's region with the actor's region, so an allowed request region does not authorize a foreign account ID. Administrative bootstrap and email migration functions are internal Convex mutations and are unavailable through the public client API.
-
-Merchant logo, banner and item uploads pass through Next.js Server Actions to the Convex `/merchant-media` HTTP action. The endpoint requires the merchant session header or Convex Auth bearer identity and verifies business ownership before reading bytes and again before registering storage ownership. It accepts JPEG/PNG MIME types with matching file signatures, limits streamed content to 10 MiB and attempts to 20 per business per minute, and returns no cacheable upload response. This is signature validation, not full image decoding or malware scanning. No browser-cookie authentication or cross-origin access is enabled for this endpoint.
-
-New image attachments require a server-created `merchantMedia` ownership record for the same business. Replacement/removal deletes a registered file only after its last logo, banner or menu reference is removed. Existing unregistered image references remain readable and may remain unchanged; they cannot be newly attached elsewhere and are not physically deleted by this path without a verified ownership migration.
-
-Stripe account-management actions (embedded session, hosted onboarding, status, Dashboard link and sandbox onboarding) load the business through `getForOwnerInternal`, which verifies ownership before provider access. Their Next.js wrappers forward the current merchant session credentials; the backend also accepts Convex Auth identity.
-
-`businesses.get` and `businesses.getByOwner` require the authenticated owner; `businesses.create` binds the submitted owner ID to that same authenticated identity. Both merchant session cookies and Convex Auth identities are supported. Terminal sessions cannot authorize private business reads. Guest and staff pages use `getPublicRestaurant`, an explicit public projection without owner IDs, tax numbers, Stripe account/status fields, raw storage IDs or internal pause reasons. Public ordering availability is computed server-side. Malformed public business IDs return no result. Internal payment operations use the internal business query.
-
-`businesses.update` accepts owner-editable profile fields only and verifies ownership before writing. Stripe fields, region/currency, deletion state and setup evidence are excluded from its argument validator. Account binding and provider-status synchronization are internal mutations; an existing account binding cannot be silently replaced by another account. Status synchronization checks that its account still matches the business binding. The sandbox onboarding helper uses the provider-status operation instead of setting readiness flags itself. Charge and payout capabilities are stored independently from the current Accounts v2 response; previous stored readiness cannot turn an inactive capability into an active one.
-
 ## Sessions and cross-subdomain sign-in
 
 Use the existing trusted merchant identity for `app` and `support`, without duplicate user records or insecure implicit domain cookies. Prefer narrow host-only Secure, HttpOnly, SameSite cookies and a deliberately designed short-lived authorization-code exchange via authenticated redirect if needed. Allowlist callback origins, bind exchange to state/nonce and session, single-use and short TTL; avoid localStorage tokens or leaking bearer credentials through URLs, logs, analytics or `Referer`. Logout and account deletion must revoke both sites. Re-evaluate account recovery, session fixation, multi-device logout and server-side revocation. Do not casually reuse internal Team Dashboard sessions for merchant routes. Existing OTP rules and timeouts need compatibility/regression testing.
@@ -72,11 +60,5 @@ Customer-visible replies and internal notes **must be different server operation
 ## Audit and incident expectations
 
 Confirmed critical/high findings block release until remediated and independently retested. A scanner output is a *lead*, not proof of exploitability; Cloudflare's skill has separate `confirmed`, `needs_validation`, and `rejected` classes. Unresolved security facts remain blockers when impact could be severe. Do not run offensive tests against production or unrelated systems; use isolated test deployment and explicit scopes. Keep actionable vulnerability details out of public marketing and screenshots. Publish only factual, conservative security language: `Zugriffe werden rollen- und betriebsbezogen geprüft` when verified, never `100 % sicher`.
-
-Audited artifacts for the current release candidate:
-- Cloudflare Coverage Ledger: [`docs/security-audit-coverage-ledger.json`](security-audit-coverage-ledger.json)
-- Cloudflare Findings Register: [`docs/security-audit-findings.json`](security-audit-findings.json)
-- Cursor Thermos Dual Review: [`docs/thermos-review.md`](thermos-review.md)
-- Agent Tooling & Security Framework: [`docs/agent-tooling.md`](agent-tooling.md)
 
 References: https://owasp.org/www-project-application-security-verification-standard/ ; https://github.com/cloudflare/security-audit-skill ; https://docs.convex.dev/ ; https://developers.cloudflare.com/workers/ .

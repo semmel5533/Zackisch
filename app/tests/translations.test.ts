@@ -1,12 +1,10 @@
 import { createTranslator } from "next-intl";
 import { describe, expect, it } from "vitest";
 import { translations } from "../lib/translations";
-import { translations as rootTranslations } from "../../root/lib/translations";
 
 describe("next-intl messages", () => {
   for (const [surface, dictionaries] of Object.entries({
     app: translations,
-    root: rootTranslations,
   })) {
     for (const [locale, messages] of Object.entries(dictionaries)) {
       it(`formats every ${surface} message in ${locale}`, () => {

@@ -8,18 +8,17 @@ Zackisch supplements, rather than replaces, the existing hospitality POS. Guests
 
 ## Canonical topology
 
-- `root/` (`name: root`): static/public `zackisch.com` (`output: "export"`), host of canonical brand assets under `public/`.
+- `root/` (`name: root`): static/public `zackisch.com`.
 - `app/` (`name: app`): `app.zackisch.com`, merchant, guest, staff, sole Convex project under `app/convex/`.
-- `support/` (`name: support`): `support.zackisch.com`, public localized SSR help center and private tickets.
-- `internal/` (`name: internal`): `internal.zackisch.com`, Team Dashboard for authorized Zackisch personnel (`noindex`).
-- `design-system/` (`@zackisch/design-system`): shared tokens, Base UI primitives, unified `ToastProvider`, `RegionLanguageSelector`, domain components (`Price`, `QrSignageCard`, `PaymentVerification`, `PosReconciliationSummary`), asset resolvers (`resolveBrandAsset`, `resolveMediaAsset`), and metadata utilities.
-- `docs/`: canonical English technical, brand, operational, and tooling documentation (including `agent-tooling.md`).
+- `support/` (`name: support`): `support.zackisch.com`, public localized help and private tickets.
+- `internal/` (`name: internal`): `internal.zackisch.com`, Team Dashboard for authorized Zackisch personnel.
+- `docs/`: canonical English technical, brand and operational documentation.
 
-No second Convex project or database. All brand assets are canonically hosted under `https://zackisch.com/*` (`root/public/`) and imported via `BRAND_ASSETS` / `resolveBrandAsset` / `resolveMediaAsset` in `@zackisch/design-system` (`root/` resolves local relative `/...` paths; `app/`, `support/`, and `internal/` resolve environment-aware URLs); duplicate binary assets must not be added to client apps. Maintain clear dependencies: UI -> validated application boundary -> authenticated/authorized domain operation -> Convex persistence/provider integration. Business rules, pricing and ownership checks belong on trusted server boundaries; a client business ID, region ID or menu price is never authority. All client-triggered Convex mutations must follow the established Next.js Server Action boundary; exceptions require security-reviewed architecture decision and tests.
+No second Convex project or database. Do not create more global packages than the actual implementation can justify. Maintain clear dependencies: UI -> validated application boundary -> authenticated/authorized domain operation -> Convex persistence/provider integration. Business rules, pricing and ownership checks belong on trusted server boundaries; a client business ID, region ID or menu price is never authority. All client-triggered Convex mutations must follow the established Next.js Server Action boundary; exceptions require security-reviewed architecture decision and tests.
 
 ## Framework and UI
 
-Before changing Next.js code, read version-matched guidance from installed `node_modules/next/dist/docs/` and verify that APIs work with Cloudflare Workers/vinext. Follow the active Next.js 16 `proxy.ts` convention where applicable, not obsolete middleware guidance. Prefer ESM, strict TypeScript, narrow domain modules and explicit contracts. For UI primitives, import from `@zackisch/design-system` built on Base UI; add accessible Zackisch design wrappers rather than mixing uncontrolled UI libraries. Tailwind-first presentation with shared semantic tokens; no arbitrary duplicated CSS systems. Use Phosphor for UI icons where supported, avoid emoji in code/product documentation. All visible UI strings, ARIA text, notices and localized links use `next-intl` keys; do not hardcode German/English strings in components. Region and language are different concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere. Support pages use React Server Components (SSR) with dynamic `generateMetadata`, `sitemap.ts`, and Schema.org JSON-LD.
+Before changing Next.js code, read version-matched guidance from installed `node_modules/next/dist/docs/` and verify that APIs work with Cloudflare Workers/vinext. Follow the active Next.js 16 `proxy.ts` convention where applicable, not obsolete middleware guidance. Prefer ESM, strict TypeScript, narrow domain modules and explicit contracts. For interactive primitives use Base UI; add accessible Zackisch design wrappers rather than mixing uncontrolled UI libraries. Tailwind-first presentation with shared semantic tokens; no arbitrary duplicated CSS systems. Use Phosphor for UI icons where supported, avoid emoji in code/product documentation. All visible UI strings, ARIA text, notices and localized links use `next-intl` keys; do not hardcode German/English strings in components. Region and language are different concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere.
 
 Maintain predictable interaction: explicit action labels, keyboard focus, logical tab order, clearly visible validation, proper empty/loading/error/offline states, WCAG 2.2 AA objective, responsive container-aware dashboards. Never modify real checkout disclosure or button wording solely for styling without testing applicable consumer purchase requirements.
 
@@ -33,7 +32,6 @@ Never trust browser totals or order IDs; reconstruct price from canonical menu d
 
 Read `docs/germany-legal-and-regulatory.md`, `docs/payments-and-stripe.md`, `docs/tax-invoicing-and-fiscalization.md`, `docs/privacy-and-data-governance.md` and `docs/legal-pages-consents-and-contracts.md` for any change involving payment, company legal content, personal data, tax, menus, receipts, merchant signup, guest purchase, tickets, analytics, retention or invoices. No approved lawyer opinion can be inferred from technical tests. Require evidence of seller/merchant-of-record identity, checkout button and price disclosure, Stripe account capability, 2% tax treatment, refunds, accounting and effective contract version. German food/drink VAT, fiscalization and e-invoice requirements are not interchangeable with Zackisch's B2B invoice obligations. Do not store card PAN/CVC, identification docs or secrets. Never create a new payment charge type as an invisible refactor.
 
-Poppins is an integral, non-removable brand typeface; preserve the original logo and style coherently with it. Support fonts may be used for UI legibility subject to `design-system/README.md`.
 
 ## Quality and architecture
 
@@ -43,11 +41,9 @@ For every substantive change add/adjust unit, integration and E2E coverage; incl
 
 ## Documentation and maintenance
 
-Read and update the relevant German README and English `docs/*.md` in the same change as behavior. The design system status is in `design-system/README.md`, product facts and copy boundaries in `docs/product-facts-and-copy.md`, requirements in `docs/product-requirements.md`, and architecture reference in `docs/architecture.md`. Remove obsolete active docs, dead imports, assets, duplicate strings, redirects or packages only after checking references and deployment contracts. Do not keep “used to”, “renamed from”, deprecated-route histories or unimplemented features in released product docs. Maintain vendor license and security-sensitive system artifacts as required.
 
 ## Commits and Semantic Versioning — preserve repository convention
 
-- Branching and integration: for now, all work is committed directly on the `main` branch and pushed directly to `main`; do not create separate feature branches.
 - Commit messages: English, 100% lowercase, past-tense action, concise technical scope, no terminal punctuation, no emoji, no Conventional Commit prefix; join related actions with `and`.
 - Examples: `added support ticket replies on internal and updated authorization tests`; `updated qr print templates on app and corrected locale links`.
 - Commit identity: `Selim Eser <semmel5533@gmail.com>` as specified by repository owner; verify configured identity.

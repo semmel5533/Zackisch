@@ -10,9 +10,7 @@ Angemeldete Betreiber eröffnen Tickets für den eigenen Betrieb, lesen Antworte
 
 ## Technik und Entwicklung
 
-Eigenes Next.js-16-Projekt mit React 19, TypeScript, Tailwind CSS 4, `@zackisch/design-system` (Base UI und Poppins-Tokens), `next-intl` und Cloudflare Workers/vinext. Marken-Assets werden zentral über `https://zackisch.com/*` geladen. Öffentliche Hilfe-Seiten (Kategorien, Artikel) sind als serverseitige React Server Components (SSR) mit vollständigen `generateMetadata`-, `generateStaticParams`- und Schema.org-JSON-LD-Strukturdaten (`Article`, `BreadcrumbList`) umgesetzt. Ein dynamisches `sitemap.ts` liefert 98 lokalisierte URLs; `robots.ts` und private Ticket-Layouts erzwingen `noindex, nofollow` für geschützte Supportbereiche.
-
-Das Projekt nutzt das bestehende Convex-Backend in `../app/convex`. Ticketabfragen und -erstellungen erzwingen serverseitig geprüfte Sitzungstokens (`supportSessions`), die über atomaren Token-Austausch ohne E-Mail-URL-Parameter etabliert werden. Aus `support/`: `npm ci` und die im Manifest dokumentierten `dev`, `typecheck`, `test`, `build:cloudflare` und `check:cloudflare`-Skripte. Details: [Hilfe-Inhalte](../docs/support-content.md), [Sicherheit](../docs/security.md).
+Eigenes Next.js-16-Projekt mit React 19, TypeScript, Tailwind CSS 4, Base UI, `next-intl` und Cloudflare Workers/vinext. Das Projekt nutzt das bestehende Convex-Backend in `../app/convex`, keine zusätzliche Datenbank und keinen zweiten Accountspeicher. Authentifizierung und regionale Isolation sind mit der Betreiber-App abgestimmt. Aus `support/`: `npm ci` und die im Manifest dokumentierten `dev`, `typecheck`, `test`, `build:cloudflare` und `check:cloudflare`-Skripte. Details: [Hilfe-Inhalte](../docs/support-content.md), [Sicherheit](../docs/security.md).
 
 ## Rechtliches und Datenschutz
 

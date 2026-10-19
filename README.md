@@ -16,18 +16,17 @@ Zackisch ist keine eigenständige Registrierkasse und ersetzt keine betriebliche
 
 | Anwendung | Projekt | URL | Aufgabe |
 | --- | --- | --- | --- |
-| Öffentliche Website | [`root/`](root/README.md) | `https://zackisch.com/de-de` | Verständliche Produktpräsentation, Voraussetzungen, Preise, FAQ, Rechtliches, zentrale Marken-Assets und Registrierung |
+| Öffentliche Website | [`root/`](root/README.md) | `https://zackisch.com/de-de` | Verständliche Produktpräsentation, Voraussetzungen, Preise, FAQ, Rechtliches und Registrierung |
 | Betriebs- und Gäste-App | [`app/`](app/README.md) | `https://app.zackisch.com` | Registrierung, Einrichtung, Speisekarten, QR-Code-Druck, Personal-Tablet, Gäste-Bestellung und Checkout |
-| Hilfe-Center | [`support/`](support/README.md) | `https://support.zackisch.com/de-de` | Öffentliche serverseitig gerenderte Schritt-für-Schritt-Anleitungen (SSR), Suche und angemeldete Support-Tickets |
+| Hilfe-Center | [`support/`](support/README.md) | `https://support.zackisch.com/de-de` | Öffentliche Schritt-für-Schritt-Anleitungen, Suche und angemeldete Support-Tickets |
 | Team Dashboard | [`internal/`](internal/README.md) | `https://internal.zackisch.com` | Regionale Teamverwaltung, Betriebe, Aufträge, Partner, Newsletter, E-Mail-/Auditprotokolle und Support-Tickets |
-| Geteiltes Designsystem | [`design-system/`](design-system/) | `@zackisch/design-system` | Wiederverwendbare Base-UI-Primitiven, Poppins-Tokens, Zackisch-Farbwerte, Regions-/Sprachauswahl und Metadaten-Helfer |
 
-Alle dynamischen Produktdaten werden über das gemeinsame Convex-Backend in `app/convex/` verarbeitet. Alle Marken-Assets sind zentral unter `https://zackisch.com/*` (`root/public/`) gehostet und werden über `@zackisch/design-system` importiert. Die verschiedenen Benutzergruppen erhalten nur die für ihre Rolle, ihren Betrieb und ihre Region zulässigen Daten.
+Alle dynamischen Produktdaten werden über das gemeinsame Convex-Backend in `app/convex/` verarbeitet. Die verschiedenen Benutzergruppen erhalten nur die für ihre Rolle, ihren Betrieb und ihre Region zulässigen Daten.
 
 ## Technische Grundlagen
 
-- **Frontend:** Next.js 16 mit App Router, React 19, TypeScript, Tailwind CSS 4, `next-intl`, `@zackisch/design-system` mit zugänglichen Base-UI-Primitiven und Poppins-Markentypografie.
-- **Hosting:** Cloudflare DNS und Edge-Plattform; alle vier Next.js-Anwendungen über Cloudflare Workers mit dem geprüften vinext-Adapter, wobei die öffentliche Website weitgehend vorgerenderte statische Inhalte ausliefert (`output: "export"`).
+- **Frontend:** Next.js 16 mit App Router, React 19, TypeScript, Tailwind CSS 4, `next-intl`, zugänglichen Base-UI-Primitiven und konsistenten Zackisch-Komponenten.
+- **Hosting:** Cloudflare DNS und Edge-Plattform; alle vier Next.js-Anwendungen über Cloudflare Workers mit dem geprüften vinext-Adapter, wobei die öffentliche Website weitgehend vorgerenderte statische Inhalte ausliefert.
 - **Backend:** Eine Convex-Bereitstellung mit reaktiver Datenbank, serverseitigen Policies, Actions, Storage, regionenbewussten Datenmodellen und zentraler Authentifizierung.
 - **Zahlungen:** Stripe Connect zur Anbindung von Gastronomiebetrieben und Abwicklung unterstützter Zahlungsarten. Merchant-of-record, Direktzahlung/Plattformzahlung, Gebühren- und Steuerbehandlung sind in der final implementierten Vertrags- und Systemkonfiguration überprüft. Zahlbeträge, Gebühren und Zahlungszustände werden serverseitig validiert und reconciliert.
 - **Unternehmensdienste:** Cloudflare für Domains und Hosting; Google Workspace für geschäftliche und transaktionale E-Mail; Finom für Geschäftskonto beziehungsweise unterstützende Finanzprozesse; GitHub für Quellcode und Zusammenarbeit.
@@ -47,9 +46,7 @@ Die Anwendungen besitzen eigene `package.json` und `package-lock.json` mit unabh
 
 Vor einem Release werden Builds und Typprüfung aller vier Anwendungen, Convex-Verträge, Zahlungs- und Rechte-Tests, Barrierefreiheit, Security-Audit, Qualitätsreview und browserbasierte End-to-End-Tests durchgeführt. Testergebnisse müssen tatsächlich reproduzierbar sein. Die wichtigsten Qualitätsgrenzen stehen unter [docs/testing-and-release.md](docs/testing-and-release.md).
 
-## Commit-, Branching- und Versionierungsregeln
-
-Fürs Erste erfolgen alle Entwicklungsarbeiten und Commits direkt auf dem `main`-Branch und werden direkt auf `main` gepusht, ohne separate Feature-Branches anzulegen.
+## Commit- und Versionierungsregeln
 
 Commit-Texte sind natürliches Englisch, vollständig kleingeschrieben, in der Vergangenheitsform, ohne Präfixe wie `feat:` und ohne abschließende Satzzeichen. Betroffene Projekte werden konkret benannt. Zusammengehörende Schritte dürfen mit `and` verbunden werden. Die hinterlegte Commit-Identität lautet `Selim Eser <semmel5533@gmail.com>`.
 
@@ -59,19 +56,14 @@ Jede Anwendung führt eigene `MAJOR.MINOR.PATCH`-Versionsnummern in Manifest und
 
 Die fünf `README.md` sind auf Deutsch und richten sich an Menschen, die Zackisch betreiben oder entwickeln. Die fünf `AGENTS.md` sowie sämtliche vertiefenden Dokumente unter `docs/` sind auf Englisch. Aktuelle, überprüfte Implementierungen sind maßgeblich: Dokumentation enthält keine veralteten Projektbezeichnungen oder Änderungsgeschichten und keine unbewiesenen Betriebsbehauptungen.
 
-- [Produktfakten und Textregeln](docs/product-facts-and-copy.md) und [Produkt-Anforderungen](docs/product-requirements.md)
-- [Designsystem-Status](design-system/README.md) und [UX/Barrierefreiheit](docs/ux-and-accessibility.md)
-- [Architektur](docs/architecture.md), [Routen-Inventar](docs/functional-route-inventory.md), [Sicherheit](docs/security.md) und [Backups & Recovery](docs/backups-and-recovery.md)
+- [Architektur](docs/architecture.md), [Sicherheit](docs/security.md) und [Backups & Recovery](docs/backups-and-recovery.md)
 - [QR-Codes und Druck](docs/qr-and-print.md)
 - [Hilfe-Center](docs/support-content.md)
 - [Regionen, SEO und Recht](docs/localization-and-compliance.md)
-- [Agent-Skills und Test-Tools](docs/agent-tooling.md)
 - [Betriebshandbuch](docs/operations.md) und [Tests/Release](docs/testing-and-release.md)
 - [Deutscher Rechtsrahmen](docs/germany-legal-and-regulatory.md), [Stripe Connect und Zahlungsflüsse](docs/payments-and-stripe.md)
 - [Steuern, E-Rechnungen und Kassenführung](docs/tax-invoicing-and-fiscalization.md), [DSGVO und Datenlebenszyklus](docs/privacy-and-data-governance.md)
 - [Legal Pages, Verträge und Einwilligungen](docs/legal-pages-consents-and-contracts.md)
-- [Quellen und technische Entscheidungen](docs/product-decisions.md)
-- [Design-Cleanup-Protokoll](docs/design-reset-deletion-ledger.md)
 
 ## Zahlungsmodell und Kassenabgleich
 
