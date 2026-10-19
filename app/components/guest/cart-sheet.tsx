@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { CircleNotch, X, Check } from "@phosphor-icons/react";
+import { CircleNotch, X, Check, Sparkle } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart-store";
 import { createCheckoutSessionAction } from "@/actions/checkout-actions";
@@ -11,6 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loadStripe } from "@stripe/stripe-js";
 import { CheckoutElementsProvider } from "@stripe/react-stripe-js/checkout";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { CheckoutForm } from "./checkout-form";
 
 import {
@@ -29,7 +32,7 @@ interface CartSheetProps {
   business: PublicRestaurant;
   type: "dine-in" | "takeaway";
   tableNumber?: string;
-  onOrderSuccess: (orderId: string, orderNumber: string) => void;
+  onOrderSuccess?: (orderId: string, orderNumber: string) => void;
 }
 
 function formatAddressLines(address?: string): string[] {
@@ -60,8 +63,13 @@ export function CartSheet({
 }: CartSheetProps) {
   const { t, locale } = useTranslation();
   const isDe = locale.startsWith("de");
-  const { items, total } = useCartStore();
+  const { items, total, addItem } = useCartStore();
   const [tipPercent, setTipPercent] = useState<(typeof TIP_OPTIONS)[number]>(0);
+
+  const isUpsellingEnabled = business.isUpsellingEnabled !== false;
+  const isTippingEnabled = business.isTippingEnabled !== false;
+  const effectiveTipPercent = isTippingEnabled ? tipPercent : 0;
+
   const [checkoutSession, setCheckoutSession] = useState<{
     clientSecret: string;
     revision: string;
@@ -77,15 +85,44 @@ export function CartSheet({
   const requestVersionRef = useRef(0);
 
   const subtotalCents = total();
-  const tipCents = Math.round((subtotalCents * tipPercent) / 100);
+  const tipCents = Math.round((subtotalCents * effectiveTipPercent) / 100);
   const totalChargeCents = subtotalCents + tipCents;
+
+  const businessId = (business._id || business.$id) as Id<"businesses">;
+
+  const cartItemIds = useMemo(
+    () => items.map((i) => i.menuItemId || i.id).filter(Boolean),
+    [items],
+  );
+
+  const smartRecommendations = useQuery(
+    api.smartMenu.getSmartMenuRecommendations,
+    isUpsellingEnabled && open && cartItemIds.length > 0
+      ? {
+          businessId,
+          currentCartItemIds: cartItemIds,
+          limit: 3,
+        }
+      : "skip",
+  );
+
+  const checkoutAddons = useQuery(
+    api.smartMenu.getCheckoutAddons,
+    isUpsellingEnabled && open
+      ? {
+          businessId,
+          currentCartItemIds: cartItemIds,
+          limit: 3,
+        }
+      : "skip",
+  );
 
   const cartRevision = JSON.stringify({
     items,
     type,
     tableNumber,
-    businessId: business.$id,
-    tipPercent,
+    businessId: business.$id || business._id,
+    tipPercent: effectiveTipPercent,
   });
   const clientSecret =
     open && checkoutSession?.revision === cartRevision
@@ -235,43 +272,124 @@ export function CartSheet({
             className="flex min-h-0 flex-1 flex-col"
           >
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
-              {/* Voluntary Tip Selector (excluded from 2% Zackisch fee) */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
+              {/* Frequently Ordered Together (Smart Menu Recommendations) */}
+              {isUpsellingEnabled && smartRecommendations && smartRecommendations.length > 0 && (
+                <div className="space-y-2.5 pb-2 border-b border-border">
+                  <div className="flex items-center gap-1.5">
+                    <Sparkle className="w-4 h-4 text-primary" weight="fill" />
+                    <span className="text-sm font-semibold text-foreground">
+                      {isDe ? "Häufig zusammen bestellt" : "Frequently ordered together"}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {smartRecommendations.map((rec) => (
+                      <div
+                        key={rec._id}
+                        className="flex items-center justify-between p-2.5 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors"
+                      >
+                        <div className="min-w-0 pr-2">
+                          <p className="text-sm font-medium text-foreground truncate">{rec.name}</p>
+                          <Price cents={rec.price} className="text-xs font-semibold text-muted-foreground" />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            addItem({
+                              id: rec._id,
+                              menuItemId: rec._id,
+                              name: rec.name,
+                              price: rec.price,
+                            });
+                          }}
+                          className="shrink-0 h-8 px-3 rounded-full text-xs font-semibold"
+                        >
+                          + {isDe ? "Hinzufügen" : "Add"}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Small Checkout Add-ons */}
+              {isUpsellingEnabled && checkoutAddons && checkoutAddons.length > 0 && (
+                <div className="space-y-2.5 pb-2 border-b border-border">
                   <span className="text-sm font-semibold text-foreground">
-                    {isDe
-                      ? "Freiwilliges Trinkgeld für das Team"
-                      : "Voluntary tip for the team"}
+                    {isDe ? "Noch eine Kleinigkeit dazu?" : "Add something extra?"}
                   </span>
-                  {tipCents > 0 && (
-                    <Price
-                      cents={tipCents}
-                      className="text-xs font-semibold text-foreground"
-                    />
-                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {checkoutAddons.map((addon) => (
+                      <div
+                        key={addon._id}
+                        className="flex items-center justify-between p-2.5 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors"
+                      >
+                        <div className="min-w-0 pr-2">
+                          <p className="text-xs font-medium text-foreground truncate">{addon.name}</p>
+                          <Price cents={addon.price} className="text-xs font-semibold text-muted-foreground" />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            addItem({
+                              id: addon._id,
+                              menuItemId: addon._id,
+                              name: addon.name,
+                              price: addon.price,
+                            });
+                          }}
+                          className="shrink-0 h-7 px-2.5 rounded-full text-[11px] font-semibold"
+                        >
+                          + {isDe ? "Dazu" : "Add"}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-4 gap-2">
-                  {TIP_OPTIONS.map((pct) => (
-                    <button
-                      key={pct}
-                      type="button"
-                      onClick={() => setTipPercent(pct)}
-                      className={`h-9 rounded-full text-xs font-semibold border transition-colors ${
-                        tipPercent === pct
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-background text-foreground border-border hover:bg-muted"
-                      }`}
-                    >
-                      {pct === 0 ? (isDe ? "Kein" : "None") : `${pct} %`}
-                    </button>
-                  ))}
+              )}
+
+              {/* Voluntary Tip Selector (excluded from 2% Zackisch fee) */}
+              {isTippingEnabled && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-foreground">
+                      {isDe
+                        ? "Freiwilliges Trinkgeld für das Team"
+                        : "Voluntary tip for the team"}
+                    </span>
+                    {tipCents > 0 && (
+                      <Price
+                        cents={tipCents}
+                        className="text-xs font-semibold text-foreground"
+                      />
+                    )}
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {TIP_OPTIONS.map((pct) => (
+                      <button
+                        key={pct}
+                        type="button"
+                        onClick={() => setTipPercent(pct)}
+                        className={`h-9 rounded-full text-xs font-semibold border transition-colors ${
+                          effectiveTipPercent === pct
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-background text-foreground border-border hover:bg-muted"
+                        }`}
+                      >
+                        {pct === 0 ? (isDe ? "Kein" : "None") : `${pct} %`}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    {isDe
+                      ? "100 % des Trinkgelds gehen ohne Zackisch-Provision an den Betrieb."
+                      : "100% of the voluntary tip goes to the venue without any Zackisch platform fee."}
+                  </p>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
-                  {isDe
-                    ? "100 % des Trinkgelds gehen ohne Zackisch-Provision an den Betrieb."
-                    : "100% of the voluntary tip goes to the venue without any Zackisch platform fee."}
-                </p>
-              </div>
+              )}
 
               <div className="space-y-3 border-t border-border pt-4">
                 <label className="flex items-start gap-3 cursor-pointer select-none group">

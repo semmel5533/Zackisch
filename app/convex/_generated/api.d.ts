@@ -26,6 +26,7 @@ import type * as permissions from "../permissions.js";
 import type * as seed from "../seed.js";
 import type * as sessions from "../sessions.js";
 import type * as setup from "../setup.js";
+import type * as smartMenu from "../smartMenu.js";
 import type * as storage from "../storage.js";
 import type * as stripe from "../stripe.js";
 import type * as support from "../support.js";
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   seed: typeof seed;
   sessions: typeof sessions;
   setup: typeof setup;
+  smartMenu: typeof smartMenu;
   storage: typeof storage;
   stripe: typeof stripe;
   support: typeof support;

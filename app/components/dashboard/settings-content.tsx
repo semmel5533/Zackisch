@@ -42,7 +42,7 @@ interface SettingsContentProps {
 }
 
 export function SettingsContent({ business, user }: SettingsContentProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const [businessState, businessAction, isBusinessPending] = useActionState(
     updateBusinessAction,
@@ -77,6 +77,15 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoggingOutAll, setIsLoggingOutAll] = useState(false);
   const [isStripeLoading, setIsStripeLoading] = useState(false);
+  const [isUpsellingEnabled, setIsUpsellingEnabled] = useState(
+    business.isUpsellingEnabled ?? true,
+  );
+  const [isTippingEnabled, setIsTippingEnabled] = useState(
+    business.isTippingEnabled ?? true,
+  );
+  const [isPopularCategoryEnabled, setIsPopularCategoryEnabled] = useState(
+    business.isPopularCategoryEnabled ?? true,
+  );
 
   useEffect(() => {
     return () => {
@@ -485,6 +494,74 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                     <span className="text-xs text-muted-foreground px-1 mt-0.5">
                       {t("brandMediaDesc")}
                     </span>
+                  </div>
+
+                  {/* Smart Menu & Checkout Feature Toggles */}
+                  <div className="flex flex-col gap-4 p-4 border border-border rounded-xl bg-background">
+                    <div className="flex flex-col gap-0.5">
+                      <h4 className="text-sm font-bold text-foreground">
+                        {locale.startsWith("de") ? "Smart Menu & Bezahlung" : "Smart Menu & Payment"}
+                      </h4>
+                      <p className="text-xs text-muted-foreground">
+                        {locale.startsWith("de")
+                          ? "Datensparsame, automatisierte Verkaufsförderung auf Basis verifizierter Restaurant-Bestellungen."
+                          : "Privacy-first, automated sales optimization based on verified venue orders."}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-foreground">
+                          {locale.startsWith("de") ? "Intelligente Empfehlungen & Upselling" : "Smart Recommendations & Upselling"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {locale.startsWith("de")
+                            ? "Häufig zusammen bestellte Artikel und kleine Zusatzartikel vor der Zahlung vorschlagen."
+                            : "Recommend frequently ordered together items and small add-ons before checkout."}
+                        </span>
+                      </div>
+                      <input type="hidden" name="isUpsellingEnabled" value={String(isUpsellingEnabled)} />
+                      <Switch
+                        checked={isUpsellingEnabled}
+                        onCheckedChange={setIsUpsellingEnabled}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-foreground">
+                          {locale.startsWith("de") ? "Freiwilliges Trinkgeld" : "Voluntary Tipping"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {locale.startsWith("de")
+                            ? "Trinkgeld-Auswahl im Bezahlprozess anbieten (100 % für das Team, 0 % Zackisch-Gebühr)."
+                            : "Offer tipping at checkout (100% to venue, 0% Zackisch fee)."}
+                        </span>
+                      </div>
+                      <input type="hidden" name="isTippingEnabled" value={String(isTippingEnabled)} />
+                      <Switch
+                        checked={isTippingEnabled}
+                        onCheckedChange={setIsTippingEnabled}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-foreground">
+                          {locale.startsWith("de") ? "Kategorie „Beliebteste“" : "Category 'Most Popular'"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {locale.startsWith("de")
+                            ? "Automatisch generierte Bestseller-Kategorie ganz oben in der Speisekarte anzeigen."
+                            : "Display an automatically generated bestsellers category at the top of the menu."}
+                        </span>
+                      </div>
+                      <input type="hidden" name="isPopularCategoryEnabled" value={String(isPopularCategoryEnabled)} />
+                      <Switch
+                        checked={isPopularCategoryEnabled}
+                        onCheckedChange={setIsPopularCategoryEnabled}
+                      />
+                    </div>
                   </div>
 
                   {businessState.error && (

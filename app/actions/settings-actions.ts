@@ -105,6 +105,16 @@ export async function updateBusinessAction(
       bannerStorageId = await uploadFileToConvex(bannerFile, businessId);
     }
 
+    const isUpsellingEnabled = formData.has("isUpsellingEnabled")
+      ? formData.get("isUpsellingEnabled") === "true"
+      : undefined;
+    const isTippingEnabled = formData.has("isTippingEnabled")
+      ? formData.get("isTippingEnabled") === "true"
+      : undefined;
+    const isPopularCategoryEnabled = formData.has("isPopularCategoryEnabled")
+      ? formData.get("isPopularCategoryEnabled") === "true"
+      : undefined;
+
     await updateBusiness(businessId, {
       name: businessName,
       address,
@@ -112,6 +122,9 @@ export async function updateBusinessAction(
       clearLogo: removeLogo,
       bannerStorageId,
       clearBanner: removeBanner,
+      isUpsellingEnabled,
+      isTippingEnabled,
+      isPopularCategoryEnabled,
     });
 
     revalidatePath(`/dashboard/${businessId}/settings`);
@@ -125,6 +138,23 @@ export async function updateBusinessAction(
         ? error.message
         : "Daten konnten nicht gespeichert werden.";
     return { error: message };
+  }
+}
+
+export async function toggleSmartMenuSettingAction(
+  businessId: string,
+  setting: "isUpsellingEnabled" | "isTippingEnabled" | "isPopularCategoryEnabled",
+  value: boolean,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    await requireOwner(businessId);
+    await updateBusiness(businessId, { [setting]: value });
+    revalidatePath(`/dashboard/${businessId}/settings`);
+    revalidatePath(`/pickup/${businessId}`);
+    revalidatePath(`/table/${businessId}`);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || "Failed to update setting" };
   }
 }
 

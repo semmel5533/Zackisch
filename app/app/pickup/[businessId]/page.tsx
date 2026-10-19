@@ -2,6 +2,7 @@ import {
   getPublicRestaurant,
   getMenuCategories,
   getAvailableMenuItems,
+  getPopularMenuItems,
   getOrder,
 } from "@/lib/convex/database";
 import { GuestFrontend } from "@/components/guest/guest-frontend";
@@ -51,11 +52,12 @@ export default async function PickupPage({
     searchParams,
   ]);
 
-  const [business, categories, items, initialOrder] = await Promise.all([
+  const [business, categories, items, initialOrder, popularItems] = await Promise.all([
     getPublicRestaurant(businessId),
     getMenuCategories(businessId),
     getAvailableMenuItems(businessId),
     order ? getOrder(order) : Promise.resolve(null),
+    getPopularMenuItems(businessId),
   ]);
 
   if (!business)
@@ -124,6 +126,7 @@ export default async function PickupPage({
       business={structuredClone(business)}
       categories={structuredClone(categories)}
       items={structuredClone(items)}
+      popularItems={popularItems ? structuredClone(popularItems) : []}
       type="takeaway"
       orderId={order}
       initialOrder={sanitizedInitialOrder ? structuredClone(sanitizedInitialOrder) : null}

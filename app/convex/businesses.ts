@@ -45,6 +45,9 @@ const businessObjectValidator = v.object({
   posWorkflowConfirmedAt: v.optional(v.number()),
   testOrderCompletedAt: v.optional(v.number()),
   setupDismissedAt: v.optional(v.number()),
+  isUpsellingEnabled: v.optional(v.boolean()),
+  isTippingEnabled: v.optional(v.boolean()),
+  isPopularCategoryEnabled: v.optional(v.boolean()),
 });
 
 async function loadBusiness(ctx: QueryCtx, id: Id<"businesses">) {
@@ -126,6 +129,9 @@ export const getPublicRestaurant = query({
       currency: v.optional(v.string()),
       region: v.optional(v.string()),
       tables: v.optional(v.array(v.string())),
+      isUpsellingEnabled: v.optional(v.boolean()),
+      isTippingEnabled: v.optional(v.boolean()),
+      isPopularCategoryEnabled: v.optional(v.boolean()),
     })
   ),
   handler: async (ctx, args) => {
@@ -160,6 +166,9 @@ export const getPublicRestaurant = query({
       currency: org.currency || "EUR",
       region: org.region || "de",
       tables: org.tables,
+      isUpsellingEnabled: org.isUpsellingEnabled ?? true,
+      isTippingEnabled: org.isTippingEnabled ?? true,
+      isPopularCategoryEnabled: org.isPopularCategoryEnabled ?? true,
     };
   },
 });
@@ -266,6 +275,9 @@ export const update = mutation({
     tables: v.optional(v.array(v.string())),
     isPaused: v.optional(v.boolean()),
     pauseReason: v.optional(v.string()),
+    isUpsellingEnabled: v.optional(v.boolean()),
+    isTippingEnabled: v.optional(v.boolean()),
+    isPopularCategoryEnabled: v.optional(v.boolean()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {

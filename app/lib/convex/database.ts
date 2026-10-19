@@ -133,7 +133,8 @@ export async function updateBusiness(
   id: string,
   data: Partial<Pick<Business,
     "name" | "address" | "logoStorageId" | "logoFileId" | "bannerStorageId" | "bannerFileId" |
-    "isToGoEnabled" | "isToStayEnabled" | "legalName" | "taxId" | "vatId" | "tables"
+    "isToGoEnabled" | "isToStayEnabled" | "legalName" | "taxId" | "vatId" | "tables" |
+    "isUpsellingEnabled" | "isTippingEnabled" | "isPopularCategoryEnabled"
   >> & { clearLogo?: boolean; clearBanner?: boolean },
 ) {
   return await (
@@ -153,6 +154,9 @@ export async function updateBusiness(
     taxId: data.taxId,
     vatId: data.vatId,
     tables: data.tables,
+    isUpsellingEnabled: data.isUpsellingEnabled,
+    isTippingEnabled: data.isTippingEnabled,
+    isPopularCategoryEnabled: data.isPopularCategoryEnabled,
   });
 }
 
@@ -267,6 +271,51 @@ export async function getAvailableMenuItems(
   return docs
     .map(toItem)
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+}
+
+export async function getPopularMenuItems(
+  businessId: string,
+  limit?: number,
+): Promise<MenuItem[]> {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.smartMenu.getPopularItems, {
+    businessId: businessId as Id<"businesses">,
+    limit,
+  });
+  return docs.map(toItem);
+}
+
+export async function getSmartMenuRecommendations(
+  businessId: string,
+  currentCartItemIds: string[],
+  limit?: number,
+): Promise<MenuItem[]> {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.smartMenu.getSmartMenuRecommendations, {
+    businessId: businessId as Id<"businesses">,
+    currentCartItemIds,
+    limit,
+  });
+  return docs.map(toItem);
+}
+
+export async function getCheckoutAddons(
+  businessId: string,
+  currentCartItemIds: string[],
+  maxPriceCents?: number,
+  limit?: number,
+): Promise<MenuItem[]> {
+  const docs = await (
+    await getAuthenticatedConvexClient()
+  ).query(api.smartMenu.getCheckoutAddons, {
+    businessId: businessId as Id<"businesses">,
+    currentCartItemIds,
+    maxPriceCents,
+    limit,
+  });
+  return docs.map(toItem);
 }
 
 export async function createMenuItem(

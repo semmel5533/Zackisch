@@ -87,6 +87,9 @@ export default defineSchema({
     posWorkflowConfirmedAt: v.optional(v.number()),
     testOrderCompletedAt: v.optional(v.number()),
     setupDismissedAt: v.optional(v.number()),
+    isUpsellingEnabled: v.optional(v.boolean()),
+    isTippingEnabled: v.optional(v.boolean()),
+    isPopularCategoryEnabled: v.optional(v.boolean()),
   })
     .index("by_ownerId", ["ownerId"])
     .index("by_region", ["region"])

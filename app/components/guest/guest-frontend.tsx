@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Minus, DownloadSimple, Check, ArrowRight } from "@phosphor-icons/react";
+import { Plus, Minus, DownloadSimple, Check, ArrowRight, Sparkle } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { getImagePreviewUrl } from "@/lib/convex/client";
@@ -23,6 +23,7 @@ interface GuestFrontendProps {
   business: PublicRestaurant;
   categories: MenuCategory[];
   items: MenuItem[];
+  popularItems?: MenuItem[];
   type: "dine-in" | "takeaway";
   tableNumber?: string;
   orderId?: string;
@@ -183,6 +184,7 @@ export function GuestFrontend({
   business,
   categories,
   items,
+  popularItems = [],
   type,
   tableNumber,
   orderId,
@@ -190,7 +192,13 @@ export function GuestFrontend({
 }: GuestFrontendProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
+  const isDe = locale.startsWith("de");
   const { items: cartItems, updateQuantity, addItem, total } = useCartStore();
+
+  const isPopularEnabled =
+    business.isPopularCategoryEnabled !== false &&
+    Array.isArray(popularItems) &&
+    popularItems.length > 0;
 
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -242,16 +250,18 @@ export function GuestFrontend({
   };
 
   const handleAddClick = (item: MenuItem) => {
+    const id = item.$id || item._id;
     if (item.customizations && item.customizations !== "[]") {
       setCustomizationItem(item);
     } else {
-      addItem({ id: item.$id, menuItemId: item.$id, name: item.name, price: item.price });
+      addItem({ id, menuItemId: id, name: item.name, price: item.price });
     }
   };
 
   const handleCustomizationAdd = (item: MenuItem, selections: NonNullable<CartItem["customizations"]>, totalPrice: number) => {
-    const cartItemId = cartVariantId(item.$id, selections);
-    addItem({ id: cartItemId, menuItemId: item.$id, name: item.name, price: totalPrice, customizations: selections });
+    const id = item.$id || item._id;
+    const cartItemId = cartVariantId(id, selections);
+    addItem({ id: cartItemId, menuItemId: id, name: item.name, price: totalPrice, customizations: selections });
   };
 
   if (orderId && type === "takeaway") {
@@ -302,6 +312,22 @@ export function GuestFrontend({
             >
               {t("allCategories")}
             </Button>
+            {isPopularEnabled && (
+              <Button variant="ghost"
+                type="button"
+                onClick={() => scrollToCategory("popular")}
+                aria-pressed={activeCategory === "popular"}
+                className={cn(
+                  "min-h-11 pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground flex items-center gap-1.5",
+                  activeCategory === "popular"
+                    ? "font-bold text-foreground border-b-2 border-foreground -mb-px"
+                    : "font-medium text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Sparkle className="size-3.5 text-primary" weight="fill" />
+                <span>{isDe ? "Beliebteste" : "Most Popular"}</span>
+              </Button>
+            )}
             {categories.map((c) => (
               <Button variant="ghost"
                 key={c.$id}
@@ -323,6 +349,109 @@ export function GuestFrontend({
           {/* Menu categories */}
           <div className="space-y-10 pt-2">
             {items.length === 0 && <p className="py-6 text-muted-foreground">{t("menuEmpty")}</p>}
+
+            {/* Virtual Popular Category */}
+            {isPopularEnabled && (
+              <div id="popular" className="scroll-mt-24 space-y-4">
+                <div className="flex items-center gap-2">
+                  <Sparkle className="size-5 text-primary" weight="fill" />
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">
+                    {isDe ? "Beliebteste" : "Most Popular"}
+                  </h2>
+                </div>
+                <div className="divide-y divide-border border-y border-border">
+                  {popularItems.map((item) => {
+                    const itemId = item.$id || item._id;
+                    const itemCartItems = cartItems.filter((i) => i.menuItemId === itemId);
+                    const totalQuantity = itemCartItems.reduce((acc, curr) => acc + curr.quantity, 0);
+
+                    return (
+                      <div
+                        key={`popular-${itemId}`}
+                        className="food-row py-4 sm:py-5 flex items-center justify-between gap-4"
+                      >
+                        <div className="flex-1 min-w-0 pr-2">
+                          <h3 className="font-semibold text-base sm:text-lg text-foreground leading-snug">
+                            {item.name}
+                          </h3>
+                          {Boolean(item.dietaryLabels?.length) && (
+                            <p className="mt-1 text-sm text-muted-foreground">
+                              {item.dietaryLabels!.map((label) => t(DIETARY_LABEL_KEYS[label])).join(" · ")}
+                            </p>
+                          )}
+                          {item.description && (
+                            <p className="text-sm text-muted-foreground mt-1 max-w-md leading-relaxed">
+                              {item.description}
+                            </p>
+                          )}
+                          <div className="mt-2">
+                            <Price
+                              cents={item.price}
+                              from={hasPaidCustomizations(item.customizations)}
+                              className="font-bold text-sm sm:text-base text-foreground"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-3 shrink-0">
+                          {(item.imageUrl || item.imageId) && (
+                            <div className="food-thumb relative size-24 sm:size-32 rounded-lg overflow-hidden bg-muted shrink-0">
+                              <Image
+                                src={item.imageUrl || getImagePreviewUrl(item.imageId!)}
+                                alt=""
+                                fill
+                                className="object-cover"
+                                sizes="(min-width: 640px) 128px, 96px"
+                              />
+                            </div>
+                          )}
+
+                          {totalQuantity > 0 ? (
+                            <div className="flex items-center bg-muted/80 p-0.5 min-h-11 rounded-lg border border-border shrink-0">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                type="button"
+                                className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                                onClick={() => {
+                                  const cartEntry = cartItems.find((ci) => ci.menuItemId === itemId);
+                                  if (cartEntry) updateQuantity(cartEntry.id, cartEntry.quantity - 1);
+                                }}
+                                aria-label={`${t("decreaseQuantity")}: ${item.name}`}
+                              >
+                                <Minus weight="bold" className="size-3.5" />
+                              </Button>
+                              <span className="text-xs sm:text-sm font-bold tabular-nums px-2 min-w-[24px] text-center font-inter">
+                                {totalQuantity}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                type="button"
+                                className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
+                                onClick={() => handleAddClick(item)}
+                                aria-label={`${t("increaseQuantity")}: ${item.name}`}
+                              >
+                                <Plus weight="bold" className="size-3.5" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              type="button"
+                              onClick={() => handleAddClick(item)}
+                              className="min-h-11 px-4 rounded-lg border border-border bg-white text-foreground hover:bg-muted text-xs sm:text-sm font-semibold transition-colors cursor-pointer shrink-0 shadow-2xs"
+                            >
+                              {t("addToCart")}
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             {categories.map((category) => {
               const categoryItems = items.filter((i) => i.categoryId === category.$id);
               if (categoryItems.length === 0) return null;

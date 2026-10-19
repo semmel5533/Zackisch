@@ -53,11 +53,15 @@ export interface Business extends ConvexDocument {
   region?: string;
   deletionRequested?: boolean;
   tables?: string[];
+  isUpsellingEnabled?: boolean;
+  isTippingEnabled?: boolean;
+  isPopularCategoryEnabled?: boolean;
 }
 
 export type PublicRestaurant = Pick<Business,
   "_id" | "$id" | "name" | "legalName" | "address" | "vatId" | "logoUrl" | "bannerUrl" |
-  "currency" | "region" | "isToGoEnabled" | "isToStayEnabled" | "tables"
+  "currency" | "region" | "isToGoEnabled" | "isToStayEnabled" | "tables" |
+  "isUpsellingEnabled" | "isTippingEnabled" | "isPopularCategoryEnabled"
 > & { canOrder: boolean; isPaused: boolean; contactEmail?: string; contactPhone?: string };
 
 export interface CreateBusinessData {
