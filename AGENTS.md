@@ -18,7 +18,11 @@ No second Convex project or database. Do not create more global packages than th
 
 ## Framework and UI
 
-Before changing Next.js code, read version-matched guidance from installed `node_modules/next/dist/docs/` and verify that APIs work with Cloudflare Workers/vinext. Follow the active Next.js 16 `proxy.ts` convention where applicable, not obsolete middleware guidance. Prefer ESM, strict TypeScript, narrow domain modules and explicit contracts. For interactive primitives use Base UI; add accessible Zackisch design wrappers rather than mixing uncontrolled UI libraries. Tailwind-first presentation with shared semantic tokens; no arbitrary duplicated CSS systems. Use Phosphor for UI icons where supported, avoid emoji in code/product documentation. All visible UI strings, ARIA text, notices and localized links use `next-intl` keys; do not hardcode German/English strings in components. Region and language are different concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere.
+Before changing Next.js code, read version-matched guidance from installed `node_modules/next/dist/docs/` and verify that APIs work with Cloudflare Workers/vinext. Follow the active Next.js 16 `proxy.ts` convention where applicable, not obsolete middleware guidance. Prefer ESM, strict TypeScript, narrow domain modules and explicit contracts.
+
+All UI screens across `internal`, `support`, and `app` are built exclusively with the Astryx Design System (`@astryxdesign/core`, `@stylexjs/stylex`, `@astryxdesign/theme-neutral`). Layout, containers, forms, typography, and navigation use pure Astryx components (`AppShell`, `TopNav`, `SideNav`, `Layout`, `Card`, `VStack`, `HStack`, `Grid`, `Heading`, `Text`, `Badge`, `Button`, `TextInput`, `TextArea`, `Selector`, `CheckboxInput`, `Table`, `Divider`, `Icon`). Theming is managed via `lib/zackisch-theme.tsx` extending the neutral theme with Zackisch monochrome palette, slightly rounded corners (`radius: { base: 4, multiplier: 1 }`), Poppins for headings/body, and Inter tabular numbers for prices/metrics.
+
+Use Astryx built-in semantic icon names where supported; for external iconography use Phosphor icons (`@phosphor-icons/react`) passed to Astryx's `<Icon icon={PhosphorIcon} size="sm" />`. Never put icons on inline form error messages. Visual storytelling leverages curated free-to-use stock imagery. All visible UI strings, ARIA text, notices and localized links use `next-intl` keys or localized dictionary lookups; do not hardcode German/English strings in components. Region and language are distinct concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere.
 
 Maintain predictable interaction: explicit action labels, keyboard focus, logical tab order, clearly visible validation, proper empty/loading/error/offline states, WCAG 2.2 AA objective, responsive container-aware dashboards. Never modify real checkout disclosure or button wording solely for styling without testing applicable consumer purchase requirements.
 
@@ -57,3 +61,33 @@ Read before editing, map dependencies, implement in small reversible changes, va
 ## Merchant-owned payments and POS boundary
 
 Prefer verified Stripe Connect Direct Charges owned by each restaurant's connected merchant account with Stripe-owned processing fees and connected-account negative-balance allocation, embedded Stripe onboarding and required Stripe agreement transparency. Reject platform-owned charge fallback when merchant processing fails. Zackisch charges 2% of the eligible captured restaurant order subtotal excluding voluntary tips **including any applicable VAT on Zackisch's own service fee**, with Stripe fees separate. The restaurant owes the guest a lawful fiscal receipt/invoice according to the applicable law; Zackisch's success document is only a non-fiscal order/payment confirmation. Record each already-paid order **once** in the restaurant's existing POS with auditable staff confirmation. Consult `../docs/payments-and-stripe.md`, `../docs/guest-confirmation-and-pos.md`, and `../docs/tax-invoicing-and-fiscalization.md` (from an app folder) or `docs/...` (from repository root). Sandbox account/payment flow may be structurally refactored; never modify real money or assert TSE exemption without independent approval.
+
+<!-- ASTRYX:START -->
+Astryx v0.7.1 · 168 components
+CLI: run every command as `npx astryx <cmd>` (shown below as `astryx ...`).
+
+SETUP (once, in app entry e.g. main.tsx) — without these, components render unstyled:
+  import "@astryxdesign/core/reset.css";
+  import "@astryxdesign/core/astryx.css";
+
+WORKFLOW — start every page from a template, never from scratch:
+1. `astryx build "<idea>"` — names the template to scaffold from and the parts it lacks.
+2. `astryx template <name> <path>` — scaffold it; keep its frame, gap and padding; replace the content.
+3. `astryx template <Block>` for parts it lacks; `astryx component <Name>` to read props before using one.
+Changing an existing page? Keep it: skip step 2 and add blocks/components inside its sections.
+
+RULES:
+- No <div> — components handle all layout and spacing.
+- Read `astryx docs layout` before changing a template's frame.
+- Dense data = rows (Table, List/Item), not Card-wrapped lists. Badge = counts only.
+- Style with component props first, then tokens (var(--color-*|--spacing-*|--radius-*)). No raw hex/px. No StyleX/Tailwind compiler here — don't use xstyle/utility classes directly. Some templates use StyleX and need a compiler plugin; see `astryx docs styling-overview`.
+- Palettes and custom colors go through the theme, never :root overrides. Run `astryx theme add <slug>` to import; `theme eject <slug>` only forks source. See `astryx docs theme`.
+- SELF-CHECK: re-read the file; replace any raw <div>/<span>, imported .css/@apply, or hardcoded #hex/px with the component or a token.
+
+`astryx help` lists every command. Key ones beyond the workflow:
+  search "<query>"   find any component / hook / doc / template
+  discover <words>   integrations you could add
+  docs <topic>       getting-started, principles, tokens, theme … (`astryx docs` lists all)
+  docs cli           commands, API reference, integration authoring
+  upgrade --from <old version> --apply   run after a dependency bump
+<!-- ASTRYX:END -->

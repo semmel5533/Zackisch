@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
+import { ZackischThemeProvider } from "@/lib/zackisch-theme";
 import { ConvexClientProvider } from "@/lib/convex";
 import { AdminProvider } from "@/lib/admin-context";
 import { AdminShell } from "@/components/AdminShell";
@@ -41,12 +42,14 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${poppins.variable} ${inter.variable}`}>
       <body className="antialiased">
-        <ConvexClientProvider>
-          <AdminProvider>
-            <AdminShell>{children}</AdminShell>
-            <Toaster position="top-right" richColors />
-          </AdminProvider>
-        </ConvexClientProvider>
+        <ZackischThemeProvider>
+          <ConvexClientProvider>
+            <AdminProvider>
+              <AdminShell>{children}</AdminShell>
+              <Toaster position="top-right" richColors />
+            </AdminProvider>
+          </ConvexClientProvider>
+        </ZackischThemeProvider>
       </body>
     </html>
   );

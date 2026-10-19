@@ -2,23 +2,21 @@
 
 import { useActionState, useState, startTransition, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import {
   signInAction,
   verifyOtpAction,
   resendOtpAction,
 } from "@/actions/auth-actions";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card } from "@astryxdesign/core/Card";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { Button } from "@astryxdesign/core/Button";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { Divider } from "@astryxdesign/core/Divider";
+import { Icon } from "@astryxdesign/core/Icon";
 import {
   InputOTP,
   InputOTPGroup,
@@ -29,7 +27,6 @@ import {
   Eye,
   EyeSlash,
   SignIn,
-  CircleNotch,
   PaperPlaneRight,
 } from "@phosphor-icons/react";
 import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
@@ -118,52 +115,47 @@ function OtpForm({ state }: { state: any }) {
   };
 
   return (
-    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-        <div className="flex items-center">
-          <Image
+    <Card variant="default" padding={6}>
+      <VStack gap={6}>
+        <HStack justify="between" vAlign="center">
+          <img
             src="/combination_mark.svg"
-            alt="zakkig"
-            width={120}
-            height={40}
-            priority
-            className="w-auto h-8 select-none"
+            alt="Zackisch"
+            style={{ height: 28, width: "auto" }}
           />
-        </div>
-        <RegionLanguageSwitcher variant="outline" />
-      </div>
-      <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold text-foreground">
-          {t("verifyLogin")}
-        </CardTitle>
-        <CardDescription className="text-muted-foreground">
-          {t("verifyLoginDesc", { email: state.email || "" })}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={handleVerifyOtp}
-          noValidate
-          className="flex flex-col gap-4"
-        >
-          {isLockedOut && (
-            <p className="w-full text-left text-sm font-medium text-destructive">
-              {t("otpLockedOut")}
-            </p>
-          )}
+          <RegionLanguageSwitcher />
+        </HStack>
 
-          {!isLockedOut &&
-            attemptsRemaining !== null &&
-            attemptsRemaining < 5 && (
-              <p className="w-full text-left text-sm font-medium text-destructive">
-                {attemptsRemaining === 1
-                  ? t("otpRemainingAttemptsOne")
-                  : t("otpRemainingAttempts", { count: attemptsRemaining })}
-              </p>
+        <Divider />
+
+        <VStack gap={1}>
+          <Heading level={1}>
+            {t("verifyLogin")}
+          </Heading>
+          <Text color="secondary">
+            {t("verifyLoginDesc", { email: state.email || "" })}
+          </Text>
+        </VStack>
+
+        <form onSubmit={handleVerifyOtp} noValidate>
+          <VStack gap={4}>
+            {isLockedOut && (
+              <Text weight="semibold" color="secondary">
+                {t("otpLockedOut")}
+              </Text>
             )}
 
-          <div className="flex flex-col items-center justify-center py-2 w-full">
-            <div className="w-full">
+            {!isLockedOut &&
+              attemptsRemaining !== null &&
+              attemptsRemaining < 5 && (
+                <Text weight="semibold" color="secondary">
+                  {attemptsRemaining === 1
+                    ? t("otpRemainingAttemptsOne")
+                    : t("otpRemainingAttempts", { count: attemptsRemaining })}
+                </Text>
+              )}
+
+            <VStack gap={2} align="center">
               <InputOTP
                 maxLength={6}
                 value={otp}
@@ -207,57 +199,46 @@ function OtpForm({ state }: { state: any }) {
                   />
                 </InputOTPGroup>
               </InputOTP>
-            </div>
-          </div>
-          {otpError && (
-            <p
-              id="sign-in-otp-error"
-              role="alert"
-              className="w-full text-left text-sm font-medium text-destructive"
-            >
-              {otpError}
-            </p>
-          )}
-          <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
-          <div className="flex flex-col sm:flex-row gap-2 w-full">
-            <Button
-              type="button"
-              variant={isLockedOut || isExpired ? "default" : "outline"}
-              className={`w-full ${isLockedOut || isExpired ? "sm:w-full font-semibold" : "sm:w-1/2 font-semibold"} h-11 rounded-full transition-all`}
-              disabled={countdown > 0 && !isLockedOut && !isExpired}
-              onClick={handleResendOtp}
-            >
-              {isLockedOut || isExpired
-                ? t("requestNewCodeNow")
-                : countdown > 0
-                  ? t("resendIn", { time: countdown })
-                  : t("resendCode")}
-            </Button>
-            {!isLockedOut && !isExpired && (
-              <Button
-                type="submit"
-                className="w-full sm:w-1/2 gap-2 h-11 rounded-full bg-primary text-primary-foreground hover:bg-neutral-800 font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
-                disabled={isVerifying || otp.length < 6}
-              >
-                {isVerifying ? (
-                  <>
-                    <CircleNotch
-                      className="w-5 h-5 animate-spin"
-                      weight="bold"
-                    />
-                    {t("verifying")}
-                  </>
-                ) : (
-                  <>
-                    <PaperPlaneRight className="w-5 h-5" weight="bold" />
-                    {t("confirm")}
-                  </>
-                )}
-              </Button>
+            </VStack>
+
+            {otpError && (
+              <Text id="sign-in-otp-error" weight="semibold">
+                {otpError}
+              </Text>
             )}
-          </div>
+
+            <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
+
+            <HStack gap={2} vAlign="center" wrap="wrap">
+              <Button
+                label={
+                  isLockedOut || isExpired
+                    ? t("requestNewCodeNow")
+                    : countdown > 0
+                      ? t("resendIn", { time: countdown })
+                      : t("resendCode")
+                }
+                variant={isLockedOut || isExpired ? "primary" : "secondary"}
+                size="md"
+                isDisabled={countdown > 0 && !isLockedOut && !isExpired}
+                onClick={handleResendOtp}
+              />
+              {!isLockedOut && !isExpired && (
+                <Button
+                  label={t("confirm")}
+                  variant="primary"
+                  size="md"
+                  type="submit"
+                  isLoading={isVerifying}
+                  isDisabled={isVerifying || otp.length < 6}
+                  icon={<Icon icon={PaperPlaneRight} size="sm" />}
+                  onClick={(e: any) => handleVerifyOtp(e)}
+                />
+              )}
+            </HStack>
+          </VStack>
         </form>
-      </CardContent>
+      </VStack>
     </Card>
   );
 }
@@ -272,31 +253,34 @@ function SignInForm({
   isPending: boolean;
 }) {
   const { t } = useTranslation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
     const errors: Record<string, string> = {};
 
-    if (!formData.get("email")) {
+    if (!email.trim()) {
       errors.email = t("emailRequired");
     } else if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.get("email") as string)
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
     ) {
       errors.email = t("emailInvalid");
     }
 
-    if (!formData.get("password")) {
+    if (!password) {
       errors.password = t("passwordRequired");
     }
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      document.getElementById(errors.email ? "email" : "password")?.focus();
     } else {
       setFieldErrors({});
+      const formData = new FormData();
+      formData.set("email", email.trim());
+      formData.set("password", password);
       startTransition(() => {
         formAction(formData);
       });
@@ -304,175 +288,118 @@ function SignInForm({
   };
 
   return (
-    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-        <div className="flex items-center">
-          <Image
+    <Card variant="default" padding={6}>
+      <VStack gap={6}>
+        <HStack justify="between" vAlign="center">
+          <img
             src="/combination_mark.svg"
-            alt="zakkig"
-            width={120}
-            height={40}
-            priority
-            loading="eager"
-            className="w-auto h-8 select-none"
+            alt="Zackisch"
+            style={{ height: 28, width: "auto" }}
           />
-        </div>
-        <div className="flex items-center gap-2">
-          <RegionLanguageSwitcher variant="outline" />
-        </div>
-      </div>
-      <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold text-foreground">
-          {t("signIn")}
-        </CardTitle>
-        <CardDescription className="text-muted-foreground">
-          {t("signInDescription")}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={handleSubmit}
-          noValidate
-          className="flex flex-col gap-5"
-        >
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="email"
-              className={`text-sm font-semibold ${fieldErrors.email ? "text-destructive" : "text-foreground"}`}
-            >
-              {t("email")}
-            </label>
-            <Input
-              id="email"
-              name="email"
+          <RegionLanguageSwitcher />
+        </HStack>
+
+        <Divider />
+
+        <VStack gap={1}>
+          <Heading level={1}>
+            {t("signIn")}
+          </Heading>
+          <Text color="secondary">
+            {t("signInDescription")}
+          </Text>
+        </VStack>
+
+        <form onSubmit={handleSubmit} noValidate>
+          <VStack gap={4}>
+            <TextInput
+              label={t("email")}
               type="email"
+              value={email}
+              onChange={(val) => {
+                setEmail(val);
+                setFieldErrors((errs) => ({ ...errs, email: "" }));
+              }}
               placeholder={t("emailPlaceholder")}
-              autoComplete="email"
-              maxLength={100}
-              aria-invalid={!!fieldErrors.email}
-              aria-describedby={fieldErrors.email ? "email-error" : undefined}
-              onChange={() =>
-                setFieldErrors((errors) => ({ ...errors, email: "" }))
-              }
-              className={fieldErrors.email ? "border-destructive" : undefined}
+              isRequired
             />
             {fieldErrors.email && (
-              <span
-                id="email-error"
-                role="alert"
-                className="w-full text-left text-sm font-medium text-destructive"
-              >
+              <Text color="secondary" weight="semibold">
                 {fieldErrors.email}
-              </span>
+              </Text>
             )}
-          </div>
 
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className={`text-sm font-semibold ${fieldErrors.password ? "text-destructive" : "text-foreground"}`}
-              >
-                {t("password")}
-              </label>
-              <Link
-                href="/reset-password"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-              >
-                {t("forgotPassword")}
-              </Link>
-            </div>
-            <div className="relative">
-              <Input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                maxLength={100}
-                aria-invalid={!!fieldErrors.password}
-                aria-describedby={
-                  fieldErrors.password ? "password-error" : undefined
-                }
-                onChange={() =>
-                  setFieldErrors((errors) => ({ ...errors, password: "" }))
-                }
-                className={
-                  fieldErrors.password ? "border-destructive pr-10" : "pr-10"
-                }
-              />
-              <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                title={showPassword ? t("hidePassword") : t("showPassword")}
-                aria-label={
-                  showPassword ? t("hidePassword") : t("showPassword")
-                }
-                aria-pressed={showPassword}
-              >
-                {showPassword ? (
-                  <EyeSlash
-                    className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
-                    weight="bold"
-                  />
-                ) : (
-                  <Eye
-                    className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
-                    weight="bold"
-                  />
-                )}
-              </button>
-            </div>
-            {fieldErrors.password && (
-              <span
-                id="password-error"
-                role="alert"
-                className="w-full text-left text-sm font-medium text-destructive"
-              >
-                {fieldErrors.password}
-              </span>
-            )}
-          </div>
+            <VStack gap={1}>
+              <HStack justify="between" vAlign="center">
+                <Text weight="semibold">{t("password")}</Text>
+                <Link
+                  href="/reset-password"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Text color="secondary">
+                    {t("forgotPassword")}
+                  </Text>
+                </Link>
+              </HStack>
+              <HStack gap={2} vAlign="center">
+                <TextInput
+                  label={t("password")}
+                  isLabelHidden
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(val) => {
+                    setPassword(val);
+                    setFieldErrors((errs) => ({ ...errs, password: "" }));
+                  }}
+                  isRequired
+                />
+                <Button
+                  label={showPassword ? t("hidePassword") : t("showPassword")}
+                  variant="ghost"
+                  size="md"
+                  onClick={() => setShowPassword(!showPassword)}
+                  icon={
+                    <Icon
+                      icon={showPassword ? EyeSlash : Eye}
+                      size="sm"
+                    />
+                  }
+                />
+              </HStack>
+              {fieldErrors.password && (
+                <Text color="secondary" weight="semibold">
+                  {fieldErrors.password}
+                </Text>
+              )}
+            </VStack>
 
-          {state.error && (
-            <p
-              role="alert"
-              className="w-full text-left text-sm font-medium text-destructive"
-            >
-              {t(state.error as any)}
-            </p>
-          )}
-          <Button
-            type="submit"
-            className="w-full gap-2"
-            disabled={isPending}
-          >
-            {isPending ? (
-              <>
-                <CircleNotch className="w-5 h-5 animate-spin" weight="bold" />
-                {t("signingIn")}
-              </>
-            ) : (
-              <>
-                <SignIn className="w-5 h-5" weight="bold" />
-                {t("signIn")}
-              </>
+            {state.error && (
+              <Text color="secondary" weight="semibold">
+                {t(state.error as any)}
+              </Text>
             )}
-          </Button>
+
+            <Button
+              label={t("signIn")}
+              variant="primary"
+              size="md"
+              type="submit"
+              isLoading={isPending}
+              icon={<Icon icon={SignIn} size="sm" />}
+              onClick={(e: any) => handleSubmit(e)}
+            />
+          </VStack>
         </form>
-      </CardContent>
 
-      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border">
-        <p className="text-sm text-muted-foreground">
-          {t("noAccount")}{" "}
-          <Link
-            href="/sign-up"
-            className="font-semibold text-foreground underline-offset-4 hover:underline"
-          >
+        <Divider />
+
+        <HStack justify="center" vAlign="center" gap={1}>
+          <Text color="secondary">{t("noAccount")}</Text>
+          <Link href="/sign-up" style={{ fontWeight: 600 }}>
             {t("signUp")}
           </Link>
-        </p>
-      </CardFooter>
+        </HStack>
+      </VStack>
     </Card>
   );
 }

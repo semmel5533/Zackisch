@@ -3,15 +3,23 @@
 import React, { useState } from "react";
 import { useQuery } from "convex/react";
 import { anyApi } from "convex/server";
-import { useAdmin } from "@/lib/admin-context";
+import { Receipt } from "@phosphor-icons/react";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { StackItem } from "@astryxdesign/core/Stack";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
 import {
-  Receipt,
-  Search,
-  CheckCircle2,
-  Clock,
-  XCircle,
-  TrendingUp,
-} from "lucide-react";
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@astryxdesign/core/SegmentedControl";
+import { Table, proportional, pixel } from "@astryxdesign/core/Table";
+import { Icon } from "@astryxdesign/core/Icon";
+import { Badge } from "@astryxdesign/core/Badge";
+import { StatusDot } from "@astryxdesign/core/StatusDot";
+import { EmptyState } from "@astryxdesign/core/EmptyState";
+import { Spinner } from "@astryxdesign/core/Spinner";
+import { useAdmin } from "@/lib/admin-context";
 
 export default function OrdersPage() {
   const { currentRegion, sessionToken } = useAdmin();
@@ -35,144 +43,142 @@ export default function OrdersPage() {
   });
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">
-            Bestell- und Zahlungsübersicht
-          </h2>
-          <p className="text-sm text-zinc-500 mt-1">
-            Reale Transaktionen, 2% Plattformgebühr und Zahlungsstatus in Region {currentRegion.toUpperCase()}.
-          </p>
-        </div>
+    <VStack gap={5} maxWidth={1200}>
+      <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
+        <StackItem size="fill">
+          <VStack gap={1}>
+            <Heading level={1}>Bestell- und Zahlungsübersicht</Heading>
+            <Text type="supporting">
+              Reale Transaktionen, 2% Plattformgebühr und Zahlungsstatus in Region{" "}
+              {currentRegion.toUpperCase()}.
+            </Text>
+          </VStack>
+        </StackItem>
 
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1.5 bg-zinc-100 p-1 rounded-xl border border-zinc-200 text-xs">
-          <button
-            onClick={() => setStatusFilter("all")}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-              statusFilter === "all" ? "bg-white text-black font-semibold shadow-2xs" : "text-zinc-500 hover:text-black"
-            }`}
-          >
-            Alle
-          </button>
-          <button
-            onClick={() => setStatusFilter("in_progress")}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-              statusFilter === "in_progress" ? "bg-white text-black font-semibold shadow-2xs" : "text-zinc-500 hover:text-black"
-            }`}
-          >
-            In Zubereitung
-          </button>
-          <button
-            onClick={() => setStatusFilter("ready_for_pickup")}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-              statusFilter === "ready_for_pickup" ? "bg-white text-black font-semibold shadow-2xs" : "text-zinc-500 hover:text-black"
-            }`}
-          >
-            Abholbereit
-          </button>
-          <button
-            onClick={() => setStatusFilter("completed")}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-              statusFilter === "completed" ? "bg-white text-black font-semibold shadow-2xs" : "text-zinc-500 hover:text-black"
-            }`}
-          >
-            Abgeschlossen
-          </button>
-        </div>
-      </div>
+        <SegmentedControl
+          label="Bestellstatus filtern"
+          value={statusFilter}
+          onChange={setStatusFilter}
+          size="sm"
+        >
+          <SegmentedControlItem value="all" label="Alle" />
+          <SegmentedControlItem value="in_progress" label="In Zubereitung" />
+          <SegmentedControlItem value="ready_for_pickup" label="Abholbereit" />
+          <SegmentedControlItem value="completed" label="Abgeschlossen" />
+        </SegmentedControl>
+      </HStack>
 
-      {/* Orders Table */}
-      <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-zinc-600">
-            <thead className="bg-zinc-50/75 border-b border-zinc-200/80 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
-              <tr>
-                <th className="py-3.5 px-6">Bestellung</th>
-                <th className="py-3.5 px-4">Typ / Tisch</th>
-                <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Gesamtbetrag</th>
-                <th className="py-3.5 px-4">Zackisch (2%)</th>
-                <th className="py-3.5 px-4">Stripe ID</th>
-                <th className="py-3.5 px-6 text-right">Zeitstempel</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100">
-              {!orders ? (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-zinc-400">
-                    Lade Bestellungen...
-                  </td>
-                </tr>
-              ) : filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-zinc-400">
-                    Keine Bestellungen mit diesem Status vorhanden.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((o: any) => (
-                  <tr key={o._id} className="hover:bg-zinc-50/50 transition-colors">
-                    <td className="py-4 px-6">
-                      <span className="font-mono text-sm font-bold text-zinc-900">
-                        #{o.orderNumber}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="font-semibold text-zinc-800">
-                        {o.type === "dine-in" ? "Vor Ort" : "Abholung"}
-                      </div>
-                      <div className="text-[11px] text-zinc-400">
-                        {o.tableNumber ? `Tisch ${o.tableNumber}` : "Ohne Tisch"}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      {o.status === "completed" && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700">
-                          <CheckCircle2 className="w-3 h-3" />
-                          Erledigt
-                        </span>
-                      )}
-                      {o.status === "ready_for_pickup" && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700">
-                          <Clock className="w-3 h-3" />
-                          Abholbereit
-                        </span>
-                      )}
-                      {o.status === "in_progress" && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700">
-                          <Clock className="w-3 h-3" />
-                          In Zubereitung
-                        </span>
-                      )}
-                      {o.status === "cancelled" && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-50 text-red-700">
-                          <XCircle className="w-3 h-3" />
-                          Storniert
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-4 px-4 font-num font-bold text-zinc-900 text-sm">
-                      {formatEuro(o.total)}
-                    </td>
-                    <td className="py-4 px-4 font-num font-semibold text-emerald-700">
-                      {formatEuro(o.zackischFee)}
-                    </td>
-                    <td className="py-4 px-4 font-mono text-[11px] text-zinc-500">
-                      {o.stripePaymentId ? o.stripePaymentId.slice(0, 16) + "..." : "—"}
-                    </td>
-                    <td className="py-4 px-6 text-right font-num text-zinc-400 text-[11px]">
-                      {o.createdAt ? new Date(o.createdAt).toLocaleString("de-DE") : "—"}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+      {!orders ? (
+        <VStack hAlign="center" vAlign="center" minHeight={240}>
+          <Spinner label="Lade Bestellungen..." />
+        </VStack>
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          icon={<Icon icon={Receipt} size="lg" color="secondary" />}
+          title="Keine Bestellungen vorhanden"
+          description="Es wurden keine Bestellungen mit diesem Status in dieser Region gefunden."
+        />
+      ) : (
+        <Table
+          data={filtered}
+          idKey="_id"
+          hasHover
+          density="balanced"
+          columns={[
+            {
+              key: "orderNumber",
+              header: "Bestellung",
+              width: pixel(110),
+              renderCell: (o: any) => (
+                <Text type="code" weight="bold" hasTabularNumbers>
+                  #{o.orderNumber}
+                </Text>
+              ),
+            },
+            {
+              key: "type",
+              header: "Typ / Tisch",
+              width: proportional(1, { minWidth: 140 }),
+              renderCell: (o: any) => (
+                <VStack gap={0.5}>
+                  <Text weight="semibold">
+                    {o.type === "dine-in" ? "Vor Ort" : "Abholung"}
+                  </Text>
+                  <Text type="supporting">
+                    {o.tableNumber ? `Tisch ${o.tableNumber}` : "Ohne Tisch"}
+                  </Text>
+                </VStack>
+              ),
+            },
+            {
+              key: "status",
+              header: "Status",
+              width: proportional(1, { minWidth: 150 }),
+              renderCell: (o: any) => {
+                if (o.status === "completed") {
+                  return (
+                    <HStack gap={1.5} vAlign="center">
+                      <StatusDot variant="success" label="Erledigt" />
+                      <Text>Erledigt</Text>
+                    </HStack>
+                  );
+                }
+                if (o.status === "ready_for_pickup") {
+                  return <Badge variant="blue" label="Abholbereit" />;
+                }
+                if (o.status === "in_progress") {
+                  return <Badge variant="warning" label="In Zubereitung" />;
+                }
+                if (o.status === "cancelled") {
+                  return <Badge variant="error" label="Storniert" />;
+                }
+                return <Text>{o.status}</Text>;
+              },
+            },
+            {
+              key: "total",
+              header: "Gesamtbetrag",
+              width: pixel(130),
+              renderCell: (o: any) => (
+                <Text weight="bold" hasTabularNumbers>
+                  {formatEuro(o.total)}
+                </Text>
+              ),
+            },
+            {
+              key: "zackischFee",
+              header: "Zackisch (2%)",
+              width: pixel(130),
+              renderCell: (o: any) => (
+                <Text weight="semibold" hasTabularNumbers>
+                  {formatEuro(o.zackischFee)}
+                </Text>
+              ),
+            },
+            {
+              key: "stripePaymentId",
+              header: "Stripe ID",
+              width: proportional(1, { minWidth: 150 }),
+              renderCell: (o: any) => (
+                <Text type="code" color="secondary" maxLines={1}>
+                  {o.stripePaymentId ? `${o.stripePaymentId.slice(0, 16)}...` : "—"}
+                </Text>
+              ),
+            },
+            {
+              key: "createdAt",
+              header: "Zeitstempel",
+              align: "end",
+              width: pixel(170),
+              renderCell: (o: any) => (
+                <Text type="supporting" hasTabularNumbers>
+                  {o.createdAt ? new Date(o.createdAt).toLocaleString("de-DE") : "—"}
+                </Text>
+              ),
+            },
+          ]}
+        />
+      )}
+    </VStack>
   );
 }

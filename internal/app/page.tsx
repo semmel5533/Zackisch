@@ -1,32 +1,36 @@
 "use client";
 
 import React, { useState } from "react";
-import { useQuery, useAction, useMutation } from "convex/react";
+import { useQuery, useAction } from "convex/react";
 import { anyApi } from "convex/server";
-import { useAdmin } from "@/lib/admin-context";
 import {
-  TrendingUp,
-  Store,
+  TrendUp,
+  Storefront,
   Receipt,
-  Users,
-  Mail,
   Handshake,
-  CheckCircle2,
-  Clock,
-  Send,
+  EnvelopeSimple,
+  PaperPlaneTilt,
   Plus,
-  RefreshCw,
-  ArrowUpRight,
-  ShieldAlert,
-} from "lucide-react";
+} from "@phosphor-icons/react";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Grid } from "@astryxdesign/core/Grid";
+import { Section } from "@astryxdesign/core/Section";
+import { Card } from "@astryxdesign/core/Card";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { Button } from "@astryxdesign/core/Button";
+import { Icon } from "@astryxdesign/core/Icon";
+import { Badge } from "@astryxdesign/core/Badge";
+import { StatusDot } from "@astryxdesign/core/StatusDot";
+import { List, ListItem } from "@astryxdesign/core/List";
+import { useAdmin } from "@/lib/admin-context";
 import { toast } from "sonner";
-import Link from "next/link";
 
 export default function AdminOverviewPage() {
   const { currentRegion, adminEmail, sessionToken } = useAdmin();
   const [testingSmtp, setTestingSmtp] = useState(false);
 
-  // Queries
   const overview = useQuery(
     (anyApi as any).admin.getRegionalOverview,
     sessionToken ? { regionId: currentRegion, sessionToken } : "skip"
@@ -58,189 +62,187 @@ export default function AdminOverviewPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      {/* Welcome Banner */}
-      <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-600" />
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-              Region Deutschland (DE) Aktiv
-            </span>
-          </div>
-          <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">
-            Willkommen in der Zackisch Zentrale
-          </h2>
-          <p className="text-sm text-zinc-500 mt-1">
-            Operative Übersicht für Betriebe und Gastronomie, Zahlungen, Partner und E-Mail-Marketing in deiner Region.
-          </p>
-        </div>
+    <VStack gap={6} maxWidth={1200}>
+      {/* Header Section */}
+      <Section variant="section" padding={5} dividers={["bottom"]}>
+        <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
+          <VStack gap={1.5}>
+            <HStack gap={2} vAlign="center">
+              <StatusDot
+                variant="success"
+                label={`Region ${currentRegion.toUpperCase()} Aktiv`}
+                isPulsing
+              />
+              <Badge
+                variant="green"
+                label={`Region Deutschland (${currentRegion.toUpperCase()}) Aktiv`}
+              />
+            </HStack>
+            <Heading level={1}>Willkommen in der Zackisch Zentrale</Heading>
+            <Text type="supporting">
+              Operative Übersicht für Betriebe und Gastronomie, Zahlungen, Partner und E-Mail-Marketing in deiner Region.
+            </Text>
+          </VStack>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleTestSmtp}
-            disabled={testingSmtp}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-50 transition-all shadow-2xs disabled:opacity-50"
-          >
-            {testingSmtp ? (
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Send className="w-3.5 h-3.5" />
-            )}
-            SMTP-Verbindung testen
-          </button>
-          <Link
-            href="/newsletter"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-black text-white text-xs font-semibold hover:bg-zinc-800 transition-all shadow-2xs"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Newsletter verfassen
-          </Link>
-        </div>
-      </div>
+          <HStack gap={2} wrap="wrap">
+            <Button
+              label="SMTP-Verbindung testen"
+              variant="secondary"
+              isLoading={testingSmtp}
+              icon={<Icon icon={PaperPlaneTilt} size="sm" />}
+              onClick={handleTestSmtp}
+            />
+            <Button
+              label="Newsletter verfassen"
+              variant="primary"
+              href="/newsletter"
+              icon={<Icon icon={Plus} size="sm" />}
+            />
+          </HStack>
+        </HStack>
+      </Section>
 
       {/* KPI Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {/* GMV */}
-        <div className="bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-xs hover:border-zinc-300 transition-colors">
-          <div className="flex items-center justify-between text-zinc-500 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Umsatzvolumen (GMV)</span>
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700">
-              <TrendingUp className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? formatEuro(overview.gmvCents) : "—"}
-          </div>
-          <p className="text-xs text-zinc-600 mt-2">
-            Gesamtes über QR abgewickeltes Bestellvolumen
-          </p>
-        </div>
+      <Grid columns={{ minWidth: 260, max: 3, repeat: "fit" }} gap={4}>
+        <Card padding={4}>
+          <VStack gap={2}>
+            <HStack justify="between" vAlign="center">
+              <Text type="label" color="secondary">
+                Umsatzvolumen (GMV)
+              </Text>
+              <Icon icon={TrendUp} color="secondary" size="sm" />
+            </HStack>
+            <Heading level={2}>
+              <Text type="inherit" hasTabularNumbers>
+                {overview ? formatEuro(overview.gmvCents) : "—"}
+              </Text>
+            </Heading>
+            <Text type="supporting">
+              Gesamtes über QR abgewickeltes Bestellvolumen
+            </Text>
+          </VStack>
+        </Card>
 
-        {/* Platform Revenue (2%) */}
-        <div className="bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-xs hover:border-zinc-300 transition-colors">
-          <div className="flex items-center justify-between text-zinc-500 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Plattform-Gebühr (2%)</span>
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700">
-              <Receipt className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? formatEuro(overview.platformFeeCents) : "—"}
-          </div>
-          <p className="text-xs text-zinc-600 mt-2">
-            Zackisch Einnahmen (2% pro relevanter Bestellung)
-          </p>
-        </div>
+        <Card padding={4}>
+          <VStack gap={2}>
+            <HStack justify="between" vAlign="center">
+              <Text type="label" color="secondary">
+                Plattform-Gebühr (2%)
+              </Text>
+              <Icon icon={Receipt} color="secondary" size="sm" />
+            </HStack>
+            <Heading level={2}>
+              <Text type="inherit" hasTabularNumbers>
+                {overview ? formatEuro(overview.platformFeeCents) : "—"}
+              </Text>
+            </Heading>
+            <Text type="supporting">
+              Zackisch Einnahmen (2% pro relevanter Bestellung)
+            </Text>
+          </VStack>
+        </Card>
 
-        {/* Partner Commission (50% of 2%) */}
-        <div className="bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-xs hover:border-zinc-300 transition-colors">
-          <div className="flex items-center justify-between text-zinc-500 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Partner-Provision (50%)</span>
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700">
-              <Handshake className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? formatEuro(overview.partnerCommissionCents) : "—"}
-          </div>
-          <p className="text-xs text-zinc-600 mt-2">
-            50% der Plattformgebühr für regionale Partner
-          </p>
-        </div>
+        <Card padding={4}>
+          <VStack gap={2}>
+            <HStack justify="between" vAlign="center">
+              <Text type="label" color="secondary">
+                Partner-Provision (50%)
+              </Text>
+              <Icon icon={Handshake} color="secondary" size="sm" />
+            </HStack>
+            <Heading level={2}>
+              <Text type="inherit" hasTabularNumbers>
+                {overview ? formatEuro(overview.partnerCommissionCents) : "—"}
+              </Text>
+            </Heading>
+            <Text type="supporting">
+              50% der Plattformgebühr für regionale Partner
+            </Text>
+          </VStack>
+        </Card>
 
-        {/* Betriebe */}
-        <div className="bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-xs hover:border-zinc-300 transition-colors">
-          <div className="flex items-center justify-between text-zinc-500 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Betriebe</span>
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700">
-              <Store className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? overview.totalBusinesses : "—"}
-          </div>
-          <p className="text-xs text-zinc-600 mt-2">
-            {(overview?.activeBusinesses) || 0} mit abgeschlossenem Stripe Onboarding
-          </p>
-        </div>
+        <Card padding={4}>
+          <VStack gap={2}>
+            <HStack justify="between" vAlign="center">
+              <Text type="label" color="secondary">
+                Betriebe
+              </Text>
+              <Icon icon={Storefront} color="secondary" size="sm" />
+            </HStack>
+            <Heading level={2}>
+              <Text type="inherit" hasTabularNumbers>
+                {overview ? overview.totalBusinesses : "—"}
+              </Text>
+            </Heading>
+            <Text type="supporting">
+              {overview?.activeBusinesses || 0} mit abgeschlossenem Stripe Onboarding
+            </Text>
+          </VStack>
+        </Card>
 
-        {/* Orders */}
-        <div className="bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-xs hover:border-zinc-300 transition-colors">
-          <div className="flex items-center justify-between text-zinc-500 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Bestellungen</span>
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700">
-              <Receipt className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? overview.totalOrders : "—"}
-          </div>
-          <p className="text-xs text-zinc-600 mt-2">
-            Tisch- und Abholbestellungen in Region DE
-          </p>
-        </div>
+        <Card padding={4}>
+          <VStack gap={2}>
+            <HStack justify="between" vAlign="center">
+              <Text type="label" color="secondary">
+                Bestellungen
+              </Text>
+              <Icon icon={Receipt} color="secondary" size="sm" />
+            </HStack>
+            <Heading level={2}>
+              <Text type="inherit" hasTabularNumbers>
+                {overview ? overview.totalOrders : "—"}
+              </Text>
+            </Heading>
+            <Text type="supporting">
+              Tisch- und Abholbestellungen in Region {currentRegion.toUpperCase()}
+            </Text>
+          </VStack>
+        </Card>
 
-        {/* Newsletter Subscribers */}
-        <div className="bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-xs hover:border-zinc-300 transition-colors">
-          <div className="flex items-center justify-between text-zinc-500 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Newsletter Abonnenten</span>
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700">
-              <Mail className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-3xl font-extrabold text-zinc-900 font-num tracking-tight">
-            {overview ? overview.subscriberCount : "—"}
-          </div>
-          <p className="text-xs text-zinc-600 mt-2">
-            Bestätigte Double-Opt-In Abonnenten
-          </p>
-        </div>
-      </div>
+        <Card padding={4}>
+          <VStack gap={2}>
+            <HStack justify="between" vAlign="center">
+              <Text type="label" color="secondary">
+                Newsletter Abonnenten
+              </Text>
+              <Icon icon={EnvelopeSimple} color="secondary" size="sm" />
+            </HStack>
+            <Heading level={2}>
+              <Text type="inherit" hasTabularNumbers>
+                {overview ? overview.subscriberCount : "—"}
+              </Text>
+            </Heading>
+            <Text type="supporting">Bestätigte Double-Opt-In Abonnenten</Text>
+          </VStack>
+        </Card>
+      </Grid>
 
       {/* System Infrastructure Status */}
-      <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs">
-        <h3 className="text-base font-bold text-zinc-900 mb-4">
-          Infrastruktur & Anbieterstatus
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 rounded-xl border border-zinc-100 bg-zinc-50/50">
-            <div className="flex items-center gap-2 text-xs font-bold text-zinc-900 mb-1">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              Google Workspace SMTP
-            </div>
-            <div className="text-[12px] text-zinc-500 space-y-0.5 mt-2">
-              <div>Host: <span className="font-mono text-zinc-700">smtp.gmail.com:587</span></div>
-              <div>Absender: <span className="font-mono text-zinc-700">noreply@zackisch.com</span></div>
-              <div>Reply-To: <span className="font-mono text-zinc-700">noreply@zackisch.com</span></div>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl border border-zinc-100 bg-zinc-50/50">
-            <div className="flex items-center gap-2 text-xs font-bold text-zinc-900 mb-1">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              Stripe Connect Standard
-            </div>
-            <div className="text-[12px] text-zinc-500 space-y-0.5 mt-2">
-              <div>Modell: <span className="text-zinc-700 font-medium">Standard Connect</span></div>
-              <div>Gebühr: <span className="text-zinc-700 font-medium">2% Plattformanteil</span></div>
-              <div>Zahlungsabwicklung: <span className="text-zinc-700 font-medium">Betrieb trägt Kosten</span></div>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl border border-zinc-100 bg-zinc-50/50">
-            <div className="flex items-center gap-2 text-xs font-bold text-zinc-900 mb-1">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              Convex Cloud Backend
-            </div>
-            <div className="text-[12px] text-zinc-500 space-y-0.5 mt-2">
-              <div>Region: <span className="text-zinc-700 font-medium">eu-west-1 (Frankfurt)</span></div>
-              <div>Architektur: <span className="text-zinc-700 font-medium">Single DB, Regionstrennung</span></div>
-              <div>Echtzeit: <span className="text-zinc-700 font-medium">Live Queries aktiv</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Section variant="section" padding={5}>
+        <VStack gap={3}>
+          <Heading level={3}>Infrastruktur & Anbieterstatus</Heading>
+          <List hasDividers density="spacious">
+            <ListItem
+              label="Google Workspace SMTP"
+              description="Host: smtp.gmail.com:587 · Absender: noreply@zackisch.com · Reply-To: noreply@zackisch.com"
+              startContent={<StatusDot variant="success" label="Aktiv" />}
+              endContent={<Badge variant="green" label="Verbunden" />}
+            />
+            <ListItem
+              label="Stripe Connect Direct Charges"
+              description="Modell: Direct Charges auf verbundenem Gastronomie-Konto · Gebühr: 2% Plattformanteil (exkl. Trinkgeld)"
+              startContent={<StatusDot variant="success" label="Aktiv" />}
+              endContent={<Badge variant="green" label="Aktiv" />}
+            />
+            <ListItem
+              label="Convex Cloud Backend"
+              description="Region: eu-west-1 (Frankfurt) · Architektur: Single DB mit strikter Regionstrennung · Echtzeit Live Queries"
+              startContent={<StatusDot variant="success" label="Aktiv" />}
+              endContent={<Badge variant="green" label="Live" />}
+            />
+          </List>
+        </VStack>
+      </Section>
+    </VStack>
   );
 }

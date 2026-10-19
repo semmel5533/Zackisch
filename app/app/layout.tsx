@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { ZackischThemeProvider } from "@/lib/zackisch-theme";
+import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -50,8 +52,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -63,10 +63,12 @@ export default function RootLayout({
       className={cn("light antialiased overflow-x-clip font-sans", poppins.variable, inter.variable)}
     >
       <body className="bg-background text-foreground overflow-x-clip min-h-screen">
-        <ConvexClientProvider>
-          {children}
-        </ConvexClientProvider>
-        <Toaster position="top-center" />
+        <ZackischThemeProvider>
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
+          <Toaster position="top-center" />
+        </ZackischThemeProvider>
       </body>
     </html>
   );

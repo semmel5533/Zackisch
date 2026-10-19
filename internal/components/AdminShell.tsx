@@ -1,27 +1,41 @@
 "use client";
 
 import React, { ReactNode, useEffect } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAdmin } from "@/lib/admin-context";
 import {
-  LayoutDashboard,
-  Store,
+  SquaresFour,
+  Storefront,
   Receipt,
+  Lifebuoy,
   Users,
   Handshake,
-  Mail,
-  History,
+  EnvelopeSimple,
+  ClockCounterClockwise,
   ShieldCheck,
-  ShieldAlert,
-  Settings,
-  Circle,
-  ExternalLink,
-  LogOut,
-  Loader2,
-  ArrowRight,
-  LifeBuoy,
-} from "lucide-react";
+  ShieldWarning,
+  GearSix,
+  SignOut,
+} from "@phosphor-icons/react";
+import { AppShell } from "@astryxdesign/core/AppShell";
+import {
+  SideNav,
+  SideNavHeading,
+  SideNavSection,
+  SideNavItem,
+} from "@astryxdesign/core/SideNav";
+import { TopNav } from "@astryxdesign/core/TopNav";
+import { Layout, LayoutHeader, LayoutContent } from "@astryxdesign/core/Layout";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { Button } from "@astryxdesign/core/Button";
+import { Icon } from "@astryxdesign/core/Icon";
+import { Badge } from "@astryxdesign/core/Badge";
+import { StatusDot } from "@astryxdesign/core/StatusDot";
+import { EmptyState } from "@astryxdesign/core/EmptyState";
+import { Spinner } from "@astryxdesign/core/Spinner";
+import { useAdmin } from "@/lib/admin-context";
 import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
 
 interface AdminShellProps {
@@ -57,14 +71,14 @@ export function AdminShell({ children }: AdminShellProps) {
     {
       name: isDe ? "Übersicht" : "Overview",
       href: "/",
-      icon: LayoutDashboard,
+      icon: SquaresFour,
       requiresAdmin: true,
       permission: null,
     },
     {
       name: isDe ? "Betriebe" : "Businesses",
       href: "/businesses",
-      icon: Store,
+      icon: Storefront,
       requiresAdmin: false,
       permission: "restaurants:read",
     },
@@ -78,7 +92,7 @@ export function AdminShell({ children }: AdminShellProps) {
     {
       name: isDe ? "Support-Tickets" : "Support Tickets",
       href: "/tickets",
-      icon: LifeBuoy,
+      icon: Lifebuoy,
       requiresAdmin: false,
       permission: "tickets:read",
     },
@@ -99,14 +113,14 @@ export function AdminShell({ children }: AdminShellProps) {
     {
       name: "Newsletter",
       href: "/newsletter",
-      icon: Mail,
+      icon: EnvelopeSimple,
       requiresAdmin: false,
       permission: "newsletter:read",
     },
     {
       name: isDe ? "E-Mail-Log" : "Email Log",
       href: "/emails",
-      icon: History,
+      icon: ClockCounterClockwise,
       requiresAdmin: true,
       permission: null,
     },
@@ -120,13 +134,12 @@ export function AdminShell({ children }: AdminShellProps) {
     {
       name: isDe ? "Einstellungen" : "Settings",
       href: "/settings",
-      icon: Settings,
+      icon: GearSix,
       requiresAdmin: true,
       permission: null,
     },
   ];
 
-  // Dynamic navigation filtered by role and permissions
   const navigation = ALL_NAV_ITEMS.filter((item) => {
     if (isRegionalAdmin) return true;
     if (item.requiresAdmin) return false;
@@ -134,12 +147,8 @@ export function AdminShell({ children }: AdminShellProps) {
     return !!adminUser?.permissions?.includes(item.permission);
   });
 
-  // Calculate default landing route for this user
-  const defaultRoute = isRegionalAdmin
-    ? "/"
-    : navigation[0]?.href || "/orders";
+  const defaultRoute = isRegionalAdmin ? "/" : navigation[0]?.href || "/orders";
 
-  // Check access to current route
   const currentItem = ALL_NAV_ITEMS.find((n) =>
     n.href === "/" ? pathname === "/" : pathname.startsWith(n.href)
   );
@@ -150,7 +159,6 @@ export function AdminShell({ children }: AdminShellProps) {
     (!currentItem.requiresAdmin &&
       (!currentItem.permission || !!adminUser?.permissions?.includes(currentItem.permission)));
 
-  // Route protection and redirection
   useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated && !isSignInPage) {
@@ -161,27 +169,28 @@ export function AdminShell({ children }: AdminShellProps) {
     }
   }, [isLoading, isAuthenticated, isSignInPage, router, defaultRoute]);
 
-  // Unauthenticated dedicated layout for /sign-in
   if (isSignInPage) {
     return <>{children}</>;
   }
 
-  // Loading or redirecting state
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f9f9fb] text-zinc-900 font-sans">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
-          <span className="text-xs font-semibold text-zinc-500 tracking-wider uppercase">
-            {isDe ? "Lade Team Dashboard..." : "Loading Team Dashboard..."}
-          </span>
-        </div>
-      </div>
+      <AppShell height="fill" variant="wash">
+        <Layout height="fill">
+          <LayoutContent>
+            <VStack gap={3} hAlign="center" vAlign="center" height="100%">
+              <Spinner
+                size="lg"
+                label={isDe ? "Lade Team Dashboard..." : "Loading Team Dashboard..."}
+              />
+            </VStack>
+          </LayoutContent>
+        </Layout>
+      </AppShell>
     );
   }
 
-  const currentTitle =
-    currentItem?.name || (isDe ? "Team Dashboard" : "Team Dashboard");
+  const currentTitle = currentItem?.name || "Team Dashboard";
 
   const handleLogout = () => {
     logout();
@@ -189,163 +198,168 @@ export function AdminShell({ children }: AdminShellProps) {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#f9f9fb] text-zinc-900 font-sans">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-zinc-200 flex flex-col shrink-0 select-none">
-        {/* Logo & Brand */}
-        <div className="p-6 border-b border-zinc-100 flex flex-col gap-2">
-          <Link href={defaultRoute} className="inline-block">
-            <img
-              src="/combination_mark.svg"
-              alt="Zackisch"
-              className="h-8 w-auto block"
+    <AppShell
+      height="fill"
+      variant="elevated"
+      topNav={
+        <TopNav
+          label="Team Dashboard Header Navigation"
+          startContent={
+            <HStack gap={2} vAlign="center">
+              <Heading level={4}>{currentTitle}</Heading>
+              <Badge
+                variant="neutral"
+                label={`Region ${currentRegion.toUpperCase()}`}
+              />
+            </HStack>
+          }
+          endContent={
+            <HStack gap={2} vAlign="center">
+              <RegionLanguageSwitcher />
+              <Button
+                label="Website"
+                href="https://zackisch.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="ghost"
+                size="sm"
+                endContent={<Icon icon="externalLink" size="xsm" />}
+              />
+              <Button
+                label="App"
+                href="https://app.zackisch.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="ghost"
+                size="sm"
+                endContent={<Icon icon="externalLink" size="xsm" />}
+              />
+              <Button
+                label="Support"
+                href="https://support.zackisch.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="ghost"
+                size="sm"
+                endContent={<Icon icon="externalLink" size="xsm" />}
+              />
+            </HStack>
+          }
+        />
+      }
+      sideNav={
+        <SideNav
+          collapsible
+          header={
+            <SideNavHeading
+              icon={
+                <img
+                  src="/icon.svg"
+                  alt="Zackisch"
+                  className="h-6 w-6 rounded-sm"
+                />
+              }
+              heading="Zackisch"
+              subheading={
+                isRegionalAdmin
+                  ? isDe
+                    ? "Team Dashboard"
+                    : "Team Dashboard"
+                  : isDe
+                    ? "Mitarbeiter-Portal"
+                    : "Staff Portal"
+              }
+              headingHref={defaultRoute}
             />
-          </Link>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded-full">
-              {isRegionalAdmin
-                ? isDe ? "Team Dashboard" : "Team Dashboard"
-                : isDe ? "Mitarbeiter-Portal" : "Staff Portal"}
-            </span>
-          </div>
-        </div>
+          }
+          footer={
+            <VStack gap={2} padding={2}>
+              <HStack justify="between" vAlign="center">
+                <HStack gap={1.5} vAlign="center">
+                  <StatusDot variant="success" label="Live Backend" isPulsing />
+                  <Text type="supporting">Live Backend</Text>
+                </HStack>
+                <Text type="supporting">Convex Cloud</Text>
+              </HStack>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {navigation.map((item) => {
-            const isActive =
-              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] font-medium transition-all ${
-                  isActive
-                    ? "bg-black text-white shadow-sm"
-                    : "text-zinc-600 hover:text-black hover:bg-zinc-50"
-                }`}
-              >
-                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-zinc-500"}`} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+              <VStack gap={0.5}>
+                <Text type="label" maxLines={1}>
+                  {adminUser?.name || "Selim Eser"}
+                </Text>
+                <Text type="supporting" maxLines={1}>
+                  {adminEmail}
+                </Text>
+                <HStack gap={1} vAlign="center">
+                  <Badge
+                    variant="neutral"
+                    label={
+                      isRegionalAdmin
+                        ? `Regional-Admin (${currentRegion.toUpperCase()})`
+                        : `Mitarbeiter (${currentRegion.toUpperCase()})`
+                    }
+                  />
+                </HStack>
+              </VStack>
 
-        {/* Region & Live Status & User Info */}
-        <div className="p-4 border-t border-zinc-100 bg-zinc-50/50 space-y-3">
-          <div className="flex items-center justify-between text-[12px] text-zinc-500">
-            <span className="flex items-center gap-1.5 font-medium text-emerald-600">
-              <Circle className="w-2 h-2 fill-emerald-500 text-emerald-500 animate-pulse" />
-              Live Backend
-            </span>
-            <span className="text-[11px] text-zinc-500">Convex Cloud</span>
-          </div>
-
-          <div className="bg-white p-3 rounded-xl border border-zinc-200/80">
-            <div className="text-[12px] font-semibold text-zinc-900 truncate">
-              {adminUser?.name || "Selim Eser"}
-            </div>
-            <div className="text-[11px] text-zinc-500 truncate">{adminEmail}</div>
-            <div className="mt-1.5 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded">
-              {isRegionalAdmin ? (
-                <>
-                  <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                  <span>Regional-Admin ({currentRegion.toUpperCase()})</span>
-                </>
-              ) : (
-                <>
-                  <Users className="w-3 h-3 text-zinc-600" />
-                  <span>Mitarbeiter ({currentRegion.toUpperCase()})</span>
-                </>
-              )}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 text-xs font-semibold text-zinc-600 transition-all shadow-2xs cursor-pointer"
+              <Button
+                label={isDe ? "Abmelden" : "Sign Out"}
+                variant="secondary"
+                size="sm"
+                width="100%"
+                icon={<Icon icon={SignOut} size="sm" />}
+                onClick={handleLogout}
+              />
+            </VStack>
+          }
+        >
+          <SideNavSection
+            title={isDe ? "Verwaltung" : "Administration"}
+            isHeaderHidden
           >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>{isDe ? "Abmelden" : "Sign Out"}</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Header Bar */}
-        <header className="h-16 bg-white border-b border-zinc-200 px-8 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-4">
-            <h1 className="text-lg font-bold text-zinc-900 tracking-tight">
-              {currentTitle}
-            </h1>
-          </div>
-
-          {/* Region Switcher & External Links */}
-          <div className="flex items-center gap-3">
-            <RegionLanguageSwitcher />
-
-            {/* Quick Links */}
-            <a
-              href="https://zackisch.com"
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-medium text-zinc-500 hover:text-black flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-zinc-100 transition-colors"
-            >
-              Website <ExternalLink className="w-3 h-3" />
-            </a>
-            <a
-              href="https://app.zackisch.com"
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-medium text-zinc-500 hover:text-black flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-zinc-100 transition-colors"
-            >
-              App <ExternalLink className="w-3 h-3" />
-            </a>
-            <a
-              href="https://support.zackisch.com"
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-medium text-zinc-500 hover:text-black flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-zinc-100 transition-colors"
-            >
-              Support <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </header>
-
-        {/* Page Content or Restricted View */}
-        <main className="flex-1 p-8 overflow-y-auto">
+            {navigation.map((item) => {
+              const isActive =
+                item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              return (
+                <SideNavItem
+                  key={item.href}
+                  label={item.name}
+                  href={item.href}
+                  icon={item.icon}
+                  selectedIcon={item.icon}
+                  isSelected={isActive}
+                />
+              );
+            })}
+          </SideNavSection>
+        </SideNav>
+      }
+    >
+      <Layout height="fill">
+        <LayoutContent padding={6}>
           {hasAccessToCurrentRoute ? (
             children
           ) : (
-            <div className="max-w-md mx-auto my-16 bg-white border border-zinc-200/80 rounded-3xl p-8 text-center space-y-4 shadow-sm">
-              <div className="w-12 h-12 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto text-rose-600">
-                <ShieldAlert className="w-6 h-6" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-base font-bold text-zinc-900">
-                  {isDe ? "Zugriff eingeschränkt" : "Access Restricted"}
-                </h3>
-                <p className="text-xs text-zinc-500 leading-relaxed">
-                  {isDe
+            <VStack hAlign="center" vAlign="center" minHeight={420}>
+              <EmptyState
+                icon={<Icon icon={ShieldWarning} size="lg" color="error" />}
+                title={isDe ? "Zugriff eingeschränkt" : "Access Restricted"}
+                description={
+                  isDe
                     ? "Für diese Ansicht sind erweiterte Administrator-Rechte oder spezielle Modulberechtigungen erforderlich."
-                    : "This section requires administrator privileges or specific permissions."}
-                </p>
-              </div>
-              <Link
-                href={defaultRoute}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white text-xs font-semibold hover:bg-zinc-800 transition-all shadow-sm"
-              >
-                <span>{isDe ? "Zurück zur Hauptansicht" : "Back to Main View"}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+                    : "This section requires administrator privileges or specific permissions."
+                }
+                actions={
+                  <Button
+                    label={isDe ? "Zurück zur Hauptansicht" : "Back to Main View"}
+                    variant="primary"
+                    href={defaultRoute}
+                  />
+                }
+              />
+            </VStack>
           )}
-        </main>
-      </div>
-    </div>
+        </LayoutContent>
+      </Layout>
+    </AppShell>
   );
 }

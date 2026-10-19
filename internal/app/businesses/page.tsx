@@ -3,14 +3,22 @@
 import React, { useState } from "react";
 import { useQuery } from "convex/react";
 import { anyApi } from "convex/server";
+import { Storefront } from "@phosphor-icons/react";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { StackItem } from "@astryxdesign/core/Stack";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { Table, proportional, pixel } from "@astryxdesign/core/Table";
+import { Button } from "@astryxdesign/core/Button";
+import { Icon } from "@astryxdesign/core/Icon";
+import { Badge } from "@astryxdesign/core/Badge";
+import { StatusDot } from "@astryxdesign/core/StatusDot";
+import { Token } from "@astryxdesign/core/Token";
+import { EmptyState } from "@astryxdesign/core/EmptyState";
+import { Spinner } from "@astryxdesign/core/Spinner";
 import { useAdmin } from "@/lib/admin-context";
-import {
-  Store,
-  CheckCircle2,
-  AlertCircle,
-  Search,
-  ExternalLink,
-} from "lucide-react";
 
 export default function BusinessesPage() {
   const { currentRegion, sessionToken } = useAdmin();
@@ -21,130 +29,139 @@ export default function BusinessesPage() {
     sessionToken ? { regionId: currentRegion, sessionToken } : "skip"
   );
 
-  const filtered = (businesses || []).filter((r: any) =>
-    r.name.toLowerCase().includes(search.toLowerCase()) ||
-    (r.address && r.address.toLowerCase().includes(search.toLowerCase())) ||
-    (r.partnerCode && r.partnerCode.toLowerCase().includes(search.toLowerCase()))
+  const filtered = (businesses || []).filter(
+    (r: any) =>
+      r.name.toLowerCase().includes(search.toLowerCase()) ||
+      (r.address && r.address.toLowerCase().includes(search.toLowerCase())) ||
+      (r.partnerCode && r.partnerCode.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">
-            Betriebs- & Gastronomieverwaltung
-          </h2>
-          <p className="text-sm text-zinc-500 mt-1">
-            Alle registrierten Betriebe (Restaurants, Cafés, Imbisse, Bars) und Speisekarten in Region {currentRegion.toUpperCase()}.
-          </p>
-        </div>
+    <VStack gap={5} maxWidth={1200}>
+      <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
+        <StackItem size="fill">
+          <VStack gap={1}>
+            <Heading level={1}>Betriebs- & Gastronomieverwaltung</Heading>
+            <Text type="supporting">
+              Alle registrierten Betriebe (Restaurants, Cafés, Imbisse, Bars) und Speisekarten in Region{" "}
+              {currentRegion.toUpperCase()}.
+            </Text>
+          </VStack>
+        </StackItem>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Betrieb suchen..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white border border-zinc-200 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-hidden focus:ring-2 focus:ring-black"
-          />
-        </div>
-      </div>
+        <TextInput
+          label="Betrieb suchen"
+          isLabelHidden
+          placeholder="Betrieb suchen..."
+          startIcon="search"
+          hasClear
+          value={search}
+          onChange={setSearch}
+          width={280}
+        />
+      </HStack>
 
-      {/* Businesses Table */}
-      <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-zinc-600">
-            <thead className="bg-zinc-50/75 border-b border-zinc-200/80 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
-              <tr>
-                <th className="py-3.5 px-6">Betrieb</th>
-                <th className="py-3.5 px-4">Stripe Onboarding</th>
-                <th className="py-3.5 px-4">Tische / QR</th>
-                <th className="py-3.5 px-4">Modus</th>
-                <th className="py-3.5 px-4">Partner-Code</th>
-                <th className="py-3.5 px-6 text-right">Aktionen</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100">
-              {!businesses ? (
-                <tr>
-                  <td colSpan={6} className="py-8 text-center text-zinc-400">
-                    Lade Betriebe...
-                  </td>
-                </tr>
-              ) : filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="py-8 text-center text-zinc-400">
-                    Keine Betriebe in dieser Region gefunden.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((r: any) => (
-                  <tr key={r._id} className="hover:bg-zinc-50/50 transition-colors">
-                    <td className="py-4 px-6">
-                      <div className="font-semibold text-zinc-900 text-sm flex items-center gap-2">
-                        <Store className="w-4 h-4 text-zinc-400 shrink-0" />
-                        {r.name}
-                      </div>
-                      <div className="text-[11px] text-zinc-400 pl-6">{r.address || "Keine Adresse angegeben"}</div>
-                    </td>
-                    <td className="py-4 px-4">
-                      {r.stripeOnboardingComplete ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700">
-                          <CheckCircle2 className="w-3 h-3" />
-                          Aktiv
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700">
-                          <AlertCircle className="w-3 h-3" />
-                          Ausstehend
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-4 px-4 font-num font-semibold text-zinc-800">
-                      {r.tablesCount} Tische
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex gap-1.5">
-                        {r.isToStayEnabled !== false && (
-                          <span className="text-[10px] font-medium bg-zinc-100 px-2 py-0.5 rounded text-zinc-700">
-                            Vor Ort
-                          </span>
-                        )}
-                        {r.isToGoEnabled && (
-                          <span className="text-[10px] font-medium bg-zinc-100 px-2 py-0.5 rounded text-zinc-700">
-                            Abholung
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      {r.partnerCode ? (
-                        <span className="font-mono text-[11px] font-semibold bg-zinc-100 px-2 py-0.5 rounded text-zinc-800">
-                          {r.partnerCode}
-                        </span>
-                      ) : (
-                        <span className="text-zinc-400 text-[11px]">Direkt</span>
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-right">
-                      <a
-                        href={`https://app.zackisch.com/menu/${r._id}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-100 transition-colors"
-                      >
-                        Menü ansehen <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+      {!businesses ? (
+        <VStack hAlign="center" vAlign="center" minHeight={240}>
+          <Spinner label="Lade Betriebe..." />
+        </VStack>
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          icon={<Icon icon={Storefront} size="lg" color="secondary" />}
+          title="Keine Betriebe gefunden"
+          description="Für diese Suchanfrage oder Region wurden keine Betriebe gefunden."
+        />
+      ) : (
+        <Table
+          data={filtered}
+          idKey="_id"
+          hasHover
+          density="balanced"
+          columns={[
+            {
+              key: "name",
+              header: "Betrieb",
+              width: proportional(2, { minWidth: 200 }),
+              renderCell: (r: any) => (
+                <VStack gap={0.5}>
+                  <HStack gap={1.5} vAlign="center">
+                    <Icon icon={Storefront} size="sm" color="secondary" />
+                    <Text weight="semibold">{r.name}</Text>
+                  </HStack>
+                  <Text type="supporting">{r.address || "Keine Adresse angegeben"}</Text>
+                </VStack>
+              ),
+            },
+            {
+              key: "stripeOnboardingComplete",
+              header: "Stripe Onboarding",
+              width: proportional(1, { minWidth: 150 }),
+              renderCell: (r: any) => (
+                <HStack gap={1.5} vAlign="center">
+                  <StatusDot
+                    variant={r.stripeOnboardingComplete ? "success" : "warning"}
+                    label={r.stripeOnboardingComplete ? "Aktiv" : "Ausstehend"}
+                  />
+                  <Text type="body">
+                    {r.stripeOnboardingComplete ? "Aktiv" : "Ausstehend"}
+                  </Text>
+                </HStack>
+              ),
+            },
+            {
+              key: "tablesCount",
+              header: "Tische / QR",
+              width: pixel(120),
+              renderCell: (r: any) => (
+                <Text weight="semibold" hasTabularNumbers>
+                  {r.tablesCount} Tische
+                </Text>
+              ),
+            },
+            {
+              key: "mode",
+              header: "Modus",
+              width: proportional(1, { minWidth: 150 }),
+              renderCell: (r: any) => (
+                <HStack gap={1} wrap="wrap">
+                  {r.isToStayEnabled !== false && (
+                    <Token label="Vor Ort" size="sm" />
+                  )}
+                  {r.isToGoEnabled && <Token label="Abholung" size="sm" />}
+                </HStack>
+              ),
+            },
+            {
+              key: "partnerCode",
+              header: "Partner-Code",
+              width: pixel(130),
+              renderCell: (r: any) =>
+                r.partnerCode ? (
+                  <Badge variant="neutral" label={r.partnerCode} />
+                ) : (
+                  <Text type="supporting">Direkt</Text>
+                ),
+            },
+            {
+              key: "actions",
+              header: "Aktionen",
+              align: "end",
+              width: pixel(150),
+              renderCell: (r: any) => (
+                <Button
+                  label="Menü ansehen"
+                  href={`https://app.zackisch.com/menu/${r._id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="secondary"
+                  size="sm"
+                  endContent={<Icon icon="externalLink" size="xsm" />}
+                />
+              ),
+            },
+          ]}
+        />
+      )}
+    </VStack>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { OpsLoginForm } from "@/components/OpsLoginForm";
+import { AdminLoginForm } from "@/components/AdminLoginForm";
 
 export default function SignInPage() {
-  return <OpsLoginForm />;
+  return <AdminLoginForm />;
 }

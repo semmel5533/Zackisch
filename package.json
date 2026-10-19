@@ -11,5 +11,11 @@
   "devDependencies": {
     "@e2e-dev/web": "^0.15.1",
     "e2e": "^0.21.1"
+  },
+  "dependencies": {
+    "@astryxdesign/cli": "^0.7.1",
+    "@astryxdesign/core": "^0.7.1",
+    "@astryxdesign/theme-neutral": "^0.7.1",
+    "@stylexjs/stylex": "^0.19.1"
   }
 }

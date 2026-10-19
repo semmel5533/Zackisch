@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "type": "module",
   "private": true,
   "scripts": {
@@ -10,13 +10,16 @@
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run tests",
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",
     "check:cloudflare": "vinext-cloudflare deploy --dry-run",
     "deploy:cloudflare": "vinext-cloudflare deploy"
   },
   "dependencies": {
+    "@astryxdesign/cli": "^0.7.1",
+    "@astryxdesign/core": "^0.7.1",
+    "@astryxdesign/theme-neutral": "^0.7.1",
     "@base-ui/react": "^1.6.0",
     "@convex-dev/auth": "^0.0.95",
     "@convex-dev/stripe": "^0.1.6",
@@ -29,6 +32,7 @@
     "@stripe/react-connect-js": "^3.4.4",
     "@stripe/react-stripe-js": "^6.8.0",
     "@stripe/stripe-js": "^9.12.1",
+    "@stylexjs/stylex": "^0.19.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.45.0",

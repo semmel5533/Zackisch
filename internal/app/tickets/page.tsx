@@ -3,18 +3,37 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { anyApi } from "convex/server";
-import { useAdmin } from "@/lib/admin-context";
 import {
-  LifeBuoy,
-  Lock,
-  MessageSquare,
-  Send,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
+  Lifebuoy,
+  LockSimple,
+  ChatText,
+  PaperPlaneTilt,
   User,
-  Store,
-} from "lucide-react";
+  Storefront,
+} from "@phosphor-icons/react";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { StackItem } from "@astryxdesign/core/Stack";
+import { Grid } from "@astryxdesign/core/Grid";
+import { Section } from "@astryxdesign/core/Section";
+import { Card } from "@astryxdesign/core/Card";
+import { List, ListItem } from "@astryxdesign/core/List";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@astryxdesign/core/SegmentedControl";
+import { Selector } from "@astryxdesign/core/Selector";
+import { TextArea } from "@astryxdesign/core/TextArea";
+import { Button } from "@astryxdesign/core/Button";
+import { Icon } from "@astryxdesign/core/Icon";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Banner } from "@astryxdesign/core/Banner";
+import { Divider } from "@astryxdesign/core/Divider";
+import { EmptyState } from "@astryxdesign/core/EmptyState";
+import { Spinner } from "@astryxdesign/core/Spinner";
+import { useAdmin } from "@/lib/admin-context";
 import { toast } from "sonner";
 
 type TicketStatus =
@@ -31,7 +50,7 @@ export default function TeamTicketsPage() {
   const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all");
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [composerMode, setComposerMode] = useState<"public" | "internal_note">(
-    "public",
+    "public"
   );
   const [messageBody, setMessageBody] = useState("");
   const [sending, setSending] = useState(false);
@@ -52,7 +71,7 @@ export default function TeamTicketsPage() {
           actorEmail: adminEmail,
           status: statusFilter === "all" ? undefined : statusFilter,
         }
-      : "skip",
+      : "skip"
   );
 
   const ticketDetail = useQuery(
@@ -64,17 +83,13 @@ export default function TeamTicketsPage() {
           actorEmail: adminEmail,
           regionId: currentRegion,
         }
-      : "skip",
+      : "skip"
   );
 
-  const addPublicReply = useMutation(
-    (anyApi as any).support.addTeamPublicReply,
-  );
-  const addInternalNote = useMutation(
-    (anyApi as any).support.addTeamInternalNote,
-  );
+  const addPublicReply = useMutation((anyApi as any).support.addTeamPublicReply);
+  const addInternalNote = useMutation((anyApi as any).support.addTeamInternalNote);
   const updateStatusAndAssignee = useMutation(
-    (anyApi as any).support.updateTicketStatusAndAssignee,
+    (anyApi as any).support.updateTicketStatusAndAssignee
   );
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -91,9 +106,7 @@ export default function TeamTicketsPage() {
           body: messageBody.trim(),
         });
         toast.success(
-          isDe
-            ? "Öffentliche Kundenantwort gesendet."
-            : "Public customer reply sent.",
+          isDe ? "Öffentliche Kundenantwort gesendet." : "Public customer reply sent."
         );
       } else {
         await addInternalNote({
@@ -104,9 +117,7 @@ export default function TeamTicketsPage() {
           body: messageBody.trim(),
         });
         toast.success(
-          isDe
-            ? "Interne Team-Notiz gespeichert."
-            : "Internal team note saved.",
+          isDe ? "Interne Team-Notiz gespeichert." : "Internal team note saved."
         );
       }
       setMessageBody("");
@@ -134,7 +145,7 @@ export default function TeamTicketsPage() {
   };
 
   const handlePriorityChange = async (
-    newPriority: "low" | "normal" | "high" | "urgent",
+    newPriority: "low" | "normal" | "high" | "urgent"
   ) => {
     if (!selectedTicketId || !ticketDetail?.ticket) return;
     try {
@@ -179,419 +190,419 @@ export default function TeamTicketsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">
-            {isDe ? "Support-Tickets" : "Support Tickets"}
-          </h2>
-          <p className="text-sm text-zinc-500 mt-1">
-            {isDe
-              ? `Händleranfragen, öffentliche Antworten und geschützte interne Team-Notizen für Region ${currentRegion.toUpperCase()}.`
-              : `Merchant support requests, public replies, and internal team notes for region ${currentRegion.toUpperCase()}.`}
-          </p>
-        </div>
+    <VStack gap={5} maxWidth={1200}>
+      <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
+        <StackItem size="fill">
+          <VStack gap={1}>
+            <Heading level={1}>{isDe ? "Support-Tickets" : "Support Tickets"}</Heading>
+            <Text type="supporting">
+              {isDe
+                ? `Händleranfragen, öffentliche Antworten und geschützte interne Team-Notizen für Region ${currentRegion.toUpperCase()}.`
+                : `Merchant support requests, public replies, and internal team notes for region ${currentRegion.toUpperCase()}.`}
+            </Text>
+          </VStack>
+        </StackItem>
 
-        <div className="flex flex-wrap items-center gap-1.5 bg-white border border-zinc-200 rounded-full p-1">
-          {(
-            [
-              "all",
-              "open",
-              "in_progress",
-              "waiting_for_customer",
-              "resolved",
-              "closed",
-            ] as const
-          ).map((st) => (
-            <button
-              key={st}
-              type="button"
-              onClick={() => setStatusFilter(st)}
-              className={`h-8 px-3 rounded-full text-xs font-semibold transition-colors ${
-                statusFilter === st
-                  ? "bg-black text-white"
-                  : "text-zinc-600 hover:text-zinc-900"
-              }`}
-            >
-              {st === "all"
-                ? isDe
-                  ? "Alle"
-                  : "All"
-                : statusLabels[st as TicketStatus]}
-            </button>
-          ))}
-        </div>
-      </div>
+        <SegmentedControl
+          label={isDe ? "Ticket-Status filtern" : "Filter ticket status"}
+          value={statusFilter}
+          onChange={(val) => setStatusFilter(val as TicketStatus | "all")}
+          size="sm"
+        >
+          <SegmentedControlItem value="all" label={isDe ? "Alle" : "All"} />
+          <SegmentedControlItem value="open" label={statusLabels.open} />
+          <SegmentedControlItem value="in_progress" label={statusLabels.in_progress} />
+          <SegmentedControlItem
+            value="waiting_for_customer"
+            label={statusLabels.waiting_for_customer}
+          />
+          <SegmentedControlItem value="resolved" label={statusLabels.resolved} />
+          <SegmentedControlItem value="closed" label={statusLabels.closed} />
+        </SegmentedControl>
+      </HStack>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left column: Ticket queue */}
-        <div className="lg:col-span-5 bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
-          <div className="px-5 py-3.5 border-b border-zinc-100 flex items-center justify-between">
-            <span className="text-xs font-semibold text-zinc-700">
-              {isDe ? "Ticket-Warteschlange" : "Ticket Queue"}
-            </span>
-            <span className="text-xs text-zinc-400">
-              {tickets ? tickets.length : 0}
-            </span>
-          </div>
+      <Grid columns={{ minWidth: 340, max: 2, repeat: "fit" }} gap={5}>
+        {/* Left: Ticket Queue */}
+        <Section variant="section" padding={4}>
+          <VStack gap={3}>
+            <HStack justify="between" vAlign="center">
+              <Heading level={3}>
+                {isDe ? "Ticket-Warteschlange" : "Ticket Queue"}
+              </Heading>
+              <Badge
+                variant="neutral"
+                label={String(tickets ? tickets.length : 0)}
+              />
+            </HStack>
 
-          <div className="divide-y divide-zinc-100 max-h-[680px] overflow-y-auto">
+            <Divider />
+
             {!tickets ? (
-              <div className="p-8 text-center text-xs text-zinc-400">
-                {isDe ? "Lade Support-Tickets..." : "Loading support tickets..."}
-              </div>
+              <VStack hAlign="center" vAlign="center" minHeight={200}>
+                <Spinner
+                  label={
+                    isDe ? "Lade Support-Tickets..." : "Loading support tickets..."
+                  }
+                />
+              </VStack>
             ) : tickets.length === 0 ? (
-              <div className="p-8 text-center text-xs text-zinc-400">
-                {isDe
-                  ? "Keine Support-Tickets für diesen Filter vorhanden."
-                  : "No support tickets found for this filter."}
-              </div>
+              <EmptyState
+                isCompact
+                icon={<Icon icon={Lifebuoy} size="lg" color="secondary" />}
+                title={isDe ? "Keine Support-Tickets" : "No support tickets"}
+                description={
+                  isDe
+                    ? "Keine Support-Tickets für diesen Filter vorhanden."
+                    : "No support tickets found for this filter."
+                }
+              />
             ) : (
-              tickets.map((t: any) => {
-                const isSelected = selectedTicketId === String(t._id);
-                const lastActivityTs = t.lastMessageAt ?? t.updatedAt ?? t.createdAt;
-                return (
-                  <button
-                    key={t._id}
-                    type="button"
-                    onClick={() => setSelectedTicketId(String(t._id))}
-                    className={`w-full text-left p-4 transition-colors ${
-                      isSelected ? "bg-zinc-900 text-white" : "hover:bg-zinc-50"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span
-                        className={`text-[11px] font-mono ${
-                          isSelected ? "text-zinc-300" : "text-zinc-500"
-                        }`}
-                      >
-                        {t.ticketNumber} · {t.category}
-                      </span>
-                      <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                          isSelected
-                            ? "bg-white/15 text-white"
-                            : t.status === "open"
-                              ? "bg-amber-50 text-amber-800 border border-amber-200"
-                              : t.status === "resolved" || t.status === "closed"
-                                ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                                : "bg-zinc-100 text-zinc-700"
-                        }`}
-                      >
-                        {statusLabels[t.status as TicketStatus] || t.status}
-                      </span>
-                    </div>
-                    <div
-                      className={`text-sm font-semibold line-clamp-1 ${
-                        isSelected ? "text-white" : "text-zinc-900"
-                      }`}
-                    >
-                      {t.subject}
-                    </div>
-                    <div
-                      className={`mt-1.5 flex items-center justify-between text-[11px] ${
-                        isSelected ? "text-zinc-300" : "text-zinc-500"
-                      }`}
-                    >
-                      <span className="truncate">{t.requesterEmail}</span>
-                      <span>
-                        {lastActivityTs
+              <List hasDividers density="spacious">
+                {tickets.map((t: any) => {
+                  const isSelected = selectedTicketId === String(t._id);
+                  const lastActivityTs =
+                    t.lastMessageAt ?? t.updatedAt ?? t.createdAt;
+                  return (
+                    <ListItem
+                      key={t._id}
+                      label={t.subject}
+                      description={`${t.ticketNumber} · ${t.category} · ${t.requesterEmail} · ${
+                        lastActivityTs
                           ? new Date(lastActivityTs).toLocaleDateString(
-                              isDe ? "de-DE" : "en-GB",
+                              isDe ? "de-DE" : "en-GB"
                             )
-                          : "—"}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })
+                          : "—"
+                      }`}
+                      isSelected={isSelected}
+                      onClick={() => setSelectedTicketId(String(t._id))}
+                      endContent={
+                        <Badge
+                          variant={
+                            t.status === "open"
+                              ? "warning"
+                              : t.status === "resolved" || t.status === "closed"
+                                ? "green"
+                                : "neutral"
+                          }
+                          label={statusLabels[t.status as TicketStatus] || t.status}
+                        />
+                      }
+                    />
+                  );
+                })}
+              </List>
             )}
-          </div>
-        </div>
+          </VStack>
+        </Section>
 
-        {/* Right column: Ticket conversation & controls */}
-        <div className="lg:col-span-7 bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs flex flex-col justify-between min-h-[560px]">
+        {/* Right: Ticket Conversation & Controls */}
+        <Section variant="section" padding={5}>
           {!selectedTicketId ? (
-            <div className="my-auto text-center py-12">
-              <LifeBuoy className="w-8 h-8 text-zinc-300 mx-auto mb-3" />
-              <p className="text-sm font-medium text-zinc-600">
-                {isDe
-                  ? "Wähle links ein Support-Ticket aus, um den Verlauf und interne Notizen einzusehen."
-                  : "Select a support ticket on the left to view conversation and internal notes."}
-              </p>
-            </div>
+            <VStack hAlign="center" vAlign="center" minHeight={400}>
+              <EmptyState
+                icon={<Icon icon={Lifebuoy} size="lg" color="secondary" />}
+                title={isDe ? "Ticket auswählen" : "Select a ticket"}
+                description={
+                  isDe
+                    ? "Wähle links ein Support-Ticket aus, um den Verlauf und interne Notizen einzusehen."
+                    : "Select a support ticket on the left to view conversation and internal notes."
+                }
+              />
+            </VStack>
           ) : !ticketDetail ? (
-            <div className="my-auto text-center py-12 text-xs text-zinc-400">
-              {isDe ? "Lade Ticket-Details..." : "Loading ticket details..."}
-            </div>
+            <VStack hAlign="center" vAlign="center" minHeight={400}>
+              <Spinner
+                label={isDe ? "Lade Ticket-Details..." : "Loading ticket details..."}
+              />
+            </VStack>
           ) : (
-            <>
-              <div>
-                {/* Ticket header & metadata */}
-                <div className="border-b border-zinc-100 pb-4 mb-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                    <span className="text-xs font-mono text-zinc-500">
-                      {ticketDetail.ticket.ticketNumber} ·{" "}
-                      {ticketDetail.ticket.category}
-                    </span>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <select
-                        value={ticketDetail.ticket.status}
-                        disabled={!canWritePublic}
-                        onChange={(e) =>
-                          handleStatusChange(e.target.value as TicketStatus)
-                        }
-                        className="h-8 rounded-full border border-zinc-200 px-3 text-xs font-semibold bg-white text-zinc-900"
-                      >
-                        {(Object.keys(statusLabels) as TicketStatus[]).map(
-                          (st) => (
-                            <option key={st} value={st}>
-                              {statusLabels[st]}
-                            </option>
-                          ),
-                        )}
-                      </select>
+            <VStack gap={4}>
+              <VStack gap={2}>
+                <HStack justify="between" vAlign="center" wrap="wrap" gap={2}>
+                  <Text type="code" color="secondary">
+                    {ticketDetail.ticket.ticketNumber} ·{" "}
+                    {ticketDetail.ticket.category}
+                  </Text>
 
-                      <select
-                        value={ticketDetail.ticket.priority}
-                        disabled={!canWritePublic}
-                        onChange={(e) =>
-                          handlePriorityChange(e.target.value as any)
-                        }
-                        className="h-8 rounded-full border border-zinc-200 px-3 text-xs font-semibold bg-white text-zinc-900"
-                      >
-                        <option value="low">
-                          {isDe ? "Priorität: Niedrig" : "Priority: Low"}
-                        </option>
-                        <option value="normal">
-                          {isDe ? "Priorität: Normal" : "Priority: Normal"}
-                        </option>
-                        <option value="high">
-                          {isDe ? "Priorität: Hoch" : "Priority: High"}
-                        </option>
-                        <option value="urgent">
-                          {isDe ? "Priorität: Dringend" : "Priority: Urgent"}
-                        </option>
-                      </select>
+                  <HStack gap={2} wrap="wrap" vAlign="center">
+                    <Selector
+                      label="Status"
+                      isLabelHidden
+                      size="sm"
+                      variant="secondary"
+                      isDisabled={!canWritePublic}
+                      value={ticketDetail.ticket.status}
+                      onChange={(val) => handleStatusChange(val as TicketStatus)}
+                      options={(Object.keys(statusLabels) as TicketStatus[]).map(
+                        (st) => ({
+                          value: st,
+                          label: statusLabels[st],
+                        })
+                      )}
+                    />
 
-                      {canWritePublic && (
-                        <button
-                          type="button"
-                          onClick={handleAssignToMe}
-                          className="h-8 px-3 rounded-full border border-zinc-200 text-xs font-semibold text-zinc-700 hover:bg-zinc-50"
-                        >
-                          {ticketDetail.ticket.assignedToEmail === adminEmail
+                    <Selector
+                      label="Priorität"
+                      isLabelHidden
+                      size="sm"
+                      variant="secondary"
+                      isDisabled={!canWritePublic}
+                      value={ticketDetail.ticket.priority}
+                      onChange={(val) => handlePriorityChange(val as any)}
+                      options={[
+                        {
+                          value: "low",
+                          label: isDe ? "Priorität: Niedrig" : "Priority: Low",
+                        },
+                        {
+                          value: "normal",
+                          label: isDe ? "Priorität: Normal" : "Priority: Normal",
+                        },
+                        {
+                          value: "high",
+                          label: isDe ? "Priorität: Hoch" : "Priority: High",
+                        },
+                        {
+                          value: "urgent",
+                          label: isDe ? "Priorität: Dringend" : "Priority: Urgent",
+                        },
+                      ]}
+                    />
+
+                    {canWritePublic && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        label={
+                          ticketDetail.ticket.assignedToEmail === adminEmail
                             ? isDe
                               ? "Mir zugewiesen"
                               : "Assigned to me"
                             : isDe
                               ? "Mir zuweisen"
-                              : "Assign to me"}
-                        </button>
-                      )}
-                    </div>
-                  </div>
+                              : "Assign to me"
+                        }
+                        onClick={handleAssignToMe}
+                      />
+                    )}
+                  </HStack>
+                </HStack>
 
-                  <h3 className="text-lg font-bold text-zinc-900">
-                    {ticketDetail.ticket.subject}
-                  </h3>
+                <Heading level={2}>{ticketDetail.ticket.subject}</Heading>
 
-                  <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-zinc-500">
-                    <span className="inline-flex items-center gap-1">
-                      <User className="w-3.5 h-3.5" />
+                <HStack gap={3} wrap="wrap" vAlign="center">
+                  <HStack gap={1} vAlign="center">
+                    <Icon icon={User} size="sm" color="secondary" />
+                    <Text type="supporting">
                       {ticketDetail.ticket.requesterName} (
                       {ticketDetail.ticket.requesterEmail})
-                    </span>
-                    {(ticketDetail.ticket.businessName ||
-                      (ticketDetail as any).businessName) && (
-                      <span className="inline-flex items-center gap-1 font-medium text-zinc-700">
-                        <Store className="w-3.5 h-3.5" />
+                    </Text>
+                  </HStack>
+                  {(ticketDetail.ticket.businessName ||
+                    (ticketDetail as any).businessName) && (
+                    <HStack gap={1} vAlign="center">
+                      <Icon icon={Storefront} size="sm" color="secondary" />
+                      <Text type="label">
                         {ticketDetail.ticket.businessName ||
                           (ticketDetail as any).businessName}
-                      </span>
-                    )}
-                  </div>
-                </div>
+                      </Text>
+                    </HStack>
+                  )}
+                </HStack>
+              </VStack>
 
-                {/* Message stream */}
-                <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1 mb-5">
-                  {ticketDetail.messages.map((msg: any) => {
-                    const isInternal =
-                      msg.visibility === "internal" ||
-                      msg.visibility === "internal_note";
-                    const isCustomer =
-                      msg.authorType === "merchant" ||
-                      msg.authorType === "customer";
-                    const authorIdentifier = msg.authorEmail || msg.authorId;
-                    return (
-                      <div
-                        key={msg._id}
-                        className={`rounded-xl p-4 border ${
-                          isInternal
-                            ? "bg-amber-50/90 border-amber-300"
-                            : isCustomer
-                              ? "bg-zinc-50 border-zinc-200"
-                              : "bg-white border-zinc-900"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-2 mb-1.5 text-[11px]">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-zinc-900">
+              <Divider />
+
+              {/* Message Stream */}
+              <VStack gap={3} height={340} isScrollable>
+                {ticketDetail.messages.map((msg: any) => {
+                  const isInternal =
+                    msg.visibility === "internal" ||
+                    msg.visibility === "internal_note";
+                  const isCustomer =
+                    msg.authorType === "merchant" || msg.authorType === "customer";
+                  const authorIdentifier = msg.authorEmail || msg.authorId;
+
+                  return (
+                    <Card
+                      key={msg._id}
+                      padding={3}
+                      variant={
+                        isInternal ? "yellow" : isCustomer ? "muted" : "default"
+                      }
+                    >
+                      <VStack gap={1.5}>
+                        <HStack justify="between" vAlign="center" wrap="wrap" gap={2}>
+                          <HStack gap={2} vAlign="center">
+                            <Text weight="semibold">
                               {msg.authorName}
                               {authorIdentifier &&
                               authorIdentifier !== msg.authorName
                                 ? ` (${authorIdentifier})`
                                 : ""}
-                            </span>
+                            </Text>
                             {isInternal ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-950 font-semibold text-[10px]">
-                                <Lock className="w-2.5 h-2.5" />
-                                {isDe
-                                  ? "Interne Notiz (Nur Team)"
-                                  : "Internal Note (Team Only)"}
-                              </span>
+                              <Badge
+                                variant="warning"
+                                icon={<Icon icon={LockSimple} size="xsm" />}
+                                label={
+                                  isDe
+                                    ? "Interne Notiz (Nur Team)"
+                                    : "Internal Note (Team Only)"
+                                }
+                              />
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-medium text-[10px]">
-                                {isCustomer
-                                  ? isDe
-                                    ? "Kundenanfrage"
-                                    : "Merchant"
-                                  : isDe
-                                    ? "Öffentliche Antwort"
-                                    : "Public Reply"}
-                              </span>
+                              <Badge
+                                variant="neutral"
+                                label={
+                                  isCustomer
+                                    ? isDe
+                                      ? "Kundenanfrage"
+                                      : "Merchant"
+                                    : isDe
+                                      ? "Öffentliche Antwort"
+                                      : "Public Reply"
+                                }
+                              />
                             )}
-                          </div>
-                          <span className="text-zinc-500">
+                          </HStack>
+                          <Text type="supporting" hasTabularNumbers>
                             {new Date(msg.createdAt).toLocaleString(
-                              isDe ? "de-DE" : "en-GB",
+                              isDe ? "de-DE" : "en-GB"
                             )}
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-800 whitespace-pre-wrap leading-relaxed">
-                          {msg.body}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+                          </Text>
+                        </HStack>
 
-              {/* Composer with explicit separation between Public Reply and Internal Note */}
-              <form
-                onSubmit={handleSendMessage}
-                className="border-t border-zinc-100 pt-4 space-y-3"
-              >
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    disabled={!canWritePublic}
-                    onClick={() => setComposerMode("public")}
-                    className={`h-9 px-4 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-colors ${
-                      composerMode === "public"
-                        ? "bg-black text-white"
-                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
-                    }`}
-                  >
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    {isDe
-                      ? "Öffentliche Kundenantwort"
-                      : "Public Customer Reply"}
-                  </button>
+                        <Text>{msg.body}</Text>
+                      </VStack>
+                    </Card>
+                  );
+                })}
+              </VStack>
 
-                  {canWriteNote && (
-                    <button
-                      type="button"
-                      onClick={() => setComposerMode("internal_note")}
-                      className={`h-9 px-4 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-colors ${
-                        composerMode === "internal_note"
-                          ? "bg-amber-500 text-black"
-                          : "bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100"
-                      }`}
-                    >
-                      <Lock className="w-3.5 h-3.5" />
-                      {isDe
-                        ? "Interne Team-Notiz (Nur intern)"
-                        : "Internal Team Note"}
-                    </button>
-                  )}
-                </div>
+              <Divider />
 
-                {composerMode === "internal_note" ? (
-                  <div className="rounded-xl bg-amber-50 border border-amber-200 px-3.5 py-2 text-[11px] text-amber-900 font-medium flex items-center gap-2">
-                    <Lock className="w-3.5 h-3.5 shrink-0" />
-                    <span>
-                      {isDe
-                        ? "NUR INTERN: Diese Notiz wird niemals im Kundenportal angezeigt und löst keine E-Mail an den Gastronomen aus."
-                        : "INTERNAL ONLY: This note is never returned to the customer portal and sends no customer email."}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-3.5 py-2 text-[11px] text-zinc-600 flex items-center gap-2">
-                    <Send className="w-3.5 h-3.5 shrink-0" />
-                    <span>
-                      {isDe
-                        ? "ÖFFENTLICH: Diese Antwort ist für den Gastronomen unter support.zackisch.com sichtbar und versendet eine E-Mail-Benachrichtigung."
-                        : "PUBLIC: This reply is visible to the merchant on support.zackisch.com and sends an email notification."}
-                    </span>
-                  </div>
-                )}
-
-                <textarea
-                  rows={4}
-                  required
-                  value={messageBody}
-                  onChange={(e) => setMessageBody(e.target.value)}
-                  placeholder={
-                    composerMode === "internal_note"
-                      ? isDe
-                        ? "Interne Notiz für das Zackisch-Team..."
-                        : "Internal note for the Zackisch team..."
-                      : isDe
-                        ? "Antwort an den Gastronomen verfassen..."
-                        : "Write reply to merchant..."
-                  }
-                  className={`w-full rounded-xl border p-3 text-xs focus:outline-hidden ${
-                    composerMode === "internal_note"
-                      ? "border-amber-300 bg-amber-50/40 focus:border-amber-500"
-                      : "border-zinc-200 bg-white focus:border-zinc-900"
-                  }`}
-                />
-
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={
-                      sending ||
-                      (composerMode === "public" && !canWritePublic) ||
-                      (composerMode === "internal_note" && !canWriteNote)
+              {/* Composer */}
+              <form onSubmit={handleSendMessage}>
+                <VStack gap={3}>
+                  <SegmentedControl
+                    label={isDe ? "Antwortmodus" : "Reply mode"}
+                    value={composerMode}
+                    onChange={(val) =>
+                      setComposerMode(val as "public" | "internal_note")
                     }
-                    className={`h-10 px-5 rounded-full text-xs font-semibold inline-flex items-center gap-2 disabled:opacity-50 ${
-                      composerMode === "internal_note"
-                        ? "bg-amber-500 text-black hover:bg-amber-400"
-                        : "bg-black text-white hover:bg-zinc-800"
-                    }`}
+                    size="sm"
                   >
-                    {composerMode === "internal_note" ? (
-                      <>
-                        <Lock className="w-3.5 h-3.5" />
-                        {isDe
-                          ? "Interne Notiz speichern"
-                          : "Save Internal Note"}
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-3.5 h-3.5" />
-                        {isDe ? "Kundenantwort senden" : "Send Public Reply"}
-                      </>
+                    <SegmentedControlItem
+                      value="public"
+                      icon={<Icon icon={ChatText} size="sm" />}
+                      label={
+                        isDe
+                          ? "Öffentliche Kundenantwort"
+                          : "Public Customer Reply"
+                      }
+                      isDisabled={!canWritePublic}
+                    />
+                    {canWriteNote && (
+                      <SegmentedControlItem
+                        value="internal_note"
+                        icon={<Icon icon={LockSimple} size="sm" />}
+                        label={
+                          isDe
+                            ? "Interne Team-Notiz (Nur intern)"
+                            : "Internal Team Note"
+                        }
+                      />
                     )}
-                  </button>
-                </div>
+                  </SegmentedControl>
+
+                  {composerMode === "internal_note" ? (
+                    <Banner
+                      status="warning"
+                      title={isDe ? "Nur für das interne Team sichtbar" : "Internal Only"}
+                      description={
+                        isDe
+                          ? "Diese Notiz wird niemals im Kundenportal angezeigt und löst keine E-Mail an den Gastronomen aus."
+                          : "This note is never returned to the customer portal and sends no customer email."
+                      }
+                      collapsible={false}
+                    />
+                  ) : (
+                    <Banner
+                      status="info"
+                      title={isDe ? "Öffentliche Kundenantwort" : "Public Reply"}
+                      description={
+                        isDe
+                          ? "Diese Antwort ist für den Gastronomen unter support.zackisch.com sichtbar und versendet eine E-Mail-Benachrichtigung."
+                          : "This reply is visible to the merchant on support.zackisch.com and sends an email notification."
+                      }
+                      collapsible={false}
+                    />
+                  )}
+
+                  <TextArea
+                    label={
+                      composerMode === "internal_note"
+                        ? isDe
+                          ? "Interne Team-Notiz"
+                          : "Internal Team Note"
+                        : isDe
+                          ? "Kundenantwort"
+                          : "Customer Reply"
+                    }
+                    isLabelHidden
+                    rows={4}
+                    isRequired
+                    value={messageBody}
+                    onChange={setMessageBody}
+                    placeholder={
+                      composerMode === "internal_note"
+                        ? isDe
+                          ? "Interne Notiz für das Zackisch-Team..."
+                          : "Internal note for the Zackisch team..."
+                        : isDe
+                          ? "Antwort an den Gastronomen verfassen..."
+                          : "Write reply to merchant..."
+                    }
+                    width="100%"
+                  />
+
+                  <HStack justify="end">
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      isLoading={sending}
+                      isDisabled={
+                        (composerMode === "public" && !canWritePublic) ||
+                        (composerMode === "internal_note" && !canWriteNote)
+                      }
+                      icon={
+                        <Icon
+                          icon={
+                            composerMode === "internal_note"
+                              ? LockSimple
+                              : PaperPlaneTilt
+                          }
+                          size="sm"
+                        />
+                      }
+                      label={
+                        composerMode === "internal_note"
+                          ? isDe
+                            ? "Interne Notiz speichern"
+                            : "Save Internal Note"
+                          : isDe
+                            ? "Kundenantwort senden"
+                            : "Send Public Reply"
+                      }
+                    />
+                  </HStack>
+                </VStack>
               </form>
-            </>
+            </VStack>
           )}
-        </div>
-      </div>
-    </div>
+        </Section>
+      </Grid>
+    </VStack>
   );
 }

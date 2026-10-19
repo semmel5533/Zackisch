@@ -1,103 +1,134 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Search, ArrowRight, Ticket } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { searchArticles, type SupportLocale } from "@/lib/knowledge-base";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { Button } from "@astryxdesign/core/Button";
+import { Card } from "@astryxdesign/core/Card";
+import { EmptyState } from "@astryxdesign/core/EmptyState";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { Icon } from "@astryxdesign/core/Icon";
+import { ArrowRight, Ticket } from "@phosphor-icons/react";
 
 export function SupportSearch({ locale }: { locale: SupportLocale }) {
+  const router = useRouter();
   const isDe = locale === "de-de";
   const [query, setQuery] = useState("");
   const searchResults = query.trim() ? searchArticles(locale, query) : [];
 
   return (
-    <>
-      <div className="max-w-2xl mx-auto relative">
-        <Search className="w-5 h-5 text-[#959595] absolute left-4 top-1/2 -translate-y-1/2" />
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={
-            isDe
-              ? "Suche nach Kasse, POS, TSE, Stripe, Trinkgeld, QR-Druck, Tablet..."
-              : "Search for POS, receipt, Stripe, tips, QR printing, tablet..."
-          }
-          className="w-full h-12 pl-12 pr-4 rounded-full bg-white text-[#161616] placeholder:text-[#959595] text-sm font-medium border border-[#E0E0E0] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#161616]"
-        />
-      </div>
+    <VStack gap={4} width="100%">
+      <TextInput
+        label={isDe ? "Wissensdatenbank durchsuchen" : "Search knowledge base"}
+        isLabelHidden
+        value={query}
+        onChange={(val) => setQuery(val)}
+        placeholder={
+          isDe
+            ? "Suche nach Kasse, POS, TSE, Stripe, Trinkgeld, QR-Druck, Tablet..."
+            : "Search for POS, receipt, Stripe, tips, QR printing, tablet..."
+        }
+        startIcon="search"
+      />
 
-      <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[#959595]">
-        <span>{isDe ? "Häufig gesucht:" : "Popular searches:"}</span>
-        {["Kasse erfassen", "Kein Kassenbeleg", "2 % Provision", "QR Ruhezone", "Tablet koppeln"].map(
-          (term) => (
-            <button
-              key={term}
-              type="button"
-              onClick={() => setQuery(term)}
-              className="px-3 py-1 rounded-full bg-[#252525] text-white hover:bg-[#383838] transition-colors cursor-pointer text-xs font-medium"
-            >
-              {term}
-            </button>
-          )
-        )}
-      </div>
+      <HStack gap={2} vAlign="center" wrap="wrap">
+        <Text color="secondary">
+          {isDe ? "Häufig gesucht:" : "Popular searches:"}
+        </Text>
+        {[
+          "Kasse erfassen",
+          "Kein Kassenbeleg",
+          "2 % Provision",
+          "QR Ruhezone",
+          "Tablet koppeln",
+        ].map((term) => (
+          <Button
+            key={term}
+            label={term}
+            variant="secondary"
+            size="sm"
+            onClick={() => setQuery(term)}
+          />
+        ))}
+      </HStack>
 
       {query.trim() !== "" && (
-        <section className="bg-white rounded-2xl border border-[#E0E0E0] p-6 sm:p-8 space-y-4 shadow-sm text-left max-w-6xl mx-auto mt-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base sm:text-lg font-bold text-[#0A0A0A] font-brand">
-              {isDe
-                ? `Suchergebnisse für „${query}“ (${searchResults.length})`
-                : `Search results for "${query}" (${searchResults.length})`}
-            </h2>
-            <button
-              type="button"
-              onClick={() => setQuery("")}
-              className="text-xs font-semibold text-[#161616] hover:underline cursor-pointer"
-            >
-              {isDe ? "Suche zurücksetzen" : "Clear search"}
-            </button>
-          </div>
-
-          {searchResults.length === 0 ? (
-            <div className="py-8 text-center space-y-3">
-              <p className="text-sm text-[#525252]">
+        <Card variant="default" padding={5}>
+          <VStack gap={4}>
+            <HStack justify="between" vAlign="center">
+              <Heading level={3}>
                 {isDe
-                  ? "Kein passender Artikel gefunden. Unser Team hilft dir gerne direkt per Support-Ticket weiter."
-                  : "No matching article found. Our team is happy to help you via a support ticket."}
-              </p>
-              <Link
-                href={`/${locale}/tickets`}
-                className="inline-flex h-10 px-5 rounded-full bg-[#161616] text-white hover:bg-[#252525] text-xs font-semibold items-center gap-2"
-              >
-                <Ticket className="w-4 h-4" />
-                <span>{isDe ? "Support-Ticket erstellen" : "Create Support Ticket"}</span>
-              </Link>
-            </div>
-          ) : (
-            <div className="divide-y divide-[#E0E0E0]">
-              {searchResults.map((article) => (
-                <Link
-                  key={article.slug}
-                  href={`/${locale}/articles/${article.slug}`}
-                  className="py-4 flex items-start justify-between gap-4 hover:bg-[#F7F7F7] px-3 rounded-xl transition-colors"
-                >
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-semibold text-[#0A0A0A]">
-                      {article.title[locale]}
-                    </h3>
-                    <p className="text-xs text-[#525252]">
-                      {article.summary[locale]}
-                    </p>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-[#161616] shrink-0 mt-1" />
-                </Link>
-              ))}
-            </div>
-          )}
-        </section>
+                  ? `Suchergebnisse für „${query}“ (${searchResults.length})`
+                  : `Search results for "${query}" (${searchResults.length})`}
+              </Heading>
+              <Button
+                label={isDe ? "Suche zurücksetzen" : "Clear search"}
+                variant="ghost"
+                size="sm"
+                onClick={() => setQuery("")}
+              />
+            </HStack>
+
+            {searchResults.length === 0 ? (
+              <EmptyState
+                title={
+                  isDe
+                    ? "Kein passender Artikel gefunden"
+                    : "No matching article found"
+                }
+                description={
+                  isDe
+                    ? "Unser Team hilft dir gerne direkt per Support-Ticket weiter."
+                    : "Our team is happy to help you via a support ticket."
+                }
+                icon={<Icon icon="search" size="lg" />}
+                actions={
+                  <Button
+                    label={
+                      isDe
+                        ? "Support-Ticket erstellen"
+                        : "Create Support Ticket"
+                    }
+                    variant="primary"
+                    size="sm"
+                    href={`/${locale}/tickets`}
+                    icon={<Icon icon={Ticket} size="sm" />}
+                  />
+                }
+              />
+            ) : (
+              <VStack gap={2}>
+                {searchResults.map((article) => (
+                  <Card
+                    key={article.slug}
+                    variant="muted"
+                    padding={4}
+                    onClick={() =>
+                      router.push(`/${locale}/articles/${article.slug}`)
+                    }
+                  >
+                    <HStack justify="between" vAlign="center" gap={4}>
+                      <VStack gap={1}>
+                        <Text weight="semibold">
+                          {article.title[locale]}
+                        </Text>
+                        <Text color="secondary">
+                          {article.summary[locale]}
+                        </Text>
+                      </VStack>
+                      <Icon icon={ArrowRight} size="sm" />
+                    </HStack>
+                  </Card>
+                ))}
+              </VStack>
+            )}
+          </VStack>
+        </Card>
       )}
-    </>
+    </VStack>
   );
 }

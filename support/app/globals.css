@@ -1,30 +1,24 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@layer reset, theme, base, astryx-base, astryx-theme, components, utilities;
 
-:root {
-  --brand-ink: #192C25;
-  --brand-deep: #173C2B;
-  --brand-forest: #245740;
-  --brand-mint: #DCEFE5;
-  --brand-cream: #F7F5EF;
-  --brand-sand: #ECE7DC;
-  --brand-paper: #FFFFFF;
-  --brand-amber: #C97A10;
-  --brand-coral: #B42318;
-  --text-primary: #14231D;
-  --text-secondary: #495A52;
-  --text-muted: #6C7B73;
-  --border-subtle: #DDD7CA;
-  --border-strong: #BFC8BE;
-}
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+@import "@astryxdesign/theme-neutral/theme.css";
+@import "@astryxdesign/core/tailwind-theme.css";
+@import "tailwindcss/utilities.css" layer(utilities);
 
-body {
-  font-family: var(--font-poppins-variable), sans-serif;
-  background-color: var(--brand-cream);
-  color: var(--text-primary);
-}
+@layer base {
+  body {
+    font-family: var(--font-poppins-variable), "Poppins", system-ui, sans-serif;
+    background-color: #fafafa;
+    color: #0a0a0a;
+    -webkit-font-smoothing: antialiased;
+  }
 
-.font-num {
-  font-family: var(--font-inter-variable), sans-serif;
-  font-variant-numeric: tabular-nums;
+  .font-num,
+  .tabular-nums {
+    font-family: var(--font-inter-variable), "Inter", system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
 }

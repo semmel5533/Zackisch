@@ -3,21 +3,34 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { anyApi } from "convex/server";
-import { useAdmin } from "@/lib/admin-context";
 import {
-  Mail,
-  Send,
-  Plus,
-  Trash2,
+  EnvelopeSimple,
+  PaperPlaneTilt,
+  Trash,
   Eye,
-  CheckCircle2,
-  Clock,
-  UserX,
-  FileText,
-  AlertTriangle,
-  MoveUp,
-  MoveDown,
-} from "lucide-react";
+} from "@phosphor-icons/react";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { StackItem } from "@astryxdesign/core/Stack";
+import { Grid } from "@astryxdesign/core/Grid";
+import { Section } from "@astryxdesign/core/Section";
+import { Card } from "@astryxdesign/core/Card";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { TabList, Tab } from "@astryxdesign/core/TabList";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { TextArea } from "@astryxdesign/core/TextArea";
+import { Selector } from "@astryxdesign/core/Selector";
+import { Button } from "@astryxdesign/core/Button";
+import { IconButton } from "@astryxdesign/core/IconButton";
+import { Icon } from "@astryxdesign/core/Icon";
+import { Table, proportional, pixel } from "@astryxdesign/core/Table";
+import { Badge } from "@astryxdesign/core/Badge";
+import { StatusDot } from "@astryxdesign/core/StatusDot";
+import { Divider } from "@astryxdesign/core/Divider";
+import { EmptyState } from "@astryxdesign/core/EmptyState";
+import { Spinner } from "@astryxdesign/core/Spinner";
+import { useAdmin } from "@/lib/admin-context";
 import { toast } from "sonner";
 
 interface ContentBlock {
@@ -29,21 +42,24 @@ interface ContentBlock {
 
 export default function NewsletterHubPage() {
   const { currentRegion, adminEmail } = useAdmin();
-  const [activeTab, setActiveTab] = useState<"subscribers" | "editor" | "campaigns">("editor");
+  const [activeTab, setActiveTab] = useState<"subscribers" | "editor" | "campaigns">(
+    "editor"
+  );
 
-  // Subscribers Query
   const subscribers = useQuery((anyApi as any).newsletter.listSubscribers, {
     regionId: currentRegion,
   });
 
-  // Campaigns Query
   const campaigns = useQuery((anyApi as any).newsletter.listCampaigns, {
     regionId: currentRegion,
   });
 
-  // Editor State
-  const [campaignTitle, setCampaignTitle] = useState("Herbst-Aktion 2026: Zackisch QR-Bestellen");
-  const [campaignSubject, setCampaignSubject] = useState("Mehr Umsatz, weniger Wartezeit – Neuigkeiten von Zackisch");
+  const [campaignTitle, setCampaignTitle] = useState(
+    "Herbst-Aktion 2026: Zackisch QR-Bestellen"
+  );
+  const [campaignSubject, setCampaignSubject] = useState(
+    "Mehr Umsatz, weniger Wartezeit – Neuigkeiten von Zackisch"
+  );
   const [campaignLocale, setCampaignLocale] = useState("de");
   const [testEmailRecipient, setTestEmailRecipient] = useState(adminEmail);
   const [sendingTest, setSendingTest] = useState(false);
@@ -80,8 +96,9 @@ export default function NewsletterHubPage() {
     },
   ]);
 
-  // Mutations & Actions
-  const createCampaignMutation = useMutation((anyApi as any).newsletter.createCampaign);
+  const createCampaignMutation = useMutation(
+    (anyApi as any).newsletter.createCampaign
+  );
   const sendBatchAction = useAction((anyApi as any).emails.sendNewsletterBatch);
   const testSmtpAction = useAction((anyApi as any).emails.testSmtpConnection);
 
@@ -93,10 +110,10 @@ export default function NewsletterHubPage() {
         type === "heading"
           ? "Neuer Titel"
           : type === "paragraph"
-          ? "Schreibe hier deinen Nachrichtentext..."
-          : type === "button"
-          ? "Mehr erfahren"
-          : "",
+            ? "Schreibe hier deinen Nachrichtentext..."
+            : type === "button"
+              ? "Mehr erfahren"
+              : "",
       buttonUrl: type === "button" ? "https://zackisch.com" : undefined,
     };
     setBlocks([...blocks, newBlock]);
@@ -108,11 +125,12 @@ export default function NewsletterHubPage() {
 
   const updateBlock = (id: string, content: string, buttonUrl?: string) => {
     setBlocks(
-      blocks.map((b) => (b.id === id ? { ...b, content, buttonUrl: buttonUrl ?? b.buttonUrl } : b))
+      blocks.map((b) =>
+        b.id === id ? { ...b, content, buttonUrl: buttonUrl ?? b.buttonUrl } : b
+      )
     );
   };
 
-  // Compile visual blocks to master email HTML template
   const generateEmailHtml = () => {
     let bodyHtml = "";
     for (const b of blocks) {
@@ -172,7 +190,9 @@ export default function NewsletterHubPage() {
   };
 
   const handlePublishCampaign = async () => {
-    const confirmedCount = (subscribers || []).filter((s: any) => s.status === "confirmed").length;
+    const confirmedCount = (subscribers || []).filter(
+      (s: any) => s.status === "confirmed"
+    ).length;
     if (confirmedCount === 0) {
       toast.warning("Keine bestätigten Abonnenten in dieser Region vorhanden.");
       return;
@@ -186,7 +206,10 @@ export default function NewsletterHubPage() {
     setSendingBatch(true);
     try {
       const htmlContent = generateEmailHtml();
-      const textContent = blocks.map((b) => b.content).filter(Boolean).join("\n\n");
+      const textContent = blocks
+        .map((b) => b.content)
+        .filter(Boolean)
+        .join("\n\n");
 
       const campaignId = await createCampaignMutation({
         title: campaignTitle,
@@ -209,7 +232,9 @@ export default function NewsletterHubPage() {
       });
 
       toast.success(
-        `Kampagne versendet! ${res.sentCount} zugestellt${res.failedCount > 0 ? `, ${res.failedCount} fehlgeschlagen` : ""}.`
+        `Kampagne versendet! ${res.sentCount} zugestellt${
+          res.failedCount > 0 ? `, ${res.failedCount} fehlgeschlagen` : ""
+        }.`
       );
       setActiveTab("campaigns");
     } catch (err: any) {
@@ -219,413 +244,452 @@ export default function NewsletterHubPage() {
     }
   };
 
-  const confirmedSubscribers = (subscribers || []).filter((s: any) => s.status === "confirmed");
+  const confirmedSubscribers = (subscribers || []).filter(
+    (s: any) => s.status === "confirmed"
+  );
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Top Header & Tab Navigation */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-zinc-200 pb-4">
-        <div>
-          <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">
-            Newsletter Zentrale
-          </h2>
-          <p className="text-sm text-zinc-500 mt-1">
-            Integrierter No-Code Block-Editor, Double-Opt-in Abonnenten und Kampagnen für Region {currentRegion.toUpperCase()}.
-          </p>
-        </div>
+    <VStack gap={5} maxWidth={1200}>
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <Heading level={1}>Newsletter Zentrale</Heading>
+          <Text type="supporting">
+            Integrierter No-Code Block-Editor, Double-Opt-in Abonnenten und Kampagnen für Region{" "}
+            {currentRegion.toUpperCase()}.
+          </Text>
+        </VStack>
 
-        {/* Tab Pills */}
-        <div className="flex items-center gap-1.5 bg-zinc-100 p-1 rounded-xl border border-zinc-200 text-xs">
-          <button
-            onClick={() => setActiveTab("editor")}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
-              activeTab === "editor" ? "bg-white text-black shadow-2xs" : "text-zinc-600 hover:text-black"
-            }`}
-          >
-            No-Code Editor
-          </button>
-          <button
-            onClick={() => setActiveTab("subscribers")}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
-              activeTab === "subscribers" ? "bg-white text-black shadow-2xs" : "text-zinc-600 hover:text-black"
-            }`}
-          >
-            Abonnenten ({confirmedSubscribers.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("campaigns")}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
-              activeTab === "campaigns" ? "bg-white text-black shadow-2xs" : "text-zinc-600 hover:text-black"
-            }`}
-          >
-            Kampagnen-Historie ({campaigns?.length || 0})
-          </button>
-        </div>
-      </div>
+        <TabList
+          value={activeTab}
+          onChange={(val) =>
+            setActiveTab(val as "subscribers" | "editor" | "campaigns")
+          }
+          hasDivider
+        >
+          <Tab value="editor" label="No-Code Editor" />
+          <Tab
+            value="subscribers"
+            label={`Abonnenten (${confirmedSubscribers.length})`}
+          />
+          <Tab
+            value="campaigns"
+            label={`Kampagnen-Historie (${campaigns?.length || 0})`}
+          />
+        </TabList>
+      </VStack>
 
-      {/* TAB 1: No-Code Visual Editor */}
       {activeTab === "editor" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Left: Editor Controls */}
-          <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs space-y-6">
-            <h3 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-              <Mail className="w-4 h-4 text-zinc-500" />
-              Kampagnen-Einstellungen
-            </h3>
+        <Grid columns={{ minWidth: 360, max: 2, repeat: "fit" }} gap={6}>
+          <Section variant="section" padding={5}>
+            <VStack gap={4}>
+              <HStack gap={2} vAlign="center">
+                <Icon icon={EnvelopeSimple} size="sm" color="secondary" />
+                <Heading level={3}>Kampagnen-Einstellungen</Heading>
+              </HStack>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">Interner Kampagnen-Titel</label>
-                <input
-                  type="text"
-                  value={campaignTitle}
-                  onChange={(e) => setCampaignTitle(e.target.value)}
-                  className="w-full border border-zinc-200 rounded-xl px-3 py-2 text-xs focus:outline-hidden focus:ring-2 focus:ring-black"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-700 mb-1">E-Mail-Betreffzeile</label>
-                <input
-                  type="text"
-                  value={campaignSubject}
-                  onChange={(e) => setCampaignSubject(e.target.value)}
-                  className="w-full border border-zinc-200 rounded-xl px-3 py-2 text-xs focus:outline-hidden focus:ring-2 focus:ring-black"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Sprache</label>
-                  <select
-                    value={campaignLocale}
-                    onChange={(e) => setCampaignLocale(e.target.value)}
-                    className="w-full border border-zinc-200 rounded-xl px-3 py-2 text-xs focus:outline-hidden focus:ring-2 focus:ring-black"
-                  >
-                    <option value="de">Deutsch (DE)</option>
-                    <option value="en">Englisch (EN)</option>
-                  </select>
-                </div>
-                <div className="flex-1">
-                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Empfänger-Segment</label>
-                  <div className="text-xs bg-zinc-100 rounded-xl px-3 py-2 font-medium text-zinc-800">
-                    {confirmedSubscribers.length} bestätigte Abonnenten
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <hr className="border-zinc-100" />
-
-            {/* Block List Editor */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">Inhalts-Blöcke</h4>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => addBlock("heading")}
-                    className="text-[11px] font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 px-2 py-1 rounded-lg"
-                  >
-                    + Überschrift
-                  </button>
-                  <button
-                    onClick={() => addBlock("paragraph")}
-                    className="text-[11px] font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 px-2 py-1 rounded-lg"
-                  >
-                    + Text
-                  </button>
-                  <button
-                    onClick={() => addBlock("button")}
-                    className="text-[11px] font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 px-2 py-1 rounded-lg"
-                  >
-                    + Button
-                  </button>
-                  <button
-                    onClick={() => addBlock("divider")}
-                    className="text-[11px] font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 px-2 py-1 rounded-lg"
-                  >
-                    + Trenner
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
-                {blocks.map((b, index) => (
-                  <div key={b.id} className="p-3 bg-zinc-50 border border-zinc-200 rounded-xl relative group">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-                        {b.type === "heading" && "Überschrift"}
-                        {b.type === "paragraph" && "Absatz / Text"}
-                        {b.type === "button" && "Call-To-Action Button"}
-                        {b.type === "divider" && "Trennlinie"}
-                      </span>
-                      <button
-                        onClick={() => removeBlock(b.id)}
-                        className="text-zinc-400 hover:text-red-600 transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    {b.type === "heading" && (
-                      <input
-                        type="text"
-                        value={b.content}
-                        onChange={(e) => updateBlock(b.id, e.target.value)}
-                        className="w-full bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs font-bold"
-                      />
-                    )}
-
-                    {b.type === "paragraph" && (
-                      <textarea
-                        rows={2}
-                        value={b.content}
-                        onChange={(e) => updateBlock(b.id, e.target.value)}
-                        className="w-full bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs"
-                      />
-                    )}
-
-                    {b.type === "button" && (
-                      <div className="space-y-2">
-                        <input
-                          type="text"
-                          placeholder="Button-Beschriftung"
-                          value={b.content}
-                          onChange={(e) => updateBlock(b.id, e.target.value, b.buttonUrl)}
-                          className="w-full bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Ziel-URL (z.B. https://zackisch.com)"
-                          value={b.buttonUrl || ""}
-                          onChange={(e) => updateBlock(b.id, b.content, e.target.value)}
-                          className="w-full bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-xs font-mono text-[11px]"
-                        />
-                      </div>
-                    )}
-
-                    {b.type === "divider" && (
-                      <div className="h-0.5 bg-zinc-200 rounded-full my-1" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <hr className="border-zinc-100" />
-
-            {/* Test Email & Dispatch */}
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Test an E-Mail senden"
-                  value={testEmailRecipient}
-                  onChange={(e) => setTestEmailRecipient(e.target.value)}
-                  className="flex-1 border border-zinc-200 rounded-xl px-3 py-2 text-xs focus:outline-hidden focus:ring-2 focus:ring-black"
-                />
-                <button
-                  type="button"
-                  onClick={handleSendTest}
-                  disabled={sendingTest}
-                  className="px-3.5 py-2 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 disabled:opacity-50"
-                >
-                  {sendingTest ? "Sendet..." : "Test-Mail"}
-                </button>
-              </div>
-
-              <button
-                type="button"
-                onClick={handlePublishCampaign}
-                disabled={sendingBatch}
-                className="w-full py-3 rounded-xl bg-black text-white text-xs font-bold hover:bg-zinc-800 transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                <Send className="w-4 h-4" />
-                {sendingBatch ? "Versand läuft..." : `Kampagne an ${confirmedSubscribers.length} Abonnenten starten`}
-              </button>
-            </div>
-          </div>
-
-          {/* Right: Live Responsive Preview */}
-          <div className="bg-zinc-100 border border-zinc-200 rounded-2xl p-6 shadow-inner">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5" />
-                Live E-Mail-Vorschau (Master Template)
-              </span>
-              <span className="text-[11px] text-zinc-400">Google Workspace Relay-Format</span>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-xs border border-zinc-200/80 max-w-md mx-auto space-y-6">
-              <img
-                src="/combination_mark.svg"
-                alt="Zackisch"
-                className="h-7 w-auto block mb-6"
+              <TextInput
+                label="Interner Kampagnen-Titel"
+                value={campaignTitle}
+                onChange={setCampaignTitle}
+                width="100%"
               />
 
-              <div className="space-y-4">
-                {blocks.map((b) => (
-                  <div key={b.id}>
-                    {b.type === "heading" && (
-                      <h2 className="text-xl font-bold text-zinc-900 tracking-tight leading-snug">
-                        {b.content}
-                      </h2>
-                    )}
-                    {b.type === "paragraph" && (
-                      <p className="text-sm text-zinc-600 leading-relaxed">
-                        {b.content}
-                      </p>
-                    )}
-                    {b.type === "button" && (
-                      <div className="text-center my-6">
-                        <a
-                          href={b.buttonUrl || "#"}
-                          className="inline-block bg-black text-white text-xs font-semibold px-6 py-3 rounded-full hover:bg-zinc-800 transition-colors"
-                        >
-                          {b.content}
-                        </a>
+              <TextInput
+                label="E-Mail-Betreffzeile"
+                value={campaignSubject}
+                onChange={setCampaignSubject}
+                width="100%"
+              />
+
+              <HStack gap={3} wrap="wrap" vAlign="end">
+                <StackItem size="fill">
+                  <Selector
+                    label="Sprache"
+                    value={campaignLocale}
+                    onChange={setCampaignLocale}
+                    options={[
+                      { value: "de", label: "Deutsch (DE)" },
+                      { value: "en", label: "Englisch (EN)" },
+                    ]}
+                    width="100%"
+                  />
+                </StackItem>
+                <Badge
+                  variant="neutral"
+                  label={`${confirmedSubscribers.length} bestätigte Abonnenten`}
+                />
+              </HStack>
+
+              <Divider />
+
+              <VStack gap={3}>
+                <HStack justify="between" vAlign="center" wrap="wrap" gap={2}>
+                  <Text type="label">Inhalts-Blöcke</Text>
+                  <HStack gap={1} wrap="wrap">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      label="+ Überschrift"
+                      onClick={() => addBlock("heading")}
+                    />
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      label="+ Text"
+                      onClick={() => addBlock("paragraph")}
+                    />
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      label="+ Button"
+                      onClick={() => addBlock("button")}
+                    />
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      label="+ Trenner"
+                      onClick={() => addBlock("divider")}
+                    />
+                  </HStack>
+                </HStack>
+
+                <VStack gap={2} height={360} isScrollable>
+                  {blocks.map((b) => (
+                    <Card key={b.id} variant="muted" padding={3}>
+                      <VStack gap={2}>
+                        <HStack justify="between" vAlign="center">
+                          <Text type="supporting">
+                            {b.type === "heading" && "Überschrift"}
+                            {b.type === "paragraph" && "Absatz / Text"}
+                            {b.type === "button" && "Call-To-Action Button"}
+                            {b.type === "divider" && "Trennlinie"}
+                          </Text>
+                          <IconButton
+                            label="Block löschen"
+                            tooltip="Block löschen"
+                            variant="ghost"
+                            size="sm"
+                            icon={<Icon icon={Trash} size="sm" />}
+                            onClick={() => removeBlock(b.id)}
+                          />
+                        </HStack>
+
+                        {b.type === "heading" && (
+                          <TextInput
+                            label="Überschrift"
+                            isLabelHidden
+                            size="sm"
+                            value={b.content}
+                            onChange={(val) => updateBlock(b.id, val)}
+                            width="100%"
+                          />
+                        )}
+
+                        {b.type === "paragraph" && (
+                          <TextArea
+                            label="Absatz"
+                            isLabelHidden
+                            rows={2}
+                            size="sm"
+                            value={b.content}
+                            onChange={(val) => updateBlock(b.id, val)}
+                            width="100%"
+                          />
+                        )}
+
+                        {b.type === "button" && (
+                          <VStack gap={2}>
+                            <TextInput
+                              label="Button-Beschriftung"
+                              isLabelHidden
+                              size="sm"
+                              placeholder="Button-Beschriftung"
+                              value={b.content}
+                              onChange={(val) =>
+                                updateBlock(b.id, val, b.buttonUrl)
+                              }
+                              width="100%"
+                            />
+                            <TextInput
+                              label="Ziel-URL"
+                              isLabelHidden
+                              size="sm"
+                              placeholder="https://zackisch.com"
+                              value={b.buttonUrl || ""}
+                              onChange={(val) =>
+                                updateBlock(b.id, b.content, val)
+                              }
+                              width="100%"
+                            />
+                          </VStack>
+                        )}
+
+                        {b.type === "divider" && <Divider />}
+                      </VStack>
+                    </Card>
+                  ))}
+                </VStack>
+              </VStack>
+
+              <Divider />
+
+              <VStack gap={3}>
+                <HStack gap={2} vAlign="end">
+                  <StackItem size="fill">
+                    <TextInput
+                      type="email"
+                      label="Test an E-Mail senden"
+                      isLabelHidden
+                      placeholder="Test an E-Mail senden"
+                      value={testEmailRecipient}
+                      onChange={setTestEmailRecipient}
+                      width="100%"
+                    />
+                  </StackItem>
+                  <Button
+                    label="Test-Mail"
+                    variant="secondary"
+                    isLoading={sendingTest}
+                    onClick={handleSendTest}
+                  />
+                </HStack>
+
+                <Button
+                  label={`Kampagne an ${confirmedSubscribers.length} Abonnenten starten`}
+                  variant="primary"
+                  width="100%"
+                  isLoading={sendingBatch}
+                  icon={<Icon icon={PaperPlaneTilt} size="sm" />}
+                  onClick={handlePublishCampaign}
+                />
+              </VStack>
+            </VStack>
+          </Section>
+
+          <Section variant="muted" padding={5}>
+            <VStack gap={4}>
+              <HStack justify="between" vAlign="center">
+                <HStack gap={1.5} vAlign="center">
+                  <Icon icon={Eye} size="sm" color="secondary" />
+                  <Text type="label">Live E-Mail-Vorschau (Master Template)</Text>
+                </HStack>
+                <Text type="supporting">Google Workspace Relay</Text>
+              </HStack>
+
+              <Card padding={6}>
+                <VStack gap={4}>
+                  <img
+                    src="/combination_mark.svg"
+                    alt="Zackisch"
+                    className="h-7 w-auto block"
+                  />
+
+                  <VStack gap={3}>
+                    {blocks.map((b) => (
+                      <div key={b.id}>
+                        {b.type === "heading" && (
+                          <Heading level={2}>{b.content}</Heading>
+                        )}
+                        {b.type === "paragraph" && <Text>{b.content}</Text>}
+                        {b.type === "button" && (
+                          <HStack justify="center" paddingBlock={2}>
+                            <Button
+                              label={b.content}
+                              variant="primary"
+                              href={b.buttonUrl || "#"}
+                            />
+                          </HStack>
+                        )}
+                        {b.type === "divider" && <Divider />}
                       </div>
-                    )}
-                    {b.type === "divider" && (
-                      <hr className="border-t border-zinc-100 my-6" />
-                    )}
-                  </div>
-                ))}
-              </div>
+                    ))}
+                  </VStack>
 
-              {/* Master Footer */}
-              <div className="mt-8 pt-6 border-t border-zinc-100 text-center text-[11px] text-zinc-400 space-y-1">
-                <p>Zackisch Gastronomie-Plattform · zackisch.com</p>
-                <p>
-                  <span className="underline cursor-pointer">Newsletter abmelden (One-Click)</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+                  <Divider />
+
+                  <VStack gap={0.5} hAlign="center">
+                    <Text type="supporting">
+                      Zackisch Gastronomie-Plattform · zackisch.com
+                    </Text>
+                    <Text type="supporting">Newsletter abmelden (One-Click)</Text>
+                  </VStack>
+                </VStack>
+              </Card>
+            </VStack>
+          </Section>
+        </Grid>
       )}
 
-      {/* TAB 2: Subscribers Table */}
       {activeTab === "subscribers" && (
-        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-zinc-100 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-zinc-900">Double-Opt-In Abonnenten</h3>
-            <span className="text-xs text-zinc-500">
-              {confirmedSubscribers.length} bestätigt / {(subscribers || []).length} gesamt
-            </span>
-          </div>
+        <Section variant="section" padding={5}>
+          <VStack gap={4}>
+            <HStack justify="between" vAlign="center">
+              <Heading level={3}>Double-Opt-In Abonnenten</Heading>
+              <Badge
+                variant="neutral"
+                label={`${confirmedSubscribers.length} bestätigt / ${
+                  (subscribers || []).length
+                } gesamt`}
+              />
+            </HStack>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-zinc-600">
-              <thead className="bg-zinc-50/75 border-b border-zinc-200/80 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
-                <tr>
-                  <th className="py-3.5 px-6">E-Mail-Adresse</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4">Sprache</th>
-                  <th className="py-3.5 px-4">Quelle</th>
-                  <th className="py-3.5 px-6 text-right">Registriert am</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100">
-                {!subscribers ? (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-zinc-400">
-                      Lade Abonnenten...
-                    </td>
-                  </tr>
-                ) : subscribers.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-zinc-400">
-                      Bisher keine Newsletter-Abonnenten in dieser Region.
-                    </td>
-                  </tr>
-                ) : (
-                  subscribers.map((s: any) => (
-                    <tr key={s._id} className="hover:bg-zinc-50/50">
-                      <td className="py-3.5 px-6 font-semibold text-zinc-900">{s.email}</td>
-                      <td className="py-3.5 px-4">
-                        {s.status === "confirmed" && (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-                            <CheckCircle2 className="w-3 h-3" /> Bestätigt
-                          </span>
-                        )}
-                        {s.status === "pending" && (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                            <Clock className="w-3 h-3" /> Ausstehend
-                          </span>
-                        )}
-                        {s.status === "unsubscribed" && (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full">
-                            <UserX className="w-3 h-3" /> Abgemeldet
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-3.5 px-4 font-mono uppercase text-zinc-600">{s.locale}</td>
-                      <td className="py-3.5 px-4 text-zinc-500">{s.source || "Website"}</td>
-                      <td className="py-3.5 px-6 text-right font-num text-zinc-400 text-[11px]">
+            {!subscribers ? (
+              <VStack hAlign="center" vAlign="center" minHeight={200}>
+                <Spinner label="Lade Abonnenten..." />
+              </VStack>
+            ) : subscribers.length === 0 ? (
+              <EmptyState
+                isCompact
+                icon={<Icon icon={EnvelopeSimple} size="lg" color="secondary" />}
+                title="Keine Abonnenten"
+                description="Bisher keine Newsletter-Abonnenten in dieser Region."
+              />
+            ) : (
+              <Table
+                data={subscribers}
+                idKey="_id"
+                hasHover
+                density="balanced"
+                columns={[
+                  {
+                    key: "email",
+                    header: "E-Mail-Adresse",
+                    width: proportional(2, { minWidth: 200 }),
+                    renderCell: (s: any) => (
+                      <Text weight="semibold">{s.email}</Text>
+                    ),
+                  },
+                  {
+                    key: "status",
+                    header: "Status",
+                    width: pixel(150),
+                    renderCell: (s: any) => {
+                      if (s.status === "confirmed") {
+                        return (
+                          <HStack gap={1.5} vAlign="center">
+                            <StatusDot variant="success" label="Bestätigt" />
+                            <Text>Bestätigt</Text>
+                          </HStack>
+                        );
+                      }
+                      if (s.status === "pending") {
+                        return <Badge variant="warning" label="Ausstehend" />;
+                      }
+                      return <Badge variant="neutral" label="Abgemeldet" />;
+                    },
+                  },
+                  {
+                    key: "locale",
+                    header: "Sprache",
+                    width: pixel(110),
+                    renderCell: (s: any) => (
+                      <Text type="code">{String(s.locale || "de").toUpperCase()}</Text>
+                    ),
+                  },
+                  {
+                    key: "source",
+                    header: "Quelle",
+                    width: pixel(130),
+                    renderCell: (s: any) => (
+                      <Text type="supporting">{s.source || "Website"}</Text>
+                    ),
+                  },
+                  {
+                    key: "createdAt",
+                    header: "Registriert am",
+                    align: "end",
+                    width: pixel(150),
+                    renderCell: (s: any) => (
+                      <Text type="supporting" hasTabularNumbers>
                         {new Date(s.createdAt).toLocaleDateString("de-DE")}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                      </Text>
+                    ),
+                  },
+                ]}
+              />
+            )}
+          </VStack>
+        </Section>
       )}
 
-      {/* TAB 3: Campaigns History */}
       {activeTab === "campaigns" && (
-        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-zinc-100 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-zinc-900">Versendete Kampagnen</h3>
-          </div>
+        <Section variant="section" padding={5}>
+          <VStack gap={4}>
+            <Heading level={3}>Versendete Kampagnen</Heading>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-zinc-600">
-              <thead className="bg-zinc-50/75 border-b border-zinc-200/80 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
-                <tr>
-                  <th className="py-3.5 px-6">Titel & Betreff</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4">Zugestellt</th>
-                  <th className="py-3.5 px-4">Erstellt von</th>
-                  <th className="py-3.5 px-6 text-right">Versanddatum</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100">
-                {!campaigns || campaigns.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-zinc-400">
-                      Bisher keine Kampagnen versendet.
-                    </td>
-                  </tr>
-                ) : (
-                  campaigns.map((c: any) => (
-                    <tr key={c._id} className="hover:bg-zinc-50/50">
-                      <td className="py-4 px-6">
-                        <div className="font-semibold text-zinc-900 text-sm">{c.title}</div>
-                        <div className="text-[11px] text-zinc-500">{c.subject}</div>
-                      </td>
-                      <td className="py-4 px-4">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-                          <CheckCircle2 className="w-3 h-3" /> Versendet
-                        </span>
-                      </td>
-                      <td className="py-4 px-4 font-num font-semibold text-zinc-900">
+            {!campaigns || campaigns.length === 0 ? (
+              <EmptyState
+                isCompact
+                icon={<Icon icon={PaperPlaneTilt} size="lg" color="secondary" />}
+                title="Keine Kampagnen"
+                description="Bisher wurden keine Kampagnen versendet."
+              />
+            ) : (
+              <Table
+                data={campaigns}
+                idKey="_id"
+                hasHover
+                density="balanced"
+                columns={[
+                  {
+                    key: "title",
+                    header: "Titel & Betreff",
+                    width: proportional(2, { minWidth: 220 }),
+                    renderCell: (c: any) => (
+                      <VStack gap={0.5}>
+                        <Text weight="semibold">{c.title}</Text>
+                        <Text type="supporting">{c.subject}</Text>
+                      </VStack>
+                    ),
+                  },
+                  {
+                    key: "status",
+                    header: "Status",
+                    width: pixel(140),
+                    renderCell: () => (
+                      <HStack gap={1.5} vAlign="center">
+                        <StatusDot variant="success" label="Versendet" />
+                        <Text>Versendet</Text>
+                      </HStack>
+                    ),
+                  },
+                  {
+                    key: "deliveredCount",
+                    header: "Zugestellt",
+                    width: pixel(150),
+                    renderCell: (c: any) => (
+                      <Text weight="semibold" hasTabularNumbers>
                         {c.deliveredCount ?? "—"} Empfänger
-                      </td>
-                      <td className="py-4 px-4 text-zinc-500">{c.createdBy}</td>
-                      <td className="py-4 px-6 text-right font-num text-zinc-400 text-[11px]">
-                        {c.sentAt ? new Date(c.sentAt).toLocaleString("de-DE") : "—"}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                      </Text>
+                    ),
+                  },
+                  {
+                    key: "createdBy",
+                    header: "Erstellt von",
+                    width: proportional(1, { minWidth: 160 }),
+                    renderCell: (c: any) => (
+                      <Text type="supporting">{c.createdBy}</Text>
+                    ),
+                  },
+                  {
+                    key: "sentAt",
+                    header: "Versanddatum",
+                    align: "end",
+                    width: pixel(170),
+                    renderCell: (c: any) => (
+                      <Text type="supporting" hasTabularNumbers>
+                        {c.sentAt
+                          ? new Date(c.sentAt).toLocaleString("de-DE")
+                          : "—"}
+                      </Text>
+                    ),
+                  },
+                ]}
+              />
+            )}
+          </VStack>
+        </Section>
       )}
-    </div>
+    </VStack>
   );
 }

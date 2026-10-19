@@ -1,30 +1,29 @@
 "use client";
 
-import { useState, startTransition, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import {
   confirmEmailChangeOtpAction,
   sendEmailChangeOtpAction,
 } from "@/actions/settings-actions";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Card } from "@astryxdesign/core/Card";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { Button } from "@astryxdesign/core/Button";
+import { Divider } from "@astryxdesign/core/Divider";
+import { Spinner } from "@astryxdesign/core/Spinner";
+import { Icon } from "@astryxdesign/core/Icon";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useTranslation } from "@/lib/i18n";
-import { CircleNotch, PaperPlaneRight } from "@phosphor-icons/react";
+import { PaperPlaneRight } from "@phosphor-icons/react";
 import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
 import { toast } from "sonner";
 
@@ -100,164 +99,139 @@ function ChangeEmailOtpForm() {
   };
 
   return (
-    <>
-      <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold text-foreground">
+    <VStack gap={4}>
+      <VStack gap={1}>
+        <Heading level={1}>
           {t("verifyEmail" as any)}
-        </CardTitle>
-        <CardDescription className="text-muted-foreground">
+        </Heading>
+        <Text color="secondary">
           {t("verifyEmailDesc" as any, { email: email || "" })}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={handleVerifyOtp}
-          noValidate
-          className="flex flex-col gap-4"
-        >
-          <div className="flex flex-col items-center justify-center gap-4 py-4 w-full">
-            <div className="w-full">
-              <InputOTP
-                maxLength={6}
-                value={otp}
-                aria-invalid={!!error}
-                aria-describedby={error ? "otp-error" : undefined}
-                onChange={(val) => {
-                  if (isExpired) return;
-                  setOtp(val);
-                  setError("");
-                  if (val.length === 6) {
-                    submitOtp(val);
-                  }
-                }}
-                disabled={isVerifying || isExpired}
-                autoFocus={!isExpired}
-              >
-                <InputOTPGroup className="w-full flex gap-2">
-                  <InputOTPSlot
-                    index={0}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={1}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={2}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={3}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={4}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={5}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                  />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
-          </div>
+        </Text>
+      </VStack>
+
+      <form onSubmit={handleVerifyOtp} noValidate>
+        <VStack gap={4}>
+          <VStack gap={2} align="center">
+            <InputOTP
+              maxLength={6}
+              value={otp}
+              aria-invalid={!!error}
+              aria-describedby={error ? "otp-error" : undefined}
+              onChange={(val) => {
+                if (isExpired) return;
+                setOtp(val);
+                setError("");
+                if (val.length === 6) {
+                  submitOtp(val);
+                }
+              }}
+              disabled={isVerifying || isExpired}
+              autoFocus={!isExpired}
+            >
+              <InputOTPGroup className="w-full flex gap-2">
+                <InputOTPSlot
+                  index={0}
+                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
+                />
+                <InputOTPSlot
+                  index={1}
+                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
+                />
+                <InputOTPSlot
+                  index={2}
+                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
+                />
+                <InputOTPSlot
+                  index={3}
+                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
+                />
+                <InputOTPSlot
+                  index={4}
+                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
+                />
+                <InputOTPSlot
+                  index={5}
+                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
+                />
+              </InputOTPGroup>
+            </InputOTP>
+          </VStack>
+
           {error && (
-            <p
-              id="otp-error"
-              role="alert"
-              className="w-full text-left text-sm font-medium text-destructive"
-            >
+            <Text color="secondary" weight="semibold">
               {error}
-            </p>
+            </Text>
           )}
+
           <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
-          <div className="flex flex-col sm:flex-row gap-2 w-full">
+
+          <HStack gap={2} vAlign="center" wrap="wrap">
             <Button
-              type="button"
-              variant={isExpired ? "default" : "outline"}
-              className={`w-full ${isExpired ? "sm:w-full" : "sm:w-1/2"}`}
-              disabled={countdown > 0 && !isExpired}
+              label={
+                isExpired
+                  ? t("requestNewCodeNow" as any)
+                  : countdown > 0
+                    ? t("resendIn", { time: countdown })
+                    : t("resendCode" as any)
+              }
+              variant={isExpired ? "primary" : "secondary"}
+              size="md"
+              isDisabled={countdown > 0 && !isExpired}
               onClick={handleResendOtp}
-            >
-              {isExpired
-                ? t("requestNewCodeNow" as any)
-                : countdown > 0
-                  ? t("resendIn", { time: countdown })
-                  : t("resendCode" as any)}
-            </Button>
+            />
             {!isExpired && (
               <Button
+                label={t("confirm" as any)}
+                variant="primary"
+                size="md"
                 type="submit"
-                className="w-full sm:w-1/2 gap-2"
-                disabled={isVerifying || otp.length < 6}
-              >
-                {isVerifying ? (
-                  <>
-                    <CircleNotch
-                      className="w-5 h-5 animate-spin"
-                      weight="bold"
-                    />
-                    {t("verifying" as any)}
-                  </>
-                ) : (
-                  <>
-                    <PaperPlaneRight className="w-5 h-5" weight="bold" />
-                    {t("confirm" as any)}
-                  </>
-                )}
-              </Button>
+                isLoading={isVerifying}
+                isDisabled={isVerifying || otp.length < 6}
+                icon={<Icon icon={PaperPlaneRight} size="sm" />}
+                onClick={(e: any) => handleVerifyOtp(e)}
+              />
             )}
-          </div>
-        </form>
-      </CardContent>
+          </HStack>
+        </VStack>
+      </form>
 
-      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border pt-6">
-        <p className="text-sm text-muted-foreground">
-          {t("changedMind" as any)}{" "}
-          <Link
-            href="/dashboard"
-            className="font-semibold text-foreground underline-offset-4 hover:underline"
-          >
-            {t("backToDashboard" as any)}
-          </Link>
-        </p>
-      </CardFooter>
-    </>
+      <Divider />
+
+      <HStack justify="center" vAlign="center" gap={1}>
+        <Text color="secondary">{t("changedMind" as any)}</Text>
+        <Link href="/dashboard" style={{ fontWeight: 600 }}>
+          {t("backToDashboard" as any)}
+        </Link>
+      </HStack>
+    </VStack>
   );
 }
 
 export default function ChangeEmailOtpPage() {
-  const { t } = useTranslation();
-
   return (
-    <Card className="w-full bg-card text-card-foreground border border-border rounded-[24px] shadow-sm">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-        <div className="flex items-center">
-          <Image
+    <Card variant="default" padding={6}>
+      <VStack gap={6}>
+        <HStack justify="between" vAlign="center">
+          <img
             src="/combination_mark.svg"
-            alt="zakkig"
-            width={120}
-            height={40}
-            priority
-            loading="eager"
-            className="w-auto h-8 select-none"
+            alt="Zackisch"
+            style={{ height: 28, width: "auto" }}
           />
-        </div>
-        <RegionLanguageSwitcher variant="outline" />
-      </div>
+          <RegionLanguageSwitcher />
+        </HStack>
 
-      <Suspense
-        fallback={
-          <CardContent>
-            <div className="h-40 flex items-center justify-center">
-              <CircleNotch className="w-8 h-8 animate-spin text-muted-foreground" />
-            </div>
-          </CardContent>
-        }
-      >
-        <ChangeEmailOtpForm />
-      </Suspense>
+        <Divider />
+
+        <Suspense
+          fallback={
+            <VStack gap={4} align="center" padding={6}>
+              <Spinner size="md" />
+            </VStack>
+          }
+        >
+          <ChangeEmailOtpForm />
+        </Suspense>
+      </VStack>
     </Card>
   );
 }

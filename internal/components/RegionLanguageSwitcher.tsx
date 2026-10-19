@@ -1,7 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { Globe, Check, X } from "lucide-react";
+import { Globe } from "@phosphor-icons/react";
+import { Button } from "@astryxdesign/core/Button";
+import { IconButton } from "@astryxdesign/core/IconButton";
+import { Icon } from "@astryxdesign/core/Icon";
+import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
+import { SelectableCard } from "@astryxdesign/core/SelectableCard";
+import { Badge } from "@astryxdesign/core/Badge";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Grid } from "@astryxdesign/core/Grid";
+import { Text } from "@astryxdesign/core/Text";
+import { Divider } from "@astryxdesign/core/Divider";
 import { useAdmin } from "@/lib/admin-context";
 
 export function RegionFlag({ code, className }: { code: string; className?: string }) {
@@ -10,7 +21,7 @@ export function RegionFlag({ code, className }: { code: string; className?: stri
     return (
       <svg
         viewBox="0 0 640 480"
-        className={`h-4.5 w-6 shrink-0 overflow-hidden rounded-xs border border-black/10 object-cover ${className || ""}`}
+        className={`h-4 w-5 shrink-0 overflow-hidden rounded-xs border border-black/10 object-cover ${className || ""}`}
         aria-hidden="true"
       >
         <path fill="#000000" d="M0 0h640v160H0z" />
@@ -23,7 +34,7 @@ export function RegionFlag({ code, className }: { code: string; className?: stri
     return (
       <svg
         viewBox="0 0 640 480"
-        className={`h-4.5 w-6 shrink-0 overflow-hidden rounded-xs border border-black/10 object-cover ${className || ""}`}
+        className={`h-4 w-5 shrink-0 overflow-hidden rounded-xs border border-black/10 object-cover ${className || ""}`}
         aria-hidden="true"
       >
         <path fill="#ED2939" d="M0 0h640v160H0z" />
@@ -36,7 +47,7 @@ export function RegionFlag({ code, className }: { code: string; className?: stri
     return (
       <svg
         viewBox="0 0 512 512"
-        className={`h-4.5 w-6 shrink-0 overflow-hidden rounded-xs border border-black/10 object-cover ${className || ""}`}
+        className={`h-4 w-5 shrink-0 overflow-hidden rounded-xs border border-black/10 object-cover ${className || ""}`}
         aria-hidden="true"
       >
         <path fill="#D52B1E" d="M0 0h512v512H0z" />
@@ -55,7 +66,6 @@ export const ADMIN_SUPPORTED_REGIONS = [
 ] as const;
 
 export function RegionLanguageSwitcher({
-  className,
   variant = "pill",
 }: {
   className?: string;
@@ -84,147 +94,129 @@ export function RegionLanguageSwitcher({
     setOpen(false);
   };
 
-  const activeRegionObj = ADMIN_SUPPORTED_REGIONS.find((r) => r.code === currentRegion) || ADMIN_SUPPORTED_REGIONS[0];
+  const activeRegionObj =
+    ADMIN_SUPPORTED_REGIONS.find((r) => r.code === currentRegion) || ADMIN_SUPPORTED_REGIONS[0];
+
+  const triggerLabel = `${activeRegionObj.code.toUpperCase()} · ${currentLocale.toUpperCase()}`;
 
   return (
     <>
       {variant === "pill" ? (
-        <button
-          type="button"
+        <Button
+          label={t("regionSelectorTitle") || triggerLabel}
+          variant="secondary"
+          size="sm"
+          icon={<Icon icon={Globe} />}
           onClick={handleOpen}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border border-zinc-200/90 bg-white hover:bg-zinc-50 text-xs font-semibold text-zinc-800 transition-all shadow-2xs ${className || ""}`}
-          aria-label={t("regionSelectorTitle") || "Region & Sprache"}
         >
-          <RegionFlag code={currentRegion} />
-          <span>{activeRegionObj.code.toUpperCase()} · {currentLocale.toUpperCase()}</span>
-          <Globe className="w-3.5 h-3.5 text-zinc-400" />
-        </button>
+          {triggerLabel}
+        </Button>
       ) : (
-        <button
-          type="button"
+        <IconButton
+          label={t("regionSelectorTitle") || "Region & Sprache"}
+          tooltip={t("regionSelectorTitle") || "Region & Sprache"}
+          icon={<Icon icon={Globe} />}
+          variant="secondary"
+          size="sm"
           onClick={handleOpen}
-          className={`p-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all shadow-2xs ${className || ""}`}
-          aria-label={t("regionSelectorTitle") || "Region & Sprache"}
-        >
-          <Globe className="w-4 h-4 text-zinc-600" />
-        </button>
+        />
       )}
 
-      {/* Modal Dialog */}
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150">
-          <div
-            className="w-full max-w-md bg-white rounded-2xl border border-zinc-200 shadow-xl overflow-hidden p-6 space-y-5 animate-in zoom-in-95 duration-150"
-            role="dialog"
-            aria-modal="true"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
-              <div>
-                <h3 className="text-base font-bold text-zinc-900 tracking-tight">
-                  {currentLocale === "en" ? "Select Region & Language" : "Region & Sprache auswählen"}
-                </h3>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  {currentLocale === "en"
-                    ? "Choose your operating market and interface language"
-                    : "Wähle deine Geschäftsregion und die Anzeigesprache"}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-black hover:bg-zinc-100 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+      <Dialog isOpen={open} onOpenChange={setOpen} width={440} purpose="form">
+        <VStack gap={4}>
+          <DialogHeader
+            title={
+              currentLocale === "en" ? "Select Region & Language" : "Region & Sprache auswählen"
+            }
+            subtitle={
+              currentLocale === "en"
+                ? "Choose your operating market and interface language"
+                : "Wähle deine Geschäftsregion und die Anzeigesprache"
+            }
+            onOpenChange={setOpen}
+          />
 
-            {/* Region Selection */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                {currentLocale === "en" ? "Operating Region" : "Geschäftsregion"}
-              </label>
-              <div className="space-y-1.5">
-                {ADMIN_SUPPORTED_REGIONS.map((r) => {
-                  const isSelected = draftRegion === r.code;
-                  return (
-                    <button
-                      key={r.code}
-                      type="button"
-                      onClick={() => setDraftRegion(r.code)}
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border text-xs font-medium transition-all ${
-                        isSelected
-                          ? "border-black bg-zinc-50 text-black font-semibold shadow-2xs"
-                          : "border-zinc-200/80 bg-white text-zinc-700 hover:bg-zinc-50/60"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
+          <VStack gap={2}>
+            <Text type="label" color="secondary">
+              {currentLocale === "en" ? "Operating Region" : "Geschäftsregion"}
+            </Text>
+            <VStack gap={1.5}>
+              {ADMIN_SUPPORTED_REGIONS.map((r) => {
+                const isSelected = draftRegion === r.code;
+                return (
+                  <SelectableCard
+                    key={r.code}
+                    label={r.nativeName}
+                    isSelected={isSelected}
+                    onChange={() => setDraftRegion(r.code)}
+                    padding={3}
+                  >
+                    <HStack justify="between" vAlign="center" gap={2}>
+                      <HStack gap={2} vAlign="center">
                         <RegionFlag code={r.code} />
-                        <span>{r.nativeName}</span>
-                        {r.status === "active" ? (
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">
-                            {currentLocale === "en" ? "Active" : "Aktiv"}
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-medium uppercase tracking-wider bg-zinc-100 text-zinc-500 px-2 py-0.5 rounded-full">
-                            {currentLocale === "en" ? "Planned" : "In Vorbereitung"}
-                          </span>
-                        )}
-                      </div>
-                      {isSelected && <Check className="w-4 h-4 text-black shrink-0" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                        <Text weight="semibold">{r.nativeName}</Text>
+                        <Badge
+                          variant={r.status === "active" ? "green" : "neutral"}
+                          label={
+                            r.status === "active"
+                              ? currentLocale === "en"
+                                ? "Active"
+                                : "Aktiv"
+                              : currentLocale === "en"
+                                ? "Planned"
+                                : "In Vorbereitung"
+                          }
+                        />
+                      </HStack>
+                      {isSelected && <Icon icon="check" color="accent" size="sm" />}
+                    </HStack>
+                  </SelectableCard>
+                );
+              })}
+            </VStack>
+          </VStack>
 
-            {/* Language Selection */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                {currentLocale === "en" ? "Interface Language" : "Anzeigesprache"}
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {languages.map((l) => {
-                  const isSelected = draftLocale === l.code;
-                  return (
-                    <button
-                      key={l.code}
-                      type="button"
-                      onClick={() => setDraftLocale(l.code)}
-                      className={`flex items-center justify-between px-4 py-3 rounded-xl border text-xs font-medium transition-all ${
-                        isSelected
-                          ? "border-black bg-zinc-50 text-black font-semibold shadow-2xs"
-                          : "border-zinc-200/80 bg-white text-zinc-700 hover:bg-zinc-50/60"
-                      }`}
-                    >
-                      <span>{l.label}</span>
-                      {isSelected && <Check className="w-4 h-4 text-black shrink-0" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+          <VStack gap={2}>
+            <Text type="label" color="secondary">
+              {currentLocale === "en" ? "Interface Language" : "Anzeigesprache"}
+            </Text>
+            <Grid columns={2} gap={2}>
+              {languages.map((l) => {
+                const isSelected = draftLocale === l.code;
+                return (
+                  <SelectableCard
+                    key={l.code}
+                    label={l.label}
+                    isSelected={isSelected}
+                    onChange={() => setDraftLocale(l.code)}
+                    padding={3}
+                  >
+                    <HStack justify="between" vAlign="center">
+                      <Text weight="semibold">{l.label}</Text>
+                      {isSelected && <Icon icon="check" color="accent" size="sm" />}
+                    </HStack>
+                  </SelectableCard>
+                );
+              })}
+            </Grid>
+          </VStack>
 
-            {/* Footer Actions */}
-            <div className="pt-2 flex items-center justify-end gap-2 border-t border-zinc-100">
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="px-4 py-2 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-50 transition-all"
-              >
-                {currentLocale === "en" ? "Cancel" : "Abbrechen"}
-              </button>
-              <button
-                type="button"
-                onClick={handleSave}
-                className="px-4 py-2 rounded-xl bg-black text-white text-xs font-semibold hover:bg-zinc-800 transition-all shadow-2xs"
-              >
-                {currentLocale === "en" ? "Save & Apply" : "Speichern & Anwenden"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          <Divider />
+
+          <HStack justify="end" gap={2}>
+            <Button
+              label={currentLocale === "en" ? "Cancel" : "Abbrechen"}
+              variant="secondary"
+              onClick={() => setOpen(false)}
+            />
+            <Button
+              label={currentLocale === "en" ? "Save & Apply" : "Speichern & Anwenden"}
+              variant="primary"
+              onClick={handleSave}
+            />
+          </HStack>
+        </VStack>
+      </Dialog>
     </>
   );
 }

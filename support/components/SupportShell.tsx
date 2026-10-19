@@ -1,10 +1,19 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { SupportLocale } from "@/lib/knowledge-base";
-import { BookOpen, Ticket, ExternalLink, Globe } from "lucide-react";
+import { AppShell } from "@astryxdesign/core/AppShell";
+import { TopNav } from "@astryxdesign/core/TopNav";
+import { Layout, LayoutContent } from "@astryxdesign/core/Layout";
+import { HStack } from "@astryxdesign/core/HStack";
+import { VStack } from "@astryxdesign/core/VStack";
+import { Badge } from "@astryxdesign/core/Badge";
+import { Button } from "@astryxdesign/core/Button";
+import { Divider } from "@astryxdesign/core/Divider";
+import { Text } from "@astryxdesign/core/Text";
+import { Icon } from "@astryxdesign/core/Icon";
+import { BookOpen, Ticket, Globe } from "@phosphor-icons/react";
 
 export function SupportShell({
   locale,
@@ -20,114 +29,132 @@ export function SupportShell({
     ? pathname.replace(/^\/(de-de|de-en)/, `/${alternateLocale}`)
     : `/${alternateLocale}`;
 
+  const isTicketsActive = Boolean(pathname?.includes("/tickets"));
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F5EF] text-[#14231D]">
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-[#DDD7CA]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <Link href={`/${locale}`} className="flex items-center gap-2.5">
-              <img
-                src="/combination_mark.svg"
-                alt="Zackisch"
-                className="h-7 w-auto"
+    <AppShell
+      variant="elevated"
+      topNav={
+        <TopNav
+          label="Zackisch Support Navigation"
+          startContent={
+            <HStack gap={3} vAlign="center">
+              <a href={`/${locale}`} style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  src="/combination_mark.svg"
+                  alt="Zackisch"
+                  style={{ height: 26, width: "auto" }}
+                />
+              </a>
+              <Badge
+                label={isDe ? "Hilfe & Support" : "Help & Support"}
+                variant="neutral"
               />
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#DCEFE5] text-[#173C2B]">
-                {isDe ? "Hilfe & Support" : "Help & Support"}
-              </span>
-            </Link>
-
-            <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
-              <Link
-                href={`/${locale}`}
-                className="px-3 py-2 rounded-full hover:bg-[#ECE7DC] transition-colors inline-flex items-center gap-1.5"
-              >
-                <BookOpen className="w-4 h-4 text-[#245740]" />
-                <span>{isDe ? "Wissensdatenbank" : "Knowledge Base"}</span>
-              </Link>
-              <Link
+              <HStack gap={1} vAlign="center">
+                <Button
+                  label={isDe ? "Wissensdatenbank" : "Knowledge Base"}
+                  variant={!isTicketsActive ? "secondary" : "ghost"}
+                  size="sm"
+                  href={`/${locale}`}
+                  icon={<Icon icon={BookOpen} size="sm" />}
+                />
+                <Button
+                  label={isDe ? "Support-Tickets" : "Support Tickets"}
+                  variant={isTicketsActive ? "secondary" : "ghost"}
+                  size="sm"
+                  href={`/${locale}/tickets`}
+                  icon={<Icon icon={Ticket} size="sm" />}
+                />
+              </HStack>
+            </HStack>
+          }
+          endContent={
+            <HStack gap={2} vAlign="center">
+              <Button
+                label={isDe ? "DE → EN" : "EN → DE"}
+                variant="ghost"
+                size="sm"
+                href={alternatePath}
+                icon={<Icon icon={Globe} size="sm" />}
+              />
+              <Button
+                label={isDe ? "Ticket erstellen" : "Open Ticket"}
+                variant="primary"
+                size="sm"
                 href={`/${locale}/tickets`}
-                className="px-3 py-2 rounded-full hover:bg-[#ECE7DC] transition-colors inline-flex items-center gap-1.5"
-              >
-                <Ticket className="w-4 h-4 text-[#245740]" />
-                <span>{isDe ? "Support-Tickets" : "Support Tickets"}</span>
-              </Link>
-            </nav>
-          </div>
+                icon={<Icon icon={Ticket} size="sm" />}
+              />
+              <Button
+                label="Dashboard"
+                variant="ghost"
+                size="sm"
+                href="https://app.zackisch.com"
+                endContent={<Icon icon="externalLink" size="xsm" />}
+              />
+            </HStack>
+          }
+        />
+      }
+    >
+      <Layout>
+        <LayoutContent>
+          <VStack gap={8} width="100%">
+            <VStack gap={6} width="100%">
+              {children}
+            </VStack>
 
-          <div className="flex items-center gap-2.5">
-            <Link
-              href={alternatePath}
-              className="h-9 px-3 rounded-full border border-[#DDD7CA] bg-white hover:bg-[#F7F5EF] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
-            >
-              <Globe className="w-3.5 h-3.5 text-[#495A52]" />
-              <span>{isDe ? "DE → EN" : "EN → DE"}</span>
-            </Link>
-            <Link
-              href={`/${locale}/tickets`}
-              className="h-9 px-4 rounded-full bg-[#173C2B] text-white hover:bg-[#245740] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
-            >
-              <Ticket className="w-3.5 h-3.5" />
-              <span>{isDe ? "Ticket erstellen" : "Open Ticket"}</span>
-            </Link>
-            <a
-              href="https://app.zackisch.com"
-              className="hidden sm:inline-flex h-9 px-3.5 rounded-full border border-[#DDD7CA] bg-white hover:bg-[#F7F5EF] text-xs font-semibold items-center gap-1 transition-colors"
-            >
-              <span>Dashboard</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1">{children}</main>
-
-      <footer className="bg-white border-t border-[#DDD7CA] py-10 mt-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 text-xs text-[#495A52]">
-          <div className="space-y-1">
-            <p className="font-semibold text-[#14231D]">
-              Zackisch Support Center (support.zackisch.com)
-            </p>
-            <p>
-              {isDe
-                ? "Selbstbedienungs-Hilfe und direkter Ticket-Support für Gastronomiebetriebe."
-                : "Self-service knowledge base and direct ticket support for hospitality venues."}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-4">
-            <a
-              href={`https://zackisch.com/${locale}/legal-notice`}
-              className="hover:underline"
-            >
-              {isDe ? "Impressum" : "Legal Notice"}
-            </a>
-            <a
-              href={`https://zackisch.com/${locale}/privacy-policy`}
-              className="hover:underline"
-            >
-              {isDe ? "Datenschutz" : "Privacy Policy"}
-            </a>
-            <a
-              href={`https://zackisch.com/${locale}/gtc`}
-              className="hover:underline"
-            >
-              {isDe ? "AGB" : "Terms"}
-            </a>
-            <a
-              href={`https://zackisch.com/${locale}/data-processing`}
-              className="hover:underline"
-            >
-              {isDe ? "Auftragsverarbeitung (AVV)" : "Data Processing (DPA)"}
-            </a>
-            <a
-              href={`https://zackisch.com/${locale}/accessibility`}
-              className="hover:underline"
-            >
-              {isDe ? "Barrierefreiheit" : "Accessibility"}
-            </a>
-          </div>
-        </div>
-      </footer>
-    </div>
+            <VStack gap={4} padding={6}>
+              <Divider />
+              <HStack justify="between" vAlign="center" gap={4} wrap="wrap">
+                <VStack gap={1}>
+                  <Text weight="semibold">
+                    Zackisch Support Center (support.zackisch.com)
+                  </Text>
+                  <Text color="secondary">
+                    {isDe
+                      ? "Selbstbedienungs-Hilfe und direkter Ticket-Support für Gastronomiebetriebe."
+                      : "Self-service knowledge base and direct ticket support for hospitality venues."}
+                  </Text>
+                </VStack>
+                <HStack gap={2} vAlign="center" wrap="wrap">
+                  <Button
+                    label={isDe ? "Impressum" : "Legal Notice"}
+                    variant="ghost"
+                    size="sm"
+                    href={`https://zackisch.com/${locale}/legal-notice`}
+                  />
+                  <Button
+                    label={isDe ? "Datenschutz" : "Privacy Policy"}
+                    variant="ghost"
+                    size="sm"
+                    href={`https://zackisch.com/${locale}/privacy-policy`}
+                  />
+                  <Button
+                    label={isDe ? "AGB" : "Terms"}
+                    variant="ghost"
+                    size="sm"
+                    href={`https://zackisch.com/${locale}/gtc`}
+                  />
+                  <Button
+                    label={
+                      isDe ? "Auftragsverarbeitung (AVV)" : "Data Processing (DPA)"
+                    }
+                    variant="ghost"
+                    size="sm"
+                    href={`https://zackisch.com/${locale}/data-processing`}
+                  />
+                  <Button
+                    label={isDe ? "Barrierefreiheit" : "Accessibility"}
+                    variant="ghost"
+                    size="sm"
+                    href={`https://zackisch.com/${locale}/accessibility`}
+                  />
+                </HStack>
+              </HStack>
+            </VStack>
+          </VStack>
+        </LayoutContent>
+      </Layout>
+    </AppShell>
   );
 }

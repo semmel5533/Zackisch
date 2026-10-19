@@ -25,7 +25,7 @@ Alle dynamischen Produktdaten werden über das gemeinsame Convex-Backend in `app
 
 ## Technische Grundlagen
 
-- **Frontend:** Next.js 16 mit App Router, React 19, TypeScript, Tailwind CSS 4, `next-intl`, zugänglichen Base-UI-Primitiven und konsistenten Zackisch-Komponenten.
+- **Frontend:** Next.js 16 mit App Router, React 19, TypeScript, Astryx Design System (`@astryxdesign/core`, `@stylexjs/stylex`, `@astryxdesign/theme-neutral`), Tailwind CSS 4, `next-intl`, Zackisch Monochrome-Theming (`zackisch-theme.tsx`) mit Poppins- und Inter-Typografie sowie Phosphor-Icons in Astryx-Icon-Komponenten.
 - **Hosting:** Cloudflare DNS und Edge-Plattform; alle vier Next.js-Anwendungen über Cloudflare Workers mit dem geprüften vinext-Adapter, wobei die öffentliche Website weitgehend vorgerenderte statische Inhalte ausliefert.
 - **Backend:** Eine Convex-Bereitstellung mit reaktiver Datenbank, serverseitigen Policies, Actions, Storage, regionenbewussten Datenmodellen und zentraler Authentifizierung.
 - **Zahlungen:** Stripe Connect zur Anbindung von Gastronomiebetrieben und Abwicklung unterstützter Zahlungsarten. Merchant-of-record, Direktzahlung/Plattformzahlung, Gebühren- und Steuerbehandlung sind in der final implementierten Vertrags- und Systemkonfiguration überprüft. Zahlbeträge, Gebühren und Zahlungszustände werden serverseitig validiert und reconciliert.

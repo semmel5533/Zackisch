@@ -8,28 +8,22 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import { sendEmailChangeOtpAction } from "@/actions/settings-actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Card } from "@astryxdesign/core/Card";
+import { VStack } from "@astryxdesign/core/VStack";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Text } from "@astryxdesign/core/Text";
+import { Button } from "@astryxdesign/core/Button";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { Divider } from "@astryxdesign/core/Divider";
+import { Spinner } from "@astryxdesign/core/Spinner";
+import { Icon } from "@astryxdesign/core/Icon";
 import { useTranslation } from "@/lib/i18n";
-import {
-  X,
-  CircleNotch,
-  ArrowLeft,
-  EnvelopeSimple,
-} from "@phosphor-icons/react";
+import { X, EnvelopeSimple } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
 function ChangeEmailConfirmForm() {
@@ -53,40 +47,38 @@ function ChangeEmailConfirmForm() {
   useEffect(() => {
     if (state.success) {
       toast.success(t("emailChangeConfirmSent" as any));
-      // Redirect to OTP page with userId, email and token
       router.push(
         `/change-email/otp?userId=${state.userId}&email=${encodeURIComponent(state.email as string)}&token=${state.token}`,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, router]);
+  }, [state, router, t]);
 
+  const [newEmail, setNewEmail] = useState("");
   const [fieldError, setFieldError] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("newEmail") as string;
-
     setFieldError("");
 
-    if (!email) {
+    if (!newEmail.trim()) {
       setFieldError(t("emailRequired" as any));
-      document.getElementById("newEmail")?.focus();
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail.trim())) {
       setFieldError(t("emailInvalid" as any));
-      document.getElementById("newEmail")?.focus();
       return;
     }
 
-    if (isDisposableEmail(email)) {
+    if (isDisposableEmail(newEmail.trim())) {
       setFieldError(t("disposableEmail" as any));
-      document.getElementById("newEmail")?.focus();
       return;
     }
+
+    const formData = new FormData();
+    formData.set("userId", userId || "");
+    formData.set("token", token || "");
+    formData.set("newEmail", newEmail.trim());
 
     startTransition(() => {
       dispatch(formData);
@@ -98,146 +90,109 @@ function ChangeEmailConfirmForm() {
   }
 
   return (
-    <>
-      <CardHeader className="flex-col items-start gap-1 pt-4">
-        <CardTitle className="text-2xl font-bold tracking-tight">
+    <VStack gap={4}>
+      <VStack gap={1}>
+        <Heading level={1}>
           {t("newEmailAddress" as any)}
-        </CardTitle>
-        <CardDescription className="text-muted-foreground">
+        </Heading>
+        <Text color="secondary">
           {t("newEmailAddressDesc" as any)}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={handleSubmit}
-          noValidate
-          className="flex flex-col gap-4"
-        >
-          <input type="hidden" name="userId" value={userId} />
-          <input type="hidden" name="token" value={token} />
+        </Text>
+      </VStack>
 
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="newEmail"
-              className="text-sm font-medium text-foreground"
-            >
-              {t("email")}
-            </label>
-            <Input
-              id="newEmail"
-              name="newEmail"
-              type="email"
-              placeholder={t("emailPlaceholder")}
-              disabled={isPending}
-              aria-invalid={!!fieldError}
-              aria-describedby={fieldError ? "newEmail-error" : undefined}
-              onChange={() => setFieldError("")}
-              className={fieldError ? "border-destructive" : undefined}
-            />
-            {fieldError && (
-              <span
-                id="newEmail-error"
-                role="alert"
-                className="text-sm font-medium text-destructive text-left w-full"
-              >
-                {fieldError}
-              </span>
-            )}
-          </div>
+      <form onSubmit={handleSubmit} noValidate>
+        <VStack gap={4}>
+          <TextInput
+            label={t("email")}
+            type="email"
+            value={newEmail}
+            onChange={(val) => {
+              setNewEmail(val);
+              setFieldError("");
+            }}
+            placeholder={t("emailPlaceholder")}
+            isRequired
+          />
+          {fieldError && (
+            <Text color="secondary" weight="semibold">
+              {fieldError}
+            </Text>
+          )}
 
           {state.error && (
-            <p
-              role="alert"
-              className="w-full text-left text-sm font-medium text-destructive"
-            >
+            <Text color="secondary" weight="semibold">
               {state.error}
-            </p>
+            </Text>
           )}
 
           <Button
+            label={t("requestVerificationCode" as any)}
+            variant="primary"
+            size="md"
             type="submit"
-            className="w-full gap-2 mt-4 text-base"
-            disabled={isPending}
-          >
-            {isPending ? (
-              <>
-                <CircleNotch className="w-5 h-5 animate-spin" weight="bold" />
-                {t("pleaseWait" as any)}
-              </>
-            ) : (
-              <>
-                <EnvelopeSimple className="w-5 h-5" weight="bold" />
-                {t("requestVerificationCode" as any)}
-              </>
-            )}
-          </Button>
-        </form>
-      </CardContent>
+            isLoading={isPending}
+            icon={<Icon icon={EnvelopeSimple} size="sm" />}
+            onClick={(e: any) => handleSubmit(e)}
+          />
+        </VStack>
+      </form>
 
-      <CardFooter className="justify-center pb-6 bg-transparent border-t border-border pt-6">
-        <p className="text-sm text-muted-foreground">
-          {t("changedMind" as any)}{" "}
-          <Link
-            href="/dashboard"
-            className="font-semibold text-foreground underline-offset-4 hover:underline"
-          >
-            {t("backToDashboard" as any)}
-          </Link>
-        </p>
-      </CardFooter>
-    </>
+      <Divider />
+
+      <HStack justify="center" vAlign="center" gap={1}>
+        <Text color="secondary">{t("changedMind" as any)}</Text>
+        <Link href="/dashboard" style={{ fontWeight: 600 }}>
+          {t("backToDashboard" as any)}
+        </Link>
+      </HStack>
+    </VStack>
   );
 }
 
 function InvalidLinkState() {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center py-8 text-center text-foreground">
-      <X className="w-12 h-12 text-destructive mb-4" />
-      <h2 className="text-xl font-semibold">{t("invalidToken" as any)}</h2>
-      <p className="text-muted-foreground mt-2">
+    <VStack gap={4} align="center">
+      <Icon icon={X} size="lg" color="error" />
+      <Heading level={2}>{t("invalidToken" as any)}</Heading>
+      <Text color="secondary">
         {t("invalidLinkEmailChangeDesc" as any)}
-      </p>
-      <div className="mt-6">
-        <Link href="/dashboard">
-          <Button type="button">{t("backToDashboard" as any)}</Button>
-        </Link>
-      </div>
-    </div>
+      </Text>
+      <Button
+        label={t("backToDashboard" as any)}
+        variant="primary"
+        size="md"
+        href="/dashboard"
+      />
+    </VStack>
   );
 }
 
 export default function ChangeEmailConfirmPage() {
-  const { t } = useTranslation();
-
   return (
-    <Card className="w-full bg-card text-card-foreground border-border shadow-sm rounded-[24px]">
-      <div className="w-full flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-        <div className="flex items-center">
-          <Image
+    <Card variant="default" padding={6}>
+      <VStack gap={6}>
+        <HStack justify="between" vAlign="center">
+          <img
             src="/combination_mark.svg"
-            alt="zakkig"
-            width={120}
-            height={40}
-            priority
-            loading="eager"
-            className="w-auto h-8 select-none"
+            alt="Zackisch"
+            style={{ height: 28, width: "auto" }}
           />
-        </div>
-        <RegionLanguageSwitcher variant="outline" />
-      </div>
+          <RegionLanguageSwitcher />
+        </HStack>
 
-      <Suspense
-        fallback={
-          <CardContent>
-            <div className="h-40 flex items-center justify-center">
-              <CircleNotch className="w-8 h-8 animate-spin text-muted-foreground" />
-            </div>
-          </CardContent>
-        }
-      >
-        <ChangeEmailConfirmForm />
-      </Suspense>
+        <Divider />
+
+        <Suspense
+          fallback={
+            <VStack gap={4} align="center" padding={6}>
+              <Spinner size="md" />
+            </VStack>
+          }
+        >
+          <ChangeEmailConfirmForm />
+        </Suspense>
+      </VStack>
     </Card>
   );
 }

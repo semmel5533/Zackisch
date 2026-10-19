@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "@/lib/convex";
-import { Toaster } from "sonner";
+import { ZackischThemeProvider } from "@/lib/zackisch-theme";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -36,10 +36,9 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${poppins.variable} ${inter.variable}`}>
       <body className="antialiased">
-        <ConvexClientProvider>
-          {children}
-          <Toaster position="top-right" richColors />
-        </ConvexClientProvider>
+        <ZackischThemeProvider>
+          <ConvexClientProvider>{children}</ConvexClientProvider>
+        </ZackischThemeProvider>
       </body>
     </html>
   );
