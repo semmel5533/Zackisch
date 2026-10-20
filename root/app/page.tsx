@@ -1,20 +1,12 @@
-import { AppShell } from "@astryxdesign/core/AppShell";
-import { Layout, LayoutContent } from "@astryxdesign/core/Layout";
-import { VStack } from "@astryxdesign/core/VStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-
 export default function Home() {
   return (
-    <AppShell height="fill" variant="surface">
-      <Layout height="fill">
-        <LayoutContent>
-          <VStack gap={2} hAlign="center" vAlign="center" height="100%">
-            <Heading level={1}>Zackisch</Heading>
-            <Text type="supporting">Next.js + Astryx Design System Starter</Text>
-          </VStack>
-        </LayoutContent>
-      </Layout>
-    </AppShell>
+    <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <h1 className="text-4xl font-bold tracking-tight">Zackisch</h1>
+        <p className="text-zinc-600 dark:text-zinc-400">
+          Next.js + Tailwind CSS
+        </p>
+      </div>
+    </main>
   );
 }

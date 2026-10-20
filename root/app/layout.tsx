@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
-import { ZackischThemeProvider } from "@/lib/zackisch-theme";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,7 +18,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Zackisch",
-  description: "Zackisch",
+  description: "Zackisch — Modernes Bestellen & Bezahlen in der Gastronomie",
 };
 
 export default function RootLayout({
@@ -30,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${poppins.variable} ${inter.variable}`}>
       <body className="antialiased">
-        <ZackischThemeProvider>{children}</ZackischThemeProvider>
+        {children}
       </body>
     </html>
   );
