@@ -1,11 +1,13 @@
 # Root marketing site — agent rules
 
+Prioritize the German owner decision journey: what Zackisch is, why the existing POS remains, how DIY onboarding works, compatible personal devices, cost/third-party fees, prerequisites, examples, and registration. Include real licensed photography of diverse hospitality contexts with documented asset provenance and descriptive alt text. Never fabricate testimonials or performance statistics; do not copy competitors' layouts. All visible language and regional links use consistent locale paths (`/de-de` and `/de-en`). Static routes `/de-de` and `/de-en` need canonical, hreflang, sitemap, noindex for private paths and accurate legal disclosure. Only mention completed product features on live copy. Test build, 320px/mobile, keyboard, contrast, reduced motion and link integrity.
 
-Prioritize the German owner decision journey: what Zackisch is, why the existing POS remains, how DIY onboarding works, compatible personal devices, cost/third-party fees, prerequisites, examples, and registration. Include real licensed photography of diverse hospitality contexts with documented asset provenance and descriptive alt text. Never fabricate testimonials or performance statistics; do not copy competitors' layouts. All visible language and regional links use `next-intl` keys. Static routes `/de-de` and `/de-en` need canonical, hreflang, sitemap, noindex for private paths and accurate legal disclosure. Only mention completed product features on live copy. Test build, 320px/mobile, keyboard, contrast, reduced motion and link integrity.
-
-## Legal, payment and privacy guardrails
-
-Follow root `AGENTS.md` and canonical `docs/germany-legal-and-regulatory.md`, `docs/privacy-and-data-governance.md`, and `docs/legal-pages-consents-and-contracts.md`. If this application handles checkout, Stripe, merchant registration, tax receipts or billing, also follow `docs/payments-and-stripe.md` and `docs/tax-invoicing-and-fiscalization.md`. Never assume a draft agreement is approved, or publish an unverified legal guarantee. Original Poppins-based wordmark and logo assets remain authoritative.
+## Strict Technical Guardrails
+1. **Zero Backend Coupling:** The marketing website is completely decoupled from Convex and Stripe client SDKs. Do NOT install `@convex-dev/*`, `convex`, or `@stripe/*` in `root/package.json`.
+2. **Calculator Model v3:** Only modify `lib/calculator.ts` with explicit reference to `docs/CALCULATOR_MODEL_SPEC.md`. Labor cost savings must remain permanently 0,00 €.
+3. **No AI-Generated Media:** Use only curated, verified hospitality photography listed in `docs/MEDIA_LICENSES.md`. Never prompt or generate synthetic portraits or dish images.
+4. **Legal Disclosures:** Follow `docs/LAUNCH_BLOCKERS.md` and keep pending legal data clearly designated as drafts awaiting official registration.
+5. **Git & Commit Conventions:** Use lowercase English technical commit messages, past tense, joined with `and`, authored by `Selim Eser <semmel5533@gmail.com>`. Never push or deploy without explicit user confirmation.
 
 <!-- ASTRYX:START -->
 Astryx v0.7.1 · 168 components
@@ -36,13 +38,3 @@ RULES:
   docs cli           commands, API reference, integration authoring
   upgrade --from <old version> --apply   run after a dependency bump
 <!-- ASTRYX:END -->
-
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
