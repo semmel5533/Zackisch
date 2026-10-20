@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
-import { headers } from "next/headers";
 import "./globals.css";
 import { ZackischThemeProvider } from "@/lib/zackisch-theme";
 
@@ -20,20 +19,17 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Zackisch",
-  description: "Zackisch — Digitales Bestell- und Bezahlsystem für die moderne Gastronomie.",
+  description: "Zackisch",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headerList = await headers();
-  const lang = headerList.get("x-locale") || "de-DE";
-
   return (
-    <html lang={lang} className={`${poppins.variable} ${inter.variable}`}>
-      <body className="antialiased min-h-screen bg-white text-[#111111]">
+    <html lang="de" className={`${poppins.variable} ${inter.variable}`}>
+      <body className="antialiased">
         <ZackischThemeProvider>{children}</ZackischThemeProvider>
       </body>
     </html>
