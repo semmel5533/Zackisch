@@ -87,3 +87,18 @@ Die Website demonstriert das Kernversprechen von Zackisch nicht in abstrakten Fe
 - [x] Bildmaterial: 100 % echte lizenzierte Fotos (Pexels / Unsplash) und originales Gründerfoto `selim_full.png`. Keine generativen KI-Personen.
 - [x] SEO & Internationalisierung: Vollständiges Zwei-Sprachen-System (`/de-de` und `/de-en`), echte HTTP-404 mit Sprachkontext, absolute Canonicals, `hreflang`, OpenGraph 1200x630, JSON-LD Schema.
 - [x] Riesiges SVG-Wordmark unter dem Footer auf Desktop (wie bei Tinder).
+
+---
+
+## 6. Region & Language Dialog & Motion Architecture
+
+- **Region & Language Dialog (`components/dialogs/region-language-dialog.tsx`):**
+  - Accessible `@base-ui/react` modal dialog with backdrop blur (`bg-black/60 backdrop-blur-sm`).
+  - Deutschland (DE) preselected and designated as the sole active operating region with an animated green pulse dot (`bg-emerald-500 animate-pulse`).
+  - Österreich (AT) and Schweiz (CH) clearly designated as coming soon ("Demnächst") with disabled interactive states.
+  - Seamless language switching (Deutsch / English) that preserves the current page pathname (`/de-de/*` <-> `/de-en/*`).
+  - Accessible via both the Desktop/Mobile Header pill (`🇩🇪 DE · Deutsch ▾`) and the Footer region link.
+
+- **Motion Architecture:**
+  - **Lenis Smooth Scroll (`components/motion/smooth-scroll.tsx`):** Inertia-based smooth scrolling on desktop viewports, automatically disabled when `prefers-reduced-motion: reduce` is active.
+  - **GSAP Scroll Reveals (`components/motion/gsap-reveals.tsx`):** `RevealOnScroll` and `AnimatedNumber` for fluid, organic viewport entrance transitions (`power3.out` easing, staggered delays).

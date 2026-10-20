@@ -7,6 +7,11 @@ import { HOMEPAGE_CONTENT, EXTERNAL_URLS, type Locale } from "@/lib/content/site
 import { constructMetadata } from "@/lib/seo";
 import { SignatureDemo } from "@/components/demo/signature-demo";
 import { PotentialCalculator } from "@/components/calculator/potential-calculator";
+import { VenueShowcase } from "@/components/home/venue-showcase";
+import { SmartEngineShowcase } from "@/components/home/smart-engine-showcase";
+import { RealitySplit } from "@/components/home/reality-split";
+import { SetupPricingStrip } from "@/components/home/setup-pricing-strip";
+import { RevealOnScroll } from "@/components/motion/gsap-reveals";
 import { RESEARCH_STUDIES } from "@/lib/research";
 
 export async function generateMetadata({
@@ -50,69 +55,72 @@ export default async function HomePage({
   const featuredStudies = RESEARCH_STUDIES.slice(0, 3);
 
   return (
-    <div className="w-full flex flex-col items-center">
-      {/* SEKTION 1 — HERO */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 lg:pt-20 pb-16 lg:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Hero Copy (Left) */}
-          <div className="lg:col-span-7 space-y-6 max-w-2xl">
-            {/* Qualifier Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FAF9F6] border border-[#E5E5E2] text-[#111111] shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-[#111111]" />
-              <span>{content.hero.qualifier}</span>
-            </div>
+    <div className="w-full flex flex-col items-center overflow-x-hidden">
+      {/* 1. HERO SECTION (AWWWARDS POSTER COMPOSITION) */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 lg:pt-24 pb-16 lg:pb-28">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          {/* Left Column: Bold Typography & Actions */}
+          <div className="lg:col-span-7 space-y-8 max-w-2xl">
+            <RevealOnScroll className="space-y-4">
+              {/* Qualifier Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-[#FAF9F6] border border-[#E5E5E2] text-[#111111] shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{content.hero.qualifier}</span>
+              </div>
 
-            {/* H1 (VERBATIM FOUNDER COPY) */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#111111] leading-[1.1]">
-              {content.hero.h1}
-            </h1>
+              {/* H1 (VERBATIM FOUNDER COPY) */}
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tighter text-[#111111] leading-[1.0] text-balance">
+                {content.hero.h1}
+              </h1>
 
-            {/* Subtitle (VERBATIM FOUNDER COPY) */}
-            <p className="text-lg sm:text-xl text-[#52525B] leading-relaxed">
-              {content.hero.subtitle}
-            </p>
+              {/* Subtitle (VERBATIM FOUNDER COPY) */}
+              <p className="text-lg sm:text-xl text-[#52525B] leading-relaxed max-w-xl">
+                {content.hero.subtitle}
+              </p>
+            </RevealOnScroll>
 
             {/* CTAs */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <RevealOnScroll delay={0.1} className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <a
                 href={EXTERNAL_URLS.signup}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 rounded-full bg-[#111111] text-white text-base font-bold hover:bg-black transition-all text-center shadow-md active:scale-98"
+                className="px-8 py-4 rounded-full bg-[#111111] text-white text-base font-bold hover:bg-black transition-all text-center shadow-md active:scale-98 cursor-pointer flex items-center justify-center gap-2 group"
               >
-                {content.hero.primaryCta}
+                <span>{content.hero.primaryCta}</span>
+                <span className="transition-transform group-hover:translate-x-1">→</span>
               </a>
               <a
                 href="#signature-demo"
-                className="px-6 py-4 rounded-full border border-[#E5E5E2] text-[#111111] hover:bg-[#F7F7F8] text-base font-semibold transition-all text-center"
+                className="px-6 py-4 rounded-full border border-[#E5E5E2] bg-white text-[#111111] hover:bg-[#FAF9F6] text-base font-semibold transition-all text-center cursor-pointer shadow-2xs"
               >
                 {content.hero.secondaryCta}
               </a>
-            </div>
+            </RevealOnScroll>
 
             {/* Compact Pricing Note */}
-            <div className="pt-3 border-t border-[#E5E5E2] text-xs text-[#646464] flex items-center gap-2 leading-relaxed">
-              <span className="text-emerald-700 font-bold">✓</span>
-              <span>{content.hero.pricingBadge}</span>
-            </div>
+            <RevealOnScroll delay={0.2} className="pt-4 border-t border-[#E5E5E2] text-xs text-[#646464] flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+              <span className="font-medium">{content.hero.pricingBadge}</span>
+            </RevealOnScroll>
           </div>
 
-          {/* Hero Visual Composition (Right) */}
+          {/* Right Column: Hero Visual Frame with Live QR Component */}
           <div className="lg:col-span-5 relative">
-            <div className="relative rounded-3xl overflow-hidden border border-[#E5E5E2] shadow-xl bg-stone-100 aspect-[4/5] sm:aspect-square lg:aspect-[4/5]">
+            <RevealOnScroll delay={0.15} className="relative rounded-3xl overflow-hidden border border-[#E5E5E2] shadow-2xl bg-stone-100 aspect-[4/5] sm:aspect-square lg:aspect-[4/5] group">
               <Image
                 src="/media/hero-hospitality.webp"
-                alt="Hospitality Dining"
+                alt="Hospitality Dining Atmosphere"
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-              {/* Floating QR Card Accent */}
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-white/40 shadow-lg flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#111111] rounded-xl flex items-center justify-center p-2 shrink-0">
+              {/* Floating Live Table Indicator */}
+              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-white/40 shadow-xl flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#111111] rounded-xl flex items-center justify-center p-2.5 shrink-0 shadow-sm">
                   <Image
                     src="/branding/brand_mark.svg"
                     alt=""
@@ -122,292 +130,88 @@ export default async function HomePage({
                   />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs font-bold text-[#111111] truncate">
-                    {isDe ? "Tisch 04 · Live-Menü" : "Table 04 · Live Menu"}
+                  <div className="text-xs font-bold text-[#111111] truncate flex items-center gap-2">
+                    <span>{isDe ? "Tisch 04 · Live-Speisekarte" : "Table 04 · Digital Menu"}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   </div>
                   <div className="text-[11px] text-[#646464] truncate">
-                    {isDe ? "Scannen & direkt loslegen" : "Scan to discover & pay"}
+                    {isDe ? "QR-Code scannen & ohne App bestellen" : "Scan QR code & order without app"}
                   </div>
                 </div>
               </div>
-            </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
 
-      {/* SEKTION 2 — SOCIETY & WAIT TIMES (27 % STAT) */}
-      <section className="w-full bg-[#FAF9F6] border-y border-[#E5E5E2] py-16 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
-                {content.society.badge}
-              </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#111111]">
-                {content.society.h2}
-              </h2>
-              <p className="text-base text-[#52525B] leading-relaxed">
-                {content.society.lead}
-              </p>
-              <div className="pt-2">
-                <span className="inline-block text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                  {content.society.conclusion}
-                </span>
-              </div>
-            </div>
+      {/* 2. REALITY SPLIT (27 % WAITING LOSS & 45 % CASH HABIT) */}
+      <RealitySplit locale={locale} />
 
-            <div className="lg:col-span-5 p-8 rounded-3xl bg-white border border-[#E5E5E2] shadow-xs space-y-3">
-              <div className="text-5xl sm:text-6xl font-extrabold tracking-tight text-[#111111] font-mono">
-                {content.society.statNumber}
-              </div>
-              <p className="text-sm font-semibold text-[#111111] leading-snug">
-                {content.society.statLabel}
-              </p>
-              <div className="pt-3 border-t border-[#E5E5E2] text-xs text-[#646464] space-y-1">
-                <div className="font-semibold text-[#111111]">{content.society.source}</div>
-                <div className="text-[11px] leading-relaxed">{content.society.sourceNote}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SEKTION 3 — MULTI-VENUE SOLUTIONS */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="max-w-2xl mx-auto text-center space-y-3 mb-12">
+      {/* 3. MULTI-VENUE OPERATING CONTEXTS (INTERACTIVE SHOWCASE) */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 space-y-12">
+        <RevealOnScroll className="max-w-2xl mx-auto text-center space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
             {content.solutionsIntro.badge}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111111]">
             {content.solutionsIntro.h2}
           </h2>
-          <p className="text-base text-[#52525B] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#52525B]">
             {content.solutionsIntro.lead}
           </p>
-        </div>
+        </RevealOnScroll>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {content.solutionsIntro.modes.map((mode) => (
-            <Link
-              key={mode.id}
-              href={`/${locale}${mode.href}`}
-              className="group rounded-3xl border border-[#E5E5E2] bg-white overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
-            >
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
-                <Image
-                  src={mode.image}
-                  alt={mode.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#646464]">
-                    {mode.tagline}
-                  </div>
-                  <h3 className="text-lg font-bold text-[#111111] mt-1 group-hover:text-black">
-                    {mode.title}
-                  </h3>
-                  <p className="text-xs text-[#52525B] mt-2 leading-relaxed">
-                    {mode.description}
-                  </p>
-                </div>
-                <div className="pt-4 text-xs font-bold text-[#111111] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  <span>{isDe ? "Mehr erfahren" : "Learn more"}</span>
-                  <span>→</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <VenueShowcase locale={locale} />
       </section>
 
-      {/* SEKTION 4 — THE SIGNATURE DEMO ("EINE BESTELLUNG. DREI PERSPEKTIVEN.") */}
-      <section id="signature-demo" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 scroll-mt-24">
-        <div className="max-w-2xl mx-auto text-center space-y-3 mb-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+      {/* 4. THE SIGNATURE DEMO CONSOLE ("EINE BESTELLUNG. DREI PERSPEKTIVEN.") */}
+      <section id="signature-demo" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 scroll-mt-24">
+        <RevealOnScroll className="max-w-2xl mx-auto text-center space-y-3 mb-12">
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3.5 py-1.5 rounded-full border border-emerald-200">
             {content.signatureDemo.badge}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111111]">
             {content.signatureDemo.h2}
           </h2>
-          <p className="text-base text-[#52525B]">
+          <p className="text-base sm:text-lg text-[#52525B]">
             {content.signatureDemo.subtitle}
           </p>
-        </div>
+        </RevealOnScroll>
 
         <SignatureDemo locale={locale} />
       </section>
 
-      {/* SEKTION 5 — SMART MENU FEATURES */}
-      <section className="w-full bg-[#FAF9F6] border-y border-[#E5E5E2] py-20">
+      {/* 5. THE SMART ENGINE (FEATURES DEMONSTRATION) */}
+      <section className="w-full bg-[#FAF9F6] border-y border-[#E5E5E2] py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center space-y-3 mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
-              {content.smartMenu.badge}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
-              {content.smartMenu.h2}
-            </h2>
-            <p className="text-base text-[#52525B]">
-              {content.smartMenu.lead}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {content.smartMenu.features.map((feat) => (
-              <div
-                key={feat.id}
-                className="p-6 rounded-3xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col justify-between"
-              >
-                <div>
-                  <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#F4F4F5] text-[#111111] mb-3">
-                    {feat.badge}
-                  </span>
-                  <h3 className="text-base font-bold text-[#111111]">
-                    {feat.title}
-                  </h3>
-                  <p className="text-xs text-[#52525B] mt-2 leading-relaxed">
-                    {feat.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 text-center text-xs text-[#646464] max-w-xl mx-auto">
-            {content.smartMenu.legalNote}
-          </div>
+          <SmartEngineShowcase locale={locale} />
         </div>
       </section>
 
-      {/* SEKTION 6 — HYBRID SERVICE & CASH INTEGRATION (45 % CASH STAT) */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
-              {content.freedom.badge}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
-              {content.freedom.h2}
-            </h2>
-            <p className="text-base text-[#52525B] leading-relaxed">
-              {content.freedom.lead}
-            </p>
-          </div>
-
-          <div className="lg:col-span-5 p-8 rounded-3xl bg-stone-50 border border-[#E5E5E2] space-y-3">
-            <div className="text-5xl font-extrabold text-[#111111] font-mono">
-              {content.freedom.factNumber}
-            </div>
-            <p className="text-sm font-semibold text-[#111111]">
-              {content.freedom.factLabel}
-            </p>
-            <div className="pt-3 border-t border-[#E5E5E2] text-xs text-[#646464]">
-              {content.freedom.factSource}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SEKTION 7 — ZERO FRICTION SETUP */}
-      <section className="w-full bg-[#FAF9F6] border-y border-[#E5E5E2] py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center space-y-3 mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
-              {content.setup.badge}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
-              {content.setup.h2}
-            </h2>
-            <p className="text-base text-[#52525B]">
-              {content.setup.lead}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {content.setup.points.map((pt, i) => (
-              <div
-                key={pt.title}
-                className="p-6 rounded-3xl bg-white border border-[#E5E5E2] space-y-2 shadow-xs"
-              >
-                <div className="text-xs font-mono font-bold text-[#646464]">
-                  0{i + 1}
-                </div>
-                <h3 className="text-base font-bold text-[#111111]">{pt.title}</h3>
-                <p className="text-xs text-[#52525B] leading-relaxed">{pt.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SEKTION 8 — PRICING OVERVIEW */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
-              {content.pricing.badge}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
-              {content.pricing.h2}
-            </h2>
-            <p className="text-base text-[#52525B] leading-relaxed">
-              {content.pricing.copy}
-            </p>
-            <div className="pt-2 text-xs text-[#646464] italic">
-              {content.pricing.seasonNote}
-            </div>
-            <div className="pt-3">
-              <Link
-                href={`/${locale}/pricing`}
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-[#111111] hover:underline"
-              >
-                <span>{content.pricing.detailsLink}</span>
-                <span>→</span>
-              </Link>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 p-8 rounded-3xl bg-[#111111] text-white shadow-xl space-y-4">
-            <div className="text-6xl font-extrabold font-mono tracking-tight text-white">
-              {content.pricing.rate}
-            </div>
-            <div className="text-sm font-semibold text-stone-200">
-              {content.pricing.rateLabel}
-            </div>
-            <p className="text-xs text-stone-400 pt-2 border-t border-stone-800">
-              {isDe
-                ? "Auf den Bestellwert ohne Trinkgeld. Zzgl. Stripe-Zahlungsabwicklung."
-                : "Calculated on food & drink subtotal excluding tips. Plus standard Stripe processing."}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* SEKTION 9 — REVENUE POTENTIAL CALCULATOR v3 */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="max-w-2xl mx-auto text-center space-y-3 mb-10">
+      {/* 6. REVENUE POTENTIAL CALCULATOR v3 (MATHEMATICAL TERMINAL) */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <RevealOnScroll className="max-w-2xl mx-auto text-center space-y-3 mb-12">
           <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
             {content.calculator.badge}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111111]">
             {content.calculator.h2}
           </h2>
-          <p className="text-base text-[#52525B]">
+          <p className="text-base sm:text-lg text-[#52525B]">
             {content.calculator.lead}
           </p>
-        </div>
+        </RevealOnScroll>
 
         <PotentialCalculator locale={locale} />
       </section>
 
-      {/* SEKTION 10 — RESEARCH EVIDENCE */}
-      <section className="w-full bg-[#FAF9F6] border-y border-[#E5E5E2] py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      {/* 7. ZERO-FRICTION SETUP & 2% FLAT PRICING */}
+      <SetupPricingStrip locale={locale} />
+
+      {/* 8. SCIENTIFIC EVIDENCE & STUDIES */}
+      <section className="w-full bg-[#FAF9F6] border-y border-[#E5E5E2] py-20 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <RevealOnScroll className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="max-w-xl space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
                 {content.research.badge}
@@ -425,29 +229,30 @@ export default async function HomePage({
             >
               {content.research.cta} →
             </Link>
-          </div>
+          </RevealOnScroll>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredStudies.map((st) => (
-              <div
+            {featuredStudies.map((st, i) => (
+              <RevealOnScroll
                 key={st.id}
-                className="p-6 rounded-3xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col justify-between"
+                delay={i * 0.1}
+                className="p-6 sm:p-8 rounded-3xl bg-white border border-[#E5E5E2] shadow-xs flex flex-col justify-between space-y-4"
               >
-                <div>
-                  <div className="flex items-center justify-between text-xs text-[#646464] mb-2 font-mono">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs text-[#646464] font-mono">
                     <span>{st.id} · {st.year}</span>
                     <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-stone-100">
                       {st.type}
                     </span>
                   </div>
-                  <h3 className="font-bold text-sm text-[#111111] leading-snug">
+                  <h3 className="font-bold text-sm sm:text-base text-[#111111] leading-snug">
                     {st.title}
                   </h3>
-                  <p className="text-xs text-[#52525B] mt-3 leading-relaxed">
+                  <p className="text-xs text-[#52525B] leading-relaxed">
                     {st.claim[locale === "de-de" ? "de" : "en"]}
                   </p>
                 </div>
-                <div className="pt-4 border-t border-[#E5E5E2] mt-4 flex items-center justify-between">
+                <div className="pt-4 border-t border-[#E5E5E2] flex items-center justify-between">
                   <span className="text-[11px] text-[#646464]">{st.authors}</span>
                   <a
                     href={st.originalUrl}
@@ -459,37 +264,38 @@ export default async function HomePage({
                     <span className="text-[10px]">↗</span>
                   </a>
                 </div>
-              </div>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SEKTION 11 — FOUNDER STORY */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#FAF9F6] border border-[#E5E5E2] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-8 space-y-4">
+      {/* 9. FOUNDER STORY (SELIM ESER, MANNHEIM) */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <RevealOnScroll className="p-8 sm:p-12 lg:p-16 rounded-3xl bg-[#FAF9F6] border border-[#E5E5E2] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="lg:col-span-8 space-y-6">
             <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
               {content.founder.badge}
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#111111]">
               {content.founder.h2}
             </h2>
-            <blockquote className="text-base sm:text-lg text-[#111111] font-semibold italic border-l-2 border-[#111111] pl-4 my-3 leading-relaxed">
+            <blockquote className="text-base sm:text-xl text-[#111111] font-semibold italic border-l-2 border-[#111111] pl-5 my-4 leading-relaxed">
               "{content.founder.quote}"
             </blockquote>
-            <p className="text-sm sm:text-base text-[#52525B] leading-relaxed">
+            <p className="text-sm sm:text-base text-[#52525B] leading-relaxed max-w-2xl">
               {content.founder.story}
             </p>
-            <div className="pt-3 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#646464]">
-              <span>Selim Eser · Gründer von Zackisch</span>
+            <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-semibold text-[#646464]">
+              <span className="text-[#111111] font-bold">Selim Eser</span>
+              <span>· Gründer von Zackisch</span>
               <span className="text-stone-300">•</span>
               <span>{content.founder.institution}</span>
             </div>
           </div>
 
           <div className="lg:col-span-4 flex justify-center">
-            <div className="relative w-48 sm:w-56 aspect-[3/4] rounded-2xl overflow-hidden border border-[#E5E5E2] shadow-md bg-stone-100">
+            <div className="relative w-48 sm:w-56 aspect-[3/4] rounded-2xl overflow-hidden border border-[#E5E5E2] shadow-lg bg-stone-100">
               <Image
                 src="/derived/selim_full.webp"
                 alt="Selim Eser"
@@ -499,33 +305,33 @@ export default async function HomePage({
               />
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
-      {/* SEKTION 12 — FAQ & FINAL ACCORDION */}
-      <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center space-y-2 mb-10">
+      {/* 10. FAQ ACCORDION */}
+      <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:pb-24">
+        <RevealOnScroll className="text-center space-y-2 mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-[#646464]">
             {content.faq.badge}
           </span>
-          <h2 className="text-3xl font-bold tracking-tight text-[#111111]">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111111]">
             {content.faq.h2}
           </h2>
-        </div>
+        </RevealOnScroll>
 
         <div className="space-y-3">
           {content.faq.questions.map((faq, i) => (
             <details
               key={i}
-              className="group p-5 rounded-2xl bg-white border border-[#E5E5E2] [&_summary::-webkit-details-marker]:hidden cursor-pointer shadow-2xs"
+              className="group p-5 sm:p-6 rounded-2xl bg-white border border-[#E5E5E2] [&_summary::-webkit-details-marker]:hidden cursor-pointer shadow-2xs hover:border-stone-400 transition-colors"
             >
-              <summary className="flex items-center justify-between text-sm font-bold text-[#111111] focus:outline-none">
+              <summary className="flex items-center justify-between text-sm sm:text-base font-bold text-[#111111] focus:outline-none">
                 <span>{faq.q}</span>
-                <span className="transition-transform group-open:rotate-180 text-stone-400">
+                <span className="transition-transform group-open:rotate-180 text-stone-400 text-sm">
                   ↓
                 </span>
               </summary>
-              <p className="text-xs sm:text-sm text-[#52525B] leading-relaxed mt-3 pt-3 border-t border-[#E5E5E2]">
+              <p className="text-xs sm:text-sm text-[#52525B] leading-relaxed mt-4 pt-4 border-t border-[#E5E5E2]">
                 {faq.a}
               </p>
             </details>

@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { EXTERNAL_URLS, type Locale } from "@/lib/content/site-data";
+import { RegionLanguageDialog } from "@/components/dialogs/region-language-dialog";
 
 interface FooterProps {
   locale: Locale;
@@ -234,24 +235,7 @@ export function Footer({ locale }: FooterProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 text-stone-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span>Region: Deutschland (DE)</span>
-            </span>
-            <div className="flex items-center gap-2 border border-stone-800 rounded-lg p-1 bg-stone-900 text-stone-300">
-              <Link
-                href={`/de-de`}
-                className={`px-2 py-0.5 rounded ${isDe ? "bg-white text-[#111111] font-bold" : "hover:text-white"}`}
-              >
-                DE
-              </Link>
-              <Link
-                href={`/de-en`}
-                className={`px-2 py-0.5 rounded ${!isDe ? "bg-white text-[#111111] font-bold" : "hover:text-white"}`}
-              >
-                EN
-              </Link>
-            </div>
+            <RegionLanguageDialog locale={locale} variant="footer" />
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SITE_NAVIGATION, EXTERNAL_URLS, type Locale } from "@/lib/content/site-data";
+import { RegionLanguageDialog } from "@/components/dialogs/region-language-dialog";
 
 interface HeaderProps {
   locale: Locale;
@@ -205,27 +206,10 @@ export function Header({ locale }: HeaderProps) {
           </div>
         </nav>
 
-        {/* Right CTA Area & Language Switcher */}
+        {/* Right CTA Area & Region/Language Dialog */}
         <div className="hidden sm:flex items-center gap-3">
-          {/* Language Switch */}
-          <div className="flex items-center border border-[#E5E5E2] rounded-xl p-0.5 bg-[#FAF9F6] text-xs font-semibold">
-            <Link
-              href={getSwitchedLocalePath("de-de")}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                isDe ? "bg-white text-[#111111] shadow-2xs font-bold" : "text-[#646464] hover:text-[#111111]"
-              }`}
-            >
-              DE
-            </Link>
-            <Link
-              href={getSwitchedLocalePath("de-en")}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                !isDe ? "bg-white text-[#111111] shadow-2xs font-bold" : "text-[#646464] hover:text-[#111111]"
-              }`}
-            >
-              EN
-            </Link>
-          </div>
+          {/* Region & Language Dialog */}
+          <RegionLanguageDialog locale={locale} />
 
           {/* Login button */}
           <a
@@ -248,23 +232,9 @@ export function Header({ locale }: HeaderProps) {
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button & Region/Language */}
         <div className="flex sm:hidden items-center gap-2">
-          {/* Language Switch for Mobile */}
-          <div className="flex items-center border border-[#E5E5E2] rounded-lg p-0.5 bg-[#FAF9F6] text-xs font-semibold">
-            <Link
-              href={getSwitchedLocalePath("de-de")}
-              className={`px-2 py-0.5 rounded ${isDe ? "bg-white text-[#111111] font-bold shadow-2xs" : "text-[#646464]"}`}
-            >
-              DE
-            </Link>
-            <Link
-              href={getSwitchedLocalePath("de-en")}
-              className={`px-2 py-0.5 rounded ${!isDe ? "bg-white text-[#111111] font-bold shadow-2xs" : "text-[#646464]"}`}
-            >
-              EN
-            </Link>
-          </div>
+          <RegionLanguageDialog locale={locale} />
 
           <button
             type="button"

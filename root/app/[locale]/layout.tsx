@@ -2,6 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { generateOrganizationJsonLd, generateSoftwareApplicationJsonLd } from "@/lib/seo";
 import type { Locale } from "@/lib/content/site-data";
 
@@ -44,11 +45,13 @@ export default async function LocaleLayout({
         {locale === "de-de" ? "Direkt zum Inhalt springen" : "Skip to main content"}
       </a>
 
-      <Header locale={locale} />
-      <main id="main-content" className="flex-1 focus:outline-none">
-        {children}
-      </main>
-      <Footer locale={locale} />
+      <SmoothScroll>
+        <Header locale={locale} />
+        <main id="main-content" className="flex-1 focus:outline-none">
+          {children}
+        </main>
+        <Footer locale={locale} />
+      </SmoothScroll>
     </div>
   );
 }
