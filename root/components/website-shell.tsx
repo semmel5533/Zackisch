@@ -83,6 +83,8 @@ export function WebsiteShell({
             <p className="footer-heading">{c.footerLegal}</p>
             <Link href={`/${locale}/legal-notice`}>{c.imprint}</Link>
             <Link href={`/${locale}/privacy`}>{c.privacy}</Link>
+            <Link href={`/${locale}/gtc`}>{c.terms}</Link>
+            <Link href={`/${locale}/guest-terms`}>{c.guestTerms}</Link>
             <PrivacySettings copy={c} />
           </div>
         </div>

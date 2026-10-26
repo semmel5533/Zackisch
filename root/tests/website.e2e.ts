@@ -131,11 +131,46 @@ for (const [locale, title, privacy] of [
     await expect(browser).toHaveURL(`/${locale}/privacy`);
     const state = await browser.evaluate(() => ({
       overflow: document.documentElement.scrollWidth > innerWidth,
-      robots: document
-        .querySelector('meta[name="robots"]')
-        ?.getAttribute("content"),
+      robots:
+        document
+          .querySelector('meta[name="robots"]')
+          ?.getAttribute("content") ?? null,
     }));
     expect(state.overflow).toBe(false);
     expect(state.robots).not.toContain("noindex");
+  });
+}
+
+for (const [locale, merchant, guest] of [
+  ["de-de", "Betreibervertrag", "Gastbestellung"],
+  ["de-en", "Merchant agreement", "Guest ordering"],
+]) {
+  test(`${locale} distinguishes merchant agreement and guest information`, async ({
+    app,
+    screen,
+    browser,
+  }) => {
+    await browser.setViewport({ width: 320, height: 800 });
+    await app.open(`/${locale}`);
+    await screen.getByRole("link", merchant, { exact: true }).tap();
+    await expect(browser).toHaveURL(`/${locale}/gtc`);
+    expect(
+      await browser.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await expect(
+      screen.getByRole(
+        "heading",
+        locale === "de-de"
+          ? "Nutzungsbedingungen für Betreiber"
+          : "Merchant terms of service",
+      ),
+    ).toBeVisible();
+    await screen.getByRole("link", guest, { exact: true }).tap();
+    await expect(browser).toHaveURL(`/${locale}/guest-terms`);
+    await expect(
+      screen.getByRole("link", "§ 312j BGB", { exact: true }),
+    ).toBeVisible();
   });
 }

@@ -50,7 +50,9 @@ export default async function InformationPage({
           </section>
         ))}
         {(paramsValue.slug === "legal-notice" ||
-          paramsValue.slug === "privacy") && (
+          paramsValue.slug === "privacy" ||
+          paramsValue.slug === "gtc" ||
+          paramsValue.slug === "guest-terms") && (
           <section>
             <h2>{c.legalSources}</h2>
             <ul>

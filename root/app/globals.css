@@ -112,7 +112,7 @@ p { text-wrap: pretty; }
 .dialog-title { font-size: 1.5rem; font-weight: 700; }
 .mobile-navigation nav { display: flex; flex-direction: column; }
 .mobile-navigation nav a { padding-block: var(--zk-space-3); }
-.article { max-width: 760px; min-height: 55vh; }
+.article { max-width: 760px; min-height: 55vh; overflow-wrap: anywhere; hyphens: auto; }
 .article h1 { font-size: clamp(2.75rem, 4vw, 3.25rem); }
 .article > .lead { margin-block: var(--zk-space-8) var(--zk-space-12); }
 .article section { margin-bottom: var(--zk-space-12); }

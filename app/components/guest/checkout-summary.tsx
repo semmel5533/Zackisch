@@ -53,8 +53,8 @@ export function CheckoutSummary({
           {t("zakkigHost")}
         </a>
         {t("paymentDisclaimerSuffix")} {t("agreeToTermsPrefix")}
-        <a href={t("termsUrl")} target="_blank" rel="noreferrer">
-          {t("termsGtc")}
+        <a href={t("guestTermsUrl")} target="_blank" rel="noreferrer">
+          {t("guestTermsLabel")}
         </a>
         {t("agreeToTermsMiddle")}
         <a href={t("privacyUrl")} target="_blank" rel="noreferrer">

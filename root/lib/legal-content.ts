@@ -171,6 +171,30 @@ export const legalPages = {
 } as const;
 
 export const legalSources = {
+  gtc: [
+    {
+      label: "§ 307 BGB",
+      url: "https://www.gesetze-im-internet.de/bgb/__307.html",
+    },
+    {
+      label: "§ 314 BGB",
+      url: "https://www.gesetze-im-internet.de/bgb/__314.html",
+    },
+    {
+      label: "Stripe Connected Account Agreement",
+      url: "https://stripe.com/legal/connect-account",
+    },
+  ],
+  "guest-terms": [
+    {
+      label: "§ 312j BGB",
+      url: "https://www.gesetze-im-internet.de/bgb/__312j.html",
+    },
+    {
+      label: "§ 312g BGB",
+      url: "https://www.gesetze-im-internet.de/bgb/__312g.html",
+    },
+  ],
   "legal-notice": [
     {
       label: "§ 5 DDG",

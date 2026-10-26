@@ -1,3 +1,5 @@
+import { guestTerms } from "./guest-terms";
+import { merchantTerms } from "./merchant-terms";
 import { legalPages } from "./legal-content";
 export const locales = ["de-de", "de-en"] as const;
 export type Locale = (typeof locales)[number];
@@ -14,6 +16,8 @@ export const pageSlugs = [
   "contact",
   "legal-notice",
   "privacy",
+  "gtc",
+  "guest-terms",
 ] as const;
 export type PageSlug = (typeof pageSlugs)[number];
 export const content = {
@@ -139,6 +143,8 @@ export const content = {
     contact: "Kontakt",
     research: "Forschung & Quellen",
     legalSources: "Rechtsquellen und weiterführende Informationen",
+    guestTerms: "Gastbestellung",
+    terms: "Betreibervertrag",
     imprint: "Impressum",
     privacy: "Datenschutz",
     privacySettings: "Datenschutzeinstellungen",
@@ -196,6 +202,8 @@ export const content = {
         sections: [],
       },
       ...legalPages["de-de"],
+      ...merchantTerms["de-de"],
+      ...guestTerms["de-de"],
     },
     notFound: "Diese Seite gibt es nicht.",
     notFoundText: "Prüfe die Adresse oder gehe zurück zur Startseite.",
@@ -322,6 +330,8 @@ export const content = {
     contact: "Contact",
     research: "Research & sources",
     legalSources: "Legal references and further information",
+    guestTerms: "Guest ordering",
+    terms: "Merchant agreement",
     imprint: "Legal notice",
     privacy: "Privacy",
     privacySettings: "Privacy settings",
@@ -379,6 +389,8 @@ export const content = {
         sections: [],
       },
       ...legalPages["de-en"],
+      ...merchantTerms["de-en"],
+      ...guestTerms["de-en"],
     },
     notFound: "This page doesn’t exist.",
     notFoundText: "Check the address or return to the homepage.",
