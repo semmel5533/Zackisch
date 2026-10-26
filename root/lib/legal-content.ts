@@ -171,6 +171,25 @@ export const legalPages = {
 } as const;
 
 export const legalSources = {
+  "privacy-policy": [
+    {
+      label: "EU 2016/679",
+      url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+    },
+    {
+      label: "§ 25 TDDDG",
+      url: "https://www.gesetze-im-internet.de/ttdsg/__25.html",
+    },
+    {
+      label: "§ 14b UStG",
+      url: "https://www.gesetze-im-internet.de/ustg_1980/__14b.html",
+    },
+    {
+      label: "§ 147 AO",
+      url: "https://www.gesetze-im-internet.de/ao_1977/__147.html",
+    },
+    { label: "Stripe Privacy", url: "https://stripe.com/privacy" },
+  ],
   gtc: [
     {
       label: "§ 307 BGB",

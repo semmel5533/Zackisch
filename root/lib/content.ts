@@ -1,3 +1,4 @@
+import { platformPrivacy } from "./platform-privacy";
 import { guestTerms } from "./guest-terms";
 import { merchantTerms } from "./merchant-terms";
 import { legalPages } from "./legal-content";
@@ -16,6 +17,7 @@ export const pageSlugs = [
   "contact",
   "legal-notice",
   "privacy",
+  "privacy-policy",
   "gtc",
   "guest-terms",
 ] as const;
@@ -146,6 +148,7 @@ export const content = {
     guestTerms: "Gastbestellung",
     terms: "Betreibervertrag",
     imprint: "Impressum",
+    platformPrivacy: "Plattform-Datenschutz",
     privacy: "Datenschutz",
     privacySettings: "Datenschutzeinstellungen",
     privacyTitle: "Deine Wahl zur Website",
@@ -202,6 +205,7 @@ export const content = {
         sections: [],
       },
       ...legalPages["de-de"],
+      ...platformPrivacy["de-de"],
       ...merchantTerms["de-de"],
       ...guestTerms["de-de"],
     },
@@ -333,6 +337,7 @@ export const content = {
     guestTerms: "Guest ordering",
     terms: "Merchant agreement",
     imprint: "Legal notice",
+    platformPrivacy: "Platform privacy",
     privacy: "Privacy",
     privacySettings: "Privacy settings",
     privacyTitle: "Your choices on this website",
@@ -389,6 +394,7 @@ export const content = {
         sections: [],
       },
       ...legalPages["de-en"],
+      ...platformPrivacy["de-en"],
       ...merchantTerms["de-en"],
       ...guestTerms["de-en"],
     },

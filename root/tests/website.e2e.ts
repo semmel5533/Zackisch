@@ -174,3 +174,40 @@ for (const [locale, merchant, guest] of [
     ).toBeVisible();
   });
 }
+
+for (const [locale, label] of [
+  ["de-de", "Plattform-Datenschutz"],
+  ["de-en", "Platform privacy"],
+]) {
+  test(`${locale} opens platform privacy separately from website privacy`, async ({
+    app,
+    browser,
+    screen,
+  }) => {
+    await browser.setViewport({ width: 320, height: 800 });
+    await app.open(`/${locale}`);
+    await screen.getByRole("link", label, { exact: true }).tap();
+    await expect(browser).toHaveURL(`/${locale}/privacy-policy`);
+    await expect(
+      screen.getByRole(
+        "heading",
+        locale === "de-de"
+          ? "Datenschutz für die Zackisch-Plattform"
+          : "Privacy for the Zackisch platform",
+      ),
+    ).toBeVisible();
+    await expect(
+      screen.getByRole(
+        "heading",
+        locale === "de-de"
+          ? "Support und interne Bearbeitung"
+          : "Support and internal handling",
+      ),
+    ).toBeVisible();
+    expect(
+      await browser.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  });
+}
