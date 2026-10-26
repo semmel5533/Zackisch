@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "type": "module",
   "private": true,
   "scripts": {
@@ -14,7 +14,11 @@
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",
     "check:cloudflare": "vinext-cloudflare deploy --dry-run",
-    "deploy:cloudflare": "vinext-cloudflare deploy"
+    "deploy:cloudflare": "vinext-cloudflare deploy",
+    "predev": "node ../scripts/sync-brand-assets.mjs app",
+    "prebuild": "node ../scripts/sync-brand-assets.mjs app",
+    "prebuild:cloudflare": "node ../scripts/sync-brand-assets.mjs app",
+    "predev:cloudflare": "node ../scripts/sync-brand-assets.mjs app"
   },
   "dependencies": {
     "@astryxdesign/cli": "^0.7.1",

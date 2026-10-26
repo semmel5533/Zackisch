@@ -67,3 +67,6 @@ node_modules/
 /app/public/zackisch/
 /support/public/zackisch/
 /internal/public/zackisch/
+
+# Per-application E2E runner artifacts
+**/.e2e/

@@ -1,14 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Globe } from "@phosphor-icons/react";
-import { Button } from "@astryxdesign/core/Button";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Text } from "@astryxdesign/core/Text";
-import { Icon } from "@astryxdesign/core/Icon";
-import { SegmentedControl, SegmentedControlItem } from "@astryxdesign/core/SegmentedControl";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
+import { ChoiceGroup } from "@/components/ui/choice-group";
 import { useTranslation } from "@/lib/i18n";
 import { useLanguageStore } from "@/store/language-store";
 
@@ -16,94 +12,65 @@ interface LanguageSwitcherProps {
   className?: string;
   variant?: "primary" | "secondary" | "ghost" | "destructive";
   size?: "sm" | "md" | "lg";
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export function LanguageSwitcher({
   variant = "secondary",
   size = "lg",
   children,
+  className,
 }: LanguageSwitcherProps) {
   const [open, setOpen] = useState(false);
   const { locale, setLocale } = useLanguageStore();
   const [draftLocale, setDraftLocale] = useState(locale);
   const { t } = useTranslation();
-
-  function handleOpen() {
-    setDraftLocale(locale);
-    setOpen(true);
-  }
-
-  function handleSave() {
-    setLocale(draftLocale);
-    setOpen(false);
-  }
-
   return (
-    <>
-      {children ? (
+    <Modal
+      open={open}
+      onOpenChange={(next) => {
+        if (next) setDraftLocale(locale);
+        setOpen(next);
+      }}
+      title={t("languageSelectorTitle")}
+      description={t("languageSelectorDescription")}
+      closeLabel={t("close")}
+      trigger={
         <Button
           variant={variant}
           size={size}
-          label={t("languageSelectorTitle")}
-          onClick={handleOpen}
+          className={className}
+          iconOnly={!children}
+          aria-label={t("languageSelectorTitle")}
         >
-          {children}
+          {children ?? <Globe size={20} aria-hidden="true" />}
         </Button>
-      ) : (
-        <Button
-          variant={variant}
-          size={size}
-          isIconOnly
-          label={t("languageSelectorTitle")}
-          icon={<Icon icon={Globe} size="sm" />}
-          onClick={handleOpen}
-        />
-      )}
-
-      <Dialog isOpen={open} onOpenChange={setOpen} width={400} purpose="form">
-        <VStack gap={4}>
-          <DialogHeader
-            title={t("languageSelectorTitle")}
-            subtitle={
-              locale === "en"
-                ? "Choose your preferred language"
-                : "Wähle deine bevorzugte Sprache"
-            }
-            onOpenChange={setOpen}
-          />
-
-          <VStack gap={2}>
-            <Text type="label" color="secondary">
-              {t("languageLabel")}
-            </Text>
-            <SegmentedControl
-              label={t("languageLabel")}
-              value={draftLocale}
-              onChange={(val) => setDraftLocale(val as "de" | "en")}
-              size="lg"
-            >
-              <SegmentedControlItem value="de" label={t("german")} />
-              <SegmentedControlItem value="en" label={t("english")} />
-            </SegmentedControl>
-          </VStack>
-
-          <HStack justify="end" gap={2}>
-            <Button
-              variant="secondary"
-              label={t("cancel")}
-              size="lg"
-              onClick={() => setOpen(false)}
-            />
-            <Button
-              variant="primary"
-              label={t("saveAndContinue")}
-              size="lg"
-              onClick={handleSave}
-            />
-          </HStack>
-        </VStack>
-      </Dialog>
-    </>
+      }
+      footer={
+        <>
+          <Button variant="secondary" onClick={() => setOpen(false)}>
+            {t("cancel")}
+          </Button>
+          <Button
+            onClick={() => {
+              setLocale(draftLocale);
+              setOpen(false);
+            }}
+          >
+            {t("saveAndContinue")}
+          </Button>
+        </>
+      }
+    >
+      <ChoiceGroup
+        label={t("languageLabel")}
+        value={draftLocale}
+        onChange={setDraftLocale}
+        options={[
+          { value: "de", label: t("german") },
+          { value: "en", label: t("english") },
+        ]}
+      />
+    </Modal>
   );
 }

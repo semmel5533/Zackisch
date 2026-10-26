@@ -1,25 +1,9 @@
-import { Poppins, Inter } from "next/font/google";
 import type { Metadata } from "next";
 
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { AstryxToaster } from "@/components/common/toast";
 import { ZackischThemeProvider } from "@/lib/zackisch-theme";
 import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins-variable",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-inter-variable",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -58,15 +42,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="de"
-      className={cn("light antialiased overflow-x-clip font-sans", poppins.variable, inter.variable)}
-    >
+    <html lang="de" className="light antialiased overflow-x-clip font-sans">
       <body className="bg-background text-foreground overflow-x-clip min-h-screen">
         <ZackischThemeProvider>
-          <ConvexClientProvider>
-            {children}
-          </ConvexClientProvider>
+          <ConvexClientProvider>{children}</ConvexClientProvider>
           <AstryxToaster />
         </ZackischThemeProvider>
       </body>

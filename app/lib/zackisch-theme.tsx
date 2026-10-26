@@ -12,12 +12,12 @@ export const zackischTheme = defineTheme({
   typography: {
     scale: { base: 14, ratio: 1.2 },
     body: {
-      family: "Poppins",
+      family: "Inter",
       fallbacks:
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
     },
     heading: {
-      family: "Poppins",
+      family: "Inter",
       fallbacks:
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
       weights: { 3: "bold", 4: "bold" },

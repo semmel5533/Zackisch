@@ -5,7 +5,6 @@
 
 import {neutralTheme as _astryxTheme0} from "@astryxdesign/theme-neutral/built";
 import "@astryxdesign/theme-neutral/theme.css";
-import "@astryxdesign/theme-neutral/fonts.css";
 
 export const themes = {
   "neutral": _astryxTheme0,

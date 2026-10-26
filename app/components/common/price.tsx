@@ -14,7 +14,7 @@ interface PriceProps {
 
 /**
  * Renders prices with digits (and decimal comma) strictly in Inter (tabular-nums),
- * while the currency symbol (€), prefix (ab / from), and surrounding text render in Poppins.
+ * with the same self-hosted Inter face for the currency, prefix and surrounding text.
  */
 export function Price({
   cents,
