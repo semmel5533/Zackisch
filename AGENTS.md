@@ -20,9 +20,13 @@ No second Convex project or database. Do not create more global packages than th
 
 Before changing Next.js code, read version-matched guidance from installed `node_modules/next/dist/docs/` and verify that APIs work with Cloudflare Workers/vinext. Follow the active Next.js 16 `proxy.ts` convention where applicable, not obsolete middleware guidance. Prefer ESM, strict TypeScript, narrow domain modules and explicit contracts.
 
-All UI screens across `internal`, `support`, and `app` are built exclusively with the Astryx Design System (`@astryxdesign/core`, `@stylexjs/stylex`, `@astryxdesign/theme-neutral`). Layout, containers, forms, typography, and navigation use pure Astryx components (`AppShell`, `TopNav`, `SideNav`, `Layout`, `Card`, `VStack`, `HStack`, `Grid`, `Heading`, `Text`, `Badge`, `Button`, `TextInput`, `TextArea`, `Selector`, `CheckboxInput`, `Table`, `Divider`, `Icon`). Theming is managed via `lib/zackisch-theme.tsx` extending the neutral theme with Zackisch monochrome palette, slightly rounded corners (`radius: { base: 4, multiplier: 1 }`), Poppins for headings/body, and Inter tabular numbers for prices/metrics.
+All four applications use `DESIGN.md` as their sole visual specification. Build accessible interaction with `@base-ui/react` and focused Zackisch wrappers using the canonical design tokens. Use semantic native HTML where appropriate. Inter is the only UI and reading typeface; tabular numbers are required for prices and metrics. The decorative Zackisch font is a display prototype for short reviewed accents, never functional UI or the official logo. Use the unchanged official Combination Mark and Brand Mark SVG masters under `assets/zackisch/brand/`.
 
-Use Astryx built-in semantic icon names where supported; for external iconography use Phosphor icons (`@phosphor-icons/react`) passed to Astryx's `<Icon icon={PhosphorIcon} size="sm" />`. Never put icons on inline form error messages. Visual storytelling leverages curated free-to-use stock imagery. All visible UI strings, ARIA text, notices and localized links use `next-intl` keys or localized dictionary lookups; do not hardcode German/English strings in components. Region and language are distinct concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere.
+Read the installed Base UI API before using a primitive. Token-backed CSS, CSS Modules or Tailwind are permitted; do not introduce a second theme or component library. Match composition, density and controls to the guest, owner, staff, support or internal task. Preserve behavior while replacing legacy components incrementally; remove old dependencies only after their consumers are migrated and tested.
+
+Use the existing Phosphor icon set for functional icons where needed; supplied doodles and mascots follow the placement rules in `DESIGN.md`. Never put icons on inline form error messages. Use actual licensed photography with documented provenance. Guest headers prioritize the venue identity. Physical QR cards have no venue name or logo, one small official Zackisch Combination Mark, a true scannable QR, table/pickup identity and the personal-service alternative. Follow the 92 × 135 mm, four-per-A4 and duplex rules in `DESIGN.md`; verify actual QR payloads and physical printing separately.
+
+All visible UI strings, ARIA text, notices and localized links use `next-intl` keys or localized dictionary lookups; do not hardcode German/English strings in components. Region and language are distinct concepts: `/de-de` and `/de-en` on public sites, server-authoritative business region elsewhere.
 
 Maintain predictable interaction: explicit action labels, keyboard focus, logical tab order, clearly visible validation, proper empty/loading/error/offline states, WCAG 2.2 AA objective, responsive container-aware dashboards. Never modify real checkout disclosure or button wording solely for styling without testing applicable consumer purchase requirements.
 
@@ -36,7 +40,6 @@ Never trust browser totals or order IDs; reconstruct price from canonical menu d
 
 Read `docs/germany-legal-and-regulatory.md`, `docs/payments-and-stripe.md`, `docs/tax-invoicing-and-fiscalization.md`, `docs/privacy-and-data-governance.md` and `docs/legal-pages-consents-and-contracts.md` for any change involving payment, company legal content, personal data, tax, menus, receipts, merchant signup, guest purchase, tickets, analytics, retention or invoices. No approved lawyer opinion can be inferred from technical tests. Require evidence of seller/merchant-of-record identity, checkout button and price disclosure, Stripe account capability, 2% tax treatment, refunds, accounting and effective contract version. German food/drink VAT, fiscalization and e-invoice requirements are not interchangeable with Zackisch's B2B invoice obligations. Do not store card PAN/CVC, identification docs or secrets. Never create a new payment charge type as an invisible refactor.
 
-
 ## Quality and architecture
 
 Keep files focused; splitting a file beyond roughly 1,000 lines is normally preferable if it reduces actual conceptual complexity. Do not add shallow wrappers or branches merely to make the file count smaller. Make state machines explicit for checkout, ticket handling, pairing and wizard progress. Use stable clear names, not historical product names. Reuse existing helpers only when their actual responsibility matches. Make related database updates atomic where supported, externally retried effects idempotent, and avoid unnecessary sequential calls. Review dependency supply chain, Cloudflare runtime compatibility and destructive behavior before installation or upgrade.
@@ -45,6 +48,7 @@ For every substantive change add/adjust unit, integration and E2E coverage; incl
 
 ## Documentation and maintenance
 
+`DESIGN.md` is the normative visual contract, not evidence of implementation or legal approval. Keep verified current product behavior in README files and technical documentation. Keep migration plans, baseline logs, screenshots and approval evidence outside the product repository. Preserve security, payment, fiscal, session, backup and release contracts when updating visual instructions.
 
 ## Commits and Semantic Versioning — preserve repository convention
 
@@ -62,41 +66,12 @@ Read before editing, map dependencies, implement in small reversible changes, va
 
 Prefer verified Stripe Connect Direct Charges owned by each restaurant's connected merchant account with Stripe-owned processing fees and connected-account negative-balance allocation, embedded Stripe onboarding and required Stripe agreement transparency. Reject platform-owned charge fallback when merchant processing fails. Zackisch charges 2% of the eligible captured restaurant order subtotal excluding voluntary tips **including any applicable VAT on Zackisch's own service fee**, with Stripe fees separate. The restaurant owes the guest a lawful fiscal receipt/invoice according to the applicable law; Zackisch's success document is only a non-fiscal order/payment confirmation. Record each already-paid order **once** in the restaurant's existing POS with auditable staff confirmation. Consult `../docs/payments-and-stripe.md`, `../docs/guest-confirmation-and-pos.md`, and `../docs/tax-invoicing-and-fiscalization.md` (from an app folder) or `docs/...` (from repository root). Sandbox account/payment flow may be structurally refactored; never modify real money or assert TSE exemption without independent approval.
 
-<!-- ASTRYX:START -->
-Astryx v0.7.1 · 168 components
-CLI: run every command as `npx astryx <cmd>` (shown below as `astryx ...`).
+## UI interaction checks
 
-SETUP (once, in app entry e.g. main.tsx) — without these, components render unstyled:
-  import "@astryxdesign/core/reset.css";
-  import "@astryxdesign/core/astryx.css";
-
-WORKFLOW — Template-first search, never build screens from scratch:
-1. When implementing or adapting ANY feature, screen, modal, or section, ALWAYS check templates first:
-   - Run `astryx template --list` or `astryx search "<use-case>"` (e.g. login, settings, dashboard, dialog, sheet, form).
-   - Scaffold or inspect the template: `astryx template <name> <path>` or `astryx template <Block>`.
-   - Adapt its proven composition, frame, gap, and padding; replace the domain content.
-2. Read component DOs and DONTs and props before using any component:
-   - Run `astryx component <Name>` (e.g. `astryx component Button`, `astryx component Card`, `astryx component TextInput`).
-
-STRICT ASTRYX COMPOSITION & DOS/DONTS RULES:
-- Pure Astryx Composition: All screens across `app/`, `internal/`, and `support/` must be composed exclusively from native Astryx components (`AppShell`, `TopNav`, `SideNav`, `Layout`, `Card`, `VStack`, `HStack`, `Grid`, `Heading`, `Text`, `Badge`, `Button`, `TextInput`, `TextArea`, `CheckboxInput`, `SegmentedControl`, `Dialog`, `BottomSheet`, `Table`, `Divider`, `Icon`).
-- Zero Arbitrary Custom Styling: No custom CSS, no rogue utility classes, no inline styles (`style={{ ... }}`). Spacing and layout adjustments are only permitted when strictly justified.
-- Component DOs and DONTs Compliance:
-  - At most ONE primary action button (`variant="primary"`) per screen or modal view. Secondary actions must be `secondary` or `ghost`.
-  - Destructive actions require explicit confirmation dialogs or double-action safeguards (`variant="destructive"`).
-  - Form controls MUST always have accessible labels (`label="..."`, or `isLabelHidden` if visually redundant, but never unlabelled).
-  - Never wrap disabled components in Tooltips; use the built-in `disabledMessage` prop on buttons/actions instead.
-  - Use `SegmentedControl` (or `Selector`) for mutually exclusive choices with 2-5 options (e.g. tip percentages, tabs, views), never loose custom button groups.
-  - Spacing and alignment alone create visual grouping — do NOT wrap everything in cards. Use `Card` only for discrete, reorderable items.
-  - Dense data = rows (`Table`, `List/Item`), not card-wrapped lists. `Badge` = counts and statuses only.
-  - Style with component props first, then theme tokens (`var(--color-*|--spacing-*|--radius-*)`).
-  - Palettes and custom colors go through the theme (`lib/zackisch-theme.tsx`), never `:root` overrides.
-- SELF-CHECK: re-read the file; replace any raw `<div>`/`<span>`, imported `.css`/`@apply`, or hardcoded `#hex`/`px` with the component or a token.
-
-`astryx help` lists every command. Key ones beyond the workflow:
-  search "<query>"   find any component / hook / doc / template
-  discover <words>   integrations you could add
-  docs <topic>       getting-started, principles, tokens, theme … (`astryx docs` lists all)
-  docs cli           commands, API reference, integration authoring
-  upgrade --from <old version> --apply   run after a dependency bump
-<!-- ASTRYX:END -->
+- Use one dominant primary action per task area or modal; navigation uses links.
+- Confirm destructive actions with explicit consequences and action labels.
+- Provide visible labels, associated descriptions and persistent inline errors; retain input after failure.
+- Use radios or a segmented control for mutually exclusive choices, checkboxes for independent choices, and tables for dense comparisons.
+- Verify keyboard navigation, focus trapping/return, disabled/loading behavior, touch targets, reduced motion, reflow and contrast.
+- Show payment success only after authoritative server confirmation. Keep POS recording separate from preparation state.
+- Do not install Hallmark without explicit approval and source review; if approved, use only custom/bespoke critique against `DESIGN.md`.
