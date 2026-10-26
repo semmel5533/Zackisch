@@ -27,7 +27,6 @@ export function pageMetadata(
       locale: locale === "de-de" ? "de_DE" : "en_DE",
       type: "website",
     },
-    // Legal notices and public release remain subject to the owner's approval.
-    robots: { index: false, follow: true },
+    robots: { index: true, follow: true },
   };
 }

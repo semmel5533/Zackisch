@@ -31,6 +31,6 @@ Die Browsertests prüfen unter anderem lokale Schriften und Bilder, Sprachmetada
 
 ## Veröffentlichung und Rechtstexte
 
-Die Anbieterangaben und vollständigen Rechtstexte sind noch nicht freigegeben. Die betreffenden Seiten kennzeichnen diese Einschränkung. Alle Seiten tragen `noindex`, `robots.txt` sperrt die Indexierung und die Sitemap ist leer. Diese Maßnahmen ersetzen keine Zugriffskontrolle oder juristische Freigabe. Der aktuelle Stand ist eine lokale Vorschau und darf nicht als rechtsgeprüfte öffentliche Website aktiviert werden.
+Impressum und Website-Datenschutz stehen unter ihren regulären Sprachpfaden. Die zweisprachigen Vorlagen in `lib/legal-content.ts` verwenden Max-Mustermann-Musterangaben und gekennzeichnete Felder für unbekannte Anbieter-, Dienstleister- und Aufbewahrungsangaben. Sie enthalten Quellenlinks und sind keine Bestätigung einer Rechtsprüfung. Die öffentlichen Seiten sind indexierbar; `robots.txt` erlaubt den Abruf und die Sitemap enthält sämtliche öffentlichen Sprachvarianten. Die Marketingwebsite führt keine eigene Veröffentlichungssperre ein.
 
 Maßgeblich bleiben [`../docs/legal-pages-consents-and-contracts.md`](../docs/legal-pages-consents-and-contracts.md), [`../docs/privacy-and-data-governance.md`](../docs/privacy-and-data-governance.md) und die Zahlungs-/Steuerdokumentation. Die Marketingwebsite nimmt selbst keine Zahlungen entgegen.

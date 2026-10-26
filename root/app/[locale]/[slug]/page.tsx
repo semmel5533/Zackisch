@@ -1,3 +1,4 @@
+import { legalSources } from "@/lib/legal-content";
 import { notFound } from "next/navigation";
 import {
   content,
@@ -48,6 +49,21 @@ export default async function InformationPage({
             <p>{section.body}</p>
           </section>
         ))}
+        {(paramsValue.slug === "legal-notice" ||
+          paramsValue.slug === "privacy") && (
+          <section>
+            <h2>{c.legalSources}</h2>
+            <ul>
+              {legalSources[paramsValue.slug].map((source) => (
+                <li key={source.url}>
+                  <a className="inline-link" href={source.url}>
+                    {source.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         {paramsValue.slug === "research" && (
           <a className="inline-link" href={surveyUrl}>
             {c.researchLink} ↗

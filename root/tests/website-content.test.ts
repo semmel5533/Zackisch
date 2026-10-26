@@ -5,7 +5,9 @@ import { pageMetadata } from "../lib/metadata";
 function leafPaths(value: unknown, path = ""): string[] {
   if (typeof value === "string") return [path];
   if (typeof value !== "object" || value === null) return [];
-  return Object.entries(value).flatMap(([key, item]) => leafPaths(item, `${path}.${key}`));
+  return Object.entries(value).flatMap(([key, item]) =>
+    leafPaths(item, `${path}.${key}`),
+  );
 }
 
 describe("localized website", () => {
@@ -25,7 +27,7 @@ describe("localized website", () => {
             "x-default": `https://zackisch.com/de-de${suffix}`,
           },
         });
-        expect(metadata.robots).toMatchObject({ index: false });
+        expect(metadata.robots).toMatchObject({ index: true });
       });
     }
   }

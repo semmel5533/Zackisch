@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
+import { websiteUrl } from "@/lib/content";
 export const dynamic = "force-static";
 export default function robots(): MetadataRoute.Robots {
-  // No public indexing until the legal/publication gate is approved.
-  return { rules: { userAgent: "*", disallow: "/" } };
+  return {
+    rules: { userAgent: "*", allow: "/" },
+    sitemap: `${websiteUrl}/sitemap.xml`,
+  };
 }

@@ -1,3 +1,4 @@
+import { legalPages } from "./legal-content";
 export const locales = ["de-de", "de-en"] as const;
 export type Locale = (typeof locales)[number];
 export function isLocale(value: string): value is Locale {
@@ -137,6 +138,7 @@ export const content = {
     footerLegal: "Rechtliches",
     contact: "Kontakt",
     research: "Forschung & Quellen",
+    legalSources: "Rechtsquellen und weiterführende Informationen",
     imprint: "Impressum",
     privacy: "Datenschutz",
     privacySettings: "Datenschutzeinstellungen",
@@ -193,23 +195,7 @@ export const content = {
           "Hilfe zur Einrichtung und zum Betrieb findest du im öffentlichen Hilfe-Center. Für betriebsbezogene Anliegen nutze dort deinen privaten Ticketbereich.",
         sections: [],
       },
-      "legal-notice": {
-        title: "Anbieterangaben",
-        intro:
-          "Die freigegebenen Anbieterangaben liegen für diese lokale Vorschau noch nicht vor. Diese Seite ist nicht als veröffentlichtes Impressum freigegeben.",
-        sections: [],
-      },
-      privacy: {
-        title: "Datenschutz auf dieser Website",
-        intro:
-          "Diese lokale Vorschau verwendet keine optionalen Analyse- oder Werbedienste und lädt Bilder und Schriften vom eigenen Host. Die vollständigen Anbieter- und Datenschutzhinweise benötigen vor Veröffentlichung eine fachliche Freigabe.",
-        sections: [
-          {
-            title: "Andere Zackisch-Anwendungen",
-            body: "Die Betreiber-App, Gastbestellung und private Support-Tickets verarbeiten andere Daten. Diese kurze Beschreibung der Marketingwebsite ersetzt ihre jeweiligen Datenschutzhinweise nicht.",
-          },
-        ],
-      },
+      ...legalPages["de-de"],
     },
     notFound: "Diese Seite gibt es nicht.",
     notFoundText: "Prüfe die Adresse oder gehe zurück zur Startseite.",
@@ -335,6 +321,7 @@ export const content = {
     footerLegal: "Legal",
     contact: "Contact",
     research: "Research & sources",
+    legalSources: "Legal references and further information",
     imprint: "Legal notice",
     privacy: "Privacy",
     privacySettings: "Privacy settings",
@@ -391,23 +378,7 @@ export const content = {
           "Find setup and operating guidance in the public help centre. For venue-specific matters, use your private ticket area there.",
         sections: [],
       },
-      "legal-notice": {
-        title: "Provider information",
-        intro:
-          "Approved provider information is not yet available for this local preview. This page is not approved as a published legal notice.",
-        sections: [],
-      },
-      privacy: {
-        title: "Privacy on this website",
-        intro:
-          "This local preview uses no optional analytics or advertising services and serves images and fonts from its own host. Complete provider and privacy notices require professional approval before publication.",
-        sections: [
-          {
-            title: "Other Zackisch applications",
-            body: "The owner app, guest ordering and private support tickets process different data. This short description of the marketing website does not replace their respective privacy notices.",
-          },
-        ],
-      },
+      ...legalPages["de-en"],
     },
     notFound: "This page doesn’t exist.",
     notFoundText: "Check the address or return to the homepage.",

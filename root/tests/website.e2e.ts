@@ -17,9 +17,9 @@ for (const [locale, lang, title] of [
     const documentState = await browser.evaluate(() => ({
       lang: document.documentElement.lang,
       overflow: document.documentElement.scrollWidth > window.innerWidth,
-      canonical: document
-        .querySelector('link[rel="canonical"]')
-        ?.getAttribute("href") ?? null,
+      canonical:
+        document.querySelector('link[rel="canonical"]')?.getAttribute("href") ??
+        null,
       headings: document.querySelectorAll("h1").length,
       images: [...document.images].filter((image) => !image.hasAttribute("alt"))
         .length,
@@ -102,3 +102,40 @@ test("marketing images load from the local host", async ({ app, browser }) => {
     expect(response.headers.get("content-type")).toMatch(/^image\//);
   }
 });
+
+for (const [locale, title, privacy] of [
+  ["de-de", "Impressum", "Datenschutz"],
+  ["de-en", "Legal notice", "Privacy"],
+]) {
+  test(`${locale} exposes editable legal pages through normal footer navigation`, async ({
+    app,
+    browser,
+    screen,
+  }) => {
+    await browser.setViewport({ width: 320, height: 800 });
+    await app.open(`/${locale}`);
+    await screen.getByRole("link", title, { exact: true }).tap();
+    await expect(
+      screen.getByRole("heading", title, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      screen.getByText("Max Mustermann", { exact: false }),
+    ).toBeVisible();
+    await expect(
+      screen.getByRole("link", "§ 5 DDG", { exact: true }),
+    ).toHaveAttribute(
+      "href",
+      "https://www.gesetze-im-internet.de/ddg/__5.html",
+    );
+    await screen.getByRole("link", privacy, { exact: true }).tap();
+    await expect(browser).toHaveURL(`/${locale}/privacy`);
+    const state = await browser.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth > innerWidth,
+      robots: document
+        .querySelector('meta[name="robots"]')
+        ?.getAttribute("content"),
+    }));
+    expect(state.overflow).toBe(false);
+    expect(state.robots).not.toContain("noindex");
+  });
+}
