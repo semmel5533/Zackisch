@@ -171,6 +171,20 @@ export const legalPages = {
 } as const;
 
 export const legalSources = {
+  "data-processing": [
+    {
+      label: "EU 2016/679",
+      url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+    },
+    {
+      label: "EDPB",
+      url: "https://www.edpb.europa.eu/sme/learn-the-basics/data-controller-or-data-processor_en",
+    },
+    {
+      label: "LfD Niedersachsen",
+      url: "https://www.lfd.niedersachsen.de/faq/faq-auftragsverarbeitung-nach-artikel-28-dsgvo-189637.html",
+    },
+  ],
   "privacy-policy": [
     {
       label: "EU 2016/679",
@@ -247,3 +261,9 @@ export const legalSources = {
     },
   ],
 } as const;
+
+export function hasLegalSources(
+  slug: string,
+): slug is keyof typeof legalSources {
+  return Object.hasOwn(legalSources, slug);
+}

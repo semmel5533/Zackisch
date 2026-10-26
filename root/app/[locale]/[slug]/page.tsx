@@ -1,4 +1,4 @@
-import { legalSources } from "@/lib/legal-content";
+import { legalSources, hasLegalSources } from "@/lib/legal-content";
 import { notFound } from "next/navigation";
 import {
   content,
@@ -49,11 +49,7 @@ export default async function InformationPage({
             <p>{section.body}</p>
           </section>
         ))}
-        {(paramsValue.slug === "legal-notice" ||
-          paramsValue.slug === "privacy" ||
-          paramsValue.slug === "privacy-policy" ||
-          paramsValue.slug === "gtc" ||
-          paramsValue.slug === "guest-terms") && (
+        {hasLegalSources(paramsValue.slug) && (
           <section>
             <h2>{c.legalSources}</h2>
             <ul>

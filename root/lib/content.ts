@@ -1,3 +1,4 @@
+import { dataProcessing } from "./data-processing";
 import { platformPrivacy } from "./platform-privacy";
 import { guestTerms } from "./guest-terms";
 import { merchantTerms } from "./merchant-terms";
@@ -19,6 +20,7 @@ export const pageSlugs = [
   "privacy",
   "privacy-policy",
   "gtc",
+  "data-processing",
   "guest-terms",
 ] as const;
 export type PageSlug = (typeof pageSlugs)[number];
@@ -146,6 +148,7 @@ export const content = {
     research: "Forschung & Quellen",
     legalSources: "Rechtsquellen und weiterführende Informationen",
     guestTerms: "Gastbestellung",
+    dataProcessing: "Auftragsverarbeitung",
     terms: "Betreibervertrag",
     imprint: "Impressum",
     platformPrivacy: "Plattform-Datenschutz",
@@ -207,6 +210,7 @@ export const content = {
       ...legalPages["de-de"],
       ...platformPrivacy["de-de"],
       ...merchantTerms["de-de"],
+      ...dataProcessing["de-de"],
       ...guestTerms["de-de"],
     },
     notFound: "Diese Seite gibt es nicht.",
@@ -335,6 +339,7 @@ export const content = {
     research: "Research & sources",
     legalSources: "Legal references and further information",
     guestTerms: "Guest ordering",
+    dataProcessing: "Data processing agreement",
     terms: "Merchant agreement",
     imprint: "Legal notice",
     platformPrivacy: "Platform privacy",
@@ -396,6 +401,7 @@ export const content = {
       ...legalPages["de-en"],
       ...platformPrivacy["de-en"],
       ...merchantTerms["de-en"],
+      ...dataProcessing["de-en"],
       ...guestTerms["de-en"],
     },
     notFound: "This page doesn’t exist.",

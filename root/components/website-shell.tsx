@@ -85,6 +85,7 @@ export function WebsiteShell({
             <Link href={`/${locale}/privacy`}>{c.privacy}</Link>
             <Link href={`/${locale}/privacy-policy`}>{c.platformPrivacy}</Link>
             <Link href={`/${locale}/gtc`}>{c.terms}</Link>
+            <Link href={`/${locale}/data-processing`}>{c.dataProcessing}</Link>
             <Link href={`/${locale}/guest-terms`}>{c.guestTerms}</Link>
             <PrivacySettings copy={c} />
           </div>

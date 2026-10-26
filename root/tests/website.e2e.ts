@@ -211,3 +211,41 @@ for (const [locale, label] of [
     ).toBe(true);
   });
 }
+
+for (const [locale, label, annex] of [
+  [
+    "de-de",
+    "Auftragsverarbeitung",
+    "Anlage B · Sicherheits- und Wiederherstellungsnachweise",
+  ],
+  [
+    "de-en",
+    "Data processing agreement",
+    "Annex B · Security and recovery evidence",
+  ],
+]) {
+  test(`${locale} makes the processing agreement and its annexes accessible`, async ({
+    app,
+    browser,
+    screen,
+  }) => {
+    await browser.setViewport({ width: 320, height: 800 });
+    await app.open(`/${locale}`);
+    await screen.getByRole("link", label, { exact: true }).tap();
+    await expect(browser).toHaveURL(`/${locale}/data-processing`);
+    await expect(
+      screen.getByRole("heading", annex, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      screen.getByRole("link", "EDPB", { exact: true }),
+    ).toHaveAttribute(
+      "href",
+      "https://www.edpb.europa.eu/sme/learn-the-basics/data-controller-or-data-processor_en",
+    );
+    expect(
+      await browser.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  });
+}
