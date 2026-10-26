@@ -364,7 +364,8 @@ export default defineSchema({
     context: v.string(), // "setup_wizard", "settings", "onboarding"
   })
     .index("by_businessId", ["businessId"])
-    .index("by_businessId_and_slug", ["businessId", "documentSlug"]),
+    .index("by_businessId_and_slug", ["businessId", "documentSlug"])
+    .index("by_business_document_version_user", ["businessId", "documentSlug", "documentVersion", "userId"]),
 
   // Monthly B2B Fee Statements & EN 16931 E-Invoices
   merchantFeeStatements: defineTable({

@@ -3,6 +3,12 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 const CURRENT_LEGAL_VERSION = "2026-10-v1";
+const ACCEPTABLE_DOCUMENTS = new Set([
+  "gtc",
+  "data-processing",
+  "fee-model",
+  "pos-workflow",
+]);
 
 export const getSetupReadiness = query({
   args: {
@@ -81,7 +87,11 @@ export const getSetupReadiness = query({
       )
       .collect();
 
-    const acceptedSlugs = new Set(acceptanceRows.map((r) => r.documentSlug));
+    const acceptedSlugs = new Set(
+      acceptanceRows
+        .filter((r) => r.documentVersion === CURRENT_LEGAL_VERSION && r.userId === userId)
+        .map((r) => r.documentSlug)
+    );
 
     const hasBusinessProfile = Boolean(
       org.name?.trim() &&
@@ -221,19 +231,36 @@ export const recordLegalAcceptance = mutation({
       throw new Error("Keine Berechtigung für diesen Betrieb.");
     }
 
-    const version = args.documentVersion || CURRENT_LEGAL_VERSION;
+    if (
+      args.documentVersion !== undefined &&
+      args.documentVersion !== CURRENT_LEGAL_VERSION
+    ) {
+      throw new Error("Unzulässige Dokumentversion.");
+    }
+    if (
+      args.documentSlugs.length === 0 ||
+      args.documentSlugs.length > ACCEPTABLE_DOCUMENTS.size ||
+      args.documentSlugs.some((slug) => !ACCEPTABLE_DOCUMENTS.has(slug))
+    ) {
+      throw new Error("Unzulässige Dokumentauswahl.");
+    }
+    const version = CURRENT_LEGAL_VERSION;
+    const documentSlugs = [...new Set(args.documentSlugs)];
     const now = Date.now();
     let recordedCount = 0;
 
-    for (const slug of args.documentSlugs) {
+    for (const slug of documentSlugs) {
       const existing = await ctx.db
         .query("acceptanceEvents")
-        .withIndex("by_businessId_and_slug", (q) =>
-          q.eq("businessId", args.businessId).eq("documentSlug", slug)
+        .withIndex("by_business_document_version_user", (q) =>
+          q.eq("businessId", args.businessId)
+            .eq("documentSlug", slug)
+            .eq("documentVersion", version)
+            .eq("userId", userId)
         )
         .first();
 
-      if (!existing || existing.documentVersion !== version) {
+      if (!existing) {
         await ctx.db.insert("acceptanceEvents", {
           businessId: args.businessId,
           userId,
@@ -261,7 +288,7 @@ export const recordLegalAcceptance = mutation({
       entityId: String(args.businessId),
       regionId: org.region || "de",
       details: JSON.stringify({
-        documentSlugs: args.documentSlugs,
+        documentSlugs,
         version,
         context: args.context || "setup_wizard",
       }),
