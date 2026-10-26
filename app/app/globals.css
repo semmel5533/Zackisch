@@ -10,6 +10,7 @@
 @import "../../assets/zackisch/tokens.css";
 @import "../../assets/zackisch/font/inter.css";
 @import "../components/ui/primitives.css";
+@import "../components/guest/guest.css";
 
 :root {
   --font-sans: var(--zk-font-ui);

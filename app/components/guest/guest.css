@@ -1,0 +1,36 @@
+.guest-venue { display: flex; flex-direction: column; gap: var(--zk-space-6); color: var(--zk-text-body); font-family: var(--zk-font-ui); }
+.guest-venue-banner { position: relative; width: 100%; aspect-ratio: 3 / 1; overflow: hidden; border-radius: var(--zk-radius-lg); background: var(--zk-surface-muted); }
+.guest-venue-banner-image { object-fit: cover; }
+.guest-venue-profile { display: flex; align-items: flex-start; gap: var(--zk-space-4); }
+.guest-venue-logo { width: 72px; height: 72px; object-fit: contain; border-radius: var(--zk-radius-md); flex-shrink: 0; }
+.guest-venue-identity { min-width: 0; flex: 1; }
+.guest-venue h1 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.2; font-weight: 700; letter-spacing: -.02em; overflow-wrap: anywhere; color: var(--zk-text); margin: 0; }
+.guest-venue-context { font-size: 1rem; font-weight: 600; margin-top: var(--zk-space-2); }
+.guest-venue-address { font-size: .875rem; line-height: 1.5; color: var(--zk-text-secondary); margin-top: var(--zk-space-2); overflow-wrap: anywhere; }
+@media(max-width: 399px) { .guest-venue-logo { width: 48px; height: 48px; } .guest-venue-profile { gap: var(--zk-space-3); } }
+
+.guest-menu-item { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--zk-space-4); padding-block: var(--zk-space-6); font-family: var(--zk-font-ui); color: var(--zk-text-body); border-bottom: 1px solid var(--zk-border); }
+.guest-menu-item:last-child { border-bottom: 0; }
+.guest-menu-item-copy { flex: 1; min-width: 0; }
+.guest-menu-item h3 { font-size: 1.125rem; font-weight: 600; line-height: 1.4; color: var(--zk-text); overflow-wrap: anywhere; margin: 0; }
+.guest-menu-description, .guest-menu-dietary { font-size: .875rem; line-height: 1.5; color: var(--zk-text-secondary); margin-top: var(--zk-space-2); }
+.guest-menu-price { margin-top: var(--zk-space-3); color: var(--zk-text); font-size: 1rem; font-weight: 600; }
+.guest-menu-unavailable { color: var(--zk-error-text); font-size: .875rem; margin-top: var(--zk-space-2); }
+.guest-menu-item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: var(--zk-space-3); flex-shrink: 0; }
+.guest-menu-image { width: 112px; height: 112px; object-fit: cover; border-radius: var(--zk-radius-md); background: var(--zk-surface-muted); }
+.guest-quantity { display: flex; align-items: center; border: 1px solid var(--zk-border); border-radius: var(--zk-radius-md); background: var(--zk-surface); }
+.guest-quantity-value { min-width: 24px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; }
+@media(max-width:599px) { .guest-menu-image { width: 88px; height: 88px; } .guest-menu-item { gap: var(--zk-space-3); } }
+
+.guest-page { background: var(--zk-page); color: var(--zk-text-body); font-family: var(--zk-font-ui); }
+.guest-cart-dock { position: fixed; inset: auto 0 0; z-index: 40; display: flex; justify-content: center; padding: var(--zk-space-3); padding-bottom: max(var(--zk-space-3), env(safe-area-inset-bottom)); background: var(--zk-surface); border-top: 1px solid var(--zk-border); }
+@media(min-width:1024px) { .guest-cart-dock { display: none; } }
+
+.guest-menu { min-width: 0; }
+.guest-category-nav { display: flex; gap: var(--zk-space-6); overflow-x: auto; border-bottom: 1px solid var(--zk-border); margin-block: var(--zk-space-6) var(--zk-space-8); }
+.guest-category-nav button { min-height: 48px; white-space: nowrap; border: 0; border-bottom: 2px solid transparent; padding: var(--zk-space-3) 0; cursor: pointer; color: var(--zk-text-secondary); font: 500 1rem var(--zk-font-ui); background: transparent; }
+.guest-category-nav button[aria-pressed="true"] { color: var(--zk-text); border-bottom-color: var(--zk-action); font-weight: 700; }
+.guest-category-nav button:focus-visible { outline: 2px solid var(--zk-focus); outline-offset: -2px; }
+.guest-menu-section { margin-top: var(--zk-space-10); scroll-margin-top: var(--zk-space-6); }
+.guest-menu-section > h2 { color: var(--zk-text); font-size: 1.5rem; font-weight: 700; line-height: 1.3; margin-bottom: var(--zk-space-2); }
+.guest-menu-empty { padding-block: var(--zk-space-8); color: var(--zk-text-secondary); }

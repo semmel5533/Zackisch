@@ -1,24 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Minus, DownloadSimple, Check, ArrowRight, Sparkle } from "@phosphor-icons/react";
+import { Plus, Minus, DownloadSimple, Check } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
-import { getImagePreviewUrl } from "@/lib/convex/client";
-import { getMenuItemImageUrl } from "@/lib/menu-images";
 import { MAX_CART_ITEM_QUANTITY, useCartStore } from "@/store/cart-store";
-import { Button } from "@astryxdesign/core/Button";
+import { Button } from "@/components/ui/button";
 import { CartSheet } from "@/components/guest/cart-sheet";
 import { Price } from "@/components/common/price";
 import { OrderTracker } from "@/components/guest/order-tracker";
-import { RestaurantHeroHeader } from "@/components/guest/restaurant-hero-header";
-import Image from "next/image";
+import { GuestMenu } from "./guest-menu";
 import { CustomizationModal } from "@/components/guest/customization-modal";
 import { cartVariantId } from "@/lib/cart-variant";
-import { DIETARY_LABEL_KEYS } from "@/lib/dietary-labels";
-import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { downloadOrderConfirmation } from "@/lib/confirmation-generator";
-import type { PublicRestaurant, MenuCategory, MenuItem, Order, CartItem } from "@/lib/types";
+import type {
+  PublicRestaurant,
+  MenuCategory,
+  MenuItem,
+  Order,
+  CartItem,
+} from "@/lib/types";
+
+const EMPTY_MENU_ITEMS: MenuItem[] = [];
 
 interface GuestFrontendProps {
   business: PublicRestaurant;
@@ -49,10 +52,13 @@ function GuestOrderSuccess({
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border px-4 sm:px-8 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-lg tracking-tight text-foreground">{business.name}</span>
+          <span className="font-semibold text-lg tracking-tight text-foreground">
+            {business.name}
+          </span>
         </div>
         <span className="text-xs font-medium text-muted-foreground">
-          {tableNumber ? `${t("tableLabel")} ${tableNumber}` : t("pickupLabel")} · {locale.toUpperCase()}
+          {tableNumber ? `${t("tableLabel")} ${tableNumber}` : t("pickupLabel")}{" "}
+          · {locale.toUpperCase()}
         </span>
       </header>
 
@@ -81,13 +87,14 @@ function GuestOrderSuccess({
         {order && (
           <div className="w-full flex flex-col items-center gap-2">
             <Button
-              label={t("downloadConfirmation")}
-              icon={<DownloadSimple className="size-4 shrink-0" weight="bold" />}
               variant="secondary"
-              width="100%"
+              fullWidth
               size="lg"
               onClick={() => downloadOrderConfirmation(order, business, locale)}
-            />
+            >
+              {<DownloadSimple className="size-4 shrink-0" weight="bold" />}
+              {t("downloadConfirmation")}
+            </Button>
             <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
               {t("confirmationDisclaimerPrefix")}
               <a
@@ -104,9 +111,8 @@ function GuestOrderSuccess({
         )}
 
         <Button
-          label={t("orderAgain")}
           variant="secondary"
-          width="100%"
+          fullWidth
           size="lg"
           onClick={() => {
             setDineInSuccess(null);
@@ -117,7 +123,9 @@ function GuestOrderSuccess({
               window.history.replaceState(null, "", url.toString());
             }
           }}
-        />
+        >
+          {t("orderAgain")}
+        </Button>
       </main>
 
       <footer className="p-4 text-center max-w-[520px] mx-auto w-full shrink-0">
@@ -138,11 +146,7 @@ function GuestOrderSuccess({
   );
 }
 
-function FloatingCartBanner({
-  onOpenCart,
-}: {
-  onOpenCart: () => void;
-}) {
+function FloatingCartBanner({ onOpenCart }: { onOpenCart: () => void }) {
   const { t } = useTranslation();
   const { items, itemCount, total } = useCartStore();
   const count = itemCount();
@@ -152,19 +156,14 @@ function FloatingCartBanner({
   }
 
   return (
-    <aside
-      aria-label={t("cart")}
-      className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-center p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none"
-    >
+    <aside aria-label={t("cart")} className="guest-cart-dock">
       <div className="w-full max-w-[500px] pointer-events-auto px-2">
         <Button
-          label={`${count} · ${t("viewCart")} · ${(total() / 100).toFixed(2).replace(".", ",")} €`}
           variant="primary"
           size="lg"
-          width="100%"
-          elevation="high"
+          fullWidth
           onClick={onOpenCart}
-        />
+        >{`${count} · ${t("viewCart")} · ${(total() / 100).toFixed(2).replace(".", ",")} €`}</Button>
       </div>
     </aside>
   );
@@ -174,7 +173,7 @@ export function GuestFrontend({
   business,
   categories,
   items,
-  popularItems = [],
+  popularItems = EMPTY_MENU_ITEMS,
   type,
   tableNumber,
   orderId,
@@ -182,18 +181,15 @@ export function GuestFrontend({
 }: GuestFrontendProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
-  const isDe = locale.startsWith("de");
   const { items: cartItems, updateQuantity, addItem, total } = useCartStore();
 
-  const isPopularEnabled =
-    business.isPopularCategoryEnabled !== false &&
-    Array.isArray(popularItems) &&
-    popularItems.length > 0;
-
-  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [cartSheetStep, setCartSheetStep] = useState<"cart" | "checkout">("cart");
-  const [customizationItem, setCustomizationItem] = useState<MenuItem | null>(null);
+  const [cartSheetStep, setCartSheetStep] = useState<"cart" | "checkout">(
+    "cart",
+  );
+  const [customizationItem, setCustomizationItem] = useState<MenuItem | null>(
+    null,
+  );
 
   const [dineInSuccess, setDineInSuccess] = useState<{
     orderNumber: string;
@@ -208,7 +204,6 @@ export function GuestFrontend({
     return null;
   });
 
-
   useEffect(() => {
     const businessName = business.name;
     if (orderId && type === "takeaway") {
@@ -219,26 +214,10 @@ export function GuestFrontend({
       type === "takeaway"
         ? t("titleToGo")
         : tableNumber
-        ? t("titleToStay", { table: tableNumber })
-        : t("titleToStayNoTable");
+          ? t("titleToStay", { table: tableNumber })
+          : t("titleToStayNoTable");
     document.title = `${prefix} – ${businessName}`;
   }, [locale, business.name, type, tableNumber, orderId, t]);
-
-  const scrollToCategory = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
-    if (categoryId === "all") {
-      window.scrollTo({ top: 0, behavior });
-      return;
-    }
-
-    const el = document.getElementById(categoryId);
-    if (el) {
-      const offset = 75;
-      const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
-      window.scrollTo({ top: y, behavior });
-    }
-  };
 
   const handleAddClick = (item: MenuItem) => {
     const id = item.$id || item._id;
@@ -249,10 +228,20 @@ export function GuestFrontend({
     }
   };
 
-  const handleCustomizationAdd = (item: MenuItem, selections: NonNullable<CartItem["customizations"]>, totalPrice: number) => {
+  const handleCustomizationAdd = (
+    item: MenuItem,
+    selections: NonNullable<CartItem["customizations"]>,
+    totalPrice: number,
+  ) => {
     const id = item.$id || item._id;
     const cartItemId = cartVariantId(id, selections);
-    addItem({ id: cartItemId, menuItemId: id, name: item.name, price: totalPrice, customizations: selections });
+    addItem({
+      id: cartItemId,
+      menuItemId: id,
+      name: item.name,
+      price: totalPrice,
+      customizations: selections,
+    });
   };
 
   if (orderId && type === "takeaway") {
@@ -271,7 +260,9 @@ export function GuestFrontend({
         orderNumber={dineInSuccess.orderNumber}
         order={
           dineInSuccess.order ||
-          (initialOrder?.orderNumber === dineInSuccess.orderNumber ? initialOrder : null)
+          (initialOrder?.orderNumber === dineInSuccess.orderNumber
+            ? initialOrder
+            : null)
         }
         business={business}
         tableNumber={tableNumber}
@@ -284,257 +275,15 @@ export function GuestFrontend({
     <div className="guest-page min-h-screen bg-background flex flex-col">
       {/* Menu and desktop cart */}
       <main className="guest-layout max-w-[1120px] mx-auto w-full px-4 sm:px-6 py-6 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 flex-1 pb-24 lg:pb-12">
-        {/* Left Section: Menu */}
-        <section className="lg:col-span-7 xl:col-span-8 space-y-6">
-          <RestaurantHeroHeader business={business} type={type} tableNumber={tableNumber} />
-
-          {/* Category navigation */}
-          <div className="tabline border-b border-border flex items-center gap-6 overflow-x-auto no-scrollbar pt-2">
-            <button
-              type="button"
-              onClick={() => scrollToCategory("all")}
-              aria-pressed={activeCategory === "all"}
-              className={cn(
-                "min-h-11 pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
-                activeCategory === "all"
-                  ? "font-bold text-foreground border-b-2 border-foreground -mb-px"
-                  : "font-medium text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {t("allCategories")}
-            </button>
-            {isPopularEnabled && (
-              <button
-                type="button"
-                onClick={() => scrollToCategory("popular")}
-                aria-pressed={activeCategory === "popular"}
-                className={cn(
-                  "min-h-11 pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground flex items-center gap-1.5",
-                  activeCategory === "popular"
-                    ? "font-bold text-foreground border-b-2 border-foreground -mb-px"
-                    : "font-medium text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <Sparkle className="size-3.5 text-foreground" weight="fill" />
-                <span>{isDe ? "Beliebteste" : "Most Popular"}</span>
-              </button>
-            )}
-            {categories.map((c) => (
-              <button
-                key={c.$id}
-                type="button"
-                onClick={() => scrollToCategory(c.$id)}
-                aria-pressed={activeCategory === c.$id}
-                className={cn(
-                  "min-h-11 pb-3 text-sm transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
-                  activeCategory === c.$id
-                    ? "font-bold text-foreground border-b-2 border-foreground -mb-px"
-                    : "font-medium text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {c.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Menu categories */}
-          <div className="space-y-10 pt-2">
-            {items.length === 0 && <p className="py-6 text-muted-foreground">{t("menuEmpty")}</p>}
-
-            {/* Virtual Popular Category */}
-            {isPopularEnabled && (
-              <div id="popular" className="scroll-mt-24 space-y-4">
-                <div className="flex items-center gap-2">
-                  <Sparkle className="size-5 text-primary" weight="fill" />
-                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">
-                    {isDe ? "Beliebteste" : "Most Popular"}
-                  </h2>
-                </div>
-                <div className="divide-y divide-border border-y border-border">
-                  {popularItems.map((item) => {
-                    const itemId = item.$id || item._id;
-                    const itemCartItems = cartItems.filter((i) => i.menuItemId === itemId);
-                    const totalQuantity = itemCartItems.reduce((acc, curr) => acc + curr.quantity, 0);
-
-                    return (
-                      <div
-                        key={`popular-${itemId}`}
-                        className="food-row py-4 sm:py-5 flex items-center justify-between gap-4"
-                      >
-                        <div className="flex-1 min-w-0 pr-2">
-                          <h3 className="font-semibold text-base sm:text-lg text-foreground leading-snug">
-                            {item.name}
-                          </h3>
-                          {Boolean(item.dietaryLabels?.length) && (
-                            <p className="mt-1 text-sm text-muted-foreground">
-                              {item.dietaryLabels!.map((label) => t(DIETARY_LABEL_KEYS[label])).join(" · ")}
-                            </p>
-                          )}
-                          {item.description && (
-                            <p className="text-sm text-muted-foreground mt-1 max-w-md leading-relaxed">
-                              {item.description}
-                            </p>
-                          )}
-                          <div className="mt-2">
-                            <Price
-                              cents={item.price}
-                              from={hasPaidCustomizations(item.customizations)}
-                              className="font-bold text-sm sm:text-base text-foreground"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-end gap-3 shrink-0">
-                          {getMenuItemImageUrl(item) && (
-                            <div className="food-thumb relative size-24 sm:size-32 rounded-lg overflow-hidden bg-muted shrink-0">
-                              <Image
-                                src={getMenuItemImageUrl(item)!}
-                                alt=""
-                                fill
-                                className="object-cover"
-                                sizes="(min-width: 640px) 128px, 96px"
-                              />
-                            </div>
-                          )}
-
-                          {totalQuantity > 0 ? (
-                            <div className="flex items-center bg-muted/80 p-0.5 min-h-11 rounded-lg border border-border shrink-0">
-                              <button
-                                type="button"
-                                className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
-                                onClick={() => {
-                                  const cartEntry = cartItems.find((ci) => ci.menuItemId === itemId);
-                                  if (cartEntry) updateQuantity(cartEntry.id, cartEntry.quantity - 1);
-                                }}
-                                aria-label={`${t("decreaseQuantity")}: ${item.name}`}
-                              >
-                                <Minus weight="bold" className="size-3.5" />
-                              </button>
-                              <span className="text-xs sm:text-sm font-bold tabular-nums px-2 min-w-[24px] text-center font-inter">
-                                {totalQuantity}
-                              </span>
-                              <button
-                                type="button"
-                                className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
-                                onClick={() => handleAddClick(item)}
-                                aria-label={`${t("increaseQuantity")}: ${item.name}`}
-                              >
-                                <Plus weight="bold" className="size-3.5" />
-                              </button>
-                            </div>
-                          ) : (
-                            <Button
-                              label={t("addToCart")}
-                              variant="secondary"
-                              size="lg"
-                              onClick={() => handleAddClick(item)}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-            {categories.map((category) => {
-              const categoryItems = items.filter((i) => i.categoryId === category.$id);
-              if (categoryItems.length === 0) return null;
-
-              return (
-                <div key={category.$id} id={category.$id} className="scroll-mt-24 space-y-4">
-                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">
-                    {category.name}
-                  </h2>
-                  <div className="divide-y divide-border border-y border-border">
-                    {categoryItems.map((item) => {
-                      const itemCartItems = cartItems.filter((i) => i.menuItemId === item.$id);
-                      const totalQuantity = itemCartItems.reduce((acc, curr) => acc + curr.quantity, 0);
-
-                      return (
-                        <div
-                          key={item.$id}
-                          className="food-row py-4 sm:py-5 flex items-center justify-between gap-4"
-                        >
-                          <div className="flex-1 min-w-0 pr-2">
-                            <h3 className="font-semibold text-base sm:text-lg text-foreground leading-snug">
-                              {item.name}
-                            </h3>
-                            {Boolean(item.dietaryLabels?.length) && (
-                              <p className="mt-1 text-sm text-muted-foreground">
-                                {item.dietaryLabels!.map(label => t(DIETARY_LABEL_KEYS[label])).join(" · ")}
-                              </p>
-                            )}
-                            {item.description && (
-                              <p className="text-sm text-muted-foreground mt-1 max-w-md leading-relaxed">
-                                {item.description}
-                              </p>
-                            )}
-                            <div className="mt-2">
-                              <Price
-                                cents={item.price}
-                                from={hasPaidCustomizations(item.customizations)}
-                                className="font-bold text-sm sm:text-base text-foreground"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col items-end gap-3 shrink-0">
-                            {getMenuItemImageUrl(item) && (
-                              <div className="food-thumb relative size-24 sm:size-32 rounded-lg overflow-hidden bg-muted shrink-0">
-                                <Image
-                                  src={getMenuItemImageUrl(item)!}
-                                  alt=""
-                                  fill
-                                  className="object-cover"
-                                  sizes="(min-width: 640px) 128px, 96px"
-                                />
-                              </div>
-                            )}
-
-                            {totalQuantity > 0 ? (
-                              <div className="flex items-center bg-muted/80 p-0.5 min-h-11 rounded-lg border border-border shrink-0">
-                                <button
-                                  type="button"
-                                  className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
-                                  onClick={() => {
-                                    const cartEntry = cartItems.find((ci) => ci.menuItemId === item.$id);
-                                    if (cartEntry) updateQuantity(cartEntry.id, cartEntry.quantity - 1);
-                                  }}
-                                  aria-label={`${t("decreaseQuantity")}: ${item.name}`}
-                                >
-                                  <Minus weight="bold" className="size-3.5" />
-                                </button>
-                                <span className="text-xs sm:text-sm font-bold tabular-nums px-2 min-w-[24px] text-center font-inter">
-                                  {totalQuantity}
-                                </span>
-                                <button
-                                  type="button"
-                                  className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
-                                  onClick={() => handleAddClick(item)}
-                                  aria-label={`${t("increaseQuantity")}: ${item.name}`}
-                                >
-                                  <Plus weight="bold" className="size-3.5" />
-                                </button>
-                              </div>
-                            ) : (
-                              <Button
-                                label={t("addToCart")}
-                                variant="secondary"
-                                size="lg"
-                                onClick={() => handleAddClick(item)}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+        <GuestMenu
+          business={business}
+          categories={categories}
+          items={items}
+          popularItems={popularItems}
+          type={type}
+          tableNumber={tableNumber}
+          onAdd={handleAddClick}
+        />
 
         {/* Desktop cart */}
         <aside className="hidden lg:block lg:col-span-5 xl:col-span-4">
@@ -555,36 +304,57 @@ export function GuestFrontend({
               <div className="space-y-4">
                 <div className="divide-y divide-border/60 max-h-[360px] overflow-y-auto pr-1">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="py-3 flex items-start justify-between gap-3 text-xs sm:text-sm">
+                    <div
+                      key={item.id}
+                      className="py-3 flex items-start justify-between gap-3 text-xs sm:text-sm"
+                    >
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-foreground truncate">{item.name}</p>
-                        <p className="text-muted-foreground text-xs mt-0.5">
-                          {item.quantity} × <Price cents={item.price} className="inline text-xs text-muted-foreground" />
+                        <p className="font-semibold text-foreground truncate">
+                          {item.name}
                         </p>
-                        {item.customizations && item.customizations.length > 0 && (
-                          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
-                            {item.customizations.map((c) => c.optionName).join(", ")}
-                          </p>
-                        )}
+                        <p className="text-muted-foreground text-xs mt-0.5">
+                          {item.quantity} ×{" "}
+                          <Price
+                            cents={item.price}
+                            className="inline text-xs text-muted-foreground"
+                          />
+                        </p>
+                        {item.customizations &&
+                          item.customizations.length > 0 && (
+                            <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
+                              {item.customizations
+                                .map((c) => c.optionName)
+                                .join(", ")}
+                            </p>
+                          )}
                       </div>
                       <div className="text-right shrink-0 flex flex-col items-end gap-1">
-                        <Price cents={item.price * item.quantity} className="font-bold text-foreground" />
+                        <Price
+                          cents={item.price * item.quantity}
+                          className="font-bold text-foreground"
+                        />
                         <div className="flex items-center bg-muted/60 p-0.5 min-h-11 rounded-lg border border-border/60">
                           <button
                             type="button"
                             className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                             aria-label={`${t("decreaseQuantity")}: ${item.name}`}
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                           >
                             <Minus weight="bold" className="size-4" />
                           </button>
-                          <span className="text-[11px] font-bold tabular-nums px-1.5 font-inter">{item.quantity}</span>
+                          <span className="text-[11px] font-bold tabular-nums px-1.5 font-inter">
+                            {item.quantity}
+                          </span>
                           <button
                             type="button"
                             className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
                             aria-label={`${t("increaseQuantity")}: ${item.name}`}
                             disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                           >
                             <Plus weight="bold" className="size-4" />
                           </button>
@@ -595,32 +365,42 @@ export function GuestFrontend({
                 </div>
 
                 <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-                  <span className="text-muted-foreground">{type === "dine-in" ? t("tableLabel") : t("pickupLabel")}</span>
+                  <span className="text-muted-foreground">
+                    {type === "dine-in" ? t("tableLabel") : t("pickupLabel")}
+                  </span>
                   <b className="font-semibold text-foreground">
-                    {type === "dine-in" && tableNumber ? tableNumber : business.name}
+                    {type === "dine-in" && tableNumber
+                      ? tableNumber
+                      : business.name}
                   </b>
                 </div>
 
                 <div className="total pt-3 border-t border-border flex items-baseline justify-between">
                   <div>
-                    <span className="text-base font-bold text-foreground">{t("total")}</span>
-                    <span className="text-xs text-muted-foreground ml-1.5">{t("taxNote")}</span>
+                    <span className="text-base font-bold text-foreground">
+                      {t("total")}
+                    </span>
+                    <span className="text-xs text-muted-foreground ml-1.5">
+                      {t("taxNote")}
+                    </span>
                   </div>
-                  <Price cents={total()} className="text-xl font-bold text-foreground" />
+                  <Price
+                    cents={total()}
+                    className="text-xl font-bold text-foreground"
+                  />
                 </div>
 
                 <Button
-                  label={t("continueToPayment")}
                   variant="primary"
                   size="lg"
-                  width="100%"
+                  fullWidth
                   onClick={() => {
                     setCartSheetStep("checkout");
                     setCheckoutOpen(true);
                   }}
-                />
-
-
+                >
+                  {t("continueToPayment")}
+                </Button>
               </div>
             )}
           </div>

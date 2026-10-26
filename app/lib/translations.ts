@@ -2,6 +2,8 @@ export type Locale = "de" | "en";
 
 export const translations = {
   de: {
+    popularMenuItems: "Beliebteste",
+    menuCategories: "Menükategorien",
     sellerIdentityTitle: "Verkäuferdaten",
     sellerLegalName: "Gesetzlicher Firmenname",
     sellerTaxId: "Steuernummer",
@@ -681,6 +683,8 @@ export const translations = {
     processedViaZakkigSuffix: " als QR-Bestell- und Bezahlsystem",
   },
   en: {
+    popularMenuItems: "Most popular",
+    menuCategories: "Menu categories",
     sellerIdentityTitle: "Seller details",
     sellerLegalName: "Legal business name",
     sellerTaxId: "Tax number",
