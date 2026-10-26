@@ -16,7 +16,7 @@ Next.js 16, React 19, TypeScript, Tailwind CSS 4, `next-intl`, Base UI und beste
 
 In `app/`: `npm ci`, `npx convex dev` für eine isolierte Entwicklungsumgebung und die im `package.json` definierten `dev`, `typecheck`, `test`, `build:cloudflare` und `check:cloudflare`-Skripte. Keine produktiven Convex-Restores oder Stripe-Live-Tests ohne Freigabe. Siehe [Architektur](../docs/architecture.md), [Sicherheit](../docs/security.md), [QR & Druck](../docs/qr-and-print.md), [Release-Tests](../docs/testing-and-release.md).
 
-Die Browserprüfung läuft vom Repository-Root mit `npx e2e run --config app/e2e.config.ts`. Der Menütest benötigt `E2E_GUEST_PATH` (öffentlicher Pfad eines Entwicklungslokals) und `E2E_SIMPLE_ITEM_NAME` (verfügbarer Artikel ohne Optionen); ohne diese Angaben wird er ausdrücklich übersprungen. Er verändert ausschließlich den lokalen Warenkorb und löst keine Zahlung aus.
+Die Browserprüfung läuft vom Repository-Root mit `npx e2e run --config app/e2e.config.ts`. Der Menütest benötigt `E2E_GUEST_PATH` (öffentlicher Pfad eines Entwicklungslokals) und `E2E_SIMPLE_ITEM_NAME` (verfügbarer Artikel ohne Optionen); ohne diese Angaben wird er ausdrücklich übersprungen. Er verändert ausschließlich den lokalen Warenkorb und löst keine Zahlung aus. Mit `E2E_CUSTOM_ITEM_NAME` wird zusätzlich die vorbereitete Größen-/Belag-Fixture geprüft (Klassisch/Familienpizza, Champignons; Gesamtpreis 15,50 €). Die Artikelauswahl verwendet Base-UI-Radios und -Checkboxen, zeigt Pflichtfehler am betroffenen Abschnitt und sperrt beschädigte Optionsdefinitionen.
 
 ## Rechtliches und Datenschutz
 

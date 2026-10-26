@@ -2,6 +2,9 @@ export type Locale = "de" | "en";
 
 export const translations = {
   de: {
+    customizationUnavailable: "Die Auswahl konnte nicht geladen werden. Bitte schließe die Ansicht und versuche es erneut.",
+    customizationRequired: "Bitte vervollständige die erforderliche Auswahl.",
+    clearSelection: "Auswahl aufheben",
     popularMenuItems: "Beliebteste",
     menuCategories: "Menükategorien",
     sellerIdentityTitle: "Verkäuferdaten",
@@ -683,6 +686,9 @@ export const translations = {
     processedViaZakkigSuffix: " als QR-Bestell- und Bezahlsystem",
   },
   en: {
+    customizationUnavailable: "Options could not be loaded. Close this view and try again.",
+    customizationRequired: "Please complete the required selection.",
+    clearSelection: "Clear selection",
     popularMenuItems: "Most popular",
     menuCategories: "Menu categories",
     sellerIdentityTitle: "Seller details",
