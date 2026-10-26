@@ -315,7 +315,7 @@ Easing funktional `cubic-bezier(.2,.8,.2,1)`; Verabschiedung kürzer als Eintrit
 - `assets/zackisch/brand/brand_mark.svg`
 
 **Mascot-Set (Auswahl der wichtigsten finalen Assets):**
-- `assets/zackisch/mascot/mascot_curious.svg`
+- `assets/zackisch/mascot/mascot_curious_welcome.svg`
 - `assets/zackisch/mascot/mascot_happy.svg`
 - `assets/zackisch/mascot/mascot_wink.svg`
 - `assets/zackisch/mascot/mascot_focused.svg`
@@ -331,8 +331,8 @@ Easing funktional `cubic-bezier(.2,.8,.2,1)`; Verabschiedung kürzer als Eintrit
 - `assets/zackisch/mascot/mascot_order_ready.svg`
 - `assets/zackisch/mascot/mascot_empty_state.svg`
 - `assets/zackisch/mascot/mascot_error_404.svg`
-- `assets/zackisch/mascot/mascot_offline.svg`
-- `assets/zackisch/mascot/mascot_support.svg`
+- `assets/zackisch/mascot/mascot_offline_pause.svg`
+- `assets/zackisch/mascot/mascot_support_listening.svg`
 
 **Doodle-Icons (Kernset):** `assets/zackisch/icons/icon_menu.svg`, `assets/zackisch/icons/icon_cart.svg`, `assets/zackisch/icons/icon_qr_code.svg`, `assets/zackisch/icons/icon_smartphone.svg`, `assets/zackisch/icons/icon_print_qr.svg`, `assets/zackisch/icons/icon_table_number.svg`, `assets/zackisch/icons/icon_receipt.svg`, `assets/zackisch/icons/icon_card_payment.svg`, `assets/zackisch/icons/icon_add.svg`, `assets/zackisch/icons/icon_confirm.svg`, `assets/zackisch/icons/icon_close.svg`, `assets/zackisch/icons/icon_search.svg`, `assets/zackisch/icons/icon_filters.svg`, `assets/zackisch/icons/icon_settings.svg` und weitere Dateien aus `assets/zackisch/icons/`.
 
@@ -368,7 +368,7 @@ Die SVG-Dateien sind echte Illustrationen, **keine** Icons für sicherheits- ode
 
 | Asset | Empfohlene Stelle | Dosierung / Textpflicht |
 |---|---|---|
-| `assets/zackisch/mascot/mascot_curious.svg` | Website: dezenter QR-Einstieg, Onboarding-Welcome | 80–140px; neben echter Überschrift |
+| `assets/zackisch/mascot/mascot_curious_welcome.svg` | Website: dezenter QR-Einstieg, Onboarding-Welcome | 80–140px; neben echter Überschrift |
 | `assets/zackisch/mascot/mascot_happy.svg` | Setup abgeschlossen, sympathisches positives Leermoment | 56–112px; Text benennt Zustand |
 | `assets/zackisch/mascot/mascot_wink.svg` | seltene freundliche Microcopy / Produkthinweis | 40–72px, keine kritischen Controls |
 | `assets/zackisch/mascot/mascot_focused.svg` | Arbeitsschritt „Wir prüfen …“ / Setup-Fortschritt | 48–80px; echte Progress-Information zusätzlich |
@@ -384,8 +384,8 @@ Die SVG-Dateien sind echte Illustrationen, **keine** Icons für sicherheits- ode
 | `assets/zackisch/mascot/mascot_order_ready.svg` | Abholstatus „Bereit“ | 72–120px; Abholkennung und klare Handlung |
 | `assets/zackisch/mascot/mascot_empty_state.svg` | Keine Ergebnisse in Menü/Support/Listen | 72–128px; Ursache und Alternative erklären |
 | `assets/zackisch/mascot/mascot_error_404.svg` | Not Found / 404, aber **nicht** Zahlungsfehler | 96–160px; Navigation zurück erforderlich |
-| `assets/zackisch/mascot/mascot_offline.svg` | Verbindung unterbrochen / Pause | 72–112px; Verbindung und Retry klar erklären |
-| `assets/zackisch/mascot/mascot_support.svg` | Support-Kontakt oder Help-Onboarding | 72–128px; echter Kontaktlink vorhanden |
+| `assets/zackisch/mascot/mascot_offline_pause.svg` | Verbindung unterbrochen / Pause | 72–112px; Verbindung und Retry klar erklären |
+| `assets/zackisch/mascot/mascot_support_listening.svg` | Support-Kontakt oder Help-Onboarding | 72–128px; echter Kontaktlink vorhanden |
 
 **Animierter Mascot:** nur später als freigegebenes separates Animation-Asset; SVG bleibt statisch. Bei `prefers-reduced-motion: reduce` keine kontinuierliche Bewegung. **Höchstens ein** deutlicher Mascot pro Abschnitt, kein Mascot bei Eingabefehlern, Chargebacks oder Sicherheitswarnungen. Auf der Gäste-Oberfläche gilt weiterhin das Lokallogo als primäre Identität.
 
@@ -823,7 +823,7 @@ Alle folgenden Repository-Pfade sind **konkret in diesem Migrationspaket enthalt
 
 | Datei | Einsatz | Einschränkung |
 |---|---|---|
-| `assets/zackisch/mascot/mascot_curious.svg` | öffentliche Website: Begrüßung / Onboarding | nicht in Zahlungskarte |
+| `assets/zackisch/mascot/mascot_curious_welcome.svg` | öffentliche Website: Begrüßung / Onboarding | nicht in Zahlungskarte |
 | `assets/zackisch/mascot/mascot_happy.svg` | abgeschlossener optionaler Schritt, leere positive Antwort | kein Ersatz für Bestätigungslabel |
 | `assets/zackisch/mascot/mascot_wink.svg` | kleine lockere Produkterklärung | nicht bei Warnung oder Fehler |
 | `assets/zackisch/mascot/mascot_focused.svg` | Konfiguration wird geprüft, Suche läuft | kein falscher Fortschritt |
@@ -839,8 +839,8 @@ Alle folgenden Repository-Pfade sind **konkret in diesem Migrationspaket enthalt
 | `assets/zackisch/mascot/mascot_order_ready.svg` | Abholung ausdrücklich bereit | Abholnummer sichtbar halten |
 | `assets/zackisch/mascot/mascot_empty_state.svg` | keine Bestellungen/Suchergebnisse | 09 peeking nicht parallel |
 | `assets/zackisch/mascot/mascot_error_404.svg` | 404-Not-Found-Seite | nicht für Zahlungsfehler |
-| `assets/zackisch/mascot/mascot_offline.svg` | keine Verbindung, Pause | expliziter Retry und Service-Alternative |
-| `assets/zackisch/mascot/mascot_support.svg` | Kontakt/Support-Einstieg | Kontaktweg stets als Text/Link |
+| `assets/zackisch/mascot/mascot_offline_pause.svg` | keine Verbindung, Pause | expliziter Retry und Service-Alternative |
+| `assets/zackisch/mascot/mascot_support_listening.svg` | Kontakt/Support-Einstieg | Kontaktweg stets als Text/Link |
 
 Für diese Varianten gilt: Die SVGs sind *direkt aus der freigegebenen Mascot-Vorschau getraced*. Pupillen nicht beim UI-Rendering verschieben, nicht neu konstruieren, nicht mit zufälligen Strichen dekorieren. `mascot_wink.svg` hat **ein geschlossenes linkes und ein offenes rechtes Auge**. Die grafische Ausrichtung ist nicht semantischer Status.
 

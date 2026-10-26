@@ -1,0 +1,442 @@
+[
+  {
+    "file": "brand/brand_mark.svg",
+    "sha256": "c856a7d8d803a859bbe649546fd9fcf932cc71a6260eab2363c1b4556762b946",
+    "source": "owner-supplied migration package v2",
+    "role": "official-master"
+  },
+  {
+    "file": "brand/combination_mark.svg",
+    "sha256": "b17fe5cab13c78b8d750b583ca074014e984e38a1ca13d9ce94f74989bc1a819",
+    "source": "owner-supplied migration package v2",
+    "role": "official-master"
+  },
+  {
+    "file": "font/zackisch.css",
+    "sha256": "fb634308016e68044a29194f637798bf96c4af34dd474b616827d056dbcdfe56",
+    "source": "owner-supplied migration package v2",
+    "role": "display-font-prototype"
+  },
+  {
+    "file": "font/zackisch.ttf",
+    "sha256": "8f60fd97329d9d620536621746b6a9d33fa47809e862a9e0a582e48ef2147ad6",
+    "source": "owner-supplied migration package v2",
+    "role": "display-font-prototype"
+  },
+  {
+    "file": "font/zackisch.woff2",
+    "sha256": "86d7ec21bdb336dadce49819e9d74919a65c4b9d9899ed942422576d7d339095",
+    "source": "owner-supplied migration package v2",
+    "role": "display-font-prototype"
+  },
+  {
+    "file": "icons/icon_add.svg",
+    "sha256": "fe634eeee8b409d33fe2fc3cd0b3651f799c1bc73bbfddb33aa621ad9b49b998",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_arrow_left.svg",
+    "sha256": "6712592fe00fb74ef5d728e619f8f27b407956f65b86543515c8b78b022d93e5",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_arrow_right.svg",
+    "sha256": "63313e918a966d89374b51a766e650ca368115b64b5b4434f6a0232306b2b3e3",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_call.svg",
+    "sha256": "6e8d3540972c688bdccfd3377fb785f385a3a2ec0338c722ab13df5b6125b75c",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_card_payment.svg",
+    "sha256": "ad4b1c30a4f770dbebf156d59ff087e50f3ab5400f91e4f882bf567fc88b255a",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_cart.svg",
+    "sha256": "2e5d19d1d21c998df0bc55e25f3b996eedff050e3cbae2a736e0a0c6f8d77ccb",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_cash.svg",
+    "sha256": "8ade2792d2dad860d7f865b89044020ae60986ed46939ba7b512c1ad3a69c78a",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_chat.svg",
+    "sha256": "31e7f12c378df9813bcb413241f592c889a7405b61c88cbc8873cef5d1992804",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_close.svg",
+    "sha256": "dccbf2eb8ead19a7e94ed155676602451192139a0ec06eb922a628260cbdaea8",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_confirm.svg",
+    "sha256": "e3564a250bd27a4cc826803b4836fdacabdbcac97afef34000683cdfa3fb8107",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_cutlery.svg",
+    "sha256": "42367de27c859560853e2a87aedc9c84d3cbe85115f555667ef9c43b3714e7bc",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_dashboard.svg",
+    "sha256": "d1781f9edd03a9b6caf8d99dc7a177f7952b5ca2b040c4b40d882f4406d46500",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_delete.svg",
+    "sha256": "689fa4a8b1e5a1bc4901c567f1a6cdeb1fe9f8fb55f014af322d1a3e0946dd1c",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_favorite.svg",
+    "sha256": "ef77f9a4082fe48892ca7eba51520b0c2fad4baf8b8541189878d046a6536a9f",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_filters.svg",
+    "sha256": "f43b3b9d64fad3b2070a2be14974e12c85f2a02344e867436624cf50af347e63",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_help.svg",
+    "sha256": "2c85cf955c7bce3b6290ea17753fed9e8276282680eb08a32521a3e093a94dac",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_info.svg",
+    "sha256": "2d6b350ae80532b8dc2fe0d4a8c87328204961fde2fe62c1a688aacfe793ed7c",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_location.svg",
+    "sha256": "7af509a319cbdda0cc13c95190655c7643f98a3e38d5f902a8355e989ffd87a2",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_menu.svg",
+    "sha256": "341b5ac59d7d2873b3c95cfa8ff7ad8c457b18239fe787a5aba26b50ba3f1351",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_message.svg",
+    "sha256": "dd32ee49c311538f247c85d394d634f04d20aa2e1d75a7273c14e9cda68c2464",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_notification.svg",
+    "sha256": "8cbf53c157de62bc53b2f6e7c6412147786733e80000790f3c439d1125c1df96",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_order.svg",
+    "sha256": "3bab316a8cf8271b9f90aeebbe76762e9e80c15d3e0245faa2a46a92a0af8a62",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_order_ticket.svg",
+    "sha256": "2ce7999203a9e050bb29f073408d07b9c01d2d0b05bc4c51bfbfea843fe11478",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_payment.svg",
+    "sha256": "63005cbacd7aa8b372776da8a75c10ac4cbb1e52ba6dbab41170c463f546c85f",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_pickup.svg",
+    "sha256": "773e909d891d902b0931ffaa2b5f4a59ed304b04fc03a6a860a569c7c495edec",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_plate.svg",
+    "sha256": "19d48d0363a296557dc05b03c745f5e723f0b9398afd87c8f2c1ec0e57eab366",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_print_qr.svg",
+    "sha256": "b239b1dcf61622a2f801e4ee2acbd9a8abcaf55ae5bc8935e89e20016c27aac1",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_qr_code.svg",
+    "sha256": "67e2fa30fc40b3abce5ec944a27c1f7e39aebdeec961815c9e057fcd9f3bf796",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_receipt.svg",
+    "sha256": "165cf3d18fcf431bb1ea325d911da81eca7177e904281019fbc62a6977195296",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_receipt_list.svg",
+    "sha256": "2436073674112b490ac0d491fe7050aa2c942ccaf6b20ef4f6b9bbfcecf8304a",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_refresh.svg",
+    "sha256": "1551562352a89e8c7ec535af98c122224f719ab35d4b1521a4bb3d8d44c124ec",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_remove.svg",
+    "sha256": "498772d353125476a510d8bdf4bed74e5febf81164c96321b44ad0369f5dc443",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_scan.svg",
+    "sha256": "4e0da9acea52962c49e2afcfb03a74e0d717a7d6abaea8e358b3a86d9892ecd2",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_search.svg",
+    "sha256": "2e442c20bf9a4f59c01f37420143706c42bbd365d633209072e84158b1e925eb",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_settings.svg",
+    "sha256": "1f14b211ccd397c7edd56db2b4541ef44c9cccf09b48dcc2f67db1ed1ae825f2",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_shopping_bag.svg",
+    "sha256": "0bb12b5af1fe4f97bf292ff9aef3717a18e855d918000df52609750838823492",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_smartphone.svg",
+    "sha256": "8fa2a21ac2f435af97a136c9a34d9b82d1ccb980eb5c34cc117ff8afb92bbc39",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_staff.svg",
+    "sha256": "10d37a481a9249f1f730be68e46370491afde301f713fc5b3a1b2c4ff0847bbf",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_staff_tablet.svg",
+    "sha256": "5709a23efc209d669e29e29ee3fbdeac3f4000834011b5e541e066f443b47ad0",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_star.svg",
+    "sha256": "da0f37d2b2539226e3d4000f7e08cf8b1fe30e907d00268547f1deeadb68220d",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_support.svg",
+    "sha256": "81729aece9b5782e8db31c7d1f85c532afad1c3d531073e1a938c3be4f6216cf",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_table_number.svg",
+    "sha256": "cdc6c170a0d93e3038569bc2c2f0964a6162055da8218385deffa5c9f9cbf2ca",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_takeaway.svg",
+    "sha256": "b13cfaf98e47ee18f5daac1701015901efdf66f9991b237506b20936b54a6702",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_tip.svg",
+    "sha256": "5172360b868727e3355d5093a0b506684fb639781c3636d5b7d0a5253c7f2a1f",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_upload_photo.svg",
+    "sha256": "8289ffc515c913c828e8a58e7a544b8110c114a28c5251676729ddedbd4fa101",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_upload_photo_alt.svg",
+    "sha256": "cfa3e0a7e89e76d99e752522b6498096453e4b617cb282d6fceb376ee4db6fda",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_view.svg",
+    "sha256": "9c12cb857ca9aec949284047f1e9342c2ace0eee7fded2d76d1380a733451fcd",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "icons/icon_warning.svg",
+    "sha256": "785fe2fad1f96642eb42a13ca905299d6e9589dec0bf8c690861dd5d93bf9006",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_celebrating.svg",
+    "sha256": "8346e92d6313700b0857c890076f854b34650a79be6ca9221f7fb9bcb6b42015",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_curious_welcome.svg",
+    "sha256": "acee4e42056282de6e80996948467df538c8c1886209e9130119445e5a7b3cd1",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_empty_state.svg",
+    "sha256": "a7820887a05746447ec82f4fef3ceec59fb19e67a945e50cf44a4d5e7dc9c18d",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_error_404.svg",
+    "sha256": "80600994a00b8cab77ea41a839ca3f68ff797b0c6634875409d0a688ae638c77",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_excited.svg",
+    "sha256": "084ba4f82ebcc0705d8b3974757e8507f0176dd619b9224c30bdb4c42c6cb322",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_focused.svg",
+    "sha256": "3f1ca783df705ff5ef56c89fb4d4ce21223772ddbb67b932ec6104b60c523d4e",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_happy.svg",
+    "sha256": "61b6f2a9d2d980fe41de8385290454b5e7a414d39d9b19df5d4f044718c65442",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_helpful_guide.svg",
+    "sha256": "b5d3a961063a697d38ee66d5c77fccbace619e9ca27301c42306e6824f2bcbac",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_offline_pause.svg",
+    "sha256": "363623f65f3dc6a9fd5a6bd0a37b8809a69ccd5e5693c98d5fc5aed9e6f0b901",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_order_ready.svg",
+    "sha256": "31ffc1f495fde447e42cc2a14db9a0d081a3e39228c807233b1f01f9e08ed07f",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_order_received.svg",
+    "sha256": "b807a6820dd0f43c68f50dfd2f05df041bca23b2cc81877b2b5d3d3fb92ab1fd",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_payment_success.svg",
+    "sha256": "2fa103a66006e61eedeae9dce668510aecb8f67d0dc45f1f42e17b0b65166cdf",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_peeking.svg",
+    "sha256": "91eb70252a7468cc38e375f4e755d9fb3b5a02f9ddd820ae2fa5135275da9c08",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_scan_qr.svg",
+    "sha256": "94e4ebb9dbed7bf01ebf84bf07b0bccb1728dd9d4798c56c03cf1539e26fba87",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_sleeping.svg",
+    "sha256": "962dc8f73c98aa919229f5b385e2f0e301a9c4892a7baf33625c150bf55d64ed",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_support_listening.svg",
+    "sha256": "75a7aee07e8dce9bb81430fd29ebb39324db37da8e5d5125f016d761ab7a83bc",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_thinking.svg",
+    "sha256": "4d6c311abcdc37377305907b2cc0159225515599fe20ddbe58b16cb094924089",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "mascot/mascot_wink.svg",
+    "sha256": "9d785736118152f0f34875680823ff7a086381429c02595b4495d9c0e089928a",
+    "source": "owner-supplied migration package v2",
+    "role": "approved-traced-artwork"
+  },
+  {
+    "file": "font/inter-variable.woff2",
+    "sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+    "source": "https://github.com/rsms/inter",
+    "license": "SIL Open Font License 1.1",
+    "role": "ui-font"
+  },
+  {
+    "file": "font/inter-license.txt",
+    "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a",
+    "source": "https://github.com/rsms/inter",
+    "license": "SIL Open Font License 1.1",
+    "role": "license"
+  }
+]

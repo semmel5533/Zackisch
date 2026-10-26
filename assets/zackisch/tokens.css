@@ -1,0 +1,70 @@
+/* Canonical values from DESIGN.md section 03a. Shared by all four apps. */
+:root {
+  --zk-font-ui: "Inter", system-ui, sans-serif;
+  --zk-font-doodle: "Zackisch", cursive;
+
+  --zk-white: #ffffff;
+  --zk-black: #000000;
+  --zk-neutral-900: #333333;
+  --zk-neutral-700: #595959;
+  --zk-neutral-500: #737373;
+  --zk-neutral-200: #e6e6e4;
+  --zk-neutral-100: #f3f3f1;
+  --zk-off-white: #fafaf9;
+  --zk-cobalt: #315bcd;
+  --zk-light-blue: #b9c9f1;
+
+  --zk-page: var(--zk-off-white);
+  --zk-surface: var(--zk-white);
+  --zk-surface-muted: var(--zk-neutral-100);
+  --zk-text: var(--zk-black);
+  --zk-text-body: var(--zk-neutral-900);
+  --zk-text-secondary: var(--zk-neutral-700);
+  --zk-border: var(--zk-neutral-200);
+  --zk-border-strong: var(--zk-neutral-500);
+  --zk-action: var(--zk-black);
+  --zk-action-fg: var(--zk-white);
+  --zk-link: var(--zk-cobalt);
+  --zk-focus: var(--zk-cobalt);
+  --zk-success-text: #146044;
+  --zk-success-bg: #e8f5ee;
+  --zk-warning-text: #744800;
+  --zk-warning-bg: #fff5dd;
+  --zk-error-text: #a52828;
+  --zk-error-bg: #fff0f0;
+  --zk-info-bg: #ecf1ff;
+
+  --zk-space-0: 0px;
+  --zk-space-1: 4px;
+  --zk-space-2: 8px;
+  --zk-space-3: 12px;
+  --zk-space-4: 16px;
+  --zk-space-5: 20px;
+  --zk-space-6: 24px;
+  --zk-space-8: 32px;
+  --zk-space-10: 40px;
+  --zk-space-12: 48px;
+  --zk-space-16: 64px;
+  --zk-space-20: 80px;
+  --zk-space-24: 96px;
+  --zk-space-32: 128px;
+
+  --zk-radius-xs: 4px;
+  --zk-radius-sm: 8px;
+  --zk-radius-md: 12px;
+  --zk-radius-lg: 16px;
+  --zk-radius-xl: 20px;
+  --zk-radius-2xl: 24px;
+  --zk-radius-pill: 9999px;
+
+  --zk-control-sm: 40px;
+  --zk-control-md: 48px;
+  --zk-control-lg: 56px;
+  --zk-touch-min: 44px;
+  --zk-stroke-ui: 2px;
+  --zk-duration-fast: 120ms;
+  --zk-duration-standard: 180ms;
+  --zk-duration-slow: 280ms;
+  --zk-ease: cubic-bezier(.2,.8,.2,1);
+  --zk-shadow-dialog: 0 16px 50px rgba(0,0,0,.10);
+}

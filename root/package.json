@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "type": "module",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",
     "check:cloudflare": "vinext-cloudflare deploy --dry-run",
