@@ -65,3 +65,57 @@ test("customization requires a size, supports radio keyboard control and prices 
     "15,50",
   );
 });
+
+test("cart opens a stable checkout with zero optional tip and validates email before payment", async ({
+  app,
+  screen,
+  browser,
+}) => {
+  const path = process.env.E2E_GUEST_PATH ?? "";
+  const itemName = process.env.E2E_SIMPLE_ITEM_NAME ?? "";
+  test.skip(
+    !path || !itemName,
+    "Configure a development venue and simple item",
+  );
+  await browser.setViewport({ width: 390, height: 844 });
+  await app.open(path);
+  await screen.getByRole("button", `Hinzufügen: ${itemName}`).tap();
+  await screen.getByRole("button", /^1 · Zum Warenkorb/).tap();
+  await screen
+    .getByRole("dialog", "Warenkorb")
+    .getByRole("button", /^Weiter zur Zahlung/)
+    .tap();
+  await expect(browser).toHaveURL(`${path}/checkout`);
+  await expect(
+    screen.getByRole("heading", "Zur Kasse", { exact: true }),
+  ).toBeVisible();
+  await expect(screen.getByRole("radio", "Kein")).toBeChecked();
+  await screen.getByRole("radio", "10 %", { exact: true }).check();
+  await expect(screen.getByText("9,35", { exact: false })).toBeVisible();
+  await screen.getByRole("checkbox").check();
+  await screen.getByRole("button", "Zahlungspflichtig weiter").tap();
+  await expect(
+    screen.getByRole("alert").filter({ hasText: "gültige E-Mail-Adresse" }),
+  ).toBeVisible();
+  await screen.getByRole("link", "Zurück zum Menü").tap();
+  await expect(browser).toHaveURL(path);
+  await expect(screen.getByRole("button", /^1 · Zum Warenkorb/)).toBeVisible();
+});
+
+test("direct checkout handles an empty cart and repeated table query safely", async ({
+  app,
+  screen,
+}) => {
+  const path = process.env.E2E_GUEST_PATH ?? "";
+  test.skip(!path, "Configure a development venue");
+  await app.open(`${path}/checkout?table=12&table=13`);
+  await expect(
+    screen.getByRole("heading", "Zur Kasse", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    screen.getByText("Dein Warenkorb ist leer", { exact: false }),
+  ).toBeVisible();
+  await expect(
+    screen.getByRole("button", "Zahlungspflichtig weiter"),
+  ).toBeHidden();
+});

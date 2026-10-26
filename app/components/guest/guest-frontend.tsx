@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Minus, DownloadSimple, Check } from "@phosphor-icons/react";
+import { DownloadSimple, Check } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
-import { MAX_CART_ITEM_QUANTITY, useCartStore } from "@/store/cart-store";
+import { useCartStore } from "@/store/cart-store";
 import { Button } from "@/components/ui/button";
+import { CartItems } from "@/components/guest/cart-items";
 import { CartSheet } from "@/components/guest/cart-sheet";
 import { Price } from "@/components/common/price";
 import { OrderTracker } from "@/components/guest/order-tracker";
+import { guestCheckoutPath } from "@/lib/guest-paths";
 import { GuestMenu } from "./guest-menu";
 import { CustomizationModal } from "@/components/guest/customization-modal";
 import { cartVariantId } from "@/lib/cart-variant";
@@ -181,12 +183,10 @@ export function GuestFrontend({
 }: GuestFrontendProps) {
   const router = useRouter();
   const { t, locale } = useTranslation();
-  const { items: cartItems, updateQuantity, addItem, total } = useCartStore();
+  const { items: cartItems, addItem, total } = useCartStore();
 
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [cartSheetStep, setCartSheetStep] = useState<"cart" | "checkout">(
-    "cart",
-  );
+
   const [customizationItem, setCustomizationItem] = useState<MenuItem | null>(
     null,
   );
@@ -302,67 +302,7 @@ export function GuestFrontend({
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="divide-y divide-border/60 max-h-[360px] overflow-y-auto pr-1">
-                  {cartItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="py-3 flex items-start justify-between gap-3 text-xs sm:text-sm"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-foreground truncate">
-                          {item.name}
-                        </p>
-                        <p className="text-muted-foreground text-xs mt-0.5">
-                          {item.quantity} ×{" "}
-                          <Price
-                            cents={item.price}
-                            className="inline text-xs text-muted-foreground"
-                          />
-                        </p>
-                        {item.customizations &&
-                          item.customizations.length > 0 && (
-                            <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
-                              {item.customizations
-                                .map((c) => c.optionName)
-                                .join(", ")}
-                            </p>
-                          )}
-                      </div>
-                      <div className="text-right shrink-0 flex flex-col items-end gap-1">
-                        <Price
-                          cents={item.price * item.quantity}
-                          className="font-bold text-foreground"
-                        />
-                        <div className="flex items-center bg-muted/60 p-0.5 min-h-11 rounded-lg border border-border/60">
-                          <button
-                            type="button"
-                            className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
-                            aria-label={`${t("decreaseQuantity")}: ${item.name}`}
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity - 1)
-                            }
-                          >
-                            <Minus weight="bold" className="size-4" />
-                          </button>
-                          <span className="text-[11px] font-bold tabular-nums px-1.5 font-inter">
-                            {item.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            className="size-11 rounded-lg flex items-center justify-center hover:bg-background text-foreground transition-colors cursor-pointer"
-                            aria-label={`${t("increaseQuantity")}: ${item.name}`}
-                            disabled={item.quantity >= MAX_CART_ITEM_QUANTITY}
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
-                            }
-                          >
-                            <Plus weight="bold" className="size-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <CartItems />
 
                 <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
                   <span className="text-muted-foreground">
@@ -395,8 +335,9 @@ export function GuestFrontend({
                   size="lg"
                   fullWidth
                   onClick={() => {
-                    setCartSheetStep("checkout");
-                    setCheckoutOpen(true);
+                    router.push(
+                      guestCheckoutPath(business.$id, type, tableNumber),
+                    );
                   }}
                 >
                   {t("continueToPayment")}
@@ -410,7 +351,6 @@ export function GuestFrontend({
       {/* Floating Cart for Mobile & Desktop Dock */}
       <FloatingCartBanner
         onOpenCart={() => {
-          setCartSheetStep("cart");
           setCheckoutOpen(true);
         }}
       />
@@ -430,16 +370,6 @@ export function GuestFrontend({
         business={business}
         type={type}
         tableNumber={tableNumber}
-        initialStep={cartSheetStep}
-        onOrderSuccess={(newOrderId, orderNumber) => {
-          setCheckoutOpen(false);
-          useCartStore.getState().clearCart();
-          if (type === "takeaway") {
-            router.push(`/pickup/${business.$id}?order=${newOrderId}`);
-          } else {
-            setDineInSuccess({ orderNumber });
-          }
-        }}
       />
     </div>
   );

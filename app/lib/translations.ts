@@ -2,6 +2,14 @@ export type Locale = "de" | "en";
 
 export const translations = {
   de: {
+    guestBackToMenu: "Zurück zum Menü",
+    guestDineInContext: "Bestellung am Tisch",
+    guestSuggestedItems: "Passend dazu",
+    guestVoluntaryTip: "Freiwilliges Trinkgeld für das Team",
+    guestNoTip: "Kein",
+    guestTipDisclosure: "100 % des Trinkgelds gehen ohne Zackisch-Provision an den Betrieb.",
+    guestContinueToPay: "Zahlungspflichtig weiter",
+
     customizationUnavailable: "Die Auswahl konnte nicht geladen werden. Bitte schließe die Ansicht und versuche es erneut.",
     customizationRequired: "Bitte vervollständige die erforderliche Auswahl.",
     clearSelection: "Auswahl aufheben",
@@ -686,6 +694,14 @@ export const translations = {
     processedViaZakkigSuffix: " als QR-Bestell- und Bezahlsystem",
   },
   en: {
+    guestBackToMenu: "Back to menu",
+    guestDineInContext: "Dine-in order",
+    guestSuggestedItems: "Suggested additions",
+    guestVoluntaryTip: "Voluntary tip for the team",
+    guestNoTip: "None",
+    guestTipDisclosure: "100% of the voluntary tip goes to the venue without any Zackisch platform fee.",
+    guestContinueToPay: "Continue to pay",
+
     customizationUnavailable: "Options could not be loaded. Close this view and try again.",
     customizationRequired: "Please complete the required selection.",
     clearSelection: "Clear selection",
