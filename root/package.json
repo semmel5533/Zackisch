@@ -1,20 +1,24 @@
 {
   "name": "root",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",
     "check:cloudflare": "vinext-cloudflare deploy --dry-run",
-    "deploy:cloudflare": "vinext-cloudflare deploy"
+    "deploy:cloudflare": "vinext-cloudflare deploy",
+    "predev": "node ../scripts/sync-brand-assets.mjs root",
+    "prebuild": "node ../scripts/sync-brand-assets.mjs root",
+    "prebuild:cloudflare": "node ../scripts/sync-brand-assets.mjs root",
+    "predev:cloudflare": "node ../scripts/sync-brand-assets.mjs root"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

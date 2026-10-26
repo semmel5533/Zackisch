@@ -1,18 +1,36 @@
 # Zackisch Website (`root`)
 
-Die öffentliche Website unter `https://zackisch.com` erklärt Zackisch für Gastronomiebetriebe in Deutschland und führt direkt zur Selbstregistrierung oder zum Voraussetzungen-Check. Sie stellt den Nutzen für bestehende Betriebe vor die technische Funktionsliste: vorhandene Kasse behalten, eigenständig einrichten, eigenes geeignetes Tablet verwenden, QR-Codes selbst drucken, keine monatliche Zackisch-Grundgebühr.
+Die Marketingwebsite erklärt den optionalen QR-Bestellweg für Gastronomiebetriebe in Deutschland. Zackisch ergänzt die bestehende Kasse und den persönlichen Service. Links führen zur Betreiberregistrierung, Anmeldung und zum Supportcenter.
 
-## Technik
+## Inhalte und Sprachen
 
-Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, `next-intl`, zugängliche Base-UI-Primitiven und das gemeinsame Zackisch-Designsystem. Die Website wird über Cloudflare Workers mit vinext und überwiegend statisch vorgerenderten Inhalten ausgeliefert. Newsletter und andere dynamische Aktionen werden über bestehende zulässige Backend-Endpunkte abgewickelt; keine geheimen Schlüssel im statischen Frontend.
+`/de-de` und `/de-en` enthalten die deutsche und englische Startseite. Unter beiden Sprachpfaden sind Kosten (`pricing`), Studienquelle und Einordnung (`research`), Kontakt (`contact`), Anbieterhinweis (`legal-notice`) und Datenschutzbeschreibung (`privacy`) erreichbar. Canonical- und Hreflang-Metadaten sowie die Dokumentsprache entsprechen dem jeweiligen Pfad. Unbekannte Seiten erhalten eine 404-Antwort.
 
-## Regionen und Inhalte
+Die Startseite zeigt Ablauf, Voraussetzungen, 2%-Gebühr einschließlich gegebenenfalls anfallender Umsatzsteuer auf die Zackisch-Gebühr, separate Stripe-Gebühren und FAQ. Die Studienzahl ist eine externe Selbstauskunft und kein Zackisch-Wirkungsnachweis. Produktaufnahmen sind ausdrücklich beschriftete graue Platzhalter. Das lokal gespeicherte Barista-Foto hat einen Quellen- und Lizenznachweis in `public/media/credits.json` und auf der Seite.
 
-`/de-de` ist die deutschsprachige Deutschland-Seite, `/de-en` die englischsprachige. Beide verwenden konsistente Canonical-/Hreflang-Angaben. Die Seite enthält verständlichen Hero, echten Gastronomiekontext, Ablauf, Voraussetzungen, Kassen-Ergänzungsmodell, DIY-Geräte- und Druckhinweise, transparente Preise mit Zahlungsanbietergebühren, FAQ, Rechtstexte und einen Link zum ausführlichen Hilfe-Center. Die Produktdarstellung zeigt ausschließlich echte verfügbare Funktionen und überprüfbare Aussagen.
+## Technik und Gestaltung
 
-## Entwicklung
+Next.js 16 App Router, React 19, TypeScript und Base UI für Dialoge und Akkordeon. Lokalisierte Wörterbücher liegen in `lib/content.ts`. [`../DESIGN.md`](../DESIGN.md) definiert die Gestaltung; Tokens, unveränderte Logo-SVGs und selbst gehostetes Inter stammen aus `../assets/zackisch/`. Das Skript `../scripts/sync-brand-assets.mjs` kopiert vor Entwicklung und Build die verwendeten Originale in den ignorierten öffentlichen Assetordner. Es gibt keine extern geladenen Schriften oder optionalen Analyse- und Werbedienste.
 
+## Entwicklung und Prüfung
 
-## Rechtliches und Datenschutz
+Aus dem Repository-Root:
 
-Die rechtliche Umsetzung richtet sich nach den geprüften Vertragsbeziehungen, dem tatsächlich eingesetzten Stripe-Connect-Modell, DSGVO-/Datenschutzanforderungen und den für Deutschland geltenden steuer- und kassentechnischen Pflichten. Technische Grundlagen sind in [`docs/germany-legal-and-regulatory.md`](../docs/germany-legal-and-regulatory.md), [`docs/privacy-and-data-governance.md`](../docs/privacy-and-data-governance.md) und [`docs/legal-pages-consents-and-contracts.md`](../docs/legal-pages-consents-and-contracts.md) dokumentiert. Zahlungs- und Steuerfragen stehen in [`docs/payments-and-stripe.md`](../docs/payments-and-stripe.md) und [`docs/tax-invoicing-and-fiscalization.md`](../docs/tax-invoicing-and-fiscalization.md). Die veröffentlichten Rechtstexte beruhen auf freigegebenen Unternehmensangaben und der tatsächlichen Anwendungskonfiguration. Die bestehenden Zackisch-Logoassets und Poppins bleiben Grundlage der visuellen Markenführung.
+```sh
+npm run dev --prefix root
+npm run lint --prefix root
+npm run typecheck --prefix root
+npm run test --prefix root
+npm run build --prefix root
+npm run build:cloudflare --prefix root
+npm run check:cloudflare --prefix root
+npx e2e run root/tests
+```
+
+Die Browsertests prüfen unter anderem lokale Schriften und Bilder, Sprachmetadaten, 320-Pixel-Darstellung, Menü, Fokus-Rückgabe, FAQ, Datenschutzeinstellungen und 404. Der vinext-Dry-Run prüft die Deploymentkonfiguration; er baut und veröffentlicht selbst nichts.
+
+## Veröffentlichung und Rechtstexte
+
+Die Anbieterangaben und vollständigen Rechtstexte sind noch nicht freigegeben. Die betreffenden Seiten kennzeichnen diese Einschränkung. Alle Seiten tragen `noindex`, `robots.txt` sperrt die Indexierung und die Sitemap ist leer. Diese Maßnahmen ersetzen keine Zugriffskontrolle oder juristische Freigabe. Der aktuelle Stand ist eine lokale Vorschau und darf nicht als rechtsgeprüfte öffentliche Website aktiviert werden.
+
+Maßgeblich bleiben [`../docs/legal-pages-consents-and-contracts.md`](../docs/legal-pages-consents-and-contracts.md), [`../docs/privacy-and-data-governance.md`](../docs/privacy-and-data-governance.md) und die Zahlungs-/Steuerdokumentation. Die Marketingwebsite nimmt selbst keine Zahlungen entgegen.
