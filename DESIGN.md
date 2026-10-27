@@ -1,6 +1,6 @@
 # Zackisch — DESIGN SYSTEM
 
-**Status:** verbindliches Soll-Design · **Version:** 5.0 · **Stand:** 26.10.2026 · **Repository-Pfad:** `/DESIGN.md`
+**Status:** verbindliches Soll-Design · **Version:** 5.1 · **Stand:** 27.10.2026 · **Repository-Pfad:** `/DESIGN.md`
 
 **Geltung:** Marke, öffentliche Website (`root/`), Betreiber- und Gästeoberflächen (`app/`), Personal-Tablet, Hilfe-Center (`support/`), internes Team (`internal/`) und physische QR-Materialien.
 
@@ -178,7 +178,7 @@ Die folgenden Werte sind die **Source of Truth für neue UI-Tokens**; in allen v
 
 **Schriftrollen, die Komponenten tatsächlich verwenden:** `display.hero` 72/44px 700; `display.section` 52/36px 700; `heading.h1` 32/28px 700; `heading.h2` 26/24px 700; `heading.h3` 22/20px 600; `heading.h4` 18px 600; `body.md` 16px 400; `label.md` 14px 600; `button.md` 16px 600. Die vollständige Tabelle im folgenden Abschnitt ist normativ. Doodle-Font nur handschriftliches Akzent-Lettering, niemals Functional UI.
 
-**Base-UI-Anbindung:** `@base-ui/react` liefert ungestylte, zugängliche Interaktion und den Zustandsvertrag. Die Zackisch-Wrapper definieren deren Appearance über diese Tokens, sichtbare Fokusführung und Component-States. Komponenten verwenden die dokumentierten Base-UI-State-Attribute (`[data-open]`, `[data-checked]`, `[data-disabled]`, `[data-invalid]` soweit für das konkrete Primitive vorgesehen) statt CSS-Klassen eines Fremd-Themes. Immer die API der installierten Base-UI-Version prüfen. Keine Radix-, Shadcn-, Astryx- oder fertigen Hallmark-Themes als zweite Komponentenbibliothek installieren.
+**Base-UI-Anbindung:** `@base-ui/react` liefert ungestylte, zugängliche Interaktion und den Zustandsvertrag. Die Zackisch-Wrapper definieren deren Appearance über diese Tokens, sichtbare Fokusführung und Component-States. Komponenten verwenden die dokumentierten Base-UI-State-Attribute (`[data-open]`, `[data-checked]`, `[data-disabled]`, `[data-invalid]` soweit für das konkrete Primitive vorgesehen) statt CSS-Klassen eines Fremd-Themes. Immer die API der installierten Base-UI-Version prüfen. Keine Radix-, Shadcn-, Astryx- oder fertigen Katalog-Themes als zweite Komponentenbibliothek installieren.
 
 **Anwendungsbeispiele der Tokenrolle:** Haupt-Button 48px hoch (`--zk-control-md`), Radius 12px (`--zk-radius-md`), Padding 16–24px, Schwarz mit weißer Schrift; Primary im Gast-/Personal-Kontext mit 56px Höhe. Eingaben 48px / 12px Radius, Default-Rahmen 1px `--zk-border-strong`, Fokus mindestens 2px `--zk-focus` mit ausreichendem Abstand. Dialog-Fläche Weiß, Radius 24px, Padding 24px, genau ein dominanter Primary-Action-Button. Card 16px Radius; flache Border statt generischer Dauerschatten. Tooltip ersetzt nie das sichtbare Formularlabel.
 
@@ -798,22 +798,21 @@ Keine automatischen inhaltslosen Bewegtbild-Karussells, keine „ästhetischen�
 **Implementierungsagent:** Zuerst dieses Dokument lesen; technischen Produktkontext aus Projekt-READMEs/AGENTS und Fach-Docs prüfen; UI von Null nach diesen Tokens und semantischen Mustern aufbauen. Keine bestehenden Design-Tokens blind portieren. Die technische Produktwahrheit steht in [`README.md`](README.md) und den dort verlinkten Projekt-/Fachdokumenten. Diese Datei ist die **einzige** visuelle Soll-Spezifikation. Die Funktion, Rechte und Zahlungsfreigaben ändern sich **nicht** aufgrund einer Designentscheidung.
 
 
-## Hallmark / Anti-AI-Slop: verbindlicher Design-Review-Modus
+## Paper Design und Taste: Designprozess ohne fremdes Theme
 
-**Hallmark wird ausschließlich als Review-Werkzeug mit `custom`- bzw. `custom bespoke`-Ausrichtung benutzt.** Die Farben, Typografien, Abstände, Radien, Bildsprache, Komponenten und Layoutregeln in **dieser** `DESIGN.md` sind nicht verhandelbar. Keine Hallmark-Katalogthemes, keine vorgeschlagene Fremd-Palette, keine andere Fontkombination, keine generischen UI-Kits übernehmen. Ein Hallmark-Vorschlag, der der Zackisch-Gestaltung widerspricht, wird verworfen; seine allgemeingültige Qualitätsregel kann trotzdem berücksichtigt werden.
+**Verbindliche gestalterische Arbeitsweise:** Vor größeren UI-Änderungen wird die Oberfläche **im einzigen Paper-Projekt namens `Zackisch`** ausgearbeitet, geprüft und als benanntes Frame freigegeben bzw. dokumentiert. Paper ist der gemeinsame Design-Arbeitsraum über alle vier Anwendungen hinweg. Die visuelle Identität und Design-Tokens kommen ausschließlich aus dieser Datei und `assets/zackisch/tokens.css`; Paper ist kein zweites Markendesign und keine neue Theme-Bibliothek.
 
-**Empfohlener Agent-Prompt:** „Use Hallmark in **custom bespoke** mode only as an anti-slop and visual critique layer. The root DESIGN.md owns the entire visual language. Preserve Base UI, Inter, the Zackisch accent font, monochrome tokens, branded vector assets, actual copy and actual product behavior. Do not select or copy a Hallmark catalog theme. Run sloplint / visual and accessibility checks against the implemented screens; fix objective issues without restyling the brand.”
+**Paper-Ordnung (ein Projekt `Zackisch`, nicht vier getrennte Projekte):** `00-system`, `10-root-marketing`, `20-app-guest`, `21-app-merchant`, `22-app-staff`, `30-support`, `40-internal`, `90-reviews`. Eine Gruppe enthält passende Desktop-, Tablet- und Mobile-Frames, relevante Interaktionszustände, echte Texte und vorgegebene Asset-Referenzen. Vor neuen Frames ist zu prüfen, ob entsprechende Frames bereits vorhanden sind, damit im bestehenden System weitergearbeitet wird statt Dubletten zu erzeugen.
 
-**Prüfregeln:** Keine künstlichen Kennzahlen oder Testimonials, keine nicht vorhandenen App-Screenshots, kein Hero aus drei leeren Geräteframes, keine Text-auf-Foto-Bereiche ohne kontrollierten Kontrast, keine doppelte prominente Filled-CTA-Gruppe, keine unbegründeten Gradients, kein „Eyebrow“ über jeder Überschrift, keine sinnlosen Mikro-Animationen, kein horizontales Scrollen bei 320px. Echte Screenshot-/Print-Assets nutzen, sonst neutrale graue Platzhalter mit Beschriftung; lizenzierte echte Menschenfotos sind zulässig. Interaktionen nach Zweck statt nach Katalogstruktur komponieren.
+**Taste-Skill (`design-taste-frontend`) als kritisches Review:** Der Skill `design-taste-frontend` liefert Layout-, Hierarchie-, Bild-/Motion- und Anti-Slop-Hinweise. Er **darf keine** Branding-Tokens, Farben, Typografie, Bildmarke, White-Label-Vorgaben, Komponentenbibliothek oder Layoutfunktionalität überschreiben. Für Zackisch gelten explizit die weißen/off-white Flächen (`#FAFAF9` / `#FFFFFF`) und `#000000` statt eventueller Taste-Defaultvorgaben wie Off-Black oder erzwungenem Dark Mode. Keine erzwungene Animation, keine unnötigen Verzierungsstriche.
 
-**Review-Workflow:** Design.md lesen → User-Journey und echte Inhalte prüfen → Zackisch-custom Design bauen → Hallmark Slop-/Browser-Audit → Accessibility und Responsive manuell testen → Diff prüfen → erst danach akzeptieren. Hallmark selbst ist derzeit als **gewünschter neuer Skill**, nicht als bereits in `skills-lock.json` bestätigte Installation dokumentiert; Installations- und Integrationsanleitung siehe README.
+**Design-Gates:** Aufgaben-/Zielgruppenkontext → echte Inhalte und Edge Cases → Paper-Frame + Zustände + Breakpoints → Taste-Kritik unter Zackisch-Vorrang → visuelle und semantische Prüfung → Übergabe an Base-UI-Code → Browser-/Accessibility-/Responsiveness-Abgleich gegen das freigegebene Paper-Frame. Bei Nachkorrekturen Paper und Code konsistent halten; keine allein im Code erfundenen großen Screens.
 
-
-
+**Technische Tool-Installation, MCP-Konfiguration und Commitablauf:** siehe [`README.md`](./README.md) und [`AGENTS.md`](./AGENTS.md).
 
 ## 27 · Verbindlicher Asset-Vertrag (freigegebenes Bundle)
 
-Alle folgenden Repository-Pfade sind **konkret in diesem Migrationspaket enthalten**. Für Fotos und Lizenzprüfungen siehe das **externe Übergabepaket** `agent_handoff/MEDIA_SOURCES.md`; technische Handoff-Anweisungen stehen außerhalb des späteren Repo-Baums.
+Alle folgenden Repository-Pfade liegen unter `assets/zackisch/` vor und werden über `scripts/sync-brand-assets.mjs` in die Anwendungen synchronisiert.
 
 **Logo-Master (Originaldateien, kein Neuzeichnen):** `assets/zackisch/brand/combination_mark.svg` (Combination Mark, handgezeichneter Schriftzug) und `assets/zackisch/brand/brand_mark.svg` (Katzenkopf). Favicon/Appicons `assets/zackisch/brand/raster/`, OG-/Bannerdarstellungen `assets/zackisch/brand/social/`; Markenexporte in die Anwendung verlinken/übernehmen, nie neu entwerfen.
 
@@ -910,6 +909,16 @@ Für diese Varianten gilt: Die SVGs sind *direkt aus der freigegebenen Mascot-Vo
 ### 27.4 Verbindliche Website-Bildplatzhalter bis zum echten Produktscreenshot
 
 Es liegen drei absichtlich **neutrale graue**, korrekt beschriftete, nicht irreführende Bilder bei: `assets/zackisch/media/placeholders/qr_stand_placeholder.png`, `assets/zackisch/media/placeholders/guest_menu_placeholder.png`, `assets/zackisch/media/placeholders/staff_tablet_placeholder.png`. Auf der öffentlichen Website nur bis zur Ersetzung durch echte freigegebene Produktbilder nutzen. Sie sind **keine Mockups mit behaupteter bereits implementierter Funktion**.
+
+## 28 · Verbindliche Paper-Designfreigabe und Quellenpriorität (27.10.2026)
+
+Die bestehende kanonische CSS-Tokenliste `assets/zackisch/tokens.css` ist der verbindliche Zahlen-/Farbwert-Vertrag. Paper importiert oder spiegelt diese Tokens. Wenn ein Designreview nachweislich eine Tokenänderung verlangt, wird sie zuerst in `DESIGN.md` beschlossen, anschließend in der CSS-Tokenquelle und in Paper konsistent umgesetzt. **Kein** globales Fremd-Theme, kein von Taste vorgeschlagener Dark-Mode-Zwang, keine neue Brandpalette.
+
+**Visuelle Priorität:** Original-Zackisch-Logo-SVGs > freigegebene Illustrator-/Approved-Preview-Referenzen > verbindliche `DESIGN.md` > kanonische Tokens (`assets/zackisch/tokens.css`) > Paper-Frames > ältere UI-Implementierung. **Design-Handoff:** Paper ist der gestalterische Arbeitsraum, `DESIGN.md` der normative Designvertrag.
+
+**Komponentenpriorität:** natives semantisches HTML für Grundstrukturen; `@base-ui/react` für erforderliche interaktive Primitives; eigene `Zackisch`-Wrapper und tokenisiertes CSS für Appearance. Taste generiert keine Alternative mit fremden Komponenten-/Theme-Libraries.
+
+**Medien:** Die in `assets/zackisch/` eingecheckten Original-Assets sind maßgeblich. Neue Exportdateien müssen auf transparente Ränder, ViewBox-Bounds, Pupillen, Umlaute und semantische Dateinamen geprüft werden.
 
 
 ## Exact asset file references

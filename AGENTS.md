@@ -74,4 +74,4 @@ Prefer verified Stripe Connect Direct Charges owned by each restaurant's connect
 - Use radios or a segmented control for mutually exclusive choices, checkboxes for independent choices, and tables for dense comparisons.
 - Verify keyboard navigation, focus trapping/return, disabled/loading behavior, touch targets, reduced motion, reflow and contrast.
 - Show payment success only after authoritative server confirmation. Keep POS recording separate from preparation state.
-- Do not install Hallmark without explicit approval and source review; if approved, use only custom/bespoke critique against `DESIGN.md`.
+- Design major UI changes in the single Paper project `Zackisch` (`00-system`, `10-root-marketing`, `20-app-guest`, `21-app-merchant`, `22-app-staff`, `30-support`, `40-internal`, `90-reviews`) before coding, and apply `design-taste-frontend` critique strictly subordinated to `DESIGN.md` (no foreign catalog themes, no dark-mode or palette/font override).
