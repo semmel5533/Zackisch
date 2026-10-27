@@ -1,18 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useState, useRef } from "react";
-import { Card } from "@astryxdesign/core/Card";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { TextArea } from "@astryxdesign/core/TextArea";
-import { Switch } from "@astryxdesign/core/Switch";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Tooltip } from "@astryxdesign/core/Tooltip";
-import { Banner } from "@astryxdesign/core/Banner";
-import { VStack, HStack } from "@astryxdesign/core/Layout";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
+import { Button } from "@/components/ui/button";
+import { Card, Banner, Badge, Divider, SwitchField } from "@/components/ui/surfaces";
 import { toast } from "@/components/common/toast";
 import {
   WarningCircle,
@@ -47,11 +37,12 @@ interface SettingsContentProps {
 
 function InfoTooltip({ content }: { content: string }) {
   return (
-    <Tooltip content={content}>
-      <span className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground cursor-help p-0.5">
-        <Info className="size-4" />
-      </span>
-    </Tooltip>
+    <span
+      title={content}
+      className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground cursor-help p-0.5"
+    >
+      <Info className="size-4" aria-hidden="true" />
+    </span>
   );
 }
 
@@ -168,16 +159,16 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
   return (
     <div className="flex-1 space-y-6 @container">
       <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
-        <Heading level={1}>{t("settings")}</Heading>
+        <h1 className="text-xl font-bold tracking-tight text-[var(--zk-text)]">{t("settings")}</h1>
       </div>
 
       <div className="flex flex-col gap-6 w-full">
         {/* Business & Stripe Settings Card */}
-        <Card elevation="low" variant="default" padding={4}>
+        <Card padding="md">
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between pb-3 border-b border-border/40">
               <div className="flex items-center gap-2">
-                <Heading level={3}>{t("businessSettings")}</Heading>
+                <h2 className="text-lg font-bold tracking-tight text-[var(--zk-text)]">{t("businessSettings")}</h2>
                 <InfoTooltip content={t("businessSettingsDescription" as any)} />
               </div>
             </div>
@@ -239,48 +230,62 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
 
               {/* Form Fields: 2 Columns on >= 480px, 1 Column on narrow mobile */}
               <div className="grid grid-cols-1 @min-[480px]:grid-cols-2 gap-4">
-                <TextInput
-                  label={t("restaurantName")}
-                  isRequired
-                  size="lg"
-                  value={businessName}
-                  onChange={(val) => setBusinessName(val.slice(0, 80))}
-                  htmlName="businessName"
-                  id="business-name"
-                  width="100%"
-                />
-                <TextInput
-                  label={t("name")}
-                  isRequired
-                  size="lg"
-                  value={userName}
-                  onChange={(val) => setUserName(val.slice(0, 128))}
-                  htmlName="userName"
-                  id="business-user-name"
-                  width="100%"
-                />
-                <TextArea
-                  label={t("address")}
-                  size="lg"
-                  value={address}
-                  onChange={setAddress}
-                  htmlName="address"
-                  id="business-address"
-                  width="100%"
-                  rows={2}
-                  maxLength={300}
-                />
-                <TextInput
-                  label={t("email")}
-                  isRequired
-                  size="lg"
-                  value={user.email || ""}
-                  isDisabled
-                  disabledMessage={t("changeEmailTooltip" as any)}
-                  htmlName="userEmail"
-                  id="business-email"
-                  width="100%"
-                />
+                <div className="zk-field">
+                  <label className="zk-label" htmlFor="business-name">
+                    {t("restaurantName")}
+                  </label>
+                  <input
+                    id="business-name"
+                    name="businessName"
+                    type="text"
+                    required
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value.slice(0, 80))}
+                    className="zk-input"
+                  />
+                </div>
+                <div className="zk-field">
+                  <label className="zk-label" htmlFor="business-user-name">
+                    {t("name")}
+                  </label>
+                  <input
+                    id="business-user-name"
+                    name="userName"
+                    type="text"
+                    required
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value.slice(0, 128))}
+                    className="zk-input"
+                  />
+                </div>
+                <div className="zk-field">
+                  <label className="zk-label" htmlFor="business-address">
+                    {t("address")}
+                  </label>
+                  <textarea
+                    id="business-address"
+                    name="address"
+                    rows={2}
+                    maxLength={300}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="zk-input"
+                  />
+                </div>
+                <div className="zk-field">
+                  <label className="zk-label" htmlFor="business-email">
+                    {t("email")}
+                  </label>
+                  <input
+                    id="business-email"
+                    name="userEmail"
+                    type="email"
+                    disabled
+                    value={user.email || ""}
+                    title={t("changeEmailTooltip" as any)}
+                    className="zk-input opacity-60 cursor-not-allowed"
+                  />
+                </div>
               </div>
 
               {/* Visual Media & Stripe Integration: 2 Columns on >= 600px, 1 Column on mobile */}
@@ -288,9 +293,9 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                 {/* Brand Media Column */}
                 <div className="flex flex-col justify-between gap-4">
                   <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <Text weight="bold">{t("brandMedia")}</Text>
-                      <Text color="secondary">{t("bannerRecommended")}</Text>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-bold text-[var(--zk-text)]">{t("brandMedia")}</span>
+                      <span className="text-[var(--zk-text-secondary)]">{t("bannerRecommended")}</span>
                     </div>
 
                     <div className="relative isolate w-full aspect-[2.3/1] rounded-xl overflow-hidden border border-border bg-muted/40 group/banner transition-colors">
@@ -452,65 +457,56 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                       </div>
                     </div>
 
-                    <Text color="secondary" className="px-1 mt-0.5">
+                    <p className="text-xs text-[var(--zk-text-secondary)] px-1 mt-0.5">
                       {t("brandMediaDesc")}
-                    </Text>
+                    </p>
                   </div>
 
                   {/* Smart Menu & Checkout Feature Toggles */}
                   <div className="flex flex-col gap-4 p-4 border border-border/70 rounded-xl bg-canvas">
                     <div className="flex flex-col gap-0.5">
-                      <Heading level={4}>
+                      <h4 className="font-bold text-base text-[var(--zk-text)]">
                         {locale.startsWith("de") ? "Smart Menu & Bezahlung" : "Smart Menu & Payment"}
-                      </Heading>
-                      <Text color="secondary">
+                      </h4>
+                      <p className="text-xs text-[var(--zk-text-secondary)]">
                         {locale.startsWith("de")
                           ? "Datensparsame, automatisierte Verkaufsförderung auf Basis verifizierter Restaurant-Bestellungen."
                           : "Privacy-first, automated sales optimization based on verified venue orders."}
-                      </Text>
+                      </p>
                     </div>
 
                     <input type="hidden" name="isUpsellingEnabled" value={String(isUpsellingEnabled)} />
-                    <Switch
+                    <SwitchField
                       label={locale.startsWith("de") ? "Intelligente Empfehlungen & Upselling" : "Smart Recommendations & Upselling"}
                       description={locale.startsWith("de")
                         ? "Häufig zusammen bestellte Artikel und kleine Zusatzartikel vor der Zahlung vorschlagen."
                         : "Recommend frequently ordered together items and small add-ons before checkout."}
-                      value={isUpsellingEnabled}
+                      checked={isUpsellingEnabled}
                       onChange={setIsUpsellingEnabled}
-                      labelPosition="start"
-                      labelSpacing="spread"
-                      width="100%"
                     />
 
                     <Divider />
 
                     <input type="hidden" name="isTippingEnabled" value={String(isTippingEnabled)} />
-                    <Switch
+                    <SwitchField
                       label={locale.startsWith("de") ? "Freiwilliges Trinkgeld" : "Voluntary Tipping"}
                       description={locale.startsWith("de")
                         ? "Trinkgeld-Auswahl im Bezahlprozess anbieten (100 % für das Team, 0 % Zackisch-Gebühr)."
                         : "Offer tipping at checkout (100% to venue, 0% Zackisch fee)."}
-                      value={isTippingEnabled}
+                      checked={isTippingEnabled}
                       onChange={setIsTippingEnabled}
-                      labelPosition="start"
-                      labelSpacing="spread"
-                      width="100%"
                     />
 
                     <Divider />
 
                     <input type="hidden" name="isPopularCategoryEnabled" value={String(isPopularCategoryEnabled)} />
-                    <Switch
+                    <SwitchField
                       label={locale.startsWith("de") ? "Kategorie „Beliebteste“" : "Category 'Most Popular'"}
                       description={locale.startsWith("de")
                         ? "Automatisch generierte Bestseller-Kategorie ganz oben in der Speisekarte anzeigen."
                         : "Display an automatically generated bestsellers category at the top of the menu."}
-                      value={isPopularCategoryEnabled}
+                      checked={isPopularCategoryEnabled}
                       onChange={setIsPopularCategoryEnabled}
-                      labelPosition="start"
-                      labelSpacing="spread"
-                      width="100%"
                     />
                   </div>
 
@@ -523,11 +519,12 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                       type="submit"
                       variant="primary"
                       size="lg"
-                      label={t("save")}
-                      isLoading={isBusinessPending}
-                      isDisabled={isBusinessPending}
-                      width="100%"
-                    />
+                      fullWidth
+                      loading={isBusinessPending}
+                      disabled={isBusinessPending}
+                    >
+                      {t("save")}
+                    </Button>
                   </div>
                 </div>
 
@@ -536,32 +533,30 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <Heading level={4}>{t("stripeSettings")}</Heading>
+                        <h4 className="font-bold text-base text-[var(--zk-text)]">{t("stripeSettings")}</h4>
                         {!business.stripeOnboardingComplete && (
                           business.stripeAccountId ? (
-                            <Badge
-                              variant="warning"
-                              label={t("stripeOnboardingIncomplete" as any)}
-                            />
+                            <Badge variant="warning">
+                              {t("stripeOnboardingIncomplete" as any)}
+                            </Badge>
                           ) : (
-                            <Badge
-                              variant="neutral"
-                              label={t("stripeNotConnected")}
-                            />
+                            <Badge variant="neutral">
+                              {t("stripeNotConnected")}
+                            </Badge>
                           )
                         )}
                       </div>
 
-                      <Text color="secondary">
+                      <p className="text-sm text-[var(--zk-text-secondary)]">
                         {business.stripeOnboardingComplete
                           ? t("stripeConnectedDesc" as any)
                           : t("stripeDescription" as any)}
-                      </Text>
+                      </p>
                     </div>
 
                     {business.stripeAccountId && (
                       <div className="bg-muted/40 p-3 rounded-lg border border-border text-xs flex flex-col gap-1">
-                        <Text weight="medium">{t("stripeAccountIdLabel" as any)}</Text>
+                        <span className="font-medium text-[var(--zk-text)]">{t("stripeAccountIdLabel" as any)}</span>
                         <code className="font-mono text-muted-foreground select-all break-all text-[11px]">
                           {business.stripeAccountId}
                         </code>
@@ -573,14 +568,9 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                     <Button
                       type="button"
                       variant={business.stripeOnboardingComplete ? "secondary" : "primary"}
-                      label={business.stripeOnboardingComplete
-                        ? t("openStripeDashboard" as any)
-                        : business.stripeAccountId
-                        ? t("continueOnboarding" as any)
-                        : t("connectStripeWithIban" as any)}
-                      isLoading={isStripeLoading}
-                      isDisabled={isStripeLoading}
-                      width="100%"
+                      loading={isStripeLoading}
+                      disabled={isStripeLoading}
+                      fullWidth
                       onClick={async () => {
                         const newTab = window.open("about:blank", "_blank");
                         setIsStripeLoading(true);
@@ -617,7 +607,13 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                           setIsStripeLoading(false);
                         }
                       }}
-                    />
+                    >
+                      {business.stripeOnboardingComplete
+                        ? t("openStripeDashboard" as any)
+                        : business.stripeAccountId
+                        ? t("continueOnboarding" as any)
+                        : t("connectStripeWithIban" as any)}
+                    </Button>
 
                     <StripeEmbeddedPortal
                       businessId={business.$id}
@@ -630,8 +626,7 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        label={t("testOnboardingHelper" as any)}
-                        isDisabled={isStripeLoading}
+                        disabled={isStripeLoading}
                         onClick={async () => {
                           setIsStripeLoading(true);
                           try {
@@ -645,7 +640,9 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                             setIsStripeLoading(false);
                           }
                         }}
-                      />
+                      >
+                        {t("testOnboardingHelper" as any)}
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -658,13 +655,13 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
         <SetupAndBillingPanel business={business} userEmail={user.email} userName={user.name} />
 
         {/* Danger Zone */}
-        <Card elevation="low" variant="default" padding={4} className="border-destructive/40">
+        <Card padding="md" className="border-[var(--zk-error-text)]/40">
           <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-between pb-3 border-b border-destructive/20">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--zk-error-text)]/20">
               <div className="flex items-center gap-2">
-                <Heading level={3} className="text-destructive">
+                <h3 className="text-lg font-bold tracking-tight text-[var(--zk-error-text)]">
                   {t("dangerZone" as any)}
-                </Heading>
+                </h3>
                 <InfoTooltip content={t("dangerZoneDescription" as any)} />
               </div>
             </div>
@@ -672,41 +669,41 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
             <div className="grid grid-cols-1 @min-[600px]:grid-cols-2 gap-6">
               <div className="h-full flex flex-col justify-between gap-4 p-5 border border-border/70 rounded-xl bg-canvas">
                 <div className="flex flex-col gap-1">
-                  <Heading level={4}>{t("logoutAllDevices")}</Heading>
-                  <Text color="secondary">
+                  <h4 className="font-bold text-base text-[var(--zk-text)]">{t("logoutAllDevices")}</h4>
+                  <p className="text-sm text-[var(--zk-text-secondary)]">
                     {t("logoutAllDevicesDescription")}
-                  </Text>
+                  </p>
                 </div>
                 <Button
                   variant="secondary"
-                  label={t("logoutAllDevices")}
-                  isLoading={isLoggingOutAll}
-                  isDisabled={isLoggingOutAll}
-                  width="100%"
+                  loading={isLoggingOutAll}
+                  disabled={isLoggingOutAll}
+                  fullWidth
                   onClick={async () => {
                     setIsLoggingOutAll(true);
                     try {
                       await logoutAllDevicesAction();
-                    } catch (error) {
+                    } catch {
                       setIsLoggingOutAll(false);
                     }
                   }}
-                />
+                >
+                  {t("logoutAllDevices")}
+                </Button>
               </div>
 
               <div className="h-full flex flex-col justify-between gap-4 p-5 border border-border/70 rounded-xl bg-canvas">
                 <div className="flex flex-col gap-1">
-                  <Heading level={4}>{t("changeEmailAddress" as any)}</Heading>
-                  <Text color="secondary">
+                  <h4 className="font-bold text-base text-[var(--zk-text)]">{t("changeEmailAddress" as any)}</h4>
+                  <p className="text-sm text-[var(--zk-text-secondary)]">
                     {t("changeEmailDescription" as any)}
-                  </Text>
+                  </p>
                 </div>
                 <Button
                   variant="secondary"
-                  label={t("changeEmailButton" as any)}
-                  isLoading={isEmailChanging}
-                  isDisabled={isEmailChanging}
-                  width="100%"
+                  loading={isEmailChanging}
+                  disabled={isEmailChanging}
+                  fullWidth
                   onClick={async () => {
                     setIsEmailChanging(true);
                     try {
@@ -720,24 +717,24 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                       setIsEmailChanging(false);
                     }
                   }}
-                />
+                >
+                  {t("changeEmailButton" as any)}
+                </Button>
               </div>
             </div>
 
-            <div className="w-full flex flex-col justify-between gap-4 p-5 border border-destructive/30 rounded-xl bg-canvas">
+            <div className="w-full flex flex-col justify-between gap-4 p-5 border border-[var(--zk-error-text)]/30 rounded-xl bg-canvas">
               <div className="flex flex-col gap-1">
-                <Heading level={4} className="text-destructive">{t("deleteAccount")}</Heading>
-                <Text color="secondary">
+                <h4 className="font-bold text-base text-[var(--zk-error-text)]">{t("deleteAccount")}</h4>
+                <p className="text-sm text-[var(--zk-text-secondary)]">
                   {t("deleteAccountDescription")}
-                </Text>
+                </p>
               </div>
               <Button
                 variant="destructive"
-                label={t("requestDeletion")}
-                isLoading={isDeleting}
-                isDisabled={isDeleting}
-                icon={<WarningCircle className="size-4" weight="bold" />}
-                width="100%"
+                loading={isDeleting}
+                disabled={isDeleting}
+                fullWidth
                 onClick={async () => {
                   setIsDeleting(true);
                   try {
@@ -751,7 +748,10 @@ export function SettingsContent({ business, user }: SettingsContentProps) {
                     setIsDeleting(false);
                   }
                 }}
-              />
+              >
+                <WarningCircle className="size-4" weight="bold" aria-hidden="true" />
+                <span>{t("requestDeletion")}</span>
+              </Button>
             </div>
           </div>
         </Card>

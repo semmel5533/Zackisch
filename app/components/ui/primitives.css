@@ -33,8 +33,10 @@
 
 .zk-preferences { display: flex; flex-direction: column; gap: var(--zk-space-6); }
 .zk-input { width: 100%; min-height: 48px; padding: var(--zk-space-3) var(--zk-space-4); border: 1px solid var(--zk-border-strong); border-radius: var(--zk-radius-md); background: var(--zk-surface); color: var(--zk-text); font: 400 1rem/1.5 var(--zk-font-ui); }
-.zk-input:focus-visible { outline: 2px solid var(--zk-focus); outline-offset: 3px; }
-.zk-input[aria-invalid="true"] { border-color: var(--zk-error-text); }
+.zk-textarea { width: 100%; padding: var(--zk-space-3) var(--zk-space-4); border: 1px solid var(--zk-border-strong); border-radius: var(--zk-radius-md); background: var(--zk-surface); color: var(--zk-text); font: 400 1rem/1.5 var(--zk-font-ui); resize: vertical; }
+.zk-select { width: 100%; min-height: 48px; padding: var(--zk-space-3) var(--zk-space-4); border: 1px solid var(--zk-border-strong); border-radius: var(--zk-radius-md); background: var(--zk-surface); color: var(--zk-text); font: 500 1rem/1.5 var(--zk-font-ui); }
+.zk-input:focus-visible, .zk-textarea:focus-visible, .zk-select:focus-visible { outline: 2px solid var(--zk-focus); outline-offset: 3px; }
+.zk-input[aria-invalid="true"], .zk-textarea[aria-invalid="true"], .zk-select[aria-invalid="true"] { border-color: var(--zk-error-text); }
 .zk-checkbox-label { display: flex; align-items: center; gap: var(--zk-space-3); min-height: 48px; cursor: pointer; }
 .zk-field-error { margin: 0; font-size: .8125rem; font-weight: 500; color: var(--zk-error-text); }
 .zk-password-group { position: relative; display: flex; align-items: center; }

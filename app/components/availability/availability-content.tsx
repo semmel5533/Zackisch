@@ -8,17 +8,12 @@ import {
   useRef,
 } from "react";
 import Image from "next/image";
-import { Switch } from "@astryxdesign/core/Switch";
-import { Card } from "@astryxdesign/core/Card";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Button } from "@astryxdesign/core/Button";
 import { CaretDown, CaretUp, SlidersHorizontal } from "@phosphor-icons/react";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { Price } from "@/components/common/price";
 import { toast } from "@/components/common/toast";
-import { getImagePreviewUrl } from "@/lib/convex/client";
 import { getMenuItemImageUrl } from "@/lib/menu-images";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -28,6 +23,8 @@ import {
   toggleCustomizationAvailabilityAction,
 } from "@/actions/menu-actions";
 import type { MenuCategory, MenuItem, CustomizationStep } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Card, Badge, SwitchField } from "@/components/ui/surfaces";
 
 interface AvailabilityContentProps {
   categories: MenuCategory[];
@@ -129,30 +126,30 @@ export function AvailabilityContent({
     (itemId: string, available: boolean) => {
       void runAvailabilityChange(itemId, () => toggleMenuItemAvailability(itemId, available, businessId), () => {
         setItems((prevItems) =>
-        prevItems.map((i) => {
-          if (i.$id !== itemId) return i;
-          if (i.customizations) {
-            try {
-              const steps = parseCustomizations(i.customizations);
-              const updatedSteps = steps.map((step) => ({
-                ...step,
-                available,
-                options: (step.options || []).map((opt) => ({
-                  ...opt,
+          prevItems.map((i) => {
+            if (i.$id !== itemId) return i;
+            if (i.customizations) {
+              try {
+                const steps = parseCustomizations(i.customizations);
+                const updatedSteps = steps.map((step) => ({
+                  ...step,
                   available,
-                })),
-              }));
-              return {
-                ...i,
-                available,
-                customizations: JSON.stringify(updatedSteps),
-              };
-            } catch {
-              return { ...i, available };
+                  options: (step.options || []).map((opt) => ({
+                    ...opt,
+                    available,
+                  })),
+                }));
+                return {
+                  ...i,
+                  available,
+                  customizations: JSON.stringify(updatedSteps),
+                };
+              } catch {
+                return { ...i, available };
+              }
             }
-          }
-          return { ...i, available };
-        }),
+            return { ...i, available };
+          }),
         );
       });
     },
@@ -168,31 +165,29 @@ export function AvailabilityContent({
     ) => {
       void runAvailabilityChange(itemId, () => toggleCustomizationAvailabilityAction(itemId, stepId, optionId, available, businessId), () => {
         setItems((prevItems) =>
-        prevItems.map((i) => {
-          if (i.$id !== itemId) return i;
-          const steps = parseCustomizations(i.customizations);
-          const updatedSteps = steps.map((step) => {
-            const currentStepId = step.id || (step as any).$id;
-            if (currentStepId !== stepId) return step;
-            if (!optionId) {
-              // Toggle entire step and cascade to all its options automatically
-              const updatedOptions = (step.options || []).map((opt) => ({
-                ...opt,
-                available,
-              }));
-              return { ...step, available, options: updatedOptions };
-            } else {
-              // Toggle specific option (only if step is not disabled)
-              if (step.available === false && available === true) return step;
-              const updatedOptions = (step.options || []).map((opt) => {
-                const currentOptId = opt.id || (opt as any).$id;
-                return currentOptId === optionId ? { ...opt, available } : opt;
-              });
-              return { ...step, options: updatedOptions };
-            }
-          });
-          return { ...i, customizations: JSON.stringify(updatedSteps) };
-        }),
+          prevItems.map((i) => {
+            if (i.$id !== itemId) return i;
+            const steps = parseCustomizations(i.customizations);
+            const updatedSteps = steps.map((step) => {
+              const currentStepId = step.id || (step as any).$id;
+              if (currentStepId !== stepId) return step;
+              if (!optionId) {
+                const updatedOptions = (step.options || []).map((opt) => ({
+                  ...opt,
+                  available,
+                }));
+                return { ...step, available, options: updatedOptions };
+              } else {
+                if (step.available === false && available === true) return step;
+                const updatedOptions = (step.options || []).map((opt) => {
+                  const currentOptId = opt.id || (opt as any).$id;
+                  return currentOptId === optionId ? { ...opt, available } : opt;
+                });
+                return { ...step, options: updatedOptions };
+              }
+            });
+            return { ...i, customizations: JSON.stringify(updatedSteps) };
+          }),
         );
       });
     },
@@ -218,7 +213,6 @@ export function AvailabilityContent({
           </div>
         ) : isTwoColumns ? (
           <div className="flex gap-6 items-start w-full">
-            {/* Left Column (Even Index: 0, 2, 4...) */}
             <div className="flex flex-col gap-6 flex-1 min-w-0">
               {leftCategories.map((category) => {
                 const categoryItems = items.filter(
@@ -237,7 +231,6 @@ export function AvailabilityContent({
               })}
             </div>
 
-            {/* Right Column (Odd Index: 1, 3, 5...) */}
             <div className="flex flex-col gap-6 flex-1 min-w-0">
               {rightCategories.map((category) => {
                 const categoryItems = items.filter(
@@ -320,11 +313,12 @@ function CategorySection({
         <div className="flex items-center justify-end gap-1.5 shrink-0">
           <Button
             variant="ghost"
-            isIconOnly
-            label={isExpanded ? t("collapse") : t("expand")}
-            icon={isExpanded ? <CaretUp className="h-4 w-4" weight="bold" /> : <CaretDown className="h-4 w-4" weight="bold" />}
+            iconOnly
+            aria-label={isExpanded ? t("collapse") : t("expand")}
             onClick={() => setIsExpanded(!isExpanded)}
-          />
+          >
+            {isExpanded ? <CaretUp className="h-4 w-4" weight="bold" /> : <CaretDown className="h-4 w-4" weight="bold" />}
+          </Button>
         </div>
       </div>
 
@@ -417,7 +411,6 @@ function ItemCardView({
           : "bg-muted/40 border-dashed border-border/70 opacity-65"
       )}
     >
-      {/* Top Image Banner matching menu & ordering page */}
       {imageUrl && (
         <div className="relative w-full h-40 sm:h-48 bg-muted border-b border-border/40 shrink-0">
           <Image
@@ -434,7 +427,6 @@ function ItemCardView({
         </div>
       )}
 
-      {/* Main Content Area */}
       <div className="flex flex-col flex-1 justify-between p-3.5 sm:p-4 gap-3">
         <div className="flex items-start justify-between gap-3 min-w-0">
           <div className="flex flex-col gap-1 min-w-0 flex-1">
@@ -460,7 +452,6 @@ function ItemCardView({
             />
           </div>
 
-          {/* Main Item Switch & Customization Badge */}
           <div className="flex items-center gap-2 shrink-0 pt-0.5">
             {steps.length > 0 && (
               <Badge
@@ -469,18 +460,17 @@ function ItemCardView({
                 icon={<SlidersHorizontal className="w-3 h-3" weight="bold" />}
               />
             )}
-            <Switch
-              value={item.available}
-              isDisabled={pending}
-              onChange={(checked) => onToggleItem(item.$id, checked)}
-              label=""
-              isLabelHidden
+            <SwitchField
+              checked={item.available}
+              disabled={pending}
+              onCheckedChange={(checked) => onToggleItem(item.$id, checked)}
+              label={item.available ? t("itemAvailable") : t("itemSoldOut")}
+              hideLabel
               aria-label={item.available ? t("itemAvailable") : t("itemSoldOut")}
             />
           </div>
         </div>
 
-      {/* Customizations Section */}
       {steps.length > 0 && (
         <div className="pt-2 border-t border-border/40">
           <button
@@ -505,16 +495,15 @@ function ItemCardView({
                 const stepAvailable = item.available && step.available !== false;
                 return (
                   <div key={stepId} className="space-y-2">
-                    {/* Step Header Row */}
                     <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-border/40">
                       <span className="text-xs font-semibold text-foreground truncate">
                         {step.name}
                       </span>
                       <div className="flex items-center shrink-0">
-                        <Switch
-                          value={stepAvailable}
-                          isDisabled={pending || !item.available}
-                          onChange={(checked) =>
+                        <SwitchField
+                          checked={stepAvailable}
+                          disabled={pending || !item.available}
+                          onCheckedChange={(checked) =>
                             onToggleCustomization(
                               item.$id,
                               stepId,
@@ -522,14 +511,13 @@ function ItemCardView({
                               checked,
                             )
                           }
-                          label=""
-                          isLabelHidden
+                          label={t("toggleStepAvailability")}
+                          hideLabel
                           aria-label={t("toggleStepAvailability")}
                         />
                       </div>
                     </div>
 
-                    {/* Options List */}
                     <div className="pt-1 space-y-1 pl-3 border-l-2 border-border/50 ml-1">
                       {(step.options || []).map((opt, oIdx) => {
                         const optId =
@@ -569,10 +557,10 @@ function ItemCardView({
                             </div>
 
                             <div className="flex items-center shrink-0">
-                              <Switch
-                                value={optAvailable}
-                                isDisabled={pending || !item.available || !stepAvailable}
-                                onChange={(checked) =>
+                              <SwitchField
+                                checked={optAvailable}
+                                disabled={pending || !item.available || !stepAvailable}
+                                onCheckedChange={(checked) =>
                                   onToggleCustomization(
                                     item.$id,
                                     stepId,
@@ -580,8 +568,8 @@ function ItemCardView({
                                     checked,
                                   )
                                 }
-                                label=""
-                                isLabelHidden
+                                label={t("toggleOptionAvailability")}
+                                hideLabel
                                 aria-label={t("toggleOptionAvailability")}
                               />
                             </div>

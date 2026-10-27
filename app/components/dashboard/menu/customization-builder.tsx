@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import {
   Plus,
   Trash,
-  CaretUp,
   CaretDown,
   DotsSixVertical,
   PencilSimple,
@@ -13,12 +12,8 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
-import { Button } from "@astryxdesign/core/Button";
-import { Switch } from "@astryxdesign/core/Switch";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Card } from "@astryxdesign/core/Card";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Tooltip } from "@astryxdesign/core/Tooltip";
+import { Button } from "@/components/ui/button";
+import { Badge, Divider, SwitchField } from "@/components/ui/surfaces";
 import type { CustomizationStep, CustomizationOption } from "@/lib/types";
 
 import {
@@ -222,10 +217,11 @@ export function CustomizationBuilder({
       <Button
         variant="secondary"
         onClick={addStep}
-        label={t("addStep")}
-        icon={<Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />}
-        width="100%"
-      />
+        fullWidth
+      >
+        <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
+        <span>{t("addStep")}</span>
+      </Button>
     </div>
   );
 }
@@ -251,8 +247,6 @@ interface StepCardProps {
 
 function SortableStepCard({
   step,
-  stepIndex,
-  totalSteps,
   itemAvailable = true,
   autoEditStepName = false,
   autoEditOptionId,
@@ -273,7 +267,6 @@ function SortableStepCard({
     onEditStepComplete?.();
   };
 
-  // Sync isEditingName when autoEditStepName changes (render-time update)
   const [prevAutoEditStepName, setPrevAutoEditStepName] =
     useState(autoEditStepName);
   if (autoEditStepName !== prevAutoEditStepName) {
@@ -306,7 +299,6 @@ function SortableStepCard({
   const [maxVal, setMaxVal] = useState(() => (step.maxSelections ?? 1).toString());
   const [incVal, setIncVal] = useState(() => (step.includedCount ?? 0).toString());
 
-  // Sync props to local state if they change externally
   useEffect(() => {
     setMinVal((step.minSelections ?? 0).toString());
     setMaxVal((step.maxSelections ?? 1).toString());
@@ -336,7 +328,6 @@ function SortableStepCard({
           }
         }}
       >
-        {/* Line 1: Drag handle, Caret, Step Name / Rename Input, Pencil */}
         <div className="flex items-center gap-2 flex-1 min-w-0 w-full">
           <div
             {...attributes}
@@ -384,14 +375,15 @@ function SortableStepCard({
                 />
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("save")}
-                  icon={<Check className="w-4 h-4 text-foreground" weight="bold" />}
+                  iconOnly
+                  aria-label={t("save")}
                   onClick={(e) => {
                     e.stopPropagation();
                     finishEditingName();
                   }}
-                />
+                >
+                  <Check className="w-4 h-4 text-foreground" weight="bold" />
+                </Button>
               </div>
             ) : (
               <div className="flex items-center gap-1.5 min-w-0 group flex-1">
@@ -400,46 +392,48 @@ function SortableStepCard({
                 </span>
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("edit")}
-                  icon={<PencilSimple className="size-4" />}
+                  iconOnly
+                  aria-label={t("edit")}
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditingName(true);
                   }}
-                />
+                >
+                  <PencilSimple className="size-4" />
+                </Button>
               </div>
             )}
           </div>
         </div>
 
-        {/* Desktop Controls (sm and above: single row) */}
+        {/* Desktop Controls */}
         <div
           className="hidden sm:flex items-center gap-2.5 sm:gap-3 shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center gap-2 sm:gap-2.5">
             <Badge label={String(step.options.length)} variant="neutral" />
-            <Switch
-              value={step.available ?? true}
-              isDisabled={itemAvailable === false}
-              onChange={(checked) => onUpdate({ available: checked })}
-              label=""
-              isLabelHidden
+            <SwitchField
+              checked={step.available ?? true}
+              disabled={itemAvailable === false}
+              onCheckedChange={(checked) => onUpdate({ available: checked })}
+              label={t("available")}
+              hideLabel
               aria-label={t("available")}
             />
           </div>
 
           <Button
-            variant="destructive"
-            isIconOnly
-            label={t("delete")}
-            icon={<Trash className="w-4 h-4" weight="bold" />}
+            variant="danger"
+            iconOnly
+            aria-label={t("delete")}
             onClick={onRemove}
-          />
+          >
+            <Trash className="w-4 h-4" weight="bold" />
+          </Button>
         </div>
 
-        {/* Mobile Controls (below sm: clean second row with full space) */}
+        {/* Mobile Controls */}
         <div
           className="flex sm:hidden items-center justify-between pt-2 border-t border-border/40 w-full shrink-0"
           onClick={(e) => e.stopPropagation()}
@@ -450,21 +444,22 @@ function SortableStepCard({
           </div>
 
           <div className="flex items-center gap-2.5">
-            <Switch
-              value={step.available ?? true}
-              isDisabled={itemAvailable === false}
-              onChange={(checked) => onUpdate({ available: checked })}
-              label=""
-              isLabelHidden
+            <SwitchField
+              checked={step.available ?? true}
+              disabled={itemAvailable === false}
+              onCheckedChange={(checked) => onUpdate({ available: checked })}
+              label={t("available")}
+              hideLabel
               aria-label={t("available")}
             />
             <Button
-              variant="destructive"
-              isIconOnly
-              label={t("delete")}
-              icon={<Trash className="w-4 h-4" weight="bold" />}
+              variant="danger"
+              iconOnly
+              aria-label={t("delete")}
               onClick={onRemove}
-            />
+            >
+              <Trash className="w-4 h-4" weight="bold" />
+            </Button>
           </div>
         </div>
       </div>
@@ -472,7 +467,6 @@ function SortableStepCard({
       {/* Step Content */}
       {isExpanded && (
         <div className="p-3 sm:p-4 flex flex-col gap-3.5 bg-muted/15">
-          {/* Step Settings - Single 3-column row on all screen sizes */}
           <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full">
             <div className="flex flex-col gap-1.5">
               <label
@@ -480,11 +474,12 @@ function SortableStepCard({
                 className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("minSelections")}
-                <Tooltip content={t("minSelectionsDesc" as any)}>
-                  <span className="hidden sm:inline-flex items-center">
-                    <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
-                  </span>
-                </Tooltip>
+                <span
+                  title={t("minSelectionsDesc" as any)}
+                  className="hidden sm:inline-flex items-center"
+                >
+                  <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                </span>
               </label>
               <input
                 id={`step-min-${step.id}`}
@@ -519,11 +514,12 @@ function SortableStepCard({
                 className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("maxSelections")}
-                <Tooltip content={t("maxSelectionsDesc" as any)}>
-                  <span className="hidden sm:inline-flex items-center">
-                    <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
-                  </span>
-                </Tooltip>
+                <span
+                  title={t("maxSelectionsDesc" as any)}
+                  className="hidden sm:inline-flex items-center"
+                >
+                  <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                </span>
               </label>
               <input
                 id={`step-max-${step.id}`}
@@ -558,11 +554,12 @@ function SortableStepCard({
                 className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1"
               >
                 {t("includedInPrice")}
-                <Tooltip content={t("includedInPriceDesc" as any)}>
-                  <span className="hidden sm:inline-flex items-center">
-                    <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
-                  </span>
-                </Tooltip>
+                <span
+                  title={t("includedInPriceDesc" as any)}
+                  className="hidden sm:inline-flex items-center"
+                >
+                  <Info className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                </span>
               </label>
               <input
                 id={`step-inc-${step.id}`}
@@ -648,11 +645,12 @@ function SortableStepCard({
             )}
             <Button
               variant="secondary"
-              label={t("addOption")}
-              icon={<Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />}
               onClick={onAddOption}
-              width="100%"
-            />
+              fullWidth
+            >
+              <Plus className="w-4 h-4 shrink-0 text-foreground" weight="bold" />
+              <span>{t("addOption")}</span>
+            </Button>
           </div>
         </div>
       )}
@@ -672,7 +670,6 @@ interface OptionRowProps {
 
 function OptionRow({
   option,
-  optionIndex,
   disabled = false,
   autoFocusName = false,
   onEditComplete,
@@ -697,7 +694,7 @@ function OptionRow({
           : (Math.round(option.extraPrice) / 100).toFixed(2),
       );
     }
-  }, [option.extraPrice]);
+  }, [option.extraPrice, priceInput]);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: option.id });
@@ -713,7 +710,6 @@ function OptionRow({
       style={style}
       className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-border/80 bg-background hover:border-foreground/25 hover:bg-muted/20 transition-colors duration-150"
     >
-      {/* Name line (Full width on mobile, flex-1 on desktop) */}
       <div className="flex items-center gap-2 w-full sm:flex-1 min-w-0">
         <div
           {...attributes}
@@ -745,9 +741,7 @@ function OptionRow({
         />
       </div>
 
-      {/* Controls line: Price + Switch + Delete (Inline on desktop, single 2nd line on mobile) */}
       <div className="flex items-center justify-between sm:justify-end gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
-        {/* Price Input */}
         <div className="relative flex-1 sm:flex-initial sm:w-28">
           <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-semibold select-none pointer-events-none">
             +
@@ -757,7 +751,7 @@ function OptionRow({
             inputMode="decimal"
             value={priceInput}
             onChange={(e) => {
-              let val = e.target.value;
+              const val = e.target.value;
               if (val === "") {
                 setPriceInput("");
                 onUpdate({ extraPrice: 0 });
@@ -805,24 +799,23 @@ function OptionRow({
           </span>
         </div>
 
-        {/* Switch */}
-        <Switch
-          value={option.available ?? true}
-          isDisabled={disabled}
-          onChange={(checked) => onUpdate({ available: checked })}
-          label=""
-          isLabelHidden
+        <SwitchField
+          checked={option.available ?? true}
+          disabled={disabled}
+          onCheckedChange={(checked) => onUpdate({ available: checked })}
+          label={t("available")}
+          hideLabel
           aria-label={t("available")}
         />
 
-        {/* Delete Icon Button */}
         <Button
-          variant="destructive"
-          isIconOnly
-          label={t("delete")}
-          icon={<Trash className="w-4 h-4" weight="bold" />}
+          variant="danger"
+          iconOnly
+          aria-label={t("delete")}
           onClick={onRemove}
-        />
+        >
+          <Trash className="w-4 h-4" weight="bold" />
+        </Button>
       </div>
     </div>
   );

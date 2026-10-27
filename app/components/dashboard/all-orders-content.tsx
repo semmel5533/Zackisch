@@ -1,30 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeaderCell,
-  TableHeader,
-  TableRow,
-} from "@astryxdesign/core/Table";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Card } from "@astryxdesign/core/Card";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Button } from "@astryxdesign/core/Button";
-import {
-  DropdownMenu,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuDivider,
-  DropdownMenuCheckboxItem,
-} from "@astryxdesign/core/DropdownMenu";
-import { Tooltip } from "@astryxdesign/core/Tooltip";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { Layout, LayoutContent, LayoutFooter, HStack } from "@astryxdesign/core/Layout";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
+import { TextField, CheckboxField } from "@/components/ui/form-controls";
+import { Badge, Card } from "@/components/ui/surfaces";
 import {
   Funnel,
   CaretDown,
@@ -381,10 +361,12 @@ export function AllOrdersContent({
     }
   }
 
+  const [filterOpen, setFilterOpen] = useState(false);
+
   return (
     <div className="flex-1 space-y-4 @container">
       <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
-        <Heading level={1}>{t("allOrders")}</Heading>
+        <h1 className="text-xl font-bold tracking-tight text-[var(--zk-text)]">{t("allOrders")}</h1>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -392,166 +374,174 @@ export function AllOrdersContent({
         <div className="flex flex-col @min-[700px]:flex-row gap-3 @min-[700px]:items-center justify-between">
           <div className="flex items-center gap-3 flex-1 w-full @min-[700px]:w-auto @min-[700px]:max-w-xl">
             {/* Search Input */}
-            <div className="flex-1 min-w-0">
-              <TextInput
-                label={t("search")}
-                isLabelHidden
+            <div className="flex-1 min-w-0 relative">
+              <MagnifyingGlass className="size-4 text-[var(--zk-text-secondary)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+              <input
+                type="search"
+                aria-label={t("search")}
                 placeholder={t("search")}
                 value={searchQuery}
-                onChange={(val) => {
-                  setSearchQuery(val);
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                hasClear
-                startIcon={<MagnifyingGlass className="size-4" />}
-                width="100%"
+                className="zk-input pl-10"
               />
             </div>
 
-            {/* Filter Multi-Select */}
-            <DropdownMenu
-              button={{
-                label: selectedTypes.length + selectedStatuses.length === 0
-                  ? t("filters")
-                  : `${selectedTypes.length + selectedStatuses.length} ${t("filters")}`,
-                variant: "secondary",
-                icon: <Funnel className="size-4" />,
-              }}
-            >
-              <DropdownMenuGroup>
-                <DropdownMenuCheckboxItem
-                  label={t("toPickUp")}
-                  value={selectedTypes.includes("takeaway")}
-                  onChange={(c) => handleTypeToggle("takeaway", c)}
-                />
-                <DropdownMenuCheckboxItem
-                  label={t("toTable")}
-                  value={selectedTypes.includes("dine-in")}
-                  onChange={(c) => handleTypeToggle("dine-in", c)}
-                />
-              </DropdownMenuGroup>
-              <DropdownMenuDivider />
-              <DropdownMenuGroup>
-                <DropdownMenuCheckboxItem
-                  label={getStatusLabel("in_progress")}
-                  value={selectedStatuses.includes("in_progress")}
-                  onChange={(c) => handleStatusToggle("in_progress", c)}
-                />
-                <DropdownMenuCheckboxItem
-                  label={getStatusLabel("ready_for_pickup")}
-                  value={selectedStatuses.includes("ready_for_pickup")}
-                  onChange={(c) => handleStatusToggle("ready_for_pickup", c)}
-                />
-                <DropdownMenuCheckboxItem
-                  label={getStatusLabel("completed")}
-                  value={selectedStatuses.includes("completed")}
-                  onChange={(c) => handleStatusToggle("completed", c)}
-                />
-                <DropdownMenuCheckboxItem
-                  label={getStatusLabel("cancelled")}
-                  value={selectedStatuses.includes("cancelled")}
-                  onChange={(c) => handleStatusToggle("cancelled", c)}
-                />
-              </DropdownMenuGroup>
-            </DropdownMenu>
+            {/* Filter Popover */}
+            <div className="relative">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setFilterOpen((o) => !o)}
+              >
+                <Funnel className="size-4" aria-hidden="true" />
+                <span>
+                  {selectedTypes.length + selectedStatuses.length === 0
+                    ? t("filters")
+                    : `${selectedTypes.length + selectedStatuses.length} ${t("filters")}`}
+                </span>
+              </Button>
+              {filterOpen && (
+                <div className="absolute right-0 mt-2 w-64 rounded-xl border border-[var(--zk-border)] bg-[var(--zk-surface)] p-4 shadow-lg z-40 flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <CheckboxField
+                      label={t("toPickUp")}
+                      checked={selectedTypes.includes("takeaway")}
+                      onChange={(c) => handleTypeToggle("takeaway", c)}
+                    />
+                    <CheckboxField
+                      label={t("toTable")}
+                      checked={selectedTypes.includes("dine-in")}
+                      onChange={(c) => handleTypeToggle("dine-in", c)}
+                    />
+                  </div>
+                  <hr className="zk-divider" />
+                  <div className="flex flex-col gap-1">
+                    <CheckboxField
+                      label={getStatusLabel("in_progress")}
+                      checked={selectedStatuses.includes("in_progress")}
+                      onChange={(c) => handleStatusToggle("in_progress", c)}
+                    />
+                    <CheckboxField
+                      label={getStatusLabel("ready_for_pickup")}
+                      checked={selectedStatuses.includes("ready_for_pickup")}
+                      onChange={(c) => handleStatusToggle("ready_for_pickup", c)}
+                    />
+                    <CheckboxField
+                      label={getStatusLabel("completed")}
+                      checked={selectedStatuses.includes("completed")}
+                      onChange={(c) => handleStatusToggle("completed", c)}
+                    />
+                    <CheckboxField
+                      label={getStatusLabel("cancelled")}
+                      checked={selectedStatuses.includes("cancelled")}
+                      onChange={(c) => handleStatusToggle("cancelled", c)}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {!hideExport && (
             <Button
               variant="primary"
               onClick={handleExportCSV}
-              icon={<DownloadSimple className="size-4" weight="bold" />}
-              label={t("exportCSV")}
-            />
+            >
+              <DownloadSimple className="size-4" weight="bold" aria-hidden="true" />
+              <span>{t("exportCSV")}</span>
+            </Button>
           )}
         </div>
 
-        <Card elevation="low" variant="default" padding={0}>
+        <Card padding="none">
           <div className="overflow-x-auto">
-            <Table density="balanced" hasHover>
-              <TableHeader>
-                <TableRow>
-                  <TableHeaderCell
-                    className="cursor-pointer whitespace-nowrap pl-4 pr-3 min-w-[90px]"
+            <table className="w-full text-left border-collapse">
+              <thead className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold text-[var(--zk-text-secondary)]">
+                <tr>
+                  <th
+                    className="cursor-pointer whitespace-nowrap py-3 pl-4 pr-3 min-w-[90px]"
                     onClick={() => handleSort("$id")}
                   >
                     <div className="flex items-center">
                       {t("id")}
                       {renderSortIcon("$id")}
                     </div>
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    className="cursor-pointer whitespace-nowrap px-3 min-w-[90px]"
+                  </th>
+                  <th
+                    className="cursor-pointer whitespace-nowrap py-3 px-3 min-w-[90px]"
                     onClick={() => handleSort("orderNumber")}
                   >
                     <div className="flex items-center">
                       {t("orderNumber")}
                       {renderSortIcon("orderNumber")}
                     </div>
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    className="cursor-pointer whitespace-nowrap px-3 min-w-[140px]"
+                  </th>
+                  <th
+                    className="cursor-pointer whitespace-nowrap py-3 px-3 min-w-[140px]"
                     onClick={() => handleSort("$createdAt")}
                   >
                     <div className="flex items-center">
                       {t("datetime")}
                       {renderSortIcon("$createdAt")}
                     </div>
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    className="cursor-pointer whitespace-nowrap px-3 min-w-[110px]"
+                  </th>
+                  <th
+                    className="cursor-pointer whitespace-nowrap py-3 px-3 min-w-[110px]"
                     onClick={() => handleSort("type")}
                   >
                     <div className="flex items-center">
                       {t("type")}
                       {renderSortIcon("type")}
                     </div>
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    className="cursor-pointer min-w-[260px] max-w-[400px] px-4"
+                  </th>
+                  <th
+                    className="cursor-pointer min-w-[260px] max-w-[400px] py-3 px-4"
                     onClick={() => handleSort("items")}
                   >
                     <div className="flex items-center">
                       {t("items")}
                       {renderSortIcon("items")}
                     </div>
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    className="cursor-pointer text-right whitespace-nowrap min-w-[110px] px-4"
+                  </th>
+                  <th
+                    className="cursor-pointer text-right whitespace-nowrap min-w-[110px] py-3 px-4"
                     onClick={() => handleSort("total")}
                   >
                     <div className="flex items-center justify-end">
                       {t("total")}
                       {renderSortIcon("total")}
                     </div>
-                  </TableHeaderCell>
-                  <TableHeaderCell className="whitespace-nowrap min-w-[140px] px-4">
+                  </th>
+                  <th className="whitespace-nowrap min-w-[140px] py-3 px-4">
                     {isDe ? "Kassenstatus (POS)" : "POS Status"}
-                  </TableHeaderCell>
-                  <TableHeaderCell
-                    className="cursor-pointer whitespace-nowrap min-w-[130px] px-4"
+                  </th>
+                  <th
+                    className="cursor-pointer whitespace-nowrap min-w-[130px] py-3 px-4"
                     onClick={() => handleSort("status")}
                   >
                     <div className="flex items-center">
                       {t("status")}
                       {renderSortIcon("status")}
                     </div>
-                  </TableHeaderCell>
-                  <TableHeaderCell className="text-right whitespace-nowrap pr-4 pl-3 w-[200px] min-w-[200px]">
+                  </th>
+                  <th className="text-right whitespace-nowrap py-3 pr-4 pl-3 w-[200px] min-w-[200px]">
                     {t("actions")}
-                  </TableHeaderCell>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--zk-border)]">
                 {paginatedOrders.length === 0 ? (
-                  <TableRow>
-                    <TableCell
+                  <tr>
+                    <td
                       colSpan={9}
                       className="text-center py-8 text-muted-foreground"
                     >
                       {t("noAllOrders")}
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ) : (
                   paginatedOrders.map((order) => {
                     let items: any[] = [];
@@ -575,33 +565,32 @@ export function AllOrdersContent({
                       !order.isTestOrder;
 
                     return (
-                      <TableRow
+                      <tr
                         key={order.$id}
-                        className={isCancelled ? "opacity-60 bg-muted/20" : ""}
+                        className={isCancelled ? "opacity-60 bg-muted/20" : "hover:bg-[var(--zk-surface-muted)]/50"}
                       >
-                        <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap pl-4 pr-3 min-w-[90px]">
-                          <Tooltip content={order.$id}>
-                            <button
-                              type="button"
-                              onClick={() => handleCopyOrderId(order.$id)}
-                              className="font-mono text-xs text-muted-foreground hover:text-foreground cursor-pointer focus-visible:outline-none focus-visible:underline"
-                              aria-label={order.$id}
-                            >
-                              {order.$id.length > 8 ? order.$id.slice(-6) : order.$id}
-                            </button>
-                          </Tooltip>
-                        </TableCell>
-                        <TableCell className="font-medium font-inter tabular-nums text-sm whitespace-nowrap px-3 min-w-[90px]">
+                        <td className="font-mono text-xs text-muted-foreground whitespace-nowrap py-3 pl-4 pr-3 min-w-[90px]">
+                          <button
+                            type="button"
+                            title={order.$id}
+                            onClick={() => handleCopyOrderId(order.$id)}
+                            className="font-mono text-xs text-muted-foreground hover:text-foreground cursor-pointer focus-visible:outline-none focus-visible:underline"
+                            aria-label={order.$id}
+                          >
+                            {order.$id.length > 8 ? order.$id.slice(-6) : order.$id}
+                          </button>
+                        </td>
+                        <td className="font-medium font-inter tabular-nums text-sm whitespace-nowrap py-3 px-3 min-w-[90px]">
                           {order.orderNumber}
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap text-sm font-inter tabular-nums px-3 min-w-[140px]">
+                        </td>
+                        <td className="whitespace-nowrap text-sm font-inter tabular-nums py-3 px-3 min-w-[140px]">
                           <span suppressHydrationWarning>
                             {dateFormatter.format(
                               new Date(order.$createdAt || order._creationTime || Date.now())
                             )}
                           </span>
-                        </TableCell>
-                        <TableCell className="text-sm font-medium whitespace-nowrap px-3 min-w-[110px]">
+                        </td>
+                        <td className="text-sm font-medium whitespace-nowrap py-3 px-3 min-w-[110px]">
                           {order.type === "dine-in" || order.tableNumber ? (
                             <span className="inline-flex items-center gap-1">
                               <span>{t("toTable")}</span>
@@ -612,8 +601,8 @@ export function AllOrdersContent({
                           ) : (
                             t("toPickUp")
                           )}
-                        </TableCell>
-                        <TableCell className="text-sm whitespace-normal min-w-[260px] max-w-[400px] px-4 py-3">
+                        </td>
+                        <td className="text-sm whitespace-normal min-w-[260px] max-w-[400px] px-4 py-3">
                           <div className="flex flex-col gap-2 py-1 max-w-[380px]">
                             {items.map((item: any, index: number) => {
                               const customizations = getItemCustomizations(item);
@@ -668,8 +657,8 @@ export function AllOrdersContent({
                               );
                             })}
                           </div>
-                        </TableCell>
-                        <TableCell className="text-right font-medium whitespace-nowrap min-w-[110px] px-4">
+                        </td>
+                        <td className="text-right font-medium whitespace-nowrap min-w-[110px] py-3 px-4">
                           <div className="flex flex-col items-end">
                             <Price cents={order.total} />
                             {order.refundStatus && order.refundStatus !== "none" && (
@@ -684,38 +673,36 @@ export function AllOrdersContent({
                               </span>
                             )}
                           </div>
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap min-w-[140px] px-4">
+                        </td>
+                        <td className="whitespace-nowrap min-w-[140px] py-3 px-4">
                           {order.posStatus === "recorded" ? (
-                            <Badge
-                              variant="success"
-                              icon={<Check className="size-3" weight="bold" />}
-                              label={isDe ? "In Kasse erfasst" : "Recorded in POS"}
-                            />
+                            <Badge variant="success">
+                              <Check className="size-3" weight="bold" aria-hidden="true" />
+                              <span>{isDe ? "In Kasse erfasst" : "Recorded in POS"}</span>
+                            </Badge>
                           ) : (
                             <Button
                               variant="secondary"
                               size="sm"
-                              isDisabled={recordingOrderId === order.$id}
+                              disabled={recordingOrderId === order.$id}
                               onClick={() => handleRecordPos(order)}
-                              icon={<Check className="size-3" weight="bold" />}
-                              label={isDe ? "In Kasse erfasst" : "Record in POS"}
-                            />
+                            >
+                              <Check className="size-3" weight="bold" aria-hidden="true" />
+                              <span>{isDe ? "In Kasse erfasst" : "Record in POS"}</span>
+                            </Button>
                           )}
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap min-w-[130px] px-4">
-                          <Badge
-                            variant={statusVariants[order.status] || "neutral"}
-                            label={getStatusLabel(order.status)}
-                          />
-                        </TableCell>
-                        <TableCell className="text-right whitespace-nowrap pr-4 pl-3 w-[200px] min-w-[200px]">
+                        </td>
+                        <td className="whitespace-nowrap min-w-[130px] py-3 px-4">
+                          <Badge variant={statusVariants[order.status] || "neutral"}>
+                            {getStatusLabel(order.status)}
+                          </Badge>
+                        </td>
+                        <td className="text-right whitespace-nowrap py-3 pr-4 pl-3 w-[200px] min-w-[200px]">
                           <div className="flex items-center justify-end gap-2">
                             {canRefund && (
                               <Button
                                 variant="secondary"
                                 size="sm"
-                                label={isDe ? "Erstattung" : "Refund"}
                                 onClick={() => {
                                   setOrderToRefund(order);
                                   setRefundAmountEur(
@@ -724,193 +711,171 @@ export function AllOrdersContent({
                                       .replace(".", ","),
                                   );
                                 }}
-                              />
+                              >
+                                {isDe ? "Erstattung" : "Refund"}
+                              </Button>
                             )}
                             {isCancellable ? (
                               <Button
                                 variant="secondary"
                                 size="sm"
-                                icon={<ReceiptX className="size-3.5" weight="bold" />}
-                                label={t("cancelOrder")}
                                 onClick={() => setOrderToCancel(order)}
-                              />
+                              >
+                                <ReceiptX className="size-3.5" weight="bold" aria-hidden="true" />
+                                <span>{t("cancelOrder")}</span>
+                              </Button>
                             ) : !canRefund ? (
                               <span className="text-muted-foreground text-xs select-none pr-3">
                                 —
                               </span>
                             ) : null}
                           </div>
-                        </TableCell>
-                      </TableRow>
+                        </td>
+                      </tr>
                     );
                   })
                 )}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         </Card>
 
         {/* Pagination & Items Per Page Controls */}
         <div className="mt-4 flex flex-col @min-[700px]:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>{t("itemsPerPage")}</span>
-            <DropdownMenu
-              button={{
-                label: `${itemsPerPage}`,
-                variant: "secondary",
-                size: "sm",
+            <label htmlFor="orders-per-page">{t("itemsPerPage")}</label>
+            <select
+              id="orders-per-page"
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
               }}
+              className="rounded-lg border border-[var(--zk-border-strong)] bg-[var(--zk-surface)] px-2.5 py-1.5 text-sm font-medium text-[var(--zk-text)]"
             >
-              <DropdownMenuGroup>
-                {[10, 20, 50, 100].map((size) => (
-                  <DropdownMenuItem
-                    key={size}
-                    label={`${size}`}
-                    onClick={() => {
-                      setItemsPerPage(size);
-                      setCurrentPage(1);
-                    }}
-                  />
-                ))}
-              </DropdownMenuGroup>
-            </DropdownMenu>
+              {[10, 20, 50, 100].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
           </div>
 
           {totalPages > 1 && (
-            <HStack vAlign="center" gap={3}>
+            <div className="flex items-center gap-3">
               <Button
                 variant="secondary"
                 size="sm"
-                isDisabled={currentPage === 1}
-                label="Zurück"
+                disabled={currentPage === 1}
                 onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              />
-              <Text weight="medium">
+              >
+                Zurück
+              </Button>
+              <span className="text-sm font-medium tabular-nums">
                 {currentPage} / {totalPages}
-              </Text>
+              </span>
               <Button
                 variant="secondary"
                 size="sm"
-                isDisabled={currentPage === totalPages}
-                label="Weiter"
+                disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-              />
-            </HStack>
+              >
+                Weiter
+              </Button>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Cancel Order Confirmation Dialog */}
-      <Dialog
-        isOpen={!!orderToCancel}
+      {/* Cancel Order Confirmation Modal */}
+      <Modal
+        open={!!orderToCancel}
         onOpenChange={(open: boolean) => !open && setOrderToCancel(null)}
-        width={460}
-        purpose="required"
+        title={
+          orderToCancel
+            ? t("cancelOrderTitle", {
+                orderNumber: orderToCancel.orderNumber,
+              })
+            : t("cancelOrderTitleFallback")
+        }
+        closeLabel={t("close")}
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              size="lg"
+              disabled={isCancelling}
+              onClick={() => setOrderToCancel(null)}
+            >
+              {t("abortCancel")}
+            </Button>
+            <Button
+              variant="destructive"
+              size="lg"
+              disabled={isCancelling}
+              loading={isCancelling}
+              onClick={() => {
+                if (orderToCancel) {
+                  handleCancelOrder(orderToCancel);
+                }
+              }}
+            >
+              {t("confirmCancelOrder")}
+            </Button>
+          </>
+        }
       >
-        <Layout
-          header={
-            <DialogHeader
-              title={orderToCancel
-                ? t("cancelOrderTitle", {
-                    orderNumber: orderToCancel.orderNumber,
-                  })
-                : t("cancelOrderTitleFallback")}
-              onOpenChange={(open: boolean) => !open && setOrderToCancel(null)}
-            />
-          }
-          content={
-            <LayoutContent>
-              <p className="text-sm text-destructive font-medium p-4">
-                {t("cancelOrderWarning")}
-              </p>
-            </LayoutContent>
-          }
-          footer={
-            <LayoutFooter>
-              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  isDisabled={isCancelling}
-                  label={t("abortCancel")}
-                  onClick={() => setOrderToCancel(null)}
-                />
-                <Button
-                  variant="destructive"
-                  size="lg"
-                  isDisabled={isCancelling}
-                  isLoading={isCancelling}
-                  label={t("confirmCancelOrder")}
-                  onClick={() => {
-                    if (orderToCancel) {
-                      handleCancelOrder(orderToCancel);
-                    }
-                  }}
-                />
-              </div>
-            </LayoutFooter>
-          }
-        />
-      </Dialog>
+        <p className="text-sm text-[var(--zk-error-text)] font-medium">
+          {t("cancelOrderWarning")}
+        </p>
+      </Modal>
 
-      {/* Full / Partial Refund Dialog with Proportional 2% Fee Reversal */}
-      <Dialog
-        isOpen={!!orderToRefund}
+      {/* Full / Partial Refund Modal with Proportional 2% Fee Reversal */}
+      <Modal
+        open={!!orderToRefund}
         onOpenChange={(open: boolean) => !open && setOrderToRefund(null)}
-        width={460}
-        purpose="form"
+        title={
+          isDe
+            ? `Rückerstattung #${orderToRefund?.orderNumber || ""}`
+            : `Refund #${orderToRefund?.orderNumber || ""}`
+        }
+        closeLabel={t("close")}
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              size="lg"
+              disabled={isRefunding}
+              onClick={() => setOrderToRefund(null)}
+            >
+              {t("abortCancel")}
+            </Button>
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={isRefunding}
+              loading={isRefunding}
+              onClick={handleRefundOrder}
+            >
+              {isDe ? "Jetzt erstatten" : "Process refund"}
+            </Button>
+          </>
+        }
       >
-        <Layout
-          header={
-            <DialogHeader
-              title={isDe
-                ? `Rückerstattung #${orderToRefund?.orderNumber || ""}`
-                : `Refund #${orderToRefund?.orderNumber || ""}`}
-              onOpenChange={(open: boolean) => !open && setOrderToRefund(null)}
-            />
-          }
-          content={
-            <LayoutContent>
-              <div className="flex flex-col gap-4 p-4">
-                <Text color="secondary">
-                  {isDe
-                    ? "Die Rückerstattung erfolgt direkt über dein verbundenes Stripe-Händlerkonto. Die 2 % Zackisch-Provision wird anteilig auf den erstatteten Warenwert automatisch gutgeschrieben."
-                    : "The refund is processed on your connected Stripe account. The 2% Zackisch fee is proportionally reversed on the refunded goods value."}
-                </Text>
-                <TextInput
-                  label={isDe ? "Erstattungsbetrag in EUR" : "Refund amount in EUR"}
-                  value={refundAmountEur}
-                  onChange={setRefundAmountEur}
-                  placeholder="0,00"
-                  size="lg"
-                  width="100%"
-                />
-              </div>
-            </LayoutContent>
-          }
-          footer={
-            <LayoutFooter>
-              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  isDisabled={isRefunding}
-                  label={t("abortCancel")}
-                  onClick={() => setOrderToRefund(null)}
-                />
-                <Button
-                  variant="primary"
-                  size="lg"
-                  isDisabled={isRefunding}
-                  isLoading={isRefunding}
-                  label={isDe ? "Jetzt erstatten" : "Process refund"}
-                  onClick={handleRefundOrder}
-                />
-              </div>
-            </LayoutFooter>
-          }
-        />
-      </Dialog>
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-[var(--zk-text-secondary)] leading-relaxed">
+            {isDe
+              ? "Die Rückerstattung erfolgt direkt über dein verbundenes Stripe-Händlerkonto. Die 2 % Zackisch-Provision wird anteilig auf den erstatteten Warenwert automatisch gutgeschrieben."
+              : "The refund is processed on your connected Stripe account. The 2% Zackisch fee is proportionally reversed on the refunded goods value."}
+          </p>
+          <TextField
+            label={isDe ? "Erstattungsbetrag in EUR" : "Refund amount in EUR"}
+            value={refundAmountEur}
+            onChange={setRefundAmountEur}
+            placeholder="0,00"
+          />
+        </div>
+      </Modal>
     </div>
   );
 }

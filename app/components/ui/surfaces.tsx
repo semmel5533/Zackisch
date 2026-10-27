@@ -2,11 +2,9 @@
 
 import { useState, useId } from "react";
 import { Input } from "@base-ui/react/input";
-import { Checkbox } from "@base-ui/react/checkbox";
 import { Switch as BaseSwitch } from "@base-ui/react/switch";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import {
-  Check,
   Eye,
   EyeSlash,
   WarningCircle,
@@ -20,15 +18,29 @@ export function Card({
   className = "",
   variant = "default",
   padding = "md",
+  width,
 }: {
   children: React.ReactNode;
   className?: string;
   variant?: "default" | "muted";
-  padding?: "none" | "sm" | "md" | "lg";
+  padding?: "none" | "sm" | "md" | "lg" | number;
+  elevation?: "none" | "low" | "medium" | "high";
+  width?: string;
 }) {
+  const padClass =
+    typeof padding === "number"
+      ? padding === 0
+        ? "none"
+        : padding <= 3
+          ? "sm"
+          : padding === 4
+            ? "md"
+            : "lg"
+      : padding;
   return (
     <div
-      className={`zk-card zk-card-${variant} zk-card-pad-${padding} ${className}`}
+      style={width ? { width } : undefined}
+      className={`zk-card zk-card-${variant} zk-card-pad-${padClass} ${className}`}
     >
       {children}
     </div>
@@ -73,16 +85,21 @@ export function Banner({
 
 export function Badge({
   children,
+  label,
+  icon,
   variant = "neutral",
   className = "",
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  label?: React.ReactNode;
+  icon?: React.ReactNode;
   variant?: "neutral" | "info" | "success" | "warning" | "error";
   className?: string;
 }) {
   return (
     <span className={`zk-badge zk-badge-${variant} ${className}`}>
-      {children}
+      {icon}
+      {children ?? label}
     </span>
   );
 }
@@ -185,20 +202,30 @@ export function SwitchField({
   description,
   checked,
   onChange,
+  onCheckedChange,
   disabled,
+  hideLabel,
   className = "",
+  "aria-label": ariaLabel,
 }: {
   label?: React.ReactNode;
   description?: React.ReactNode;
   checked: boolean;
-  onChange: (checked: boolean) => void;
+  onChange?: (checked: boolean) => void;
+  onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
+  hideLabel?: boolean;
   className?: string;
+  "aria-label"?: string;
 }) {
   const id = useId();
+  const handleToggle = (next: boolean) => {
+    onChange?.(next);
+    onCheckedChange?.(next);
+  };
   return (
     <div className={`zk-switch-row ${className}`}>
-      {(label || description) && (
+      {!hideLabel && (label || description) && (
         <div className="flex flex-col gap-0.5">
           {label && (
             <label htmlFor={id} className="zk-label cursor-pointer">
@@ -215,8 +242,9 @@ export function SwitchField({
       <BaseSwitch.Root
         id={id}
         checked={checked}
-        onCheckedChange={onChange}
+        onCheckedChange={handleToggle}
         disabled={disabled}
+        aria-label={ariaLabel || (typeof label === "string" ? label : undefined)}
         className="zk-switch"
       >
         <BaseSwitch.Thumb className="zk-switch-thumb" />

@@ -120,8 +120,6 @@ export function ZackischToaster() {
   return <ToastViewport />;
 }
 
-export const AstryxToaster = ZackischToaster;
-
 export function useToast(): ShowToastFn {
   return (options: ToastOptions) => {
     if (activeToastDispatcher) {

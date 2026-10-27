@@ -6,22 +6,9 @@ import {
   Archive,
   SlidersHorizontal,
   SignOut,
+  List,
+  X,
 } from "@phosphor-icons/react";
-import { AppShell } from "@astryxdesign/core/AppShell";
-import {
-  SideNav,
-  SideNavHeading,
-  SideNavSection,
-  SideNavItem,
-} from "@astryxdesign/core/SideNav";
-import { TopNav } from "@astryxdesign/core/TopNav";
-import { Layout, LayoutContent } from "@astryxdesign/core/Layout";
-import { HStack } from "@astryxdesign/core/HStack";
-import { VStack } from "@astryxdesign/core/VStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
 import { useTranslation } from "@/lib/i18n";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import type { PublicRestaurant, Order, MenuCategory, MenuItem } from "@/lib/types";
@@ -32,6 +19,9 @@ import { CurrentOrdersContent } from "@/components/dashboard/current-orders-cont
 import { AllOrdersContent } from "@/components/dashboard/all-orders-content";
 import { AvailabilityContent } from "@/components/availability/availability-content";
 import { signOutStaffAction } from "@/actions/staff-actions";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/surfaces";
+import { cn } from "@/lib/utils";
 
 interface StaffTerminalShellProps {
   business: PublicRestaurant;
@@ -54,6 +44,7 @@ export function StaffTerminalShell({
   const [activeTab, setActiveTab] = useState<
     "current-orders" | "all-orders" | "availability"
   >(initialTab);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -73,6 +64,7 @@ export function StaffTerminalShell({
     tab: "current-orders" | "all-orders" | "availability",
   ) => {
     setActiveTab(tab);
+    setMobileMenuOpen(false);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
       url.searchParams.set("tab", tab);
@@ -114,83 +106,144 @@ export function StaffTerminalShell({
   ];
 
   return (
-    <AppShell
-      height="fill"
-      variant="elevated"
-      topNav={
-        <TopNav
-          label="Zackisch Personal-Terminal Header"
-          startContent={
-            <HStack gap={3} vAlign="center">
-              <Heading level={4}>{business.name}</Heading>
-              <Badge
-                label="Personal-Terminal"
-                variant="neutral"
-              />
-              {activeOrdersCount > 0 && (
-                <Badge
-                  label={`${activeOrdersCount} in Bearbeitung`}
-                  variant="info"
-                />
-              )}
-            </HStack>
-          }
-          endContent={
-            <HStack gap={2} vAlign="center">
-              <RegionLanguageSwitcher />
-              <Button
-                label={t("signOut")}
-                variant="ghost"
-                size="sm"
-                icon={<Icon icon={SignOut} size="sm" />}
-                onClick={() => signOutStaffAction(business.$id)}
-              />
-            </HStack>
-          }
-        />
-      }
-      sideNav={
-        <SideNav
-          collapsible
-          header={
-            <SideNavHeading
-              icon={
-                <img
-                  src="/icon.svg"
-                  alt="Zackisch"
-                  style={{ width: 24, height: 24, borderRadius: 4 }}
-                />
-              }
-              heading={business.name}
-              subheading="Personal-Terminal"
+    <div className="min-h-screen flex flex-col bg-canvas text-foreground">
+      {/* Top Header */}
+      <header
+        aria-label="Zackisch Personal-Terminal Header"
+        className="sticky top-0 z-40 h-16 bg-surface border-b border-border px-4 sm:px-6 flex items-center justify-between gap-4 print:hidden"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            aria-label={mobileMenuOpen ? "Navigation schließen" : "Navigation öffnen"}
+            className="lg:hidden inline-flex items-center justify-center size-10 rounded-lg border border-border bg-surface text-foreground"
+          >
+            {mobileMenuOpen ? <X className="size-5" /> : <List className="size-5" />}
+          </button>
+          <img
+            src="/icon.svg"
+            alt="Zackisch"
+            className="size-6 rounded shrink-0"
+          />
+          <h2 className="text-base sm:text-lg font-bold tracking-tight truncate">
+            {business.name}
+          </h2>
+          <Badge label="Personal-Terminal" variant="neutral" />
+          {activeOrdersCount > 0 && (
+            <Badge
+              label={`${activeOrdersCount} in Bearbeitung`}
+              variant="info"
             />
-          }
-        >
-          <SideNavSection title="Terminal">
-            {navItems.map((item) => (
-              <SideNavItem
-                key={item.id}
-                label={item.label}
-                icon={<Icon icon={item.icon} size="sm" />}
-                isSelected={activeTab === item.id}
-                onClick={() => handleTabChange(item.id)}
-                endContent={
-                  item.count && item.count > 0 ? (
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <RegionLanguageSwitcher />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => signOutStaffAction(business.$id)}
+          >
+            <SignOut className="size-4" />
+            <span>{t("signOut")}</span>
+          </Button>
+        </div>
+      </header>
+
+      <div className="flex flex-1 min-h-0">
+        {/* Desktop Side Navigation */}
+        <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-border bg-surface p-4 gap-4 print:hidden">
+          <div className="px-2 py-1">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Terminal
+            </div>
+          </div>
+          <nav className="flex flex-col gap-1" aria-label="Terminal">
+            {navItems.map((item) => {
+              const IconComp = item.icon;
+              const isSelected = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleTabChange(item.id)}
+                  className={cn(
+                    "flex items-center justify-between gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors text-left cursor-pointer",
+                    isSelected
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-muted",
+                  )}
+                >
+                  <span className="flex items-center gap-2.5 min-w-0">
+                    <IconComp className="size-4 shrink-0" weight={isSelected ? "bold" : "regular"} />
+                    <span className="truncate">{item.label}</span>
+                  </span>
+                  {item.count !== undefined && item.count > 0 && (
                     <Badge
                       label={String(item.count)}
-                      variant="info"
+                      variant={isSelected ? "neutral" : "info"}
                     />
-                  ) : undefined
-                }
-              />
-            ))}
-          </SideNavSection>
-        </SideNav>
-      }
-    >
-      <Layout>
-        <LayoutContent>
-          <VStack gap={6} width="100%">
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden flex">
+            <div
+              className="fixed inset-0 bg-black/50"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <aside className="relative z-10 w-72 max-w-[85vw] bg-surface border-r border-border p-4 flex flex-col gap-4">
+              <div className="flex items-center justify-between pb-2 border-b border-border">
+                <span className="font-bold text-base">{business.name}</span>
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Schließen"
+                  className="size-9 inline-flex items-center justify-center rounded-lg hover:bg-muted"
+                >
+                  <X className="size-5" />
+                </button>
+              </div>
+              <nav className="flex flex-col gap-1" aria-label="Terminal">
+                {navItems.map((item) => {
+                  const IconComp = item.icon;
+                  const isSelected = activeTab === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => handleTabChange(item.id)}
+                      className={cn(
+                        "flex items-center justify-between gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors text-left",
+                        isSelected
+                          ? "bg-primary text-primary-foreground"
+                          : "text-foreground hover:bg-muted",
+                      )}
+                    >
+                      <span className="flex items-center gap-2.5 min-w-0">
+                        <IconComp className="size-4 shrink-0" />
+                        <span className="truncate">{item.label}</span>
+                      </span>
+                      {item.count !== undefined && item.count > 0 && (
+                        <Badge label={String(item.count)} variant="info" />
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
+            </aside>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <main className="flex-1 min-w-0 p-4 sm:p-6">
+          <div className="flex flex-col gap-6 w-full">
             {activeTab === "current-orders" && (
               <CurrentOrdersContent
                 businessId={business.$id}
@@ -211,9 +264,9 @@ export function StaffTerminalShell({
                 items={items}
               />
             )}
-          </VStack>
-        </LayoutContent>
-      </Layout>
-    </AppShell>
+          </div>
+        </main>
+      </div>
+    </div>
   );
 }

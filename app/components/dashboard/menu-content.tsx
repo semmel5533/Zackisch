@@ -30,7 +30,6 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
   rectSortingStrategy,
   useSortable,
 } from "@dnd-kit/sortable";
@@ -39,8 +38,6 @@ import {
   Plus,
   PencilSimple,
   Trash,
-  Eye,
-  EyeSlash,
   DotsSixVertical,
   SlidersHorizontal,
   CaretDown,
@@ -51,19 +48,14 @@ import {
 } from "@phosphor-icons/react";
 import { toast } from "@/components/common/toast";
 import { cn, hasPaidCustomizations } from "@/lib/utils";
-import { Card } from "@astryxdesign/core/Card";
-import { Button } from "@astryxdesign/core/Button";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Switch } from "@astryxdesign/core/Switch";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
-import { Text } from "@astryxdesign/core/Text";
+import { Button } from "@/components/ui/button";
+import { Card, Badge, SwitchField } from "@/components/ui/surfaces";
+import { Modal } from "@/components/ui/modal";
 import { ItemWorkspace } from "./menu/item-workspace";
 
 import Image from "next/image";
 import { useTranslation } from "@/lib/i18n";
 import { Price } from "@/components/common/price";
-import { getImagePreviewUrl } from "@/lib/convex/client";
 import { getMenuItemImageUrl } from "@/lib/menu-images";
 import {
   createCategoryAction,
@@ -101,7 +93,6 @@ function useIsDesktop(containerRef: React.RefObject<HTMLDivElement | null>) {
 }
 
 const customItemCollisionDetection: CollisionDetection = (args) => {
-  // If dragging a category, only collide with other categories using closestCenter
   if (args.active.data.current?.type === "category") {
     const categoryContainers = args.droppableContainers.filter(
       (c) => c.data?.current?.type === "category",
@@ -109,8 +100,6 @@ const customItemCollisionDetection: CollisionDetection = (args) => {
     return closestCenter({ ...args, droppableContainers: categoryContainers });
   }
 
-  // If dragging an item:
-  // 1. If pointer is within a category card, prioritize items in that category using closestCenter
   const pointerCollisions = pointerWithin(args);
   const overCategory = pointerCollisions.find((c) => {
     const container = args.droppableContainers.find((dc) => dc.id === c.id);
@@ -138,7 +127,6 @@ const customItemCollisionDetection: CollisionDetection = (args) => {
     return [overCategory];
   }
 
-  // 2. Fallback to closestCenter on all items
   const itemContainers = args.droppableContainers.filter(
     (c) => c.data?.current?.type === "item",
   );
@@ -160,7 +148,6 @@ export function MenuContent({
   const containerRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop(containerRef);
 
-  // Persistent client state for categories and items to eliminate drag & drop flickering
   const [categories, setCategories] = useState<MenuCategory[]>(() =>
     Array.from(
       new Map(
@@ -201,7 +188,6 @@ export function MenuContent({
     );
   }, [initialCategories, initialItems]);
 
-  // Dialog & Sheet states
   const [showItemSheet, setShowItemSheet] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
@@ -211,12 +197,10 @@ export function MenuContent({
   const isCreatingCategoryRef = useRef(false);
   const pendingAvailabilityIdsRef = useRef(new Set<string>());
 
-  // Collapsed categories state (map of categoryId -> isCollapsed)
   const [collapsedCategories, setCollapsedCategories] = useState<
     Record<string, boolean>
   >({});
 
-  // Delete alert dialog state
   const [deleteConfirm, setDeleteConfirm] = useState<{
     type: "category" | "item";
     id: string;
@@ -224,7 +208,6 @@ export function MenuContent({
     imageId?: string;
   } | null>(null);
 
-  // DnD sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -236,7 +219,6 @@ export function MenuContent({
     }),
   );
 
-  // Memoized items mapped by category ID for zero-alloc prop stability
   const itemsByCategory = useMemo(() => {
     const map: Record<string, MenuItem[]> = {};
     categories.forEach((cat) => {
@@ -252,7 +234,6 @@ export function MenuContent({
     return map;
   }, [categories, items]);
 
-  // Partition categories for masonry-like two column layout
   const { leftCategories, rightCategories } = useMemo(() => {
     const left: MenuCategory[] = [];
     const right: MenuCategory[] = [];
@@ -263,7 +244,6 @@ export function MenuContent({
     return { leftCategories: left, rightCategories: right };
   }, [categories]);
 
-  // Active item or category for drag preview overlay
   const [activeItem, setActiveItem] = useState<MenuItem | null>(null);
   const [activeCategory, setActiveCategory] = useState<MenuCategory | null>(
     null,
@@ -271,7 +251,6 @@ export function MenuContent({
 
   const initialItemsRef = useRef<MenuItem[]>([]);
 
-  // Handle Drag Start
   const handleDragStart = (event: DragStartEvent) => {
     const type = event.active.data.current?.type;
     if (type === "item") {
@@ -284,7 +263,6 @@ export function MenuContent({
     }
   };
 
-  // Handle Drag Cancel
   const handleDragCancel = () => {
     setActiveItem(null);
     setActiveCategory(null);
@@ -293,7 +271,6 @@ export function MenuContent({
     }
   };
 
-  // Handle Drag Over (live move only across different categories)
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -306,8 +283,6 @@ export function MenuContent({
 
     const overType = over.data.current?.type;
 
-    // Only reorder live if hovering over another visible ITEM in a DIFFERENT category.
-    // Intra-category sorting is handled automatically by @dnd-kit SortableContext transforms.
     if (overType !== "item") return;
 
     const overCategoryId = over.data.current?.item?.categoryId;
@@ -322,7 +297,6 @@ export function MenuContent({
       const overIdx = prevItems.findIndex((i) => i.$id === overId);
       if (overIdx === -1) return prevItems;
 
-      // Cross-category item hover: move item to target category's SortableContext
       if (currentCatId !== overCategoryId) {
         const updated = [...prevItems];
         updated[activeIdx] = {
@@ -332,13 +306,10 @@ export function MenuContent({
         return arrayMove(updated, activeIdx, overIdx);
       }
 
-      // Intra-category sorting: do NOT modify items state during drag.
-      // SortableContext handles CSS transform animations cleanly.
       return prevItems;
     });
   };
 
-  // Handle Drag End (persist final category or item positions to Convex)
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveItem(null);
@@ -391,10 +362,8 @@ export function MenuContent({
       );
       const initialCatId = initialItem?.categoryId;
 
-      // 1. Intra-category item drop or inter-item drop
       if (overType === "item") {
         if (initialCatId === overCategoryId) {
-          // Intra-category: items state was not mutated during drag. Apply arrayMove now.
           if (activeId !== overId) {
             const overIdx = currentItems.findIndex((i) => i.$id === overId);
             if (overIdx !== -1) {
@@ -402,7 +371,6 @@ export function MenuContent({
             }
           }
         } else {
-          // Cross-category: ensure target categoryId is updated on active item
           if (
             overCategoryId &&
             currentItems[activeIdx].categoryId !== overCategoryId
@@ -413,9 +381,7 @@ export function MenuContent({
             };
           }
         }
-      }
-      // 2. Drop onto category card directly (e.g. collapsed or empty category)
-      else if (overType === "category" && overCategoryId) {
+      } else if (overType === "category" && overCategoryId) {
         if (currentItems[activeIdx].categoryId !== overCategoryId) {
           const catItems = currentItems.filter(
             (i) => i.categoryId === overCategoryId,
@@ -521,7 +487,6 @@ export function MenuContent({
     });
   }, [items, businessId, t]);
 
-  // In-place category creation handler
   async function openNewCategory() {
     if (isCreatingCategoryRef.current) return;
     isCreatingCategoryRef.current = true;
@@ -620,7 +585,6 @@ export function MenuContent({
     });
   }, []);
 
-  // Delete Action Confirmations
   async function confirmDelete() {
     if (!deleteConfirm) return;
     if (deleteConfirm.type === "category") {
@@ -657,33 +621,33 @@ export function MenuContent({
             return;
           }
           setItems((prevItems) =>
-        prevItems.map((i) => {
-          if (i.$id !== itemId) return i;
-          if (i.customizations) {
-            try {
-              const steps = JSON.parse(i.customizations);
-              if (Array.isArray(steps)) {
-                const updatedSteps = steps.map((step: any) => ({
-                  ...step,
-                  available,
-                  options: (step.options || []).map((opt: any) => ({
-                    ...opt,
-                    available,
-                  })),
-                }));
-                return {
-                  ...i,
-                  available,
-                  customizations: JSON.stringify(updatedSteps),
-                };
+            prevItems.map((i) => {
+              if (i.$id !== itemId) return i;
+              if (i.customizations) {
+                try {
+                  const steps = JSON.parse(i.customizations);
+                  if (Array.isArray(steps)) {
+                    const updatedSteps = steps.map((step: any) => ({
+                      ...step,
+                      available,
+                      options: (step.options || []).map((opt: any) => ({
+                        ...opt,
+                        available,
+                      })),
+                    }));
+                    return {
+                      ...i,
+                      available,
+                      customizations: JSON.stringify(updatedSteps),
+                    };
+                  }
+                } catch {
+                  return { ...i, available };
+                }
               }
-            } catch {
               return { ...i, available };
-            }
-          }
-          return { ...i, available };
-        }),
-        );
+            }),
+          );
         } catch {
           toast.error(t("error"));
         } finally {
@@ -716,10 +680,11 @@ export function MenuContent({
           </div>
           <Button
             variant="secondary"
-            label={t("addCategory")}
-            icon={<Plus className="h-4 w-4 shrink-0" weight="bold" />}
             onClick={openNewCategory}
-          />
+          >
+            <Plus className="h-4 w-4 shrink-0" weight="bold" />
+            <span>{t("addCategory")}</span>
+          </Button>
         </div>
       ) : (
         <DndContext
@@ -739,7 +704,6 @@ export function MenuContent({
           >
             {isDesktop ? (
               <div className="flex gap-6 items-start w-full">
-                {/* Left Column (Even Index: 0, 2, 4...) */}
                 <div className="flex flex-col gap-6 flex-1 min-w-0">
                   {leftCategories.map((category) => (
                     <SortableCategoryCard
@@ -768,7 +732,6 @@ export function MenuContent({
                   )}
                 </div>
 
-                {/* Right Column (Odd Index: 1, 3, 5...) */}
                 <div className="flex flex-col gap-6 flex-1 min-w-0">
                   {rightCategories.map((category) => (
                     <SortableCategoryCard
@@ -798,7 +761,6 @@ export function MenuContent({
                 </div>
               </div>
             ) : (
-              /* Mobile Layout (Single Column) */
               <div className="flex flex-col gap-6 w-full">
                 {categories.map((category) => (
                   <SortableCategoryCard
@@ -864,63 +826,47 @@ export function MenuContent({
         businessId={businessId}
       />
 
-      <Dialog
-        isOpen={!!deleteConfirm}
+      <Modal
+        open={!!deleteConfirm}
         onOpenChange={(open) => !open && setDeleteConfirm(null)}
-        width={440}
-        purpose="required"
-      >
-        <Layout
-          header={
-            <DialogHeader
-              title={
-                deleteConfirm?.type === "category"
-                  ? t("confirmDeleteCategoryTitle", {
-                      name: deleteConfirm?.name || "",
-                    })
-                  : t("confirmDeleteItemTitle", {
-                      name: deleteConfirm?.name || "",
-                    })
-              }
-              onOpenChange={(open) => !open && setDeleteConfirm(null)}
-            />
-          }
-          content={
-            <LayoutContent>
-              <div className="p-4">
-                <Text color="secondary">
-                  {deleteConfirm?.type === "category"
-                    ? t("confirmDeleteCategoryDesc", {
-                        name: deleteConfirm?.name || "",
-                      })
-                    : t("confirmDeleteItemDesc", {
-                        name: deleteConfirm?.name || "",
-                      })}
-                </Text>
-              </div>
-            </LayoutContent>
-          }
-          footer={
-            <LayoutFooter>
-              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  label={t("cancel")}
-                  onClick={() => setDeleteConfirm(null)}
-                />
-                <Button
-                  variant="destructive"
-                  size="lg"
-                  label={t("delete")}
-                  icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
-                  onClick={confirmDelete}
-                />
-              </div>
-            </LayoutFooter>
-          }
-        />
-      </Dialog>
+        title={
+          deleteConfirm?.type === "category"
+            ? t("confirmDeleteCategoryTitle", {
+                name: deleteConfirm?.name || "",
+              })
+            : t("confirmDeleteItemTitle", {
+                name: deleteConfirm?.name || "",
+              })
+        }
+        description={
+          deleteConfirm?.type === "category"
+            ? t("confirmDeleteCategoryDesc", {
+                name: deleteConfirm?.name || "",
+              })
+            : t("confirmDeleteItemDesc", {
+                name: deleteConfirm?.name || "",
+              })
+        }
+        footer={
+          <div className="flex items-center justify-end gap-3 w-full">
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={() => setDeleteConfirm(null)}
+            >
+              {t("cancel")}
+            </Button>
+            <Button
+              variant="danger"
+              size="lg"
+              onClick={confirmDelete}
+            >
+              <Trash className="h-4 w-4 shrink-0" weight="bold" />
+              <span>{t("delete")}</span>
+            </Button>
+          </div>
+        }
+      />
     </div>
   );
 }
@@ -930,15 +876,14 @@ function AddCategoryCardButton({ onClick }: { onClick: () => void }) {
   return (
     <Button
       variant="secondary"
-      label={t("addCategory")}
-      icon={<Plus className="h-5 w-5 shrink-0" weight="bold" />}
       onClick={onClick}
-      width="100%"
-    />
+      fullWidth
+    >
+      <Plus className="h-5 w-5 shrink-0" weight="bold" />
+      <span>{t("addCategory")}</span>
+    </Button>
   );
 }
-
-// Sortable Category Card
 
 interface SortableCategoryCardProps {
   category: MenuCategory;
@@ -980,7 +925,7 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
   const [nameVal, setNameVal] = useState(category.name);
   const [isSavingName, setIsSavingName] = useState(false);
 
-  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+  const { isOver } = useDroppable({
     id: category.$id,
     data: { type: "category", category },
   });
@@ -988,14 +933,12 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
   const { active } = useDndContext();
   const isDraggingItem = active?.data.current?.type === "item";
 
-  // Sync nameVal when category.name changes (render-time update)
   const [prevCategoryName, setPrevCategoryName] = useState(category.name);
   if (category.name !== prevCategoryName) {
     setPrevCategoryName(category.name);
     setNameVal(category.name);
   }
 
-  // Sync isEditingName when autoEditName changes (render-time update)
   const [prevAutoEditName, setPrevAutoEditName] = useState(autoEditName);
   if (autoEditName !== prevAutoEditName) {
     setPrevAutoEditName(autoEditName);
@@ -1099,12 +1042,13 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                 />
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("save")}
-                  icon={<Check className="h-4 w-4" weight="bold" />}
+                  iconOnly
+                  aria-label={t("save")}
                   onClick={handleSaveName}
-                  isDisabled={isSavingName}
-                />
+                  disabled={isSavingName}
+                >
+                  <Check className="h-4 w-4" weight="bold" />
+                </Button>
               </div>
             ) : (
               <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -1117,14 +1061,15 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
                 </button>
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("editCategory")}
-                  icon={<PencilSimple className="h-4 w-4" />}
+                  iconOnly
+                  aria-label={t("editCategory")}
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditingName(true);
                   }}
-                />
+                >
+                  <PencilSimple className="h-4 w-4" />
+                </Button>
               </div>
             )}
             {!isEditingName && (
@@ -1137,43 +1082,45 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
           <div className="flex items-center justify-between gap-1.5 shrink-0 border-t border-border/40 pt-2 w-full">
             <Button
               variant="ghost"
-              isIconOnly
-              label={isCollapsed ? t("expand") : t("collapse")}
-              icon={
-                isCollapsed ? (
-                  <CaretDown className="h-4 w-4" weight="bold" />
-                ) : (
-                  <CaretUp className="h-4 w-4" weight="bold" />
-                )
-              }
+              iconOnly
+              aria-label={isCollapsed ? t("expand") : t("collapse")}
               onClick={() => onToggleCollapse(category.$id)}
-            />
+            >
+              {isCollapsed ? (
+                <CaretDown className="h-4 w-4" weight="bold" />
+              ) : (
+                <CaretUp className="h-4 w-4" weight="bold" />
+              )}
+            </Button>
 
             <div className="flex items-center gap-1.5 shrink-0">
               {canMoveUp && (
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("moveUp")}
-                  icon={<ArrowUp className="size-4" weight="bold" />}
+                  iconOnly
+                  aria-label={t("moveUp")}
                   onClick={() => onMoveCategory(category.$id, -1)}
-                />
+                >
+                  <ArrowUp className="size-4" weight="bold" />
+                </Button>
               )}
               {canMoveDown && (
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("moveDown")}
-                  icon={<ArrowDown className="size-4" weight="bold" />}
+                  iconOnly
+                  aria-label={t("moveDown")}
                   onClick={() => onMoveCategory(category.$id, 1)}
-                />
+                >
+                  <ArrowDown className="size-4" weight="bold" />
+                </Button>
               )}
               <Button
-                variant="destructive"
-                label={t("delete")}
-                icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
+                variant="danger"
                 onClick={() => onDeleteCategory(category)}
-              />
+              >
+                <Trash className="h-4 w-4 shrink-0" weight="bold" />
+                <span>{t("delete")}</span>
+              </Button>
             </div>
           </div>
         </div>
@@ -1210,18 +1157,18 @@ const SortableCategoryCard = memo(function SortableCategoryCard({
 
             <Button
               variant="ghost"
-              label={t("addItem")}
-              icon={<Plus className="h-4 w-4 shrink-0" weight="bold" />}
               onClick={() => onNewItem(category.$id)}
-              width="100%"
-            />
+              fullWidth
+            >
+              <Plus className="h-4 w-4 shrink-0" weight="bold" />
+              <span>{t("addItem")}</span>
+            </Button>
           </div>
         )}
       </Card>
     </div>
   );
 });
-// Sortable Item Row
 
 interface ItemRowViewProps {
   item: MenuItem;
@@ -1254,7 +1201,6 @@ const ItemRowView = memo(function ItemRowView({
 }: ItemRowViewProps) {
   const { t } = useTranslation();
 
-  // Parse customization step count
   let customizationStepCount = 0;
   try {
     const parsed: CustomizationStep[] = JSON.parse(item.customizations || "[]");
@@ -1279,7 +1225,6 @@ const ItemRowView = memo(function ItemRowView({
           : "opacity-100 bg-background hover:border-foreground/25",
       )}
     >
-      {/* Top Image */}
       {imageUrl && (
         <div className="relative w-full h-40 sm:h-48 bg-muted border-b border-border/40 shrink-0">
           <Image
@@ -1296,9 +1241,7 @@ const ItemRowView = memo(function ItemRowView({
         </div>
       )}
 
-      {/* Content Area */}
       <div className="flex items-start p-3 sm:p-4 gap-3 flex-1">
-        {/* Drag Handle */}
         <button
           type="button"
           {...attributes}
@@ -1310,11 +1253,8 @@ const ItemRowView = memo(function ItemRowView({
           <DotsSixVertical className="h-5 w-5" weight="bold" />
         </button>
 
-        {/* Content Column to right of handle */}
         <div className="flex flex-col flex-1 min-w-0 justify-between h-full gap-2">
-          {/* Top section: Title, Switch, Description */}
           <div className="flex flex-col gap-2">
-            {/* Row 1: Title on left, Badge & Switch on right */}
             <div className="flex items-start justify-between gap-2.5">
               <span
                 className={cn(
@@ -1333,17 +1273,16 @@ const ItemRowView = memo(function ItemRowView({
                     icon={<SlidersHorizontal className="w-3 h-3" weight="bold" />}
                   />
                 )}
-                <Switch
-                  value={item.available}
-                  onChange={(checked) => onToggleAvailability(checked)}
-                  label=""
-                  isLabelHidden
+                <SwitchField
+                  checked={item.available}
+                  onCheckedChange={(checked) => onToggleAvailability(checked)}
+                  label={item.available ? t("itemAvailable") : t("itemSoldOut")}
+                  hideLabel
                   aria-label={item.available ? t("itemAvailable") : t("itemSoldOut")}
                 />
               </div>
             </div>
 
-            {/* Description */}
             {item.description && (
               <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed break-words">
                 {item.description}
@@ -1351,7 +1290,6 @@ const ItemRowView = memo(function ItemRowView({
             )}
           </div>
 
-          {/* Row 2: Price on left, Actions on right */}
           <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 mt-auto">
             <Price
               cents={item.price}
@@ -1363,35 +1301,39 @@ const ItemRowView = memo(function ItemRowView({
               {onMove && canMoveUp && (
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("moveUp")}
-                  icon={<ArrowUp className="size-4" weight="bold" />}
+                  iconOnly
+                  aria-label={t("moveUp")}
                   onClick={() => onMove(-1)}
-                />
+                >
+                  <ArrowUp className="size-4" weight="bold" />
+                </Button>
               )}
               {onMove && canMoveDown && (
                 <Button
                   variant="ghost"
-                  isIconOnly
-                  label={t("moveDown")}
-                  icon={<ArrowDown className="size-4" weight="bold" />}
+                  iconOnly
+                  aria-label={t("moveDown")}
                   onClick={() => onMove(1)}
-                />
+                >
+                  <ArrowDown className="size-4" weight="bold" />
+                </Button>
               )}
               <Button
                 variant="ghost"
-                isIconOnly
-                label={t("edit")}
-                icon={<PencilSimple className="h-4 w-4" />}
+                iconOnly
+                aria-label={t("edit")}
                 onClick={onEdit}
-              />
+              >
+                <PencilSimple className="h-4 w-4" />
+              </Button>
               <Button
-                variant="destructive"
-                isIconOnly
-                label={t("delete")}
-                icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
+                variant="danger"
+                iconOnly
+                aria-label={t("delete")}
                 onClick={onDelete}
-              />
+              >
+                <Trash className="h-4 w-4 shrink-0" weight="bold" />
+              </Button>
             </div>
           </div>
         </div>
@@ -1495,10 +1437,11 @@ function CategoryCardOverlay({
             </span>
             <Button
               variant="ghost"
-              isIconOnly
-              label={t("editCategory")}
-              icon={<PencilSimple className="h-4 w-4" />}
-            />
+              iconOnly
+              aria-label={t("editCategory")}
+            >
+              <PencilSimple className="h-4 w-4" />
+            </Button>
           </div>
           <div className="ml-auto shrink-0">
             <Badge label={String(categoryItems.length)} variant="neutral" />
@@ -1508,17 +1451,19 @@ function CategoryCardOverlay({
         <div className="flex items-center justify-between gap-1.5 shrink-0 border-t border-border/40 pt-2 w-full">
           <Button
             variant="ghost"
-            isIconOnly
-            label={isCollapsed ? t("expand") : t("collapse")}
-            icon={isCollapsed ? <CaretDown className="h-4 w-4" weight="bold" /> : <CaretUp className="h-4 w-4" weight="bold" />}
-          />
+            iconOnly
+            aria-label={isCollapsed ? t("expand") : t("collapse")}
+          >
+            {isCollapsed ? <CaretDown className="h-4 w-4" weight="bold" /> : <CaretUp className="h-4 w-4" weight="bold" />}
+          </Button>
 
           <div className="flex items-center gap-1.5 shrink-0">
             <Button
-              variant="destructive"
-              label={t("delete")}
-              icon={<Trash className="h-4 w-4 shrink-0" weight="bold" />}
-            />
+              variant="danger"
+            >
+              <Trash className="h-4 w-4 shrink-0" weight="bold" />
+              <span>{t("delete")}</span>
+            </Button>
           </div>
         </div>
       </div>
@@ -1547,10 +1492,11 @@ function CategoryCardOverlay({
 
           <Button
             variant="ghost"
-            label={t("addItem")}
-            icon={<Plus className="h-4 w-4 shrink-0" weight="bold" />}
-            width="100%"
-          />
+            fullWidth
+          >
+            <Plus className="h-4 w-4 shrink-0" weight="bold" />
+            <span>{t("addItem")}</span>
+          </Button>
         </div>
       )}
     </Card>

@@ -1,16 +1,35 @@
-@layer reset, theme, base, astryx-base, astryx-theme, components, utilities;
-
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "@astryxdesign/core/reset.css";
-@import "@astryxdesign/core/astryx.css";
-@import "@astryxdesign/theme-neutral/theme.css";
-@import "@astryxdesign/core/tailwind-theme.css";
-@import "tailwindcss/utilities.css" layer(utilities);
+@import "tailwindcss";
 @import "../../assets/zackisch/tokens.css";
 @import "../../assets/zackisch/font/inter.css";
 @import "../components/ui/primitives.css";
 @import "../components/guest/guest.css";
+
+@theme inline {
+  --color-background: var(--zk-surface);
+  --color-canvas: var(--zk-page);
+  --color-surface: var(--zk-surface);
+  --color-foreground: var(--zk-text);
+  --color-card: var(--zk-surface);
+  --color-card-foreground: var(--zk-text);
+  --color-popover: var(--zk-surface);
+  --color-popover-foreground: var(--zk-text);
+  --color-primary: var(--zk-action);
+  --color-primary-foreground: var(--zk-action-fg);
+  --color-secondary: var(--zk-surface-muted);
+  --color-secondary-foreground: var(--zk-text);
+  --color-muted: var(--zk-surface-muted);
+  --color-muted-foreground: var(--zk-text-secondary);
+  --color-accent: var(--zk-brand-tint);
+  --color-accent-foreground: var(--zk-text);
+  --color-destructive: var(--zk-error-text);
+  --color-destructive-foreground: var(--zk-white);
+  --color-border: var(--zk-border);
+  --color-input: var(--zk-border-strong);
+  --color-ring: var(--zk-focus);
+  --font-sans: var(--zk-font-ui);
+  --font-inter: var(--zk-font-ui);
+  --font-mono: var(--zk-font-ui);
+}
 
 :root {
   --font-sans: var(--zk-font-ui);
@@ -19,8 +38,8 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-background-body, #F7F7F8);
-  color: var(--color-text-primary, #0A0A0B);
+  background-color: var(--zk-page, #FAFAF9);
+  color: var(--zk-text, #000000);
   -webkit-font-smoothing: antialiased;
 }
 

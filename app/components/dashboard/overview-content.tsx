@@ -6,56 +6,37 @@ import {
   useMemo,
   useRef,
   useTransition,
-  useOptimistic,
   useId,
 } from "react";
 import {
   Plus,
   Trash,
-  LinkSimple,
-  ChartLineUp,
-  ShoppingBag,
   Printer,
-  Scissors,
-  CaretDown,
   ClipboardText,
   ForkKnife,
   Gear,
   Archive,
-  CheckSquare,
-  Check,
   DotsSixVertical,
   Info,
 } from "@phosphor-icons/react";
 import { toast } from "@/components/common/toast";
-import { Card } from "@astryxdesign/core/Card";
-import { Button } from "@astryxdesign/core/Button";
-import { Badge } from "@astryxdesign/core/Badge";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Switch } from "@astryxdesign/core/Switch";
-import { Tooltip } from "@astryxdesign/core/Tooltip";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import {
-  DropdownMenu,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-} from "@astryxdesign/core/DropdownMenu";
 import Link from "next/link";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useTranslation } from "@/lib/i18n";
 import { Price } from "@/components/common/price";
+import { Button } from "@/components/ui/button";
+import { Card, SwitchField } from "@/components/ui/surfaces";
+import { Modal } from "@/components/ui/modal";
 
 function InfoTooltip({ content }: { content: string }) {
   return (
-    <Tooltip content={content} touchTrigger="tap">
-      <span className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground cursor-help p-0.5">
-        <Info className="size-4" />
-      </span>
-    </Tooltip>
+    <span
+      title={content}
+      aria-label={content}
+      className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground cursor-help p-0.5"
+    >
+      <Info className="size-4" />
+    </span>
   );
 }
 import {
@@ -189,7 +170,7 @@ function InkScaledText({
           const bbox = textRef.current.getBBox();
           const ink = getInkMetrics(displayText, "700 100px Inter, sans-serif");
           setViewBox(`${bbox.x} ${-ink.ascent} ${bbox.width} ${ink.height}`);
-        } catch (e) {}
+        } catch {}
       }
     };
     update();
@@ -229,7 +210,7 @@ function InkConnectorText({
   className?: string;
 }) {
   const displayText = text.toLowerCase();
-  const font = `700 ${fontSize}px Poppins, sans-serif`;
+  const font = `700 ${fontSize}px Inter, sans-serif`;
   const [metrics, setMetrics] = useState(() => ({
     viewBox: `0 -${fontSize} ${displayText.length * fontSize} ${fontSize}`,
     height: fontSize,
@@ -291,7 +272,7 @@ function InkConnectorText({
           textAnchor="start"
           dominantBaseline="alphabetic"
           fill="currentColor"
-          className="font-bold font-poppins lowercase"
+          className="font-bold font-inter lowercase"
           style={{ font }}
         >
           {displayText}
@@ -390,10 +371,6 @@ function SortableTableItem({
   );
 }
 
-// -----------------------------------------------------------------------------
-// Sub-components
-// -----------------------------------------------------------------------------
-
 function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
   const { t } = useTranslation();
 
@@ -474,25 +451,19 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
     <Card elevation="low" variant="default" padding={4} className="h-full flex flex-col print:hidden">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-border/40 gap-4 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
-          <Heading level={3}>{t("statistics")}</Heading>
+          <h3 className="text-lg font-bold tracking-tight text-foreground">{t("statistics")}</h3>
           <InfoTooltip content={t("statisticsDesc" as any)} />
         </div>
-        <DropdownMenu
-          button={{
-            label: period === "24h"
-              ? t("last24h")
-              : period === "30d"
-                ? t("last30d")
-                : t("last90d"),
-            variant: "secondary",
-          }}
+        <select
+          value={period}
+          onChange={(e) => setPeriod(e.target.value as TimePeriod)}
+          aria-label={t("statistics")}
+          className="h-9 rounded-lg border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-2 focus-visible:outline-ring"
         >
-          <DropdownMenuGroup>
-            <DropdownMenuItem label={t("last24h")} onClick={() => setPeriod("24h")} />
-            <DropdownMenuItem label={t("last30d")} onClick={() => setPeriod("30d")} />
-            <DropdownMenuItem label={t("last90d")} onClick={() => setPeriod("90d")} />
-          </DropdownMenuGroup>
-        </DropdownMenu>
+          <option value="24h">{t("last24h")}</option>
+          <option value="30d">{t("last30d")}</option>
+          <option value="90d">{t("last90d")}</option>
+        </select>
       </div>
       <div className="pt-4 flex-1 flex flex-col min-h-0">
         <div className="flex flex-col flex-1 min-h-0">
@@ -501,11 +472,11 @@ function StatisticsCard({ orders, period, setPeriod, isMobile, mounted }: any) {
               <div className="text-3xl font-bold font-inter tabular-nums">
                 {totalOrders}
               </div>
-              <Text color="secondary">{t("sales")}</Text>
+              <span className="text-sm text-muted-foreground">{t("sales")}</span>
             </div>
             <div className="flex flex-col">
               <Price cents={totalRevenue} className="text-3xl font-bold" />
-              <Text color="secondary">{t("revenue")}</Text>
+              <span className="text-sm text-muted-foreground">{t("revenue")}</span>
             </div>
           </div>
           <div className="flex-1 w-full min-h-[260px] sm:min-h-[280px] min-w-0 mt-4">
@@ -687,32 +658,31 @@ function QrCodeGeneratorCard({
       <Card elevation="low" variant="default" padding={4} className="h-full flex flex-col bg-white print:hidden @container">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-border/40 gap-4 shrink-0">
           <div className="flex items-center gap-2 min-w-0">
-            <Heading level={3}>{t("qrManagement")}</Heading>
+            <h3 className="text-lg font-bold tracking-tight text-foreground">{t("qrManagement")}</h3>
             <InfoTooltip content={t("qrManagementDesc" as any)} />
           </div>
 
           <div className="flex items-center gap-3">
-            <Switch
-              value={isActive}
-              onChange={(checked) =>
+            <SwitchField
+              checked={isActive}
+              onCheckedChange={(checked) =>
                 handleToggleFeature(qrType, checked)
               }
-              isDisabled={isPending}
+              disabled={isPending}
               label={qrType === "pickup" ? t("toGo") : t("toStay")}
-              isLabelHidden
+              hideLabel
+              aria-label={qrType === "pickup" ? t("toGo") : t("toStay")}
             />
 
-            <DropdownMenu
-              button={{
-                label: qrType === "pickup" ? t("toGo") : t("toStay"),
-                variant: "secondary",
-              }}
+            <select
+              value={qrType}
+              onChange={(e) => setQrType(e.target.value as "pickup" | "table")}
+              aria-label={t("qrManagement")}
+              className="h-9 rounded-lg border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-2 focus-visible:outline-ring"
             >
-              <DropdownMenuGroup>
-                <DropdownMenuItem label={t("toGo")} onClick={() => setQrType("pickup")} />
-                <DropdownMenuItem label={t("toStay")} onClick={() => setQrType("table")} />
-              </DropdownMenuGroup>
-            </DropdownMenu>
+              <option value="pickup">{t("toGo")}</option>
+              <option value="table">{t("toStay")}</option>
+            </select>
           </div>
         </div>
 
@@ -725,8 +695,7 @@ function QrCodeGeneratorCard({
                   <Button
                     type="button"
                     variant="secondary"
-                    isDisabled={tables.length === 0}
-                    label={t("selectAll")}
+                    disabled={tables.length === 0}
                     onClick={() => {
                       if (tables.length === 0) return;
                       if (selectedTables.length === tables.length) {
@@ -739,16 +708,19 @@ function QrCodeGeneratorCard({
                       "w-full",
                       selectedTables.length > 0 ? "sm:flex-1" : "",
                     )}
-                  />
+                  >
+                    {t("selectAll")}
+                  </Button>
 
                   {selectedTables.length > 0 && (
                     <Button
-                      variant="destructive"
+                      variant="danger"
                       onClick={handleRemoveSelectedTables}
-                      icon={<Trash className="size-4" weight="bold" />}
-                      label={`${selectedTables.length} ${t("delete")}`}
                       className="w-full sm:flex-1"
-                    />
+                    >
+                      <Trash className="size-4" weight="bold" />
+                      <span>{`${selectedTables.length} ${t("delete")}`}</span>
+                    </Button>
                   )}
                 </div>
 
@@ -782,12 +754,14 @@ function QrCodeGeneratorCard({
                         })()}
                         <div className="col-span-1">
                           {isAddingTable ? (
-                            <TextInput
-                              label={t("tableNr")}
-                              isLabelHidden
+                            <input
+                              type="text"
+                              aria-label={t("tableNr")}
                               placeholder={t("tableNr")}
                               value={newTableInput}
-                              onChange={(val) => {
+                              autoFocus
+                              onChange={(e) => {
+                                const val = e.target.value;
                                 if (val.length <= 4) setNewTableInput(val);
                               }}
                               onKeyDown={(e) => {
@@ -805,16 +779,17 @@ function QrCodeGeneratorCard({
                                   setIsAddingTable(false);
                                 }
                               }}
-                              width="100%"
+                              className="w-full h-11 rounded-xl border border-border bg-background px-3 text-sm font-semibold text-foreground"
                             />
                           ) : (
                             <Button
                               variant="secondary"
                               onClick={() => setIsAddingTable(true)}
-                              icon={<Plus className="size-4" weight="bold" />}
-                              label={t("addTableFull")}
-                              width="100%"
-                            />
+                              fullWidth
+                            >
+                              <Plus className="size-4" weight="bold" />
+                              <span>{t("addTableFull")}</span>
+                            </Button>
                           )}
                         </div>
                       </div>
@@ -829,14 +804,17 @@ function QrCodeGeneratorCard({
                   <Button
                     onClick={handlePrint}
                     variant="primary"
-                    isDisabled={selectedTables.length === 0}
-                    icon={<Printer className="size-4" />}
-                    label={selectedTables.length > 1
-                      ? t("printMultipleCodes", {
-                          count: selectedTables.length,
-                        })
-                      : t("printQrCode")}
-                  />
+                    disabled={selectedTables.length === 0}
+                  >
+                    <Printer className="size-4" />
+                    <span>
+                      {selectedTables.length > 1
+                        ? t("printMultipleCodes", {
+                            count: selectedTables.length,
+                          })
+                        : t("printQrCode")}
+                    </span>
+                  </Button>
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
@@ -886,9 +864,10 @@ function QrCodeGeneratorCard({
                 <Button
                   onClick={handlePrint}
                   variant="primary"
-                  icon={<Printer className="size-4" />}
-                  label={t("printQrCode")}
-                />
+                >
+                  <Printer className="size-4" />
+                  <span>{t("printQrCode")}</span>
+                </Button>
               </div>
 
               <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-2">
@@ -1001,54 +980,38 @@ function QrCodeGeneratorCard({
         )}
       </div>
 
-      <Dialog
-        isOpen={deleteTablesDialogOpen}
+      <Modal
+        open={deleteTablesDialogOpen}
         onOpenChange={setDeleteTablesDialogOpen}
-        width={440}
-        purpose="required"
-      >
-        <Layout
-          header={
-            <DialogHeader
-              title={
-                selectedTables.length === 1
-                  ? t("deleteTableTitle")
-                  : t("deleteTablesTitle")
-              }
-              onOpenChange={setDeleteTablesDialogOpen}
-            />
-          }
-          content={
-            <LayoutContent>
-              <div className="p-4">
-                <Text color="secondary">
-                  {selectedTables.length === 1
-                    ? t("deleteTableDesc")
-                    : t("deleteTablesDesc")}
-                </Text>
-              </div>
-            </LayoutContent>
-          }
-          footer={
-            <LayoutFooter>
-              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  label={t("cancel")}
-                  onClick={() => setDeleteTablesDialogOpen(false)}
-                />
-                <Button
-                  variant="destructive"
-                  size="lg"
-                  label={t("delete")}
-                  onClick={confirmRemoveTables}
-                />
-              </div>
-            </LayoutFooter>
-          }
-        />
-      </Dialog>
+        title={
+          selectedTables.length === 1
+            ? t("deleteTableTitle")
+            : t("deleteTablesTitle")
+        }
+        description={
+          selectedTables.length === 1
+            ? t("deleteTableDesc")
+            : t("deleteTablesDesc")
+        }
+        footer={
+          <div className="flex items-center justify-end gap-3 w-full">
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={() => setDeleteTablesDialogOpen(false)}
+            >
+              {t("cancel")}
+            </Button>
+            <Button
+              variant="danger"
+              size="lg"
+              onClick={confirmRemoveTables}
+            >
+              {t("delete")}
+            </Button>
+          </div>
+        }
+      />
     </>
   );
 }

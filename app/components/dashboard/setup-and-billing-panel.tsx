@@ -4,20 +4,9 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { Card } from "@astryxdesign/core/Card";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Banner } from "@astryxdesign/core/Banner";
-import { VStack, HStack } from "@astryxdesign/core/Layout";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Icon } from "@astryxdesign/core/Icon";
 import { Price } from "@/components/common/price";
 import {
   Check,
-  WarningCircle,
   DownloadSimple,
   Question,
   Play,
@@ -28,6 +17,9 @@ import { toast } from "@/components/common/toast";
 import { useTranslation } from "@/lib/i18n";
 import { updateSellerIdentityAction } from "@/actions/settings-actions";
 import type { Business } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Card, Badge, Banner, Divider } from "@/components/ui/surfaces";
+import { TextField } from "@/components/ui/form-controls";
 
 interface SetupAndBillingPanelProps {
   business: Business;
@@ -207,28 +199,28 @@ export function SetupAndBillingPanel({
   };
 
   return (
-    <VStack gap={6} width="100%">
+    <div className="flex flex-col gap-6 w-full">
       {/* 1. Self-Service 8-Step Setup Wizard & Go-Live Checklist */}
       <Card variant="default" padding={5} elevation="low" width="100%">
-        <VStack gap={5} width="100%">
-          <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
-            <VStack gap={1}>
-              <HStack gap={2} vAlign="center">
-                <Icon icon={ShieldCheck} size="md" />
-                <Heading level={3}>
+        <div className="flex flex-col gap-5 w-full">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="size-5 shrink-0" />
+                <h3 className="text-lg font-bold tracking-tight text-foreground">
                   {isDe
                     ? "Selbstständige Einrichtung & Live-Checkliste (8 Schritte)"
                     : "Self-Service Setup & Live Readiness (8 Steps)"}
-                </Heading>
-              </HStack>
-              <Text color="secondary" size="sm">
+                </h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
                 {isDe
                   ? "Jeder Schritt wird serverseitig geprüft. Erst wenn alle Pflichtschritte erfüllt sind, ist dein QR-Bestellsystem live."
                   : "Every step is verified server-side before live QR ordering is enabled."}
-              </Text>
-            </VStack>
+              </p>
+            </div>
 
-            <HStack gap={2} vAlign="center">
+            <div className="flex items-center gap-2">
               {readiness?.isReadyForLive ? (
                 <Badge
                   label={isDe ? "8 / 8 Schritte bereit" : "8 / 8 steps ready"}
@@ -249,11 +241,12 @@ export function SetupAndBillingPanel({
                 variant="secondary"
                 size="sm"
                 onClick={handleOpenSupportPortal}
-                icon={<Icon icon={Question} size="sm" />}
-                label={isDe ? "Hilfe & Support-Ticket" : "Help & Support Ticket"}
-              />
-            </HStack>
-          </HStack>
+              >
+                <Question className="size-4" />
+                <span>{isDe ? "Hilfe & Support-Ticket" : "Help & Support Ticket"}</span>
+              </Button>
+            </div>
+          </div>
 
           {readiness && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
@@ -290,127 +283,121 @@ export function SetupAndBillingPanel({
           {/* Quick Seller & Tax Identity + Legal Acceptance + POS Workflow Controls */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <Card variant="muted" padding={4} width="100%">
-              <VStack gap={3}>
-                <Heading level={4}>{t("sellerIdentityTitle")}</Heading>
-                <TextInput
+              <div className="flex flex-col gap-3">
+                <h4 className="text-base font-bold text-foreground">{t("sellerIdentityTitle")}</h4>
+                <TextField
                   label={t("sellerLegalName")}
                   value={legalName}
-                  onChange={(val) => setLegalName(val)}
-                  size="lg"
-                  width="100%"
+                  onValueChange={(val) => setLegalName(val)}
                 />
-                <TextInput
+                <TextField
                   label={t("sellerTaxId")}
                   value={taxId}
-                  onChange={(val) => setTaxId(val)}
-                  size="lg"
-                  width="100%"
+                  onValueChange={(val) => setTaxId(val)}
                 />
-                <TextInput
+                <TextField
                   label={t("sellerVatId")}
                   value={vatId}
-                  onChange={(val) => setVatId(val)}
-                  size="lg"
-                  width="100%"
+                  onValueChange={(val) => setVatId(val)}
                 />
                 <Button
                   type="button"
                   variant="secondary"
                   size="lg"
-                  width="100%"
-                  isDisabled={savingSeller}
-                  isLoading={savingSeller}
+                  fullWidth
+                  disabled={savingSeller}
+                  loading={savingSeller}
                   onClick={handleSaveSellerIdentity}
-                  label={t(savingSeller ? "sellerIdentitySaving" : "sellerIdentitySave")}
-                />
-              </VStack>
+                >
+                  {t(savingSeller ? "sellerIdentitySaving" : "sellerIdentitySave")}
+                </Button>
+              </div>
             </Card>
 
             {/* Box 2: Merchant Contract, DPA & 2% Fee Schedule */}
             <Card variant="muted" padding={4} width="100%">
-              <VStack gap={3} justify="between" height="100%">
-                <VStack gap={1.5}>
-                  <Heading level={4}>
+              <div className="flex flex-col justify-between gap-3 h-full">
+                <div className="flex flex-col gap-1.5">
+                  <h4 className="text-base font-bold text-foreground">
                     {isDe
                       ? "2. Händlervertrag, AVV & 2 %-Preisblatt"
                       : "2. Merchant Contract, DPA & 2% Pricing"}
-                  </Heading>
-                  <Text color="secondary" size="sm">
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
                     {isDe
                       ? "2 % Zackisch-Provision auf den bezahlten Bruttowarenwert (inkl. USt. auf unsere eigene Leistung, 0 % auf freiwilliges Trinkgeld) zzgl. Stripe-Zahlungsgebühren."
                       : "2% Zackisch platform fee on eligible gross goods/services (VAT-inclusive, 0% on voluntary tips) plus Stripe processing fees."}
-                  </Text>
-                </VStack>
+                  </p>
+                </div>
                 <Button
                   type="button"
                   variant="secondary"
                   size="lg"
-                  width="100%"
+                  fullWidth
                   onClick={handleAcceptContracts}
-                  icon={<Icon icon={Check} size="sm" />}
-                  label={
-                    isDe
+                >
+                  <Check className="size-4" />
+                  <span>
+                    {isDe
                       ? "AGB, AVV & 2 %-Konditionen bestätigen"
-                      : "Accept GTC, DPA & 2% fee schedule"
-                  }
-                />
-              </VStack>
+                      : "Accept GTC, DPA & 2% fee schedule"}
+                  </span>
+                </Button>
+              </div>
             </Card>
 
             {/* Box 3: POS Single-Entry Workflow & Test Order */}
             <Card variant="muted" padding={4} width="100%">
-              <VStack gap={3} justify="between" height="100%">
-                <VStack gap={2}>
-                  <Heading level={4}>
+              <div className="flex flex-col justify-between gap-3 h-full">
+                <div className="flex flex-col gap-2">
+                  <h4 className="text-base font-bold text-foreground">
                     {isDe
                       ? "3. Kassenworkflow & Testbestellung"
                       : "3. POS Workflow & Test Order"}
-                  </Heading>
-                  <TextInput
+                  </h4>
+                  <TextField
                     label={isDe ? "Kassensystem" : "POS System"}
                     value={posSystemName}
-                    onChange={(val) => setPosSystemName(val)}
+                    onValueChange={(val) => setPosSystemName(val)}
                     placeholder={isDe ? "Kassensystem (z.B. orderbird)" : "POS system"}
-                    size="lg"
-                    width="100%"
                   />
-                  <TextInput
+                  <TextField
                     label={isDe ? "Zahlungsart in Kasse" : "External payment label"}
                     value={posExternalPaymentLabel}
-                    onChange={(val) => setPosExternalPaymentLabel(val)}
+                    onValueChange={(val) => setPosExternalPaymentLabel(val)}
                     placeholder={
                       isDe
                         ? "Zahlungsart in Kasse (Online bezahlt)"
                         : "External payment label in POS"
                     }
-                    size="lg"
-                    width="100%"
                   />
-                </VStack>
-                <VStack gap={2} width="100%">
+                </div>
+                <div className="flex flex-col gap-2 w-full">
                   <Button
                     type="button"
                     variant="secondary"
                     size="lg"
-                    width="100%"
-                    isDisabled={savingPos}
-                    isLoading={savingPos}
+                    fullWidth
+                    disabled={savingPos}
+                    loading={savingPos}
                     onClick={handleAcknowledgePos}
-                    label={isDe ? "Kassenworkflow speichern" : "Save POS workflow"}
-                  />
+                  >
+                    {isDe ? "Kassenworkflow speichern" : "Save POS workflow"}
+                  </Button>
                   <Button
                     type="button"
                     variant="secondary"
                     size="lg"
-                    width="100%"
-                    isDisabled={creatingTestOrder}
-                    isLoading={creatingTestOrder}
+                    fullWidth
+                    disabled={creatingTestOrder}
+                    loading={creatingTestOrder}
                     onClick={handleTriggerTestOrder}
-                    icon={<Icon icon={Play} size="sm" />}
-                    label={isDe ? "Testbestellung" : "Test Order"}
-                  />
-                </VStack>
-              </VStack>
+                  >
+                    <Play className="size-4" />
+                    <span>{isDe ? "Testbestellung" : "Test Order"}</span>
+                  </Button>
+                </div>
+              </div>
             </Card>
           </div>
 
@@ -430,58 +417,57 @@ export function SetupAndBillingPanel({
               description={`${isDe ? "Bruttoumsatz gesamt:" : "Gross volume:"} ${(posSummary.totals.grossTotalCents / 100).toFixed(2).replace(".", ",")} €`}
             />
           )}
-        </VStack>
+        </div>
       </Card>
 
       {/* 2. Monthly B2B Fee Statements & EN 16931 / XRechnung 3.0 XML Export */}
       <Card variant="default" padding={5} elevation="low" width="100%">
-        <VStack gap={5} width="100%">
-          <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
-            <VStack gap={1}>
-              <HStack gap={2} vAlign="center">
-                <Icon icon={Receipt} size="md" />
-                <Heading level={3}>
+        <div className="flex flex-col gap-5 w-full">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <Receipt className="size-5 shrink-0" />
+                <h3 className="text-lg font-bold tracking-tight text-foreground">
                   {isDe
                     ? "Monatliche Zackisch-Provisionsabrechnung & E-Rechnung (XRechnung 3.0)"
                     : "Monthly Zackisch B2B Fee Statements & E-Invoice (XRechnung 3.0)"}
-                </Heading>
-              </HStack>
-              <Text color="secondary" size="sm">
+                </h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
                 {isDe
                   ? "Strukturierte B2B-Abrechnung über die 2 % Zackisch-Provision (inkl. 19 % USt. auf unsere eigene Leistung, Trinkgeld ausgenommen) nach EN 16931."
                   : "Structured B2B fee statements for the 2% Zackisch platform fee (inclusive of 19% VAT on our own service, tips excluded) per EN 16931."}
-              </Text>
-            </VStack>
+              </p>
+            </div>
 
             <Button
               type="button"
               variant="secondary"
               size="sm"
               onClick={handleGenerateStatement}
-              label={
-                isDe
-                  ? `Abrechnung für ${currentPeriodMonth} aktualisieren`
-                  : `Generate statement (${currentPeriodMonth})`
-              }
-            />
-          </HStack>
+            >
+              {isDe
+                ? `Abrechnung für ${currentPeriodMonth} aktualisieren`
+                : `Generate statement (${currentPeriodMonth})`}
+            </Button>
+          </div>
 
           {!feeStatements || feeStatements.length === 0 ? (
-            <Text color="secondary" size="sm">
+            <p className="text-sm text-muted-foreground">
               {isDe
                 ? "Noch keine monatliche Provisionsabrechnung erzeugt. Klicke oben auf „Abrechnung aktualisieren“, um eine Abrechnung inkl. XRechnung-XML zu erstellen."
                 : "No monthly fee statements generated yet. Click above to generate the current month's statement and XRechnung XML."}
-            </Text>
+            </p>
           ) : (
-            <VStack gap={3} width="100%">
+            <div className="flex flex-col gap-3 w-full">
               {feeStatements.map((stmt) => (
                 <Card key={stmt._id} variant="muted" padding={4} width="100%">
-                  <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
-                    <VStack gap={1}>
-                      <Text weight="semibold">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-semibold text-foreground">
                         {stmt.statementNumber} · {stmt.period}
-                      </Text>
-                      <Text color="secondary" size="sm">
+                      </span>
+                      <span className="text-sm text-muted-foreground">
                         {isDe ? "Provisionspflichtiger Umsatz:" : "Eligible volume:"}{" "}
                         <Price
                           cents={stmt.eligibleTurnoverCents}
@@ -492,21 +478,21 @@ export function SetupAndBillingPanel({
                           cents={stmt.tipTurnoverCents}
                           className="font-semibold text-foreground"
                         />
-                      </Text>
-                    </VStack>
+                      </span>
+                    </div>
 
-                    <HStack gap={3} vAlign="center">
-                      <VStack gap={0.5} hAlign="end">
-                        <Text weight="semibold">
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-end gap-0.5">
+                        <span className="font-semibold text-foreground">
                           {isDe ? "2 % Provision (brutto inkl. USt.):" : "2% Fee (gross incl. VAT):"}{" "}
                           <Price cents={stmt.platformFeeGrossCents} />
-                        </Text>
-                        <Text color="secondary" size="sm">
+                        </span>
+                        <span className="text-sm text-muted-foreground">
                           {isDe ? "Netto:" : "Net:"}{" "}
                           <Price cents={stmt.platformFeeNetCents} /> + 19 % USt. (
                           <Price cents={stmt.platformFeeVatCents} />)
-                        </Text>
-                      </VStack>
+                        </span>
+                      </div>
 
                       {stmt.xmlContent && (
                         <Button
@@ -514,18 +500,19 @@ export function SetupAndBillingPanel({
                           variant="secondary"
                           size="sm"
                           onClick={() => handleDownloadXRechnung(stmt)}
-                          icon={<Icon icon={DownloadSimple} size="sm" />}
-                          label="XRechnung XML"
-                        />
+                        >
+                          <DownloadSimple className="size-4" />
+                          <span>XRechnung XML</span>
+                        </Button>
                       )}
-                    </HStack>
-                  </HStack>
+                    </div>
+                  </div>
                 </Card>
               ))}
-            </VStack>
+            </div>
           )}
-        </VStack>
+        </div>
       </Card>
-    </VStack>
+    </div>
   );
 }

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
-import { AstryxToaster } from "@/components/common/toast";
-import { ZackischThemeProvider } from "@/lib/zackisch-theme";
+import { ZackischToaster } from "@/components/common/toast";
 import { ConvexClientProvider } from "@/components/providers/convex-client-provider";
 
 export const metadata: Metadata = {
@@ -43,11 +42,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className="light antialiased overflow-x-clip font-sans">
-      <body className="bg-background text-foreground overflow-x-clip min-h-screen">
-        <ZackischThemeProvider>
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-          <AstryxToaster />
-        </ZackischThemeProvider>
+      <body className="bg-canvas text-foreground overflow-x-clip min-h-screen">
+        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ZackischToaster />
       </body>
     </html>
   );

@@ -15,14 +15,9 @@ import {
   createEmbeddedAccountSessionAction,
   getStripeAccountStatusAction,
 } from "@/actions/stripe-actions";
-import { Button } from "@astryxdesign/core/Button";
-import { Banner } from "@astryxdesign/core/Banner";
-import {
-  SegmentedControl,
-  SegmentedControlItem,
-} from "@astryxdesign/core/SegmentedControl";
-import { Icon } from "@astryxdesign/core/Icon";
-import { SpinnerGap, Check, WarningCircle } from "@phosphor-icons/react";
+import { Button } from "@/components/ui/button";
+import { Banner, Tabs } from "@/components/ui/surfaces";
+import { Check } from "@phosphor-icons/react";
 import { toast } from "@/components/common/toast";
 import { useTranslation } from "@/lib/i18n";
 
@@ -109,7 +104,7 @@ export function StripeEmbeddedPortal({
           overlays: "dialog",
           variables: {
             colorPrimary: "#000000",
-            fontFamily: "Poppins, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
             borderRadius: "12px",
           },
         },
@@ -161,7 +156,7 @@ export function StripeEmbeddedPortal({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-[var(--zk-text-secondary)]">
           {isDe
             ? "Direct Charges (Connected Account v2): Dein Betrieb ist Verkäufer, Stripe zieht Zahlungsgebühren direkt ab, Zackisch erhält 2 % Provision (inkl. USt., ohne Trinkgeld)."
             : "Direct Charges (Connected Account v2): Your venue is the Seller of Record, Stripe collects processing fees directly, Zackisch receives a 2% VAT-inclusive fee (excl. tips)."}
@@ -173,19 +168,18 @@ export function StripeEmbeddedPortal({
               type="button"
               size="sm"
               variant="primary"
-              isDisabled={isInitializing}
-              isLoading={isInitializing}
+              disabled={isInitializing}
+              loading={isInitializing}
               onClick={initializeEmbeddedConnect}
-              label={
-                stripeAccountId
-                  ? isDe
-                    ? "Eingebettetes Stripe-Portal öffnen"
-                    : "Open embedded Stripe portal"
-                  : isDe
-                    ? "Stripe Connect v2 Konto jetzt starten"
-                    : "Start Stripe Connect v2 onboarding"
-              }
-            />
+            >
+              {stripeAccountId
+                ? isDe
+                  ? "Eingebettetes Stripe-Portal öffnen"
+                  : "Open embedded Stripe portal"
+                : isDe
+                  ? "Stripe Connect v2 Konto jetzt starten"
+                  : "Start Stripe Connect v2 onboarding"}
+            </Button>
           )}
           {stripeAccountId && (
             <Button
@@ -193,9 +187,10 @@ export function StripeEmbeddedPortal({
               variant="secondary"
               size="sm"
               onClick={handleSyncStatus}
-              icon={<Icon icon={Check} size="sm" />}
-              label={isDe ? "Status prüfen" : "Sync status"}
-            />
+            >
+              <Check size={14} weight="bold" aria-hidden="true" />
+              <span>{isDe ? "Status prüfen" : "Sync status"}</span>
+            </Button>
           )}
         </div>
       </div>
@@ -209,32 +204,31 @@ export function StripeEmbeddedPortal({
 
       {connectInstance && (
         <ConnectComponentsProvider connectInstance={connectInstance}>
-          <div className="space-y-3 border border-border rounded-xl p-4 bg-background">
+          <div className="space-y-3 border border-[var(--zk-border)] rounded-xl p-4 bg-[var(--zk-surface)]">
             <ConnectNotificationBanner />
 
-            <SegmentedControl
-              label="Stripe Connect Tab"
+            <Tabs
               value={activeTab}
-              onChange={(val) => setActiveTab(val as any)}
-              size="sm"
-            >
-              <SegmentedControlItem
-                value="onboarding"
-                label={isDe ? "Verifizierung & KYC" : "Onboarding & KYC"}
-              />
-              <SegmentedControlItem
-                value="management"
-                label={isDe ? "Konto & Bankdaten" : "Account & Bank"}
-              />
-              <SegmentedControlItem
-                value="payments"
-                label={isDe ? "Zahlungen & Erstattungen" : "Payments & Refunds"}
-              />
-              <SegmentedControlItem
-                value="payouts"
-                label={isDe ? "Auszahlungen (IBAN)" : "Payouts (IBAN)"}
-              />
-            </SegmentedControl>
+              onValueChange={(val) => setActiveTab(val as any)}
+              items={[
+                {
+                  value: "onboarding",
+                  label: isDe ? "Verifizierung & KYC" : "Onboarding & KYC",
+                },
+                {
+                  value: "management",
+                  label: isDe ? "Konto & Bankdaten" : "Account & Bank",
+                },
+                {
+                  value: "payments",
+                  label: isDe ? "Zahlungen & Erstattungen" : "Payments & Refunds",
+                },
+                {
+                  value: "payouts",
+                  label: isDe ? "Auszahlungen (IBAN)" : "Payouts (IBAN)",
+                },
+              ]}
+            />
 
             <div className="min-h-[320px] pt-2">
               {activeTab === "onboarding" && (

@@ -10,11 +10,12 @@ type ModalProps = {
   onOpenChange: (open: boolean) => void;
   title: string;
   description?: string;
-  closeLabel: string;
+  closeLabel?: string;
   trigger?: ReactElement;
-  children: ReactNode;
+  children?: ReactNode;
   footer?: ReactNode;
   sheet?: boolean;
+  size?: "sm" | "md" | "lg";
 };
 
 export function Modal({
@@ -22,18 +23,21 @@ export function Modal({
   onOpenChange,
   title,
   description,
-  closeLabel,
+  closeLabel = "Close",
   trigger,
   children,
   footer,
   sheet,
+  size = "md",
 }: ModalProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <Dialog.Trigger render={trigger} />}
       <Dialog.Portal>
         <Dialog.Backdrop className="zk-modal-backdrop" />
-        <Dialog.Popup className={`zk-modal ${sheet ? "zk-modal-sheet" : ""}`}>
+        <Dialog.Popup
+          className={`zk-modal zk-modal-${size} ${sheet ? "zk-modal-sheet" : ""}`}
+        >
           <header className="zk-modal-header">
             <div>
               <Dialog.Title className="zk-modal-title">{title}</Dialog.Title>
@@ -51,7 +55,7 @@ export function Modal({
               <X size={20} aria-hidden="true" />
             </Dialog.Close>
           </header>
-          <div className="zk-modal-body">{children}</div>
+          {children && <div className="zk-modal-body">{children}</div>}
           {footer && <footer className="zk-modal-footer">{footer}</footer>}
         </Dialog.Popup>
       </Dialog.Portal>

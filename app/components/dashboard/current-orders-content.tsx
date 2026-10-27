@@ -2,12 +2,9 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@astryxdesign/core/Button";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Tooltip } from "@astryxdesign/core/Tooltip";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { Layout, LayoutContent, LayoutFooter } from "@astryxdesign/core/Layout";
-import { Heading } from "@astryxdesign/core/Heading";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
+import { Badge } from "@/components/ui/surfaces";
 import { Price } from "@/components/common/price";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
@@ -403,19 +400,17 @@ export function CurrentOrdersContent({
           >
             {order.orderNumber}
           </span>
-          <Badge
-            variant="neutral"
-            label={order.type === "dine-in" || order.tableNumber ? `${t("table")} ${order.tableNumber || ""}` : t("pickup")}
-          />
+          <Badge variant="neutral">
+            {order.type === "dine-in" || order.tableNumber ? `${t("table")} ${order.tableNumber || ""}` : t("pickup")}
+          </Badge>
         </div>
 
         {/* Right: Time badge */}
         <div className="shrink-0 flex items-center pl-1">
-          <Badge
-            variant="neutral"
-            icon={<Clock className="w-3 h-3 shrink-0" weight="bold" />}
-            label={clockTime}
-          />
+          <Badge variant="neutral">
+            <Clock className="w-3 h-3 shrink-0" weight="bold" aria-hidden="true" />
+            <span className="tabular-nums">{clockTime}</span>
+          </Badge>
         </div>
       </div>
     );
@@ -426,21 +421,19 @@ export function CurrentOrdersContent({
       {/* Top Header */}
       <div className="sticky top-0 z-30 h-16 -mx-4 sm:-mx-6 px-4 sm:px-6 bg-canvas/95 backdrop-blur-md border-b border-border/40 flex items-center justify-between shrink-0 print:hidden">
         <div className="flex items-center gap-3">
-          <Heading level={1}>{t("orders")}</Heading>
+          <h1 className="text-xl font-bold tracking-tight text-[var(--zk-text)]">{t("orders")}</h1>
           {unrecordedActiveCount > 0 && (
-            <Badge
-              variant="warning"
-              label={isDe
+            <Badge variant="warning">
+              {isDe
                 ? `Kassenabgleich offen: ${unrecordedActiveCount}`
                 : `POS pending: ${unrecordedActiveCount}`}
-            />
+            </Badge>
           )}
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant={soundEnabled ? "primary" : "secondary"}
-            label={soundEnabled ? t("soundOn") : t("soundOff")}
-            icon={soundEnabled ? <SpeakerHigh className="w-4 h-4" weight="fill" /> : <SpeakerSlash className="w-4 h-4" />}
+            size="sm"
             onClick={() => {
               initAudioContext();
               const next = !soundEnabled;
@@ -448,7 +441,14 @@ export function CurrentOrdersContent({
               localStorage.setItem("zakkig_kitchen_sound", next ? "1" : "0");
               if (next) playNewOrderSound();
             }}
-          />
+          >
+            {soundEnabled ? (
+              <SpeakerHigh className="w-4 h-4" weight="fill" aria-hidden="true" />
+            ) : (
+              <SpeakerSlash className="w-4 h-4" aria-hidden="true" />
+            )}
+            <span>{soundEnabled ? t("soundOn") : t("soundOff")}</span>
+          </Button>
         </div>
       </div>
 
@@ -464,16 +464,18 @@ export function CurrentOrdersContent({
           <div className="flex tablet:hidden gap-2 pb-2 shrink-0">
             <Button
               variant={mobileTab === "in_progress" ? "primary" : "secondary"}
-              label={`${t("inProgress")} (${inProgressOrders.length})`}
               onClick={() => setMobileTab("in_progress")}
               className="flex-1"
-            />
+            >
+              {`${t("inProgress")} (${inProgressOrders.length})`}
+            </Button>
             <Button
               variant={mobileTab === "ready_for_pickup" ? "primary" : "secondary"}
-              label={`${t("ready")} (${readyOrders.length})`}
               onClick={() => setMobileTab("ready_for_pickup")}
               className="flex-1"
-            />
+            >
+              {`${t("ready")} (${readyOrders.length})`}
+            </Button>
           </div>
 
           {/* Dual Columns Side-by-Side */}
@@ -491,16 +493,16 @@ export function CurrentOrdersContent({
                   <span className="text-sm font-bold text-foreground truncate">
                     {t("inProgress")}
                   </span>
-                  <Tooltip content={t("inProgressSubline")} touchTrigger="tap">
-                    <span className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help">
-                      <Info className="w-3.5 h-3.5" />
-                    </span>
-                  </Tooltip>
+                  <span
+                    title={t("inProgressSubline")}
+                    className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help"
+                  >
+                    <Info className="w-3.5 h-3.5" aria-hidden="true" />
+                  </span>
                 </div>
-                <Badge
-                  variant="neutral"
-                  label={inProgressOrders.length}
-                />
+                <Badge variant="neutral" className="tabular-nums">
+                  {inProgressOrders.length}
+                </Badge>
               </div>
 
               <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
@@ -527,16 +529,16 @@ export function CurrentOrdersContent({
                   <span className="text-sm font-bold text-foreground truncate">
                     {t("ready")}
                   </span>
-                  <Tooltip content={t("readySubline")} touchTrigger="tap">
-                    <span className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help">
-                      <Info className="w-3.5 h-3.5" />
-                    </span>
-                  </Tooltip>
+                  <span
+                    title={t("readySubline")}
+                    className="inline-flex items-center justify-center p-1 text-muted-foreground hover:text-foreground cursor-help"
+                  >
+                    <Info className="w-3.5 h-3.5" aria-hidden="true" />
+                  </span>
                 </div>
-                <Badge
-                  variant="neutral"
-                  label={readyOrders.length}
-                />
+                <Badge variant="neutral" className="tabular-nums">
+                  {readyOrders.length}
+                </Badge>
               </div>
 
               <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-2.5 space-y-2">
@@ -563,10 +565,11 @@ export function CurrentOrdersContent({
           <div className="desktop:hidden shrink-0">
             <Button
               variant="secondary"
-              label={t("backToList")}
-              icon={<ArrowLeft className="w-4 h-4 shrink-0" weight="bold" />}
               onClick={() => setMobileView("list")}
-            />
+            >
+              <ArrowLeft className="w-4 h-4 shrink-0" weight="bold" aria-hidden="true" />
+              <span>{t("backToList")}</span>
+            </Button>
           </div>
 
           {selectedOrder ? (
@@ -578,28 +581,25 @@ export function CurrentOrdersContent({
                     {selectedOrder.orderNumber}
                   </span>
                   {/* Status Badge directly next to order number */}
-                  <Badge
-                    variant="neutral"
-                    label={selectedOrder.status === "ready_for_pickup"
+                  <Badge variant="neutral">
+                    {selectedOrder.status === "ready_for_pickup"
                       ? t("ready")
                       : t("inProgress")}
-                  />
+                  </Badge>
                 </div>
 
                 {/* Right-aligned Badges: Table or Pickup, and Time */}
                 <div className="flex items-center gap-2 ml-auto sm:ml-0 shrink-0">
-                  <Badge
-                    variant="neutral"
-                    label={selectedOrder.type === "dine-in" || selectedOrder.tableNumber
+                  <Badge variant="neutral">
+                    {selectedOrder.type === "dine-in" || selectedOrder.tableNumber
                       ? `${t("table")} ${selectedOrder.tableNumber || ""}`
                       : t("pickup")}
-                  />
+                  </Badge>
                   {selectedOrderTime && (
-                    <Badge
-                      variant="neutral"
-                      icon={<Clock className="w-3.5 h-3.5 shrink-0" weight="bold" />}
-                      label={selectedOrderTime}
-                    />
+                    <Badge variant="neutral">
+                      <Clock className="w-3.5 h-3.5 shrink-0" weight="bold" aria-hidden="true" />
+                      <span className="tabular-nums">{selectedOrderTime}</span>
+                    </Badge>
                   )}
                 </div>
               </div>
@@ -702,27 +702,26 @@ export function CurrentOrdersContent({
               <div className="p-3.5 sm:p-4 border-t border-border bg-muted/20 shrink-0 flex flex-col gap-3">
                 {/* Payment & Single-Entry POS Reconciliation Row */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border/50">
-                  <Badge
-                    variant="success"
-                    icon={<Check className="w-3.5 h-3.5 shrink-0" weight="bold" />}
-                    label={isDe ? "Bereits mit Zackisch bezahlt" : "Already paid via Zackisch"}
-                  />
+                  <Badge variant="success">
+                    <Check className="w-3.5 h-3.5 shrink-0" weight="bold" aria-hidden="true" />
+                    <span>{isDe ? "Bereits mit Zackisch bezahlt" : "Already paid via Zackisch"}</span>
+                  </Badge>
 
                   {selectedOrder.posStatus === "recorded" ? (
-                    <Badge
-                      variant="neutral"
-                      icon={<Check className="w-3.5 h-3.5 shrink-0" weight="bold" />}
-                      label={isDe ? "In Kasse erfasst" : "Recorded in POS"}
-                    />
+                    <Badge variant="neutral">
+                      <Check className="w-3.5 h-3.5 shrink-0" weight="bold" aria-hidden="true" />
+                      <span>{isDe ? "In Kasse erfasst" : "Recorded in POS"}</span>
+                    </Badge>
                   ) : (
                     <Button
                       size="sm"
                       variant="secondary"
-                      isDisabled={pendingOrderId !== null}
+                      disabled={pendingOrderId !== null}
                       onClick={() => handleRecordInPos(selectedOrder.$id)}
-                      icon={<Check className="w-3.5 h-3.5 mr-1.5 shrink-0" weight="bold" />}
-                      label={isDe ? "In Kasse erfasst" : "Record in POS"}
-                    />
+                    >
+                      <Check className="w-3.5 h-3.5 shrink-0" weight="bold" aria-hidden="true" />
+                      <span>{isDe ? "In Kasse erfasst" : "Record in POS"}</span>
+                    </Button>
                   )}
                 </div>
 
@@ -747,39 +746,43 @@ export function CurrentOrdersContent({
                     <>
                       <Button
                         variant="secondary"
-                        isDisabled={pendingOrderId !== null}
-                        label={t("cancelOrder")}
-                        icon={<ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
+                        disabled={pendingOrderId !== null}
                         onClick={() => setOrderToCancel(selectedOrder.$id)}
-                      />
+                      >
+                        <ReceiptX className="w-4 h-4 shrink-0" weight="bold" aria-hidden="true" />
+                        <span>{t("cancelOrder")}</span>
+                      </Button>
                       <Button
                         variant="primary"
-                        isDisabled={pendingOrderId !== null}
+                        disabled={pendingOrderId !== null}
                         className="flex-1"
-                        label={t("markReady")}
-                        icon={<Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
                         onClick={() =>
                           handleStatusChange(selectedOrder.$id, "ready_for_pickup")
                         }
-                      />
+                      >
+                        <Check className="w-4 h-4 shrink-0" weight="bold" aria-hidden="true" />
+                        <span>{t("markReady")}</span>
+                      </Button>
                     </>
                   ) : (
                     <>
                       <Button
                         variant="secondary"
-                        isDisabled={pendingOrderId !== null}
-                        label={t("cancelOrder")}
-                        icon={<ReceiptX className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
+                        disabled={pendingOrderId !== null}
                         onClick={() => setOrderToCancel(selectedOrder.$id)}
-                      />
+                      >
+                        <ReceiptX className="w-4 h-4 shrink-0" weight="bold" aria-hidden="true" />
+                        <span>{t("cancelOrder")}</span>
+                      </Button>
                       <Button
                         variant="primary"
-                        isDisabled={pendingOrderId !== null}
+                        disabled={pendingOrderId !== null}
                         className="flex-1"
-                        label={t("complete")}
-                        icon={<Check className="w-4 h-4 mr-2 shrink-0" weight="bold" />}
                         onClick={() => setOrderToComplete(selectedOrder.$id)}
-                      />
+                      >
+                        <Check className="w-4 h-4 shrink-0" weight="bold" aria-hidden="true" />
+                        <span>{t("complete")}</span>
+                      </Button>
                     </>
                   )}
                 </div>
@@ -799,116 +802,95 @@ export function CurrentOrdersContent({
         </div>
       </div>
 
-      {/* Cancel Order Confirmation Dialog */}
-      <Dialog
-        isOpen={!!orderToCancel}
+      {/* Cancel Order Confirmation Modal */}
+      <Modal
+        open={!!orderToCancel}
         onOpenChange={(open) => !open && setOrderToCancel(null)}
-        width={460}
-        purpose="required"
+        title={
+          targetOrderToCancel
+            ? t("cancelOrderTitle", {
+                orderNumber: targetOrderToCancel.orderNumber,
+              })
+            : t("cancelOrderTitleFallback")
+        }
+        closeLabel={t("close")}
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              size="lg"
+              disabled={pendingOrderId !== null}
+              onClick={() => setOrderToCancel(null)}
+            >
+              {t("abortCancel")}
+            </Button>
+            <Button
+              variant="destructive"
+              size="lg"
+              disabled={pendingOrderId !== null}
+              onClick={async () => {
+                if (orderToCancel) {
+                  if (await handleStatusChange(orderToCancel, "cancelled")) {
+                    setOrderToCancel(null);
+                    toast.success(t("cancelledOrder"));
+                  }
+                }
+              }}
+            >
+              {t("confirmCancelOrder")}
+            </Button>
+          </>
+        }
       >
-        <Layout
-          header={
-            <DialogHeader
-              title={targetOrderToCancel
-                ? t("cancelOrderTitle", {
-                    orderNumber: targetOrderToCancel.orderNumber,
-                  })
-                : t("cancelOrderTitleFallback")}
-              onOpenChange={(open: boolean) => !open && setOrderToCancel(null)}
-            />
-          }
-          content={
-            <LayoutContent>
-              <p className="text-sm text-destructive font-medium p-4">
-                {t("cancelOrderWarning")}
-              </p>
-            </LayoutContent>
-          }
-          footer={
-            <LayoutFooter>
-              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  isDisabled={pendingOrderId !== null}
-                  label={t("abortCancel")}
-                  onClick={() => setOrderToCancel(null)}
-                />
-                <Button
-                  variant="destructive"
-                  size="lg"
-                  isDisabled={pendingOrderId !== null}
-                  label={t("confirmCancelOrder")}
-                  onClick={async () => {
-                    if (orderToCancel) {
-                      if (await handleStatusChange(orderToCancel, "cancelled")) {
-                        setOrderToCancel(null);
-                        toast.success(t("cancelledOrder"));
-                      }
-                    }
-                  }}
-                />
-              </div>
-            </LayoutFooter>
-          }
-        />
-      </Dialog>
+        <p className="text-sm text-[var(--zk-error-text)] font-medium">
+          {t("cancelOrderWarning")}
+        </p>
+      </Modal>
 
-      {/* Complete Order Confirmation Dialog */}
-      <Dialog
-        isOpen={!!orderToComplete}
+      {/* Complete Order Confirmation Modal */}
+      <Modal
+        open={!!orderToComplete}
         onOpenChange={(open) => !open && setOrderToComplete(null)}
-        width={460}
-        purpose="required"
+        title={
+          targetOrderToComplete
+            ? t("completeOrderTitle", {
+                orderNumber: targetOrderToComplete.orderNumber,
+              })
+            : t("completeOrderTitleFallback")
+        }
+        closeLabel={t("close")}
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              size="lg"
+              disabled={pendingOrderId !== null}
+              onClick={() => setOrderToComplete(null)}
+            >
+              {t("abortCancel")}
+            </Button>
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={pendingOrderId !== null}
+              onClick={async () => {
+                if (orderToComplete) {
+                  if (await handleStatusChange(orderToComplete, "completed")) {
+                    setOrderToComplete(null);
+                    toast.success(t("completed"));
+                  }
+                }
+              }}
+            >
+              {t("completeConfirm")}
+            </Button>
+          </>
+        }
       >
-        <Layout
-          header={
-            <DialogHeader
-              title={targetOrderToComplete
-                ? t("completeOrderTitle", {
-                    orderNumber: targetOrderToComplete.orderNumber,
-                  })
-                : t("completeOrderTitleFallback")}
-              onOpenChange={(open: boolean) => !open && setOrderToComplete(null)}
-            />
-          }
-          content={
-            <LayoutContent>
-              <p className="text-sm text-muted-foreground leading-relaxed p-4">
-                {t("completeOrderDesc")}
-              </p>
-            </LayoutContent>
-          }
-          footer={
-            <LayoutFooter>
-              <div className="flex items-center justify-end gap-3 p-4 border-t border-border/40 w-full">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  isDisabled={pendingOrderId !== null}
-                  label={t("abortCancel")}
-                  onClick={() => setOrderToComplete(null)}
-                />
-                <Button
-                  variant="primary"
-                  size="lg"
-                  isDisabled={pendingOrderId !== null}
-                  label={t("completeConfirm")}
-                  onClick={async () => {
-                    if (orderToComplete) {
-                      if (await handleStatusChange(orderToComplete, "completed")) {
-                        setOrderToComplete(null);
-                        toast.success(t("completed"));
-                      }
-                    }
-                  }}
-                />
-              </div>
-            </LayoutFooter>
-          }
-        />
-      </Dialog>
-
+        <p className="text-sm text-[var(--zk-text-secondary)] leading-relaxed">
+          {t("completeOrderDesc")}
+        </p>
+      </Modal>
     </div>
   );
 }
