@@ -4,24 +4,17 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { anyApi } from "convex/server";
 import { Handshake, Plus, Coins } from "@phosphor-icons/react";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { StackItem } from "@astryxdesign/core/Stack";
-import { Section } from "@astryxdesign/core/Section";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Table, proportional, pixel } from "@astryxdesign/core/Table";
-import { Badge } from "@astryxdesign/core/Badge";
-import { StatusDot } from "@astryxdesign/core/StatusDot";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Divider } from "@astryxdesign/core/Divider";
-import { EmptyState } from "@astryxdesign/core/EmptyState";
-import { Spinner } from "@astryxdesign/core/Spinner";
 import { useAdmin } from "@/lib/admin-context";
 import { toast } from "@/components/common/toast";
+import {
+  Card,
+  Button,
+  Badge,
+  StatusDot,
+  TextField,
+  Modal,
+  Spinner,
+} from "@/components/ui/primitives";
 
 export default function PartnersPage() {
   const { currentRegion, sessionToken } = useAdmin();
@@ -104,341 +97,267 @@ export default function PartnersPage() {
   };
 
   return (
-    <VStack gap={6} maxWidth={1200}>
-      <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
-        <StackItem size="fill">
-          <VStack gap={1}>
-            <Heading level={1}>Vertriebspartner & Provisionen</Heading>
-            <Text type="supporting">
-              Partner-Vergütung: 50% der Zackisch-Plattformgebühr (1% des Gastronomie-Umsatzes).
-            </Text>
-          </VStack>
-        </StackItem>
+    <div className="flex flex-col gap-6 max-w-[1200px]">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex-1 min-w-[240px]">
+          <h1 className="text-2xl font-bold text-[var(--zk-text)]">
+            Vertriebspartner & Provisionen
+          </h1>
+          <p className="text-sm text-[var(--zk-text-secondary)] mt-1">
+            Partner-Vergütung: 50% der Zackisch-Plattformgebühr (1% des Gastronomie-Umsatzes).
+          </p>
+        </div>
 
-        <Button
-          label="Partner anlegen"
-          variant="primary"
-          icon={<Icon icon={Plus} size="sm" />}
-          onClick={() => setShowCreateModal(true)}
-        />
-      </HStack>
+        <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+          <Plus className="size-4" aria-hidden="true" />
+          <span>Partner anlegen</span>
+        </Button>
+      </div>
 
-      <Section variant="section" padding={5}>
-        <VStack gap={4}>
-          <HStack justify="between" vAlign="center">
-            <Heading level={3}>Aktive Vertriebspartner</Heading>
-            <Badge
-              variant="neutral"
-              label={`${partners?.length || 0} Partner registriert`}
-            />
-          </HStack>
+      <Card padding="lg">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[var(--zk-text)]">
+              Aktive Vertriebspartner
+            </h2>
+            <Badge variant="neutral">
+              {partners?.length || 0} Partner registriert
+            </Badge>
+          </div>
 
           {!partners ? (
-            <VStack hAlign="center" vAlign="center" minHeight={200}>
+            <div className="py-12 flex justify-center">
               <Spinner label="Lade Partner..." />
-            </VStack>
+            </div>
           ) : partners.length === 0 ? (
-            <EmptyState
-              isCompact
-              icon={<Icon icon={Handshake} size="lg" color="secondary" />}
-              title="Keine Partner hinterlegt"
-              description={`Keine Partner für Region ${currentRegion.toUpperCase()} hinterlegt.`}
-            />
+            <div className="py-12 text-center flex flex-col items-center gap-2">
+              <Handshake className="size-8 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+              <div className="text-base font-bold text-[var(--zk-text)]">
+                Keine Partner hinterlegt
+              </div>
+              <p className="text-sm text-[var(--zk-text-secondary)]">
+                Keine Partner für Region {currentRegion.toUpperCase()} hinterlegt.
+              </p>
+            </div>
           ) : (
-            <Table
-              data={partners}
-              idKey="_id"
-              hasHover
-              density="balanced"
-              columns={[
-                {
-                  key: "name",
-                  header: "Code & Partner",
-                  width: proportional(1.5, { minWidth: 200 }),
-                  renderCell: (p: any) => (
-                    <VStack gap={0.5}>
-                      <HStack gap={2} vAlign="center">
-                        <Badge variant="neutral" label={p.code} />
-                        <Text weight="semibold">{p.name}</Text>
-                      </HStack>
-                      <Text type="supporting">{p.email}</Text>
-                    </VStack>
-                  ),
-                },
-                {
-                  key: "referredBusinessesCount",
-                  header: "Vermittelte Betriebe",
-                  width: pixel(150),
-                  renderCell: (p: any) => (
-                    <Text weight="semibold" hasTabularNumbers>
-                      {p.referredBusinessesCount} Betriebe
-                    </Text>
-                  ),
-                },
-                {
-                  key: "rate",
-                  header: "Provisionssatz",
-                  width: pixel(130),
-                  renderCell: () => (
-                    <Text hasTabularNumbers>50% (1% GMV)</Text>
-                  ),
-                },
-                {
-                  key: "totalEarnedCents",
-                  header: "Verdient",
-                  width: pixel(130),
-                  renderCell: (p: any) => (
-                    <Text weight="bold" hasTabularNumbers>
-                      {formatEuro(p.totalEarnedCents)}
-                    </Text>
-                  ),
-                },
-                {
-                  key: "totalPaidCents",
-                  header: "Ausbezahlt",
-                  width: pixel(130),
-                  renderCell: (p: any) => (
-                    <Text weight="semibold" hasTabularNumbers>
-                      {formatEuro(p.totalPaidCents)}
-                    </Text>
-                  ),
-                },
-                {
-                  key: "iban",
-                  header: "IBAN",
-                  width: proportional(1, { minWidth: 140 }),
-                  renderCell: (p: any) => (
-                    <Text type="code" color="secondary">
-                      {p.iban ? `${p.iban.slice(0, 10)}...` : "—"}
-                    </Text>
-                  ),
-                },
-                {
-                  key: "actions",
-                  header: "Aktionen",
-                  align: "end",
-                  width: pixel(160),
-                  renderCell: (p: any) => (
-                    <Button
-                      label="Auszahlung buchen"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setShowPayoutModal(p)}
-                    />
-                  ),
-                },
-              ]}
-            />
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                    <th className="py-3 pr-4">Code & Partner</th>
+                    <th className="py-3 px-4">Vermittelte Betriebe</th>
+                    <th className="py-3 px-4">Provisionssatz</th>
+                    <th className="py-3 px-4">Verdient</th>
+                    <th className="py-3 px-4">Ausbezahlt</th>
+                    <th className="py-3 px-4">IBAN</th>
+                    <th className="py-3 pl-4 text-right">Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--zk-border)]">
+                  {partners.map((p: any) => (
+                    <tr key={p._id} className="hover:bg-[var(--zk-surface-muted)]">
+                      <td className="py-3 pr-4">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="neutral">{p.code}</Badge>
+                          <span className="font-semibold text-[var(--zk-text)]">
+                            {p.name}
+                          </span>
+                        </div>
+                        <div className="text-xs text-[var(--zk-text-secondary)] mt-0.5">
+                          {p.email}
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 font-semibold tabular-nums">
+                        {p.referredBusinessesCount} Betriebe
+                      </td>
+                      <td className="py-3 px-4 tabular-nums">50% (1% GMV)</td>
+                      <td className="py-3 px-4 font-bold text-[var(--zk-text)] tabular-nums">
+                        {formatEuro(p.totalEarnedCents)}
+                      </td>
+                      <td className="py-3 px-4 font-semibold tabular-nums">
+                        {formatEuro(p.totalPaidCents)}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-xs text-[var(--zk-text-secondary)]">
+                        {p.iban ? `${p.iban.slice(0, 10)}...` : "—"}
+                      </td>
+                      <td className="py-3 pl-4 text-right">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => setShowPayoutModal(p)}
+                        >
+                          Auszahlung buchen
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
-        </VStack>
-      </Section>
+        </div>
+      </Card>
 
-      <Section variant="section" padding={5}>
-        <VStack gap={4}>
-          <Heading level={3}>Auszahlungs-Historie (Ledger)</Heading>
+      <Card padding="lg">
+        <div className="flex flex-col gap-4">
+          <h2 className="text-lg font-bold text-[var(--zk-text)]">
+            Auszahlungs-Historie (Ledger)
+          </h2>
 
           {!payouts || payouts.length === 0 ? (
-            <EmptyState
-              isCompact
-              icon={<Icon icon={Coins} size="lg" color="secondary" />}
-              title="Keine Auszahlungen"
-              description="Bisher wurden keine Auszahlungen verbucht."
-            />
+            <div className="py-12 text-center flex flex-col items-center gap-2">
+              <Coins className="size-8 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+              <div className="text-base font-bold text-[var(--zk-text)]">
+                Keine Auszahlungen
+              </div>
+              <p className="text-sm text-[var(--zk-text-secondary)]">
+                Bisher wurden keine Auszahlungen verbucht.
+              </p>
+            </div>
           ) : (
-            <Table
-              data={payouts}
-              idKey="_id"
-              hasHover
-              density="balanced"
-              columns={[
-                {
-                  key: "createdAt",
-                  header: "Zeitpunkt",
-                  width: pixel(140),
-                  renderCell: (py: any) => (
-                    <Text hasTabularNumbers>
-                      {new Date(py.createdAt).toLocaleDateString("de-DE")}
-                    </Text>
-                  ),
-                },
-                {
-                  key: "period",
-                  header: "Periode",
-                  width: pixel(130),
-                  renderCell: (py: any) => (
-                    <Text type="code" weight="semibold">
-                      {py.period}
-                    </Text>
-                  ),
-                },
-                {
-                  key: "amountCents",
-                  header: "Betrag",
-                  width: pixel(140),
-                  renderCell: (py: any) => (
-                    <Text weight="bold" hasTabularNumbers>
-                      {formatEuro(py.amountCents)}
-                    </Text>
-                  ),
-                },
-                {
-                  key: "status",
-                  header: "Status",
-                  width: pixel(140),
-                  renderCell: () => (
-                    <HStack gap={1.5} vAlign="center">
-                      <StatusDot variant="success" label="Ausbezahlt" />
-                      <Text>Ausbezahlt</Text>
-                    </HStack>
-                  ),
-                },
-                {
-                  key: "notes",
-                  header: "Notizen",
-                  width: proportional(1, { minWidth: 200 }),
-                  renderCell: (py: any) => (
-                    <Text type="supporting">{py.notes || "—"}</Text>
-                  ),
-                },
-              ]}
-            />
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                    <th className="py-3 pr-4">Zeitpunkt</th>
+                    <th className="py-3 px-4">Periode</th>
+                    <th className="py-3 px-4">Betrag</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 pl-4">Notizen</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--zk-border)]">
+                  {payouts.map((py: any) => (
+                    <tr key={py._id} className="hover:bg-[var(--zk-surface-muted)]">
+                      <td className="py-3 pr-4 tabular-nums">
+                        {new Date(py.createdAt).toLocaleDateString("de-DE")}
+                      </td>
+                      <td className="py-3 px-4 font-mono font-semibold text-xs">
+                        {py.period}
+                      </td>
+                      <td className="py-3 px-4 font-bold text-[var(--zk-text)] tabular-nums">
+                        {formatEuro(py.amountCents)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="inline-flex items-center gap-1.5">
+                          <StatusDot variant="success" label="Ausbezahlt" />
+                          <span>Ausbezahlt</span>
+                        </div>
+                      </td>
+                      <td className="py-3 pl-4 text-[var(--zk-text-secondary)]">
+                        {py.notes || "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
-        </VStack>
-      </Section>
+        </div>
+      </Card>
 
       {/* Create Partner Modal */}
-      <Dialog
-        isOpen={showCreateModal}
+      <Modal
+        open={showCreateModal}
         onOpenChange={setShowCreateModal}
-        width={440}
-        purpose="form"
+        title="Neuen Vertriebspartner anlegen"
+        description="Erstelle einen individuellen Partnercode für die regionale Gastronomie-Akquise."
       >
-        <form onSubmit={handleCreatePartner}>
-          <VStack gap={4}>
-            <DialogHeader
-              title="Neuen Vertriebspartner anlegen"
-              subtitle="Erstelle einen individuellen Partnercode für die regionale Gastronomie-Akquise."
-              onOpenChange={setShowCreateModal}
-            />
+        <form onSubmit={handleCreatePartner} className="flex flex-col gap-4">
+          <TextField
+            label="Partner-Code (Empfehlungscode)"
+            placeholder="z.B. BERLIN-01"
+            value={partnerCode}
+            onChange={(val) => setPartnerCode(val.toUpperCase())}
+            required
+          />
 
-            <TextInput
-              label="Partner-Code (Empfehlungscode)"
-              placeholder="z.B. BERLIN-01"
-              value={partnerCode}
-              onChange={(val) => setPartnerCode(val.toUpperCase())}
-              isRequired
-              width="100%"
-            />
+          <TextField
+            label="Name / Firma"
+            placeholder="z.B. Gastro Partner Nord"
+            value={partnerName}
+            onChange={setPartnerName}
+            required
+          />
 
-            <TextInput
-              label="Name / Firma"
-              placeholder="z.B. Gastro Partner Nord"
-              value={partnerName}
-              onChange={setPartnerName}
-              isRequired
-              width="100%"
-            />
+          <TextField
+            type="email"
+            label="E-Mail-Adresse"
+            placeholder="partner@example.de"
+            value={partnerEmail}
+            onChange={setPartnerEmail}
+            required
+          />
 
-            <TextInput
-              type="email"
-              label="E-Mail-Adresse"
-              placeholder="partner@example.de"
-              value={partnerEmail}
-              onChange={setPartnerEmail}
-              isRequired
-              width="100%"
-            />
+          <TextField
+            label="IBAN (optional)"
+            placeholder="DE89 3704 0044 0532 0130 00"
+            value={partnerIban}
+            onChange={setPartnerIban}
+          />
 
-            <TextInput
-              label="IBAN"
-              isOptional
-              placeholder="DE89 3704 0044 0532 0130 00"
-              value={partnerIban}
-              onChange={setPartnerIban}
-              width="100%"
-            />
-
-            <Divider />
-
-            <HStack justify="end" gap={2}>
-              <Button
-                label="Abbrechen"
-                variant="secondary"
-                onClick={() => setShowCreateModal(false)}
-              />
-              <Button
-                type="submit"
-                label="Partner anlegen"
-                variant="primary"
-              />
-            </HStack>
-          </VStack>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => setShowCreateModal(false)}
+            >
+              Abbrechen
+            </Button>
+            <Button type="submit" variant="primary">
+              Partner anlegen
+            </Button>
+          </div>
         </form>
-      </Dialog>
+      </Modal>
 
       {/* Record Payout Modal */}
-      <Dialog
-        isOpen={Boolean(showPayoutModal)}
+      <Modal
+        open={Boolean(showPayoutModal)}
         onOpenChange={(open) => {
           if (!open) setShowPayoutModal(null);
         }}
-        width={440}
-        purpose="form"
+        title={`Auszahlung für ${showPayoutModal?.name || ""}`}
+        description={`Partner-Code: ${showPayoutModal?.code || ""}`}
       >
-        <form onSubmit={handleRecordPayout}>
-          <VStack gap={4}>
-            <DialogHeader
-              title={`Auszahlung für ${showPayoutModal?.name || ""}`}
-              subtitle={`Partner-Code: ${showPayoutModal?.code || ""}`}
-              onOpenChange={(open) => {
-                if (!open) setShowPayoutModal(null);
-              }}
-            />
+        <form onSubmit={handleRecordPayout} className="flex flex-col gap-4">
+          <TextField
+            label="Auszahlungsbetrag (€)"
+            placeholder="z.B. 250.00"
+            value={payoutAmount}
+            onChange={setPayoutAmount}
+            required
+          />
 
-            <TextInput
-              label="Auszahlungsbetrag (€)"
-              placeholder="z.B. 250.00"
-              value={payoutAmount}
-              onChange={setPayoutAmount}
-              isRequired
-              width="100%"
-            />
+          <TextField
+            label="Abrechnungsperiode"
+            placeholder="2026-10"
+            value={payoutPeriod}
+            onChange={setPayoutPeriod}
+            required
+          />
 
-            <TextInput
-              label="Abrechnungsperiode"
-              placeholder="2026-10"
-              value={payoutPeriod}
-              onChange={setPayoutPeriod}
-              isRequired
-              width="100%"
-            />
+          <TextField
+            label="Verwendungszweck / Notiz (optional)"
+            placeholder="Gutschrift Überweisung Finom"
+            value={payoutNotes}
+            onChange={setPayoutNotes}
+          />
 
-            <TextInput
-              label="Verwendungszweck / Notiz"
-              isOptional
-              placeholder="Gutschrift Überweisung Finom"
-              value={payoutNotes}
-              onChange={setPayoutNotes}
-              width="100%"
-            />
-
-            <Divider />
-
-            <HStack justify="end" gap={2}>
-              <Button
-                label="Abbrechen"
-                variant="secondary"
-                onClick={() => setShowPayoutModal(null)}
-              />
-              <Button
-                type="submit"
-                label="Auszahlung verbuchen"
-                variant="primary"
-              />
-            </HStack>
-          </VStack>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => setShowPayoutModal(null)}
+            >
+              Abbrechen
+            </Button>
+            <Button type="submit" variant="primary">
+              Auszahlung verbuchen
+            </Button>
+          </div>
         </form>
-      </Dialog>
-    </VStack>
+      </Modal>
+    </div>
   );
 }

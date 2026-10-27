@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ReactNode, useEffect } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   SquaresFour,
@@ -15,28 +16,17 @@ import {
   ShieldWarning,
   GearSix,
   SignOut,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
-import { AppShell } from "@astryxdesign/core/AppShell";
-import {
-  SideNav,
-  SideNavHeading,
-  SideNavSection,
-  SideNavItem,
-} from "@astryxdesign/core/SideNav";
-import { TopNav } from "@astryxdesign/core/TopNav";
-import { Layout, LayoutHeader, LayoutContent } from "@astryxdesign/core/Layout";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Badge } from "@astryxdesign/core/Badge";
-import { StatusDot } from "@astryxdesign/core/StatusDot";
-import { EmptyState } from "@astryxdesign/core/EmptyState";
-import { Spinner } from "@astryxdesign/core/Spinner";
 import { useAdmin } from "@/lib/admin-context";
 import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
+import {
+  Card,
+  Button,
+  Badge,
+  StatusDot,
+  Spinner,
+} from "@/components/ui/primitives";
 
 interface AdminShellProps {
   children: ReactNode;
@@ -157,7 +147,8 @@ export function AdminShell({ children }: AdminShellProps) {
     !currentItem ||
     isRegionalAdmin ||
     (!currentItem.requiresAdmin &&
-      (!currentItem.permission || !!adminUser?.permissions?.includes(currentItem.permission)));
+      (!currentItem.permission ||
+        !!adminUser?.permissions?.includes(currentItem.permission)));
 
   useEffect(() => {
     if (!isLoading) {
@@ -175,18 +166,12 @@ export function AdminShell({ children }: AdminShellProps) {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <AppShell height="fill" variant="wash">
-        <Layout height="fill">
-          <LayoutContent>
-            <VStack gap={3} hAlign="center" vAlign="center" height="100%">
-              <Spinner
-                size="lg"
-                label={isDe ? "Lade Team Dashboard..." : "Loading Team Dashboard..."}
-              />
-            </VStack>
-          </LayoutContent>
-        </Layout>
-      </AppShell>
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--zk-bg)]">
+        <Spinner
+          size="lg"
+          label={isDe ? "Lade Team Dashboard..." : "Loading Team Dashboard..."}
+        />
+      </div>
     );
   }
 
@@ -198,168 +183,149 @@ export function AdminShell({ children }: AdminShellProps) {
   };
 
   return (
-    <AppShell
-      height="fill"
-      variant="elevated"
-      topNav={
-        <TopNav
-          label="Team Dashboard Header Navigation"
-          startContent={
-            <HStack gap={2} vAlign="center">
-              <Heading level={4}>{currentTitle}</Heading>
-              <Badge
-                variant="neutral"
-                label={`Region ${currentRegion.toUpperCase()}`}
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[var(--zk-bg)] text-[var(--zk-text-body)]">
+      {/* Sidebar */}
+      <aside className="w-full lg:w-[272px] shrink-0 border-b lg:border-b-0 lg:border-r border-[var(--zk-border)] bg-[var(--zk-surface)] flex flex-col justify-between">
+        <div>
+          <div className="flex items-center justify-between gap-2 px-5 py-4 border-b border-[var(--zk-border)]">
+            <Link href={defaultRoute} className="inline-flex items-center gap-2">
+              <img
+                src="/zackisch/combination-mark.svg"
+                alt="Zackisch"
+                className="h-6 w-auto block"
               />
-            </HStack>
-          }
-          endContent={
-            <HStack gap={2} vAlign="center">
-              <RegionLanguageSwitcher />
-              <Button
-                label="Website"
-                href="https://zackisch.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="ghost"
-                size="sm"
-                endContent={<Icon icon="externalLink" size="xsm" />}
-              />
-              <Button
-                label="App"
-                href="https://app.zackisch.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="ghost"
-                size="sm"
-                endContent={<Icon icon="externalLink" size="xsm" />}
-              />
-              <Button
-                label="Support"
-                href="https://support.zackisch.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="ghost"
-                size="sm"
-                endContent={<Icon icon="externalLink" size="xsm" />}
-              />
-            </HStack>
-          }
-        />
-      }
-      sideNav={
-        <SideNav
-          collapsible
-          header={
-            <SideNavHeading
-              icon={
-                <img
-                  src="/icon.svg"
-                  alt="Zackisch"
-                  className="h-6 w-6 rounded-sm"
-                />
-              }
-              heading="Zackisch"
-              subheading={
-                isRegionalAdmin
-                  ? isDe
-                    ? "Team Dashboard"
-                    : "Team Dashboard"
-                  : isDe
-                    ? "Mitarbeiter-Portal"
-                    : "Staff Portal"
-              }
-              headingHref={defaultRoute}
-            />
-          }
-          footer={
-            <VStack gap={2} padding={2}>
-              <HStack justify="between" vAlign="center">
-                <HStack gap={1.5} vAlign="center">
-                  <StatusDot variant="success" label="Live Backend" isPulsing />
-                  <Text type="supporting">Live Backend</Text>
-                </HStack>
-                <Text type="supporting">Convex Cloud</Text>
-              </HStack>
+            </Link>
+            <Badge variant="neutral">INTERNAL</Badge>
+          </div>
 
-              <VStack gap={0.5}>
-                <Text type="label" maxLines={1}>
-                  {adminUser?.name || "Selim Eser"}
-                </Text>
-                <Text type="supporting" maxLines={1}>
-                  {adminEmail}
-                </Text>
-                <HStack gap={1} vAlign="center">
-                  <Badge
-                    variant="neutral"
-                    label={
-                      isRegionalAdmin
-                        ? `Regional-Admin (${currentRegion.toUpperCase()})`
-                        : `Mitarbeiter (${currentRegion.toUpperCase()})`
-                    }
-                  />
-                </HStack>
-              </VStack>
-
-              <Button
-                label={isDe ? "Abmelden" : "Sign Out"}
-                variant="secondary"
-                size="sm"
-                width="100%"
-                icon={<Icon icon={SignOut} size="sm" />}
-                onClick={handleLogout}
-              />
-            </VStack>
-          }
-        >
-          <SideNavSection
-            title={isDe ? "Verwaltung" : "Administration"}
-            isHeaderHidden
+          <nav
+            aria-label={isDe ? "Verwaltung" : "Administration"}
+            className="p-3 flex flex-row lg:flex-col gap-1 overflow-x-auto"
           >
             {navigation.map((item) => {
+              const IconComp = item.icon;
               const isActive =
-                item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
+
               return (
-                <SideNavItem
+                <Link
                   key={item.href}
-                  label={item.name}
                   href={item.href}
-                  icon={item.icon}
-                  selectedIcon={item.icon}
-                  isSelected={isActive}
-                />
+                  aria-current={isActive ? "page" : undefined}
+                  className={`inline-flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${
+                    isActive
+                      ? "bg-[var(--zk-action)] text-[var(--zk-action-fg)]"
+                      : "text-[var(--zk-text-body)] hover:bg-[var(--zk-surface-muted)] hover:text-[var(--zk-text)]"
+                  }`}
+                >
+                  <IconComp
+                    className="size-4 shrink-0"
+                    weight={isActive ? "bold" : "regular"}
+                    aria-hidden="true"
+                  />
+                  <span>{item.name}</span>
+                </Link>
               );
             })}
-          </SideNavSection>
-        </SideNav>
-      }
-    >
-      <Layout height="fill">
-        <LayoutContent padding={6}>
+          </nav>
+        </div>
+
+        <div className="p-4 border-t border-[var(--zk-border)] flex flex-col gap-3">
+          <div className="flex items-center justify-between text-xs text-[var(--zk-text-secondary)]">
+            <div className="inline-flex items-center gap-1.5">
+              <StatusDot variant="success" label="Live Backend" />
+              <span>Live Backend</span>
+            </div>
+            <span>Convex Cloud</span>
+          </div>
+
+          <Card padding="sm" variant="muted">
+            <div className="flex flex-col gap-1">
+              <div className="text-xs font-semibold text-[var(--zk-text)] truncate">
+                {adminUser?.name || "Selim Eser"}
+              </div>
+              <div className="text-xs text-[var(--zk-text-secondary)] truncate">
+                {adminEmail}
+              </div>
+              <div className="pt-1">
+                <Badge variant="neutral">
+                  {isRegionalAdmin
+                    ? `Regional-Admin (${currentRegion.toUpperCase()})`
+                    : `Mitarbeiter (${currentRegion.toUpperCase()})`}
+                </Badge>
+              </div>
+            </div>
+          </Card>
+
+          <Button
+            variant="secondary"
+            size="sm"
+            fullWidth
+            onClick={handleLogout}
+          >
+            <SignOut className="size-4" aria-hidden="true" />
+            <span>{isDe ? "Abmelden" : "Sign Out"}</span>
+          </Button>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 min-w-0 flex flex-col">
+        <header className="w-full border-b border-[var(--zk-border)] bg-[var(--zk-surface)] px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-base font-bold text-[var(--zk-text)]">
+              {currentTitle}
+            </h2>
+            <Badge variant="neutral">Region {currentRegion.toUpperCase()}</Badge>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <RegionLanguageSwitcher />
+            <Button variant="ghost" size="sm" href="https://zackisch.com">
+              <span>Website</span>
+              <ArrowSquareOut className="size-3.5" aria-hidden="true" />
+            </Button>
+            <Button variant="ghost" size="sm" href="https://app.zackisch.com">
+              <span>App</span>
+              <ArrowSquareOut className="size-3.5" aria-hidden="true" />
+            </Button>
+            <Button variant="ghost" size="sm" href="https://support.zackisch.com">
+              <span>Support</span>
+              <ArrowSquareOut className="size-3.5" aria-hidden="true" />
+            </Button>
+          </div>
+        </header>
+
+        <main className="flex-1 p-5 sm:p-8">
           {hasAccessToCurrentRoute ? (
             children
           ) : (
-            <VStack hAlign="center" vAlign="center" minHeight={420}>
-              <EmptyState
-                icon={<Icon icon={ShieldWarning} size="lg" color="error" />}
-                title={isDe ? "Zugriff eingeschränkt" : "Access Restricted"}
-                description={
-                  isDe
-                    ? "Für diese Ansicht sind erweiterte Administrator-Rechte oder spezielle Modulberechtigungen erforderlich."
-                    : "This section requires administrator privileges or specific permissions."
-                }
-                actions={
-                  <Button
-                    label={isDe ? "Zurück zur Hauptansicht" : "Back to Main View"}
-                    variant="primary"
-                    href={defaultRoute}
+            <div className="py-24 flex justify-center">
+              <Card padding="lg" className="max-w-md text-center">
+                <div className="flex flex-col items-center gap-3">
+                  <ShieldWarning
+                    className="size-10 text-[var(--zk-error-text)]"
+                    aria-hidden="true"
                   />
-                }
-              />
-            </VStack>
+                  <h2 className="text-lg font-bold text-[var(--zk-text)]">
+                    {isDe ? "Zugriff eingeschränkt" : "Access Restricted"}
+                  </h2>
+                  <p className="text-sm text-[var(--zk-text-secondary)]">
+                    {isDe
+                      ? "Für diese Ansicht sind erweiterte Administrator-Rechte oder spezielle Modulberechtigungen erforderlich."
+                      : "This section requires administrator privileges or specific permissions."}
+                  </p>
+                  <Button variant="primary" href={defaultRoute}>
+                    {isDe ? "Zurück zur Hauptansicht" : "Back to Main View"}
+                  </Button>
+                </div>
+              </Card>
+            </div>
           )}
-        </LayoutContent>
-      </Layout>
-    </AppShell>
+        </main>
+      </div>
+    </div>
   );
 }

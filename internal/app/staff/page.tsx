@@ -4,26 +4,19 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { anyApi } from "convex/server";
 import { Users, UserPlus, ShieldCheck } from "@phosphor-icons/react";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { StackItem } from "@astryxdesign/core/Stack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Table, proportional, pixel } from "@astryxdesign/core/Table";
-import { Badge } from "@astryxdesign/core/Badge";
-import { StatusDot } from "@astryxdesign/core/StatusDot";
-import { Token } from "@astryxdesign/core/Token";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Selector } from "@astryxdesign/core/Selector";
-import { CheckboxInput } from "@astryxdesign/core/CheckboxInput";
-import { Divider } from "@astryxdesign/core/Divider";
-import { EmptyState } from "@astryxdesign/core/EmptyState";
-import { Spinner } from "@astryxdesign/core/Spinner";
 import { useAdmin } from "@/lib/admin-context";
 import { toast } from "@/components/common/toast";
+import {
+  Card,
+  Button,
+  Badge,
+  StatusDot,
+  TextField,
+  SelectField,
+  CheckboxField,
+  Modal,
+  Spinner,
+} from "@/components/ui/primitives";
 
 export default function StaffPage() {
   const { currentRegion, adminEmail, sessionToken } = useAdmin();
@@ -53,8 +46,14 @@ export default function StaffPage() {
     { id: "restaurants:write", label: "Betriebe bearbeiten" },
     { id: "orders:read", label: "Bestellungen & Zahlungen einsehen" },
     { id: "tickets:read", label: "Support-Tickets einsehen" },
-    { id: "tickets:write", label: "Support-Tickets öffentlich beantworten & Status ändern" },
-    { id: "tickets:note", label: "Interne Team-Notizen in Support-Tickets verfassen" },
+    {
+      id: "tickets:write",
+      label: "Support-Tickets öffentlich beantworten & Status ändern",
+    },
+    {
+      id: "tickets:note",
+      label: "Interne Team-Notizen in Support-Tickets verfassen",
+    },
     { id: "newsletter:read", label: "Newsletter einsehen" },
     { id: "newsletter:write", label: "Newsletter verfassen & editieren" },
     { id: "newsletter:send", label: "Newsletter versenden (Massenversand)" },
@@ -105,211 +104,192 @@ export default function StaffPage() {
         regionId: currentRegion,
         sessionToken: sessionToken || "",
       });
-      toast.success(currentActive ? "Mitarbeiter deaktiviert." : "Mitarbeiter aktiviert.");
+      toast.success(
+        currentActive ? "Mitarbeiter deaktiviert." : "Mitarbeiter aktiviert."
+      );
     } catch (err: any) {
       toast.error(`Fehler: ${err.message}`);
     }
   };
 
   return (
-    <VStack gap={5} maxWidth={1200}>
-      <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
-        <StackItem size="fill">
-          <VStack gap={1}>
-            <Heading level={1}>Mitarbeiterverwaltung</Heading>
-            <Text type="supporting">
-              Persönliche Konten, Rollen und granulare Berechtigungen für Region{" "}
-              {currentRegion.toUpperCase()}.
-            </Text>
-          </VStack>
-        </StackItem>
+    <div className="flex flex-col gap-5 max-w-[1200px]">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex-1 min-w-[240px]">
+          <h1 className="text-2xl font-bold text-[var(--zk-text)]">
+            Mitarbeiterverwaltung
+          </h1>
+          <p className="text-sm text-[var(--zk-text-secondary)] mt-1">
+            Persönliche Konten, Rollen und granulare Berechtigungen für Region{" "}
+            {currentRegion.toUpperCase()}.
+          </p>
+        </div>
 
-        <Button
-          label="Mitarbeiter hinzufügen"
-          variant="primary"
-          icon={<Icon icon={UserPlus} size="sm" />}
-          onClick={() => setShowInviteModal(true)}
-        />
-      </HStack>
+        <Button variant="primary" onClick={() => setShowInviteModal(true)}>
+          <UserPlus className="size-4" aria-hidden="true" />
+          <span>Mitarbeiter hinzufügen</span>
+        </Button>
+      </div>
 
-      {!staffList ? (
-        <VStack hAlign="center" vAlign="center" minHeight={240}>
-          <Spinner label="Lade Mitarbeiter..." />
-        </VStack>
-      ) : staffList.length === 0 ? (
-        <EmptyState
-          icon={<Icon icon={Users} size="lg" color="secondary" />}
-          title="Keine Mitarbeiter angelegt"
-          description="In dieser Region wurden noch keine Mitarbeiter angelegt."
-          actions={
-            <Button
-              label="Mitarbeiter hinzufügen"
-              variant="primary"
-              onClick={() => setShowInviteModal(true)}
-            />
-          }
-        />
-      ) : (
-        <Table
-          data={staffList}
-          idKey="_id"
-          hasHover
-          density="balanced"
-          columns={[
-            {
-              key: "name",
-              header: "Name & E-Mail",
-              width: proportional(1.5, { minWidth: 180 }),
-              renderCell: (s: any) => (
-                <VStack gap={0.5}>
-                  <Text weight="semibold">{s.name}</Text>
-                  <Text type="supporting">{s.email}</Text>
-                </VStack>
-              ),
-            },
-            {
-              key: "role",
-              header: "Rolle",
-              width: pixel(160),
-              renderCell: (s: any) =>
-                s.role === "regional_admin" ? (
-                  <Badge
-                    variant="neutral"
-                    icon={<Icon icon={ShieldCheck} size="xsm" />}
-                    label="Regional-Admin"
-                  />
-                ) : (
-                  <Badge
-                    variant="gray"
-                    icon={<Icon icon={Users} size="xsm" />}
-                    label="Mitarbeiter"
-                  />
-                ),
-            },
-            {
-              key: "permissions",
-              header: "Berechtigungen",
-              width: proportional(2, { minWidth: 240 }),
-              renderCell: (s: any) => (
-                <HStack gap={1} wrap="wrap">
-                  {(s.permissions || []).map((p: string) => (
-                    <Token key={p} label={p} size="sm" />
-                  ))}
-                </HStack>
-              ),
-            },
-            {
-              key: "isActive",
-              header: "Status",
-              width: pixel(120),
-              renderCell: (s: any) => (
-                <HStack gap={1.5} vAlign="center">
-                  <StatusDot
-                    variant={s.isActive ? "success" : "neutral"}
-                    label={s.isActive ? "Aktiv" : "Inaktiv"}
-                  />
-                  <Text>{s.isActive ? "Aktiv" : "Inaktiv"}</Text>
-                </HStack>
-              ),
-            },
-            {
-              key: "actions",
-              header: "Aktionen",
-              align: "end",
-              width: pixel(140),
-              renderCell: (s: any) =>
-                s.email !== adminEmail ? (
-                  <Button
-                    label={s.isActive ? "Deaktivieren" : "Aktivieren"}
-                    variant={s.isActive ? "destructive" : "secondary"}
-                    size="sm"
-                    onClick={() => handleToggleStatus(s._id, s.isActive)}
-                  />
-                ) : null,
-            },
-          ]}
-        />
-      )}
-
-      <Dialog
-        isOpen={showInviteModal}
-        onOpenChange={setShowInviteModal}
-        width={480}
-        purpose="form"
-      >
-        <form onSubmit={handleInvite}>
-          <VStack gap={4}>
-            <DialogHeader
-              title="Mitarbeiter einladen"
-              subtitle={`Erstelle einen persönlichen Zugang für ein neues Teammitglied in Region ${currentRegion.toUpperCase()}.`}
-              onOpenChange={setShowInviteModal}
-            />
-
-            <TextInput
-              label="Vollständiger Name"
-              placeholder="z.B. Alex Müller"
-              value={inviteName}
-              onChange={setInviteName}
-              isRequired
-              width="100%"
-            />
-
-            <TextInput
-              type="email"
-              label="E-Mail-Adresse"
-              placeholder="alex@zackisch.com"
-              value={inviteEmail}
-              onChange={setInviteEmail}
-              isRequired
-              width="100%"
-            />
-
-            <Selector
-              label="Rolle"
-              value={inviteRole}
-              onChange={(val) => setInviteRole(val as "regional_admin" | "staff")}
-              options={[
-                { value: "staff", label: "Mitarbeiter (Granulare Rechte)" },
-                {
-                  value: "regional_admin",
-                  label: "Regional-Admin (Volle Regionsrechte)",
-                },
-              ]}
-              width="100%"
-            />
-
-            <VStack gap={2}>
-              <Text type="label">Berechtigungen</Text>
-              <VStack gap={1.5} height={200} isScrollable padding={2}>
-                {ALL_PERMISSIONS.map((perm) => (
-                  <CheckboxInput
-                    key={perm.id}
-                    label={perm.label}
-                    size="sm"
-                    value={selectedPermissions.includes(perm.id)}
-                    onChange={() => handleTogglePermission(perm.id)}
-                  />
+      <Card padding="none">
+        {!staffList ? (
+          <div className="py-16 flex justify-center">
+            <Spinner label="Lade Mitarbeiter..." />
+          </div>
+        ) : staffList.length === 0 ? (
+          <div className="py-16 px-4 text-center flex flex-col items-center gap-3">
+            <Users className="size-8 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+            <div className="text-base font-bold text-[var(--zk-text)]">
+              Keine Mitarbeiter angelegt
+            </div>
+            <p className="text-sm text-[var(--zk-text-secondary)]">
+              In dieser Region wurden noch keine Mitarbeiter angelegt.
+            </p>
+            <Button variant="primary" onClick={() => setShowInviteModal(true)}>
+              Mitarbeiter hinzufügen
+            </Button>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                  <th className="py-3 px-4">Name & E-Mail</th>
+                  <th className="py-3 px-4">Rolle</th>
+                  <th className="py-3 px-4">Berechtigungen</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--zk-border)]">
+                {staffList.map((s: any) => (
+                  <tr key={s._id} className="hover:bg-[var(--zk-surface-muted)]">
+                    <td className="py-3 px-4">
+                      <div className="font-semibold text-[var(--zk-text)]">
+                        {s.name}
+                      </div>
+                      <div className="text-xs text-[var(--zk-text-secondary)]">
+                        {s.email}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      {s.role === "regional_admin" ? (
+                        <Badge variant="info">
+                          <ShieldCheck className="size-3.5" aria-hidden="true" />
+                          <span>Regional-Admin</span>
+                        </Badge>
+                      ) : (
+                        <Badge variant="neutral">
+                          <Users className="size-3.5" aria-hidden="true" />
+                          <span>Mitarbeiter</span>
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex flex-wrap gap-1">
+                        {(s.permissions || []).map((p: string) => (
+                          <span
+                            key={p}
+                            className="inline-flex items-center px-2 py-0.5 rounded bg-[var(--zk-surface-muted)] border border-[var(--zk-border)] font-mono text-xs text-[var(--zk-text)]"
+                          >
+                            {p}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="inline-flex items-center gap-1.5">
+                        <StatusDot
+                          variant={s.isActive ? "success" : "neutral"}
+                          label={s.isActive ? "Aktiv" : "Inaktiv"}
+                        />
+                        <span>{s.isActive ? "Aktiv" : "Inaktiv"}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      {s.email !== adminEmail ? (
+                        <Button
+                          variant={s.isActive ? "destructive" : "secondary"}
+                          size="sm"
+                          onClick={() => handleToggleStatus(s._id, s.isActive)}
+                        >
+                          {s.isActive ? "Deaktivieren" : "Aktivieren"}
+                        </Button>
+                      ) : null}
+                    </td>
+                  </tr>
                 ))}
-              </VStack>
-            </VStack>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
 
-            <Divider />
+      <Modal
+        open={showInviteModal}
+        onOpenChange={setShowInviteModal}
+        title="Mitarbeiter einladen"
+        description={`Erstelle einen persönlichen Zugang für ein neues Teammitglied in Region ${currentRegion.toUpperCase()}.`}
+      >
+        <form onSubmit={handleInvite} className="flex flex-col gap-4">
+          <TextField
+            label="Vollständiger Name"
+            placeholder="z.B. Alex Müller"
+            value={inviteName}
+            onChange={setInviteName}
+            required
+          />
 
-            <HStack justify="end" gap={2}>
-              <Button
-                label="Abbrechen"
-                variant="secondary"
-                onClick={() => setShowInviteModal(false)}
-              />
-              <Button
-                type="submit"
-                label="Mitarbeiter anlegen"
-                variant="primary"
-              />
-            </HStack>
-          </VStack>
+          <TextField
+            type="email"
+            label="E-Mail-Adresse"
+            placeholder="alex@zackisch.com"
+            value={inviteEmail}
+            onChange={setInviteEmail}
+            required
+          />
+
+          <SelectField
+            label="Rolle"
+            value={inviteRole}
+            onChange={(val) => setInviteRole(val as "regional_admin" | "staff")}
+            options={[
+              { value: "staff", label: "Mitarbeiter (Granulare Rechte)" },
+              {
+                value: "regional_admin",
+                label: "Regional-Admin (Volle Regionsrechte)",
+              },
+            ]}
+          />
+
+          <div className="flex flex-col gap-2">
+            <span className="zk-label">Berechtigungen</span>
+            <div className="max-h-52 overflow-y-auto rounded-lg border border-[var(--zk-border)] p-3 flex flex-col gap-1">
+              {ALL_PERMISSIONS.map((perm) => (
+                <CheckboxField
+                  key={perm.id}
+                  label={perm.label}
+                  checked={selectedPermissions.includes(perm.id)}
+                  onChange={() => handleTogglePermission(perm.id)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => setShowInviteModal(false)}
+            >
+              Abbrechen
+            </Button>
+            <Button type="submit" variant="primary">
+              Mitarbeiter anlegen
+            </Button>
+          </div>
         </form>
-      </Dialog>
-    </VStack>
+      </Modal>
+    </div>
   );
 }

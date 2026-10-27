@@ -4,158 +4,128 @@ import React, { useState } from "react";
 import { useQuery } from "convex/react";
 import { anyApi } from "convex/server";
 import { ShieldCheck } from "@phosphor-icons/react";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import {
-  SegmentedControl,
-  SegmentedControlItem,
-} from "@astryxdesign/core/SegmentedControl";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Table, proportional, pixel } from "@astryxdesign/core/Table";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Token } from "@astryxdesign/core/Token";
-import { EmptyState } from "@astryxdesign/core/EmptyState";
-import { Spinner } from "@astryxdesign/core/Spinner";
 import { useAdmin } from "@/lib/admin-context";
+import { Card, Badge, TextField, Spinner } from "@/components/ui/primitives";
 
-export default function AuditTrailPage() {
+export default function AuditPage() {
   const { currentRegion, sessionToken } = useAdmin();
-  const [entityFilter, setEntityFilter] = useState("all");
-  const [search, setSearch] = useState("");
+  const [filterActor, setFilterActor] = useState("");
+  const [filterAction, setFilterAction] = useState("");
 
-  const auditLogs = useQuery(
-    (anyApi as any).audit.getAuditLogs,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          sessionToken,
-          entityType: entityFilter === "all" ? undefined : entityFilter,
-          limit: 100,
-        }
-      : "skip"
+  const logs = useQuery(
+    (anyApi as any).admin.listAuditLogs,
+    sessionToken ? { regionId: currentRegion, sessionToken, limit: 200 } : "skip"
   );
 
-  const filtered = (auditLogs || []).filter(
-    (log: any) =>
-      log.actorId.toLowerCase().includes(search.toLowerCase()) ||
-      log.action.toLowerCase().includes(search.toLowerCase()) ||
-      log.details.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredLogs = (logs || []).filter((log: any) => {
+    const matchActor = filterActor
+      ? log.actorEmail.toLowerCase().includes(filterActor.toLowerCase())
+      : true;
+    const matchAction = filterAction
+      ? log.action.toLowerCase().includes(filterAction.toLowerCase())
+      : true;
+    return matchActor && matchAction;
+  });
 
   return (
-    <VStack gap={5} maxWidth={1200}>
-      <VStack gap={1}>
-        <Heading level={1}>Audit-Trail & Aktivitätshistorie</Heading>
-        <Text type="supporting">
-          Chronologische, filterbare Detaildokumentation aller relevanten Team- und Adminaktionen in Region{" "}
-          {currentRegion.toUpperCase()}.
-        </Text>
-      </VStack>
+    <div className="flex flex-col gap-5 max-w-[1200px]">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--zk-text)]">
+            Revisionssicherer Audit-Trail
+          </h1>
+          <p className="text-sm text-[var(--zk-text-secondary)] mt-1">
+            Lückenlose Protokollierung aller administrativen und operativen Aktionen in Region{" "}
+            {currentRegion.toUpperCase()}.
+          </p>
+        </div>
 
-      <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
-        <SegmentedControl
-          label="Entitäten filtern"
-          value={entityFilter}
-          onChange={setEntityFilter}
-          size="sm"
-        >
-          <SegmentedControlItem value="all" label="Alle Entitäten" />
-          <SegmentedControlItem value="staff" label="Mitarbeiter" />
-          <SegmentedControlItem value="partner" label="Partner" />
-          <SegmentedControlItem value="newsletter" label="Newsletter" />
-          <SegmentedControlItem value="restaurant" label="Betriebe" />
-        </SegmentedControl>
+        <Badge variant="neutral">
+          <span className="inline-flex items-center gap-1.5">
+            <ShieldCheck className="size-3.5" aria-hidden="true" />
+            <span>Unveränderliches Protokoll</span>
+          </span>
+        </Badge>
+      </div>
 
-        <TextInput
-          label="Aktion oder Akteur suchen"
-          isLabelHidden
-          placeholder="Aktion / Akteur suchen..."
-          startIcon="search"
-          hasClear
-          value={search}
-          onChange={setSearch}
-          width={280}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
+        <TextField
+          type="search"
+          label="Nach Mitarbeiter-E-Mail filtern"
+          hideLabel
+          placeholder="Nach Mitarbeiter-E-Mail filtern..."
+          value={filterActor}
+          onChange={setFilterActor}
         />
-      </HStack>
 
-      {!auditLogs ? (
-        <VStack hAlign="center" vAlign="center" minHeight={240}>
-          <Spinner label="Lade Audit-Trail..." />
-        </VStack>
-      ) : filtered.length === 0 ? (
-        <EmptyState
-          icon={<Icon icon={ShieldCheck} size="lg" color="secondary" />}
-          title="Keine Audit-Einträge gefunden"
-          description="Für diesen Filter liegen keine protokollierten Ereignisse vor."
+        <TextField
+          type="search"
+          label="Nach Aktion filtern"
+          hideLabel
+          placeholder="Nach Aktion filtern (z.B. newsletter, partner, staff)..."
+          value={filterAction}
+          onChange={setFilterAction}
         />
-      ) : (
-        <Table
-          data={filtered}
-          idKey="_id"
-          hasHover
-          density="balanced"
-          columns={[
-            {
-              key: "actorId",
-              header: "Akteur",
-              width: proportional(1.5, { minWidth: 180 }),
-              renderCell: (log: any) => (
-                <Text weight="semibold">{log.actorId}</Text>
-              ),
-            },
-            {
-              key: "actorRole",
-              header: "Rolle",
-              width: pixel(140),
-              renderCell: (log: any) => (
-                <Badge variant="neutral" label={log.actorRole} />
-              ),
-            },
-            {
-              key: "action",
-              header: "Aktion",
-              width: proportional(1.2, { minWidth: 160 }),
-              renderCell: (log: any) => (
-                <Text type="code" weight="semibold">
-                  {log.action}
-                </Text>
-              ),
-            },
-            {
-              key: "entityType",
-              header: "Entität",
-              width: pixel(130),
-              renderCell: (log: any) => (
-                <Token label={log.entityType} size="sm" />
-              ),
-            },
-            {
-              key: "details",
-              header: "Details (Sanitized JSON)",
-              width: proportional(2, { minWidth: 220 }),
-              renderCell: (log: any) => (
-                <Text type="code" color="secondary" maxLines={1}>
-                  {log.details}
-                </Text>
-              ),
-            },
-            {
-              key: "timestamp",
-              header: "Zeitstempel",
-              align: "end",
-              width: pixel(170),
-              renderCell: (log: any) => (
-                <Text type="supporting" hasTabularNumbers>
-                  {new Date(log.timestamp).toLocaleString("de-DE")}
-                </Text>
-              ),
-            },
-          ]}
-        />
-      )}
-    </VStack>
+      </div>
+
+      <Card padding="none">
+        {!logs ? (
+          <div className="py-16 flex justify-center">
+            <Spinner label="Lade Audit-Trail..." />
+          </div>
+        ) : filteredLogs.length === 0 ? (
+          <div className="py-16 px-4 text-center flex flex-col items-center gap-2">
+            <ShieldCheck className="size-8 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+            <div className="text-base font-bold text-[var(--zk-text)]">
+              Keine Einträge gefunden
+            </div>
+            <p className="text-sm text-[var(--zk-text-secondary)]">
+              Es wurden keine passenden Audit-Einträge gefunden.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                  <th className="py-3 px-4">Zeitstempel</th>
+                  <th className="py-3 px-4">Akteur & Rolle</th>
+                  <th className="py-3 px-4">Aktion</th>
+                  <th className="py-3 px-4">Zielobjekt</th>
+                  <th className="py-3 px-4">Metadaten (JSON)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--zk-border)]">
+                {filteredLogs.map((log: any) => (
+                  <tr key={log._id} className="hover:bg-[var(--zk-surface-muted)]">
+                    <td className="py-3 px-4 text-xs text-[var(--zk-text-secondary)] tabular-nums whitespace-nowrap">
+                      {new Date(log.createdAt).toLocaleString("de-DE")}
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="font-semibold text-[var(--zk-text)]">
+                        {log.actorEmail}
+                      </div>
+                      <div className="text-xs text-[var(--zk-text-secondary)]">
+                        {log.actorRole}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <Badge variant="neutral">{log.action}</Badge>
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs text-[var(--zk-text)]">
+                      {log.targetType}
+                      {log.targetId ? ` · ${log.targetId}` : ""}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs text-[var(--zk-text-secondary)] max-w-xs truncate">
+                      {log.metadataJson || "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+    </div>
   );
 }

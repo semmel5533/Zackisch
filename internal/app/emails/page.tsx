@@ -1,191 +1,206 @@
 "use client";
 
 import React, { useState } from "react";
-import { useQuery, useAction } from "convex/react";
+import { useQuery } from "convex/react";
 import { anyApi } from "convex/server";
-import { ClockCounterClockwise, PaperPlaneTilt } from "@phosphor-icons/react";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { StackItem } from "@astryxdesign/core/Stack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
-import {
-  SegmentedControl,
-  SegmentedControlItem,
-} from "@astryxdesign/core/SegmentedControl";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Table, proportional, pixel } from "@astryxdesign/core/Table";
-import { Badge } from "@astryxdesign/core/Badge";
-import { StatusDot } from "@astryxdesign/core/StatusDot";
-import { Token } from "@astryxdesign/core/Token";
-import { EmptyState } from "@astryxdesign/core/EmptyState";
-import { Spinner } from "@astryxdesign/core/Spinner";
+import { EnvelopeSimple, ShieldCheck } from "@phosphor-icons/react";
 import { useAdmin } from "@/lib/admin-context";
-import { toast } from "@/components/common/toast";
+import {
+  Card,
+  Badge,
+  StatusDot,
+  TextField,
+  Spinner,
+} from "@/components/ui/primitives";
 
-export default function EmailLogPage() {
-  const { currentRegion, adminEmail, sessionToken } = useAdmin();
-  const [typeFilter, setTypeFilter] = useState("all");
+export default function EmailsAuditPage() {
+  const { currentRegion, sessionToken, currentLocale } = useAdmin();
+  const isDe = currentLocale !== "en";
   const [search, setSearch] = useState("");
-  const [testingSmtp, setTestingSmtp] = useState(false);
 
-  const emailLogs = useQuery(
-    (anyApi as any).emailLogs.listEmailLogs,
-    sessionToken
-      ? {
-          regionId: currentRegion,
-          sessionToken,
-          type: typeFilter === "all" ? undefined : typeFilter,
-          limit: 100,
-        }
-      : "skip"
+  const logs = useQuery(
+    (anyApi as any).admin.listAuditLogs,
+    sessionToken ? { regionId: currentRegion, sessionToken, limit: 250 } : "skip"
   );
 
-  const testSmtpAction = useAction((anyApi as any).emails.testSmtpConnection);
+  const emailLogs = (logs || []).filter((log: any) => {
+    const isEmailRelated =
+      log.action.includes("newsletter") ||
+      log.action.includes("otp") ||
+      log.action.includes("ticket") ||
+      log.action.includes("staff.invite") ||
+      log.targetType.includes("newsletter") ||
+      log.targetType.includes("ticket");
 
-  const handleTestSmtp = async () => {
-    setTestingSmtp(true);
-    try {
-      const res = await testSmtpAction({ testRecipient: adminEmail });
-      if (res.success) {
-        toast.success(
-          "Testnachricht über Google Workspace SMTP erfolgreich zugestellt!"
-        );
-      } else {
-        toast.error(`SMTP-Fehler: ${res.message}`);
-      }
-    } catch (err: any) {
-      toast.error(`Fehler: ${err.message}`);
-    } finally {
-      setTestingSmtp(false);
-    }
-  };
+    if (!isEmailRelated) return false;
+    if (!search.trim()) return true;
 
-  const filtered = (emailLogs || []).filter(
-    (log: any) =>
-      log.recipient.toLowerCase().includes(search.toLowerCase()) ||
-      log.subject.toLowerCase().includes(search.toLowerCase())
-  );
+    const q = search.toLowerCase();
+    return (
+      log.actorEmail.toLowerCase().includes(q) ||
+      log.action.toLowerCase().includes(q) ||
+      (log.targetId && log.targetId.toLowerCase().includes(q)) ||
+      (log.metadataJson && log.metadataJson.toLowerCase().includes(q))
+    );
+  });
 
   return (
-    <VStack gap={5} maxWidth={1200}>
-      <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
-        <StackItem size="fill">
-          <VStack gap={1}>
-            <Heading level={1}>E-Mail-Versandprotokoll</Heading>
-            <Text type="supporting">
-              Alle durch das Zackisch-Backend ausgelösten E-Mails (Google Workspace SMTP). Keine manuellen Postfach-Mails.
-            </Text>
-          </VStack>
-        </StackItem>
+    <div className="flex flex-col gap-5 max-w-[1200px]">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex-1 min-w-[240px]">
+          <h1 className="text-2xl font-bold text-[var(--zk-text)]">
+            {isDe
+              ? "E-Mail-Verkehr & Systembenachrichtigungen"
+              : "Email Traffic & System Notifications"}
+          </h1>
+          <p className="text-sm text-[var(--zk-text-secondary)] mt-1">
+            {isDe
+              ? `Übersicht über ausgehende E-Mail-Ereignisse (OTP-Codes, Ticket-Benachrichtigungen, Newsletter & Einladungen) über Google Workspace Relay (noreply@zackisch.com) in Region ${currentRegion.toUpperCase()}.`
+              : `Outbound email events (OTP codes, ticket notifications, newsletters & invitations) via Google Workspace Relay (noreply@zackisch.com) in region ${currentRegion.toUpperCase()}.`}
+          </p>
+        </div>
 
-        <Button
-          label="SMTP Testmail senden"
-          variant="secondary"
-          isLoading={testingSmtp}
-          icon={<Icon icon={PaperPlaneTilt} size="sm" />}
-          onClick={handleTestSmtp}
-        />
-      </HStack>
+        <Badge variant="success">
+          <span className="inline-flex items-center gap-1.5">
+            <StatusDot variant="success" label="Verbunden" />
+            <span>SMTP Relay: smtp.gmail.com:587</span>
+          </span>
+        </Badge>
+      </div>
 
-      <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
-        <SegmentedControl
-          label="E-Mail-Typ filtern"
-          value={typeFilter}
-          onChange={setTypeFilter}
-          size="sm"
-        >
-          <SegmentedControlItem value="all" label="Alle Typen" />
-          <SegmentedControlItem value="otp" label="OTP / Auth" />
-          <SegmentedControlItem value="newsletter" label="Newsletter" />
-          <SegmentedControlItem value="test" label="Testnachrichten" />
-        </SegmentedControl>
+      {/* SMTP Configuration Summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card padding="md">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <EnvelopeSimple className="size-4" aria-hidden="true" />
+              <span>{isDe ? "Absender (From)" : "Sender (From)"}</span>
+            </div>
+            <div className="font-mono text-sm font-bold text-[var(--zk-text)]">
+              noreply@zackisch.com
+            </div>
+            <div className="text-xs text-[var(--zk-text-secondary)]">
+              Auth: selim@zackisch.com (Google Workspace)
+            </div>
+          </div>
+        </Card>
 
-        <TextInput
-          label="Empfänger oder Betreff suchen"
-          isLabelHidden
-          placeholder="Empfänger / Betreff suchen..."
-          startIcon="search"
-          hasClear
+        <Card padding="md">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <ShieldCheck className="size-4" aria-hidden="true" />
+              <span>{isDe ? "Transaktions-Typen" : "Transactional Types"}</span>
+            </div>
+            <div className="text-sm font-bold text-[var(--zk-text)]">
+              OTP · Support · Receipts · Newsletter
+            </div>
+            <div className="text-xs text-[var(--zk-text-secondary)]">
+              {isDe
+                ? "Alle E-Mails nutzen das zentrale Zackisch HTML-Template"
+                : "All emails use the canonical Zackisch HTML template"}
+            </div>
+          </div>
+        </Card>
+
+        <Card padding="md">
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              {isDe ? "Protokollierte Ereignisse" : "Logged Events"}
+            </span>
+            <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">
+              {emailLogs.length}
+            </div>
+            <div className="text-xs text-[var(--zk-text-secondary)]">
+              {isDe
+                ? `In Region ${currentRegion.toUpperCase()} erfasst`
+                : `Recorded in region ${currentRegion.toUpperCase()}`}
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Filter */}
+      <div className="max-w-md">
+        <TextField
+          type="search"
+          label={
+            isDe
+              ? "Nach Empfänger, Ticket-Nummer oder Aktion filtern"
+              : "Filter by recipient, ticket number, or action"
+          }
+          hideLabel
           value={search}
           onChange={setSearch}
-          width={280}
+          placeholder={
+            isDe
+              ? "Nach Empfänger, Ticket-Nummer oder Aktion filtern..."
+              : "Filter by recipient, ticket number, or action..."
+          }
         />
-      </HStack>
+      </div>
 
-      {!emailLogs ? (
-        <VStack hAlign="center" vAlign="center" minHeight={240}>
-          <Spinner label="Lade E-Mail-Protokoll..." />
-        </VStack>
-      ) : filtered.length === 0 ? (
-        <EmptyState
-          icon={<Icon icon={ClockCounterClockwise} size="lg" color="secondary" />}
-          title="Keine E-Mail-Einträge gefunden"
-          description="Es liegen keine Versandprotokolle für diesen Filter vor."
-        />
-      ) : (
-        <Table
-          data={filtered}
-          idKey="_id"
-          hasHover
-          density="balanced"
-          columns={[
-            {
-              key: "recipient",
-              header: "Empfänger",
-              width: proportional(1.5, { minWidth: 180 }),
-              renderCell: (log: any) => (
-                <Text type="code" weight="semibold">
-                  {log.recipient}
-                </Text>
-              ),
-            },
-            {
-              key: "type",
-              header: "Anlass / Typ",
-              width: pixel(140),
-              renderCell: (log: any) => (
-                <Token label={String(log.type).toUpperCase()} size="sm" />
-              ),
-            },
-            {
-              key: "subject",
-              header: "Betreff",
-              width: proportional(2, { minWidth: 220 }),
-              renderCell: (log: any) => (
-                <Text maxLines={1}>{log.subject}</Text>
-              ),
-            },
-            {
-              key: "status",
-              header: "Status",
-              width: pixel(140),
-              renderCell: (log: any) =>
-                log.status === "sent" ? (
-                  <HStack gap={1.5} vAlign="center">
-                    <StatusDot variant="success" label="Gesendet" />
-                    <Text>Gesendet</Text>
-                  </HStack>
-                ) : (
-                  <Badge variant="error" label="Fehlgeschlagen" />
-                ),
-            },
-            {
-              key: "timestamp",
-              header: "Zeitpunkt",
-              align: "end",
-              width: pixel(170),
-              renderCell: (log: any) => (
-                <Text type="supporting" hasTabularNumbers>
-                  {new Date(log.timestamp).toLocaleString("de-DE")}
-                </Text>
-              ),
-            },
-          ]}
-        />
-      )}
-    </VStack>
+      {/* Log Table */}
+      <Card padding="none">
+        {!logs ? (
+          <div className="py-16 flex justify-center">
+            <Spinner
+              label={
+                isDe ? "Lade E-Mail-Protokolle..." : "Loading email logs..."
+              }
+            />
+          </div>
+        ) : emailLogs.length === 0 ? (
+          <div className="py-16 px-4 text-center flex flex-col items-center gap-2">
+            <EnvelopeSimple className="size-8 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+            <div className="text-base font-bold text-[var(--zk-text)]">
+              {isDe ? "Keine Einträge gefunden" : "No entries found"}
+            </div>
+            <p className="text-sm text-[var(--zk-text-secondary)]">
+              {isDe
+                ? "Keine E-Mail-Ereignisse für diesen Filter gefunden."
+                : "No email events found for this filter."}
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                  <th className="py-3 px-4">{isDe ? "Zeitpunkt" : "Timestamp"}</th>
+                  <th className="py-3 px-4">{isDe ? "Ereignis / Typ" : "Event / Type"}</th>
+                  <th className="py-3 px-4">{isDe ? "Auslöser" : "Actor"}</th>
+                  <th className="py-3 px-4">{isDe ? "Ziel / Referenz" : "Target / Ref"}</th>
+                  <th className="py-3 px-4">{isDe ? "Details" : "Details"}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--zk-border)]">
+                {emailLogs.map((log: any) => (
+                  <tr key={log._id} className="hover:bg-[var(--zk-surface-muted)]">
+                    <td className="py-3 px-4 text-xs text-[var(--zk-text-secondary)] tabular-nums whitespace-nowrap">
+                      {new Date(log.createdAt).toLocaleString(
+                        isDe ? "de-DE" : "en-GB"
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <Badge variant="neutral">{log.action}</Badge>
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-[var(--zk-text)]">
+                      {log.actorEmail}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs text-[var(--zk-text)]">
+                      {log.targetType}
+                      {log.targetId ? ` · ${log.targetId}` : ""}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs text-[var(--zk-text-secondary)] max-w-xs truncate">
+                      {log.metadataJson || "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+    </div>
   );
 }

@@ -2,178 +2,180 @@
 
 import React from "react";
 import { Coins, Globe, EnvelopeSimple } from "@phosphor-icons/react";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Grid } from "@astryxdesign/core/Grid";
-import { Section } from "@astryxdesign/core/Section";
-import { Card } from "@astryxdesign/core/Card";
-import { List, ListItem } from "@astryxdesign/core/List";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Badge } from "@astryxdesign/core/Badge";
-import { StatusDot } from "@astryxdesign/core/StatusDot";
 import { useAdmin } from "@/lib/admin-context";
+import { Card, Badge, StatusDot } from "@/components/ui/primitives";
 
 export default function SettingsPage() {
   const { currentRegion, regions } = useAdmin();
 
   return (
-    <VStack gap={6} maxWidth={1000}>
-      <VStack gap={1}>
-        <Heading level={1}>Regionale Einstellungen & Parameter</Heading>
-        <Text type="supporting">
+    <div className="flex flex-col gap-6 max-w-[1000px]">
+      <div>
+        <h1 className="text-2xl font-bold text-[var(--zk-text)]">
+          Regionale Einstellungen & Parameter
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)] mt-1">
           Konfiguration für Region {currentRegion.toUpperCase()} und Überblick über Expansionsmärkte.
-        </Text>
-      </VStack>
+        </p>
+      </div>
 
       {/* Pricing & Business Policy Section */}
-      <Section variant="section" padding={5}>
-        <VStack gap={4}>
-          <HStack gap={2} vAlign="center">
-            <Icon icon={Coins} size="sm" color="secondary" />
-            <Heading level={3}>Gebührenmodell & Richtlinien</Heading>
-          </HStack>
+      <Card padding="lg">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <Coins className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+            <h2 className="text-lg font-bold text-[var(--zk-text)]">
+              Gebührenmodell & Richtlinien
+            </h2>
+          </div>
 
-          <Grid columns={{ minWidth: 220, max: 3, repeat: "fit" }} gap={4}>
-            <Card padding={4} variant="muted">
-              <VStack gap={1}>
-                <Text type="label" color="secondary">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card padding="md" variant="muted">
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
                   Grundgebühr
-                </Text>
-                <Heading level={2}>
-                  <Text type="inherit" hasTabularNumbers>
-                    0,00 €
-                  </Text>
-                </Heading>
-                <Text type="supporting">
+                </span>
+                <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">
+                  0,00 €
+                </div>
+                <span className="text-xs text-[var(--zk-text-secondary)]">
                   Keine monatliche Fixgebühr für Betriebe
-                </Text>
-              </VStack>
+                </span>
+              </div>
             </Card>
 
-            <Card padding={4} variant="muted">
-              <VStack gap={1}>
-                <Text type="label" color="secondary">
+            <Card padding="md" variant="muted">
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
                   Einrichtungsgebühr
-                </Text>
-                <Heading level={2}>
-                  <Text type="inherit" hasTabularNumbers>
-                    0,00 €
-                  </Text>
-                </Heading>
-                <Text type="supporting">
+                </span>
+                <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">
+                  0,00 €
+                </div>
+                <span className="text-xs text-[var(--zk-text-secondary)]">
                   Kostenlose Registrierung und Bereitstellung
-                </Text>
-              </VStack>
+                </span>
+              </div>
             </Card>
 
-            <Card padding={4} variant="muted">
-              <VStack gap={1}>
-                <Text type="label" color="secondary">
+            <Card padding="md" variant="muted">
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
                   Zackisch Plattformgebühr
-                </Text>
-                <Heading level={2}>
-                  <Text type="inherit" hasTabularNumbers>
-                    2,0 %
-                  </Text>
-                </Heading>
-                <Text type="supporting">
+                </span>
+                <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">
+                  2,0 %
+                </div>
+                <span className="text-xs text-[var(--zk-text-secondary)]">
                   Nur bei tatsächlich erfolgter Bestellung
-                </Text>
-              </VStack>
+                </span>
+              </div>
             </Card>
-          </Grid>
+          </div>
 
-          <Card padding={4} variant="muted">
-            <HStack justify="between" vAlign="center" wrap="wrap" gap={2}>
-              <VStack gap={0.5}>
-                <Text weight="semibold">Partner-Provisionsanspruch</Text>
-                <Text type="supporting">
+          <Card padding="md" variant="muted">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div className="text-sm font-semibold text-[var(--zk-text)]">
+                  Partner-Provisionsanspruch
+                </div>
+                <div className="text-xs text-[var(--zk-text-secondary)]">
                   50 % der Zackisch-Plattformgebühr (entspricht rechnerisch 1 % der Umsatzbasis)
-                </Text>
-              </VStack>
-              <Badge variant="green" label="50 %" />
-            </HStack>
+                </div>
+              </div>
+              <Badge variant="success">50 %</Badge>
+            </div>
           </Card>
-        </VStack>
-      </Section>
+        </div>
+      </Card>
 
       {/* Supported Regions */}
-      <Section variant="section" padding={5}>
-        <VStack gap={4}>
-          <HStack gap={2} vAlign="center">
-            <Icon icon={Globe} size="sm" color="secondary" />
-            <Heading level={3}>Geschäftsregionen</Heading>
-          </HStack>
+      <Card padding="lg">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <Globe className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+            <h2 className="text-lg font-bold text-[var(--zk-text)]">
+              Geschäftsregionen
+            </h2>
+          </div>
 
-          <List hasDividers density="spacious">
+          <div className="divide-y divide-[var(--zk-border)]">
             {(regions || []).map((r: any) => (
-              <ListItem
+              <div
                 key={r.code}
-                label={`${r.name} (${r.code.toUpperCase()})`}
-                description={`Währung: ${r.currency} · Steuersätze: ${r.taxRates.join(
-                  "%, "
-                )}% · Sprachen: ${r.supportedLocales.join(", ").toUpperCase()}`}
-                startContent={
+                className="py-3 flex flex-wrap items-center justify-between gap-3"
+              >
+                <div className="flex items-center gap-3">
                   <StatusDot
                     variant={r.status === "active" ? "success" : "neutral"}
                     label={r.status === "active" ? "Aktiv" : "In Vorbereitung"}
                   />
-                }
-                endContent={
-                  <Badge
-                    variant={r.status === "active" ? "green" : "neutral"}
-                    label={
-                      r.status === "active"
-                        ? "Aktiv (Startmarkt)"
-                        : "In Vorbereitung"
-                    }
-                  />
-                }
-              />
+                  <div>
+                    <div className="text-sm font-semibold text-[var(--zk-text)]">
+                      {r.name} ({r.code.toUpperCase()})
+                    </div>
+                    <div className="text-xs text-[var(--zk-text-secondary)]">
+                      Währung: {r.currency} · Steuersätze: {r.taxRates.join("%, ")}% · Sprachen:{" "}
+                      {r.supportedLocales.join(", ").toUpperCase()}
+                    </div>
+                  </div>
+                </div>
+
+                <Badge variant={r.status === "active" ? "success" : "neutral"}>
+                  {r.status === "active" ? "Aktiv (Startmarkt)" : "In Vorbereitung"}
+                </Badge>
+              </div>
             ))}
-          </List>
-        </VStack>
-      </Section>
+          </div>
+        </div>
+      </Card>
 
       {/* E-Mail & Google Workspace Status */}
-      <Section variant="section" padding={5}>
-        <VStack gap={4}>
-          <HStack gap={2} vAlign="center">
-            <Icon icon={EnvelopeSimple} size="sm" color="secondary" />
-            <Heading level={3}>Google Workspace E-Mail-Konfiguration</Heading>
-          </HStack>
+      <Card padding="lg">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <EnvelopeSimple className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+            <h2 className="text-lg font-bold text-[var(--zk-text)]">
+              Google Workspace E-Mail-Konfiguration
+            </h2>
+          </div>
 
-          <List hasDividers density="balanced">
-            <ListItem
-              label="SMTP Relay Host"
-              endContent={<Text type="code">smtp.gmail.com:587 (STARTTLS)</Text>}
-            />
-            <ListItem
-              label="SMTP Auth User"
-              endContent={<Text type="code">selim@zackisch.com</Text>}
-            />
-            <ListItem
-              label="From-Absenderadresse"
-              endContent={<Text type="code">noreply@zackisch.com</Text>}
-            />
-            <ListItem
-              label="Reply-To Adresse"
-              endContent={<Text type="code">noreply@zackisch.com</Text>}
-            />
-            <ListItem
-              label="App-Passwort Status"
-              endContent={
-                <Badge
-                  variant="green"
-                  label="In Convex Deployment synchronisiert (16 Zeichen)"
-                />
-              }
-            />
-          </List>
-        </VStack>
-      </Section>
-    </VStack>
+          <dl className="divide-y divide-[var(--zk-border)] text-sm">
+            <div className="py-2.5 flex items-center justify-between gap-4">
+              <dt className="font-medium text-[var(--zk-text)]">SMTP Relay Host</dt>
+              <dd className="font-mono text-xs text-[var(--zk-text-secondary)]">
+                smtp.gmail.com:587 (STARTTLS)
+              </dd>
+            </div>
+            <div className="py-2.5 flex items-center justify-between gap-4">
+              <dt className="font-medium text-[var(--zk-text)]">SMTP Auth User</dt>
+              <dd className="font-mono text-xs text-[var(--zk-text-secondary)]">
+                selim@zackisch.com
+              </dd>
+            </div>
+            <div className="py-2.5 flex items-center justify-between gap-4">
+              <dt className="font-medium text-[var(--zk-text)]">From-Absenderadresse</dt>
+              <dd className="font-mono text-xs text-[var(--zk-text-secondary)]">
+                noreply@zackisch.com
+              </dd>
+            </div>
+            <div className="py-2.5 flex items-center justify-between gap-4">
+              <dt className="font-medium text-[var(--zk-text)]">Reply-To Adresse</dt>
+              <dd className="font-mono text-xs text-[var(--zk-text-secondary)]">
+                noreply@zackisch.com
+              </dd>
+            </div>
+            <div className="py-2.5 flex items-center justify-between gap-4">
+              <dt className="font-medium text-[var(--zk-text)]">App-Passwort Status</dt>
+              <dd>
+                <Badge variant="success">
+                  In Convex Deployment synchronisiert (16 Zeichen)
+                </Badge>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </Card>
+    </div>
   );
 }

@@ -178,7 +178,7 @@ Die folgenden Werte sind die **Source of Truth für neue UI-Tokens**; in allen v
 
 **Schriftrollen, die Komponenten tatsächlich verwenden:** `display.hero` 72/44px 700; `display.section` 52/36px 700; `heading.h1` 32/28px 700; `heading.h2` 26/24px 700; `heading.h3` 22/20px 600; `heading.h4` 18px 600; `body.md` 16px 400; `label.md` 14px 600; `button.md` 16px 600. Die vollständige Tabelle im folgenden Abschnitt ist normativ. Doodle-Font nur handschriftliches Akzent-Lettering, niemals Functional UI.
 
-**Base-UI-Anbindung:** `@base-ui/react` liefert ungestylte, zugängliche Interaktion und den Zustandsvertrag. Die Zackisch-Wrapper definieren deren Appearance über diese Tokens, sichtbare Fokusführung und Component-States. Komponenten verwenden die dokumentierten Base-UI-State-Attribute (`[data-open]`, `[data-checked]`, `[data-disabled]`, `[data-invalid]` soweit für das konkrete Primitive vorgesehen) statt CSS-Klassen eines Fremd-Themes. Immer die API der installierten Base-UI-Version prüfen. Keine Radix-, Shadcn-, Astryx- oder fertigen Katalog-Themes als zweite Komponentenbibliothek installieren.
+**Base-UI-Anbindung:** `@base-ui/react` liefert ungestylte, zugängliche Interaktion und den Zustandsvertrag. Die Zackisch-Wrapper definieren deren Appearance über diese Tokens, sichtbare Fokusführung und Component-States. Komponenten verwenden die dokumentierten Base-UI-State-Attribute (`[data-open]`, `[data-checked]`, `[data-disabled]`, `[data-invalid]` soweit für das konkrete Primitive vorgesehen) statt CSS-Klassen eines Fremd-Themes. Immer die API der installierten Base-UI-Version prüfen. Keine Radix-, Shadcn- oder fertigen Katalog-Themes als zweite Komponentenbibliothek installieren.
 
 **Anwendungsbeispiele der Tokenrolle:** Haupt-Button 48px hoch (`--zk-control-md`), Radius 12px (`--zk-radius-md`), Padding 16–24px, Schwarz mit weißer Schrift; Primary im Gast-/Personal-Kontext mit 56px Höhe. Eingaben 48px / 12px Radius, Default-Rahmen 1px `--zk-border-strong`, Fokus mindestens 2px `--zk-focus` mit ausreichendem Abstand. Dialog-Fläche Weiß, Radius 24px, Padding 24px, genau ein dominanter Primary-Action-Button. Card 16px Radius; flache Border statt generischer Dauerschatten. Tooltip ersetzt nie das sichtbare Formularlabel.
 
@@ -790,7 +790,7 @@ Keine automatischen inhaltslosen Bewegtbild-Karussells, keine „ästhetischen�
 
 ### Migration aus dem bisherigen Repositoryzustand
 
-- Die noch im Repository vorhandenen Poppins-/Astryx-/alten Theme-Regeln sind **Legacy-Implementierungsdetails** und **keine Design-Vorgaben**. Der neue Zielzustand benutzt Inter und die hier genannten Tokens; vorhandene technische Komponenten werden nur soweit wiederverwendet, wie sie semantisch und accessibility-technisch passen.
+- Ältere Theme-Regeln sind **Legacy-Implementierungsdetails** und **keine Design-Vorgaben**. Der Zielzustand benutzt Inter und die hier genannten Tokens; vorhandene technische Komponenten werden nur soweit wiederverwendet, wie sie semantisch und accessibility-technisch passen.
 - Kein globales Redesign ohne visuelle Regression über alle vier Oberflächen: Die White-Label-Gäste-App, der Tabletbetrieb und das interne Dashboard haben unterschiedliche Dichten, aber dieselbe tokenbasierte Basissprache.
 - Projekt-READMEs und Agent-Anleitungen nach Implementierung auf diese zentrale Designquelle **verweisen**, statt alte Font-/Komponentenregeln parallel zu verwalten.
 - Zustand, Rechte, Zahlungs- und Fiskalprozesse **nicht** aus UI-Gestaltung ableiten; funktional gegen die jeweiligen Engineering-Verträge prüfen.
@@ -924,90 +924,90 @@ Die bestehende kanonische CSS-Tokenliste `assets/zackisch/tokens.css` ist der ve
 ## Exact asset file references
 
 ### Approved preview masters
-- `previews/font_approved.png`
-- `previews/icons_approved.png`
-- `previews/mascot_approved.png`
+- `assets/zackisch/previews/font_approved.png`
+- `assets/zackisch/previews/icons_approved.png`
+- `assets/zackisch/previews/mascot_approved.png`
 
 ### Official logo masters
-- `brand/combination_mark.svg`
-- `brand/brand_mark.svg`
+- `assets/zackisch/brand/combination_mark.svg`
+- `assets/zackisch/brand/brand_mark.svg`
 
 ### Production icon assets
-- `icons/icon_menu.svg`
-- `icons/icon_qr_code.svg`
-- `icons/icon_smartphone.svg`
-- `icons/icon_scan.svg`
-- `icons/icon_cart.svg`
-- `icons/icon_order.svg`
-- `icons/icon_receipt.svg`
-- `icons/icon_payment.svg`
-- `icons/icon_cash.svg`
-- `icons/icon_confirm.svg`
-- `icons/icon_close.svg`
-- `icons/icon_add.svg`
-- `icons/icon_remove.svg`
-- `icons/icon_info.svg`
-- `icons/icon_warning.svg`
-- `icons/icon_search.svg`
-- `icons/icon_filters.svg`
-- `icons/icon_settings.svg`
-- `icons/icon_dashboard.svg`
-- `icons/icon_table_number.svg`
-- `icons/icon_pickup.svg`
-- `icons/icon_takeaway.svg`
-- `icons/icon_cutlery.svg`
-- `icons/icon_plate.svg`
-- `icons/icon_print_qr.svg`
-- `icons/icon_upload_photo.svg`
-- `icons/icon_favorite.svg`
-- `icons/icon_location.svg`
-- `icons/icon_staff.svg`
-- `icons/icon_support.svg`
-- `icons/icon_call.svg`
-- `icons/icon_message.svg`
-- `icons/icon_notification.svg`
-- `icons/icon_help.svg`
-- `icons/icon_arrow_right.svg`
-- `icons/icon_arrow_left.svg`
-- `icons/icon_refresh.svg`
-- `icons/icon_shopping_bag.svg`
-- `icons/icon_tip.svg`
-- `icons/icon_star.svg`
-- `icons/icon_view.svg`
-- `icons/icon_upload_photo_alt.svg`
-- `icons/icon_order_ticket.svg`
-- `icons/icon_receipt_list.svg`
-- `icons/icon_staff_tablet.svg`
-- `icons/icon_chat.svg`
-- `icons/icon_card_payment.svg`
-- `icons/icon_delete.svg`
+- `assets/zackisch/icons/icon_menu.svg`
+- `assets/zackisch/icons/icon_qr_code.svg`
+- `assets/zackisch/icons/icon_smartphone.svg`
+- `assets/zackisch/icons/icon_scan.svg`
+- `assets/zackisch/icons/icon_cart.svg`
+- `assets/zackisch/icons/icon_order.svg`
+- `assets/zackisch/icons/icon_receipt.svg`
+- `assets/zackisch/icons/icon_payment.svg`
+- `assets/zackisch/icons/icon_cash.svg`
+- `assets/zackisch/icons/icon_confirm.svg`
+- `assets/zackisch/icons/icon_close.svg`
+- `assets/zackisch/icons/icon_add.svg`
+- `assets/zackisch/icons/icon_remove.svg`
+- `assets/zackisch/icons/icon_info.svg`
+- `assets/zackisch/icons/icon_warning.svg`
+- `assets/zackisch/icons/icon_search.svg`
+- `assets/zackisch/icons/icon_filters.svg`
+- `assets/zackisch/icons/icon_settings.svg`
+- `assets/zackisch/icons/icon_dashboard.svg`
+- `assets/zackisch/icons/icon_table_number.svg`
+- `assets/zackisch/icons/icon_pickup.svg`
+- `assets/zackisch/icons/icon_takeaway.svg`
+- `assets/zackisch/icons/icon_cutlery.svg`
+- `assets/zackisch/icons/icon_plate.svg`
+- `assets/zackisch/icons/icon_print_qr.svg`
+- `assets/zackisch/icons/icon_upload_photo.svg`
+- `assets/zackisch/icons/icon_favorite.svg`
+- `assets/zackisch/icons/icon_location.svg`
+- `assets/zackisch/icons/icon_staff.svg`
+- `assets/zackisch/icons/icon_support.svg`
+- `assets/zackisch/icons/icon_call.svg`
+- `assets/zackisch/icons/icon_message.svg`
+- `assets/zackisch/icons/icon_notification.svg`
+- `assets/zackisch/icons/icon_help.svg`
+- `assets/zackisch/icons/icon_arrow_right.svg`
+- `assets/zackisch/icons/icon_arrow_left.svg`
+- `assets/zackisch/icons/icon_refresh.svg`
+- `assets/zackisch/icons/icon_shopping_bag.svg`
+- `assets/zackisch/icons/icon_tip.svg`
+- `assets/zackisch/icons/icon_star.svg`
+- `assets/zackisch/icons/icon_view.svg`
+- `assets/zackisch/icons/icon_upload_photo_alt.svg`
+- `assets/zackisch/icons/icon_order_ticket.svg`
+- `assets/zackisch/icons/icon_receipt_list.svg`
+- `assets/zackisch/icons/icon_staff_tablet.svg`
+- `assets/zackisch/icons/icon_chat.svg`
+- `assets/zackisch/icons/icon_card_payment.svg`
+- `assets/zackisch/icons/icon_delete.svg`
 
 ### Production mascot assets
-- `mascot/mascot_curious_welcome.svg`
-- `mascot/mascot_happy.svg`
-- `mascot/mascot_wink.svg`
-- `mascot/mascot_focused.svg`
-- `mascot/mascot_thinking.svg`
-- `mascot/mascot_sleeping.svg`
-- `mascot/mascot_excited.svg`
-- `mascot/mascot_celebrating.svg`
-- `mascot/mascot_peeking.svg`
-- `mascot/mascot_helpful_guide.svg`
-- `mascot/mascot_scan_qr.svg`
-- `mascot/mascot_payment_success.svg`
-- `mascot/mascot_order_received.svg`
-- `mascot/mascot_order_ready.svg`
-- `mascot/mascot_empty_state.svg`
-- `mascot/mascot_error_404.svg`
-- `mascot/mascot_offline_pause.svg`
-- `mascot/mascot_support_listening.svg`
+- `assets/zackisch/mascot/mascot_curious_welcome.svg`
+- `assets/zackisch/mascot/mascot_happy.svg`
+- `assets/zackisch/mascot/mascot_wink.svg`
+- `assets/zackisch/mascot/mascot_focused.svg`
+- `assets/zackisch/mascot/mascot_thinking.svg`
+- `assets/zackisch/mascot/mascot_sleeping.svg`
+- `assets/zackisch/mascot/mascot_excited.svg`
+- `assets/zackisch/mascot/mascot_celebrating.svg`
+- `assets/zackisch/mascot/mascot_peeking.svg`
+- `assets/zackisch/mascot/mascot_helpful_guide.svg`
+- `assets/zackisch/mascot/mascot_scan_qr.svg`
+- `assets/zackisch/mascot/mascot_payment_success.svg`
+- `assets/zackisch/mascot/mascot_order_received.svg`
+- `assets/zackisch/mascot/mascot_order_ready.svg`
+- `assets/zackisch/mascot/mascot_empty_state.svg`
+- `assets/zackisch/mascot/mascot_error_404.svg`
+- `assets/zackisch/mascot/mascot_offline_pause.svg`
+- `assets/zackisch/mascot/mascot_support_listening.svg`
 
 ### Font assets
-- `font/zackisch.ttf`
-- `font/zackisch.woff2`
-- `font/zackisch.css`
+- `assets/zackisch/font/zackisch.ttf`
+- `assets/zackisch/font/zackisch.woff2`
+- `assets/zackisch/font/zackisch.css`
 
 ### Asset usage rules
-- Never recreate the official full Zackisch logo from the font. Use `brand/combination_mark.svg`.
-- Never redraw the mascot mark in code. Use `brand/brand_mark.svg` for the canonical mark and `mascot/*.svg` for expressive variants.
+- Never recreate the official full Zackisch logo from the font. Use `assets/zackisch/brand/combination_mark.svg`.
+- Never redraw the mascot mark in code. Use `assets/zackisch/brand/brand_mark.svg` for the canonical mark and `assets/zackisch/mascot/*.svg` for expressive variants.
 - Use `Inter` for product UI and `Zackisch` only for display accents.

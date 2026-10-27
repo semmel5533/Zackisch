@@ -4,35 +4,27 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ShieldCheck,
-  EnvelopeSimple,
-  LockSimple,
-  Key,
   ArrowRight,
   ArrowLeft,
   ArrowsClockwise,
 } from "@phosphor-icons/react";
-import { AppShell } from "@astryxdesign/core/AppShell";
-import { TopNav, TopNavHeading } from "@astryxdesign/core/TopNav";
-import { Layout, LayoutContent } from "@astryxdesign/core/Layout";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Banner } from "@astryxdesign/core/Banner";
-import { StatusDot } from "@astryxdesign/core/StatusDot";
-import { Divider } from "@astryxdesign/core/Divider";
 import { useAdmin } from "@/lib/admin-context";
 import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
 import { toast } from "@/components/common/toast";
+import {
+  Card,
+  Button,
+  Badge,
+  Banner,
+  StatusDot,
+  Divider,
+  TextField,
+} from "@/components/ui/primitives";
 
 export function AdminLoginForm() {
   const router = useRouter();
-  const { initiateLogin, completeLoginWithOtp, resendOtp, currentLocale } = useAdmin();
+  const { initiateLogin, completeLoginWithOtp, resendOtp, currentLocale } =
+    useAdmin();
   const [email, setEmail] = useState("selim@zackisch.com");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
@@ -84,7 +76,9 @@ export function AdminLoginForm() {
         );
       }
     } catch (err: any) {
-      setErrorMessage(err.message || (isDe ? "Verbindungsfehler." : "Network error."));
+      setErrorMessage(
+        err.message || (isDe ? "Verbindungsfehler." : "Network error.")
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -140,7 +134,8 @@ export function AdminLoginForm() {
       }
     } catch (err: any) {
       setErrorMessage(
-        err.message || (isDe ? "Fehler bei der Bestätigung." : "Verification error.")
+        err.message ||
+          (isDe ? "Fehler bei der Bestätigung." : "Verification error.")
       );
     } finally {
       setIsSubmitting(false);
@@ -162,13 +157,17 @@ export function AdminLoginForm() {
       } else {
         setErrorMessage(
           res.error ||
-            (isDe ? "Code konnte nicht erneut gesendet werden." : "Could not resend code.")
+            (isDe
+              ? "Code konnte nicht erneut gesendet werden."
+              : "Could not resend code.")
         );
       }
     } catch (err: any) {
       setErrorMessage(
         err.message ||
-          (isDe ? "Verbindungsfehler beim erneuten Senden." : "Network error during resend.")
+          (isDe
+            ? "Verbindungsfehler beim erneuten Senden."
+            : "Network error during resend.")
       );
     } finally {
       setIsResending(false);
@@ -176,202 +175,190 @@ export function AdminLoginForm() {
   };
 
   return (
-    <AppShell
-      height="fill"
-      variant="wash"
-      topNav={
-        <TopNav
-          label="Team Dashboard Sign-In Navigation"
-          heading={
-            <TopNavHeading
-              logo={
-                <img
-                  src="/icon.svg"
-                  alt="Zackisch"
-                  className="h-6 w-6 rounded-sm"
-                />
-              }
-              heading="Zackisch Team Dashboard"
-              subheading="internal.zackisch.com"
-            />
-          }
-          endContent={<RegionLanguageSwitcher />}
-        />
-      }
-    >
-      <Layout height="fill">
-        <LayoutContent>
-          <VStack gap={6} hAlign="center" vAlign="center" minHeight="100%" padding={6}>
-            <Card width={420} padding={6} elevation="low">
-              <VStack gap={4}>
-                <VStack gap={1.5} hAlign="center">
-                  <Badge
-                    variant="neutral"
-                    icon={<Icon icon={ShieldCheck} size="xsm" />}
-                    label={
-                      step === "credentials"
-                        ? isDe
-                          ? "1. Passwort"
-                          : "1. Password"
-                        : isDe
-                          ? "2. E-Mail-Code"
-                          : "2. Email OTP"
-                    }
-                  />
-                  <Heading level={2} justify="center">
-                    {step === "credentials"
-                      ? "Zackisch Team Dashboard"
-                      : isDe
-                        ? "Zwei-Faktor-Bestätigung"
-                        : "Two-Factor Verification"}
-                  </Heading>
-                  <Text type="supporting" justify="center">
+    <div className="min-h-screen flex flex-col bg-[var(--zk-bg)] text-[var(--zk-text-body)]">
+      <header className="w-full border-b border-[var(--zk-border)] bg-[var(--zk-surface)] px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img
+            src="/zackisch/combination-mark.svg"
+            alt="Zackisch"
+            className="h-6 w-auto block"
+          />
+          <Badge variant="neutral">INTERNAL</Badge>
+        </div>
+        <RegionLanguageSwitcher />
+      </header>
+
+      <main className="flex-1 flex flex-col items-center justify-center p-6">
+        <div className="w-full max-w-[420px] flex flex-col gap-6">
+          <Card padding="lg">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col items-center text-center gap-1.5">
+                <Badge variant="neutral">
+                  <ShieldCheck className="size-3.5" aria-hidden="true" />
+                  <span>
                     {step === "credentials"
                       ? isDe
-                        ? "Interne Oberfläche für Mitarbeiter und Administratoren. Passwort und E-Mail-Einmalkennwort erforderlich."
-                        : "Internal interface for staff and administrators. Password and email verification code required."
+                        ? "1. Passwort"
+                        : "1. Password"
                       : isDe
-                        ? `Wir haben einen 6-stelligen Sicherheitscode an ${email} gesendet.`
-                        : `We sent a 6-digit security code to ${email}.`}
-                  </Text>
-                </VStack>
+                        ? "2. E-Mail-Code"
+                        : "2. Email OTP"}
+                  </span>
+                </Badge>
 
-                {errorMessage ? (
-                  <Banner
-                    status="error"
-                    title={isDe ? "Anmeldung fehlgeschlagen" : "Authentication error"}
-                    description={errorMessage}
-                    collapsible={false}
+                <h1 className="text-xl font-bold text-[var(--zk-text)]">
+                  {step === "credentials"
+                    ? "Zackisch Team Dashboard"
+                    : isDe
+                      ? "Zwei-Faktor-Bestätigung"
+                      : "Two-Factor Verification"}
+                </h1>
+
+                <p className="text-sm text-[var(--zk-text-secondary)]">
+                  {step === "credentials"
+                    ? isDe
+                      ? "Interne Oberfläche für Mitarbeiter und Administratoren. Passwort und E-Mail-Einmalkennwort erforderlich."
+                      : "Internal interface for staff and administrators. Password and email verification code required."
+                    : isDe
+                      ? `Wir haben einen 6-stelligen Sicherheitscode an ${email} gesendet.`
+                      : `We sent a 6-digit security code to ${email}.`}
+                </p>
+              </div>
+
+              {errorMessage ? (
+                <Banner
+                  status="error"
+                  title={
+                    isDe ? "Anmeldung fehlgeschlagen" : "Authentication error"
+                  }
+                  description={errorMessage}
+                />
+              ) : null}
+
+              {step === "credentials" ? (
+                <form onSubmit={handleRequestOtp} className="flex flex-col gap-3">
+                  <TextField
+                    type="email"
+                    label={isDe ? "E-Mail-Adresse" : "Email Address"}
+                    value={email}
+                    onChange={(val) => setEmail(val)}
+                    placeholder="selim@zackisch.com"
+                    required
                   />
-                ) : null}
 
-                {step === "credentials" ? (
-                  <form onSubmit={handleRequestOtp}>
-                    <VStack gap={3}>
-                      <TextInput
-                        type="email"
-                        size="lg"
-                        label={isDe ? "E-Mail-Adresse" : "Email Address"}
-                        value={email}
-                        onChange={(val) => setEmail(val)}
-                        placeholder="selim@zackisch.com"
-                        startIcon={EnvelopeSimple}
-                        isRequired
-                        width="100%"
-                      />
+                  <TextField
+                    type="password"
+                    label={isDe ? "Administrator-Passwort" : "Password"}
+                    value={password}
+                    onChange={(val) => setPassword(val)}
+                    placeholder="••••••••••••"
+                    required
+                  />
 
-                      <TextInput
-                        type="password"
-                        size="lg"
-                        label={isDe ? "Administrator-Passwort" : "Password"}
-                        value={password}
-                        onChange={(val) => setPassword(val)}
-                        placeholder="••••••••••••"
-                        startIcon={LockSimple}
-                        isRequired
-                        width="100%"
-                      />
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    loading={isSubmitting}
+                  >
+                    <span>
+                      {isDe
+                        ? "Sicherheitscode anfordern"
+                        : "Request Security Code"}
+                    </span>
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </Button>
+                </form>
+              ) : (
+                <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3">
+                  <TextField
+                    type="text"
+                    label={
+                      isDe
+                        ? "6-stelliger Bestätigungscode"
+                        : "6-digit verification code"
+                    }
+                    description={
+                      isDe
+                        ? "Code per Google Workspace SMTP gesendet (15 Min. gültig)"
+                        : "Code sent via Google Workspace SMTP (valid 15 min)"
+                    }
+                    value={otp}
+                    onChange={(val) =>
+                      setOtp(val.replace(/\D/g, "").slice(0, 6))
+                    }
+                    placeholder="123456"
+                    required
+                  />
 
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        size="lg"
-                        width="100%"
-                        isLoading={isSubmitting}
-                        endContent={<Icon icon={ArrowRight} size="sm" />}
-                        label={
-                          isDe ? "Sicherheitscode anfordern" : "Request Security Code"
-                        }
-                      />
-                    </VStack>
-                  </form>
-                ) : (
-                  <form onSubmit={handleVerifyOtp}>
-                    <VStack gap={3}>
-                      <TextInput
-                        type="text"
-                        size="lg"
-                        label={
-                          isDe
-                            ? "6-stelliger Bestätigungscode"
-                            : "6-digit verification code"
-                        }
-                        description={
-                          isDe
-                            ? "Code per Google Workspace SMTP gesendet (15 Min. gültig)"
-                            : "Code sent via Google Workspace SMTP (valid 15 min)"
-                        }
-                        value={otp}
-                        onChange={(val) => setOtp(val.replace(/\D/g, "").slice(0, 6))}
-                        placeholder="123456"
-                        startIcon={Key}
-                        hasAutoFocus
-                        isRequired
-                        width="100%"
-                      />
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    loading={isSubmitting}
+                    disabled={otp.length !== 6}
+                  >
+                    <span>
+                      {isDe
+                        ? "Im Team Dashboard einloggen"
+                        : "Sign into Team Dashboard"}
+                    </span>
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </Button>
 
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        size="lg"
-                        width="100%"
-                        isLoading={isSubmitting}
-                        isDisabled={otp.length !== 6}
-                        endContent={<Icon icon={ArrowRight} size="sm" />}
-                        label={
-                          isDe
-                            ? "Im Team Dashboard einloggen"
-                            : "Sign into Team Dashboard"
-                        }
-                      />
+                  <Divider />
 
-                      <Divider />
+                  <div className="flex items-center justify-between gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      type="button"
+                      onClick={() => {
+                        setStep("credentials");
+                        setErrorMessage("");
+                        setOtp("");
+                      }}
+                    >
+                      <ArrowLeft className="size-4" aria-hidden="true" />
+                      <span>
+                        {isDe ? "Zurück zu Passwort" : "Back to password"}
+                      </span>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      type="button"
+                      loading={isResending}
+                      onClick={handleResendOtp}
+                    >
+                      <ArrowsClockwise className="size-4" aria-hidden="true" />
+                      <span>{isDe ? "Code erneut senden" : "Resend code"}</span>
+                    </Button>
+                  </div>
+                </form>
+              )}
 
-                      <HStack justify="between" vAlign="center" gap={2}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          icon={<Icon icon={ArrowLeft} size="sm" />}
-                          label={isDe ? "Zurück zu Passwort" : "Back to password"}
-                          onClick={() => {
-                            setStep("credentials");
-                            setErrorMessage("");
-                            setOtp("");
-                          }}
-                        />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          isLoading={isResending}
-                          icon={<Icon icon={ArrowsClockwise} size="sm" />}
-                          label={isDe ? "Code erneut senden" : "Resend code"}
-                          onClick={handleResendOtp}
-                        />
-                      </HStack>
-                    </VStack>
-                  </form>
-                )}
+              <Divider />
 
-                <Divider />
+              <div className="flex items-center justify-between text-xs text-[var(--zk-text-secondary)]">
+                <div className="inline-flex items-center gap-1.5">
+                  <StatusDot variant="success" label="Convex Cloud Live" />
+                  <span>Convex Cloud Live</span>
+                </div>
+                <span>Regional-Admin DE</span>
+              </div>
+            </div>
+          </Card>
 
-                <HStack justify="between" vAlign="center">
-                  <HStack gap={1.5} vAlign="center">
-                    <StatusDot variant="success" label="Convex Cloud Live" isPulsing />
-                    <Text type="supporting">Convex Cloud Live</Text>
-                  </HStack>
-                  <Text type="supporting">Regional-Admin DE</Text>
-                </HStack>
-              </VStack>
-            </Card>
-
-            <Text type="supporting" justify="center">
-              {isDe
-                ? "© 2026 Zackisch Team Dashboard. Alle Rechte vorbehalten. Nur für autorisiertes Personal."
-                : "© 2026 Zackisch Team Dashboard. All rights reserved. Authorized personnel only."}
-            </Text>
-          </VStack>
-        </LayoutContent>
-      </Layout>
-    </AppShell>
+          <p className="text-center text-xs text-[var(--zk-text-secondary)]">
+            {isDe
+              ? "© 2026 Zackisch Team Dashboard. Alle Rechte vorbehalten. Nur für autorisiertes Personal."
+              : "© 2026 Zackisch Team Dashboard. All rights reserved. Authorized personnel only."}
+          </p>
+        </div>
+      </main>
+    </div>
   );
 }

@@ -4,21 +4,14 @@ import React, { useState } from "react";
 import { useQuery } from "convex/react";
 import { anyApi } from "convex/server";
 import { Storefront } from "@phosphor-icons/react";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { StackItem } from "@astryxdesign/core/Stack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Table, proportional, pixel } from "@astryxdesign/core/Table";
-import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Badge } from "@astryxdesign/core/Badge";
-import { StatusDot } from "@astryxdesign/core/StatusDot";
-import { Token } from "@astryxdesign/core/Token";
-import { EmptyState } from "@astryxdesign/core/EmptyState";
-import { Spinner } from "@astryxdesign/core/Spinner";
 import { useAdmin } from "@/lib/admin-context";
+import {
+  Card,
+  Badge,
+  StatusDot,
+  TextField,
+  Spinner,
+} from "@/components/ui/primitives";
 
 export default function BusinessesPage() {
   const { currentRegion, sessionToken } = useAdmin();
@@ -30,138 +23,117 @@ export default function BusinessesPage() {
   );
 
   const filtered = (businesses || []).filter(
-    (r: any) =>
-      r.name.toLowerCase().includes(search.toLowerCase()) ||
-      (r.address && r.address.toLowerCase().includes(search.toLowerCase())) ||
-      (r.partnerCode && r.partnerCode.toLowerCase().includes(search.toLowerCase()))
+    (b: any) =>
+      b.name.toLowerCase().includes(search.toLowerCase()) ||
+      b.slug.toLowerCase().includes(search.toLowerCase()) ||
+      (b.referralPartnerCode &&
+        b.referralPartnerCode.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
-    <VStack gap={5} maxWidth={1200}>
-      <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
-        <StackItem size="fill">
-          <VStack gap={1}>
-            <Heading level={1}>Betriebs- & Gastronomieverwaltung</Heading>
-            <Text type="supporting">
-              Alle registrierten Betriebe (Restaurants, Cafés, Imbisse, Bars) und Speisekarten in Region{" "}
-              {currentRegion.toUpperCase()}.
-            </Text>
-          </VStack>
-        </StackItem>
+    <div className="flex flex-col gap-5 max-w-[1200px]">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex-1 min-w-[240px]">
+          <h1 className="text-2xl font-bold text-[var(--zk-text)]">
+            Gastronomiebetriebe
+          </h1>
+          <p className="text-sm text-[var(--zk-text-secondary)] mt-1">
+            Alle registrierten Betriebe in Region {currentRegion.toUpperCase()} inkl. Stripe-Status und Partner-Zuordnung.
+          </p>
+        </div>
 
-        <TextInput
-          label="Betrieb suchen"
-          isLabelHidden
-          placeholder="Betrieb suchen..."
-          startIcon="search"
-          hasClear
-          value={search}
-          onChange={setSearch}
-          width={280}
-        />
-      </HStack>
+        <div className="w-full sm:w-80">
+          <TextField
+            type="search"
+            label="Betrieb, Slug oder Partnercode suchen"
+            hideLabel
+            placeholder="Betrieb, Slug oder Partnercode suchen..."
+            value={search}
+            onChange={setSearch}
+          />
+        </div>
+      </div>
 
-      {!businesses ? (
-        <VStack hAlign="center" vAlign="center" minHeight={240}>
-          <Spinner label="Lade Betriebe..." />
-        </VStack>
-      ) : filtered.length === 0 ? (
-        <EmptyState
-          icon={<Icon icon={Storefront} size="lg" color="secondary" />}
-          title="Keine Betriebe gefunden"
-          description="Für diese Suchanfrage oder Region wurden keine Betriebe gefunden."
-        />
-      ) : (
-        <Table
-          data={filtered}
-          idKey="_id"
-          hasHover
-          density="balanced"
-          columns={[
-            {
-              key: "name",
-              header: "Betrieb",
-              width: proportional(2, { minWidth: 200 }),
-              renderCell: (r: any) => (
-                <VStack gap={0.5}>
-                  <HStack gap={1.5} vAlign="center">
-                    <Icon icon={Storefront} size="sm" color="secondary" />
-                    <Text weight="semibold">{r.name}</Text>
-                  </HStack>
-                  <Text type="supporting">{r.address || "Keine Adresse angegeben"}</Text>
-                </VStack>
-              ),
-            },
-            {
-              key: "stripeOnboardingComplete",
-              header: "Stripe Onboarding",
-              width: proportional(1, { minWidth: 150 }),
-              renderCell: (r: any) => (
-                <HStack gap={1.5} vAlign="center">
-                  <StatusDot
-                    variant={r.stripeOnboardingComplete ? "success" : "warning"}
-                    label={r.stripeOnboardingComplete ? "Aktiv" : "Ausstehend"}
-                  />
-                  <Text type="body">
-                    {r.stripeOnboardingComplete ? "Aktiv" : "Ausstehend"}
-                  </Text>
-                </HStack>
-              ),
-            },
-            {
-              key: "tablesCount",
-              header: "Tische / QR",
-              width: pixel(120),
-              renderCell: (r: any) => (
-                <Text weight="semibold" hasTabularNumbers>
-                  {r.tablesCount} Tische
-                </Text>
-              ),
-            },
-            {
-              key: "mode",
-              header: "Modus",
-              width: proportional(1, { minWidth: 150 }),
-              renderCell: (r: any) => (
-                <HStack gap={1} wrap="wrap">
-                  {r.isToStayEnabled !== false && (
-                    <Token label="Vor Ort" size="sm" />
-                  )}
-                  {r.isToGoEnabled && <Token label="Abholung" size="sm" />}
-                </HStack>
-              ),
-            },
-            {
-              key: "partnerCode",
-              header: "Partner-Code",
-              width: pixel(130),
-              renderCell: (r: any) =>
-                r.partnerCode ? (
-                  <Badge variant="neutral" label={r.partnerCode} />
-                ) : (
-                  <Text type="supporting">Direkt</Text>
-                ),
-            },
-            {
-              key: "actions",
-              header: "Aktionen",
-              align: "end",
-              width: pixel(150),
-              renderCell: (r: any) => (
-                <Button
-                  label="Menü ansehen"
-                  href={`https://app.zackisch.com/menu/${r._id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="secondary"
-                  size="sm"
-                  endContent={<Icon icon="externalLink" size="xsm" />}
-                />
-              ),
-            },
-          ]}
-        />
-      )}
-    </VStack>
+      <Card padding="none">
+        {!businesses ? (
+          <div className="py-16 flex justify-center">
+            <Spinner label="Lade Betriebe..." />
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="py-16 px-4 text-center flex flex-col items-center gap-2">
+            <Storefront className="size-8 text-[var(--zk-text-secondary)]" aria-hidden="true" />
+            <div className="text-base font-bold text-[var(--zk-text)]">
+              Keine Betriebe gefunden
+            </div>
+            <p className="text-sm text-[var(--zk-text-secondary)]">
+              Es wurden keine Betriebe in dieser Region gefunden.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                  <th className="py-3 px-4">Betrieb & Slug</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4">Stripe Connect</th>
+                  <th className="py-3 px-4">Partner-Code</th>
+                  <th className="py-3 px-4">Gebühr</th>
+                  <th className="py-3 px-4 text-right">Erstellt am</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--zk-border)]">
+                {filtered.map((b: any) => (
+                  <tr key={b._id} className="hover:bg-[var(--zk-surface-muted)]">
+                    <td className="py-3 px-4">
+                      <div className="font-semibold text-[var(--zk-text)]">
+                        {b.name}
+                      </div>
+                      <div className="font-mono text-xs text-[var(--zk-text-secondary)]">
+                        /{b.slug}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="inline-flex items-center gap-1.5">
+                        <StatusDot
+                          variant={b.isActive ? "success" : "neutral"}
+                          label={b.isActive ? "Aktiv" : "Pausiert"}
+                        />
+                        <span>{b.isActive ? "Aktiv" : "Pausiert"}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      {b.stripeOnboardingComplete ? (
+                        <div className="inline-flex items-center gap-1.5">
+                          <StatusDot variant="success" label="Verifiziert" />
+                          <span>Verifiziert</span>
+                        </div>
+                      ) : (
+                        <Badge variant="warning">Ausstehend</Badge>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      {b.referralPartnerCode ? (
+                        <Badge variant="neutral">{b.referralPartnerCode}</Badge>
+                      ) : (
+                        <span className="text-[var(--zk-text-secondary)]">—</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-[var(--zk-text)] tabular-nums">
+                      2,0 % (0 € Fix)
+                    </td>
+                    <td className="py-3 px-4 text-right text-xs text-[var(--zk-text-secondary)] tabular-nums whitespace-nowrap">
+                      {b.createdAt
+                        ? new Date(b.createdAt).toLocaleDateString("de-DE")
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+    </div>
   );
 }

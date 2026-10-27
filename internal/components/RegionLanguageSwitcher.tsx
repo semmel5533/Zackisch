@@ -1,19 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Globe } from "@phosphor-icons/react";
-import { Button } from "@astryxdesign/core/Button";
-import { IconButton } from "@astryxdesign/core/IconButton";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { SelectableCard } from "@astryxdesign/core/SelectableCard";
-import { Badge } from "@astryxdesign/core/Badge";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Grid } from "@astryxdesign/core/Grid";
-import { Text } from "@astryxdesign/core/Text";
-import { Divider } from "@astryxdesign/core/Divider";
+import { Globe, Check } from "@phosphor-icons/react";
 import { useAdmin } from "@/lib/admin-context";
+import { Button, Modal, Badge, Divider } from "@/components/ui/primitives";
 
 export function RegionFlag({ code, className }: { code: string; className?: string }) {
   const c = code.toLowerCase();
@@ -67,15 +57,17 @@ export const ADMIN_SUPPORTED_REGIONS = [
 
 export function RegionLanguageSwitcher({
   variant = "pill",
+  className = "",
 }: {
   className?: string;
   variant?: "pill" | "icon";
 }) {
   const [open, setOpen] = useState(false);
-  const { currentRegion, setCurrentRegion, currentLocale, setCurrentLocale, t } = useAdmin();
+  const { currentRegion, setCurrentRegion, currentLocale, setCurrentLocale, t } =
+    useAdmin();
 
   const [draftRegion, setDraftRegion] = useState(currentRegion);
-  const [draftLocale, setDraftLocale] = useState(currentLocale);
+  const [draftLocale, setDraftLocale] = useState<"de" | "en">(currentLocale);
 
   const languages = [
     { code: "de" as const, label: "Deutsch" },
@@ -95,7 +87,8 @@ export function RegionLanguageSwitcher({
   };
 
   const activeRegionObj =
-    ADMIN_SUPPORTED_REGIONS.find((r) => r.code === currentRegion) || ADMIN_SUPPORTED_REGIONS[0];
+    ADMIN_SUPPORTED_REGIONS.find((r) => r.code === currentRegion) ||
+    ADMIN_SUPPORTED_REGIONS[0];
 
   const triggerLabel = `${activeRegionObj.code.toUpperCase()} · ${currentLocale.toUpperCase()}`;
 
@@ -103,120 +96,135 @@ export function RegionLanguageSwitcher({
     <>
       {variant === "pill" ? (
         <Button
-          label={t("regionSelectorTitle") || triggerLabel}
           variant="secondary"
           size="sm"
-          icon={<Icon icon={Globe} />}
           onClick={handleOpen}
+          className={className}
         >
-          {triggerLabel}
+          <Globe className="size-4" aria-hidden="true" />
+          <span>{triggerLabel}</span>
         </Button>
       ) : (
-        <IconButton
-          label={t("regionSelectorTitle") || "Region & Sprache"}
-          tooltip={t("regionSelectorTitle") || "Region & Sprache"}
-          icon={<Icon icon={Globe} />}
+        <Button
           variant="secondary"
           size="sm"
+          iconOnly
+          aria-label={t("regionSelectorTitle") || "Region & Sprache"}
           onClick={handleOpen}
-        />
+          className={className}
+        >
+          <Globe className="size-4" aria-hidden="true" />
+        </Button>
       )}
 
-      <Dialog isOpen={open} onOpenChange={setOpen} width={440} purpose="form">
-        <VStack gap={4}>
-          <DialogHeader
-            title={
-              currentLocale === "en" ? "Select Region & Language" : "Region & Sprache auswählen"
-            }
-            subtitle={
-              currentLocale === "en"
-                ? "Choose your operating market and interface language"
-                : "Wähle deine Geschäftsregion und die Anzeigesprache"
-            }
-            onOpenChange={setOpen}
-          />
-
-          <VStack gap={2}>
-            <Text type="label" color="secondary">
+      <Modal
+        open={open}
+        onOpenChange={setOpen}
+        title={
+          currentLocale === "en"
+            ? "Select Region & Language"
+            : "Region & Sprache auswählen"
+        }
+        description={
+          currentLocale === "en"
+            ? "Choose your operating market and interface language"
+            : "Wähle deine Geschäftsregion und die Anzeigesprache"
+        }
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
+              {currentLocale === "en" ? "Cancel" : "Abbrechen"}
+            </Button>
+            <Button variant="primary" type="button" onClick={handleSave}>
+              {currentLocale === "en" ? "Save & Apply" : "Speichern & Anwenden"}
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <span className="zk-label">
               {currentLocale === "en" ? "Operating Region" : "Geschäftsregion"}
-            </Text>
-            <VStack gap={1.5}>
+            </span>
+            <div className="flex flex-col gap-2">
               {ADMIN_SUPPORTED_REGIONS.map((r) => {
                 const isSelected = draftRegion === r.code;
                 return (
-                  <SelectableCard
+                  <button
                     key={r.code}
-                    label={r.nativeName}
-                    isSelected={isSelected}
-                    onChange={() => setDraftRegion(r.code)}
-                    padding={3}
+                    type="button"
+                    onClick={() => setDraftRegion(r.code)}
+                    className={`flex items-center justify-between gap-2 p-3 rounded-xl border text-left transition-colors ${
+                      isSelected
+                        ? "border-[var(--zk-link)] bg-[var(--zk-info-bg)]"
+                        : "border-[var(--zk-border)] bg-[var(--zk-surface)] hover:bg-[var(--zk-surface-muted)]"
+                    }`}
                   >
-                    <HStack justify="between" vAlign="center" gap={2}>
-                      <HStack gap={2} vAlign="center">
-                        <RegionFlag code={r.code} />
-                        <Text weight="semibold">{r.nativeName}</Text>
-                        <Badge
-                          variant={r.status === "active" ? "green" : "neutral"}
-                          label={
-                            r.status === "active"
-                              ? currentLocale === "en"
-                                ? "Active"
-                                : "Aktiv"
-                              : currentLocale === "en"
-                                ? "Planned"
-                                : "In Vorbereitung"
-                          }
-                        />
-                      </HStack>
-                      {isSelected && <Icon icon="check" color="accent" size="sm" />}
-                    </HStack>
-                  </SelectableCard>
+                    <div className="flex items-center gap-2.5">
+                      <RegionFlag code={r.code} />
+                      <span className="font-semibold text-sm text-[var(--zk-text)]">
+                        {r.nativeName}
+                      </span>
+                      <Badge variant={r.status === "active" ? "success" : "neutral"}>
+                        {r.status === "active"
+                          ? currentLocale === "en"
+                            ? "Active"
+                            : "Aktiv"
+                          : currentLocale === "en"
+                            ? "Planned"
+                            : "In Vorbereitung"}
+                      </Badge>
+                    </div>
+                    {isSelected && (
+                      <Check
+                        className="size-4 text-[var(--zk-link)]"
+                        weight="bold"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
                 );
               })}
-            </VStack>
-          </VStack>
-
-          <VStack gap={2}>
-            <Text type="label" color="secondary">
-              {currentLocale === "en" ? "Interface Language" : "Anzeigesprache"}
-            </Text>
-            <Grid columns={2} gap={2}>
-              {languages.map((l) => {
-                const isSelected = draftLocale === l.code;
-                return (
-                  <SelectableCard
-                    key={l.code}
-                    label={l.label}
-                    isSelected={isSelected}
-                    onChange={() => setDraftLocale(l.code)}
-                    padding={3}
-                  >
-                    <HStack justify="between" vAlign="center">
-                      <Text weight="semibold">{l.label}</Text>
-                      {isSelected && <Icon icon="check" color="accent" size="sm" />}
-                    </HStack>
-                  </SelectableCard>
-                );
-              })}
-            </Grid>
-          </VStack>
+            </div>
+          </div>
 
           <Divider />
 
-          <HStack justify="end" gap={2}>
-            <Button
-              label={currentLocale === "en" ? "Cancel" : "Abbrechen"}
-              variant="secondary"
-              onClick={() => setOpen(false)}
-            />
-            <Button
-              label={currentLocale === "en" ? "Save & Apply" : "Speichern & Anwenden"}
-              variant="primary"
-              onClick={handleSave}
-            />
-          </HStack>
-        </VStack>
-      </Dialog>
+          <div className="flex flex-col gap-2">
+            <span className="zk-label">
+              {currentLocale === "en" ? "Interface Language" : "Anzeigesprache"}
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {languages.map((l) => {
+                const isSelected = draftLocale === l.code;
+                return (
+                  <button
+                    key={l.code}
+                    type="button"
+                    onClick={() => setDraftLocale(l.code)}
+                    className={`flex items-center justify-between gap-2 p-3 rounded-xl border text-left transition-colors ${
+                      isSelected
+                        ? "border-[var(--zk-link)] bg-[var(--zk-info-bg)]"
+                        : "border-[var(--zk-border)] bg-[var(--zk-surface)] hover:bg-[var(--zk-surface-muted)]"
+                    }`}
+                  >
+                    <span className="font-semibold text-sm text-[var(--zk-text)]">
+                      {l.label}
+                    </span>
+                    {isSelected && (
+                      <Check
+                        className="size-4 text-[var(--zk-link)]"
+                        weight="bold"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

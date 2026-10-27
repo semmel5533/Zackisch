@@ -85,4 +85,29 @@ describe("internal team dashboard RBAC & ticket security", () => {
     expect(ticketsPageSrc).toContain("support.getTeamTicketThread");
     expect(ticketsPageSrc).toContain('msg.visibility === "internal"');
   });
+
+  it("enforces Base UI and canonical Zackisch design tokens across internal dashboard with zero legacy Astryx or Poppins imports", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const globalsCss = fs.readFileSync(
+      path.resolve(__dirname, "../app/globals.css"),
+      "utf8",
+    );
+    expect(globalsCss).toContain("assets/zackisch/tokens.css");
+    expect(globalsCss).toContain("assets/zackisch/font/inter.css");
+    expect(globalsCss).not.toMatch(/poppins|astryx|stylex/i);
+
+    const shellSrc = fs.readFileSync(
+      path.resolve(__dirname, "../components/AdminShell.tsx"),
+      "utf8",
+    );
+    expect(shellSrc).toContain("/zackisch/combination-mark.svg");
+    expect(shellSrc).not.toMatch(/astryx|stylex/i);
+
+    const newsletterSrc = fs.readFileSync(
+      path.resolve(__dirname, "../app/newsletter/page.tsx"),
+      "utf8",
+    );
+    expect(newsletterSrc).not.toMatch(/poppins|fonts\.googleapis\.com/i);
+  });
 });
