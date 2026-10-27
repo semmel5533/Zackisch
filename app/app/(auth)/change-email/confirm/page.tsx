@@ -12,17 +12,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import { sendEmailChangeOtpAction } from "@/actions/settings-actions";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Banner } from "@astryxdesign/core/Banner";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Spinner } from "@astryxdesign/core/Spinner";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Button } from "@/components/ui/button";
+import { TextField } from "@/components/ui/form-controls";
+import { Card, Banner, Divider, Spinner } from "@/components/ui/surfaces";
 import { useTranslation } from "@/lib/i18n";
 import { X, EnvelopeSimple } from "@phosphor-icons/react";
 import { toast } from "@/components/common/toast";
@@ -91,108 +83,109 @@ function ChangeEmailConfirmForm() {
   }
 
   return (
-    <VStack gap={4}>
-      <VStack gap={1}>
-        <Heading level={1}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
           {t("newEmailAddress" as any)}
-        </Heading>
-        <Text color="secondary">
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
           {t("newEmailAddressDesc" as any)}
-        </Text>
-      </VStack>
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} noValidate>
-        <VStack gap={4}>
-          {state.error && (
-            <Banner
-              status="error"
-              title={state.error}
-            />
-          )}
-
-          <TextInput
-            label={t("email")}
-            type="email"
-            value={newEmail}
-            onChange={(val) => {
-              setNewEmail(val);
-              setFieldError("");
-            }}
-            placeholder={t("emailPlaceholder")}
-            isRequired
-            width="100%"
-            autoComplete="email"
-            status={fieldError ? { type: "error", message: fieldError } : undefined}
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        {state.error && (
+          <Banner
+            status="error"
+            title={state.error}
           />
+        )}
 
-          <Button
-            label={t("requestVerificationCode" as any)}
-            variant="primary"
-            size="md"
-            type="submit"
-            isLoading={isPending}
-            icon={<Icon icon={EnvelopeSimple} size="sm" />}
-            onClick={(e: any) => handleSubmit(e)}
-          />
-        </VStack>
+        <TextField
+          label={t("email")}
+          type="email"
+          value={newEmail}
+          onChange={(val) => {
+            setNewEmail(val);
+            setFieldError("");
+          }}
+          placeholder={t("emailPlaceholder")}
+          required
+          autoComplete="email"
+          error={fieldError || null}
+        />
+
+        <Button
+          variant="primary"
+          size="md"
+          type="submit"
+          fullWidth
+          loading={isPending}
+        >
+          <EnvelopeSimple size={16} weight="bold" aria-hidden="true" />
+          <span>{t("requestVerificationCode" as any)}</span>
+        </Button>
       </form>
 
       <Divider />
 
-      <HStack justify="center" vAlign="center" gap={1}>
-        <Text color="secondary">{t("changedMind" as any)}</Text>
-        <Link href="/dashboard" style={{ fontWeight: 600 }}>
+      <div className="flex items-center justify-center gap-1.5 text-sm">
+        <span className="text-[var(--zk-text-secondary)]">{t("changedMind" as any)}</span>
+        <Link
+          href="/dashboard"
+          className="font-semibold text-[var(--zk-text)] underline underline-offset-4 hover:opacity-80"
+        >
           {t("backToDashboard" as any)}
         </Link>
-      </HStack>
-    </VStack>
+      </div>
+    </div>
   );
 }
 
 function InvalidLinkState() {
   const { t } = useTranslation();
   return (
-    <VStack gap={4} align="center">
-      <Icon icon={X} size="lg" color="error" />
-      <Heading level={2}>{t("invalidToken" as any)}</Heading>
-      <Text color="secondary">
+    <div className="flex flex-col items-center gap-4 text-center">
+      <div className="size-12 rounded-full bg-[var(--zk-error-bg)] text-[var(--zk-error-text)] flex items-center justify-center">
+        <X size={24} weight="bold" aria-hidden="true" />
+      </div>
+      <h2 className="text-xl font-bold text-[var(--zk-text)]">{t("invalidToken" as any)}</h2>
+      <p className="text-sm text-[var(--zk-text-secondary)]">
         {t("invalidLinkEmailChangeDesc" as any)}
-      </Text>
-      <Button
-        label={t("backToDashboard" as any)}
-        variant="primary"
-        size="md"
+      </p>
+      <Link
         href="/dashboard"
-      />
-    </VStack>
+        className="zk-button zk-button-primary zk-button-md zk-full-width"
+      >
+        {t("backToDashboard" as any)}
+      </Link>
+    </div>
   );
 }
 
 export default function ChangeEmailConfirmPage() {
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
-          />
-          <RegionLanguageSwitcher />
-        </HStack>
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <Suspense
-          fallback={
-            <VStack gap={4} align="center" padding={6}>
-              <Spinner size="md" />
-            </VStack>
-          }
-        >
-          <ChangeEmailConfirmForm />
-        </Suspense>
-      </VStack>
+      <Suspense
+        fallback={
+          <div className="flex flex-col items-center justify-center p-6">
+            <Spinner size="md" />
+          </div>
+        }
+      >
+        <ChangeEmailConfirmForm />
+      </Suspense>
     </Card>
   );
 }

@@ -10,18 +10,9 @@ import {
   verifyOtpAction,
   resendOtpAction,
 } from "@/actions/auth-actions";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { InputGroup } from "@astryxdesign/core/InputGroup";
-import { Banner } from "@astryxdesign/core/Banner";
-import { CheckboxInput } from "@astryxdesign/core/CheckboxInput";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Button } from "@/components/ui/button";
+import { TextField, CheckboxField } from "@/components/ui/form-controls";
+import { Card, Banner, Divider, PasswordField } from "@/components/ui/surfaces";
 import {
   InputOTP,
   InputOTPGroup,
@@ -30,8 +21,6 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { isDisposableEmail } from "@/lib/disposable-domains";
 import {
-  Eye,
-  EyeSlash,
   Check,
   X,
   UserPlus,
@@ -129,130 +118,111 @@ function OtpForm({ state }: { state: any }) {
   };
 
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
-          />
-          <RegionLanguageSwitcher />
-        </HStack>
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <VStack gap={1}>
-          <Heading level={1}>{t("verifyEmail")}</Heading>
-          <Text color="secondary">
-            {t("verifyEmailDesc", { email: state.email || "" })}
-          </Text>
-        </VStack>
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
+          {t("verifyEmail")}
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
+          {t("verifyEmailDesc", { email: state.email || "" })}
+        </p>
+      </div>
 
-        <form onSubmit={handleVerifyOtp} noValidate>
-          <VStack gap={4}>
-            {isLockedOut && (
-              <Banner status="error" title={t("otpLockedOut")} />
-            )}
+      <form onSubmit={handleVerifyOtp} noValidate className="flex flex-col gap-4">
+        {isLockedOut && (
+          <Banner status="error" title={t("otpLockedOut")} />
+        )}
 
-            {!isLockedOut &&
-              attemptsRemaining !== null &&
-              attemptsRemaining < 5 && (
-                <Banner
-                  status="warning"
-                  title={
-                    attemptsRemaining === 1
-                      ? t("otpRemainingAttemptsOne")
-                      : t("otpRemainingAttempts", { count: attemptsRemaining })
-                  }
-                />
-              )}
-
-            {otpError && (
-              <Banner status="error" title={otpError} />
-            )}
-
-            <VStack gap={2} align="center">
-              <InputOTP
-                maxLength={6}
-                value={otp}
-                aria-invalid={!!otpError}
-                aria-describedby={otpError ? "sign-up-otp-error" : undefined}
-                onChange={(val) => {
-                  if (isLockedOut || isExpired) return;
-                  setOtp(val);
-                  setOtpError("");
-                  if (val.length === 6) {
-                    submitOtp(val);
-                  }
-                }}
-                disabled={isVerifying || isLockedOut || isExpired}
-                autoFocus={!isLockedOut && !isExpired}
-              >
-                <InputOTPGroup className="w-full flex gap-2">
-                  <InputOTPSlot
-                    index={0}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={1}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={2}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={3}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={4}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={5}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                </InputOTPGroup>
-              </InputOTP>
-            </VStack>
-
-            <OtpValidityTimer
-              expiresAt={otpExpiresAt}
-              onExpired={setIsExpired}
+        {!isLockedOut &&
+          attemptsRemaining !== null &&
+          attemptsRemaining < 5 && (
+            <Banner
+              status="warning"
+              title={
+                attemptsRemaining === 1
+                  ? t("otpRemainingAttemptsOne")
+                  : t("otpRemainingAttempts", { count: attemptsRemaining })
+              }
             />
+          )}
 
-            <HStack gap={2} vAlign="center" wrap="wrap">
-              <Button
-                label={
-                  isLockedOut || isExpired
-                    ? t("requestNewCodeNow")
-                    : countdown > 0
-                      ? t("resendIn", { time: countdown })
-                      : t("resendCode")
-                }
-                variant={isLockedOut || isExpired ? "primary" : "secondary"}
-                size="md"
-                isDisabled={countdown > 0 && !isLockedOut && !isExpired}
-                onClick={handleResendOtp}
-              />
-              {!isLockedOut && !isExpired && (
-                <Button
-                  label={t("confirm")}
-                  variant="primary"
-                  size="md"
-                  type="submit"
-                  isLoading={isVerifying}
-                  isDisabled={isVerifying || otp.length < 6}
-                  icon={<Icon icon={PaperPlaneRight} size="sm" />}
-                  onClick={(e: any) => handleVerifyOtp(e)}
+        {otpError && (
+          <Banner status="error" title={otpError} />
+        )}
+
+        <div className="flex flex-col items-center gap-2">
+          <InputOTP
+            maxLength={6}
+            value={otp}
+            aria-invalid={!!otpError}
+            aria-describedby={otpError ? "sign-up-otp-error" : undefined}
+            onChange={(val) => {
+              if (isLockedOut || isExpired) return;
+              setOtp(val);
+              setOtpError("");
+              if (val.length === 6) {
+                submitOtp(val);
+              }
+            }}
+            disabled={isVerifying || isLockedOut || isExpired}
+            autoFocus={!isLockedOut && !isExpired}
+          >
+            <InputOTPGroup className="w-full flex gap-2">
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <InputOTPSlot
+                  key={index}
+                  index={index}
+                  className="h-14 flex-1 text-2xl rounded-xl border-[var(--zk-border-strong)] text-[var(--zk-text)] font-inter tabular-nums"
                 />
-              )}
-            </HStack>
-          </VStack>
-        </form>
-      </VStack>
+              ))}
+            </InputOTPGroup>
+          </InputOTP>
+        </div>
+
+        <OtpValidityTimer
+          expiresAt={otpExpiresAt}
+          onExpired={setIsExpired}
+        />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant={isLockedOut || isExpired ? "primary" : "secondary"}
+            size="md"
+            disabled={countdown > 0 && !isLockedOut && !isExpired}
+            onClick={handleResendOtp}
+          >
+            {isLockedOut || isExpired
+              ? t("requestNewCodeNow")
+              : countdown > 0
+                ? t("resendIn", { time: countdown })
+                : t("resendCode")}
+          </Button>
+          {!isLockedOut && !isExpired && (
+            <Button
+              variant="primary"
+              size="md"
+              type="submit"
+              loading={isVerifying}
+              disabled={isVerifying || otp.length < 6}
+            >
+              <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />
+              <span>{t("confirm")}</span>
+            </Button>
+          )}
+        </div>
+      </form>
     </Card>
   );
 }
@@ -277,8 +247,6 @@ function SignUpForm({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
 
@@ -376,338 +344,255 @@ function SignUpForm({
     }
   };
 
+  const passwordReqs = [
+    { ok: password.length >= 8, label: t("passwordReqLength" as any) },
+    { ok: /[A-Z]/.test(password), label: t("passwordReqUppercase" as any) },
+    { ok: /[a-z]/.test(password), label: t("passwordReqLowercase" as any) },
+    {
+      ok:
+        /[0-9]/.test(password) ||
+        /[!@#$%^&*(),.?":{}|<>]/.test(password),
+      label: t("passwordReqNumberOrSpecial" as any),
+    },
+  ];
+
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
+
+      <Divider />
+
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
+          {t("signUp")}
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
+          {t("signUpDescription")}
+        </p>
+      </div>
+
+      {/* Progress indicator */}
+      <div className="flex items-center gap-2" aria-hidden="true">
+        {[1, 2, 3].map((s) => (
+          <div
+            key={s}
+            style={{
+              flex: s <= step ? 2 : 1,
+              height: 4,
+              borderRadius: 2,
+              backgroundColor:
+                s <= step ? "var(--zk-text)" : "var(--zk-border-strong)",
+              transition: "all 0.25s ease",
+            }}
           />
-          <RegionLanguageSwitcher />
-        </HStack>
+        ))}
+      </div>
 
-        <Divider />
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        {state.error && (
+          <Banner
+            status="error"
+            title={t(state.error as any)}
+          />
+        )}
 
-        <VStack gap={1}>
-          <Heading level={1}>{t("signUp")}</Heading>
-          <Text color="secondary">{t("signUpDescription")}</Text>
-        </VStack>
-
-        {/* Progress indicator */}
-        <HStack gap={2} vAlign="center">
-          {[1, 2, 3].map((s) => (
-            <div
-              key={s}
-              style={{
-                flex: s <= step ? 2 : 1,
-                height: 4,
-                borderRadius: 2,
-                backgroundColor:
-                  s <= step ? "currentColor" : "var(--neutral-300, #d4d4d4)",
-                transition: "all 0.3s ease",
+        {/* Step 1: Restaurant Name & Name */}
+        {step === 1 && (
+          <>
+            <TextField
+              label={t("restaurantName")}
+              value={restaurantName}
+              onChange={(val) => {
+                setRestaurantName(val);
+                setFieldErrors((errs) => ({ ...errs, restaurantName: "" }));
               }}
+              placeholder={t("businessPlaceholder")}
+              required
+              error={fieldErrors.restaurantName || null}
             />
-          ))}
-        </HStack>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <VStack gap={4}>
-            {state.error && (
-              <Banner
-                status="error"
-                title={t(state.error as any)}
-              />
-            )}
+            <TextField
+              label={t("name")}
+              value={name}
+              onChange={(val) => setName(val)}
+              placeholder={t("namePlaceholder")}
+            />
+          </>
+        )}
 
-            {/* Step 1: Restaurant Name & Name */}
-            {step === 1 && (
-              <>
-                <TextInput
-                  label={t("restaurantName")}
-                  size="lg"
-                  value={restaurantName}
-                  onChange={(val) => {
-                    setRestaurantName(val);
-                    setFieldErrors((errs) => ({ ...errs, restaurantName: "" }));
-                  }}
-                  placeholder={t("businessPlaceholder")}
-                  isRequired
-                  width="100%"
-                  status={fieldErrors.restaurantName ? { type: "error", message: fieldErrors.restaurantName } : undefined}
-                />
+        {/* Step 2: Email & Password */}
+        {step === 2 && (
+          <>
+            <TextField
+              label={t("email")}
+              type="email"
+              value={email}
+              onChange={(val) => {
+                setEmail(val);
+                setFieldErrors((errs) => ({ ...errs, email: "" }));
+              }}
+              placeholder={t("emailPlaceholder")}
+              required
+              autoComplete="email"
+              error={fieldErrors.email || null}
+            />
 
-                <TextInput
-                  label={t("name")}
-                  size="lg"
-                  value={name}
-                  onChange={(val) => setName(val)}
-                  placeholder={t("namePlaceholder")}
-                  width="100%"
-                />
-              </>
-            )}
+            <PasswordField
+              label={t("password")}
+              value={password}
+              onChange={(val) => {
+                setPassword(val);
+                setFieldErrors((errs) => ({ ...errs, password: "" }));
+              }}
+              required
+              autoComplete="new-password"
+              showLabel={t("showPassword")}
+              hideLabel={t("hidePassword")}
+              error={fieldErrors.password || null}
+            />
 
-            {/* Step 2: Email & Password */}
-            {step === 2 && (
-              <>
-                <TextInput
-                  label={t("email")}
-                  type="email"
-                  size="lg"
-                  value={email}
-                  onChange={(val) => {
-                    setEmail(val);
-                    setFieldErrors((errs) => ({ ...errs, email: "" }));
-                  }}
-                  placeholder={t("emailPlaceholder")}
-                  isRequired
-                  width="100%"
-                  autoComplete="email"
-                  status={fieldErrors.email ? { type: "error", message: fieldErrors.email } : undefined}
-                />
-
-                <VStack gap={1} width="100%">
-                  <InputGroup
-                    label={t("password")}
-                    isRequired
-                    size="lg"
-                    status={fieldErrors.password ? { type: "error", message: fieldErrors.password } : undefined}
-                  >
-                    <TextInput
-                      label={t("password")}
-                      isLabelHidden
-                      size="lg"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(val) => {
-                        setPassword(val);
-                        setFieldErrors((errs) => ({ ...errs, password: "" }));
-                      }}
-                      isRequired
-                      autoComplete="new-password"
-                    />
-                    <Button
-                      label={
-                        showPassword ? t("hidePassword") : t("showPassword")
-                      }
-                      isIconOnly
-                      variant="ghost"
-                      size="lg"
-                      onClick={() => setShowPassword(!showPassword)}
-                      icon={
-                        <Icon
-                          icon={showPassword ? EyeSlash : Eye}
-                          size="md"
-                        />
-                      }
-                    />
-                  </InputGroup>
-                </VStack>
-
-                {/* Password Requirements */}
-                <VStack gap={1}>
-                  <HStack gap={2} vAlign="center">
-                    <Icon
-                      icon={password.length >= 8 ? Check : X}
-                      size="sm"
-                    />
-                    <Text
-                      size="sm"
-                      color={password.length >= 8 ? "primary" : "secondary"}
-                    >
-                      {t("passwordReqLength" as any)}
-                    </Text>
-                  </HStack>
-
-                  <HStack gap={2} vAlign="center">
-                    <Icon
-                      icon={/[A-Z]/.test(password) ? Check : X}
-                      size="sm"
-                    />
-                    <Text
-                      size="sm"
-                      color={/[A-Z]/.test(password) ? "primary" : "secondary"}
-                    >
-                      {t("passwordReqUppercase" as any)}
-                    </Text>
-                  </HStack>
-
-                  <HStack gap={2} vAlign="center">
-                    <Icon
-                      icon={/[a-z]/.test(password) ? Check : X}
-                      size="sm"
-                    />
-                    <Text
-                      size="sm"
-                      color={/[a-z]/.test(password) ? "primary" : "secondary"}
-                    >
-                      {t("passwordReqLowercase" as any)}
-                    </Text>
-                  </HStack>
-
-                  <HStack gap={2} vAlign="center">
-                    <Icon
-                      icon={
-                        /[0-9]/.test(password) ||
-                        /[!@#$%^&*(),.?":{}|<>]/.test(password)
-                          ? Check
-                          : X
-                      }
-                      size="sm"
-                    />
-                    <Text
-                      size="sm"
-                      color={
-                        /[0-9]/.test(password) ||
-                        /[!@#$%^&*(),.?":{}|<>]/.test(password)
-                          ? "primary"
-                          : "secondary"
-                      }
-                    >
-                      {t("passwordReqNumberOrSpecial" as any)}
-                    </Text>
-                  </HStack>
-                </VStack>
-              </>
-            )}
-
-            {/* Step 3: Confirm Password & Terms */}
-            {step === 3 && (
-              <>
-                <VStack gap={1} width="100%">
-                  <InputGroup
-                    label={t("confirmPassword")}
-                    isRequired
-                    size="lg"
-                    status={fieldErrors.confirmPassword ? { type: "error", message: fieldErrors.confirmPassword } : undefined}
-                  >
-                    <TextInput
-                      label={t("confirmPassword")}
-                      isLabelHidden
-                      size="lg"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(val) => {
-                        setConfirmPassword(val);
-                        setFieldErrors((errs) => ({
-                          ...errs,
-                          confirmPassword: "",
-                        }));
-                      }}
-                      isRequired
-                      autoComplete="new-password"
-                    />
-                    <Button
-                      label={
-                        showConfirmPassword
-                           ? t("hidePassword")
-                          : t("showPassword")
-                      }
-                      isIconOnly
-                      variant="ghost"
-                      size="lg"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      icon={
-                        <Icon
-                          icon={showConfirmPassword ? EyeSlash : Eye}
-                          size="md"
-                        />
-                      }
-                    />
-                  </InputGroup>
-                </VStack>
-
-                <VStack gap={1}>
-                  <CheckboxInput
-                    label={t("agreeToTerms")}
-                    value={termsAccepted}
-                    onChange={(checked) => {
-                      setTermsAccepted(checked);
-                      setFieldErrors((errs) => ({ ...errs, terms: "" }));
-                    }}
-                    isRequired
-                  />
-                  <Text size="sm" color="secondary">
-                    {t("termsAgreementPrefix")}
-                    <a
-                      href={t("termsUrl")}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ textDecoration: "underline" }}
-                    >
-                      {t("termsAndConditions")}
-                    </a>
-                    {t("termsAgreementMiddle")}
-                    <a
-                      href={t("privacyUrl")}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ textDecoration: "underline" }}
-                    >
-                      {t("privacyPolicy")}
-                    </a>
-                    {t("termsAgreementSuffix")}
-                  </Text>
-                  {fieldErrors.terms && (
-                    <Banner status="error" title={fieldErrors.terms} />
+            <ul className="flex flex-col gap-1.5 text-xs">
+              {passwordReqs.map((req, idx) => (
+                <li
+                  key={idx}
+                  className={`flex items-center gap-2 ${
+                    req.ok
+                      ? "text-[var(--zk-text)] font-medium"
+                      : "text-[var(--zk-text-secondary)]"
+                  }`}
+                >
+                  {req.ok ? (
+                    <Check size={14} weight="bold" aria-hidden="true" />
+                  ) : (
+                    <X size={14} weight="bold" aria-hidden="true" />
                   )}
-                </VStack>
-              </>
-            )}
+                  <span>{req.label}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
-            {/* Navigation Buttons */}
-            <HStack gap={3} vAlign="center">
-              {step > 1 && (
-                <Button
-                  label={t("back")}
-                  variant="secondary"
-                  size="lg"
-                  onClick={handleBack}
-                  isDisabled={isPending || isCheckingEmail}
-                  icon={<Icon icon={ArrowLeft} size="md" />}
-                />
+        {/* Step 3: Confirm Password & Terms */}
+        {step === 3 && (
+          <>
+            <PasswordField
+              label={t("confirmPassword")}
+              value={confirmPassword}
+              onChange={(val) => {
+                setConfirmPassword(val);
+                setFieldErrors((errs) => ({
+                  ...errs,
+                  confirmPassword: "",
+                }));
+              }}
+              required
+              autoComplete="new-password"
+              showLabel={t("showPassword")}
+              hideLabel={t("hidePassword")}
+              error={fieldErrors.confirmPassword || null}
+            />
+
+            <div className="flex flex-col gap-1.5">
+              <CheckboxField
+                label={t("agreeToTerms")}
+                checked={termsAccepted}
+                onChange={(checked) => {
+                  setTermsAccepted(checked);
+                  setFieldErrors((errs) => ({ ...errs, terms: "" }));
+                }}
+              />
+              <p className="text-xs text-[var(--zk-text-secondary)] leading-relaxed">
+                {t("termsAgreementPrefix")}
+                <a
+                  href={t("termsUrl")}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-4 text-[var(--zk-text)] font-medium"
+                >
+                  {t("termsAndConditions")}
+                </a>
+                {t("termsAgreementMiddle")}
+                <a
+                  href={t("privacyUrl")}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-4 text-[var(--zk-text)] font-medium"
+                >
+                  {t("privacyPolicy")}
+                </a>
+                {t("termsAgreementSuffix")}
+              </p>
+              {fieldErrors.terms && (
+                <Banner status="error" title={fieldErrors.terms} />
               )}
+            </div>
+          </>
+        )}
 
-              {step < 3 ? (
-                <Button
-                  label={t("next")}
-                  variant="primary"
-                  size="lg"
-                  type="button"
-                  isLoading={isCheckingEmail}
-                  isDisabled={isCheckingEmail}
-                  onClick={handleNext}
-                  icon={<Icon icon={ArrowRight} size="md" />}
-                />
-              ) : (
-                <Button
-                  label={t("signUp")}
-                  variant="primary"
-                  size="lg"
-                  type="submit"
-                  isLoading={isPending}
-                  isDisabled={isPending}
-                  onClick={(e: any) => handleSubmit(e)}
-                  icon={<Icon icon={UserPlus} size="md" />}
-                />
-              )}
-            </HStack>
-          </VStack>
-        </form>
+        {/* Navigation Buttons */}
+        <div className="flex items-center gap-3 pt-1">
+          {step > 1 && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              onClick={handleBack}
+              disabled={isPending || isCheckingEmail}
+            >
+              <ArrowLeft size={18} weight="bold" aria-hidden="true" />
+              <span>{t("back")}</span>
+            </Button>
+          )}
 
-        <Divider />
+          {step < 3 ? (
+            <Button
+              variant="primary"
+              size="lg"
+              type="button"
+              fullWidth={step === 1}
+              className="flex-1"
+              loading={isCheckingEmail}
+              disabled={isCheckingEmail}
+              onClick={handleNext}
+            >
+              <span>{t("next")}</span>
+              <ArrowRight size={18} weight="bold" aria-hidden="true" />
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              size="lg"
+              type="submit"
+              className="flex-1"
+              loading={isPending}
+              disabled={isPending}
+            >
+              <UserPlus size={18} weight="bold" aria-hidden="true" />
+              <span>{t("signUp")}</span>
+            </Button>
+          )}
+        </div>
+      </form>
 
-        <HStack justify="center" vAlign="center" gap={1}>
-          <Text color="secondary">{t("hasAccount")}</Text>
-          <Link href="/sign-in" style={{ fontWeight: 600 }}>
-            {t("signIn")}
-          </Link>
-        </HStack>
-      </VStack>
+      <Divider />
+
+      <div className="flex items-center justify-center gap-1.5 text-sm">
+        <span className="text-[var(--zk-text-secondary)]">{t("hasAccount")}</span>
+        <Link
+          href="/sign-in"
+          className="font-semibold text-[var(--zk-text)] underline underline-offset-4 hover:opacity-80"
+        >
+          {t("signIn")}
+        </Link>
+      </div>
     </Card>
   );
 }

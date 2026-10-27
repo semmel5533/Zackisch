@@ -7,16 +7,9 @@ import { resetPasswordAction } from "@/actions/auth-actions";
 import { useTranslation } from "@/lib/i18n";
 import { PaperPlaneRight, ArrowLeft } from "@phosphor-icons/react";
 import { toast } from "@/components/common/toast";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { Banner } from "@astryxdesign/core/Banner";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Button } from "@/components/ui/button";
+import { TextField } from "@/components/ui/form-controls";
+import { Card, Banner, Divider } from "@/components/ui/surfaces";
 
 export default function ResetPasswordPage() {
   const [state, formAction, isPending] = useActionState(
@@ -56,96 +49,95 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
-          />
-          <RegionLanguageSwitcher />
-        </HStack>
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        {state.success ? (
-          <VStack gap={4}>
-            <VStack gap={1}>
-              <Heading level={1}>
-                {t("resetPasswordLinkSent" as any)}
-              </Heading>
-              <Text color="secondary">
-                {t("resetPasswordSent")}
-              </Text>
-            </VStack>
+      {state.success ? (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
+              {t("resetPasswordLinkSent" as any)}
+            </h1>
+            <p className="text-sm text-[var(--zk-text-secondary)]">
+              {t("resetPasswordSent")}
+            </p>
+          </div>
+
+          <Link
+            href="/sign-in"
+            className="zk-button zk-button-primary zk-button-md zk-full-width"
+          >
+            <ArrowLeft size={16} weight="bold" aria-hidden="true" />
+            <span>{t("backToSignIn")}</span>
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
+              {t("resetPassword")}
+            </h1>
+            <p className="text-sm text-[var(--zk-text-secondary)]">
+              {t("resetPasswordDescription")}
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+            {state.error && (
+              <Banner
+                status="error"
+                title={t(state.error as any)}
+              />
+            )}
+
+            <TextField
+              label={t("email")}
+              type="email"
+              value={email}
+              onChange={(val) => {
+                setEmail(val);
+                setFieldErrors((errs) => ({ ...errs, email: "" }));
+              }}
+              placeholder={t("emailPlaceholder")}
+              required
+              autoComplete="email"
+              error={fieldErrors.email || null}
+            />
 
             <Button
-              label={t("backToSignIn")}
               variant="primary"
               size="md"
+              type="submit"
+              fullWidth
+              loading={isPending}
+            >
+              <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />
+              <span>{t("sendLink")}</span>
+            </Button>
+          </form>
+
+          <Divider />
+
+          <div className="flex items-center justify-center gap-1.5 text-sm">
+            <span className="text-[var(--zk-text-secondary)]">{t("rememberedAccount")}</span>
+            <Link
               href="/sign-in"
-              icon={<Icon icon={ArrowLeft} size="sm" />}
-            />
-          </VStack>
-        ) : (
-          <VStack gap={4}>
-            <VStack gap={1}>
-              <Heading level={1}>
-                {t("resetPassword")}
-              </Heading>
-              <Text color="secondary">
-                {t("resetPasswordDescription")}
-              </Text>
-            </VStack>
-
-            <form onSubmit={handleSubmit} noValidate>
-              <VStack gap={4}>
-                {state.error && (
-                  <Banner
-                    status="error"
-                    title={t(state.error as any)}
-                  />
-                )}
-
-                <TextInput
-                  label={t("email")}
-                  type="email"
-                  value={email}
-                  onChange={(val) => {
-                    setEmail(val);
-                    setFieldErrors((errs) => ({ ...errs, email: "" }));
-                  }}
-                  placeholder={t("emailPlaceholder")}
-                  isRequired
-                  width="100%"
-                  autoComplete="email"
-                  status={fieldErrors.email ? { type: "error", message: fieldErrors.email } : undefined}
-                />
-
-                <Button
-                  label={t("sendLink")}
-                  variant="primary"
-                  size="md"
-                  type="submit"
-                  isLoading={isPending}
-                  icon={<Icon icon={PaperPlaneRight} size="sm" />}
-                  onClick={(e: any) => handleSubmit(e)}
-                />
-              </VStack>
-            </form>
-
-            <Divider />
-
-            <HStack justify="center" vAlign="center" gap={1}>
-              <Text color="secondary">{t("rememberedAccount")}</Text>
-              <Link href="/sign-in" style={{ fontWeight: 600 }}>
-                {t("signIn")}
-              </Link>
-            </HStack>
-          </VStack>
-        )}
-      </VStack>
+              className="font-semibold text-[var(--zk-text)] underline underline-offset-4 hover:opacity-80"
+            >
+              {t("signIn")}
+            </Link>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }

@@ -10,13 +10,23 @@ export function TextField({
   error,
   type = "text",
   placeholder,
+  autoComplete,
+  required,
+  disabled,
+  readOnly,
+  description,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   error?: string | null;
-  type?: "text" | "email";
+  type?: "text" | "email" | "password" | "number" | "url" | "tel";
   placeholder?: string;
+  autoComplete?: string;
+  required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  description?: string;
 }) {
   const id = useId();
   return (
@@ -30,12 +40,21 @@ export function TextField({
         value={value}
         onValueChange={onChange}
         placeholder={placeholder}
+        autoComplete={autoComplete}
+        required={required}
+        disabled={disabled}
+        readOnly={readOnly}
         className="zk-input"
         aria-invalid={!!error}
-        aria-describedby={error ? `${id}-error` : undefined}
+        aria-describedby={error ? `${id}-error` : description ? `${id}-desc` : undefined}
       />
+      {description && !error && (
+        <p id={`${id}-desc`} className="text-xs text-[var(--zk-text-secondary)]">
+          {description}
+        </p>
+      )}
       {error && (
-        <p id={`${id}-error`} role="alert" className="guest-option-error">
+        <p id={`${id}-error`} role="alert" className="zk-field-error guest-option-error">
           {error}
         </p>
       )}
@@ -46,16 +65,19 @@ export function CheckboxField({
   label,
   checked,
   onChange,
+  disabled,
 }: {
-  label: string;
+  label: React.ReactNode;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  disabled?: boolean;
 }) {
   return (
     <label className="zk-checkbox-label">
       <Checkbox.Root
         checked={checked}
         onCheckedChange={onChange}
+        disabled={disabled}
         className="guest-option-checkbox"
       >
         <Checkbox.Indicator>

@@ -8,29 +8,16 @@ import {
   verifyOtpAction,
   resendOtpAction,
 } from "@/actions/auth-actions";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { InputGroup } from "@astryxdesign/core/InputGroup";
-import { Banner } from "@astryxdesign/core/Banner";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Button } from "@/components/ui/button";
+import { TextField } from "@/components/ui/form-controls";
+import { Card, Banner, Divider, PasswordField } from "@/components/ui/surfaces";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/common/input-otp";
 import { useTranslation } from "@/lib/i18n";
-import {
-  Eye,
-  EyeSlash,
-  SignIn,
-  PaperPlaneRight,
-} from "@phosphor-icons/react";
+import { SignIn, PaperPlaneRight } from "@phosphor-icons/react";
 import { OtpValidityTimer } from "@/components/auth/otp-validity-timer";
 import { toast } from "@/components/common/toast";
 
@@ -117,129 +104,108 @@ function OtpForm({ state }: { state: any }) {
   };
 
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
-          />
-          <RegionLanguageSwitcher />
-        </HStack>
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <VStack gap={1}>
-          <Heading level={1}>
-            {t("verifyLogin")}
-          </Heading>
-          <Text color="secondary">
-            {t("verifyLoginDesc", { email: state.email || "" })}
-          </Text>
-        </VStack>
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
+          {t("verifyLogin")}
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
+          {t("verifyLoginDesc", { email: state.email || "" })}
+        </p>
+      </div>
 
-        <form onSubmit={handleVerifyOtp} noValidate>
-          <VStack gap={4}>
-            {isLockedOut && (
-              <Banner status="error" title={t("otpLockedOut")} />
-            )}
+      <form onSubmit={handleVerifyOtp} noValidate className="flex flex-col gap-4">
+        {isLockedOut && (
+          <Banner status="error" title={t("otpLockedOut")} />
+        )}
 
-            {!isLockedOut &&
-              attemptsRemaining !== null &&
-              attemptsRemaining < 5 && (
-                <Banner
-                  status="warning"
-                  title={
-                    attemptsRemaining === 1
-                      ? t("otpRemainingAttemptsOne")
-                      : t("otpRemainingAttempts", { count: attemptsRemaining })
-                  }
+        {!isLockedOut &&
+          attemptsRemaining !== null &&
+          attemptsRemaining < 5 && (
+            <Banner
+              status="warning"
+              title={
+                attemptsRemaining === 1
+                  ? t("otpRemainingAttemptsOne")
+                  : t("otpRemainingAttempts", { count: attemptsRemaining })
+              }
+            />
+          )}
+
+        {otpError && (
+          <Banner status="error" title={otpError} />
+        )}
+
+        <div className="flex flex-col items-center gap-2">
+          <InputOTP
+            maxLength={6}
+            value={otp}
+            aria-invalid={!!otpError}
+            aria-describedby={otpError ? "sign-in-otp-error" : undefined}
+            onChange={(val) => {
+              if (isLockedOut || isExpired) return;
+              setOtp(val);
+              setOtpError("");
+              if (val.length === 6) {
+                submitOtp(val);
+              }
+            }}
+            disabled={isVerifying || isLockedOut || isExpired}
+            autoFocus={!isLockedOut && !isExpired}
+          >
+            <InputOTPGroup className="w-full flex gap-2">
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <InputOTPSlot
+                  key={index}
+                  index={index}
+                  className="h-14 flex-1 text-2xl rounded-xl border-[var(--zk-border-strong)] text-[var(--zk-text)] font-inter tabular-nums"
                 />
-              )}
+              ))}
+            </InputOTPGroup>
+          </InputOTP>
+        </div>
 
-            {otpError && (
-              <Banner status="error" title={otpError} />
-            )}
+        <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
 
-            <VStack gap={2} align="center">
-              <InputOTP
-                maxLength={6}
-                value={otp}
-                aria-invalid={!!otpError}
-                aria-describedby={otpError ? "sign-in-otp-error" : undefined}
-                onChange={(val) => {
-                  if (isLockedOut || isExpired) return;
-                  setOtp(val);
-                  setOtpError("");
-                  if (val.length === 6) {
-                    submitOtp(val);
-                  }
-                }}
-                disabled={isVerifying || isLockedOut || isExpired}
-                autoFocus={!isLockedOut && !isExpired}
-              >
-                <InputOTPGroup className="w-full flex gap-2">
-                  <InputOTPSlot
-                    index={0}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={1}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={2}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={3}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={4}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                  <InputOTPSlot
-                    index={5}
-                    className="h-14 flex-1 text-2xl rounded-xl border-border text-foreground font-inter tabular-nums"
-                  />
-                </InputOTPGroup>
-              </InputOTP>
-            </VStack>
-
-            <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
-
-            <HStack gap={2} vAlign="center" wrap="wrap">
-              <Button
-                label={
-                  isLockedOut || isExpired
-                    ? t("requestNewCodeNow")
-                    : countdown > 0
-                      ? t("resendIn", { time: countdown })
-                      : t("resendCode")
-                }
-                variant={isLockedOut || isExpired ? "primary" : "secondary"}
-                size="md"
-                isDisabled={countdown > 0 && !isLockedOut && !isExpired}
-                onClick={handleResendOtp}
-              />
-              {!isLockedOut && !isExpired && (
-                <Button
-                  label={t("confirm")}
-                  variant="primary"
-                  size="md"
-                  type="submit"
-                  isLoading={isVerifying}
-                  isDisabled={isVerifying || otp.length < 6}
-                  icon={<Icon icon={PaperPlaneRight} size="sm" />}
-                  onClick={(e: any) => handleVerifyOtp(e)}
-                />
-              )}
-            </HStack>
-          </VStack>
-        </form>
-      </VStack>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant={isLockedOut || isExpired ? "primary" : "secondary"}
+            size="md"
+            disabled={countdown > 0 && !isLockedOut && !isExpired}
+            onClick={handleResendOtp}
+          >
+            {isLockedOut || isExpired
+              ? t("requestNewCodeNow")
+              : countdown > 0
+                ? t("resendIn", { time: countdown })
+                : t("resendCode")}
+          </Button>
+          {!isLockedOut && !isExpired && (
+            <Button
+              variant="primary"
+              size="md"
+              type="submit"
+              loading={isVerifying}
+              disabled={isVerifying || otp.length < 6}
+            >
+              <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />
+              <span>{t("confirm")}</span>
+            </Button>
+          )}
+        </div>
+      </form>
     </Card>
   );
 }
@@ -256,7 +222,6 @@ function SignInForm({
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -289,123 +254,94 @@ function SignInForm({
   };
 
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
+
+      <Divider />
+
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
+          {t("signIn")}
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
+          {t("signInDescription")}
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        {state.error && (
+          <Banner
+            status="error"
+            title={t(state.error as any)}
           />
-          <RegionLanguageSwitcher />
-        </HStack>
+        )}
 
-        <Divider />
+        <TextField
+          label={t("email")}
+          type="email"
+          value={email}
+          onChange={(val) => {
+            setEmail(val);
+            setFieldErrors((errs) => ({ ...errs, email: "" }));
+          }}
+          placeholder={t("emailPlaceholder")}
+          required
+          autoComplete="email"
+          error={fieldErrors.email || null}
+        />
 
-        <VStack gap={1}>
-          <Heading level={1}>
-            {t("signIn")}
-          </Heading>
-          <Text color="secondary">
-            {t("signInDescription")}
-          </Text>
-        </VStack>
+        <PasswordField
+          label={t("password")}
+          value={password}
+          onChange={(val) => {
+            setPassword(val);
+            setFieldErrors((errs) => ({ ...errs, password: "" }));
+          }}
+          required
+          autoComplete="current-password"
+          showLabel={t("showPassword")}
+          hideLabel={t("hidePassword")}
+          error={fieldErrors.password || null}
+          rightHeader={
+            <Link
+              href="/reset-password"
+              className="text-xs font-medium text-[var(--zk-text-secondary)] hover:text-[var(--zk-text)] underline-offset-4 hover:underline"
+            >
+              {t("forgotPassword")}
+            </Link>
+          }
+        />
 
-        <form onSubmit={handleSubmit} noValidate>
-          <VStack gap={4}>
-            {state.error && (
-              <Banner
-                status="error"
-                title={t(state.error as any)}
-              />
-            )}
+        <Button
+          variant="primary"
+          size="lg"
+          type="submit"
+          fullWidth
+          loading={isPending}
+        >
+          <SignIn size={18} weight="bold" aria-hidden="true" />
+          <span>{t("signIn")}</span>
+        </Button>
+      </form>
 
-            <TextInput
-              label={t("email")}
-              type="email"
-              size="lg"
-              value={email}
-              onChange={(val) => {
-                setEmail(val);
-                setFieldErrors((errs) => ({ ...errs, email: "" }));
-              }}
-              placeholder={t("emailPlaceholder")}
-              isRequired
-              width="100%"
-              autoComplete="email"
-              status={fieldErrors.email ? { type: "error", message: fieldErrors.email } : undefined}
-            />
+      <Divider />
 
-            <VStack gap={1} width="100%">
-              <HStack justify="between" vAlign="center">
-                <Text weight="semibold">{t("password")}</Text>
-                <Link
-                  href="/reset-password"
-                  style={{ textDecoration: "none" }}
-                >
-                  <Text color="secondary">
-                    {t("forgotPassword")}
-                  </Text>
-                </Link>
-              </HStack>
-
-              <InputGroup
-                label={t("password")}
-                isLabelHidden
-                isRequired
-                size="lg"
-                status={fieldErrors.password ? { type: "error", message: fieldErrors.password } : undefined}
-              >
-                <TextInput
-                  label={t("password")}
-                  isLabelHidden
-                  size="lg"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(val) => {
-                    setPassword(val);
-                    setFieldErrors((errs) => ({ ...errs, password: "" }));
-                  }}
-                  isRequired
-                  autoComplete="current-password"
-                />
-                <Button
-                  label={showPassword ? t("hidePassword") : t("showPassword")}
-                  isIconOnly
-                  variant="ghost"
-                  size="lg"
-                  onClick={() => setShowPassword(!showPassword)}
-                  icon={
-                    <Icon
-                      icon={showPassword ? EyeSlash : Eye}
-                      size="md"
-                    />
-                  }
-                />
-              </InputGroup>
-            </VStack>
-
-            <Button
-              label={t("signIn")}
-              variant="primary"
-              size="lg"
-              type="submit"
-              isLoading={isPending}
-              icon={<Icon icon={SignIn} size="md" />}
-              onClick={(e: any) => handleSubmit(e)}
-            />
-          </VStack>
-        </form>
-
-        <Divider />
-
-        <HStack justify="center" vAlign="center" gap={1}>
-          <Text color="secondary">{t("noAccount")}</Text>
-          <Link href="/sign-up" style={{ fontWeight: 600 }}>
-            {t("signUp")}
-          </Link>
-        </HStack>
-      </VStack>
+      <div className="flex items-center justify-center gap-1.5 text-sm">
+        <span className="text-[var(--zk-text-secondary)]">{t("noAccount")}</span>
+        <Link
+          href="/sign-up"
+          className="font-semibold text-[var(--zk-text)] underline underline-offset-4 hover:opacity-80"
+        >
+          {t("signUp")}
+        </Link>
+      </div>
     </Card>
   );
 }

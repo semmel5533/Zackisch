@@ -11,26 +11,16 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { RegionLanguageSwitcher } from "@/components/region-language-dialog";
 import { confirmPasswordResetAction } from "@/actions/auth-actions";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { InputGroup } from "@astryxdesign/core/InputGroup";
-import { Banner } from "@astryxdesign/core/Banner";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Spinner } from "@astryxdesign/core/Spinner";
-import { Icon } from "@astryxdesign/core/Icon";
-import { useTranslation } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 import {
-  Eye,
-  EyeSlash,
-  Check,
-  X,
-  ArrowLeft,
-} from "@phosphor-icons/react";
+  Card,
+  Banner,
+  Divider,
+  Spinner,
+  PasswordField,
+} from "@/components/ui/surfaces";
+import { useTranslation } from "@/lib/i18n";
+import { Check, X, ArrowLeft } from "@phosphor-icons/react";
 import { toast } from "@/components/common/toast";
 
 function ResetPasswordConfirmForm() {
@@ -53,8 +43,6 @@ function ResetPasswordConfirmForm() {
     }
   }, [state, t]);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
   const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -101,228 +89,177 @@ function ResetPasswordConfirmForm() {
     return <SuccessState locale={locale} t={t} />;
   }
 
+  const passwordReqs = [
+    { ok: passwordValue.length >= 8, label: t("passwordReqLength" as any) },
+    { ok: /[A-Z]/.test(passwordValue), label: t("passwordReqUppercase" as any) },
+    { ok: /[a-z]/.test(passwordValue), label: t("passwordReqLowercase" as any) },
+    {
+      ok:
+        /[0-9]/.test(passwordValue) ||
+        /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue),
+      label: t("passwordReqNumberOrSpecial" as any),
+    },
+  ];
+
   return (
-    <VStack gap={4}>
-      <VStack gap={1}>
-        <Heading level={1}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
           {t("resetPasswordTitle")}
-        </Heading>
-        <Text color="secondary">
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
           {t("resetPasswordSubtitle")}
-        </Text>
-      </VStack>
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} noValidate>
-        <VStack gap={4}>
-          {state.error && (
-            <Banner
-              status="error"
-              title={t(state.error as any)}
-            />
-          )}
-
-          <VStack gap={1} width="100%">
-            <InputGroup
-              label={t("newPasswordLabel")}
-              isRequired
-              status={fieldErrors.password ? { type: "error", message: fieldErrors.password } : undefined}
-            >
-              <TextInput
-                label={t("newPasswordLabel")}
-                isLabelHidden
-                type={showPassword ? "text" : "password"}
-                value={passwordValue}
-                onChange={(val) => {
-                  setPasswordValue(val);
-                  setFieldErrors((errs) => ({ ...errs, password: "" }));
-                }}
-                isRequired
-                autoComplete="new-password"
-              />
-              <Button
-                label={showPassword ? t("hidePassword") : t("showPassword")}
-                isIconOnly
-                variant="ghost"
-                size="md"
-                onClick={() => setShowPassword(!showPassword)}
-                icon={
-                  <Icon
-                    icon={showPassword ? EyeSlash : Eye}
-                    size="sm"
-                  />
-                }
-              />
-            </InputGroup>
-
-            <VStack gap={1}>
-              <HStack gap={1} vAlign="center">
-                <Icon
-                  icon={passwordValue.length >= 8 ? Check : X}
-                  size="sm"
-                  color={passwordValue.length >= 8 ? "accent" : "secondary"}
-                />
-                <Text color="secondary">{t("passwordReqLength" as any)}</Text>
-              </HStack>
-              <HStack gap={1} vAlign="center">
-                <Icon
-                  icon={/[A-Z]/.test(passwordValue) ? Check : X}
-                  size="sm"
-                  color={/[A-Z]/.test(passwordValue) ? "accent" : "secondary"}
-                />
-                <Text color="secondary">{t("passwordReqUppercase" as any)}</Text>
-              </HStack>
-              <HStack gap={1} vAlign="center">
-                <Icon
-                  icon={/[a-z]/.test(passwordValue) ? Check : X}
-                  size="sm"
-                  color={/[a-z]/.test(passwordValue) ? "accent" : "secondary"}
-                />
-                <Text color="secondary">{t("passwordReqLowercase" as any)}</Text>
-              </HStack>
-              <HStack gap={1} vAlign="center">
-                <Icon
-                  icon={
-                    /[0-9]/.test(passwordValue) ||
-                    /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue)
-                      ? Check
-                      : X
-                  }
-                  size="sm"
-                  color={
-                    /[0-9]/.test(passwordValue) ||
-                    /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue)
-                      ? "accent"
-                      : "secondary"
-                  }
-                />
-                <Text color="secondary">{t("passwordReqNumberOrSpecial" as any)}</Text>
-              </HStack>
-            </VStack>
-          </VStack>
-
-          <VStack gap={1} width="100%">
-            <InputGroup
-              label={t("confirmPassword")}
-              isRequired
-              status={fieldErrors.confirmPassword ? { type: "error", message: fieldErrors.confirmPassword } : undefined}
-            >
-              <TextInput
-                label={t("confirmPassword")}
-                isLabelHidden
-                type={showConfirmPassword ? "text" : "password"}
-                value={confirmPasswordValue}
-                onChange={(val) => {
-                  setConfirmPasswordValue(val);
-                  setFieldErrors((errs) => ({ ...errs, confirmPassword: "" }));
-                }}
-                isRequired
-                autoComplete="new-password"
-              />
-              <Button
-                label={
-                  showConfirmPassword ? t("hidePassword") : t("showPassword")
-                }
-                isIconOnly
-                variant="ghost"
-                size="md"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                icon={
-                  <Icon
-                    icon={showConfirmPassword ? EyeSlash : Eye}
-                    size="sm"
-                  />
-                }
-              />
-            </InputGroup>
-          </VStack>
-
-          <Button
-            label={t("changePassword")}
-            variant="primary"
-            size="md"
-            type="submit"
-            isLoading={isPending}
-            onClick={(e: any) => handleSubmit(e)}
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        {state.error && (
+          <Banner
+            status="error"
+            title={t(state.error as any)}
           />
-        </VStack>
+        )}
+
+        <div className="flex flex-col gap-2">
+          <PasswordField
+            label={t("newPasswordLabel")}
+            value={passwordValue}
+            onChange={(val) => {
+              setPasswordValue(val);
+              setFieldErrors((errs) => ({ ...errs, password: "" }));
+            }}
+            required
+            autoComplete="new-password"
+            showLabel={t("showPassword")}
+            hideLabel={t("hidePassword")}
+            error={fieldErrors.password || null}
+          />
+
+          <ul className="flex flex-col gap-1 text-xs">
+            {passwordReqs.map((req, idx) => (
+              <li
+                key={idx}
+                className={`flex items-center gap-1.5 ${
+                  req.ok
+                    ? "text-[var(--zk-text)] font-medium"
+                    : "text-[var(--zk-text-secondary)]"
+                }`}
+              >
+                {req.ok ? (
+                  <Check size={14} weight="bold" aria-hidden="true" />
+                ) : (
+                  <X size={14} weight="bold" aria-hidden="true" />
+                )}
+                <span>{req.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <PasswordField
+          label={t("confirmPassword")}
+          value={confirmPasswordValue}
+          onChange={(val) => {
+            setConfirmPasswordValue(val);
+            setFieldErrors((errs) => ({ ...errs, confirmPassword: "" }));
+          }}
+          required
+          autoComplete="new-password"
+          showLabel={t("showPassword")}
+          hideLabel={t("hidePassword")}
+          error={fieldErrors.confirmPassword || null}
+        />
+
+        <Button
+          variant="primary"
+          size="md"
+          type="submit"
+          fullWidth
+          loading={isPending}
+        >
+          {t("changePassword")}
+        </Button>
       </form>
 
       <Divider />
 
-      <HStack justify="center" vAlign="center" gap={1}>
-        <Text color="secondary">{t("rememberedAccount")}</Text>
-        <Link href="/sign-in" style={{ fontWeight: 600 }}>
+      <div className="flex items-center justify-center gap-1.5 text-sm">
+        <span className="text-[var(--zk-text-secondary)]">{t("rememberedAccount")}</span>
+        <Link
+          href="/sign-in"
+          className="font-semibold text-[var(--zk-text)] underline underline-offset-4 hover:opacity-80"
+        >
           {t("signIn")}
         </Link>
-      </HStack>
-    </VStack>
+      </div>
+    </div>
   );
 }
 
 function InvalidLinkState({ locale }: { locale: string }) {
   const { t } = useTranslation();
   return (
-    <VStack gap={4} align="center">
-      <Icon icon={X} size="lg" color="error" />
-      <Heading level={2}>{t("invalidLink")}</Heading>
-      <Text color="secondary">{t("invalidLinkDesc")}</Text>
-      <Button
-        label={t("requestNewLink")}
-        variant="primary"
-        size="md"
+    <div className="flex flex-col items-center gap-4 text-center">
+      <div className="size-12 rounded-full bg-[var(--zk-error-bg)] text-[var(--zk-error-text)] flex items-center justify-center">
+        <X size={24} weight="bold" aria-hidden="true" />
+      </div>
+      <h2 className="text-xl font-bold text-[var(--zk-text)]">{t("invalidLink")}</h2>
+      <p className="text-sm text-[var(--zk-text-secondary)]">{t("invalidLinkDesc")}</p>
+      <Link
         href="/reset-password"
-      />
-    </VStack>
+        className="zk-button zk-button-primary zk-button-md zk-full-width"
+      >
+        {t("requestNewLink")}
+      </Link>
+    </div>
   );
 }
 
 function SuccessState({ locale, t }: { locale: string; t: any }) {
   return (
-    <VStack gap={4}>
-      <VStack gap={1}>
-        <Heading level={1}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
           {t("passwordChangedSuccess" as any)}
-        </Heading>
-        <Text color="secondary">
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
           {t("passwordChangedDesc")}
-        </Text>
-      </VStack>
-      <Button
-        label={t("signIn")}
-        variant="primary"
-        size="md"
+        </p>
+      </div>
+      <Link
         href="/sign-in"
-        icon={<Icon icon={ArrowLeft} size="sm" />}
-      />
-    </VStack>
+        className="zk-button zk-button-primary zk-button-md zk-full-width"
+      >
+        <ArrowLeft size={16} weight="bold" aria-hidden="true" />
+        <span>{t("signIn")}</span>
+      </Link>
+    </div>
   );
 }
 
 export default function ResetPasswordConfirmPage() {
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
-          />
-          <RegionLanguageSwitcher />
-        </HStack>
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <Suspense
-          fallback={
-            <VStack gap={4} align="center" padding={6}>
-              <Spinner size="md" />
-            </VStack>
-          }
-        >
-          <ResetPasswordConfirmForm />
-        </Suspense>
-      </VStack>
+      <Suspense
+        fallback={
+          <div className="flex flex-col items-center justify-center p-6">
+            <Spinner size="md" />
+          </div>
+        }
+      >
+        <ResetPasswordConfirmForm />
+      </Suspense>
     </Card>
   );
 }

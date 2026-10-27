@@ -8,16 +8,8 @@ import { confirmAccountDeletionAction } from "@/actions/settings-actions";
 import { useTranslation } from "@/lib/i18n";
 import { X, ArrowLeft, Trash } from "@phosphor-icons/react";
 import { toast } from "@/components/common/toast";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { Banner } from "@astryxdesign/core/Banner";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Spinner } from "@astryxdesign/core/Spinner";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Button } from "@/components/ui/button";
+import { Card, Banner, Divider, Spinner } from "@/components/ui/surfaces";
 
 function DeleteAccountConfirmForm() {
   const searchParams = useSearchParams();
@@ -74,113 +66,115 @@ function DeleteAccountConfirmForm() {
 function InvalidLinkState() {
   const { t } = useTranslation();
   return (
-    <VStack gap={4} align="center">
-      <Icon icon={X} size="lg" color="error" />
-      <Heading level={2}>{t("invalidToken" as any)}</Heading>
-      <Text color="secondary">
+    <div className="flex flex-col items-center gap-4 text-center">
+      <div className="size-12 rounded-full bg-[var(--zk-error-bg)] text-[var(--zk-error-text)] flex items-center justify-center">
+        <X size={24} weight="bold" aria-hidden="true" />
+      </div>
+      <h2 className="text-xl font-bold text-[var(--zk-text)]">{t("invalidToken" as any)}</h2>
+      <p className="text-sm text-[var(--zk-text-secondary)]">
         {t("invalidLinkDeleteAccountDesc" as any)}
-      </Text>
-      <Button
-        label={t("backToDashboard" as any)}
-        variant="primary"
-        size="md"
+      </p>
+      <Link
         href="/dashboard"
-      />
-    </VStack>
+        className="zk-button zk-button-primary zk-button-md zk-full-width"
+      >
+        {t("backToDashboard" as any)}
+      </Link>
+    </div>
   );
 }
 
 function SuccessState({ t }: { t: any }) {
   return (
-    <VStack gap={4}>
-      <VStack gap={1}>
-        <Heading level={1}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
           {t("accountDeletedSuccess" as any)}
-        </Heading>
-        <Text color="secondary">
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
           {t("accountDeletedDesc" as any)}
-        </Text>
-      </VStack>
-      <Button
-        label={t("backHome" as any)}
-        variant="primary"
-        size="md"
+        </p>
+      </div>
+      <Link
         href="/"
-        icon={<Icon icon={ArrowLeft} size="sm" />}
-      />
-    </VStack>
+        className="zk-button zk-button-primary zk-button-md zk-full-width"
+      >
+        <ArrowLeft size={16} weight="bold" aria-hidden="true" />
+        <span>{t("backHome" as any)}</span>
+      </Link>
+    </div>
   );
 }
 
 function DeleteConfirmFormContent({ t, error, isPending, handleSubmit }: any) {
   return (
-    <VStack gap={4}>
-      <VStack gap={1}>
-        <Heading level={1}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
           {t("deleteAccountConfirmTitle" as any)}
-        </Heading>
-        <Text color="secondary">
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
           {t("deleteAccountConfirmDesc" as any)}
-        </Text>
-      </VStack>
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <VStack gap={4}>
-          {error && (
-            <Banner
-              status="error"
-              title={error}
-            />
-          )}
-          <Button
-            label={t("deleteAccountConfirmButton" as any)}
-            variant="destructive"
-            size="md"
-            type="submit"
-            isLoading={isPending}
-            icon={<Icon icon={Trash} size="sm" />}
-            onClick={(e: any) => handleSubmit(e)}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {error && (
+          <Banner
+            status="error"
+            title={error}
           />
-        </VStack>
+        )}
+        <Button
+          variant="destructive"
+          size="md"
+          type="submit"
+          fullWidth
+          loading={isPending}
+        >
+          <Trash size={16} weight="bold" aria-hidden="true" />
+          <span>{t("deleteAccountConfirmButton" as any)}</span>
+        </Button>
       </form>
 
       <Divider />
 
-      <HStack justify="center" vAlign="center" gap={1}>
-        <Text color="secondary">{t("changedMind" as any)}</Text>
-        <Link href="/dashboard" style={{ fontWeight: 600 }}>
+      <div className="flex items-center justify-center gap-1.5 text-sm">
+        <span className="text-[var(--zk-text-secondary)]">{t("changedMind" as any)}</span>
+        <Link
+          href="/dashboard"
+          className="font-semibold text-[var(--zk-text)] underline underline-offset-4 hover:opacity-80"
+        >
           {t("backToDashboard" as any)}
         </Link>
-      </HStack>
-    </VStack>
+      </div>
+    </div>
   );
 }
 
 export default function DeleteAccountConfirmPage() {
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
-          />
-          <RegionLanguageSwitcher />
-        </HStack>
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <Suspense
-          fallback={
-            <VStack gap={4} align="center" padding={6}>
-              <Spinner size="md" />
-            </VStack>
-          }
-        >
-          <DeleteAccountConfirmForm />
-        </Suspense>
-      </VStack>
+      <Suspense
+        fallback={
+          <div className="flex flex-col items-center justify-center p-6">
+            <Spinner size="md" />
+          </div>
+        }
+      >
+        <DeleteAccountConfirmForm />
+      </Suspense>
     </Card>
   );
 }

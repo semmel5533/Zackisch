@@ -1,10 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Card } from "@astryxdesign/core/Card";
-import { Button } from "@astryxdesign/core/Button";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
+import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
@@ -72,25 +69,26 @@ export function OrderTracker({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center space-y-4">
-        <Heading level={1}>{t("error")}</Heading>
-        <Text type="supporting">{t("trackingExpired")}</Text>
+      <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center space-y-4 bg-[var(--zk-page)] text-[var(--zk-text)]">
+        <h1 className="text-2xl font-bold tracking-tight">{t("error")}</h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">{t("trackingExpired")}</p>
         <Button
-          label={t("orderAgain")}
           variant="primary"
           size="lg"
           onClick={() => (window.location.href = t("pickupUrl", { businessId: business.$id }))}
-        />
+        >
+          {t("orderAgain")}
+        </Button>
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-6">
+      <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[var(--zk-page)]">
         <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="h-8 w-32 bg-muted rounded"></div>
-          <div className="h-64 w-full max-w-sm bg-muted rounded-xl"></div>
+          <div className="h-8 w-32 bg-[var(--zk-surface-muted)] rounded"></div>
+          <div className="h-64 w-full max-w-sm bg-[var(--zk-surface-muted)] rounded-xl"></div>
         </div>
       </div>
     );
@@ -98,7 +96,7 @@ export function OrderTracker({
 
   if (order.status === "cancelled") {
     return (
-      <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
+      <div className="flex flex-col min-h-screen bg-[var(--zk-page)] text-[var(--zk-text)] overflow-x-clip">
         <RestaurantHeroHeader
           className="max-w-[500px] mx-auto px-4 pt-6"
           business={business}
@@ -106,24 +104,24 @@ export function OrderTracker({
           showOrderingSubtitle={false}
         />
         <main className="flex-1 px-4 py-6 max-w-[500px] mx-auto w-full flex flex-col items-center justify-center">
-          <Card padding={6} variant="muted" width="100%">
+          <section className="w-full rounded-2xl border border-[var(--zk-border)] bg-[var(--zk-surface)] p-6 shadow-xs">
             <div className="text-center space-y-4">
-              <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
-                <X className="size-6" weight="bold" />
+              <div className="mx-auto size-12 rounded-full bg-[var(--zk-error-bg)] flex items-center justify-center text-[var(--zk-error-text)]">
+                <X className="size-6" weight="bold" aria-hidden="true" />
               </div>
-              <Heading level={2}>{t("orderCancelledTitle")}</Heading>
-              <Text type="supporting">{t("orderCancelledDesc")}</Text>
+              <h2 className="text-xl font-bold tracking-tight text-[var(--zk-text)]">{t("orderCancelledTitle")}</h2>
+              <p className="text-sm text-[var(--zk-text-secondary)] leading-relaxed">{t("orderCancelledDesc")}</p>
             </div>
-          </Card>
+          </section>
         </main>
         <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-[var(--zk-text-secondary)]">
             {t("processedViaZakkigPrefix")}
             <a
               href={t("homepageUrl")}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
+              className="underline underline-offset-4 text-[var(--zk-text)] font-medium hover:opacity-80 transition-opacity"
             >
               zackisch.com
             </a>
@@ -142,7 +140,7 @@ export function OrderTracker({
       : 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip">
+    <div className="flex flex-col min-h-screen bg-[var(--zk-page)] text-[var(--zk-text)] overflow-x-clip">
       <RestaurantHeroHeader
         className="max-w-[500px] mx-auto px-4 pt-6"
         business={business}
@@ -152,47 +150,47 @@ export function OrderTracker({
 
       <main className="flex-1 px-4 py-6 max-w-[500px] mx-auto w-full flex flex-col items-center space-y-6">
         <div className="text-center space-y-2">
-          <Text type="supporting" weight="medium">{t("yourOrderNumber")}</Text>
-          <div className="text-7xl sm:text-8xl font-black tracking-wider text-foreground font-inter tabular-nums">
+          <p className="text-sm font-semibold text-[var(--zk-text-secondary)]">{t("yourOrderNumber")}</p>
+          <div className="text-7xl sm:text-8xl font-black tracking-wider text-[var(--zk-text)] font-inter tabular-nums">
             {order.orderNumber}
           </div>
         </div>
 
         {order.status === "in_progress" && (
-          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3">
-            <div className="size-12 rounded-full bg-foreground text-background flex items-center justify-center mx-auto">
-              <CookingPot className="size-6" weight="bold" />
+          <div className="w-full bg-[var(--zk-surface-muted)] border border-[var(--zk-border)] rounded-2xl p-6 text-center space-y-3">
+            <div className="size-12 rounded-full bg-[var(--zk-text)] text-[var(--zk-white)] flex items-center justify-center mx-auto">
+              <CookingPot className="size-6" weight="bold" aria-hidden="true" />
             </div>
-            <Heading level={2}>{t("inProgress")}</Heading>
-            <Text type="supporting">{t("inProgressDesc" as any)}</Text>
+            <h2 className="text-xl font-bold tracking-tight text-[var(--zk-text)]">{t("inProgress")}</h2>
+            <p className="text-sm text-[var(--zk-text-secondary)] leading-relaxed">{t("inProgressDesc" as any)}</p>
           </div>
         )}
 
         {order.status === "ready_for_pickup" && (
-          <div className="w-full bg-muted/40 border border-border rounded-xl p-6 text-center space-y-3">
-            <div className="size-12 rounded-full bg-foreground text-background flex items-center justify-center mx-auto">
-              <Check className="size-6" weight="bold" />
+          <div className="w-full bg-[var(--zk-success-bg)] border border-[var(--zk-success-text)]/25 rounded-2xl p-6 text-center space-y-3">
+            <div className="size-12 rounded-full bg-[var(--zk-success-text)] text-[var(--zk-white)] flex items-center justify-center mx-auto">
+              <Check className="size-6" weight="bold" aria-hidden="true" />
             </div>
-            <Heading level={2}>{t("orderReadyForPickup")}</Heading>
-            <Text type="supporting">{t("orderReadyDesc")}</Text>
+            <h2 className="text-xl font-bold tracking-tight text-[var(--zk-text)]">{t("orderReadyForPickup")}</h2>
+            <p className="text-sm text-[var(--zk-text-body)] leading-relaxed">{t("orderReadyDesc")}</p>
           </div>
         )}
 
         {order.status === "completed" && (
-          <div className="w-full bg-muted/30 border border-border rounded-xl p-6 text-center space-y-3">
-            <div className="size-12 rounded-full bg-foreground text-background flex items-center justify-center mx-auto">
-              <Check className="size-6" weight="bold" />
+          <div className="w-full bg-[var(--zk-surface-muted)] border border-[var(--zk-border)] rounded-2xl p-6 text-center space-y-3">
+            <div className="size-12 rounded-full bg-[var(--zk-text)] text-[var(--zk-white)] flex items-center justify-center mx-auto">
+              <Check className="size-6" weight="bold" aria-hidden="true" />
             </div>
-            <Heading level={2}>{t("orderPickedUp")}</Heading>
-            <Text type="supporting">{t("orderPickedUpDesc")}</Text>
+            <h2 className="text-xl font-bold tracking-tight text-[var(--zk-text)]">{t("orderPickedUp")}</h2>
+            <p className="text-sm text-[var(--zk-text-secondary)] leading-relaxed">{t("orderPickedUpDesc")}</p>
           </div>
         )}
 
-        <Card padding={5} width="100%">
+        <section className="w-full rounded-2xl border border-[var(--zk-border)] bg-[var(--zk-surface)] p-5 shadow-xs">
           <div className="space-y-6">
-            <Heading level={3}>{t("orderStatus")}</Heading>
+            <h3 className="text-lg font-bold tracking-tight text-[var(--zk-text)]">{t("orderStatus")}</h3>
 
-            <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-muted before:to-transparent">
+            <div className="space-y-4">
               {statusSteps.map((step, index) => {
                 const isDone = index < currentStepIndex || (order.status === "completed" && index === 2);
                 const isCurrent = index === currentStepIndex && order.status !== "completed";
@@ -200,40 +198,36 @@ export function OrderTracker({
                 return (
                   <div
                     key={step.id}
-                    className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse"
+                    className="flex items-center gap-4"
                   >
                     <div
                       className={cn(
-                        "flex items-center justify-center size-10 rounded-full border-2 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-inter tabular-nums transition-colors",
-                        isDone
-                          ? "border-foreground bg-foreground text-background"
-                          : isCurrent
-                          ? "border-foreground bg-foreground text-background"
-                          : "border-border text-muted-foreground bg-background"
+                        "flex items-center justify-center size-10 rounded-full border-2 shrink-0 font-inter tabular-nums transition-colors",
+                        isDone || isCurrent
+                          ? "border-[var(--zk-text)] bg-[var(--zk-text)] text-[var(--zk-white)]"
+                          : "border-[var(--zk-border-strong)] text-[var(--zk-text-secondary)] bg-[var(--zk-surface)]"
                       )}
                     >
                       {isDone ? (
-                        <Check className="size-5" weight="bold" />
+                        <Check className="size-5" weight="bold" aria-hidden="true" />
                       ) : (
                         <span className="text-sm font-bold">{index + 1}</span>
                       )}
                     </div>
                     <div
                       className={cn(
-                        "w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-lg border transition-colors",
+                        "flex-1 p-4 rounded-xl border transition-colors",
                         isCurrent || (order.status === "completed" && index === 2)
-                          ? "border-border bg-muted/40 font-bold"
-                          : "bg-background"
+                          ? "border-[var(--zk-border-strong)] bg-[var(--zk-surface-muted)] font-bold"
+                          : "border-[var(--zk-border)] bg-[var(--zk-surface)]"
                       )}
                     >
                       <span
                         className={cn(
                           "font-bold text-sm sm:text-base",
-                          isCurrent || (order.status === "completed" && index === 2)
-                            ? "text-foreground"
-                            : isDone
-                            ? "text-foreground"
-                            : "text-muted-foreground"
+                          isCurrent || isDone || (order.status === "completed" && index === 2)
+                            ? "text-[var(--zk-text)]"
+                            : "text-[var(--zk-text-secondary)]"
                         )}
                       >
                         {t(step.labelKey as any)}
@@ -244,25 +238,26 @@ export function OrderTracker({
               })}
             </div>
           </div>
-        </Card>
+        </section>
 
         {/* Download Order & Payment Confirmation Action */}
         <div className="w-full flex flex-col items-center gap-2">
           <Button
-            label={t("downloadConfirmation")}
-            icon={<DownloadSimple className="size-4 shrink-0" weight="bold" />}
             variant="secondary"
-            width="100%"
+            fullWidth
             size="lg"
             onClick={() => downloadOrderConfirmation(order, business, locale)}
-          />
-          <p className="text-[11px] leading-relaxed text-muted-foreground text-center px-2">
+          >
+            <DownloadSimple className="size-4 shrink-0" weight="bold" aria-hidden="true" />
+            <span>{t("downloadConfirmation")}</span>
+          </Button>
+          <p className="text-[11px] leading-relaxed text-[var(--zk-text-secondary)] text-center px-2">
             {t("confirmationDisclaimerPrefix")}
             <a
               href={t("homepageUrl")}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
+              className="text-[var(--zk-text)] font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
             >
               zackisch.com
             </a>
@@ -272,25 +267,26 @@ export function OrderTracker({
 
         {order.status === "completed" && (
           <Button
-            label={t("orderAgain")}
             variant="secondary"
-            width="100%"
+            fullWidth
             size="lg"
             onClick={() =>
               (window.location.href = t("pickupUrl", { businessId: business.$id }))
             }
-          />
+          >
+            {t("orderAgain")}
+          </Button>
         )}
       </main>
 
       <footer className="p-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:pb-6 text-center max-w-[500px] mx-auto w-full shrink-0">
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-[var(--zk-text-secondary)]">
           {t("processedViaZakkigPrefix")}
           <a
             href={t("homepageUrl")}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-4 text-foreground font-medium hover:opacity-80 transition-opacity"
+            className="underline underline-offset-4 text-[var(--zk-text)] font-medium hover:opacity-80 transition-opacity"
           >
             zackisch.com
           </a>

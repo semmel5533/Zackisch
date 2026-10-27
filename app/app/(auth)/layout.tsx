@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { translations, Locale } from "@/lib/translations";
-import { Center } from "@astryxdesign/core/Center";
-import { VStack } from "@astryxdesign/core/VStack";
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
@@ -26,15 +24,10 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Center
-      axis="both"
-      minHeight="100vh"
-      padding={4}
-      style={{ backgroundColor: "var(--color-background-body, #F7F7F8)" }}
-    >
-      <VStack gap={4} hAlign="center" width="100%" maxWidth={460}>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--zk-page)] text-[var(--zk-text)]">
+      <div className="w-full max-w-[460px] flex flex-col items-center gap-4">
         {children}
-      </VStack>
-    </Center>
+      </div>
+    </div>
   );
 }

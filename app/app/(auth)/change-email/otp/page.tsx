@@ -8,16 +8,8 @@ import {
   confirmEmailChangeOtpAction,
   sendEmailChangeOtpAction,
 } from "@/actions/settings-actions";
-import { Card } from "@astryxdesign/core/Card";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Button } from "@astryxdesign/core/Button";
-import { Banner } from "@astryxdesign/core/Banner";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Spinner } from "@astryxdesign/core/Spinner";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Button } from "@/components/ui/button";
+import { Card, Banner, Divider, Spinner } from "@/components/ui/surfaces";
 import {
   InputOTP,
   InputOTPGroup,
@@ -100,140 +92,122 @@ function ChangeEmailOtpForm() {
   };
 
   return (
-    <VStack gap={4}>
-      <VStack gap={1}>
-        <Heading level={1}>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--zk-text)]">
           {t("verifyEmail" as any)}
-        </Heading>
-        <Text color="secondary">
+        </h1>
+        <p className="text-sm text-[var(--zk-text-secondary)]">
           {t("verifyEmailDesc" as any, { email: email || "" })}
-        </Text>
-      </VStack>
+        </p>
+      </div>
 
-      <form onSubmit={handleVerifyOtp} noValidate>
-        <VStack gap={4}>
-          <VStack gap={2} align="center">
-            <InputOTP
-              maxLength={6}
-              value={otp}
-              aria-invalid={!!error}
-              aria-describedby={error ? "otp-error" : undefined}
-              onChange={(val) => {
-                if (isExpired) return;
-                setOtp(val);
-                setError("");
-                if (val.length === 6) {
-                  submitOtp(val);
-                }
-              }}
-              disabled={isVerifying || isExpired}
-              autoFocus={!isExpired}
-            >
-              <InputOTPGroup className="w-full flex gap-2">
-                <InputOTPSlot
-                  index={0}
-                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                />
-                <InputOTPSlot
-                  index={1}
-                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                />
-                <InputOTPSlot
-                  index={2}
-                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                />
-                <InputOTPSlot
-                  index={3}
-                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                />
-                <InputOTPSlot
-                  index={4}
-                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                />
-                <InputOTPSlot
-                  index={5}
-                  className="h-14 flex-1 text-2xl rounded-xl border-border bg-background text-foreground font-inter tabular-nums"
-                />
-              </InputOTPGroup>
-            </InputOTP>
-          </VStack>
-
-          {error && (
-            <Banner
-              status="error"
-              title={error}
-            />
-          )}
-
-          <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
-
-          <HStack gap={2} vAlign="center" wrap="wrap">
-            <Button
-              label={
-                isExpired
-                  ? t("requestNewCodeNow" as any)
-                  : countdown > 0
-                    ? t("resendIn", { time: countdown })
-                    : t("resendCode" as any)
+      <form onSubmit={handleVerifyOtp} noValidate className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-2">
+          <InputOTP
+            maxLength={6}
+            value={otp}
+            aria-invalid={!!error}
+            aria-describedby={error ? "otp-error" : undefined}
+            onChange={(val) => {
+              if (isExpired) return;
+              setOtp(val);
+              setError("");
+              if (val.length === 6) {
+                submitOtp(val);
               }
-              variant={isExpired ? "primary" : "secondary"}
+            }}
+            disabled={isVerifying || isExpired}
+            autoFocus={!isExpired}
+          >
+            <InputOTPGroup className="w-full flex gap-2">
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <InputOTPSlot
+                  key={index}
+                  index={index}
+                  className="h-14 flex-1 text-2xl rounded-xl border-[var(--zk-border-strong)] bg-[var(--zk-surface)] text-[var(--zk-text)] font-inter tabular-nums"
+                />
+              ))}
+            </InputOTPGroup>
+          </InputOTP>
+        </div>
+
+        {error && (
+          <Banner
+            status="error"
+            title={error}
+          />
+        )}
+
+        <OtpValidityTimer expiresAt={otpExpiresAt} onExpired={setIsExpired} />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant={isExpired ? "primary" : "secondary"}
+            size="md"
+            disabled={countdown > 0 && !isExpired}
+            onClick={handleResendOtp}
+          >
+            {isExpired
+              ? t("requestNewCodeNow" as any)
+              : countdown > 0
+                ? t("resendIn", { time: countdown })
+                : t("resendCode" as any)}
+          </Button>
+          {!isExpired && (
+            <Button
+              variant="primary"
               size="md"
-              isDisabled={countdown > 0 && !isExpired}
-              onClick={handleResendOtp}
-            />
-            {!isExpired && (
-              <Button
-                label={t("confirm" as any)}
-                variant="primary"
-                size="md"
-                type="submit"
-                isLoading={isVerifying}
-                isDisabled={isVerifying || otp.length < 6}
-                icon={<Icon icon={PaperPlaneRight} size="sm" />}
-                onClick={(e: any) => handleVerifyOtp(e)}
-              />
-            )}
-          </HStack>
-        </VStack>
+              type="submit"
+              loading={isVerifying}
+              disabled={isVerifying || otp.length < 6}
+            >
+              <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />
+              <span>{t("confirm" as any)}</span>
+            </Button>
+          )}
+        </div>
       </form>
 
       <Divider />
 
-      <HStack justify="center" vAlign="center" gap={1}>
-        <Text color="secondary">{t("changedMind" as any)}</Text>
-        <Link href="/dashboard" style={{ fontWeight: 600 }}>
+      <div className="flex items-center justify-center gap-1.5 text-sm">
+        <span className="text-[var(--zk-text-secondary)]">{t("changedMind" as any)}</span>
+        <Link
+          href="/dashboard"
+          className="font-semibold text-[var(--zk-text)] underline underline-offset-4 hover:opacity-80"
+        >
           {t("backToDashboard" as any)}
         </Link>
-      </HStack>
-    </VStack>
+      </div>
+    </div>
   );
 }
 
 export default function ChangeEmailOtpPage() {
   return (
-    <Card variant="default" padding={6} elevation="med" width="100%">
-      <VStack gap={6}>
-        <HStack justify="between" vAlign="center">
-          <img
-            src="/combination_mark.svg"
-            alt="Zackisch"
-            style={{ height: 28, width: "auto" }}
-          />
-          <RegionLanguageSwitcher />
-        </HStack>
+    <Card className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <img
+          src="/combination_mark.svg"
+          alt="Zackisch"
+          style={{ height: 28, width: "auto" }}
+        />
+        <RegionLanguageSwitcher />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <Suspense
-          fallback={
-            <VStack gap={4} align="center" padding={6}>
-              <Spinner size="md" />
-            </VStack>
-          }
-        >
-          <ChangeEmailOtpForm />
-        </Suspense>
-      </VStack>
+      <Suspense
+        fallback={
+          <div className="flex flex-col items-center justify-center p-6">
+            <Spinner size="md" />
+          </div>
+        }
+      >
+        <ChangeEmailOtpForm />
+      </Suspense>
     </Card>
   );
 }
