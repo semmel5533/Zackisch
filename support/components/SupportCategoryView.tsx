@@ -7,14 +7,7 @@ import {
   getArticlesByCategory,
   type SupportLocale,
 } from "@/lib/knowledge-base";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Card } from "@astryxdesign/core/Card";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Button } from "@astryxdesign/core/Button";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Card, Badge, Button } from "@/components/ui/primitives";
 import {
   ArrowLeft,
   ArrowRight,
@@ -59,59 +52,62 @@ export function SupportCategoryView({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }}
       />
-      <VStack gap={6} width="100%" style={{ maxWidth: 840, margin: "0 auto" }}>
-        <HStack>
+      <div className="flex flex-col gap-6 w-full max-w-[840px] mx-auto">
+        <div className="flex items-center">
           <Button
-            label={isDe ? "Alle Themenbereiche" : "All Categories"}
             variant="ghost"
             size="sm"
             href={`/${locale}`}
-            icon={<Icon icon={ArrowLeft} size="sm" />}
-          />
-        </HStack>
+          >
+            <ArrowLeft className="size-4" />
+            <span>{isDe ? "Alle Themenbereiche" : "All Categories"}</span>
+          </Button>
+        </div>
 
-        <VStack gap={2}>
-          <HStack gap={2} vAlign="center">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
             <Badge
               label={category.badge[locale]}
               variant="neutral"
-              icon={<Icon icon={BookOpen} size="sm" />}
+              icon={<BookOpen className="size-3.5" />}
             />
-          </HStack>
-          <Heading level={1}>{category.title[locale]}</Heading>
-          <Text color="secondary">{category.description[locale]}</Text>
-        </VStack>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            {category.title[locale]}
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            {category.description[locale]}
+          </p>
+        </div>
 
-        <Card variant="default" padding={0}>
-          <VStack gap={0}>
+        <Card variant="default" padding={0} className="overflow-hidden">
+          <div className="flex flex-col divide-y divide-border">
             {articles.map((art) => (
               <a
                 key={art.slug}
                 href={`/${locale}/articles/${art.slug}`}
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  display: "block",
-                  padding: "20px 24px",
-                  borderBottom: "1px solid var(--color-border, #E4E4E7)",
-                }}
+                className="block px-6 py-5 no-underline text-inherit hover:bg-muted/40 transition-colors"
               >
-                <HStack justify="between" vAlign="start" gap={4}>
-                  <VStack gap={1} style={{ maxWidth: 680 }}>
-                    <Heading level={3}>{art.title[locale]}</Heading>
-                    <Text color="secondary">{art.summary[locale]}</Text>
-                    <Text weight="semibold">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex flex-col gap-1 max-w-[680px]">
+                    <h3 className="text-base font-bold text-foreground">
+                      {art.title[locale]}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {art.summary[locale]}
+                    </p>
+                    <span className="text-xs font-semibold text-foreground pt-1">
                       {art.steps[locale].length}{" "}
                       {isDe ? "Schritte zur Umsetzung" : "Implementation Steps"}
-                    </Text>
-                  </VStack>
-                  <Icon icon={ArrowRight} size="sm" />
-                </HStack>
+                    </span>
+                  </div>
+                  <ArrowRight className="size-4 shrink-0 text-muted-foreground mt-1" />
+                </div>
               </a>
             ))}
-          </VStack>
+          </div>
         </Card>
-      </VStack>
+      </div>
     </SupportShell>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "support",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "type": "module",
   "private": true,
   "scripts": {
@@ -14,14 +14,15 @@
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",
     "check:cloudflare": "vinext-cloudflare deploy --dry-run",
-    "deploy:cloudflare": "vinext-cloudflare deploy"
+    "deploy:cloudflare": "vinext-cloudflare deploy",
+    "predev": "node ../scripts/sync-brand-assets.mjs support",
+    "prebuild": "node ../scripts/sync-brand-assets.mjs support",
+    "prebuild:cloudflare": "node ../scripts/sync-brand-assets.mjs support",
+    "predev:cloudflare": "node ../scripts/sync-brand-assets.mjs support"
   },
   "dependencies": {
-    "@astryxdesign/cli": "^0.7.1",
-    "@astryxdesign/core": "^0.7.1",
-    "@astryxdesign/theme-neutral": "^0.7.1",
+    "@base-ui/react": "^1.9.0",
     "@phosphor-icons/react": "^2.1.10",
-    "@stylexjs/stylex": "^0.19.1",
     "clsx": "^2.1.1",
     "convex": "^1.45.0",
     "next": "^16.3.4",

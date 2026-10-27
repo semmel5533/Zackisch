@@ -6,19 +6,14 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { SupportShell } from "@/components/SupportShell";
 import type { SupportLocale } from "@/lib/knowledge-base";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Grid } from "@astryxdesign/core/Grid";
-import { Card } from "@astryxdesign/core/Card";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Button } from "@astryxdesign/core/Button";
-import { TextInput } from "@astryxdesign/core/TextInput";
-import { TextArea } from "@astryxdesign/core/TextArea";
-import { Selector } from "@astryxdesign/core/Selector";
-import { EmptyState } from "@astryxdesign/core/EmptyState";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Icon } from "@astryxdesign/core/Icon";
+import {
+  Card,
+  Badge,
+  Button,
+  TextField,
+  TextareaField,
+  SelectField,
+} from "@/components/ui/primitives";
 import {
   Ticket,
   Plus,
@@ -26,6 +21,7 @@ import {
   Clock,
   Buildings,
   Lock,
+  Info,
 } from "@phosphor-icons/react";
 
 const STORAGE_KEY = "zackisch_support_customer_ctx";
@@ -59,7 +55,6 @@ export default function SupportTicketsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Restore saved customer session or exchange cross-subdomain handoff token
   useEffect(() => {
     setMounted(true);
     try {
@@ -88,7 +83,6 @@ export default function SupportTicketsPage() {
             setBusinessName(res.businessName);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(res));
 
-            // Remove handoff token from history immediately (P0-05)
             if (typeof window !== "undefined") {
               const url = new URL(window.location.href);
               url.searchParams.delete("handoff");
@@ -100,7 +94,6 @@ export default function SupportTicketsPage() {
     }
   }, [searchParams, exchangeToken, isDe]);
 
-  // Verify support session server-side
   const verifiedSession = useQuery(
     api.support.verifySupportSession,
     sessionToken ? { sessionToken } : "skip"
@@ -113,7 +106,6 @@ export default function SupportTicketsPage() {
       setBusinessId(verifiedSession.businessId as any);
       setBusinessName(verifiedSession.businessName);
     } else if (verifiedSession === null && sessionToken) {
-      // Session expired
       setSessionToken(null);
       localStorage.removeItem(STORAGE_KEY);
     }
@@ -208,200 +200,197 @@ export default function SupportTicketsPage() {
 
   return (
     <SupportShell locale={locale}>
-      <VStack gap={8} width="100%">
-        <HStack justify="between" vAlign="center" wrap="wrap" gap={4}>
-          <VStack gap={1}>
-            <Heading level={1}>
+      <div className="flex flex-col gap-8 w-full">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
               {isDe
                 ? "Support-Tickets für Gastronomen"
                 : "Merchant Support Tickets"}
-            </Heading>
-            <Text color="secondary">
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               {isDe
                 ? "Erstelle ein neues Ticket oder verfolge den Status deiner laufenden Anfragen."
                 : "Create a new support ticket or track your existing requests."}
-            </Text>
-          </VStack>
+            </p>
+          </div>
           {businessName && (
             <Badge
               label={businessName}
               variant="neutral"
-              icon={<Icon icon={Buildings} size="sm" />}
+              icon={<Buildings className="size-3.5" />}
             />
           )}
-        </HStack>
+        </div>
 
         {!sessionToken ? (
           <Card variant="default" padding={8}>
-            <VStack
-              gap={4}
-              align="center"
-              style={{ maxWidth: 520, margin: "0 auto" }}
-            >
-              <EmptyState
-                title={
-                  isDe
+            <div className="flex flex-col items-center text-center gap-4 max-w-[520px] mx-auto py-4">
+              <div className="size-12 rounded-2xl bg-muted flex items-center justify-center text-foreground">
+                <Lock className="size-6" weight="bold" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <h2 className="text-lg font-bold text-foreground">
+                  {isDe
                     ? "Anmeldung mit Betriebskonto erforderlich"
-                    : "Merchant Account Sign-in Required"
-                }
-                description={
-                  isDe
+                    : "Merchant Account Sign-in Required"}
+                </h2>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {isDe
                     ? "Support-Tickets sind exklusiv für verifizierte Zackisch-Gastronomen verfügbar. Bitte melde dich mit deinem Betriebskonto an, um ein neues Ticket zu erstellen oder deine Anfragen einzusehen."
-                    : "Support tickets are exclusively available for verified Zackisch merchants. Please sign in with your business account to open a new ticket or view your existing requests."
+                    : "Support tickets are exclusively available for verified Zackisch merchants. Please sign in with your business account to open a new ticket or view your existing requests."}
+                </p>
+              </div>
+              <Button
+                variant="primary"
+                size="md"
+                href={
+                  mounted &&
+                  typeof window !== "undefined" &&
+                  window.location.hostname.includes("localhost")
+                    ? "http://localhost:3001/sign-in"
+                    : "https://app.zackisch.com/sign-in"
                 }
-                icon={<Icon icon={Lock} size="lg" />}
-                actions={
-                  <Button
-                    label={
-                      isDe
-                        ? "Mit Zackisch-Konto anmelden"
-                        : "Sign in with Zackisch"
-                    }
-                    variant="primary"
-                    size="md"
-                    href={
-                      mounted &&
-                      typeof window !== "undefined" &&
-                      window.location.hostname.includes("localhost")
-                        ? "http://localhost:3001/sign-in"
-                        : "https://app.zackisch.com/sign-in"
-                    }
-                    endContent={<Icon icon={ArrowRight} size="sm" />}
-                  />
-                }
-              />
-            </VStack>
+              >
+                <span>
+                  {isDe
+                    ? "Mit Zackisch-Konto anmelden"
+                    : "Sign in with Zackisch"}
+                </span>
+                <ArrowRight className="size-4" />
+              </Button>
+            </div>
           </Card>
         ) : (
-          <Grid columns={{ minWidth: 320, max: 2 }} gap={6} width="100%">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-start">
             {/* Left: Create Ticket Form */}
             <Card variant="default" padding={6}>
-              <VStack gap={4}>
-                <HStack gap={2} vAlign="center">
-                  <Icon icon={Plus} size="sm" />
-                  <Heading level={2}>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <Plus className="size-5 shrink-0 text-foreground" weight="bold" />
+                  <h2 className="text-lg font-bold text-foreground">
                     {isDe
                       ? "Neues Support-Ticket eröffnen"
                       : "Open a New Support Ticket"}
-                  </Heading>
-                </HStack>
+                  </h2>
+                </div>
 
-                <form onSubmit={handleSubmit}>
-                  <VStack gap={4}>
-                    <Grid columns={2} gap={4}>
-                      <TextInput
-                        label={
-                          isDe
-                            ? "Deine geschäftliche E-Mail"
-                            : "Your Business Email"
-                        }
-                        type="email"
-                        value={customerEmail}
-                        isReadOnly
-                      />
-                      <TextInput
-                        label={isDe ? "Name / Betrieb" : "Name / Venue"}
-                        value={businessName || customerName}
-                        isReadOnly
-                      />
-                    </Grid>
-
-                    <Grid columns={2} gap={4}>
-                      <Selector
-                        label={isDe ? "Themenbereich" : "Category"}
-                        options={categoryOptions}
-                        value={category}
-                        onChange={(val) => setCategory(val)}
-                      />
-                      <Selector
-                        label={isDe ? "Dringlichkeit" : "Priority"}
-                        options={priorityOptions}
-                        value={priority}
-                        onChange={(val) => setPriority(val)}
-                      />
-                    </Grid>
-
-                    <TextInput
-                      label={isDe ? "Betreff" : "Subject"}
-                      value={subject}
-                      onChange={(val) => setSubject(val)}
-                      placeholder={
-                        isDe
-                          ? "z. B. Frage zum Tagesabgleich in unserer Kasse"
-                          : "e.g. Question about daily POS reconciliation"
-                      }
-                      isRequired
-                    />
-
-                    <TextArea
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <TextField
                       label={
                         isDe
-                          ? "Beschreibung deines Anliegens"
-                          : "Description"
+                          ? "Deine geschäftliche E-Mail"
+                          : "Your Business Email"
                       }
-                      value={body}
-                      onChange={(val) => setBody(val)}
-                      placeholder={
-                        isDe
-                          ? "Beschreibe kurz dein Anliegen (gerne mit Bestellnummer oder Tischnummer)..."
-                          : "Describe your question (include order or table number if applicable)..."
-                      }
-                      rows={5}
-                      isRequired
+                      type="email"
+                      value={customerEmail}
+                      readOnly
                     />
+                    <TextField
+                      label={isDe ? "Name / Betrieb" : "Name / Venue"}
+                      value={businessName || customerName}
+                      readOnly
+                    />
+                  </div>
 
-                    <Button
-                      label={
-                        isSubmitting
-                          ? isDe
-                            ? "Ticket wird gesendet..."
-                            : "Submitting ticket..."
-                          : isDe
-                            ? "Support-Ticket absenden"
-                            : "Submit Support Ticket"
-                      }
-                      variant="primary"
-                      size="md"
-                      isLoading={isSubmitting}
-                      icon={<Icon icon={Ticket} size="sm" />}
-                      onClick={(e: any) => handleSubmit(e)}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <SelectField
+                      label={isDe ? "Themenbereich" : "Category"}
+                      options={categoryOptions}
+                      value={category}
+                      onChange={(val) => setCategory(val)}
                     />
-                  </VStack>
+                    <SelectField
+                      label={isDe ? "Dringlichkeit" : "Priority"}
+                      options={priorityOptions}
+                      value={priority}
+                      onChange={(val) => setPriority(val)}
+                    />
+                  </div>
+
+                  <TextField
+                    label={isDe ? "Betreff" : "Subject"}
+                    value={subject}
+                    onChange={(val) => setSubject(val)}
+                    placeholder={
+                      isDe
+                        ? "z. B. Frage zum Tagesabgleich in unserer Kasse"
+                        : "e.g. Question about daily POS reconciliation"
+                    }
+                    required
+                  />
+
+                  <TextareaField
+                    label={
+                      isDe
+                        ? "Beschreibung deines Anliegens"
+                        : "Description"
+                    }
+                    value={body}
+                    onChange={(val) => setBody(val)}
+                    placeholder={
+                      isDe
+                        ? "Beschreibe kurz dein Anliegen (gerne mit Bestellnummer oder Tischnummer)..."
+                        : "Describe your question (include order or table number if applicable)..."
+                    }
+                    rows={5}
+                    required
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="md"
+                    loading={isSubmitting}
+                    disabled={isSubmitting}
+                  >
+                    <Ticket className="size-4" />
+                    <span>
+                      {isSubmitting
+                        ? isDe
+                          ? "Ticket wird gesendet..."
+                          : "Submitting ticket..."
+                        : isDe
+                          ? "Support-Ticket absenden"
+                          : "Submit Support Ticket"}
+                    </span>
+                  </Button>
                 </form>
-              </VStack>
+              </div>
             </Card>
 
             {/* Right: Existing Tickets List */}
             <Card variant="default" padding={6}>
-              <VStack gap={4}>
-                <HStack justify="between" vAlign="center">
-                  <Heading level={2}>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="text-lg font-bold text-foreground">
                     {isDe
                       ? "Deine bisherigen Tickets"
                       : "Your Existing Tickets"}
-                  </Heading>
+                  </h2>
                   <Badge
                     label={String(tickets ? tickets.length : 0)}
                     variant="neutral"
                   />
-                </HStack>
+                </div>
 
                 {!tickets || tickets.length === 0 ? (
-                  <EmptyState
-                    title={
-                      isDe
+                  <div className="flex flex-col items-center text-center gap-2 py-8">
+                    <Info className="size-7 text-muted-foreground" />
+                    <span className="font-semibold text-sm text-foreground">
+                      {isDe
                         ? "Keine Tickets vorhanden"
-                        : "No support tickets found"
-                    }
-                    description={
-                      isDe
+                        : "No support tickets found"}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {isDe
                         ? "Für deine E-Mail-Adresse liegen noch keine Support-Tickets vor."
-                        : "No support tickets found for your account yet."
-                    }
-                    icon={<Icon icon="info" size="lg" />}
-                  />
+                        : "No support tickets found for your account yet."}
+                    </span>
+                  </div>
                 ) : (
-                  <VStack gap={2}>
+                  <div className="flex flex-col gap-2">
                     {tickets.map((t) => (
                       <Card
                         key={t._id}
@@ -413,8 +402,8 @@ export default function SupportTicketsPage() {
                           )
                         }
                       >
-                        <VStack gap={2}>
-                          <HStack justify="between" vAlign="center">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center justify-between gap-2">
                             <Badge
                               label={t.ticketNumber}
                               variant="neutral"
@@ -428,37 +417,31 @@ export default function SupportTicketsPage() {
                                   : "info"
                               }
                             />
-                          </HStack>
-                          <Heading level={3}>
+                          </div>
+                          <h3 className="text-sm font-bold text-foreground">
                             {t.subject}
-                          </Heading>
-                          <HStack justify="between" vAlign="center">
-                            <HStack gap={1} vAlign="center">
-                              <Icon
-                                icon={Clock}
-                                size="sm"
-                              />
-                              <Text color="secondary">
+                          </h3>
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <Clock className="size-3.5" />
+                              <span>
                                 {new Date(t.updatedAt).toLocaleDateString(
                                   isDe ? "de-DE" : "en-US"
                                 )}
-                              </Text>
-                            </HStack>
-                            <Icon
-                              icon={ArrowRight}
-                              size="sm"
-                            />
-                          </HStack>
-                        </VStack>
+                              </span>
+                            </div>
+                            <ArrowRight className="size-4 text-muted-foreground" />
+                          </div>
+                        </div>
                       </Card>
                     ))}
-                  </VStack>
+                  </div>
                 )}
-              </VStack>
+              </div>
             </Card>
-          </Grid>
+          </div>
         )}
-      </VStack>
+      </div>
     </SupportShell>
   );
 }

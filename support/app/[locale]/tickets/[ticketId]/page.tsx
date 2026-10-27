@@ -6,16 +6,13 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { SupportShell } from "@/components/SupportShell";
 import type { SupportLocale } from "@/lib/knowledge-base";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Card } from "@astryxdesign/core/Card";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Button } from "@astryxdesign/core/Button";
-import { TextArea } from "@astryxdesign/core/TextArea";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Icon } from "@astryxdesign/core/Icon";
+import {
+  Card,
+  Badge,
+  Button,
+  TextareaField,
+  Divider,
+} from "@/components/ui/primitives";
 import {
   ArrowLeft,
   PaperPlaneRight,
@@ -80,50 +77,52 @@ export default function CustomerTicketThreadPage() {
 
   return (
     <SupportShell locale={locale}>
-      <VStack gap={6} width="100%" style={{ maxWidth: 840, margin: "0 auto" }}>
-        <HStack>
+      <div className="flex flex-col gap-6 w-full max-w-[840px] mx-auto">
+        <div className="flex items-center">
           <Button
-            label={isDe ? "Zurück zu allen Tickets" : "Back to all tickets"}
             variant="ghost"
             size="sm"
             href={`/${locale}/tickets`}
-            icon={<Icon icon={ArrowLeft} size="sm" />}
-          />
-        </HStack>
+          >
+            <ArrowLeft className="size-4" />
+            <span>{isDe ? "Zurück zu allen Tickets" : "Back to all tickets"}</span>
+          </Button>
+        </div>
 
         {!sessionToken ? (
           <Card variant="default" padding={6}>
-            <VStack gap={4}>
-              <Heading level={2}>
+            <div className="flex flex-col gap-4">
+              <h2 className="text-lg font-bold text-foreground">
                 {isDe ? "Anmeldung erforderlich" : "Authentication Required"}
-              </Heading>
-              <Text color="secondary">
+              </h2>
+              <p className="text-sm text-muted-foreground">
                 {isDe
                   ? "Um auf dieses Ticket zuzugreifen, musst du mit deinem Betriebskonto angemeldet sein."
                   : "To access this ticket, please sign in with your verified merchant account."}
-              </Text>
-              <HStack>
+              </p>
+              <div>
                 <Button
-                  label={isDe ? "Zu meinen Tickets" : "Go to my tickets"}
                   variant="primary"
                   size="sm"
                   href={`/${locale}/tickets`}
-                />
-              </HStack>
-            </VStack>
+                >
+                  {isDe ? "Zu meinen Tickets" : "Go to my tickets"}
+                </Button>
+              </div>
+            </div>
           </Card>
         ) : !thread ? (
           <Card variant="default" padding={6}>
-            <Heading level={2}>
+            <h2 className="text-lg font-bold text-foreground">
               {isDe ? "Ticket wird geladen..." : "Loading ticket..."}
-            </Heading>
+            </h2>
           </Card>
         ) : (
           <Card variant="default" padding={6}>
-            <VStack gap={6}>
-              <HStack justify="between" vAlign="center" wrap="wrap" gap={3}>
-                <VStack gap={1}>
-                  <HStack gap={2} vAlign="center">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
                     <Badge
                       label={thread.ticket.ticketNumber}
                       variant="neutral"
@@ -132,22 +131,22 @@ export default function CustomerTicketThreadPage() {
                       label={thread.ticket.status}
                       variant="info"
                     />
-                  </HStack>
-                  <Heading level={1}>
+                  </div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground">
                     {thread.ticket.subject}
-                  </Heading>
-                </VStack>
-                <Text color="secondary">
+                  </h1>
+                </div>
+                <span className="text-xs text-muted-foreground">
                   {new Date(thread.ticket.createdAt).toLocaleString(
                     isDe ? "de-DE" : "en-US"
                   )}
-                </Text>
-              </HStack>
+                </span>
+              </div>
 
               <Divider />
 
               {/* Message Thread */}
-              <VStack gap={3}>
+              <div className="flex flex-col gap-3">
                 {thread.messages.map((msg) => {
                   const isStaff = msg.authorType === "staff";
                   return (
@@ -156,72 +155,75 @@ export default function CustomerTicketThreadPage() {
                       variant={isStaff ? "muted" : "default"}
                       padding={4}
                     >
-                      <VStack gap={2}>
-                        <HStack justify="between" vAlign="center">
-                          <HStack gap={1} vAlign="center">
-                            <Icon
-                              icon={isStaff ? ShieldCheck : User}
-                              size="sm"
-                            />
-                            <Text weight="bold">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 text-sm font-bold text-foreground">
+                            {isStaff ? (
+                              <ShieldCheck className="size-4 shrink-0" />
+                            ) : (
+                              <User className="size-4 shrink-0" />
+                            )}
+                            <span>
                               {msg.authorName}{" "}
                               {isStaff ? "(Zackisch Support)" : ""}
-                            </Text>
-                          </HStack>
-                          <Text color="secondary">
+                            </span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">
                             {new Date(msg.createdAt).toLocaleString(
                               isDe ? "de-DE" : "en-US"
                             )}
-                          </Text>
-                        </HStack>
-                        <Text>{msg.body}</Text>
-                      </VStack>
+                          </span>
+                        </div>
+                        <p className="text-sm text-foreground whitespace-pre-wrap">
+                          {msg.body}
+                        </p>
+                      </div>
                     </Card>
                   );
                 })}
-              </VStack>
+              </div>
 
               <Divider />
 
               {/* Reply Form */}
-              <form onSubmit={handleSendReply}>
-                <VStack gap={3}>
-                  <TextArea
-                    label={isDe ? "Antwort hinzufügen" : "Add a reply"}
-                    value={replyBody}
-                    onChange={(val) => setReplyBody(val)}
-                    placeholder={
-                      isDe
-                        ? "Schreibe eine Nachricht an das Zackisch Support-Team..."
-                        : "Write a reply to the Zackisch support team..."
-                    }
-                    rows={4}
-                    isRequired
-                  />
-                  <HStack>
-                    <Button
-                      label={
-                        isSending
-                          ? isDe
-                            ? "Wird gesendet..."
-                            : "Sending..."
-                          : isDe
-                            ? "Antwort absenden"
-                            : "Send Reply"
-                      }
-                      variant="primary"
-                      size="md"
-                      isLoading={isSending}
-                      icon={<Icon icon={PaperPlaneRight} size="sm" />}
-                      onClick={(e: any) => handleSendReply(e)}
-                    />
-                  </HStack>
-                </VStack>
+              <form onSubmit={handleSendReply} className="flex flex-col gap-3">
+                <TextareaField
+                  label={isDe ? "Antwort hinzufügen" : "Add a reply"}
+                  value={replyBody}
+                  onChange={(val) => setReplyBody(val)}
+                  placeholder={
+                    isDe
+                      ? "Schreibe eine Nachricht an das Zackisch Support-Team..."
+                      : "Write a reply to the Zackisch support team..."
+                  }
+                  rows={4}
+                  required
+                />
+                <div>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="md"
+                    loading={isSending}
+                    disabled={isSending}
+                  >
+                    <PaperPlaneRight className="size-4" />
+                    <span>
+                      {isSending
+                        ? isDe
+                          ? "Wird gesendet..."
+                          : "Sending..."
+                        : isDe
+                          ? "Antwort absenden"
+                          : "Send Reply"}
+                    </span>
+                  </Button>
+                </div>
               </form>
-            </VStack>
+            </div>
           </Card>
         )}
-      </VStack>
+      </div>
     </SupportShell>
   );
 }

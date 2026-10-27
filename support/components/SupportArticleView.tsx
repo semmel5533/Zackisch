@@ -7,16 +7,7 @@ import {
   getCategoryBySlug,
   type SupportLocale,
 } from "@/lib/knowledge-base";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Grid } from "@astryxdesign/core/Grid";
-import { Card } from "@astryxdesign/core/Card";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Button } from "@astryxdesign/core/Button";
-import { Divider } from "@astryxdesign/core/Divider";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Card, Badge, Button, Divider } from "@/components/ui/primitives";
 import {
   CheckCircle,
   ListChecks,
@@ -101,97 +92,105 @@ export function SupportArticleView({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <VStack gap={6} width="100%" style={{ maxWidth: 840, margin: "0 auto" }}>
-        <HStack gap={2} vAlign="center">
+      <div className="flex flex-col gap-6 w-full max-w-[840px] mx-auto">
+        <div className="flex items-center gap-2 flex-wrap">
           <Button
-            label={isDe ? "Hilfe-Center" : "Help Center"}
             variant="ghost"
             size="sm"
             href={`/${locale}`}
-            icon={<Icon icon={ArrowLeft} size="sm" />}
-          />
+          >
+            <ArrowLeft className="size-4" />
+            <span>{isDe ? "Hilfe-Center" : "Help Center"}</span>
+          </Button>
           {category && (
             <>
-              <Text color="secondary">/</Text>
+              <span className="text-muted-foreground">/</span>
               <Button
-                label={category.title[locale]}
                 variant="ghost"
                 size="sm"
                 href={`/${locale}/categories/${category.slug}`}
-              />
+              >
+                {category.title[locale]}
+              </Button>
             </>
           )}
-        </HStack>
+        </div>
 
         <Card variant="default" padding={6}>
-          <VStack gap={6}>
-            <VStack gap={2}>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col items-start gap-2">
               {category && (
                 <Badge label={category.badge[locale]} variant="neutral" />
               )}
-              <Heading level={1}>{article.title[locale]}</Heading>
-              <Text color="secondary">{article.summary[locale]}</Text>
-            </VStack>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                {article.title[locale]}
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                {article.summary[locale]}
+              </p>
+            </div>
 
             <Divider />
 
             {/* Prerequisites */}
             <Card variant="muted" padding={4}>
-              <VStack gap={2}>
-                <HStack gap={1} vAlign="center">
-                  <Icon icon={ListChecks} size="sm" />
-                  <Text weight="bold">
-                    {isDe ? "Voraussetzungen" : "Prerequisites"}
-                  </Text>
-                </HStack>
-                <VStack gap={1}>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-1.5 text-sm font-bold text-foreground">
+                  <ListChecks className="size-4 shrink-0" />
+                  <span>{isDe ? "Voraussetzungen" : "Prerequisites"}</span>
+                </div>
+                <div className="flex flex-col gap-1 text-sm text-foreground">
                   {article.prerequisites[locale].map((req, idx) => (
-                    <Text key={idx}>• {req}</Text>
+                    <span key={idx}>• {req}</span>
                   ))}
-                </VStack>
-              </VStack>
+                </div>
+              </div>
             </Card>
 
             {/* Step-by-Step Instructions */}
-            <VStack gap={3}>
-              <Heading level={2}>
+            <div className="flex flex-col gap-3">
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                 {isDe
                   ? "Schritt-für-Schritt-Anleitung"
                   : "Step-by-Step Instructions"}
-              </Heading>
-              <VStack gap={2}>
+              </h2>
+              <div className="flex flex-col gap-2">
                 {article.steps[locale].map((step, idx) => (
                   <Card key={idx} variant="muted" padding={3}>
-                    <HStack gap={3} vAlign="start">
+                    <div className="flex items-start gap-3">
                       <Badge label={String(idx + 1)} variant="neutral" />
-                      <Text>{step}</Text>
-                    </HStack>
+                      <span className="text-sm text-foreground leading-relaxed">
+                        {step}
+                      </span>
+                    </div>
                   </Card>
                 ))}
-              </VStack>
-            </VStack>
+              </div>
+            </div>
 
             {/* Verification Check */}
             <Card variant="muted" padding={4}>
-              <HStack gap={3} vAlign="start">
-                <Icon icon={ShieldCheck} size="md" />
-                <VStack gap={1}>
-                  <Text weight="bold">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="size-5 shrink-0 mt-0.5 text-foreground" />
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-bold text-foreground">
                     {isDe ? "Erfolgskontrolle" : "Expected Result"}
-                  </Text>
-                  <Text>{article.verification[locale]}</Text>
-                </VStack>
-              </HStack>
+                  </span>
+                  <span className="text-sm text-foreground">
+                    {article.verification[locale]}
+                  </span>
+                </div>
+              </div>
             </Card>
 
             {/* Related Guides */}
             {article.relatedSlugs.length > 0 && (
-              <VStack gap={3}>
+              <div className="flex flex-col gap-3">
                 <Divider />
-                <Text weight="bold">
+                <span className="text-sm font-bold text-foreground">
                   {isDe ? "Weiterführende Artikel" : "Related Guides"}
-                </Text>
-                <Grid columns={{ minWidth: 260, max: 2 }} gap={2}>
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {article.relatedSlugs.map((relSlug) => {
                     const rel = getArticleBySlug(relSlug);
                     if (!rel) return null;
@@ -199,52 +198,55 @@ export function SupportArticleView({
                       <a
                         key={relSlug}
                         href={`/${locale}/articles/${relSlug}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
+                        className="no-underline text-inherit block"
                       >
-                        <Card variant="default" padding={3}>
-                          <HStack gap={2} vAlign="center">
-                            <Icon icon={CheckCircle} size="sm" />
-                            <Text weight="semibold">{rel.title[locale]}</Text>
-                          </HStack>
+                        <Card variant="default" padding={3} className="hover:border-[var(--zk-border-strong)] transition-colors">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="size-4 shrink-0 text-foreground" />
+                            <span className="text-sm font-semibold text-foreground">
+                              {rel.title[locale]}
+                            </span>
+                          </div>
                         </Card>
                       </a>
                     );
                   })}
-                </Grid>
-              </VStack>
+                </div>
+              </div>
             )}
-          </VStack>
+          </div>
         </Card>
 
         {/* Support Ticket Escalation Banner */}
         <Card variant="muted" padding={6}>
-          <HStack justify="between" vAlign="center" gap={4} wrap="wrap">
-            <VStack gap={1}>
-              <Heading level={3}>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <h3 className="text-base sm:text-lg font-bold text-foreground">
                 {isDe
                   ? "Frage noch nicht geklärt?"
                   : "Still need help with this topic?"}
-              </Heading>
-              <Text color="secondary">
+              </h3>
+              <p className="text-sm text-muted-foreground">
                 {isDe
                   ? "Erstelle ein Support-Ticket zu diesem Thema — unser Team hilft dir direkt weiter."
                   : "Create a support ticket on this topic and our team will assist you directly."}
-              </Text>
-            </VStack>
+              </p>
+            </div>
             <Button
-              label={
-                isDe
-                  ? "Ticket zu diesem Thema öffnen"
-                  : "Open Ticket on This Topic"
-              }
               variant="primary"
               size="md"
               href={`/${locale}/tickets?category=${category?.ticketCategory || "other"}&subject=${encodeURIComponent(article.title[locale])}`}
-              icon={<Icon icon={Ticket} size="sm" />}
-            />
-          </HStack>
+            >
+              <Ticket className="size-4" />
+              <span>
+                {isDe
+                  ? "Ticket zu diesem Thema öffnen"
+                  : "Open Ticket on This Topic"}
+              </span>
+            </Button>
+          </div>
         </Card>
-      </VStack>
+      </div>
     </SupportShell>
   );
 }

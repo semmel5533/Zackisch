@@ -8,15 +8,7 @@ import {
   getFeaturedArticles,
   type SupportLocale,
 } from "@/lib/knowledge-base";
-import { VStack } from "@astryxdesign/core/VStack";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Grid } from "@astryxdesign/core/Grid";
-import { Card } from "@astryxdesign/core/Card";
-import { Badge } from "@astryxdesign/core/Badge";
-import { Button } from "@astryxdesign/core/Button";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Text } from "@astryxdesign/core/Text";
-import { Icon } from "@astryxdesign/core/Icon";
+import { Card, Badge, Button } from "@/components/ui/primitives";
 import {
   ArrowRight,
   CheckCircle,
@@ -31,10 +23,10 @@ export function SupportHomeView({ locale }: { locale: SupportLocale }) {
 
   return (
     <SupportShell locale={locale}>
-      <VStack gap={8} width="100%">
+      <div className="flex flex-col gap-8 w-full">
         {/* Hero & Search Banner */}
         <Card variant="default" padding={6}>
-          <VStack gap={4} align="center" width="100%">
+          <div className="flex flex-col items-center text-center gap-4 w-full">
             <Badge
               label={
                 isDe
@@ -42,159 +34,169 @@ export function SupportHomeView({ locale }: { locale: SupportLocale }) {
                   : "Self-Service Help Center for Restaurants & Teams"
               }
               variant="neutral"
-              icon={<Icon icon={Sparkle} size="sm" />}
+              icon={<Sparkle className="size-3.5" />}
             />
-            <VStack gap={1} align="center">
-              <Heading level={1}>
+            <div className="flex flex-col items-center gap-2 max-w-2xl">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                 {isDe
                   ? "Wie können wir deinem Betrieb heute helfen?"
                   : "How can we help your restaurant today?"}
-              </Heading>
-              <Text color="secondary">
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 {isDe
                   ? "Schritt-für-Schritt-Anleitungen zur einfachen Einrichtung, zur einmaligen Kassenerfassung (POS) und zu Stripe Connect Direktzahlungen."
                   : "Step-by-step guides for simple onboarding, single-entry POS recording, and Stripe Connect direct charges."}
-              </Text>
-            </VStack>
+              </p>
+            </div>
 
-            <div style={{ width: "100%", maxWidth: 640 }}>
+            <div className="w-full max-w-[640px]">
               <SupportSearch locale={locale} />
             </div>
-          </VStack>
+          </div>
         </Card>
 
         {/* Critical POS & Fiscal Clarity Callout */}
         <Card variant="muted" padding={5}>
-          <HStack justify="between" vAlign="center" gap={6} wrap="wrap">
-            <VStack gap={1} style={{ maxWidth: 720 }}>
-              <HStack gap={1} vAlign="center">
-                <Icon icon={Receipt} size="sm" />
-                <Text weight="bold">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div className="flex flex-col gap-1.5 max-w-[720px]">
+              <div className="flex items-center gap-1.5 text-sm font-bold text-foreground">
+                <Receipt className="size-4 shrink-0" />
+                <span>
                   {isDe
                     ? "Wichtiger Ablauf für deinen Kassen-Alltag (POS)"
                     : "Essential Daily POS Workflow"}
-                </Text>
-              </HStack>
-              <Heading level={2}>
+                </span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                 {isDe
                   ? "Deine bestehende Kasse bleibt: Jede bezahlte Bestellung einmalig erfassen"
                   : "Your existing POS stays: Record every paid order once"}
-              </Heading>
-              <Text color="secondary">
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {isDe
                   ? "Zackisch stellt Gästen eine digitale Bestell- und Zahlungsbestätigung bereit (kein Kassenbeleg und keine Rechnung). Dein Team sieht auf dem Tablet sofort „Bereits mit Zackisch bezahlt“, erfasst die Bestellung genau einmal als unbare Online-Zahlung in der vorhandenen Kasse und tippt auf „In Kasse erfasst“."
                   : "Zackisch provides guests with a digital Order and Payment Confirmation (neither a POS receipt nor an invoice). Your staff see 'Already paid with Zackisch' on the tablet, enter the order once as a non-cash online payment in your POS, and tap 'Recorded in POS'."}
-              </Text>
-            </VStack>
+              </p>
+            </div>
             <Button
-              label={isDe ? "Kassen-Leitfaden lesen" : "Read POS Guide"}
               variant="primary"
               size="md"
               href={`/${locale}/articles/pos-single-entry-workflow`}
-              endContent={<Icon icon={ArrowRight} size="sm" />}
-            />
-          </HStack>
+            >
+              <span>{isDe ? "Kassen-Leitfaden lesen" : "Read POS Guide"}</span>
+              <ArrowRight className="size-4" />
+            </Button>
+          </div>
         </Card>
 
         {/* Categories Section */}
-        <VStack gap={3} width="100%">
-          <HStack justify="between" vAlign="center">
-            <Heading level={2}>
+        <div className="flex flex-col gap-3 w-full">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">
               {isDe ? "Themenbereiche" : "Browse by Category"}
-            </Heading>
-            <Text color="secondary">
+            </h2>
+            <span className="text-sm text-muted-foreground">
               {isDe
                 ? "43 Schritt-für-Schritt-Anleitungen"
                 : "43 Step-by-Step Guides"}
-            </Text>
-          </HStack>
+            </span>
+          </div>
 
-          <Grid columns={{ minWidth: 280, max: 3 }} gap={4} width="100%">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {SUPPORT_CATEGORIES.map((cat) => (
               <a
                 key={cat.slug}
                 href={`/${locale}/categories/${cat.slug}`}
-                style={{ textDecoration: "none", color: "inherit" }}
+                className="no-underline text-inherit block h-full"
               >
-                <Card variant="default" padding={5} height="100%">
-                  <VStack gap={3} justify="between" height="100%">
-                    <VStack gap={2}>
-                      <HStack justify="between" vAlign="center">
+                <Card variant="default" padding={5} className="h-full hover:border-[var(--zk-border-strong)] transition-colors">
+                  <div className="flex flex-col justify-between gap-3 h-full">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between gap-2">
                         <Badge label={cat.badge[locale]} variant="neutral" />
-                        <Icon icon={ArrowRight} size="sm" />
-                      </HStack>
-                      <Heading level={3}>{cat.title[locale]}</Heading>
-                      <Text color="secondary">{cat.description[locale]}</Text>
-                    </VStack>
-                    <Text weight="semibold">
+                        <ArrowRight className="size-4 text-muted-foreground" />
+                      </div>
+                      <h3 className="text-base font-bold text-foreground">
+                        {cat.title[locale]}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {cat.description[locale]}
+                      </p>
+                    </div>
+                    <span className="text-sm font-semibold text-foreground pt-2">
                       {isDe ? "Alle Anleitungen ansehen →" : "View all guides →"}
-                    </Text>
-                  </VStack>
+                    </span>
+                  </div>
                 </Card>
               </a>
             ))}
-          </Grid>
-        </VStack>
+          </div>
+        </div>
 
         {/* Featured Guides */}
-        <VStack gap={3} width="100%">
-          <Heading level={2}>
+        <div className="flex flex-col gap-3 w-full">
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
             {isDe
               ? "Wichtigste Anleitungen für den Start"
               : "Most Important Guides to Get Started"}
-          </Heading>
-          <Grid columns={{ minWidth: 320, max: 2 }} gap={4} width="100%">
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {featured.map((art) => (
               <a
                 key={art.slug}
                 href={`/${locale}/articles/${art.slug}`}
-                style={{ textDecoration: "none", color: "inherit" }}
+                className="no-underline text-inherit block h-full"
               >
-                <Card variant="default" padding={4} height="100%">
-                  <HStack justify="between" vAlign="start" gap={3}>
-                    <VStack gap={1}>
-                      <HStack gap={1} vAlign="center">
-                        <Icon icon={CheckCircle} size="sm" />
-                        <Text weight="bold">
+                <Card variant="default" padding={4} className="h-full hover:border-[var(--zk-border-strong)] transition-colors">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                        <CheckCircle className="size-4 shrink-0" />
+                        <span>
                           {isDe ? "Empfohlene Anleitung" : "Featured Guide"}
-                        </Text>
-                      </HStack>
-                      <Heading level={3}>{art.title[locale]}</Heading>
-                      <Text color="secondary">{art.summary[locale]}</Text>
-                    </VStack>
-                    <Icon icon={ArrowRight} size="sm" />
-                  </HStack>
+                        </span>
+                      </div>
+                      <h3 className="text-base font-bold text-foreground">
+                        {art.title[locale]}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {art.summary[locale]}
+                      </p>
+                    </div>
+                    <ArrowRight className="size-4 shrink-0 text-muted-foreground mt-1" />
+                  </div>
                 </Card>
               </a>
             ))}
-          </Grid>
-        </VStack>
+          </div>
+        </div>
 
         {/* Direct Ticket Support CTA */}
         <Card variant="muted" padding={6}>
-          <HStack justify="between" vAlign="center" gap={4} wrap="wrap">
-            <VStack gap={1}>
-              <Heading level={2}>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                 {isDe
                   ? "Du hast eine individuelle Frage zu deinem Betrieb?"
                   : "Need personalized help with your venue?"}
-              </Heading>
-              <Text color="secondary">
+              </h2>
+              <p className="text-sm text-muted-foreground">
                 {isDe
                   ? "Erstelle direkt ein Support-Ticket. Unser Team sieht deinen Kontext und antwortet dir direkt im Ticketverlauf."
                   : "Open a support ticket directly. Our team reviews your context and replies right in your ticket thread."}
-              </Text>
-            </VStack>
+              </p>
+            </div>
             <Button
-              label={isDe ? "Zum Ticket-Portal" : "Open Ticket Portal"}
               variant="primary"
               size="md"
               href={`/${locale}/tickets`}
-              icon={<Icon icon={Ticket} size="sm" />}
-            />
-          </HStack>
+            >
+              <Ticket className="size-4" />
+              <span>{isDe ? "Zum Ticket-Portal" : "Open Ticket Portal"}</span>
+            </Button>
+          </div>
         </Card>
-      </VStack>
+      </div>
     </SupportShell>
   );
 }
