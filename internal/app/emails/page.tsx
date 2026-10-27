@@ -72,7 +72,7 @@ export default function EmailsAuditPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card padding="md">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[var(--zk-text-secondary)]">
               <EnvelopeSimple className="size-4" aria-hidden="true" />
               <span>{isDe ? "Absender (From)" : "Sender (From)"}</span>
             </div>
@@ -87,7 +87,7 @@ export default function EmailsAuditPage() {
 
         <Card padding="md">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[var(--zk-text-secondary)]">
               <ShieldCheck className="size-4" aria-hidden="true" />
               <span>{isDe ? "Transaktions-Typen" : "Transactional Types"}</span>
             </div>
@@ -104,7 +104,7 @@ export default function EmailsAuditPage() {
 
         <Card padding="md">
           <div className="flex flex-col gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+            <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
               {isDe ? "Protokollierte Ereignisse" : "Logged Events"}
             </span>
             <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">
@@ -165,7 +165,7 @@ export default function EmailsAuditPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold text-[var(--zk-text-secondary)]">
                   <th className="py-3 px-4">{isDe ? "Zeitpunkt" : "Timestamp"}</th>
                   <th className="py-3 px-4">{isDe ? "Ereignis / Typ" : "Event / Type"}</th>
                   <th className="py-3 px-4">{isDe ? "Auslöser" : "Actor"}</th>

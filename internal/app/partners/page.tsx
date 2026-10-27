@@ -143,7 +143,7 @@ export default function PartnersPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold text-[var(--zk-text-secondary)]">
                     <th className="py-3 pr-4">Code & Partner</th>
                     <th className="py-3 px-4">Vermittelte Betriebe</th>
                     <th className="py-3 px-4">Provisionssatz</th>
@@ -218,7 +218,7 @@ export default function PartnersPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold text-[var(--zk-text-secondary)]">
                     <th className="py-3 pr-4">Zeitpunkt</th>
                     <th className="py-3 px-4">Periode</th>
                     <th className="py-3 px-4">Betrag</th>

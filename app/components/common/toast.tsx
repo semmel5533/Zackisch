@@ -79,7 +79,7 @@ export function ToastViewport({
               <div
                 key={item.id}
                 role={isError ? "alert" : "status"}
-                className={`pointer-events-auto flex items-start gap-3 rounded-xl border p-4 shadow-lg text-sm font-medium transition-all ${
+                className={`pointer-events-auto flex items-start gap-3 rounded-xl border p-4 shadow-lg text-sm font-medium transition-colors ${
                   isError
                     ? "bg-[var(--zk-error-bg)] border-[var(--zk-error-text)]/30 text-[var(--zk-error-text)]"
                     : isSuccess

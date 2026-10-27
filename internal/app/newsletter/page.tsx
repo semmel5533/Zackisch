@@ -551,7 +551,7 @@ export default function NewsletterStudioPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-[var(--zk-border)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                    <tr className="border-b border-[var(--zk-border)] text-xs font-semibold text-[var(--zk-text-secondary)]">
                       <th className="py-3 pr-4">E-Mail-Adresse</th>
                       <th className="py-3 px-4">Status</th>
                       <th className="py-3 px-4">Sprache</th>
@@ -617,7 +617,7 @@ export default function NewsletterStudioPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-[var(--zk-border)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                    <tr className="border-b border-[var(--zk-border)] text-xs font-semibold text-[var(--zk-text-secondary)]">
                       <th className="py-3 pr-4">Titel & Betreff</th>
                       <th className="py-3 px-4">Status</th>
                       <th className="py-3 px-4">Zugestellt</th>

@@ -32,7 +32,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card padding="md" variant="muted">
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                   Grundgebühr
                 </span>
                 <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">
@@ -46,7 +46,7 @@ export default function SettingsPage() {
 
             <Card padding="md" variant="muted">
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                   Einrichtungsgebühr
                 </span>
                 <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">
@@ -60,7 +60,7 @@ export default function SettingsPage() {
 
             <Card padding="md" variant="muted">
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                   Zackisch Plattformgebühr
                 </span>
                 <div className="text-2xl font-bold text-[var(--zk-text)] tabular-nums">

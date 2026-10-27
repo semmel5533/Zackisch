@@ -1,6 +1,6 @@
 {
   "name": "support",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "type": "module",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "next start --port 3003",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run tests",
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",

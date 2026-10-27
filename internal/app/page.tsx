@@ -64,7 +64,7 @@ export default function InternalOverviewPage() {
         <Card padding="md">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                 Aktive Gastronomiebetriebe
               </span>
               <Storefront className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
@@ -81,7 +81,7 @@ export default function InternalOverviewPage() {
         <Card padding="md">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                 Gastronomie-Bruttoumsatz (GMV)
               </span>
               <Receipt className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
@@ -98,7 +98,7 @@ export default function InternalOverviewPage() {
         <Card padding="md">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                 Zackisch Plattformgebühr (2%)
               </span>
               <Coins className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
@@ -116,7 +116,7 @@ export default function InternalOverviewPage() {
         <Card padding="md">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                 Vertriebspartner & Provisionen
               </span>
               <Handshake className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
@@ -133,7 +133,7 @@ export default function InternalOverviewPage() {
         <Card padding="md">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                 Newsletter-Abonnenten
               </span>
               <EnvelopeSimple className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
@@ -150,7 +150,7 @@ export default function InternalOverviewPage() {
         <Card padding="md">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+              <span className="text-xs font-semibold text-[var(--zk-text-secondary)]">
                 Autorisierte Teammitglieder
               </span>
               <ShieldCheck className="size-4 text-[var(--zk-text-secondary)]" aria-hidden="true" />
@@ -193,7 +193,7 @@ export default function InternalOverviewPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                  <tr className="border-b border-[var(--zk-border)] text-xs font-semibold text-[var(--zk-text-secondary)]">
                     <th className="py-2.5 pr-4">Zeitpunkt</th>
                     <th className="py-2.5 px-4">Akteur</th>
                     <th className="py-2.5 px-4">Aktion</th>

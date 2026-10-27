@@ -87,7 +87,7 @@ export default function AuditPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold uppercase tracking-wider text-[var(--zk-text-secondary)]">
+                <tr className="border-b border-[var(--zk-border)] bg-[var(--zk-surface-muted)] text-xs font-semibold text-[var(--zk-text-secondary)]">
                   <th className="py-3 px-4">Zeitstempel</th>
                   <th className="py-3 px-4">Akteur & Rolle</th>
                   <th className="py-3 px-4">Aktion</th>

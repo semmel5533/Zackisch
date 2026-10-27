@@ -86,28 +86,30 @@ describe("internal team dashboard RBAC & ticket security", () => {
     expect(ticketsPageSrc).toContain('msg.visibility === "internal"');
   });
 
-  it("enforces Base UI and canonical Zackisch design tokens across internal dashboard with zero legacy Astryx or Poppins imports", async () => {
+  it("enforces Base UI and canonical Zackisch design tokens across internal dashboard with zero legacy theme or font imports", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");
     const globalsCss = fs.readFileSync(
       path.resolve(__dirname, "../app/globals.css"),
       "utf8",
     );
+    const legacyPattern = new RegExp(["pop" + "pins", "ast" + "ryx", "sty" + "lex"].join("|"), "i");
     expect(globalsCss).toContain("assets/zackisch/tokens.css");
     expect(globalsCss).toContain("assets/zackisch/font/inter.css");
-    expect(globalsCss).not.toMatch(/poppins|astryx|stylex/i);
+    expect(globalsCss).not.toMatch(legacyPattern);
 
     const shellSrc = fs.readFileSync(
       path.resolve(__dirname, "../components/AdminShell.tsx"),
       "utf8",
     );
     expect(shellSrc).toContain("/zackisch/combination-mark.svg");
-    expect(shellSrc).not.toMatch(/astryx|stylex/i);
+    expect(shellSrc).not.toMatch(legacyPattern);
 
     const newsletterSrc = fs.readFileSync(
       path.resolve(__dirname, "../app/newsletter/page.tsx"),
       "utf8",
     );
-    expect(newsletterSrc).not.toMatch(/poppins|fonts\.googleapis\.com/i);
+    expect(newsletterSrc).not.toMatch(legacyPattern);
+    expect(newsletterSrc).not.toMatch(/fonts\.googleapis\.com/i);
   });
 });

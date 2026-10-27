@@ -1,6 +1,6 @@
 {
   "name": "internal",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "type": "module",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
     "start": "next start --port 3002",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run tests",
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",

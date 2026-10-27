@@ -459,9 +459,9 @@ function SignUpForm({
             />
 
             <ul className="flex flex-col gap-1.5 text-xs">
-              {passwordReqs.map((req, idx) => (
+              {passwordReqs.map((req) => (
                 <li
-                  key={idx}
+                  key={req.label}
                   className={`flex items-center gap-2 ${
                     req.ok
                       ? "text-[var(--zk-text)] font-medium"
