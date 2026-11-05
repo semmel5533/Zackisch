@@ -36,82 +36,19 @@ export const content = {
     close: "Menü schließen",
     dismiss: "Schließen",
     navigation: "Navigation",
-    nav: ["So funktioniert’s", "Kosten", "Fragen", "Hilfe"],
+    nav: ["Funktionen", "Kosten", "Fragen", "Hilfe"],
     login: "Anmelden",
     start: "Lokal einrichten",
     title: "QR-Bestellung für dein Lokal – Zackisch",
     description:
       "Gäste bestellen und bezahlen per QR-Code. Dein Team behält den Überblick, deine bestehende Kasse bleibt. 2 % Zackisch-Gebühr plus Stripe-Gebühren.",
-    hero: "Guter Service. Ein Bestellweg mehr.",
-    intro:
-      "Gäste scannen den QR-Code und bestellen und bezahlen direkt am Smartphone. Dein Team sieht die bezahlten Aufträge auf dem Tablet. Und deine Kasse bleibt, wo sie ist.",
-    heroNote: "Für Cafés, Bars und alle, die gern Gastgeber sind.",
     heroAlt: "Eine Servicekraft begrüßt zwei Gäste beim Essen im Café.",
     photoCredit:
       "Stockfoto: Ketut Subiyanto / Pexels. Kein Zackisch-Kundenlokal.",
-    problemTitle: "Noch eine Runde. Ohne noch einmal zu winken.",
-    problemText:
-      "Ein Getränk nachbestellen, das Menü in Ruhe ansehen oder bezahlen: Gäste können selbst entscheiden, wann sie den digitalen Bestellweg nutzen. Für Fragen und persönlichen Service bleibt dein Team da.",
-    statistic: "27 %",
-    statisticText:
-      "der Befragten in Deutschland hatten wegen Wartezeiten schon einmal ein Lokal vor der Bestellung verlassen.",
-    source: "Lightspeed × Medallia · Mai 2025 · rund 1.000 Erwachsene",
-    caveat:
-      "Selbstauskunft, keine Abbruchquote pro Besuch und kein gemessener Zackisch-Effekt.",
     researchLink: "Quelle und Einordnung lesen",
-    storyTitle: "Vom Tisch zu deinem Team.",
-    storyIntro:
-      "Ein zusätzlicher Weg für Gäste. Ein klarer Ablauf für dein Lokal.",
-    steps: [
-      {
-        title: "Scannen",
-        text: "Der QR-Code führt zum richtigen Tisch oder zur Abholung. Ohne App-Installation und ohne Gastkonto.",
-        placeholder: "Hier erscheint: QR-Aufsteller",
-        detail:
-          "Schwarz-weiße Karte mit Tischkennung und Hinweis auf persönlichen Service.",
-      },
-      {
-        title: "Auswählen & bezahlen",
-        text: "Gäste sehen dein Lokal, dein Menü und die Preise. Sie wählen Artikel und Extras und bezahlen über Stripe.",
-        placeholder: "Hier erscheint: Gäste-Menü",
-        detail:
-          "Echter mobiler Screenshot mit Lokallogo, Artikeln, Preisen und Warenkorb.",
-      },
-      {
-        title: "Zubereiten & erfassen",
-        text: "Nach bestätigter Zahlung erscheint der Auftrag beim Personal. Dein Team bereitet ihn zu und erfasst ihn einmal in eurer Kasse.",
-        placeholder: "Hier erscheint: Personal-Tablet",
-        detail:
-          "Echte Personalansicht mit bezahltem Auftrag und separater Kassenerfassung.",
-      },
-    ],
-    placeholderNote: "Platzhalter · Produktaufnahme folgt",
     conversationAlt: "Freunde lachen gemeinsam an einem Tisch im Café.",
-    hybridTitle: "Gastfreundschaft bleibt persönlich.",
-    hybridText:
-      "QR-Bestellen ist eine Möglichkeit. Wer lieber persönlich bestellt, wendet sich weiterhin an dein Team. Bestehende Kasse, persönliche Beratung und gewohnter Service bleiben Teil deines Lokals.",
-    setupTitle: "Dein Lokal. Schritt für Schritt eingerichtet.",
-    setupIntro:
-      "Du richtest Zackisch selbst ein. Die öffentliche Hilfe begleitet dich dabei.",
-    setup: [
-      "Konto und Lokal anlegen",
-      "Menü mit Preisen und Optionen pflegen",
-      "Zahlungen über Stripe einrichten",
-      "Tische und QR-Codes vorbereiten",
-      "Personal-Tablet verbinden",
-      "Ablauf testen, dann starten",
-    ],
     setupHelp: "Einrichtungsanleitungen öffnen",
-    priceTitle: "Eine klare Gebühr. Wenn Gäste bestellen.",
-    fee: "2 %",
-    feeLabel: "Zackisch-Gebühr je erfolgreich bezahlter Bestellung",
-    feeText:
-      "Auf den bezahlten Bruttobestellwert ohne freiwilliges Trinkgeld, inklusive der gegebenenfalls auf unsere Gebühr entfallenden Umsatzsteuer. Stripe-Gebühren kommen separat hinzu.",
-    free: "0 € Einrichtung. 0 € monatliche Zackisch-Grundgebühr.",
-    requirements:
-      "Du brauchst ein geeignetes Tablet, Internet, ein für Zahlungen freigegebenes Stripe-Konto und deinen bestehenden Kassenablauf. Geräte, Verbindung und Druck können eigene Kosten verursachen.",
     priceLink: "Gebühren und Voraussetzungen ansehen",
-    faqTitle: "Gut zu wissen, bevor du loslegst.",
     faqs: [
       {
         question: "Brauche ich eine neue Kasse?",
@@ -139,9 +76,6 @@ export const content = {
           "Nein. Zackisch zeigt eine Bestell- und Zahlungsbestätigung. Den gesetzlich erforderlichen Beleg oder eine Rechnung stellt dein Lokal über seinen eigenen zulässigen Ablauf bereit.",
       },
     ],
-    endTitle: "Mach Platz für eine weitere Art zu bestellen.",
-    endText:
-      "Starte mit deinem Lokal und prüfe in Ruhe, was du für den digitalen Bestellweg brauchst.",
     footerProduct: "Zackisch",
     footerHelp: "Kontakt & Hilfe",
     footerLegal: "Rechtliches",
@@ -229,81 +163,19 @@ export const content = {
     close: "Close menu",
     dismiss: "Close",
     navigation: "Navigation",
-    nav: ["How it works", "Pricing", "Questions", "Help"],
+    nav: ["Features", "Pricing", "Questions", "Help"],
     login: "Sign in",
     start: "Set up your venue",
     title: "QR ordering for your venue – Zackisch",
     description:
       "Guests order and pay by QR code. Your team keeps track and your existing POS stays. 2% Zackisch fee plus Stripe fees.",
-    hero: "Good service. One more way to order.",
-    intro:
-      "Guests scan the QR code to order and pay on their phones. Your team sees paid orders on a tablet. And your existing POS stays right where it is.",
-    heroNote: "For cafés, bars and people who love hosting.",
     heroAlt: "A member of the café team welcomes two guests over lunch.",
     photoCredit:
       "Stock photo: Ketut Subiyanto / Pexels. Not a Zackisch customer venue.",
-    problemTitle: "Another round. Without waving again.",
-    problemText:
-      "Ordering a drink, browsing the menu or paying: guests choose when to use the digital option. Your team is still there for questions and personal service.",
-    statistic: "27%",
-    statisticText:
-      "of respondents in Germany had left a venue before ordering because of waiting times.",
-    source: "Lightspeed × Medallia · May 2025 · around 1,000 adults",
-    caveat:
-      "Self-reported experience, not a per-visit abandonment rate or a measured Zackisch effect.",
     researchLink: "Read the source and context",
-    storyTitle: "From the table to your team.",
-    storyIntro: "An extra option for guests. A clear process for your venue.",
-    steps: [
-      {
-        title: "Scan",
-        text: "The QR code opens the right table or pickup menu. No app installation and no guest account.",
-        placeholder: "Coming here: QR table stand",
-        detail:
-          "Black-and-white card with a table identifier and a reminder of personal service.",
-      },
-      {
-        title: "Choose & pay",
-        text: "Guests see your venue, menu and prices. They select items and extras and pay through Stripe.",
-        placeholder: "Coming here: guest menu",
-        detail:
-          "An actual mobile screenshot with the venue logo, items, prices and cart.",
-      },
-      {
-        title: "Prepare & record",
-        text: "After the server verifies payment, the order appears for staff. Your team prepares it and records it once in your existing POS.",
-        placeholder: "Coming here: staff tablet",
-        detail:
-          "An actual staff view showing a paid order and separate POS recording status.",
-      },
-    ],
-    placeholderNote: "Placeholder · Product image to follow",
     conversationAlt: "Friends laughing together around a café table.",
-    hybridTitle: "Hospitality stays personal.",
-    hybridText:
-      "QR ordering is an option. Guests who prefer ordering in person can still turn to your team. Your existing POS, personal advice and familiar service remain part of your venue.",
-    setupTitle: "Your venue. Set up step by step.",
-    setupIntro:
-      "You set up Zackisch yourself. Public help guides you along the way.",
-    setup: [
-      "Create your account and venue",
-      "Add your menu, prices and options",
-      "Set up payments with Stripe",
-      "Prepare tables and QR codes",
-      "Connect your staff tablet",
-      "Test the process, then start",
-    ],
     setupHelp: "Open setup guides",
-    priceTitle: "A clear fee. When guests order.",
-    fee: "2%",
-    feeLabel: "Zackisch fee per successfully paid order",
-    feeText:
-      "On the paid gross order value excluding voluntary tips, including any VAT applicable to our fee. Stripe fees are charged separately.",
-    free: "€0 setup. €0 monthly Zackisch base fee.",
-    requirements:
-      "You need a suitable tablet, internet, a Stripe account approved for payments and your existing POS process. Devices, connectivity and printing may have their own costs.",
     priceLink: "See fees and prerequisites",
-    faqTitle: "Good to know before you start.",
     faqs: [
       {
         question: "Do I need a new POS?",
@@ -331,9 +203,6 @@ export const content = {
           "No. Zackisch provides an order and payment confirmation. Your venue issues the legally required receipt or invoice through its own lawful process.",
       },
     ],
-    endTitle: "Make room for another way to order.",
-    endText:
-      "Start with your venue and take your time checking what you need for digital ordering.",
     footerProduct: "Zackisch",
     footerHelp: "Contact & help",
     footerLegal: "Legal",

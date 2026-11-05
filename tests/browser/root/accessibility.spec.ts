@@ -11,6 +11,10 @@ for (const locale of ["de-de", "de-en"] as const) {
       locale === "de-de" ? "de" : "en",
     );
     await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page).toHaveTitle(/ \| Zackisch$/);
+    await expect(
+      page.locator('link[rel="icon"][type="image/svg+xml"]'),
+    ).toHaveAttribute("href", "/brand/logo/platform/signet--favicon.svg");
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
       `https://zackisch.com/${locale}`,
@@ -95,23 +99,28 @@ test("product placeholders and desktop motion respect user preferences", async (
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/de-de");
-  await expect(page.locator(".hero .lead")).toContainText("QR-Code");
-  await expect(page.locator(".product-placeholder")).toHaveCount(3);
-  await expect(page.locator(".product-placeholder img")).toHaveCount(0);
+  await expect(page.locator(".welcome-intro")).toContainText("QR-Bestellung");
+  await expect(page.locator(".screenshot-placeholder")).toHaveCount(4);
+  await expect(page.locator(".screenshot-placeholder img")).toHaveCount(0);
   expect(
     await page
-      .locator(".section-heading")
+      .locator(".menu-chapter")
+      .first()
       .evaluate((el) => getComputedStyle(el).position),
   ).toBe("sticky");
+  await page.setViewportSize({ width: 844, height: 390 });
+  expect(await page.locator(".menu-chapter").first().evaluate(el => getComputedStyle(el).position)).toBe("static");
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   expect(
     await page
-      .locator(".section-heading")
+      .locator(".menu-chapter")
+      .first()
       .evaluate((el) => getComputedStyle(el).position),
   ).toBe("static");
   expect(
     await page
-      .locator(".hero-photo img")
+      .locator(".welcome-main-photo")
       .evaluate((el) => getComputedStyle(el).animationName),
   ).toBe("none");
   for (const width of [320, 768, 1024, 1920]) {

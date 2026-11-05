@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 for (const [locale, lang, title] of [
-  ["de-de", "de", "Guter Service. Ein Bestellweg mehr."],
-  ["de-en", "en", "Good service. One more way to order."],
+  ["de-de", "de", "Dein Menü kann mehr. Du bleibst Gastgeber."],
+  ["de-en", "en", "Your menu does more. You stay the host."],
 ]) {
   test(`${locale} has localized metadata and fits small screens`, async ({
     page,
@@ -45,7 +45,7 @@ test("mobile menu closes after anchor selection and returns focus on Escape", as
   await trigger.click();
   await page
     .getByRole("dialog", { name: "Navigation" })
-    .getByRole("link", { name: "So funktioniert’s" })
+    .getByRole("link", { name: "Funktionen" })
     .click();
   await expect(page.getByRole("dialog", { name: "Navigation" })).toBeHidden();
   await expect(page).toHaveURL(/#how-it-works$/);

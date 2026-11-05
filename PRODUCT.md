@@ -16,6 +16,10 @@ Zackisch is Selim Eser's sole proprietorship, currently without employees. Busin
 
 The service fee is 2% of eligible successfully captured restaurant order value, excluding voluntary tips and including any VAT applicable to Zackisch's own fee. Stripe fees are separate. There is no Zackisch setup or monthly base fee. The restaurant remains the seller and is responsible for its lawful receipt/invoice and POS workflow.
 
+## Verified smart-menu functionality
+
+Same-venue order co-occurrence informs cart recommendations, excluding current and unavailable items. The current cart and checkout each request at most two suggestions; checkout offers available low-priced additions (default ceiling EUR 6). Available same-venue items provide a fallback. A virtual most-popular category appears first and ranks historical ordered quantities. Recommendations, popularity and tipping have independent venue toggles. Optional percentage tips start at zero. Ordinary menu/category order remains manually managed; no rolling trend window or personalized guest profile is implemented. Current queries exclude cancelled orders but do not independently filter payment status/test flags; never market them as a verified-paid-only ranking until this is implemented and tested.
+
 ## Brand commitments
 
 Use the founder-supplied black wordmark and signet without modifying outlines. `DESIGN.md` is the only visual authority. All new UI uses Impeccable, Mobbin research and Base UI. The website targets owner self-registration at https://app.zackisch.com/sign-up, in German and English for Germany. Only real internet stock photography with verified free commercial usage rights; never AI-generated photos. Product screenshots remain text-labelled placeholders until genuine captures exist. No invented endorsements, metrics or feature claims.
@@ -30,14 +34,14 @@ Preserve payment, checkout, permissions, ledgers, pairing, partners and newslett
 
 ## Root website direction contract
 
-THESIS: An extra ordering route leaves hospitality human. Explain the existing POS boundary before asking a venue owner to register.
+THESIS: The menu does more while the operator remains the host. Explain discovery, relevant additions and voluntary tips through few meaningful words, then show how the existing POS and team remain central.
 
-OWN-WORLD: Supplied black Zackisch masters, League Spartan, white canvas, Citron emphasis, generous rounded photo surfaces and pill controls. No dark theme, foreign fonts or generated photography.
+OWN-WORLD: Original black primary wordmark, League Spartan, white canvas and Citron. Oversized editorial type, generous space and real hospitality photography. Signet only for constrained positions. No invented product images.
 
-STORY: Meet the people; understand the need; follow scan, choose/pay, prepare/POS; see setup and total fee boundaries; resolve questions; register.
+STORY: Understand the product in the hero; discover popular items, complementary recommendations and optional tips; understand venue control and staff/POS handoff; inspect fees; register.
 
-FIRST VIEWPORT: A wide two-column headline and concise explanation above one large real hospitality photograph. Registration is the single primary action in the hero. The photo opens gently on desktop scroll where supported.
+FIRST VIEWPORT: Centered two-line display headline, one short explanation and primary signup action, followed by two offset hospitality photographs. No statistic, feature dump or decorative signet.
 
-FORM: Documentary product explanation with a sticky desktop chapter heading and three explicitly labeled future-product-image areas; sequential on narrow screens. User-pinned brand and reference direction controls composition. Code-led build; seed:48372546b412a709 recorded as a workflow reference, not as authority to replace the user's brand.
+FORM: Three progressively stronger Citron product chapters stack during desktop scrolling, each with one core message and an explicitly textual screenshot placeholder. On mobile and reduced motion, they remain sequential. A visible-default photographic scroll entrance introduces the page. Code-led implementation; seed:48372546b412a709 is the original recorded workflow reference; current composition follows the user's explicit new brief.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

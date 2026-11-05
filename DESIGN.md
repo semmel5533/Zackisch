@@ -6,6 +6,7 @@ colors:
   white: "#FFFFFF"
   citron: "#C6FF34"
   citron-subtle: "#F7FFDF"
+  citron-soft: "#EFFFBB"
   citron-selected: "#9FD600"
   text-secondary: "#525252"
   border: "#E5E5E5"
@@ -14,22 +15,32 @@ colors:
 typography:
   marketing-display:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "clamp(3rem, 5.4vw, 4.5rem)"
-    fontWeight: 700
-    lineHeight: 1.05
+    fontSize: "clamp(3rem, 6.7vw, 6rem)"
+    fontWeight: 650
+    lineHeight: 0.98
     letterSpacing: "-0.035em"
   marketing-display-mobile:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "clamp(2.6rem, 9.5vw, 3.5rem)"
-    fontWeight: 700
-    lineHeight: 1.05
+    fontSize: "2.6rem"
+    fontWeight: 650
+    lineHeight: 0.98
     letterSpacing: "-0.035em"
   marketing-headline:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "clamp(2.25rem, 3.8vw, 3.25rem)"
+    fontSize: "clamp(2.6rem, 4.7vw, 4rem)"
     fontWeight: 700
-    lineHeight: 1.1
+    lineHeight: 1.03
     letterSpacing: "-0.035em"
+  marketing-chapter-title:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "clamp(2rem, 3.8vw, 3.4rem)"
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: "-0.03em"
+  marketing-intro:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "1.25rem"
+    lineHeight: 1.45
   body:
     fontFamily: "League Spartan, Arial, sans-serif"
     fontSize: "1rem"
@@ -46,6 +57,7 @@ rounded:
   xl: "20px"
   dialog: "24px"
   marketing-pill: "999px"
+  marketing-panel: "32px"
 spacing:
   compact: "8px"
   control-y: "12px"
@@ -74,15 +86,19 @@ components:
     padding: "12px 20px"
     height: "48px"
   marketing-placeholder:
+    textColor: "{colors.black}"
+    rounded: "{rounded.dialog}"
+    padding: "40px"
+  marketing-chapter:
     backgroundColor: "{colors.citron-subtle}"
     textColor: "{colors.black}"
-    rounded: "{rounded.xl}"
-    padding: "32px"
+    rounded: "{rounded.marketing-panel}"
+    padding: "64px"
 ---
 
 # Zackisch — Brand & Product Design System
 
-> **Version 1.2 · 5 November 2026 · Canonical design specification**
+> **Version 1.3 · 6 November 2026 · Canonical design specification**
 > Applies to `root/` (public website), `app/` (merchant/guest/staff), `support/` and `internal/`.
 > This document defines the **new** visual direction. It intentionally does not inherit, preserve, or adapt the repository's previous visual identity. It does **not** change checkout, POS or payment behavior.
 
@@ -94,7 +110,7 @@ components:
 | Foundation | Pure white `#FFFFFF`, pure black `#000000`, **Electric Citron `#C6FF34`**. No substitutions. |
 | Selection | On Citron menus: background `citron.300` (`#C6FF34`); selected **pill** `citron.500` (`#9FD600`), black font weight **700**, Phosphor icon **fill** when an icon is present (inactive **regular**); **no black marker, stripe, dot or side border**. |
 | Feedback | **Every meaningful status, including Error, uses a recognizable Phosphor status icon + explicit text.** Only Error has a separate hue: icon/message/border `#C62828`. Success, Warning, Info and Pending stay black/gray, distinguished by icon shape and wording — never green/yellow/blue. |
-| Typography | **League Spartan** across marketing and app, weights 400/500/600/700/800. Original letterforms of the logo are artwork, not retyped in the font. |
+| Typography | **League Spartan** across marketing and app, weights 400/500/600/700/800; the public marketing hero uses variable weight 650. Original letterforms of the logo are artwork, not retyped in the font. |
 | Icons | **Phosphor** exclusively and **only where they add information**. No icons automatically on every button, field, card, menu item or metric; see §6. |
 | Shape | Rounded language. Pill buttons, menu items, tabs and chips. Large rounded cards; input corners 16px for a practical floating-label field. |
 | Inputs | Persistent accessible `<label>` inside the outline. Resting: centered; on focus **or filled**: floats to upper inner edge, never disappears. |
@@ -263,17 +279,37 @@ The table above remains the operational UI scale for merchant, guest, staff, sup
 
 | Public website role | Implemented size / line height | Weight / tracking |
 |---|---|---|
-| Hero, widths from 600px | `clamp(3rem, 5.4vw, 4.5rem)` / 1.05; maximum 72px at the default root size | 700 / −0.035em |
-| Hero, widths through 599px | `clamp(2.6rem, 9.5vw, 3.5rem)` / 1.05 | 700 / −0.035em |
-| Marketing section heading | `clamp(2.25rem, 3.8vw, 3.25rem)` / 1.1; maximum 52px | 700 / −0.035em |
-| Product-story step heading | 32px / 1.3 | 600 / −0.02em |
+| Hero, widths from 400px | `clamp(3rem, 6.7vw, 6rem)` / 0.98; maximum 96px at the default root size | 650 / −0.035em |
+| Hero, widths through 399px | 2.6rem / 0.98 | 650 / −0.035em |
+| Marketing section heading | `clamp(2.6rem, 4.7vw, 4rem)` / 1.03; maximum 64px | 700 / −0.035em |
+| Product chapter heading | `clamp(2rem, 3.8vw, 3.4rem)` / 1.05 | 600 / −0.03em |
+| Closing invitation heading | `clamp(3rem, 6.5vw, 6rem)` / 1.03 | 700 / −0.035em |
 | Article/legal title | `clamp(2.75rem, 4vw, 3.25rem)` / 1.05 | 700 / −0.035em |
 | Article/legal section heading | 26px / 1.1 | 700 / −0.035em |
-| Introductory copy | 18px / 1.55; hero 20px above 599px | Inherited body weight |
+| Hero introduction | 20px / 1.45, maximum 42ch | Inherited body weight |
+| General lead | 18px / 1.55, maximum 65ch | Inherited body weight |
+| Chapter summary | 22px / 1.35; 20px through 799px, maximum 30ch | Inherited body weight |
+| Fee figure | `clamp(7rem, 16vw, 14rem)` / 0.85; 8rem through 799px | 600 / −0.04em; tabular figures |
+
+The self-hosted variable font declares weights 100–900; the hero's 650 is a supported marketing-specific setting, not a replacement for operational weight roles.
 
 **The Marketing Scope Rule.** Larger display typography belongs to the public website's explanatory hierarchy; keep the operational UI scale unchanged. Headings wrap naturally, without fixed-height text containers. Body copy retains a maximum 65-character measure where the layout permits; long legal text uses a narrower 760px article container. Test the actual translation at 320px and with enlarged text.
 
-**The Visible Motion Rule.** Scroll enhancements begin from visible content. On the public website, desktop-only photo clipping is progressive enhancement; reduced-motion mode disables animations and sticky chapter headings. No content depends on animation support or scroll position to become readable.
+**The Visible Motion Rule.** Scroll enhancements begin from visible content. On the public website, desktop-only photo clipping is progressive enhancement; reduced-motion mode disables animations, transitions and sticky chapter panels. No content depends on animation support or scroll position to become readable.
+
+### Public marketing layout and motion — root only
+
+The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header is 112px tall, reduced to 96px through 599px; desktop navigation becomes a dialog menu through 899px. These content-driven breakpoints override the general device guidance only for this website.
+
+The centered introduction leads into two offset photographs in a 1.7:1 grid with a 24px gap. Main and side images are 440px and 376px high, respectively; the side figure begins 64px lower. Image corners are 32px. Through 799px the supporting photo is omitted, and the main photograph uses its natural height within a 4:3 aspect ratio. The promise list stacks vertically at that width. Through 399px the introductory actions also stack.
+
+Product chapters use two equal columns, 64px padding and gap, 32px corners, a 32px top sticky offset and `min(720px, calc(100svh - 64px))` minimum height. Their surfaces progress from Citron 50 through Citron 100 to Citron 300. Through 1100px padding becomes 40px and gap 32px; through 799px chapters become static single-column panels with 32px padding and no fixed minimum height. Through 399px padding is 28px vertically and 20px horizontally. Viewport heights through 650px and reduced motion also make the chapters static.
+
+Screenshot regions remain explicitly labelled text descriptions: transparent backgrounds inherit their chapter surface, a dashed Citron 700 boundary uses 24px corners, 40px padding and 420px minimum height. Padding reduces to 24px through 1100px; minimum height reduces to 300px through 799px. The staff variant uses a muted surface and secondary-text border with a 460px desktop minimum height. No preview controls or synthetic screenshots are implied.
+
+Chapter introductions, staff explanation and setup use split layouts; all become single-column through 799px. Major desktop sections use up to 144px vertical spacing; mobile sequences use 64–80px. The fee section is full-width Citron with a two-column inner grid, becoming one column through 799px. These spacious marketing rules do not change operational card density or radii.
+
+In browsers supporting `animation-timeline: view()`, only widths from 800px with no reduced-motion preference receive photo entrances. The main figure opens from `clip-path: inset(0 6% round 32px)` to zero inset over `entry 0% cover 45%`; the side figure rises from 40px to zero over `entry 0% cover 60%`. Both use linear progression and visible defaults. Sticky panels use native scrolling, without scroll hijacking. Buttons retain 120ms background/border transitions; the FAQ icon rotates 45 degrees over 180ms ease-out. Reduced motion removes these animations and transitions.
 
 ## 6. Iconography and semantic feedback
 
@@ -478,3 +514,7 @@ The research references below support **principles**, not an attempt to visually
 - [Carbon – notification guidelines](https://www.carbondesignsystem.com/building-blocks/core/components/notification/guidelines): feedback messages with status-specific icons and recovery context (Zackisch intentionally uses only Error red).
 
 **Implementation reminder:** Real-world accessibility compliance depends on rendered markup and user flows, not just brand guidance. This specification should be treated as testable design requirements, not an audit certificate.
+
+### Brand hierarchy and browser titles
+
+The **wordmark is the primary logo** across all four applications. Reserve the signet for positions where the wordmark cannot fit, including favicons and genuinely compact navigation. Do not use an isolated signet as decoration in a spacious marketing section. Browser titles use `<localized page subject> | Zackisch` exactly once; this applies to metadata and dynamic title updates. The website favicon uses `platform/signet--favicon.svg` with its supplied Citron background and rounded transparent exterior, with the matching 32px PNG fallback.

@@ -1,161 +1,152 @@
 import Image from "next/image";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { content, signupUrl, type Locale } from "@/lib/content";
+import { marketing } from "@/lib/marketing-content";
 import { WebsiteShell } from "./website-shell";
 import { Faq } from "./website-controls";
 
 export function WebsiteHome({ locale }: { locale: Locale }) {
   const c = content[locale];
+  const m = marketing[locale];
   return (
     <WebsiteShell locale={locale}>
-      <main id="main" lang={c.lang}>
-        <section className="hero container">
-          <div className="hero-copy">
-            <h1>{c.hero}</h1>
-            <p className="lead">{c.intro}</p>
+      <main id="main" lang={c.lang} className="marketing">
+        <section className="welcome container">
+          <h1>
+            {m.hero[0]}
+            <br />
+            <span>{m.hero[1]}</span>
+          </h1>
+          <p className="welcome-intro">{m.intro}</p>
+          <div className="welcome-actions">
             <Link className="button button-primary" href={signupUrl}>
               {c.start}
-              <ArrowUpRight aria-hidden="true" size={20} />
+              <ArrowUpRight aria-hidden size={20} />
             </Link>
-            <p className="hero-note">{c.heroNote}</p>
+            <a className="quiet-link" href="#how-it-works">
+              {m.explore}
+              <ArrowDown aria-hidden size={18} />
+            </a>
           </div>
-          <figure className="hero-photo">
-            <Image
-              src="/media/hospitality.webp"
-              alt={c.heroAlt}
-              width="2000"
-              height="1164"
-              sizes="(max-width: 899px) 100vw, 92vw"
-              fetchPriority="high"
-            />
-            <figcaption>
-              <Link href="https://www.pexels.com/photo/delighted-friends-having-lunch-in-cafe-4349791/">
-                {c.photoCredit}
-              </Link>
-            </figcaption>
-          </figure>
-        </section>
-        <section className="problem container section-space">
-          <div>
-            <h2>{c.problemTitle}</h2>
-            <p className="lead">{c.problemText}</p>
-          </div>
-          <aside className="research-fact">
-            <p className="statistic">{c.statistic}</p>
-            <p className="fact-text">{c.statisticText}</p>
-            <p className="source">{c.source}</p>
-            <p className="source">{c.caveat}</p>
-            <Link className="inline-link" href={`/${locale}/research`}>
-              {c.researchLink}
-              <ArrowUpRight aria-hidden="true" size={18} />
-            </Link>
-          </aside>
-        </section>
-        <section
-          id="how-it-works"
-          className="product-story section-space container"
-        >
-          <div className="section-heading">
-            <h2>{c.storyTitle}</h2>
-            <p className="lead">{c.storyIntro}</p>
-          </div>
-          <ol className="story-steps">
-            {c.steps.map((step, index) => (
-              <li key={step.title}>
-                <div className="step-copy">
-                  <span className="step-number" aria-hidden="true">
-                    0{index + 1}
-                  </span>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
-                </div>
-                <figure className="product-placeholder">
-                  <div>
-                    <p>{step.placeholder}</p>
-                    <span>{c.placeholderNote}</span>
-                  </div>
-                  <figcaption>{step.detail}</figcaption>
-                </figure>
-              </li>
-            ))}
-          </ol>
-        </section>
-        <section className="hybrid section-space">
-          <div className="container hybrid-inner">
-            <figure className="hospitality-photo">
+          <div className="welcome-pictures">
+            <figure className="welcome-main-photo">
+              <Image
+                src="/media/hospitality.webp"
+                alt={c.heroAlt}
+                width={2000}
+                height={1164}
+                sizes="(max-width: 700px) 100vw, 66vw"
+                fetchPriority="high"
+              />
+              <figcaption>
+                <a href="https://www.pexels.com/photo/delighted-friends-having-lunch-in-cafe-4349791/">
+                  {c.photoCredit}
+                </a>
+              </figcaption>
+            </figure>
+            <figure className="welcome-side-photo">
               <Image
                 src="/media/conversation.webp"
                 alt={c.conversationAlt}
                 width={1400}
                 height={933}
-                sizes="(max-width: 899px) 100vw, 50vw"
+                sizes="(max-width: 700px) 40vw, 30vw"
               />
               <figcaption>
-                <Link href="https://www.pexels.com/photo/happy-multiracial-friends-having-fun-together-in-cafe-4350223/">
+                <a href="https://www.pexels.com/photo/happy-multiracial-friends-having-fun-together-in-cafe-4350223/">
                   {c.photoCredit}
-                </Link>
+                </a>
               </figcaption>
             </figure>
-            <div className="hybrid-copy">
-              <Image
-                src="/brand/logo/lockups/signet--transparent--standard.svg"
-                alt=""
-                width="120"
-                height="120"
-                loading="lazy"
-              />
-              <h2>{c.hybridTitle}</h2>
-              <p className="lead">{c.hybridText}</p>
-            </div>
           </div>
-        </section>
-        <section className="setup container section-space">
-          <div>
-            <h2>{c.setupTitle}</h2>
-            <p className="lead">{c.setupIntro}</p>
-            <Link
-              className="inline-link"
-              href={`https://support.zackisch.com/${locale}`}
-            >
-              {c.setupHelp}
-              <ArrowUpRight aria-hidden="true" size={18} />
-            </Link>
-          </div>
-          <ol className="setup-steps">
-            {c.setup.map((step) => (
-              <li key={step}>{step}</li>
+          <ul className="promise-line">
+            {m.promise.map((p) => (
+              <li key={p}>{p}</li>
             ))}
-          </ol>
+          </ul>
         </section>
-        <section className="pricing container section-space">
-          <h2>{c.priceTitle}</h2>
-          <div className="price-grid">
-            <div>
-              <p className="fee">{c.fee}</p>
-              <p className="fee-label">{c.feeLabel}</p>
+        <section id="how-it-works" className="menu-chapters">
+          <div className="chapter-introduction container">
+            <h2>{m.menuTitle}</h2>
+            <p>{m.menuIntro}</p>
+          </div>
+          <div className="chapter-stack container">
+            {m.features.map((feature, i) => (
+              <article
+                className={`menu-chapter chapter-${i}`}
+                key={feature.title}
+              >
+                <div className="chapter-copy">
+                  <h3>{feature.title}</h3>
+                  <p className="chapter-summary">{feature.text}</p>
+                  <p className="chapter-detail">{feature.detail}</p>
+                </div>
+                <figure className="screenshot-placeholder">
+                  <figcaption>{m.placeholder}</figcaption>
+                  <p>{feature.image}</p>
+                </figure>
+              </article>
+            ))}
+          </div>
+          <div className="venue-control container">
+            <h3>{m.control}</h3>
+            <p>{m.controlText}</p>
+          </div>
+        </section>
+        <section className="service-section container">
+          <div>
+            <h2>{m.teamTitle}</h2>
+            <p>{m.teamText}</p>
+          </div>
+          <figure className="screenshot-placeholder staff-placeholder">
+            <figcaption>{m.placeholder}</figcaption>
+            <p>{m.teamImage}</p>
+          </figure>
+        </section>
+        <section className="cost-section">
+          <div className="container cost-inner">
+            <h2>{m.costTitle}</h2>
+            <div className="cost-figure">
+              <p className="cost-number">
+                2<span>%</span>
+              </p>
+              <p>{m.feeLabel}</p>
             </div>
-            <div>
-              <h3>{c.free}</h3>
-              <p>{c.feeText}</p>
-              <p>{c.requirements}</p>
+            <div className="cost-details">
+              <h3>{m.zero}</h3>
+              <p>{m.feeDetail}</p>
               <Link className="inline-link" href={`/${locale}/pricing`}>
                 {c.priceLink}
-                <ArrowUpRight aria-hidden="true" size={18} />
+                <ArrowUpRight aria-hidden size={18} />
               </Link>
             </div>
           </div>
         </section>
-        <section id="questions" className="questions container section-space">
-          <h2>{c.faqTitle}</h2>
+        <section className="start-section container">
+          <h2>{m.setupTitle}</h2>
+          <div>
+            <p className="start-description">{m.setupText}</p>
+            <p>{m.setupNote}</p>
+            <a
+              className="inline-link"
+              href={`https://support.zackisch.com/${locale}`}
+            >
+              {c.setupHelp}
+              <ArrowUpRight aria-hidden size={18} />
+            </a>
+          </div>
+        </section>
+        <section id="questions" className="questions container">
+          <h2>{m.faq}</h2>
           <Faq items={c.faqs} />
         </section>
-        <section className="closing container section-space">
-          <h2>{c.endTitle}</h2>
-          <p className="lead">{c.endText}</p>
+        <section className="last-invitation container">
+          <h2>{m.close}</h2>
+          <p>{m.closeText}</p>
           <Link className="button button-primary" href={signupUrl}>
             {c.start}
-            <ArrowUpRight aria-hidden="true" size={20} />
+            <ArrowUpRight aria-hidden size={20} />
           </Link>
         </section>
       </main>

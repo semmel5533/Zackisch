@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-05T22:46:23.470468+00:00",
+  "generatedAt": "2026-11-05T23:32:27.013023+00:00",
   "title": "Zackisch — Brand & Product Design System",
   "extensions": {
     "colorMeta": {
@@ -38,11 +38,19 @@
       },
       "marketing-display-mobile": {
         "displayName": "Mobile public website hero",
-        "purpose": "Widths through 599px."
+        "purpose": "Widths through 399px; inherits weight 650 and line height 0.98 from the hero."
       },
       "marketing-headline": {
         "displayName": "Public website section heading",
         "purpose": "Explanatory marketing sections, never operational dashboards or checkout."
+      },
+      "marketing-chapter-title": {
+        "displayName": "Product chapter title",
+        "purpose": "Public marketing chapters only."
+      },
+      "marketing-intro": {
+        "displayName": "Hero introduction",
+        "purpose": "Centered public marketing explanation, maximum 42ch."
       }
     },
     "shadows": [
@@ -64,23 +72,49 @@
         "purpose": "FAQ disclosure icon rotation."
       },
       {
-        "name": "photo-open",
-        "value": "view(); entry 0% cover 35%",
-        "purpose": "Supported desktop browsers only; visible photo clipping from 5% inset to none. Disabled for reduced motion."
+        "name": "welcome-expand",
+        "value": "linear both; view(); entry 0% cover 45%",
+        "purpose": "Source .welcome-main-photo: clip-path inset(0 6% round 32px) to inset(0 0 round 32px); only supported browsers from 800px with no reduced-motion preference."
+      },
+      {
+        "name": "welcome-rise",
+        "value": "linear both; view(); entry 0% cover 60%",
+        "purpose": "Source .welcome-side-photo: translateY(40px) to translateY(0); same desktop and motion conditions as welcome-expand."
+      },
+      {
+        "name": "chapter-stack",
+        "value": "position: sticky; top: 32px",
+        "purpose": "Source .menu-chapter: native sticky panels, static through 799px width, through 650px viewport height, and with reduced motion. All content visible by default."
       }
     ],
     "breakpoints": [
       {
-        "name": "marketing-compact",
+        "name": "marketing-small-phone",
+        "value": "399px"
+      },
+      {
+        "name": "shell-compact",
         "value": "599px"
       },
       {
         "name": "marketing-single-column",
+        "value": "799px"
+      },
+      {
+        "name": "photo-motion-minimum",
+        "value": "800px"
+      },
+      {
+        "name": "shell-mobile-navigation",
         "value": "899px"
       },
       {
         "name": "marketing-narrow-desktop",
         "value": "1100px"
+      },
+      {
+        "name": "chapter-static-maximum-height",
+        "value": "650px"
       }
     ]
   },
@@ -91,7 +125,7 @@
       "refersTo": "marketing-button-primary",
       "description": "One dominant registration or task action.",
       "html": "<button class=\"ds-control ds-primary\">Lokal einrichten</button>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; }"
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Marketing secondary action",
@@ -99,15 +133,15 @@
       "refersTo": "marketing-button-secondary",
       "description": "Secondary controls such as mobile navigation and dialog dismissal.",
       "html": "<button class=\"ds-control ds-secondary\">Menü öffnen</button>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; }"
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Product image placeholder",
       "kind": "card",
       "refersTo": "marketing-placeholder",
-      "description": "Honest text description while a genuine product capture is unavailable.",
-      "html": "<figure class=\"ds-placeholder\"><p>Hier erscheint: Gäste-Menü</p><span>Platzhalter · Produktaufnahme folgt</span></figure>",
-      "css": ".ds-placeholder { margin:0; padding:32px; border-radius:20px; background:var(--zk-color-semantic-background-brand-subtle, #f7ffdf); color:var(--zk-text, #000); text-align:center; font-family:\"League Spartan\", Arial, sans-serif; } .ds-placeholder p { font-size:24px; font-weight:600; } .ds-placeholder span { font-size:14px; }"
+      "description": "Text-only future capture, transparent inside a Citron chapter; the staff variant uses a muted surface. No fabricated product UI.",
+      "html": "<figure class=\"ds-placeholder\"><figcaption>Platzhalter · Produktaufnahme folgt</figcaption><p>Hier erscheint: Gäste-Menü</p></figure>",
+      "css": ".ds-placeholder { margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; min-height:420px; padding:40px; border:1px dashed var(--zk-color-ref-citron-700, #506e00); border-radius:24px; color:var(--zk-text, #000); text-align:center; font-family:\"League Spartan\", Arial, sans-serif; } .ds-placeholder p { margin:0; font-size:24px; line-height:1.25; max-width:24ch; font-weight:500; } .ds-placeholder figcaption { font-size:14px; font-weight:500; } @media (max-width:1100px) { .ds-placeholder { padding:24px; } } @media (max-width:799px) { .ds-placeholder { min-height:300px; } }"
     },
     {
       "name": "Public navigation link",
@@ -121,7 +155,7 @@
       "kind": "custom",
       "description": "A secondary text destination within explanatory content.",
       "html": "<a class=\"ds-inline-link\" href=\"#gebuehren\">Gebühren und Voraussetzungen ansehen</a>",
-      "css": ".ds-inline-link { display:inline-flex; align-items:center; padding:12px 0; font:600 16px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-link, #000); text-underline-offset:.2em; } .ds-inline-link:hover { text-decoration-thickness:2px; } .ds-inline-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
+      "css": ".ds-inline-link { display:inline-flex; align-items:center; padding:12px 0; font:600 16px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-link, #000); text-underline-offset:.2em; } .ds-inline-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
     }
   ],
   "narrative": {
@@ -135,12 +169,12 @@
     "rules": [
       {
         "name": "The Marketing Scope Rule",
-        "body": "Larger display typography belongs to the public website's explanatory hierarchy; keep the operational UI scale unchanged.",
+        "body": "Larger display typography belongs to the public website's explanatory hierarchy; keep the operational UI scale unchanged. Headings wrap naturally, without fixed-height text containers. Body copy retains a maximum 65-character measure where the layout permits; long legal text uses a narrower 760px article container. Test the actual translation at 320px and with enlarged text.",
         "section": "typography"
       },
       {
         "name": "The Visible Motion Rule",
-        "body": "Scroll enhancements begin from visible content.",
+        "body": "Scroll enhancements begin from visible content. On the public website, desktop-only photo clipping is progressive enhancement; reduced-motion mode disables animations, transitions and sticky chapter panels. No content depends on animation support or scroll position to become readable.",
         "section": "layout"
       }
     ],
