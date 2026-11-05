@@ -70,3 +70,8 @@ node_modules/
 
 # Per-application E2E runner artifacts
 **/.e2e/
+
+# Browser verification and local design evidence
+/playwright-report/
+/test-results/
+/.impeccable/review/

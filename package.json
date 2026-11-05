@@ -1,15 +1,19 @@
 {
   "name": "zackisch-monorepo",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "type": "module",
   "scripts": {
     "test:e2e": "e2e run",
     "test:unit": "npm run test --prefix root && npm run test --prefix app && npm run test --prefix support && npm run test --prefix internal",
-    "typecheck": "npm run typecheck --prefix root && npm run typecheck --prefix app && npm run typecheck --prefix support && npm run typecheck --prefix internal"
+    "typecheck": "npm run typecheck --prefix root && npm run typecheck --prefix app && npm run typecheck --prefix support && npm run typecheck --prefix internal",
+    "test:browser": "playwright test",
+    "design:check": "sh .agents/skills/impeccable/scripts/impeccable detect"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@e2e-dev/web": "^0.15.1",
+    "@playwright/test": "1.65.0",
     "e2e": "^0.21.1"
   }
 }
