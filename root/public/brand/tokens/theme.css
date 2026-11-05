@@ -1,0 +1,10 @@
+/* Import after tokens.css. Single brand light theme, semantic roles only. */
+/* Load League Spartan using the application font pipeline (e.g. next/font/google). */
+:root { color-scheme: light; }
+html { font-family: var(--zk-typography-font-family-base); font-synthesis: none; }
+body { background: var(--zk-color-semantic-background-canvas); color: var(--zk-color-semantic-text-primary); }
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: var(--zk-component-focus-outline-width) solid var(--zk-color-semantic-border-focus); outline-offset: var(--zk-component-focus-outline-offset); }
+::selection { background: var(--zk-color-ref-citron-100); color: var(--zk-color-ref-black); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }

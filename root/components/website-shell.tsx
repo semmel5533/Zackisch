@@ -29,7 +29,7 @@ export function WebsiteShell({
       <header className="site-header container">
         <Link href={`/${locale}`} aria-label={c.home} className="brand">
           <Image
-            src="/zackisch/combination-mark.svg"
+            src="/brand/logo/lockups/wordmark--transparent--standard.svg"
             alt=""
             width="150"
             height="64"
@@ -92,7 +92,7 @@ export function WebsiteShell({
         </div>
         <Image
           className="footer-mark"
-          src="/zackisch/combination-mark.svg"
+          src="/brand/logo/lockups/wordmark--transparent--standard.svg"
           alt="Zackisch"
           width="576"
           height="246"

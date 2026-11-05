@@ -3,7 +3,7 @@ import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Zackisch",
-  icons: { icon: "/zackisch/brand-mark.svg" },
+  icons: { icon: "/brand/logo/lockups/signet--transparent--standard.svg" },
   robots: { index: true, follow: true },
   description: "Zackisch — Modernes Bestellen & Bezahlen in der Gastronomie",
 };

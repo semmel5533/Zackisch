@@ -94,15 +94,15 @@ describe("internal team dashboard RBAC & ticket security", () => {
       "utf8",
     );
     const legacyPattern = new RegExp(["pop" + "pins", "ast" + "ryx", "sty" + "lex"].join("|"), "i");
-    expect(globalsCss).toContain("assets/zackisch/tokens.css");
-    expect(globalsCss).toContain("assets/zackisch/font/inter.css");
+    expect(globalsCss).toContain("root/public/brand/tokens/tokens.css");
+    expect(globalsCss).toContain("root/public/brand/fonts/fonts.css");
     expect(globalsCss).not.toMatch(legacyPattern);
 
     const shellSrc = fs.readFileSync(
       path.resolve(__dirname, "../components/AdminShell.tsx"),
       "utf8",
     );
-    expect(shellSrc).toContain("/zackisch/combination-mark.svg");
+    expect(shellSrc).toContain("https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg");
     expect(shellSrc).not.toMatch(legacyPattern);
 
     const newsletterSrc = fs.readFileSync(

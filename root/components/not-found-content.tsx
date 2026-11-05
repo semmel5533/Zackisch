@@ -4,7 +4,7 @@ import { content } from "@/lib/content";
 export default function NotFound() {
   return (
     <main className="not-found container" id="main">
-      <Image src="/zackisch/not-found.svg" alt="" width="140" height="140" />
+      <Image src="/brand/logo/lockups/signet--transparent--standard.svg" alt="" width="140" height="140" />
       <section lang="de">
         <h1>{content["de-de"].notFound}</h1>
         <p>{content["de-de"].notFoundText}</p>

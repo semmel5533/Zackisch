@@ -3,11 +3,11 @@ export const merchantTerms = {
     gtc: {
       title: "Nutzungsbedingungen für Betreiber",
       intro:
-        "B2B-Vertragsvorlage für Restaurants und andere Gastronomiebetriebe. Fassung: Muster 2026-10-26. Ausfüllbare Angaben stehen in eckigen Klammern.",
+        "B2B-Vertragsvorlage für Restaurants und andere Gastronomiebetriebe. Fassung: Muster 2026-11-05. Ausfüllbare Angaben stehen in eckigen Klammern.",
       sections: [
         {
           title: "1. Vertragspartner und Anwendungsbereich",
-          body: "Anbieter ist Max Mustermann (Mustername), handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland; Kontakt: [geschäftliche E-Mail]. Diese Bedingungen gelten ausschließlich gegenüber Unternehmern, die Zackisch für ihr Lokal nutzen. Der Vertrag über Speisen und Getränke entsteht zwischen dem Restaurant und seinem Gast. Diese Bedingungen sind keine Restaurant-AGB für Gäste.",
+          body: "Anbieter ist Selim Eser, handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland; Kontakt: selim@zackisch.com. Diese Bedingungen gelten ausschließlich gegenüber Unternehmern, die Zackisch für ihr Lokal nutzen. Der Vertrag über Speisen und Getränke entsteht zwischen dem Restaurant und seinem Gast. Diese Bedingungen sind keine Restaurant-AGB für Gäste.",
         },
         {
           title: "2. Leistung und Voraussetzungen",
@@ -23,7 +23,7 @@ export const merchantTerms = {
         },
         {
           title: "5. Abrechnung und Umsatzsteuer",
-          body: "Die Zackisch-Gebühr wird als Plattformgebühr im verbundenen Stripe-Händlerkonto berücksichtigt. Maßgeblich sind die tatsächlichen Zahlungs- und Erstattungsereignisse. Abrechnungszeitraum und Bereitstellung der Zackisch-Gebührenrechnung: [konkreten Ablauf ergänzen]. [Bei bestätigter Anwendung des § 19 UStG: Die Zackisch-Leistung ist aufgrund der Kleinunternehmerregelung umsatzsteuerfrei; Umsatzsteuer wird nicht gesondert ausgewiesen.] Der Steuerstatus von Zackisch ändert nicht den Steuerstatus oder die Rechnungs- und Belegpflichten des Restaurants.",
+          body: "Die Zackisch-Gebühr wird als Plattformgebühr im verbundenen Stripe-Händlerkonto berücksichtigt. Maßgeblich sind die tatsächlichen Zahlungs- und Erstattungsereignisse. Abrechnungszeitraum und Bereitstellung der Zackisch-Gebührenrechnung: [konkreten Ablauf ergänzen]. Der Umsatzsteuerstatus von Zackisch ist noch zu bestätigen; eine Steuerbefreiung nach § 19 UStG wird nicht zugesagt. Der Steuerstatus von Zackisch ändert nicht den Steuerstatus oder die Rechnungs- und Belegpflichten des Restaurants.",
         },
         {
           title: "6. Stripe und Händlerkonto",
@@ -60,11 +60,11 @@ export const merchantTerms = {
     gtc: {
       title: "Merchant terms of service",
       intro:
-        "B2B agreement template for restaurants and hospitality businesses. Version: template 2026-10-26. Editable details appear in square brackets.",
+        "B2B agreement template for restaurants and hospitality businesses. Version: template 2026-11-05. Editable details appear in square brackets.",
       sections: [
         {
           title: "1. Parties and scope",
-          body: "The provider is Max Mustermann (example name), trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany; contact: [business email]. These terms apply exclusively to businesses using Zackisch for their venue. Food and drink contracts are between the restaurant and its guests. These are not restaurant terms for guests.",
+          body: "The provider is Selim Eser, trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany; contact: selim@zackisch.com. These terms apply exclusively to businesses using Zackisch for their venue. Food and drink contracts are between the restaurant and its guests. These are not restaurant terms for guests.",
         },
         {
           title: "2. Service and prerequisites",
@@ -80,7 +80,7 @@ export const merchantTerms = {
         },
         {
           title: "5. Billing and VAT",
-          body: "The Zackisch fee is accounted for as a platform fee in the connected Stripe merchant account. Actual payment and refund events govern billing. Billing period and provision of Zackisch fee invoices: [specify the actual process]. [If section 19 UStG applies: Zackisch services are exempt under the small-business VAT rule and VAT is not separately shown.] Zackisch’s tax status does not change the restaurant’s tax status or invoice and receipt obligations.",
+          body: "The Zackisch fee is accounted for as a platform fee in the connected Stripe merchant account. Actual payment and refund events govern billing. Billing period and provision of Zackisch fee invoices: [specify the actual process]. Zackisch’s VAT status still needs confirmation; no exemption under section 19 UStG is claimed. Zackisch’s tax status does not change the restaurant’s tax status or invoice and receipt obligations.",
         },
         {
           title: "6. Stripe and merchant account",

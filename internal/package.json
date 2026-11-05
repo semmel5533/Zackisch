@@ -1,13 +1,9 @@
 {
   "name": "internal",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "type": "module",
   "private": true,
   "scripts": {
-    "predev": "node ../scripts/sync-brand-assets.mjs internal",
-    "prebuild": "node ../scripts/sync-brand-assets.mjs internal",
-    "prebuild:cloudflare": "node ../scripts/sync-brand-assets.mjs internal",
-    "predev:cloudflare": "node ../scripts/sync-brand-assets.mjs internal",
     "dev": "next dev --port 3002",
     "build": "next build",
     "start": "next start --port 3002",

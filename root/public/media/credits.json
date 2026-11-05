@@ -8,5 +8,25 @@
     "downloaded_at": "2026-10-26",
     "changes": "Resized to 1280 pixels wide, converted to WebP, metadata removed. Display may crop to the responsive frame.",
     "right_of_publicity_checked": "Visually inspected: hands and torso only, no identifiable face or visible third-party trademark. No customer affiliation or endorsement claimed. No separate model-release evidence supplied."
+  },
+  "hospitality.webp": {
+    "source_url": "https://www.pexels.com/photo/delighted-friends-having-lunch-in-cafe-4349791/",
+    "author": "Ketut Subiyanto",
+    "license_name": "Pexels License (free commercial use)",
+    "license_url": "https://www.pexels.com/license/",
+    "downloaded_at": "2026-11-05",
+    "changes": "Resized, converted to WebP. Responsive display crops the original photograph.",
+    "provenance": "Original photographic listing dates to April 2020; photographer and camera metadata inspected.",
+    "usage": "Illustrative hospitality stock photography only; no endorsement, testimonial or customer affiliation asserted. No separate model-release document held."
+  },
+  "conversation.webp": {
+    "source_url": "https://www.pexels.com/photo/happy-multiracial-friends-having-fun-together-in-cafe-4350223/",
+    "author": "Ketut Subiyanto",
+    "license_name": "Pexels License (free commercial use)",
+    "license_url": "https://www.pexels.com/license/",
+    "downloaded_at": "2026-11-05",
+    "changes": "Resized, converted to WebP. Responsive display crops the original photograph.",
+    "provenance": "Original photographic listing dates to April 2020; photographer and camera metadata inspected.",
+    "usage": "Illustrative hospitality stock photography only; no endorsement, testimonial or customer affiliation asserted. No separate model-release document held."
   }
 }

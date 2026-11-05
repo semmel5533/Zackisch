@@ -139,7 +139,7 @@ export const sendEmailOtp = internalAction({
 <meta name="supported-color-schemes" content="light">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+@import url("https://zackisch.com/brand/fonts/fonts.css");
 
 @media only screen and (max-width: 480px) {
   .email-wrapper { padding: 24px 12px !important; }
@@ -155,18 +155,18 @@ export const sendEmailOtp = internalAction({
 </style>
 </head>
 <body style="margin: 0; padding: 0;">
-<div class="email-wrapper" style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
+<div class="email-wrapper" style="font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div class="email-card" style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
     <div class="email-header" style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
       <a href="https://zackisch.com" style="display: inline-block; text-decoration: none;">
-        <img src="https://zackisch.com/combination_mark.svg" alt="Zackisch" style="height: 40px; width: auto; display: block;" />
+        <img src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard--600w.png" alt="Zackisch" style="height: 40px; width: auto; display: block;" />
       </a>
     </div>
     <div class="email-body" style="padding: 40px;">
       <h1 class="email-title" style="margin: 0 0 12px; font-size: 24px; font-weight: 800; color: #000000; letter-spacing: -0.5px;">${title}</h1>
       <p class="email-intro" style="margin: 0 0 32px; font-size: 15px; color: #71717a; line-height: 1.6;">${intro}</p>
       <div class="otp-box" style="background-color: #000000; border-radius: 16px; padding: 24px 16px; text-align: center; margin-bottom: 28px;">
-        <p class="otp-code" style="margin: 0; font-family: 'Inter', sans-serif; font-size: 44px; font-weight: 800; letter-spacing: 24px; padding-left: 24px; color: #ffffff; white-space: nowrap; line-height: 1.2;">${args.code}</p>
+        <p class="otp-code" style="margin: 0; font-family: 'League Spartan', sans-serif; font-size: 44px; font-weight: 800; letter-spacing: 24px; padding-left: 24px; color: #ffffff; white-space: nowrap; line-height: 1.2;">${args.code}</p>
       </div>
       <p style="margin: 0 0 8px; font-size: 14px; color: #71717a; line-height: 1.6;">${hint1}</p>
       <p style="margin: 0; font-size: 14px; color: #71717a; line-height: 1.6;">${hint2}</p>
@@ -228,15 +228,15 @@ export const sendPasswordResetEmail = internalAction({
 <meta name="color-scheme" content="light">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+@import url("https://zackisch.com/brand/fonts/fonts.css");
 </style>
 </head>
 <body style="margin: 0; padding: 0;">
-<div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
+<div style="font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
     <div style="padding: 32px 40px 24px; border-bottom: 1px solid #f4f4f5;">
       <a href="https://zackisch.com" style="display: inline-block; text-decoration: none;">
-        <img src="https://zackisch.com/combination_mark.svg" alt="Zackisch" style="height: 40px; width: auto; display: block;" />
+        <img src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard--600w.png" alt="Zackisch" style="height: 40px; width: auto; display: block;" />
       </a>
     </div>
     <div style="padding: 40px;">
@@ -295,9 +295,9 @@ export const sendDeleteAccountEmail = internalAction({
     const html = `<!DOCTYPE html>
 <html>
 <head><meta name="color-scheme" content="light"></head>
-<body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; padding: 40px;">
-    <img src="https://zackisch.com/combination_mark.svg" alt="Zackisch" style="height: 40px; margin-bottom: 24px;" />
+    <img src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard--600w.png" alt="Zackisch" style="height: 40px; margin-bottom: 24px;" />
     <h1 style="font-size: 24px; font-weight: 800; color: #000;">${subject}</h1>
     <p style="color: #71717a; line-height: 1.6;">${intro}</p>
     <div style="text-align: center; margin: 32px 0;">
@@ -347,9 +347,9 @@ export const sendChangeEmailLink = internalAction({
     const html = `<!DOCTYPE html>
 <html>
 <head><meta name="color-scheme" content="light"></head>
-<body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; padding: 40px;">
-    <img src="https://zackisch.com/combination_mark.svg" alt="Zackisch" style="height: 40px; margin-bottom: 24px;" />
+    <img src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard--600w.png" alt="Zackisch" style="height: 40px; margin-bottom: 24px;" />
     <h1 style="font-size: 24px; font-weight: 800; color: #000;">${subject}</h1>
     <p style="color: #71717a; line-height: 1.6;">${intro}</p>
     <div style="text-align: center; margin: 32px 0;">
@@ -408,9 +408,9 @@ export const sendNewsletterConfirmationEmail = internalAction({
     const html = `<!DOCTYPE html>
 <html>
 <head><meta name="color-scheme" content="light"></head>
-<body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; padding: 40px 16px;">
   <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-    <img src="https://zackisch.com/combination_mark.svg" alt="Zackisch" style="height: 40px; margin-bottom: 24px;" />
+    <img src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard--600w.png" alt="Zackisch" style="height: 40px; margin-bottom: 24px;" />
     <h1 style="font-size: 24px; font-weight: 800; color: #000; margin-bottom: 12px;">${title}</h1>
     <p style="color: #71717a; line-height: 1.6; margin-bottom: 32px;">${intro}</p>
     <div style="text-align: center; margin: 32px 0;">

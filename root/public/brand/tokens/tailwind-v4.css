@@ -1,0 +1,14 @@
+/* Optional Tailwind v4 theme bridge; import after tokens.css. */
+@theme inline {
+  --font-sans: var(--zk-typography-font-family-base);
+  --color-brand: var(--zk-color-ref-citron-300);
+  --color-brand-strong: var(--zk-color-ref-citron-500);
+  --color-page: var(--zk-color-semantic-background-canvas);
+  --color-surface: var(--zk-color-semantic-surface-default);
+  --color-ink: var(--zk-color-semantic-text-primary);
+  --color-muted: var(--zk-color-semantic-text-secondary);
+  --color-line: var(--zk-color-semantic-border-default);
+  --color-error: var(--zk-color-ref-error);
+  --radius-card: var(--zk-component-card-radius);
+  --radius-control: var(--zk-radius-pill);
+}

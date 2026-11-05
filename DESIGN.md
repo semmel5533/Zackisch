@@ -1,1013 +1,480 @@
-# Zackisch — DESIGN SYSTEM
-
-**Status:** verbindliches Soll-Design · **Version:** 5.1 · **Stand:** 27.10.2026 · **Repository-Pfad:** `/DESIGN.md`
-
-**Geltung:** Marke, öffentliche Website (`root/`), Betreiber- und Gästeoberflächen (`app/`), Personal-Tablet, Hilfe-Center (`support/`), internes Team (`internal/`) und physische QR-Materialien.
-
-> **Single Source of Truth:** Diese Datei legt **ausschließlich Design** fest: Brand Identity, Bildsprache, Typografie, Farben, Abstände, Radien, Responsive-Grundsätze, Informationshierarchie, semantische UI-Komponenten, Oberflächenkomposition, Microinteractions, Mascot, Print-Visuals, UX-Qualität. Sie beschreibt **keine** Datenmodelle, API/Stripe-Verträge, Authentifizierungsimplementierungen, technische Routen, Exportalgorithmen, SemVer oder Deployment-Anleitungen. Die direkt nebenan liegende [`README.md`](./README.md) erklärt das Produkt, die Nutzergruppen, Forschung, Gründerstory, Funktionsinventar und technischen Kontext; projektspezifische README/AGENTS und `docs/` gelten für Implementierungsdetails.
->
-> **Neues Erscheinungsbild:** Bisherige UI-Stile und Layouts im Repository gelten nicht als Designvorlage. **Combination Mark (aus der gelieferten Wortmarken-Referenz vektorisiert) und unveränderte offizielle Brand Mark bleiben verbindlich.** UI-Schrift ist Inter; der Edding-Stil ist ein begrenztes Markenelement.
->
-> **Sprache:** Der Oberbegriff ist **Lokal** (auch für Bars, Cafés, Imbisse und Bäckereien). Inhalte, Listen und Konfigurationsangebote heißen **Menü**. Ausnahmen nur für wörtliche Originalquellen, technische Altbezeichner oder juristisch notwendige Begriffe.
-
+---
+name: Zackisch
+description: Human service with an additional browser QR ordering route
+colors:
+  black: "#000000"
+  white: "#FFFFFF"
+  citron: "#C6FF34"
+  citron-subtle: "#F7FFDF"
+  citron-selected: "#9FD600"
+  text-secondary: "#525252"
+  border: "#E5E5E5"
+  hover-neutral: "#171717"
+  error: "#C62828"
+typography:
+  marketing-display:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "clamp(3rem, 5.4vw, 4.5rem)"
+    fontWeight: 700
+    lineHeight: 1.05
+    letterSpacing: "-0.035em"
+  marketing-display-mobile:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "clamp(2.6rem, 9.5vw, 3.5rem)"
+    fontWeight: 700
+    lineHeight: 1.05
+    letterSpacing: "-0.035em"
+  marketing-headline:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "clamp(2.25rem, 3.8vw, 3.25rem)"
+    fontWeight: 700
+    lineHeight: 1.1
+    letterSpacing: "-0.035em"
+  body:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "1rem"
+    lineHeight: 1.5
+  button-label:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 600
+    lineHeight: 1.25
+rounded:
+  sm: "8px"
+  md: "12px"
+  lg: "16px"
+  xl: "20px"
+  dialog: "24px"
+  marketing-pill: "999px"
+spacing:
+  compact: "8px"
+  control-y: "12px"
+  body: "16px"
+  control-x: "20px"
+  group: "24px"
+  surface: "32px"
+  section-mobile: "64px"
+  section-desktop: "96px"
+components:
+  marketing-button-primary:
+    backgroundColor: "{colors.black}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.marketing-pill}"
+    typography: "{typography.button-label}"
+    padding: "12px 20px"
+    height: "48px"
+  marketing-button-primary-hover:
+    backgroundColor: "{colors.hover-neutral}"
+    textColor: "{colors.white}"
+  marketing-button-secondary:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.black}"
+    rounded: "{rounded.marketing-pill}"
+    typography: "{typography.button-label}"
+    padding: "12px 20px"
+    height: "48px"
+  marketing-placeholder:
+    backgroundColor: "{colors.citron-subtle}"
+    textColor: "{colors.black}"
+    rounded: "{rounded.xl}"
+    padding: "32px"
 ---
 
-## 01 · Zielgruppen, UX-Prioritäten und Marke
+# Zackisch — Brand & Product Design System
 
-**Markeneigenschaften:** freundlich · locker · einfach · klar · menschlich · modern · schnell · nahbar. Kein Werbeslogan im Designsystem vorgeschrieben.
+> **Version 1.2 · 5 November 2026 · Canonical design specification**
+> Applies to `root/` (public website), `app/` (merchant/guest/staff), `support/` and `internal/`.
+> This document defines the **new** visual direction. It intentionally does not inherit, preserve, or adapt the repository's previous visual identity. It does **not** change checkout, POS or payment behavior.
 
-| Kontext | Situation | UX-Maßstab | Grundton |
-|---|---|---|---|
-| Gast am Tisch | Spontaner QR-Scan, oft mit einer Hand, wechselndes Licht, ggf. schlechte Verbindung | Ohne Account, einfache Produktauswahl, klare Preise, durchsichtige Zahlung | ruhig, selbsterklärend |
-| Abholgast | In Bewegung, kein Tisch, möchte Zeit und Abholstatus verstehen | minimaler Checkout, deutliche Abholidentität/Nummer | praktisch, prägnant |
-| Betreiber:in eines Lokals | Wenig Zeit, oft keine IT-Expertise, unterschiedliche digitale Erfahrung | schrittweise Selbst-Einrichtung, verständliche Begriffe, rücknehmbare Änderungen | hilfsbereit, unaufgeregt |
-| Service-/Küchenpersonal | Lärm, Zeitdruck, weit entferntes Tablet, Hände beschäftigt | große Aktionen, sofort sichtbarer Status, kein Rätselraten | präzise, robust |
-| Support/Team | Große Datenmengen, viele ähnliche Fälle, hohe Verantwortung | filtern, vergleichen, sicher entscheiden, klarer Auditkontext | sachlich, verlässlich |
-| Marketing-Besucher | Eigentümer:innen und Betriebsleitende, müssen Nutzen und Hürden schnell erfassen | Geschichte statt Produkt-Screenshot-Wüste, Belege statt Prognosen, eine klare Aktion | seriös, menschlich |
+## 0. Quick decisions
 
-**Leitprinzipien:**
-1. **Menschen vor Software.** Zeige Gäste, Gastgeber:innen und nachvollziehbare Aufgaben statt abstrakter Technologie.
-2. **Eine Hauptaufgabe pro Sichtbereich.** Sekundäre Funktionen sind auffindbar, konkurrieren aber nicht mit der nächsten sinnvollen Aktion.
-3. **Sichtbarer Systemstatus.** Zahlung, Erreichbarkeit, Bestellung, Druck und POS-Erfassung sind textlich eindeutig.
-4. **Bestehenden Service respektieren.** QR-Bestellen ist eine zusätzliche Möglichkeit; persönlicher Service bleibt erkennbar.
-5. **Weniger Oberfläche, mehr Orientierung.** Keine drei gleichförmigen Karten nur zur Dekoration, kein unmotiviertes Badge-/Icon-Raster.
-6. **Zielgruppengerecht statt überall identisch.** Gemeinsame Tokens, aber unterschiedliche Dichte, Navigation und Aktionsgrößen.
-7. **Reduziert bedeutet nicht kalt.** Eine sparsame, monochrome UI darf durch Fotos, natürliche Texte und die Katze menschlich wirken.
-
-## 02 · Markenhierarchie und White Label
-
-| Oberfläche | Primäre Identität | Zackisch Combination Mark | Brand Mark / Mascot |
-|---|---|---|---|
-| Öffentliche Website und eigene Präsentationen | Zackisch | sichtbar an markentypischen Stellen | sparsam |
-| Betreiber-Dashboard und Hilfe | Zackisch | in Rahmen-Navigation | Hilfen, einzelne Zustände |
-| Internes Team-Dashboard | Zackisch | kleine Navigation | überwiegend nicht erforderlich |
-| Gäste-Bestelloberfläche | **Lokalname/-logo** | **nicht im Header, nicht als Hauptlogo** | bei ausgewählten Hilfen/Bestätigungen |
-| Physische QR-Karten, Aufsteller, Sticker | neutrales Tisch-/Abholziel | **erlaubt: einmal klein und dezent** | nur optional, sonst vermeiden |
-| Gäste-Bestellbestätigung | Lokal als Verkäufer | nicht statt Lokalname | kleine positive Emotion zulässig |
-
-**Combination Mark** = vollständiger Zackisch-Schriftzug als markeneigene Wortmarke. Die freigegebene Referenz ist die bereitgestellte handgezeichnete Wortmarke; das separate Katzenzeichen wird **Brand Mark** genannt. **Brand Mark** = Katzenkopf allein. **Mascot** = expressive Varianten der Brand Mark. Bereitgestelltes bzw. freigegebenes finales SVG verwenden. Keine zusätzlichen Striche, Funken, Sterne, Effektringe oder Unterstreichungen **direkt an der Combination Mark oder Brand Mark**. Abstände der Marke nach Original-Proportionen; Mindestfreiraum ringsum 0,5 × Höhe der Brand Mark als Layoutregel; nicht Teil des SVG modifizieren.
-
-### Original-Assets
-- `assets/zackisch/brand/combination_mark.svg`: Vektorexport der gelieferten Zackisch-Wortmarkenreferenz; Originalform bewahren, vor Publikation mit der Masterdatei abgleichen.
-- `assets/zackisch/brand/brand_mark.svg`: unveränderte offizielle Zackisch Brand Mark aus der SVG-Quelldatei; auch Favicon/Avatar.
-- `assets/zackisch/mascot/*.svg`: finale Mascot-Varianten als einsatzbereite Vektorassets.
-- `assets/zackisch/icons/*.svg`: handgezeichnete Doodle-Icons für Website, Produkt, Hilfestates und Marketing.
-- `assets/zackisch/font/zackisch.ttf`, `assets/zackisch/font/zackisch.woff2`, `assets/zackisch/font/zackisch.css`: dekorative Zackisch-Display-Schrift und Einbindung.
-- Keine generierten Neukonstruktionen des Kernlogos jenseits dieser finalen Export-Assets.
-- Dunkle Assets auf hellem Grund bevorzugen. Invertierte Version nur, wenn es ein autorisiertes Logoasset ist und Kontrast stimmt.
-
-## 03 · Farbe: Foundation- und semantische Tokens
-
-### Neutrales Markensystem
-| Token | Wert | Primäre Funktion |
-|---|---|---|
-| `neutral.canvas` | `#FAFAF9` | Standardhintergrund |
-| `neutral.white` | `#FFFFFF` | QR-Fläche, UI-Karten, Dialoge, Print |
-| `neutral.black` | `#000000` | Markenassets, wichtigste Texte und Icons |
-| `neutral.900` | `#333333` | längerer Text |
-| `neutral.700` | `#595959` | sekundärer Text mit ausreichend Kontrast |
-| `neutral.500` | `#737373` | nur große/dekorative Meta-Information; bei normalem Text Kontrast messen, ggf. `neutral.700` verwenden |
-| `neutral.200` | `#E6E6E4` | Linien, Separators, Kartenränder |
-| `neutral.100` | `#F3F3F1` | Flächen, Hover, Gruppen |
-| `accent.cobalt` | `#315BCD` | ausgewählte Aktionen, Links, Fokus, ausgewählte Grafik |
-| `accent.light` | `#B9C9F1` | kleine Hintergrundflächen, nie alleinige Text-/Statusfarbe |
-
-### Semantische Rollen (funktionale Statusfarben, keine Erweiterung der Branding-Palette)
-| Token | Designwert | Regel |
-|---|---|---|
-| `text.primary` | `#000000` | Überschrift, Beträge, Schlüsseldaten |
-| `text.body` | `#333333` | Fließtext |
-| `text.secondary` | `#595959` | sekundäre Informationen |
-| `text.inverse` | `#FFFFFF` | auf Schwarz / geprüftem Cobalt |
-| `surface.page` | `#FAFAF9` | normale Seite |
-| `surface.card` | `#FFFFFF` | sachliche Arbeitskarte |
-| `surface.muted` | `#F3F3F1` | gruppierende Fläche |
-| `border.default` | `#E6E6E4` | feine Linien |
-| `border.strong` | `#737373` | wichtiger Input-Rahmen |
-| `action.primary` | `#000000` | Default-Hauptaktion markeneigener Produktoberflächen |
-| `action.secondary` | `#FFFFFF` | Outline-Aktion |
-| `action.accent` | `#315BCD` | gezielte aktive/konversionsbezogene Handlung |
-| `focus.ring` | `#315BCD` | sichtbarer äußerer Fokusrahmen |
-| `status.success.ink` | `#146044` | Erfolgstext, nur mit Wort/Icon |
-| `status.success.bg` | `#E8F5EE` | Erfolgsfläche |
-| `status.warning.ink` | `#744800` | Warntext |
-| `status.warning.bg` | `#FFF5DD` | Warnfläche |
-| `status.error.ink` | `#A52828` | Fehltext |
-| `status.error.bg` | `#FFF0F0` | Fehlerfläche |
-| `status.info.bg` | `#ECF1FF` | Information |
-
-**Farbdisziplin:** ca. 90 % der sichtbaren Marke neutral; Cobalt und Light Blue zusammen ca. 10 %. Ausnahme für kritische Statusflächen: Statuskommunikation ist wichtiger als Markenpurismus. Rot/Grün/Amber **niemals als alleiniger Informationsträger**. Kontrast aller tatsächlichen Kombinationen überprüfen (mindestens WCAG 2.2 AA; Ziel 4,5:1 Fließtext, 3:1 große Schrift, 3:1 wichtige Nichttext-Signale). `#737373` auf sehr hellem Hintergrund nicht ungetestet als kleiner Text verwenden.
-
-**White-Label:** Die Akzentfarbe des Lokals kann `action.accent`, nicht jedoch rechtliche Statussemantik oder Tastaturfokus-Sichtbarkeit überschreiben. Falls Lokalfarben Kontrasttests nicht bestehen, fällt das UI auf sichere Zackisch-Fallbacks zurück. **Black (`#000000`) bleibt für Zackisch-Markenassets unverändert.**
-
-## 03a · Verbindliche CSS-Custom-Properties für Base UI
-
-Die folgenden Werte sind die **Source of Truth für neue UI-Tokens**; in allen vier Projekten werden sie aus einem gemeinsamen Design-Contract übernommen. Tokenwerte in Einzelkomponenten nicht frei überschreiben. Semantische Rollen sind bewusst von Rohwerten getrennt. Dark Mode ist **nicht** automatisch freigegeben; keine ungetestete Invertierung der Marken-/Gastoberfläche.
-
-```css
-:root {
-  --zk-font-ui: "Inter", system-ui, sans-serif;
-  --zk-font-doodle: "Zackisch", cursive;
-
-  --zk-white: #ffffff;
-  --zk-black: #000000;
-  --zk-neutral-900: #333333;
-  --zk-neutral-700: #595959;
-  --zk-neutral-500: #737373;
-  --zk-neutral-200: #e6e6e4;
-  --zk-neutral-100: #f3f3f1;
-  --zk-off-white: #fafaf9;
-  --zk-cobalt: #315bcd;
-  --zk-light-blue: #b9c9f1;
-
-  --zk-page: var(--zk-off-white);
-  --zk-surface: var(--zk-white);
-  --zk-surface-muted: var(--zk-neutral-100);
-  --zk-text: var(--zk-black);
-  --zk-text-body: var(--zk-neutral-900);
-  --zk-text-secondary: var(--zk-neutral-700);
-  --zk-border: var(--zk-neutral-200);
-  --zk-border-strong: var(--zk-neutral-500);
-  --zk-action: var(--zk-black);
-  --zk-action-fg: var(--zk-white);
-  --zk-link: var(--zk-cobalt);
-  --zk-focus: var(--zk-cobalt);
-  --zk-success-text: #146044;
-  --zk-success-bg: #e8f5ee;
-  --zk-warning-text: #744800;
-  --zk-warning-bg: #fff5dd;
-  --zk-error-text: #a52828;
-  --zk-error-bg: #fff0f0;
-  --zk-info-bg: #ecf1ff;
-
-  --zk-space-0: 0px;
-  --zk-space-1: 4px;
-  --zk-space-2: 8px;
-  --zk-space-3: 12px;
-  --zk-space-4: 16px;
-  --zk-space-5: 20px;
-  --zk-space-6: 24px;
-  --zk-space-8: 32px;
-  --zk-space-10: 40px;
-  --zk-space-12: 48px;
-  --zk-space-16: 64px;
-  --zk-space-20: 80px;
-  --zk-space-24: 96px;
-  --zk-space-32: 128px;
-
-  --zk-radius-xs: 4px;
-  --zk-radius-sm: 8px;
-  --zk-radius-md: 12px;
-  --zk-radius-lg: 16px;
-  --zk-radius-xl: 20px;
-  --zk-radius-2xl: 24px;
-  --zk-radius-pill: 9999px;
-
-  --zk-control-sm: 40px;
-  --zk-control-md: 48px;
-  --zk-control-lg: 56px;
-  --zk-touch-min: 44px;
-  --zk-stroke-ui: 2px;
-  --zk-duration-fast: 120ms;
-  --zk-duration-standard: 180ms;
-  --zk-duration-slow: 280ms;
-  --zk-ease: cubic-bezier(.2,.8,.2,1);
-  --zk-shadow-dialog: 0 16px 50px rgba(0,0,0,.10);
-}
-```
-
-**Schriftrollen, die Komponenten tatsächlich verwenden:** `display.hero` 72/44px 700; `display.section` 52/36px 700; `heading.h1` 32/28px 700; `heading.h2` 26/24px 700; `heading.h3` 22/20px 600; `heading.h4` 18px 600; `body.md` 16px 400; `label.md` 14px 600; `button.md` 16px 600. Die vollständige Tabelle im folgenden Abschnitt ist normativ. Doodle-Font nur handschriftliches Akzent-Lettering, niemals Functional UI.
-
-**Base-UI-Anbindung:** `@base-ui/react` liefert ungestylte, zugängliche Interaktion und den Zustandsvertrag. Die Zackisch-Wrapper definieren deren Appearance über diese Tokens, sichtbare Fokusführung und Component-States. Komponenten verwenden die dokumentierten Base-UI-State-Attribute (`[data-open]`, `[data-checked]`, `[data-disabled]`, `[data-invalid]` soweit für das konkrete Primitive vorgesehen) statt CSS-Klassen eines Fremd-Themes. Immer die API der installierten Base-UI-Version prüfen. Keine Radix-, Shadcn- oder fertigen Katalog-Themes als zweite Komponentenbibliothek installieren.
-
-**Anwendungsbeispiele der Tokenrolle:** Haupt-Button 48px hoch (`--zk-control-md`), Radius 12px (`--zk-radius-md`), Padding 16–24px, Schwarz mit weißer Schrift; Primary im Gast-/Personal-Kontext mit 56px Höhe. Eingaben 48px / 12px Radius, Default-Rahmen 1px `--zk-border-strong`, Fokus mindestens 2px `--zk-focus` mit ausreichendem Abstand. Dialog-Fläche Weiß, Radius 24px, Padding 24px, genau ein dominanter Primary-Action-Button. Card 16px Radius; flache Border statt generischer Dauerschatten. Tooltip ersetzt nie das sichtbare Formularlabel.
-
-## 04 · Typografie: ausschließlich Inter für UI und Lesetexte
-
-**Fonts:** Inter, Fallback `system-ui, sans-serif`; Zahlen und Preise `font-variant-numeric: tabular-nums`. Zusätzlich gibt es die dekorative Display-Schrift **Zackisch** (`assets/zackisch/font/zackisch.ttf`, `assets/zackisch/font/zackisch.woff2`) für kurze Headlines, Labels, Sticker, Kampagnenwörter und ausgewählte Website-Akzente. **Zackisch nie für Fließtext, Formulare, Preise, kritische UI-Texte oder längere Navigation einsetzen.**
-
-### Verbindliche Type-Styles (px; Desktop / Mobile wenn abweichend)
-| Stil | Größe | Line Height | Weight | Farbe | Einsatz |
-|---|---:|---:|---:|---|---|
-| `display.hero` | 72 / 44 | 1.05 | 700 | primary | einmaliger Marketing-Hero |
-| `display.section` | 52 / 36 | 1.10 | 700 | primary | große Story-Abschnitte |
-| `heading.h1` | 32 / 28 | 1.20 | 700 | primary | Produkt-Seitentitel |
-| `heading.h2` | 26 / 24 | 1.25 | 700 | primary | Hauptbereich |
-| `heading.h3` | 22 / 20 | 1.30 | 600 | primary | Karten-/Bereichstitel |
-| `heading.h4` | 18 | 1.35 | 600 | primary | kleinere Titel, Artikelname |
-| `body.lg` | 18 | 1.55 | 400 | body | Marketing-Einleitung, größere Hinweise |
-| `body.md` | 16 | 1.50 | 400 | body | Standardtext, Formulare, Gäste-Menü |
-| `body.sm` | 14 | 1.45 | 400 | body | Zusatzinformationen, Hilfetexte |
-| `label.md` | 14 | 1.35 | 600 | primary | Feldlabel, Filter |
-| `label.sm` | 12 | 1.30 | 600 | secondary | nur kurze Metadaten, kein erforderlicher Fließtext |
-| `button.md` | 16 | 1.25 | 600 | nach Variante | Buttons |
-| `button.sm` | 14 | 1.25 | 600 | nach Variante | sekundäre Desktop-Aktionen |
-| `number.money` | 20 | 1.25 | 700 | primary | Preise, Beträge |
-| `number.kpi` | 36 / 30 | 1.15 | 700 | primary | KPI/Bestellnummer |
-| `status.critical` | 18 | 1.35 | 700 | primary | Bestell-/Zahlungsstatus |
-
-**Keine ungeprüften Zwischengewichte simulieren:** Es gelten ausschließlich die oben aufgelisteten Inter-Gewichte (400, 600, 700). Keine `text-xs` für Hauptaktionen, Zahlungsinfos, Allergene, Preise oder rechtliche Pflichttexte. Gast-UI mindestens 16px für produktive Texte; Eingabefelder mindestens 16px zur Vermeidung von iOS-Zoom beim Fokus. Schrift darf bei 200 % Zoom und 320px Breite nicht abgeschnitten werden; Line-Height nicht fest in px schneiden.
-
-**Marketing-Lesebreite:** Textspalte 58–70 Zeichen, große Überschrift visuell ~10–14 Zeichen pro Zeile bei sehr großen Fonts; keine erzwungenen Zeilenumbrüche in Übersetzungen. **Tabellen und Geld** rechtsbündig und tabellarisch.
-
-## 05 · Spacing und Rhythmus
-
-**4px-Grundraster:** `space.0=0`, `.1=4`, `.2=8`, `.3=12`, `.4=16`, `.5=20`, `.6=24`, `.8=32`, `.10=40`, `.12=48`, `.16=64`, `.20=80`, `.24=96`, `.32=128` (alle px). Kein freies `margin: 17px` ohne expliziten Grund.
-
-| Anwendungsfall | Vertikal | Horizontal |
-|---|---:|---:|
-| Icon ↔ Label | 8 | 8 |
-| Label ↔ Input | 8 | – |
-| Feld ↔ Hilfetext/Fehler | 4–8 | – |
-| Zwischen Formularfeldern | 20–24 | – |
-| Button-Gruppe | 8–12 | 8–12 |
-| Karte intern mobil | 16 | 16 |
-| Karte intern desktop | 24 | 24 |
-| Karten im Raster | 16–24 | 16–24 |
-| Inhaltsblock ↔ Inhaltsblock | 32–48 | – |
-| Dashboard-Sektion ↔ Sektion | 48–64 | – |
-| Marketing-Sektion mobil | 64–80 | 20 |
-| Marketing-Sektion desktop | 96–128 | 24–48 |
-
-**Vertikale Hierarchie:** Die Abstände zwischen Blöcken sind stets größer als innerhalb. Einzelne Formulare in langen Reihen ohne Trennung vermeiden; Gruppen erst bei semantischer Zusammengehörigkeit bilden. Kein unmotivierter vertikaler Leerraum in Personalansicht.
-
-## 06 · Layoutsysteme, Breiten und Responsive
-
-| Kontext | Breiten-/Layout-Regel |
+| Area | Non-negotiable rule |
 |---|---|
-| Marketing | max-width 1280px; großer Hero darf visuell bis 1440px; horizontal mobile 20px, tablet 32px, desktop 48px |
-| Gäste-App | max. 640px Lesespalte auf Desktop; mobil volle Breite mit 16px Rand; Produkte immer lesbar in einer Spalte, ab ≥480 optional dichtere Bilder/Zeilen |
-| Checkout Gäste | max. 560px; immer lineares Schrittmodell; keine zweispaltige Checkout-Pflichtstrecke |
-| Betreiber-Dashboard | Shell 240px Seitenleiste ≥1200px; 80px kompakt bei Bedarf 900–1199px; unter 900px Drawer-Navigation |
-| Dashboard-Inhalt | max. 1440px; 24–32px Rand desktop, 16px mobil; Tabellen horizontal nur bei echtem Datenbedarf |
-| Personal-Tablet | Full-Viewport; sichtbare Echtzeit-Queue, 1–3 Spalten abhängig von Tabletbreite; 24px Rand im landscape |
-| Support-Artikel | Lesespalte 760px; Seitentoc nur ab 1100px; keine drei Textspalten |
-| Team-Dashboard | hohe Informationsdichte, aber Tabellen lesbar: Minimum 44px Zeilenhöhe, Daten in vorhandener Breite vergleichbar |
+| Identity | Original `wordmark.svg` and `signet.svg` supplied by the founder; their vector outlines stay intact and **always #000000**. No recoloring. |
+| Foundation | Pure white `#FFFFFF`, pure black `#000000`, **Electric Citron `#C6FF34`**. No substitutions. |
+| Selection | On Citron menus: background `citron.300` (`#C6FF34`); selected **pill** `citron.500` (`#9FD600`), black font weight **700**, Phosphor icon **fill** when an icon is present (inactive **regular**); **no black marker, stripe, dot or side border**. |
+| Feedback | **Every meaningful status, including Error, uses a recognizable Phosphor status icon + explicit text.** Only Error has a separate hue: icon/message/border `#C62828`. Success, Warning, Info and Pending stay black/gray, distinguished by icon shape and wording — never green/yellow/blue. |
+| Typography | **League Spartan** across marketing and app, weights 400/500/600/700/800. Original letterforms of the logo are artwork, not retyped in the font. |
+| Icons | **Phosphor** exclusively and **only where they add information**. No icons automatically on every button, field, card, menu item or metric; see §6. |
+| Shape | Rounded language. Pill buttons, menu items, tabs and chips. Large rounded cards; input corners 16px for a practical floating-label field. |
+| Inputs | Persistent accessible `<label>` inside the outline. Resting: centered; on focus **or filled**: floats to upper inner edge, never disappears. |
+| Imagery | Candid, people-first photographs showing real hospitality, staff, guests, smiles and authentic service; no generic corporate stock mood. |
+| Print QR | Printable guest-order QR output **black ink on white paper only**; centered black signet; no brand colors. Documented here only: **no QR templates or QR code assets included in this package**. |
+| Product | Human-centered: service stays human; Zackisch removes ordering/payment friction. Quick, obvious, honest and accessible. |
 
-**Responsive Orientierung:** 320–599 `compact`, 600–899 `medium`, 900–1199 `wide`, ≥1200 `expanded`. Diese Werte sind Layout-Entscheidungen, keine Gerätemodelle. Bei langem Inhalt robust umbrechen. Kein horizontales Dokument-Scrolling. Mobile Bottom-Bar nur für **dauerhafte** Navigation mit maximal 3–4 Einträgen; nie doppelt mit identischer Kopf-/Sidebar-Navigation.
+## 1. Brand strategy
 
-**Sticky:** Gast-Warenkorb-/Checkout-CTA darf unten haften, darf aber keine Eingaben verdecken und berücksichtigt `env(safe-area-inset-bottom)`. In Mitarbeiter-Tablet sichtbare Status-/Aktionsleiste. Keine globale Sticky-Marketing-Navigation; Header scrollt normal mit.
+### Brand idea
 
-## 07 · Radius, Konturen, Schatten, Layer
+**Human service, without unnecessary waiting.** Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. The restaurant keeps its POS and service choices; guests do not need an app/account. The visual system should feel **direct, warm, fast, trustworthy, calm** — more useful product than neon experiment.
 
-| Token | px | Einsatz |
-|---|---:|---|
-| `radius.xs` | 4 | kleine visuelle Tags, Codeflächen |
-| `radius.sm` | 8 | kleine Chips, kleine Badges |
-| `radius.md` | 12 | **Inputs und Buttons** |
-| `radius.lg` | 16 | **Standard-Card**, Menu-Item-Detail |
-| `radius.xl` | 20 | größere Medienkacheln |
-| `radius.2xl` | 24 | Dialog/Sheet-Content |
-| `radius.pill` | 9999 | echte Pills, nur Chips und Filter |
+- **Personality:** approachable, confident, practical, cheerful without being childish; transparent and never coercive.
+- **Promise:** “Deine Kasse bleibt. Deine Gäste bestellen selbst.” Use as an approved product message when contextually accurate; do not imply Zackisch replaces the POS or guarantees operations.
+- **Visual tension:** vivid Electric Citron for recognition; otherwise confident black typography, clean white pages, warm human photography and generous whitespace.
+- **Audience by surface:** owners need trustworthy setup/billing, staff need fast operational clarity, guests need rapid mobile decisions, support users need readable instructions, internal staff need dense and reliable data.
+- **Primary languages:** German first; all UI must accept longer German copy and English translations, and be localization-ready.
 
-**Rahmen:** 1px `border.default`, interaktiv fokussiert 2px sichtbarer äußerer Focus-Ring + 2px Offset. **Shadows:** Standard keiner; schwebende Popovers weicher geringer Shadow `0 8px 24px rgba(0,0,0,.08)`, Modal `0 20px 56px rgba(0,0,0,.14)`; keine schwebenden Karten überall, keine Glassmorphism-Dauerlösung. **Layering:** Document → sticky CTA → popover/tooltip → overlay → dialog → transient nonblocking notice; zentral verwalten und testen. Hinter Dialog inert, Fokus darin gehalten und danach zurückgeführt.
+### Writing and interaction voice
 
-## 08 · Interaktionszustände und Motion
+Write in plain language and present a next action. Prefer “Bestellung abschicken”, “Zahlung prüfen”, “Erneut versuchen” over jargon. Never mask the difference between *order submitted*, *payment authorized*, *payment successful* and *order accepted*. Errors state what failed and what the user can do safely, particularly with payments. Avoid clever copy in permission, legal, payment, tax and checkout dialogs.
 
-### Einheitliche Zustände
-`default`, `hover` (wenn Pointer), `active/pressed`, `focus-visible`, `selected/checked`, `disabled`, `loading`, `success`, `error`; zusätzlich für Formulare `invalid`, `readonly`, `required` und für asynchrone Bereiche `empty`, `offline`, `stale`, `retrying`.
+## 2. Brand assets and logo governance
 
-- Hover **nur** subtile Farbänderung; keine springenden Buttons.
-- Active optional `scale(.99)` max. 100ms; fokussiert immer sichtbarer Ring.
-- Disabled: visuell reduziert, aber erklärbar; Gründe bei geschäftskritischen Aktionen **als Text** nebenan.
-- Loading: Buttontext bleibt erkennbar oder wird zu „Wird gespeichert…“, feste Breite; mehrfaches Abschicken blockieren.
-- Skeleton nur wenn Layoutstruktur bekannt; für kurzlebige Operationen eher Progress-Indikator, niemals Infinite-Spinner ohne Abbruch/Retry bei Fehlern.
-- Reduced Motion: alle Informationen statisch zugänglich, scrollgebundene Effekte entfernt, UI-Feedback bleibt verständlich.
+**The two original source files are authoritative:** `root/public/brand/logo/original/signet.svg` and `root/public/brand/logo/original/wordmark.svg`. They are **byte-identical** to the supplied cropped vectors, with neither white space nor a new font. Every derivative includes **only** the unmodified black artwork, optionally positioned within a white or Electric Citron canvas. **No slogans, taglines, headings, supporting text, illustrations, decorative frames, shadows, extra marks or additional logo combinations** are allowed in any published logo/social asset. Never typeset the wordmark using League Spartan. The logo is *always* `#000000`; there is no white or colored-reversal mark.
 
-### Motion-Tokens
-| Token | Dauer | Anwendung |
-|---|---:|---|
-| `motion.fast` | 100–140ms | Press/hover |
-| `motion.default` | 180–220ms | Popover, kleine Panels |
-| `motion.dialog` | 220–280ms | Dialog/Sheet |
-| `motion.story` | scrollabhängig, **nicht zeitkritisch** | einziger zentraler Produkt-Erklärmoment der Website |
+### Curated source, lockup and platform formats
 
-Easing funktional `cubic-bezier(.2,.8,.2,1)`; Verabschiedung kürzer als Eintritt. Animation erklärt Raum/Status, nie entscheidende Daten allein. **Kein Scroll-Jacking, kein verpflichtendes Pinning, kein fliegender QR-Code als Funktionshindernis.** Für Storytelling Transform und Opacity bevorzugen; pro Viewport in der Regel höchstens eine nennenswerte Bewegung gleichzeitig. Feste Menüs und Checkout bewusst ruhig lassen.
-
-## 09 · Bildsprache, Medien und Authentizität
-
-- Menschen in **echten** Gastronomie-Umgebungen: Gäste, Service, Bar, kleine Cafés, Imbiss, Tischservice, Abholung. Divers ohne künstliche Inszenierung.
-- Website-Bilder: warm, natürlich, leichte lebendige Farbigkeit. **Keine KI-generierten Fotos/Videos als reale Referenz.** Rechte/Quelle/Personenfreigabe dokumentieren.
-- Hero: echtes menschliches Erlebnis + beiläufig sichtbarer QR-Touchpoint; nicht nur schwebende Geräte.
-- Produktfotos: Speise klar erkennbar, appetitlich, realistisches Licht; standardmäßig **4:3**, auf Produktdetail optional 1:1. Keinen generischen Burger-Platzhalter, wenn echte Bilder fehlen: neutrale Kategorie-Motivfläche.
-- Lokalbanner: **16:7** breites Querformat oder 16:9 als sichere Aufnahme; informative zentrale Safe Zone. Darf den Lokalnamen **nicht** ersetzen. Wenn kein Banner: neutrale Fläche, keine unpassende Stockaufnahme.
-- Lokallogo: eigene freigegebene Datei, zentriert in einem max. ca. 120×72px Container, `object-fit:contain`; transparenter Hintergrund zulässig. Fehlt es: Lokalname in Inter Bold.
-- Help-Center: echte aktuelle Screenshots; beschneiden und markieren, damit Schritte nachvollziehbar sind. Keine Mockups als angebliche reale Ansichten.
-- Video nur, wenn ein Ablauf durch Bewegtbild besser verständlich wird: 30–90s mit Untertiteln/Transkript, Pausieren, Posterbild, keine Autoplay-Audio. In Marketing kann ein sehr kurzes stummes Loop eine reale Szene veranschaulichen – nie statt Text oder Handlung.
-- Print-QR: Schwarz auf reinem Weiß; keine Fotohintergründe unter dem Code.
-
-## 10 · Icon-System
-
-**Zwei bewusst getrennte Stile:**
-1. **Funktionale UI-Icons:** schlichtes, konsistentes 24px-/20px-Vektor-Set; feste 2px-Stroke, klare Standard-Symbole. Hier gewinnt Erkennbarkeit vor Unperfektion. Semantische Icons niemals ohne Text als einziges Signal bei wichtigen Aktionen.
-2. **Marker-Illustrationsicons:** ausschließlich Marketing, leere Zustände, QR-Deko außerhalb Scanzone, Hilfegrafiken; handgezeichnet, asymmetrisch, leicht schwankende Strichbreite 2.5–3.5px auf 48px Raster. Nicht wie kaputte SVG-Icons wirken; bewusst gestaltete Original-Assets, nicht zufällige Linienverzerrung.
-
-**QR-Grafik ist kein Illustration-Icon:** Der wirklich zu scannende Code besteht aus unberührter, technisch korrekter Matrix. **Keine** Katzenköpfe im Code, verzerrte Module, invertierten Farben, dekorativen Aussparungen oder Effekte innerhalb der Quiet Zone.
-
-
-
-## 10a · Asset bundle und verbindliche Namen
-
-**Dateinamenskonvention:** nur englisch, nur lowercase, Wörter mit `_` bzw. `-` wie im Bundle vorgegeben.
-
-**Brand:**
-- `assets/zackisch/brand/combination_mark.svg`
-- `assets/zackisch/brand/brand_mark.svg`
-
-**Mascot-Set (Auswahl der wichtigsten finalen Assets):**
-- `assets/zackisch/mascot/mascot_curious_welcome.svg`
-- `assets/zackisch/mascot/mascot_happy.svg`
-- `assets/zackisch/mascot/mascot_wink.svg`
-- `assets/zackisch/mascot/mascot_focused.svg`
-- `assets/zackisch/mascot/mascot_thinking.svg`
-- `assets/zackisch/mascot/mascot_sleeping.svg`
-- `assets/zackisch/mascot/mascot_excited.svg`
-- `assets/zackisch/mascot/mascot_celebrating.svg`
-- `assets/zackisch/mascot/mascot_peeking.svg`
-- `assets/zackisch/mascot/mascot_helpful_guide.svg`
-- `assets/zackisch/mascot/mascot_scan_qr.svg`
-- `assets/zackisch/mascot/mascot_payment_success.svg`
-- `assets/zackisch/mascot/mascot_order_received.svg`
-- `assets/zackisch/mascot/mascot_order_ready.svg`
-- `assets/zackisch/mascot/mascot_empty_state.svg`
-- `assets/zackisch/mascot/mascot_error_404.svg`
-- `assets/zackisch/mascot/mascot_offline_pause.svg`
-- `assets/zackisch/mascot/mascot_support_listening.svg`
-
-**Doodle-Icons (Kernset):** `assets/zackisch/icons/icon_menu.svg`, `assets/zackisch/icons/icon_cart.svg`, `assets/zackisch/icons/icon_qr_code.svg`, `assets/zackisch/icons/icon_smartphone.svg`, `assets/zackisch/icons/icon_print_qr.svg`, `assets/zackisch/icons/icon_table_number.svg`, `assets/zackisch/icons/icon_receipt.svg`, `assets/zackisch/icons/icon_card_payment.svg`, `assets/zackisch/icons/icon_add.svg`, `assets/zackisch/icons/icon_confirm.svg`, `assets/zackisch/icons/icon_close.svg`, `assets/zackisch/icons/icon_search.svg`, `assets/zackisch/icons/icon_filters.svg`, `assets/zackisch/icons/icon_settings.svg` und weitere Dateien aus `assets/zackisch/icons/`.
-
-**Display-Font:**
-- `assets/zackisch/font/zackisch.ttf`
-- `assets/zackisch/font/zackisch.woff2`
-- `assets/zackisch/font/zackisch.css`
-
-**Typeface / Font:** `assets/zackisch/font/zackisch.ttf` (eigenständige aus Handlettering-Referenzen entstandene Prototyp-Glyphen, inkl. äöü/ÄÖÜ/ß), `assets/zackisch/font/zackisch.woff2` (Browser), `assets/zackisch/font/zackisch.css` (Einbindung). die gesonderte Übergabevorschau `previews/zackisch_font_exported.png` zeigt eine Darstellung aus der echten Font-Datei. Die dynamische Schrift ist ein **Display-Prototyp** (Kernzeichen/Umlaute im tatsächlichen Font-Render prüfen, Kerning ist nicht final) und **nicht** das offizielle Logo: `assets/zackisch/brand/combination_mark.svg` bleibt bei Logoeinsatz unverändert.
-
-
-**Einsatzlogik:** Inter bleibt UI-Standard. Zackisch ist ein illustratives Brand-Tool. Die Mascot-Dateien sind in `DESIGN.md` semantisch verortet; die exakten Produkt-/Projektkontexte stehen in `README.md`.
-
-## 11 · Mascot-System und präzise Placement Map
-
-| Emotion / Variante | Wo sinnvoll | Größe (visuell) | Wann nicht |
-|---|---|---:|---|
-| **Neugierig** (offene Augen) | erste optionale Einführung; Tipps zur Menü; Produkt-Tour | 48–72px | dauerhaft im Navigationsheader |
-| **Fröhlich** (lächelnd) | tatsächlich bestätigte, nichtkritische Erfolgsmomente | 56–96px | Zahlung solange nur `processing` |
-| **Zwinkernd** | kleine optionale UX-Hilfen, kleine Marketing-Lockerheit | 32–48px | rechtliche Hinweise, notwendige Validierung |
-| **Fokussiert** | neutrale Begleitung von Arbeitsschritten im Onboarding | 40–64px | als Icon für Pflichtstatus/Zahlungszustand |
-| **Schläfrig/Ruhig** | leerer, **unbedenklicher** Arbeitszustand („noch keine Artikel“) | 64–96px | Systemausfall, Bestellung verloren, Geräte offline |
-| **Überrascht** | wenige kuratierte, positive Produktmomente | 48–64px | Fehlermeldung oder unerwartete Gebühren |
-| **Feiernd/Sternaugen** | Einrichtung nach vollständig geprüftem Abschluss, neutrale Gast-Bestätigung **nach verifizierter Zahlung** | 64–112px | künstliche Success-Pages vor Backendbestätigung |
-| **Peeking / über Kante** | sanfter Empty State oder QR-Aufsteller **außerhalb des Codes** optional | 36–64px | neben jedem CTA, in jedem Produktbild |
-| **Keine Katze** | Preisaufschlüsselung, Stripe-Finanzdaten, Fehler/Inkonsistenz, Allergene, Datenschutz, Support-Audit, Beschwerden | – | – |
-
-**Verbindlich:** max. **eine** sichtbare Mascot-Darstellung pro Produktzustand / Hauptbereich. Katze nie Ersatz für Text, Statusicon, Buttonlabel oder Lokallogo. Originale Silhouette bleibt; Emotionen durch Augen/Mimik/Pose; keine Glow-Striche am Logo, keine permanenten Wackelanimationen, niemals autoanimierte Mascot beim kritischen Tippen/Zahlen. Bildbeschreibung bei dekorativem Mascot `alt=""`, bei informativem Bild eine sinnvolle knappe Beschreibung; **nicht** dieselbe Statusmeldung doppelt vorlesen.
-
-## 11a · Mascot-Asset-Mapping pro Situation (Dateiname ist Vertrag)
-
-Die SVG-Dateien sind echte Illustrationen, **keine** Icons für sicherheits- oder zahlungskritische Statusanzeige. Für alle Assets gilt: keine externen Animationen, keine zufälligen Glanz-/Stressstriche an der Marke, keine Farbe allein als Semantik.
-
-| Asset | Empfohlene Stelle | Dosierung / Textpflicht |
+| Layer | Exact location / naming | Practical use |
 |---|---|---|
-| `assets/zackisch/mascot/mascot_curious_welcome.svg` | Website: dezenter QR-Einstieg, Onboarding-Welcome | 80–140px; neben echter Überschrift |
-| `assets/zackisch/mascot/mascot_happy.svg` | Setup abgeschlossen, sympathisches positives Leermoment | 56–112px; Text benennt Zustand |
-| `assets/zackisch/mascot/mascot_wink.svg` | seltene freundliche Microcopy / Produkthinweis | 40–72px, keine kritischen Controls |
-| `assets/zackisch/mascot/mascot_focused.svg` | Arbeitsschritt „Wir prüfen …“ / Setup-Fortschritt | 48–80px; echte Progress-Information zusätzlich |
-| `assets/zackisch/mascot/mascot_thinking.svg` | erklärender Hinweis, FAQ-/Hilfesituation | 48–90px |
-| `assets/zackisch/mascot/mascot_sleeping.svg` | Leerlauf-/Ruheansicht ohne Aktivitätsdruck | 56–112px; nicht in Checkout-Zahlungswartezeit |
-| `assets/zackisch/mascot/mascot_excited.svg` | seltene positive Marke-/Marketingmomente | 64–140px; nicht übernutzen |
-| `assets/zackisch/mascot/mascot_celebrating.svg` | erfolgreicher Setup-Meilenstein, freiwillige positive Aktion | 64–112px; nicht als alleinige Bestätigung |
-| `assets/zackisch/mascot/mascot_peeking.svg` | freie Fläche an leeren Listen, Showcase-Kante | 64–120px, nicht neben jedem CTA |
-| `assets/zackisch/mascot/mascot_helpful_guide.svg` | kurze Schritt-für-Schritt-Hilfe auf Betreiberseiten | 56–96px |
-| `assets/zackisch/mascot/mascot_scan_qr.svg` | Website: Funktionsgrafik QR-Einstieg | 100–180px; illustrative QR-Fläche ist **nicht scannbar** |
-| `assets/zackisch/mascot/mascot_payment_success.svg` | Gast-Bestätigung **nach verifiziertem Status** | 72–120px; Text und Bestellreferenz bleiben zentral |
-| `assets/zackisch/mascot/mascot_order_received.svg` | Gaststatus „Bestellung eingegangen“ | 72–120px; echte Bestellung/Zeit/Daten separat |
-| `assets/zackisch/mascot/mascot_order_ready.svg` | Abholstatus „Bereit“ | 72–120px; Abholkennung und klare Handlung |
-| `assets/zackisch/mascot/mascot_empty_state.svg` | Keine Ergebnisse in Menü/Support/Listen | 72–128px; Ursache und Alternative erklären |
-| `assets/zackisch/mascot/mascot_error_404.svg` | Not Found / 404, aber **nicht** Zahlungsfehler | 96–160px; Navigation zurück erforderlich |
-| `assets/zackisch/mascot/mascot_offline_pause.svg` | Verbindung unterbrochen / Pause | 72–112px; Verbindung und Retry klar erklären |
-| `assets/zackisch/mascot/mascot_support_listening.svg` | Support-Kontakt oder Help-Onboarding | 72–128px; echter Kontaktlink vorhanden |
+| Original / zero padding | `root/public/brand/logo/original/{signet,wordmark}.svg` | Tight transparent vector source; retain unchanged |
+| Responsive padded SVG | `root/public/brand/logo/lockups/{signet,wordmark}--{transparent,white,citron}--{standard,spacious}.svg` | UI header, marketing layout, presentations, email signature; CSS scalable |
+| Bitmap fallback | `root/public/brand/logo/lockups/{signet,wordmark}--{background}--{padding}--{width}w.png` | Fixed-resolution placement when SVG is not supported |
+| Favicon | `root/public/brand/logo/platform/signet--favicon.{svg,ico}` and `signet--favicon--32.png` | Browser tab/bookmarks; rounded 28%-radius Citron tile with transparent outer corners; ICO 16/32/48 px |
+| Apple touch | `root/public/brand/logo/platform/signet--apple-touch--180.png` | Full-bleed square Citron; OS applies rounded mask automatically |
+| PWA | `root/public/brand/logo/platform/signet--pwa--{192,512}.png`, `signet--pwa-maskable--512.png` | `any`: round-square/transparent corners; `maskable`: full-bleed square for OS-provided mask |
+| Social profile | `root/public/brand/logo/social/signet--avatar--400.png` | Square avatar, centered and circle-crop safe |
+| Open Graph | `root/public/brand/logo/social/wordmark--og--{citron,white}--1200x630.png` | Link preview / OG and large social card; logo only |
 
-**Animierter Mascot:** nur später als freigegebenes separates Animation-Asset; SVG bleibt statisch. Bei `prefers-reduced-motion: reduce` keine kontinuierliche Bewegung. **Höchstens ein** deutlicher Mascot pro Abschnitt, kein Mascot bei Eingabefehlern, Chargebacks oder Sicherheitswarnungen. Auf der Gäste-Oberfläche gilt weiterhin das Lokallogo als primäre Identität.
+This is an **intentionally constrained** set, not a collection of all export sizes a design tool can generate. No redundant WebP logos, 10-size PNG ladders, standalone social banners, platform-specific extra dimensions, old logo variants or combined wordmark/signet compositions. A dedicated social-cover asset should be added **only after** an actual platform's cover crop and requirements are confirmed; render the existing original artwork, without slogans.
 
-## 12 · Komponenten: semantische Entscheidungsmatrix
+### Backgrounds, padding and clear space
 
-**Grundregel:** Zuerst entscheiden, *was die Information oder Aktion bedeutet*, dann die visuelle Komponente wählen. Vorhandene Screens sind kein Vorbild.
+- **Approved artwork color:** black `#000000` only. **Approved export backgrounds:** transparent, white `#FFFFFF`, Citron 300 `#C6FF34`. Transparent is true alpha; do not bake in a fake checkerboard or gray canvas.
+- **Original tight:** supplied cropped SVG with zero added padding, for precise developer placement. It is *not* a recommended final lockup for social publishing or fixed-size UI.
+- **Standard:** practical default. Signet occupies ~72% of square canvas height; wordmark has clear space of `0.35×` source mark height on every side.
+- **Spacious:** for visually isolated placements and co-branding. Signet occupies ~58% of a square canvas; wordmark clear space `0.85×` source mark height on every side.
+- **Platform treatments:** favicon icon is deliberately larger (~80% signet height) for tiny tab sizes; its Citron canvas has strongly rounded (28% radius) corners with actual transparent exterior. PWA `purpose=any` uses the same rounded-square treatment at ~70% signet height. Apple Touch must remain opaque square because iOS rounds it; PWA `maskable` must remain opaque square because Android/OS masks it. Both preserve original artwork and safe areas; 512px maskable and round-cropped avatar use ~58% high signet. Check actual device/platform crops before release.
+- When placing an original tight SVG in a custom layout, reserve at least the **standard** clear space around it and test at actual display size. Do not stretch, rotate, recolor, outline, add filters or draw a replacement wordmark.
 
-| Bedarf | Komponente | Beispiel | Nicht verwenden |
-|---|---|---|---|
-| nächste Aktion in einem Ablauf | Primary Button | `Weiter`, `Speichern`, `Zahlungspflichtig bestellen` | Link für Mutation |
-| Navigation zu anderem Ziel | Link | `Anleitungen öffnen` | Button für reinen Seitenwechsel |
-| Wahl aus 2–4 **gegenseitig ausschließenden** Optionen | Radio Group / Segmented | Tisch/Abholung nur wenn beides für Gast wählbar | Checkbox |
-| mehrere unabhängige Optionen | Checkbox Group | Zutaten hinzufügen | Segmented Single Select |
-| wenige Optionen aus bekannten Werten | Select | Betriebsregion, Kategorie | freie Texteingabe |
-| langer, filterbarer Auswahlkatalog | Combobox | große Artikelliste, interner Ticket-Owner | Native Select mit 200 Einträgen |
-| Navigation innerhalb derselben Seite | Tabs | `Aktuell` / `Archiv` | Tabs für mehrstufige Einrichtungs-Formulare |
-| progressive Details ohne Seitenwechsel | Disclosure/Accordion | FAQ, optionale Details | Accordion für Pflichtinformationen im Checkout |
-| kurzer, nichtkritischer Ereignis-Hinweis | Toast | `Änderung gespeichert` | Zahlung fehlgeschlagen, Formularfehler |
-| persistentes Problem auf der Seite | Inline Callout / Notice | `Zahlungskonto muss geprüft werden` | automatisch verschwindender Toast |
-| invalides Feld | Field Error | `Gib eine gültige E-Mail-Adresse ein` | globaler Toast |
-| mehrere Formularfehler | Error Summary + Inline Errors | Einrichtung/Steuerdaten | nur rote Rahmen |
-| destruktiver, schwer rücknehmbarer Vorgang | Alert Dialog | Betrieb dauerhaft löschen | Popover mit „OK“ |
-| normale kontextuelle Bearbeitung | Dialog (desktop), Sheet (mobil) | Produktdetails/Extras | Alert Dialog für triviale Auswahl |
-| kurzes Kontextmenü | Menu | `Umbenennen / Duplizieren / Löschen` | Navigation als Dropdown-Menü bei drei Seiten |
-| mehrere fokussierte Informationen zu einem Datensatz | Side Panel | Bestelldetails desktop | Modal für dauerhaftes paralleles Prüfen |
-| umfangreiche Datenvergleiche | Table/Data Grid | Auftragsliste, Gebühren, Audit | 100 einzelne Cards |
-| wiederholte kleine Auswahl-/Filteroptionen | Chips | Kategorie-/Statusfilter | Pill-Badge als fake Button |
-| Status abbilden | Status Badge **mit Text** | `Bezahlt`, `In Bearbeitung` | Farbe oder Mascot allein |
-| endgültiger Abschluss eines linearen Ablaufs | Confirmation Screen | Account, QR-Ausdruck vorbereitet, Zahlung bestätigt | kurzer Toast als einzige Bestätigung |
-| Erfolg mit aktionsrelevanten Daten | Summary/Receipt View | Gast-Bestell-/Zahlungsbestätigung | Gratulations-Popup ohne Daten |
-| Datei auswählen | File Input/Uploader | Artikelfoto, Lokallogo | freie URL für normale Nutzer |
-| Menge ändern | Stepper + validierte Eingabe | Anzahl eines Artikels | Slider |
-| Fortschritt anzeigen | Progress/Stepper | mehrstufige Einrichtung | unendlicher Ladebalken ohne Status |
-| externe Zahlungsdetails | Trusted Provider Embed | Stripe Onboarding/Zahlung | frei nachempfundenes Checkout-Formular |
+### Asset integration and quality control
 
-### Komponenten-Anatomie (verbindliche Maße)
-| Komponente | Maße | Radius | Weitere Regeln |
-|---|---|---|---|
-| Button groß | min. 56px hoch (Gast-Primary, Personal) | 12px | seitliches Padding 24px, Icon 20px |
-| Button normal | 48px hoch | 12px | Padding 20px |
-| Button klein | 40px hoch (nur Desktop-Sekundär) | 10px | Padding 16px |
-| Icon Button | **mind. 44×44px**; Personal 56×56 | 12px | Tooltip + accessible name |
-| Text Input | 48px hoch; Gast 52px | 12px | Border 1px, x-Padding 16px |
-| Textarea | min. 120px | 12px | vertikales Resize erlauben |
-| Select / Combobox Trigger | 48–52px | 12px | lange Werte nicht abschneiden ohne Anzeige |
-| Checkbox / Radio | visuelle Form 20–24px, Target ≥44px | nach Typ | gesamtes Label klickbar |
-| Segmented | 44–48px pro Option | 12px Außenform | klare aktive Fläche, nicht nur Farbe |
-| Tabs | min. 44px hohe Ziele | keine Card nötig | aktive Linie/Fläche, keyboard pattern |
-| Toast | 320–420px max, mobil Full minus 16px Rand | 12px | 16px Padding, max 2 Zeilen Kerntext |
-| Inline Notice | volle relevante Inhaltsbreite | 12px | 16px Padding, erklärende Aktion/Link |
-| Card | variabel | 16px | 16–24px Padding, meist Border statt Shadow |
-| Dialog | bis 560px, komplex bis 720px | 24px | Header/Body/Footer, max 90vh scrollfähig |
-| Mobile Sheet | 100vw, max 90dvh | 24px oben | Handle optional, sichere Close/Back-Aktion |
-| Popover | 240–360px, um Inhalt | 12px | Position/Fokus testen, nicht Modal-Ersatz |
-| Dropdown Menu | 200–320px | 12px | Items ≥40px hoch |
-| Table Row | 48px; interne dichte Liste min. 44px | – | sortierbare Spaltenlabels; kein horizontales Chaos |
-| Badge | Höhe 24–28px | 8px | lesbarer Status-Text, keine Buttons |
-| Tooltip | max. 280px | 8px | 12–14px Text, niemals notwendige einzige Info |
-| Empty State | freie Fläche ≥240px | – | kurze Überschrift, Erklärung, nächste Handlung |
+All filenames in the delivered brand library begin with **`signet`** or **`wordmark`** (besides the machine-readable `manifest.json`); the original artwork stays in `original/`. File naming follows `mark--background--padding--size`, so a developer can reliably choose the needed variant. `root/public/brand/logo/manifest.json` lists every exported file, its specific purpose, format, pixel dimensions where relevant and SHA-256 checksum. A background-specific file is visually just the black logo on that color, nothing else.
 
-### Toast-Spezifikation
-- Position: Betreiber/Team/Desktop **rechts unten** mit 24px Abstand; Gast mobil **oberhalb** einer festen Bottom-Action (sonst oben), nicht über Tastatur/Checkout. Safe area respektieren.
-- **Success**: kurze 3–5 Sekunden; **Info**: 5–7 Sekunden; auto-dismiss pausen bei Hover/Fokus, manuelles Schließen. Nichtkritische Meldungen höflich über `role=status`/polite ankündigen.
-- **Nicht auto-dismiss** bei notwendiger Handlung: statt Toast persistenten Inline-Hinweis. Kein Toast-Stack aus fünf parallelen Meldungen; Events sinnvoll zusammenfassen.
-- Bei Optimistic Save nur Erfolg melden, wenn Persistierung bestätigt. Fehler mit konkreter Retry-Aktion im relevanten Kontext. Kein Mascot innerhalb Toast.
+Prefer SVG for web/UI and editable vector handoffs; use exact-size PNG only for systems requiring raster. For Next.js App Router, copy/route the relevant source under the framework's expected metadata name or configure `metadata.icons`; this runtime wiring does **not** rename the source asset in the design library. The same **1200×630** OG PNG may be used for a large social share card; site titles and descriptions belong in HTML/OG metadata, **not printed onto the graphic**. Asset filenames and platform masks are listed above.
 
-### Dialog/Alert-Dialog/Sheet
-- Dialog bei kurz bearbeitbarer fokussierter Aufgabe (z. B. eine Speise schnell bearbeiten); komplexe Menükonfiguration hat **eigene Seite / Side Workspace** mit Zustandserhalt.
-- Alert Dialog nur bei Verlust/irreversibler Wirkung. Konsequenz konkret nennen, positive/negative Buttons explizit benennen, Escape nur wenn sicher; Fokus passend setzen, Rückkehr zum Trigger.
-- Bottom Sheet für Gast-Produktdetails, Warenkorb, kleine Filter; **Checkout selbst als stabile Seite**, nicht in endloser Sheet-Kaskade. Bei Sheet-Schließen ungespeicherte Eingaben schützen.
+**QR printing is not a logo asset export.** Printed order QR designs are specified later in this document: functional black on white, a black signet centered only when scan reliability allows, no Citron or ornamentation. **No QR codes, table-tent print layouts or PDFs belong in this package.**
 
-### Formulare: Feldtypen und Fehler
-- Feld-Label **immer sichtbar außerhalb des Feldes**; Placeholder ist Beispiel, kein Ersatz. Required und optional nur dort kennzeichnen, wo nötig.
-- Telefonnummer mit `type=tel`, E-Mail mit `type=email`, Geld nicht als frei formatierter String ohne Vorzeichen-/Rundungsprüfung. Decimal-Eingabe mobil mit sinnvoller Tastatur, Währung sichtbar.
-- Feldhinweis direkt unter Label oder Feld, Fehlermeldung direkt am Feld + Fehlerübersicht bei mehrschrittigen/längeren Formularen. Nach fehlerhaftem Absenden Fokus zur Fehlerübersicht und Links zum fehlerhaften Feld.
-- Validierung beim Submit; bei verlassenem Feld nur unaufdringliche Formatprüfung, keine roten Fehlermeldungen während aktiver Eingabe. Fehler klar umsetzbar formulieren.
-- Maximal eine primäre Aktion pro Formular; klare `Abbrechen`-Navigation. Langer Assistent speichert Fortschritt nur, wenn Backend das garantiert; sonst ehrlich vor Verlust warnen.
-- Formularblöcke gruppieren, Schritte nach Aufgabe statt Datenbanktabellen. Beispiel: **Betrieb → Menü → Zahlung → QR & Personal → Test → Start**; Reihenfolge von tatsächlichen Freigaben abhängig, visuell nachvollziehbar.
+## 3. Palette — primitives
 
-## 13 · Spezialkomponenten: Gäste-App
+Three fixed brand values:
 
-| Komponente | Einsatz und Platzierung | Sichtbare Pflichtinformationen |
+| Primitive | Hex | Function |
 |---|---|---|
-| LokalHeader | Oben; Lokallogo/-name, ggf. Banner, Kontext Tisch/Abholung | Lokal als Verkäufer erkennbar; nicht Zackisch-Logo |
-| MenuCategoryNav | unter Lokalheader, horizontal scrollbare **echte** Kategorien | klare aktive Kategorie, überspringbare Navigation |
-| MenuItemRow | Standard: Bild 88–112px (wenn vorhanden), Titel, kurzer Text, Preis, klare Add-Aktion | verfügbar/nicht verfügbar, notwendige Allergene erreichbar |
-| MenuItemDetail | mobile Sheet oder stabile Detailseite bei sehr vielen Optionen | Produkt, Preis, Eigenschaften, Optionen, Gesamtpreis |
-| CustomizationStep | nacheinander oder scrollbarer Bereich, Radio für genau eine, Checkbox für mehrere Optionen | Pflichtwahl, Mehrpreis je Option, Zusammenfassung |
-| QuantityStepper | im Detail und Cart; Buttons 44px | Wert, Grenzen, Preisaktualisierung |
-| CartSummary | sticky Gast-Aktion, erst wenn Warenkorb >0 | Menge, Gesamtbetrag, `Warenkorb ansehen` |
-| CheckoutSummary | **vor** verpflichtender Zahlung als prüfbare Zusammenfassung | Lokal, Tisch/Abholung, Einzelpositionen, Trinkgeld, Gesamt, klare Zahlungsart |
-| TipSelector | freiwillig und ohne Dark Patterns | **0** als unvoreingestellter/sicherer Default, freie Wahl, Gesamtänderung |
-| Recommendation | max. 1–2 sachlich passende Ergänzungen, nach Auswahl vor finalem Checkout | Preis, Begründung nicht überbehaupten, leicht überspringbar |
-| OrderStatus | separate ruhige Ansicht | tatsächlicher bezahlter / ausstehender / fehlgeschlagener Status; Bestellnummer |
-| GuestConfirmation | **erst nach gesicherter Serverbestätigung** | Bestell- und Zahlungsbestätigung (kein automatisch angenommener Kassenbeleg), Lokal, Positionen, Zeit, Betrag, Download/Status |
+| `color.ref.white` | `#FFFFFF` | Default canvas and content surfaces |
+| `color.ref.black` | `#000000` | Logo, headings, buttons, nav labels, icons |
+| `color.ref.citron.300` | `#C6FF34` | Brand identity, logo canvas, navigation background, emphasis |
 
-**Gast-Informationsfluss:** Lokal & Menü → Artikel/Optionen → Warenkorb → kompakte Kontrolle & Trinkgeld → rechtlich korrekte zahlungspflichtige Aktion / Provider-Checkout → überprüfter Status → Bestätigung/Tracking. Keine Pflichtregistrierung. **Persönlichen Service nicht im Bestellfrontend als nutzlose Fake-Funktion versprechen**; in QR-Druckhinweis erklären.
+**Citron scale**
 
-## 14 · Betreiber-Dashboard: Aufgaben statt Menülawine
+| Token | Value | Use |
+|---|---|---|
+| `citron.50` | `#F7FFDF` | Gentle content emphasis |
+| `citron.100` | `#EFFFBB` | Highlight card backgrounds |
+| `citron.200` | `#DEFF8C` | Hover fill and neutral accent surfaces |
+| **`citron.300`** | **`#C6FF34`** | **Fixed primary** |
+| `citron.400` | `#B6EF15` | Intermediate tone, use sparingly |
+| **`citron.500`** | **`#9FD600`** | **Selected navigation/menu item** |
+| `citron.600` | `#79A800` | Deeper accent (use only with contrast audit) |
+| `citron.700` | `#506E00` | Exceptional dark detail; not standard sidebar |
+| `citron.800` | `#354A00` | Exceptional illustration only |
+| `citron.900` | `#1E2B00` | Exceptional illustration only |
 
-### Soll-Navigation
-1. **Übersicht** — Betriebsstatus, Startklar-Status, heutige Aufträge, priorisierte To-dos.
-2. **Bestellungen** — `Aktuell`, `Verlauf`, Filter, Kassenabgleich; gespeicherte Ansicht für offene POS-Erfassungen.
-3. **Menü** — Kategorien/Artikel als Liste + rechter Detailworkspace; Optionsgruppen mit klaren Regeln; Medien, Allergene und Verfügbarkeit.
-4. **QR & Tische** — Tischverwaltung, Druckvorlagen, A4 4-up, Duplex, Scan-Test, Abholung.
-5. **Zahlungen** — Stripe-Verbindungsstatus, Auszahlungen/Gebühren, Erstattungsstatus, Verweise zum Provider.
-6. **Betrieb** — Lokallogo, Banner, Kontaktdaten, Tisch-/Abholmodus, Öffnungs-/Pausenstatus, Einstellungen.
-7. **Hilfe** — kontextuelle Links statt separate Einstellungsseite für jedes Problem.
+**Neutral grayscale**
 
-**Onboarding** als Aufgabe auf Übersichtsseite (nach Aktivierung als „Einrichtung anzeigen“ erreichbar): Ein klarer Schritt zur Zeit mit eigenem Titel, Status, Grund und nächster Aktion. Keine 8 irrelevanten Marketingkarten. Optionales kann auf später verschoben werden; erforderliche Voraussetzungen dürfen nie als erfüllt simuliert werden.
+| Token | Value | Default use |
+|---|---|---|
+| `gray.50` | `#FAFAFA` | Quiet page sections, table headers |
+| `gray.100` | `#F5F5F5` | Muted cards, hover surfaces, skeleton highlight |
+| `gray.200` | `#E5E5E5` | Dividers, skeleton base, noncritical borders |
+| `gray.300` | `#D4D4D4` | Stronger borders, disabled tracks |
+| `gray.400` | `#A3A3A3` | Disabled UI, not regular body copy |
+| `gray.500` | `#737373` | Tertiary text only after context-specific contrast review |
+| **`gray.600`** | **`#525252`** | **Descriptions and supporting copy** |
+| `gray.700` | `#404040` | Strong secondary labels |
+| `gray.800` | `#262626` | Black-button hover, near-black UI |
+| `gray.900` | `#171717` | Inverse near-black surfaces only if needed |
 
-**Menüs:** desktop Category List + Item List + Inspector (bei sehr großen Inhalten eine separate Detailansicht). Mobil gestapelt mit Back-Navigation, nicht drei nebeneinander gestauchte Spalten. Drag-and-drop nur optional **mit Tastatur-Buttons Hoch/Runter als Alternative**. Produkt-Foto-Upload mit Crop-Vorschau, Fehler/Dateigröße, `Entfernen` als sekundärer Text-Button.
+**Error:** `color.ref.error = #C62828` for error icons, borders, messages and blocked destructive confirmation. It is deliberately **not** a fourth brand accent. A destructive action must be plainly labeled and offer meaningful safeguards. No separate success green, warning orange or info blue.
 
-## 15 · Personal-Tablet und Betriebszustand
+## 4. Token architecture and implementation
 
-- Vollbild-ähnliche Arbeitsoberfläche, hohe Kontraste, 56px Hauptaktionen, 18–22px Hauptinformationen, Order-ID und Tisch/Abholung unverwechselbar.
-- Kanbanähnliche Spalten nur wenn auf Gerät und Arbeitsablauf erkennbar; sonst priorisierte Liste `Neu` → `In Bearbeitung` → `Bereit` → `Erledigt`, klare Anzahl je Gruppe.
-- Ticket zeigt: **bereits bezahlt**, Bestellnummer, Zeitpunkt, Tisch/Abholung, Produkte/Optionen, eventuelle Allergene und notwendige Warnungen.
-- `In Kasse erfasst` **separater unabhängiger Status** von Zubereitung; nicht mit „Erledigt“ koppeln. Bei fehlender Erfassung sichtbarer POS-Hinweis; nicht verbergen.
-- Offline/Realtime-Störung: feststehendes kritisches Banner mit Zeitpunkt letzter Aktualisierung und klarer Wiederaufnahme; keine grüne Success-Katze bei fehlender Verbindung.
-- Akustische Hinweise optional konfigurierbar, nie einzige Benachrichtigung. Scroll-Position bei Aktualisierungen stabil; keine Karten, die während einer Interaktion springen.
-- Keine Bezahlung kassieren oder erneut auslösen, wenn Order bereits extern bezahlt ist.
+**Canonical source:** `root/public/brand/tokens/design-tokens.json` uses Design Tokens Community Group 2025.10-style `$type`, `$value`, type-aware values and aliases. Reference the source tokens by semantic intent rather than copying a hex into components:
 
-## 16 · Hilfe-Center und interne Verwaltung
+1. **Reference / primitive:** `color.ref.*`, `space.*`, `radius.*`, `typography.*`, `motion.*`.
+2. **Semantic:** `color.semantic.text.primary`, `.background.canvas`, `.navigation.item-active`, `.skeleton.base`.
+3. **Component:** `component.sidebar.item-radius`, `component.input.height`, `component.card.radius`.
 
-**Support:** suchen → Kategorie/Ergebnis → Artikel (Ziel, Voraussetzungen, nummerierte Schritte, echte aktuelle Screenshots, Prüfkriterium, Probleme, nächste Schritte) → optional Ticket. Suche bekommt echte Empty States und gute Navigation zurück. Private Tickets als Conversation View mit Status, Antwortfeld, Anhängen und klarer Unterscheidung öffentlicher Antwort vs. interner Notiz (nur internes Team). Eine interne Notiz ist **nicht bloß ein farbiges öffentliches Textfeld**, sondern eine erkennbar getrennte UX-Aktion.
+**Deliverables:** `root/public/brand/tokens/tokens.css` (CSS custom properties), `root/public/brand/tokens/tokens.ts` (TypeScript lookup), `root/public/brand/tokens/tailwind-v4.css` (optional theme bridge), `root/public/brand/tokens/theme.css` (base reset/typographic use), `root/public/brand/tokens/contrast-audit.json` (reference audit). Do not invent duplicate per-app token catalogs. CSS tokens use `--zk-` prefix, e.g. `--zk-color-semantic-navigation-item-active`.
 
-**Internal:** Datenlisten, Filterchips, Date-Ranges, Status, Bulk-Aktionen nur mit deutlicher Zielanzahl. Datensätze erhalten Detailseiten/Inspector, keine Modal-Flut. Gefahraktionen brauchen Bestätigung; Export/Download muss eindeutigen Umfang benennen. Berechtigungsfehler sind neutrale Access-Denied-Ansichten, kein rotes Validierungsfeld.
+A token is not permission to use a color everywhere. Red is strictly error; dark Citron is not a global sidebar treatment; neutral, white and black make up most application surfaces.
 
-## 17 · QR-Karten und Aufsteller: vollständige visuelle Spezifikation
+### Most-used semantic assignments
 
-**Zielbild:** Ein ganz einfacher, vertrauenswürdiger Schwarz-Weiß-Aufsteller, den auch ein kleines Café mit Heimdrucker schnell nutzen kann. **Weder Name noch Logo des Lokals auf der Karte.** Die **Combination Mark** darf **einmal dezent** vorkommen. Das Gäste-Menü hinter dem QR zeigt dagegen die Identität des Lokals; diese Trennung ist bindend.
+| Purpose | Semantic token | Resolved example |
+|---|---|---|
+| Main app canvas | `background.canvas` | White |
+| Secondary page section | `background.subtle` | Gray 50 |
+| Main content card | `card.default` | White |
+| Soft card | `card.subtle` | Gray 50 |
+| Featured card | `card.emphasis` | Citron 100 |
+| Main text | `text.primary` | Black |
+| Descriptions | `text.secondary` | Gray 600 |
+| Muted micro-label | `text.tertiary` | Gray 500, review 12px contrast |
+| Border | `border.default` | Gray 200 |
+| Input border | `field.border` | Gray 300 (not sole affordance) |
+| Focus border / ring | `border.focus` | Black |
+| Main action | `action.primary` | Black with white label |
+| Alternative accent action | `action.accent` | Citron 300 with black label |
+| Sidebar/menu surface | `navigation.background` | Citron 300 |
+| Selected nav/menu fill | `navigation.item-active` | Citron 500 |
+| Loading skeleton | `skeleton.base` / `skeleton.shimmer` | Gray 200 / 100 |
+| Notification error | `status.error` / `text.error` | Red |
+| Other feedback | `status.success` / `status.warning` / `status.info` | Black |
+| Print QR | `qr.dark` / `qr.light` | Black / white |
 
-### 17.1 Standardformat und ruhige Druckanmutung
+### Contrast and accessibility constraints
 
-| Eigenschaft | Fester Designwert / Regel |
+- On Citron 300 and 500 **always black** for nav text and icons, not white. Black-on-Citron is high contrast.
+- Citron 300 and 500 differ by only about **1.47:1**. Therefore background color alone **must not** carry selection: use a complete rounded selection shape, bold 700 label and **Phosphor `fill` icon if present** (inactive `regular`); expose `aria-current="page"` on navigational links, `aria-selected` only for the correct selectable widget pattern. No decorative marker, line, stripe or dot. Keep keyboard focus as a **separate** high-contrast ring using `:focus-visible`.
+- W3C WCAG 2.2 AA target: text 4.5:1 normal, 3:1 large; essential graphical/UI-state indicators 3:1 against relevant adjacent colors. Verify each context, including focused/error/disabled and forced-colors. Do not assume selected fill alone satisfies non-text state contrast. In Windows forced-colors mode an OS-visible selected outline is allowed only as an accessibility fallback, **not part of the default branding**.
+- Never communicate error *only* via red: always pair with accessible message, icon and recovery action. Never distinguish success/warning/info purely through color, as no separate hue exists for those.
+- A supporting description in Gray 500 at 12px may be too low-contrast in smaller UI. Prefer Gray 600 for operational copy.
+
+## 5. Typography
+
+Use **League Spartan** in every property, including data tables, labels, mobile checkout and support article text. The custom Zackisch wordmark is never recreated as typeset League Spartan.
+
+| Text role | Size / line height | Weight |
+|---|---|---|
+| Hero | 48–60px / 1.05–1.1 | 700–800 |
+| Page title | 32–36px / 1.15 | 700 |
+| Section title | 24px / 1.2 | 700 |
+| Card title | 18–20px / 1.3 | 600–700 |
+| Body | 16px / 1.5 | 400–500 |
+| Compact data / desktop nav | 14px / 1.4 | 500 |
+| Helper / captions | 12–14px / 1.45 | 500; avoid critical 12px |
+| Numeric data / amounts | 16–36px, according to hierarchy | 600–700; `font-variant-numeric: tabular-nums` |
+
+Load the approved self-hosted League Spartan font from `root/public/brand/fonts/`, with all required weights, `font-display: swap` and sensible fallback fonts. The other applications use the absolute website URL with the configured CORS headers. Ensure the correct diacritics and German numeric formatting. Prefer tighter letter spacing only for large display, not microcopy. Preserve legibility in long support articles: cap line length around 65–75 characters and use generous line height. Optical sizing varies; test text in actual browsers and zoom.
+
+### Public marketing scale — root only
+
+The table above remains the operational UI scale for merchant, guest, staff, support and internal screens. The public website has a separate responsive display hierarchy to support the founder's requested desktop emphasis. This exception does not enlarge checkout controls, dashboards or support reading text.
+
+| Public website role | Implemented size / line height | Weight / tracking |
+|---|---|---|
+| Hero, widths from 600px | `clamp(3rem, 5.4vw, 4.5rem)` / 1.05; maximum 72px at the default root size | 700 / −0.035em |
+| Hero, widths through 599px | `clamp(2.6rem, 9.5vw, 3.5rem)` / 1.05 | 700 / −0.035em |
+| Marketing section heading | `clamp(2.25rem, 3.8vw, 3.25rem)` / 1.1; maximum 52px | 700 / −0.035em |
+| Product-story step heading | 32px / 1.3 | 600 / −0.02em |
+| Article/legal title | `clamp(2.75rem, 4vw, 3.25rem)` / 1.05 | 700 / −0.035em |
+| Article/legal section heading | 26px / 1.1 | 700 / −0.035em |
+| Introductory copy | 18px / 1.55; hero 20px above 599px | Inherited body weight |
+
+**The Marketing Scope Rule.** Larger display typography belongs to the public website's explanatory hierarchy; keep the operational UI scale unchanged. Headings wrap naturally, without fixed-height text containers. Body copy retains a maximum 65-character measure where the layout permits; long legal text uses a narrower 760px article container. Test the actual translation at 320px and with enlarged text.
+
+**The Visible Motion Rule.** Scroll enhancements begin from visible content. On the public website, desktop-only photo clipping is progressive enhancement; reduced-motion mode disables animations and sticky chapter headings. No content depends on animation support or scroll position to become readable.
+
+## 6. Iconography and semantic feedback
+
+**One library: Phosphor Icons** (`@phosphor-icons/react` in React, or official Phosphor equivalents elsewhere). Use `currentColor`; no mixing with Lucide, emoji, custom glyphs or decorative illustrations as functional UI icons. **Icons are optional in most product components, not mandatory decoration.** A meaningful icon must make the interface faster to recognize, expose an action/affordance, or clarify a non-trivial status. When words are clearer, use words alone.
+
+### When to use icons — decision guide
+
+| Context | Recommended treatment | Avoid |
+|---|---|---|
+| Primary navigation (sidebar/bottom nav) | Icon **plus always-visible label** only for familiar, unambiguous destinations; keep use consistent within the same navigation group | Guesswork metaphors, icon-only nav, a token icon for every destination |
+| Secondary/settings/context menu | **Text first**; optionally add a familiar icon where it materially improves scanning (e.g. Delete) | Decorating every menu row, arbitrary icon metaphors |
+| Buttons / CTAs | Usually **text only**; add e.g. `Plus`, `Download`, `MagnifyingGlass` only when it reinforces an established action, consistently in a group | Icon on every CTA, mismatched icon treatments in adjacent button group |
+| Icon-only controls | Only universally recognized, space-constrained controls (close, search, overflow) with accessible name and 44–48px target | Icon-only destructive actions or ambiguous actions with no visible explanation |
+| Status / feedback | **Icon + clear text for all states, including Error**; see state mapping below | Bare colored dots, color-only semantics, icon-only payment outcome |
+| Fields | Text labels first; use trailing icon only for true affordance (`Eye` visibility toggle, clear button) or **error indicator** | Leading icons on every email/name/phone field |
+| Data tables / KPIs / cards | **No icons by default**; add only for actionable columns, exceptional status or helpful scanning | Decorative icons beside every number, heading or row |
+| Empty states | Icon optional; informative text and clear next action are mandatory | Generic decorative picture repeated on every blank panel |
+| Marketing | Prefer licensed human photography and strong type; use iconography sparingly for simple feature explanation | Infographics built from miscellaneous symbols |
+
+**Icon recognition rule:** if the team cannot quickly identify a stable, well-understood metaphor, remove the icon or use label-only UI. Research and test with real operators/guests; never add an icon purely to fill whitespace. Labels must remain visible where users need to distinguish actions. Consistent visual density is more important than artificially using the same number of icons on every page.
+
+### Icon weights and active navigation
+
+- **Inactive/current pairing:** if a navigation item has an icon, render that **same Phosphor icon in `weight="regular"` when inactive and `weight="fill"` when active/selected**. Simultaneously use label **500 → 700** and background **Citron 300 → Citron 500**. This is the canonical pattern for sidebars, brand-colored menus, mobile navigation and nav-like tabs. **No marker, left rail, dot or indicator stroke.**
+- **Without icon:** keep the same background and font-weight change. **Do not add an icon just to create a selected state.**
+- Choose only icon concepts with a clear, recognizable **regular/fill pair**; audit the filled silhouette at actual size. If filled meaning is ambiguous or illegible, use **text-only across that navigation group** or choose a better metaphor — do not silently switch active state back to `bold`.
+- For ordinary controls that aren't active nav, default to `regular`; `fill` may convey persistent selected/toggled state when conventionally meaningful. Don't use filled icons as generic emphasis. Status icons use the explicit weight mapping below, independently of navigation.
+- Recommended sizes: 16px compact supplementary, 20px standard, 24px primary nav/action, 28–32px large status (not automatic). Pair icon and text in `currentColor` and center-align optically. Interactive hit targets ideally ≥44×44px; icon size is not the hit target.
+- With a visible text label, normally set the icon `aria-hidden="true"` to avoid duplicate announcement. Icon-only buttons need a meaningful **`aria-label`**; if a status icon adds meaning not present in text, ensure the accessible text describes the state. Respect screen-reader live-region urgency and avoid double announcements.
+
+### Status feedback: icon is mandatory, red is Error-only
+
+These rules apply to **alerts, inline field validation, toast notifications and significant payment/order states**, irrespective of compact/expanded presentation. Include **an icon and descriptive text in every meaningful semantic state**; use action/recovery copy where needed. Visual color is never the sole indicator.
+
+| State | Phosphor icon | Suggested weight | Icon/text color | Meaning and copy |
+|---|---|---|---|---|
+| **Success** | `CheckCircle` | `regular` | Black / Gray 700 | “Bestellung übernommen” after verified success |
+| **Warning** | `Warning` | `regular` | Black / Gray 700 | Risk explained + safe next step; no yellow/orange |
+| **Info** | `Info` | `regular` | Black / Gray 700 | Important context and guidance; no blue |
+| **Pending** | `Clock` or labeled spinner | `regular` | Black / Gray 700 | State still processing; don't imply completion |
+| **Error** | **`XCircle`** (or `WarningCircle` when conceptually appropriate) | **`fill`** | **Red `#C62828`** for icon and key message/border | **What failed + what user can do next; icon is required in addition to red** |
+
+**Error examples:** payment failure alert = filled red `XCircle` **and** readable “Zahlung fehlgeschlagen. Bitte überprüfe die Zahlungsmethode.”; invalid text input = red error icon adjacent to the specific field **and** visible message linked through `aria-describedby` plus `aria-invalid="true"`; error toast = red error icon **and** concise explanation with optional retry. The red border by itself never replaces the error icon. Do **not** use green success, amber warning or blue information hues. Neutral status icons are not necessarily decorative: they make shape/meaning distinguishable without relying on color.
+
+For a non-urgent success/info state use `role="status"`/polite announcement when appropriate; for blocking errors use `role="alert"`/assertive **where necessary**, not blanket assertive live regions for every state. Critical payment outcomes are always stated in text and backed by server-confirmed state. If status is already unmistakably clear from normal text in a non-feedback context (e.g., a descriptive paragraph), don't turn it into an additional alert merely to show an icon.
+
+**Approved concepts** (verify exact exports in installed Phosphor version): `House`, `Receipt`, `ShoppingBag`, `CreditCard`, `Gear`, `CheckCircle`, `Warning`, `Info`, `Clock`, `XCircle`, `Plus`, `MagnifyingGlass`, `CaretDown`, `Trash`, `QrCode`. This is a vocabulary, **not a requirement to display them all**. Refer to `examples/navigation-item.tsx` and `examples/status-message.tsx` for implementation guidance.
+
+## 7. Shape, spacing, elevation and motion
+
+**Rounded, but purposeful.** Pills (`radius.pill = 9999px`) for buttons, nav items, tabs, segmented selectors, filters and chips. Cards use 24px radius, dialogs/drawers 28px, floating-label inputs 16px (not a true pill: the upper label/border must remain readable). Image frames 16–24px depending on crop. Avatars round/circular. This is a visual system, not “every rectangle must be a pill”.
+
+**Spacing:** 4px base; common steps 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96. Default card padding 24px desktop / 16px mobile, content gutters 24–32px desktop / 16px mobile. Touch targets at least 44×44px; preferred design token 48px. Forms: 16px between controls, 24–32px between groups.
+
+**Elevation:** almost flat; boundaries and space first. `--zk-shadow-card` barely perceptible, popover and modal elevation modest. Avoid heavy glows, noisy gradients, glassmorphism or 3D effects.
+
+**Motion:** quick 120–180ms state changes; slow 260ms for larger spatial transitions. Use only transform/opacity for animation where feasible; skeleton 1400ms subtle pulse/shimmer. Respect `prefers-reduced-motion`; no motion necessary to understand feedback. Avoid animation around monetary totals.
+
+## 8. Components — standards and states
+
+Every component requires: default, hover (if pointer), `:focus-visible`, pressed/active, selected where relevant, disabled, loading (where relevant), error (where relevant), empty content and long localized copy behavior. Prefer semantic HTML and an accessible headless primitive to custom keyboard logic.
+
+### Buttons
+
+- **Primary:** black pill, white text, 48px minimum height (40px compact when justified), active/hover gray 800, no all-caps. One clear primary action per decision region.
+- **Accent:** Citron 300 pill, black text; reserved for strong brand contexts or specific checkout emphasis, not every CTA.
+- **Secondary:** white pill, black label, subtle neutral border. **Tertiary:** text/ghost action with accessible focus ring.
+- **Destructive:** do not make general red buttons. Use neutral button; in irreversible/error flow highlight the *error message/icon* red, confirmation text must be explicit.
+- Disabled never by opacity alone on a control with ambiguous function; disable interaction semantically and explain prerequisite. While loading, hold button width/label area to prevent layout shift.
+
+### Navigation — fixed brand pattern
+
+**This rule applies consistently to desktop sidebar, compact menus, popovers, mobile navigation and tab-like brand navigation where the containing surface is Citron.**
+
+| State | Container | Label/icon | Other |
+|---|---|---|---|
+| Resting | Citron 300, no extra item fill | Black, weight 500, Phosphor regular | pill hit area 44–48px |
+| Hover | Citron 200 (or subtle opacity feedback) | Black, weight 500 | no motion/layout shift |
+| **Current/selected** | **Citron 500, full rounded pill** | **Black, weight 700, optional Phosphor **fill** (inactive `regular`)** | **NO marker, side bar, dot, stroke or extra decoration** |
+| Keyboard focus | Existing state preserved | Black | Separate visible focus outline, never suppressed |
+| Disabled | Lower-emphasis Citron surface | Low emphasis, no action | semantic disabled state |
+
+ARIA rule: use `<nav aria-label="...">` and current route `<a aria-current="page">`. Tabs use valid tab semantics and keyboard mapping; do not apply `aria-current` to arbitrary toggles. Header nav on white uses equivalent semantic selected-background patterns appropriate for the context; never introduce dark-lime sidebar as default. Prefer one permanent nav level, consistent names and a visible section heading when needed. More than two nested navigation levels is a signal to simplify IA.
+
+### Text fields — floating labels
+
+- **Persistent real label**, never only a placeholder or `aria-label`. Label starts *within* input. On focus **or non-empty value (including autofill)**, animate to its **upper internal edge**; keep it visible after blur while filled.
+- Recommended field height 56px (larger for high-density checkouts where necessary), 16px radius, 16px side padding. Resting label 16px; floated 12px. Maintain sufficient contrast of label and typed text.
+- On invalid data: **red border + red Phosphor error icon + explicit text below**. Error message tied with `aria-describedby`; set `aria-invalid`. Neutral helper copy uses Gray 600.
+- Optional/required must be explained in the accessible label, not solely with a color/asterisk. Show formatting examples as helper text **outside** the field. Don't use disappearing placeholders.
+- Keyboard input modes: `email`, `tel`, `decimal`, `numeric` as applicable. Browser autofill, paste, prefilled values, long names, dynamic validation, password manager and zoom behavior must be tested. Don't animate content unexpectedly on submit.
+- Use Base UI Field/Input and test autofill, prefilled values, keyboard and validation states.
+
+### Cards, tables and data
+
+- Default card white with subtle Gray 200 boundary and 24px radius; data-dense cards may use Gray 50. Highlight only important metrics with Citron 50/100/300, not a page full of bright tiles.
+- Orders/transactions need clear readable state text/icons, numeric amounts with tabular figures, localized Euro decimals, sortable column semantics, responsive overflow or stacked rows. Do not encode financial meaning in chart hue alone.
+- Chart palette is deliberately limited: black, Citron 300, Gray 600 and Gray 300. Use direct labels, contrasting pattern or line shape, meaningful legend, and a text/table alternative for critical values.
+- Empty state = optional meaningful Phosphor icon, clear heading, succinct explanation, primary next step. A loading skeleton mirrors the content shape; no fake metrics.
+
+### Additional component recipes
+
+| Component | Default specification |
 |---|---|
-| Karte | **92 × 135 mm, Hochkant**, etwas kleiner als A6 |
-| A4-Vorschau | **2 Spalten × 2 Zeilen**, vier Karten |
-| Zwischenraum | **4 mm** horizontal und vertikal |
-| Blattseitenränder | **11 mm** links/rechts, **11,5 mm** oben/unten |
-| Druckfarben | **#000000 auf #FFFFFF**, kein Cobalt-Blau als Pflichtfarbe |
-| Kartensicherheitsabstand | mindestens 5–6 mm für reguläre Texte/Logo, Schneidelinien außerhalb |
-| Kartenumrandung | Default keine; alternativ 0,35 mm feine Kontur außerhalb des Inhalts |
-| Typografie | Inter; QR-Pflichttexte sind echte, scharfe Drucktypen, keine Edding-Schrift |
-| Logo | einmal kleine originale **Combination Mark**, ca. 22–28 mm breit |
-| QR | technisch korrekt erzeugte schwarze Matrix, auf Weiß, **mindestens vier Module Quiet Zone**, keine gestalterischen Eingriffe |
-| QR-Größe | Richtwert: 43–49 mm **Matrix** plus separate erforderliche Quiet Zone; Gesamthöhe nach tatsächlicher Modulzahl prüfen |
-
-### 17.2 Verpflichtende visuelle Lesereihenfolge
-
-1. **Handlung:** `Scannen, bestellen & bezahlen` – kompakter Titel, **15 pt / 18 pt, Inter SemiBold**, zentriert, gegebenenfalls zwei Zeilen.
-2. **QR-Fläche:** mittig, kontraststark, mit echter geschützter Weißzone; **kein Mascot, Logo, Doodle oder Rahmen innerhalb der Quiet Zone**.
-3. **Ort:** bei Tischbetrieb `Tisch 04` – **17 pt / 20 pt Bold**, optional 1.5× größer als erläuternde Zeilen. Bei Abholung `Abholung`, niemals eine erfundene Tischnummer.
-4. **Persönliche Alternative:** `Du möchtest lieber persönlich bestellen? Unser Personal kommt wie gewohnt zu dir. Bitte warte einen Moment.` – **9,5–10 pt**, Inter Regular, mindestens 12 pt Zeilenhöhe; bei Platzmangel lieber Titel kompakter halten als Servicehinweis unlesbar machen.
-5. **Absender:** originale Zackisch Combination Mark, **einmal** klein am Kartenfuß mit genügend Freiraum.
-6. **Fallback**, nur wenn URL lesbar, tatsächlich kurz und sicher: unter dem QR oder beim Fuß als zweite Möglichkeit bei Scanproblemen. Niemals URL auf Kosten der Quiet Zone setzen.
-
-Das ist die verbindliche **inhaltliche Hierarchie**, nicht zwingend eine einzige unveränderliche Anordnung: Bei optisch besserer Balance darf der kleine Absender am Kopf erscheinen. **Nicht** zweimal Zackisch auf einer Karte. Gäste müssen den Code und die Tischnummer zuerst erkennen, nicht die Plattformmarke.
-
-### 17.3 Erlaubte Varianten
-
-| Name | Wann | Visuell |
-|---|---|---|
-| **Minimal** (Default) | fast alle Lokale, Klebeetikett oder Aufsteller | Weiß, schwarzer Text, keine äußere Kontur, kompakter Logo-Fuß |
-| **Outline** | Ausschneiden, kontrastarme Tischoberfläche | wie Minimal, mit dünner schwarzer Kartengrenze **außerhalb** QR-Sicherheitsbereich |
-| **Abholung** | Theke, Fenster, Außer-Haus | explizit `Abholung` statt Tisch, passende Headline; sonst identisches Erscheinungsbild |
-| **Duplex-Aufsteller** | Zweiseitiger Papierständer, Schutzhülle | jede physische Vorder-/Rückseite trägt dieselbe Karte, kein spiegelverkehrter Text |
-
-**Nicht als Varianten zulassen:** Lokalname/-logo, farbige Markenflächen, invertierter QR, Katzenkopf *im* QR, rustikale Edding-Verzierung auf der Matrix, unlesbare Mini-Schrift, automatisch wechselnde Hero-Bilder, Gutscheinwerbung oder zweite konkurrierende CTA.
-
-### 17.4 Druckauswahl und Duplex-Vorschau (UX, keine Export-Implementierung)
-
-Im Betreiberbereich `QR & Tische` gibt es eine schmale, klare **Schrittansicht**: **Auswahl → Vorlage → Papier & Seiten → Prüfen → Drucken**. Rechts (mobil darunter) ist immer eine maßstabsnahe A4-Vorschau. Einstellungen sind kurze Radio-Gruppen/Selects, **keine** überladene Einstellungsmodalwand. Einseitig ist Standard; Duplex wird bewusst aktiviert und erklärt.
-
-**Front-Vorschau (vier unterschiedliche Tische):**
-
-```text
-┌─────────────┬─────────────┐
-│  Tisch 01   │  Tisch 02   │
-├─────────────┼─────────────┤
-│  Tisch 03   │  Tisch 04   │
-└─────────────┴─────────────┘
-```
-
-**Rückseiten-Vorschau bei A4 Hochkant / Wenden an langer Kante:**
-
-```text
-┌─────────────┬─────────────┐
-│  Tisch 02   │  Tisch 01   │
-├─────────────┼─────────────┤
-│  Tisch 04   │  Tisch 03   │
-└─────────────┴─────────────┘
-```
-
-Hier werden **Kartenpositionen links/rechts getauscht**, nicht der QR selbst oder der Text gespiegelt. Die Vorschau enthält eine sichtbare Legende `Vorderseite` / `Rückseite`, die gewählte Wendeart und eine Hilfe `Erst ein Testblatt drucken`. **Physische Druckertests bleiben nötig**, da Treiber/Wendeart variieren. Bei weniger als vier Karten sichtbare Leerslots, keine falschen Tischcodes. Ein interaktiver Druck-Assistent muss nach dem Anzeigen/Export nicht fälschlich behaupten, der QR sei bereits physisch geprüft.
-
-**Fehlerdarstellung im Druckdialog:** nicht nur Toast. Lange Tischnamen, ungültige Zielcodes, fehlende Druckvoraussetzungen oder unvollständige Auswahl werden direkt im jeweiligen Auswahlfeld und in der Vorschau mit konkreter nächster Handlung gezeigt. Scanprüfung im realen Ausdruck ist ein expliziter Schritt; das Symbol ist keine Scan-Garantie.
-
-### 17.5 Materialien außerhalb des Blattes
-
-Für echte Tischaufsteller: genügend Fuß- und Schnittfreiheit, kein QR genau auf Falz/Knick, matte statt stark reflektierende Oberfläche; für einfache Sticker keine dekorativen Schnitt-/Falzelemente. Eine Abholversion kann ohne lokale Tischzuordnung bereitgestellt werden. Technische Codierung, Druck-/Sicherheitsverträge und Exportprüfungen stehen in [`README.md`](README.md) und [`docs/qr-and-print.md`](docs/qr-and-print.md).
-
-## 18 · Marketingwebsite: vollständige Art Direction und Oberflächenkomposition
-
-**Ziel:** Eine reduzierte, außergewöhnlich gut gestaltete Website für Menschen, die **ein Lokal führen**. Sie soll in Sekunden verständlich sein und im Verlauf Vertrauen schaffen. **Kein Umsatzrechner, keine Feature-Wand, keine künstlichen KPIs, keine pflichtmäßige Founder-Section**. Studien, inhaltliche Produktwahrheiten und Gründer-Quellfakten stehen in [`README.md`](README.md); hier steht nur, **wie** diese Inhalte dargestellt werden.
-
-### 18.1 Rhythmus, Grid und Dramaturgie
-
-**Keine fixe Zahl an Sections**. Ausgangskomposition (zusammenziehen/aufteilen, wenn die tatsächliche Seite dadurch besser wird):
-
-| Visueller Beat | Primäre Frage | Gestalterische Ausführung | Vermeiden |
-|---|---|---|---|
-| **A — Intro/Hero** | Was bietet Zackisch? | 2-Spalten-Editorial am Desktop: markantes ruhiges Inter-Display, kurzer lesbarer Begleittext, **eine** klar erkennbare Primary Action. Gegenpol: glaubwürdiges echtes Foto von Menschen im Lokal. | 3 gleichzeitig konkurrierende CTAs, Autoplay-Hintergrundvideo, Fantasiezahlen |
-| **B — Problem/Beleg** | Wo hakt es aus Gästesicht? | Ein einzelner gut belegter Befund (nur nach Prüfung in README) als typografisch eigenständiger Block, mit sichtbarer Quellenzeile; daneben eine konkrete Alltagsszene. Darunter **klar markierte qualitative Einordnung** aus Betreiberperspektive. | Zahlen als vermeintlicher Zackisch-Effekt, überdimensionierte drei KPI-Karten |
-| **C — Produktstrecke** | Wie funktioniert es praktisch? | Eine visuelle Sequenz **gedruckter QR → Gäste-Menü → bezahlte Bestellung → Personal-Tablet**. Auf großen Screens kann die Szene bei Scrollbewegung **gezielt** Zustände wechseln, auf Mobile als vertikale klare Schritte. | 3D-Deko, unwahre Screenshots, blockierendes Pinning |
-| **D — Menschen & Wahlfreiheit** | Ersetzt das den persönlichen Service? | Großes reales Foto einer guten Interaktion, maximal zwei präzise Sätze zu zusätzlicher Wahlmöglichkeit und bestehender Kasse. Bild trägt Emotion, Typografie die Erklärung. | Menschen als austauschbare „Teamwork“-Stockszene; Personalabbau-Versprechen |
-| **E — Einfacher Einstieg** | Wie komme ich dazu? | Reduzierter nummerierter Ablauf mit vier bis sechs klaren Schritten; echte Begriffe, kleine sachliche Icons; optionale Hilfelinks. | 8 Riesen-Cards oder technischer Setup-Screenshot als Erstkontakt |
-| **F — Konditionen & Grenzen** | Was kostet und braucht es? | Ruhiger Text-/Zahlenblock mit **prüfbaren** Eckdaten, getrennt Plattform- vs. Zahlungsanbietergebühr, zusammen mit Voraussetzungen. Kein Rechner, keine Schätzkurve. | hypothetische Ertragsprognosen, kryptisches Sternchen-Mikrocopy |
-| **G — Vertrauen & Ende** | Ist das glaubwürdig, wie fange ich an? | knapper Quellenlink zur Research-Vertiefung, ggf. FAQ-Disclosure, kleine reale Kontakt-/Gründeroption, großer klarer Abschluss-CTA. Danach strukturierter Footer. | Logos fremder Kunden/Studien als endorsement, endlose Doppelung |
-
-**Prinzip der visuellen Verdichtung:** Der Hero schafft Orientierung; Abschnitt B schafft eine nachvollziehbare Notwendigkeit; Abschnitt C zeigt **das echte Produkt**; D löst die Sorge vor unpersönlichem Service; E/F nehmen Setup- und Kostenrisiken; G schließt ab. Eine Section ohne eigenständige Frage entfällt.
-
-### 18.2 Header, Navigation und Footer
-
-- **Header nicht sticky.** Original-Combination-Mark links, maximal vier klare Hauptlinks bzw. eine kompakte Menügruppe, rechts ein klarer primärer Einstieg; Desktop große, ruhige horizontale Abstände. Keine animierte Navigation. Mobile ein leicht bedienbarer Menü-Trigger, logische Fokusführung, keine redundanten Buttons.
-- Auf der Homepage **ein H1**. Hero: `display.hero`, max. 8–11 Wörter als grobe Lesbarkeitsleitlinie; Zeilenumbrüche bewusst; keine sinnlosen per-word Animationen, die Screenreader zerlegen. Body max. ~65–75 Zeichen pro Zeile. Links/Buttons mit eindeutigem Ziel.
-- **Call to Action:** als eigenständiger, kontraststarker Button; primär Schwarz auf Hell oder eine einzelne Cobalt-Aktion; in einem sichtbaren Abschnitt üblicherweise genau eine Haupthandlung. Sekundärlink nach Bedarf.
-- **Footer:** 2–4 klar gruppierte Spalten aus Produkt, Hilfe, Kontakt, Recht/Sprachen. **Am äußersten Ende** eine große originale Zackisch-Wortmarke bzw. autorisierte Kombination, breit und responsiv, ohne Beschnitt/Verzerrung. Nicht zwischen Pflichtrechtsinformationen platzieren.
-
-### 18.3 Bilder, Videos, Produkt-Demos, Preview-Fallback
-
-**Immer sichtbar oder als bewusst geplanter Medienplatz vorhanden:**
-
-1. **QR-Aufsteller** (Foto eines echten gedruckten Aufstellers auf Lokal-Tisch oder ein nach Freigabe authentisches Produktbild mit realem QR-Design).
-2. **Gäste-Menü** (authentische Browseroberfläche mit Lokallogo/-name, Artikelfoto, Varianten/Preis; **keine Zackisch Combination Mark im Gast-Header**).
-3. **Personalansicht** (echte, gut lesbare Liste/Karte neuer **bereits bezahlter** Bestellungen und Status; kein erdachter Kassenterminal).
-
-**Bis echte Assets existieren:** pro fehlendem Produktmoment eine zurückhaltend gestaltete graue Fläche (`#F3F3F1` oder neutrales Grau) mit 1px Border, 12–20px Radius und zentrierter **expliziter Beschriftung** `Hier erscheint: QR-Aufsteller`, `Hier erscheint: Gäste-Menü`, `Hier erscheint: Personal-Tablet`. Kein fiktiver Screenshot, keine Fake-App mit unmöglichen Daten und kein Live-Anschein. Auch auf einer veröffentlichten Prelaunch-Seite ist die graue Preview als **deutlich erkennbarer Platzhalter** zulässig, aber niemals als fertiger Produktscreenshot oder Kundenreferenz. Echte Fotos der Menschen und klare Texte tragen weiterhin die Glaubwürdigkeit. Sobald reale Freigaben vorliegen, Platzhalter durch echte, korrekt beschriftete Assets ersetzen.
-
-**Menschenfotos:** Freigegebene reale Fotos, lokale Atmosphäre, natürliches Licht, Unterschiede in Alter und Gastro-Konzepten. Kommerziell verwendbare Stockbilder sind erlaubt, **Lizenz und Quelle dokumentieren**, keine KI-generierten vermeintlich realen Gäste, Angestellten oder Gründer. Fotopositionen und Motivauswahl müssen zur Aussage passen (z. B. Bestellung/Warten/Service). Für Founder-Story ausschließlich echtes freigegebenes Gründerfoto; MARS-Logo nur nach bestätigter Freigabe; die Founder-Section **optional**. Tatsächliche Informationen dazu: README Abschnitt 9.
-
-**Video:** Optional ein realistischer kurzer Clip von Lokal-Alltag bzw. Freigabe einer echten Produktdemo; kein automatisch abspielender Ton. Posterbild, Play/Pause, Untertitel/Transkript wo erforderlich. **Nicht** Video nur wegen eines Awwwards-Effekts einsetzen. Eine stumme Hero-Loop darf ein *echtes* Produkt-/Menschmotiv veranschaulichen, aber die statische Erstansicht muss schon vollständig überzeugen.
-
-### 18.4 Der eine Signature-Motion-Moment
-
-Die **QR→Gast→Personal-Kette** ist die einzige mögliche große Scroll-Story. Empfehlung: Desktop zeigt einen ruhigen zweigeteilten Frame aus Foto/QR und Produktmoment; bei kontrolliertem Scrollen wechselt die aktive **eindeutig beschriftete Phase**. Keine frei schwebenden Telefonsimulationen, keine festgehaltene Scrollposition mit Zwang zum „Durchspielen“; die Story ist vor und nach Animationsende vollständig verständlich.
-
-- Phasen maximal vier: `Scannen` → `Menü` → `Bezahlen` → `Personal sieht Auftrag`. Je Phase ein erklärender Satz, ein Medium/Platzhalter, ein visueller Wechsel. Status „Bezahlt“ nur in als Demo gekennzeichneter Simulation oder echter verifizierter Aufnahme.
-- Mobile: einfache vertikale Schrittfolge statt Scroll-Pinning; optional tapbare Step-Navigation **mit zugänglichen Labels**. Kein horizontaler Zwangsscroll.
-- Alle Schritte immer im Dokument lesbar; Motion animiert nur vorhandene visuelle Ebenen, versteckt keine Pflichtinformationen.
-- `prefers-reduced-motion`: **dieselbe Information statisch**; keine Parallax-/Scrollbindung. Animationsdauer nicht als Informationskanal verwenden.
-- Kleine Motion: nur sinnvolle Dropdown-/Dialog-Transitions, Bild-Reveals bei wirklich relevantem Szenenwechsel; Buttons springen nicht. Die Bewegung muss professionell, nicht „AI-Slop“ wirken.
-
-### 18.5 Redaktions- und Research-Darstellung
-
-- Ein Studienwert als einzelne typografische Hervorhebung mit **sichtbarer Einheit, Bezugsgruppe, Datum und direktem Quellenlink**. Daneben in Inter-Medium eine knappe Einordnung: Was wissen wir? Was **wissen wir nicht**?
-- Die Verbindung **Gastproblem → mögliche Belastung für Lokal → zusätzliche Bestellmöglichkeit** muss als sachliche Logik erkennbar bleiben. Keine **Kausalgarantie**, dass Zackisch dadurch eine konkrete Umsatz-/Wartezeitsteigerung erzeugt.
-- Feste Microcopy-Prinzipien: kurze konkrete Titel, keine Buzzword-Slogans; keine Zahlen aus erfundenen Beispielrechnungen. Konkrete Zitate/Studieninhalte kommen ausschließlich aus der README und ihren Primärquellen.
-- Newsletter, About und ausführliche Research-Inhalte nur dann visuell hervorheben, wenn sie wirklich zum jeweiligen Entscheidungsschritt beitragen.
-
-### 18.6 Alternative Kompositionen und Entscheidungskriterien
-
-**Layout A (bevorzugt):** ruhiger Editorial-Hero + reales Foto → typografischer Studienbeleg → große Produktsequenz → Menschenbild/Hybrid → kompakte Einrichtung/Preise → Schluss. **Layout B:** Einstieg direkt mit QR-/Personalszene im Hero, danach Problem/Beleg; nur wenn Blicktest ohne Vorwissen zeigt, dass Zackisch in Sekunden verstanden wird. Nicht zwei Konzepte gleichzeitig mischen.
-
-**Qualitätscheck der Homepage:** Innerhalb von 5 Sekunden erkennbar, dass Zackisch QR-Bestellung/Bezahlung für Lokale ergänzt; Primary CTA sichtbar; kein unklarer QR-Live-Demolink; Personalfunktion erkennbar; kein unbewiesener finanzieller Outcome; korrektes White Label; vollständige Story ohne Scrollanimation; mobil in einer Hand verständlich.
-
-### 18.7 A/B-Evidenz als Designentscheidung, nicht als Schablone
-
-Die dokumentierten Obama- und Bing-Experimente werden **in der README** inklusive Quellen, Ergebnissen und Übertragungsgrenzen beschrieben. Für die Gestaltung bedeutet das **nicht**, dass jeder blaue CTA gewinnt oder jedes Video verliert. Daher: zuerst einen hervorragenden, schnellen, menschenorientierten **statischen** Hero bauen; eindeutige CTA-Sprache; visuelle Produktstory nur, wenn sie nachweislich das Verständnis verbessert; Experimente später sauber auf echten Betreibern evaluieren. Keine Ad-hoc-Änderungen nach einzelnen Klicks; nie Accessibility gegen Klickrate eintauschen. Automatisch wechselnde Hero-Slider sind nicht Bestandteil des Designs.
-
-## 19 · UX-Wording und Sprachregeln
-
-- Deutsch und Englisch als gleichwertige Oberflächen, Begriffe konsequent: `Betrieb`, `Tisch`, `Abholung`, `Bestellung`, `Personal-Tablet`, `Kasse`, `In Kasse erfasst`, `Bestell- und Zahlungsbestätigung`.
-- Keine Slogans im Design System festlegen; funktionale UI-Beispiele sind erlaubt.
-- Buttons als klare **Verb-Objekt-Handlung**: `Menü bearbeiten`, `QR-Codes drucken`, `Zahlungspflichtig bestellen` (nach Prüfung der tatsächlichen Checkout-Position).
-- Fehler präzise und lösbar: statt `Fehler` → `Die Verbindung zum Tablet ist unterbrochen. Verbinde das Tablet erneut.`
-- Kein „100 %“, „garantiert“, „KI“, „Echtzeit“ ohne belegbare technische Grundlage. Keine UX-Dark-Patterns, keine bereits angekreuzten Marketing-Opt-ins, kein Default-Trinkgeld >0.
-- Keine Success-Texte, solange ein Zahlungs-/Speicherzustand noch unbestätigt ist.
-
-## 20 · Anti-AI-Slop: zwingende Gestaltungsprüfung
-
-1. Jede Sektion muss eine **Frage des konkreten Zielnutzers** beantworten; sonst löschen.
-2. Keine zufälligen Glows, Gradients, Hintergrund-Gitter, Blur-Blobs, Fake-3D-Phone-Floats oder Glassmorphism als Markenidentität.
-3. Keine drei gleich großen Karten für Inhalte, die besser als Absatz, Timeline, Liste oder reales Foto erzählt wären.
-4. Icons nur, wenn sie schneller verstanden werden als Text; Marker-Stil nicht für kritische Interaktion.
-5. Keine Lorem-ipsum-UI, Fantasie-KPIs, erfundenen Kundenzitate, frei erfundenen Fotos oder Anbieter-Zertifizierungen.
-6. Überschriften nicht austauschbar (`Revolutioniere dein Business`, `Next-Level-Erlebnis`); konkrete Aufgaben/Zustände verwenden.
-7. Nur ein starker Motion-Moment; der Rest verhält sich ruhig.
-8. Keine kleine Schrift als „Premium-Look“. Lesbarkeit bei schlechter Beleuchtung und während Service priorisieren.
-9. Keine unmotivierten Full-Bleed-Fotos hinter Body-Text, kein miserabler Kontrast.
-10. Screenshots und Produktdemos auf echte Produktfunktionen beziehen; Demo immer als Simulation kennzeichnen.
-11. Konsistente Rundungen, Raster und Abstände; nicht willkürlich pill-shaped alles.
-12. Vor Freigabe jede Seite bei 320px, 390px, 768px, 1280px und 1600px sowie Tastatur/Zoom/Reduced Motion prüfen.
-
-## 21 · Base UI, Accessibility und Qualitäts-Gates
-
-**Base UI ist bevorzugtes primitives Fundament** für Dialog, Select, Combobox, Checkbox, Radio, Switch, Tabs, Accordion, Popover, Menu, Tooltip und Field; native HTML-Elemente verwenden, wenn sie semantisch angemessener sind. Base UI ist **unstyled**: der neue Zackisch-Komponentenlayer übernimmt ausschließlich die Tokens dieses Dokuments, nicht ein fremdes Theme. Ein eigener `Toast`-Wrapper muss Accessible-Live-Region, Lebensdauer und Interaktionsunterbrechungen prüfen. Bei komplexen Datengrid- und Drag-and-Drop-Funktionen zusätzliche geprüfte Pattern nutzen; Base UI deckt nicht automatisch alle Anwendungsfälle ab.
-
-**Minimum:** WCAG 2.2 AA; 44×44px als praktische Touch-Vorgabe (AA-Minimum kann kleiner sein, aber Gastro-Nutzung verlangt Komfort); Focus Visible mit ≥2px kontrastreichem Ring, logische Tab-Reihenfolge, Escape/Focus-Restore, Screenreader-Labels, Fehlerzusammenfassung, Zoom/Reflow, Text-Abstände, Farbkontrast, Reduced Motion. Wenn ein Pattern nicht sicher barrierefrei umgesetzt werden kann: **einfacheren zugänglichen Pattern wählen**.
-
-### Definition of Done pro Komponente/Screen
-- [ ] Zweck und korrekte Semantik dokumentiert; kein unnötiges Overlay.
-- [ ] Alle Zustände: default, selected, disabled, loading, empty, error, offline, success wo relevant.
-- [ ] Keyboard, Pointer, Touch, Screenreader und Fokus-Rückkehr getestet.
-- [ ] Bei wichtigen Entscheidungen klare textliche Folgen und Undo/Bestätigung.
-- [ ] Keine unbestätigte Zahlung als erfolgreich beschrieben; keine vertraulichen Daten in öffentlicher View.
-- [ ] Gast-/Betreiber-/Personal-/Support-Kontext korrekt, Lokal-White-Label geschützt.
-- [ ] Original-Brand-Assets unverändert; Mascot-Variante und Häufigkeit begründet.
-- [ ] Freigegebene echte Fotos/Rechte, Alt-Texte oder dekoratives `alt=""`.
-- [ ] Keine horizontalen Überläufe bei 320px oder 200 % Zoom; Reduced Motion ohne Informationsverlust.
-- [ ] Test mit echter Zielgruppe: Scan, Bestellung, Druck und POS-Arbeit unter realistischen Bedingungen.
-
-## 22 · Screen-, Komponenten- und Status-Mapping als verbindlicher Designvertrag
-
-Die folgende Matrix beschreibt **nur die sichtbare Aufgabe, Reihenfolge und passende Semantik**. Sie ist **keine technische Routenliste**; technische Domänen, Daten und Berechtigungen stehen in der README.
-
-| Oberfläche/Situation | Visuelle Kernstruktur | Zwingendes Hauptfeedback | Mascot |
-|---|---|---|---|
-| Gäste-Menü am Tisch | Lokalkopf + Tischkontext, Kategoriennavigation, Artikelliste mit Preisen, erreichbarer Warenkorb | Verfügbarkeit/Allergene/Preise unmittelbar an Artikeln | beim optionalen Einstieg höchstens neugierig, sonst keiner |
-| Gäste-Menü Abholung | Lokalkopf + Abholkontext, Artikelliste, ggf. Abholhinweise, Warenkorb | Abholung deutlich statt Tisch | kein Dauer-Mascot |
-| Artikeloptionen | Überschrift/Bild, Optionen in echten Radios/Checkboxen, sichtbare Mehrpreise, Mengenwahl, Gesamtbetrag, CTA | Pflichtoptionen inline; Zusammenfassung vor Bestätigung | keiner |
-| Warenkorb | Positionen/Optionen, Menge, Entfernung, Zwischensumme, optionale Empfehlungen, Weiter-CTA | Bestand/Preisänderung persistent, nicht Toast-only | keiner |
-| Checkout | Verkäufer-Lokal, Bestellkontext, Gesamtsumme, 0%-Trinkgeldoption, Anbieterzahlung | ausstehend/fehlgeschlagen/bezahlt als unterschiedliche Zustände | keiner |
-| Bestätigung | echte Bestellreferenz, Positionen, Gesamtbetrag, Status, Download / Statusverfolgung | erst nach verifizierter Zahlung Erfolg | **fröhlich/feiernd**, einmal optional |
-| Betreiberübersicht | aktueller Lokalstatus + priorisierte nächste Aufgabe, danach relevante Kennzahlen/Bestellungen | erforderliche Einrichtung oder Störung als persistente Notice | neugierig beim echten Onboarding-Erstschritt |
-| Menüverwaltung | Kategorie-/Artikelliste mit Inspector; Schnelledit für Verfügbarkeit | Save/Fehler lokal am Datensatz; nicht erzwungene Dialogkaskade | keiner |
-| QR-Auswahl/Druck | Tabellen-/Tischauswahl, Layoutoptionen, A4-Vorschau, Duplex-Vorschau, Druckhilfe | falsch zugeordneter Code blockiert Druck mit präzisem Fehler | keiner auf Druckvorschau |
-| Personal-Tablet live | neue bezahlte Bestellungen visuell priorisiert, Aktionen groß, Details vollständig | Verbindung/Letzte Aktualisierung + bezahlt + Kassenerfassung | keiner |
-| Betreiber-Zahlungskonto | Anbieterstatus und konkrete nächste Handlung, verständliche Fachlabels | eingeschränkt/offen/aktiv persistenter Status | keiner |
-| Hilfe-Suche | prominentes Suchfeld, Kategorien als klare Textliste, Suchtreffer | Nulltreffer mit Vorschlägen | kleine **neugierige** Variante nur im unbelasteten Empty State |
-| Support-Ticket | chronologischer Gesprächsverlauf, eigene Antworten, sichere Anhänge | Status/Absende- oder Ladefehler inline; Sichtbarkeit klar | keiner |
-| Interne Ticketnotiz | separat erkennbare Notizkomposition und Sichtbarkeit, nicht nur anderes Textfeld | vor Senden eindeutiger Empfängerkontext | keiner |
-| Team-Auswertung | Filterzeile, Datentabelle, sortierbare Spalten, Detailansicht | Ergebnisse/Leere/Fehler/Scope textlich | keiner |
-| Marketing-Website | Editorial Hero → belegtes Problem → Produkt-/Menschenreise → Setup/Preis → Kontakt/CTA | visuelles Lesen auch ohne Motion möglich | maximal ein bis zwei kleine kuratierte Akzente auf ganzer Homepage |
-
-### Konsistenz der visuellen Zustände
-
-Jede aufgeführte Oberfläche erhält **aufgabenangemessene** Default-, Loading-, Empty-, Fehler-, Offline-/Verbindungs-, Success- und ggf. eingeschränkte Zustände. Nicht alle Zustände müssen künstlich überall existieren; wenn ein Zustand fachlich nicht vorkommen kann, wird er nicht simuliert. Keine dramatische rote Fläche für einen einfachen „noch kein Menüartikel“; kein heiterer Mascot bei fehlgeschlagener Zahlung. Kritische Folgen immer textlich, mit nächster Handlung und sichtbarem Wiederherstellungspfad.
-
-## 23 · Formulardesign nach Fragetyp statt nach Datenbankfeld
-
-**Eine Frage pro begrifflich zusammengehörigem Feld; eine Gruppe pro Entscheidung.** Bei Lokaldaten, persönlicher Authentifizierung, Artikelbearbeitung, Zahlungskonto und Support gelten dieselben visuellen Komponenten, aber **nicht** dieselbe Bildschirmdichte.
-
-| Nutzerentscheidung | Richtige sichtbare Eingabe | Beschreibung / Nicht benutzen |
-|---|---|---|
-| Lokalname, Menüartikelname | Textfeld mit permanent sichtbarem Label | Placeholder nur Beispiel, nie als einzige Frage |
-| E-Mail, Telefonnummer | spezialisiertes Eingabefeld | passende mobile Tastatur, konkrete Fehltexte, keine Icons als Label |
-| Preis, Menge, Trinkgeld | Zahleneingabe oder Stepper abhängig von Aufgabe | Euro-/Einheitenanzeige, Grenzen, korrigierbarer Wert; keine Schieberegler für präzise Beträge |
-| Tisch/Abholung als Angebot aktivieren | unabhängige Checkbox/Switch je **eigener** Betriebsfunktion | Zustand braucht Label und Konsequenz; Gast sieht keinen nicht verfügbaren Modus |
-| exakt eine Größe/Variante | Radio Group | **nicht** Checkboxen, wenn genau eine Wahl nötig |
-| optionale Extras | Checkbox Group mit sichtbaren Aufpreisen | **nicht** Radio, wenn mehrere möglich sind |
-| eine Kategorie aus wenigen | Select/Radio je Platz | nicht Combobox ohne Suchbedarf |
-| sehr viele Artikel/Tickets | Such-Combobox | leere Suche, kein Ergebnis und Tastatur explizit gestalten |
-| Datum/Zeitbereich | Datum/Zeitraumkontrolle | lokale Datumsformatierung; keine zwei verwirrenden freien Texteingaben |
-| Bild hochladen | Datei-Auswahl mit Vorschau, Fehler und austauschbarer Aktion | kein Drag-only; akzeptierter Inhalt/Format visuell erklären |
-| Freitext/Supportnachricht | Textarea mit klarer Länge und ggf. Anhang | nicht E-Mail-Einzeiler für ausführliche Problembeschreibung |
-| irreversibles Entfernen | Bestätigungsdialog mit konkretem Gegenstand | nicht als Switch/Toasts/unklare kleine Mülltonne |
-
-**Fehlerablauf:** bei Submit Eingaben behalten; fehlerhafte Felder inline exakt benennen; bei langem Formular zusätzlich Error Summary ganz oben mit Sprung zum Feld; Fokus zur Summary. Bei mehreren sicheren Schritten ein erklärender Progress Stepper. Bei Eingabe weder jitternde Fehlermeldungen noch automatische Scrollanimationen bei jedem Zeichen. Sekundäre Entscheidungen nicht hinter auffälligem `Advanced` verstecken, wenn sie rechtlich oder finanziell wesentlich sind.
-
-## 24 · Bildverwendung und Formatvertrag nach Medium
-
-| Medium | Motive/Rolle | Bildformat & Layout | Fallback / Verbot |
-|---|---|---|---|
-| Website-Hero | echte Gäste oder Service in erkennbar echtem Lokal | großes Foto 4:5 oder 3:2, Motiv-Safe-Zone für Mobile | seriöse reine Textkomposition statt generiertem Menschenfoto |
-| Website Produktstory | **QR-Aufsteller**, **Gäste-Menü**, **Personal-Tablet** als drei klar benannte Produktmomente | konsistente Medienrahmen, Desktop nebeneinander/abwechselnd, Mobile vertikal | grau beschrifteter Platzhalter, bis **echter** Screen freigegeben |
-| Website Problem | wartende Gäste/realer Servicekontext, ohne gespielte Frustration | vorzugsweise dokumentarischer Ausschnitt 3:2 | kein künstliches Schmerz-Stockfoto |
-| Gäste-Menü Artikelfoto | genau dieses Essen/Getränk, realistisch, lokaltypisch | Standard 4:3, scharfe Thumbnail-Crops, keine ikonischen Produktfotofakes | neutrale Kategoriefläche, Titel und Preis tragen Inhalt |
-| Lokalbanner | Atmosphäre des Lokals, nicht generischer Skyline-Look | breites Verhältnis ca. 16:7, mittige Safe-Zone | Off White/Light Gray, **Lokalname bleibt Text** |
-| Lokallogo | vom Betreiber bereitgestellte authentische Bildmarke | `contain` in ruhigem Container, ohne Verfälschung | Lokalname als Inter Text |
-| Hilfeartikel | **aktueller echter Screenshot** mit markiertem Schritt | möglichst 16:9 bzw. natürliche App-Ratio; klare sichtbare Schritte | Textanleitung und explizit als noch fehlend markierte Screenshot-Stelle |
-| Founder | freigegebenes echtes Gründerfoto | eher natürliches Hochkant 4:5; kleiner redaktioneller Bereich | Text oder Section auslassen |
-| Team/Support | keine dekorative Personenillustration in operativer Tabelle | Datenklarheit gewinnt | keine Fake-Avatare als Identitätsersatz |
-| Print-QR | reiner Vektorcode schwarz auf weiß | lesbar und reproduzierbar | **niemals** Foto als QR-Untergrund |
-
-Keine automatischen inhaltslosen Bewegtbild-Karussells, keine „ästhetischen“ Blur-Overlays auf wichtigen Speisen, kein nicht freigegebenes Logo als Kunden-/Partnerempfehlung.
-
-## 25 · Forschung, A/B-Ergebnisse und Designvalidierung
-
-**Externe A/B-Tests sind Ideenquellen, nicht ein Designgesetz.** Die README enthält die dokumentierten Obama- und Bing-Experimente inklusive Quellen und Übertragungsgrenzen; der eigene **visuelle** Lernauftrag ist: Erstverständnis, echte Menschen statt Fremdvertrauenssymbolen, klare CTAs und Animationen mit Erklärnutzen. Deshalb:
-
-1. **Hero zuerst statisch entwerfen:** Verständlichkeit bei abgeschalteter Animation; danach Motion ergänzen, nicht umgekehrt.
-2. **Produktverständnis testen:** Betreiber:in ohne Vorwissen sieht den QR→Menü→Tablet-Verlauf und kann nach wenigen Sekunden selbst erklären, was passiert.
-3. **CTA-Hierarchie testen:** eine dominante Aktion, verlässliche Links und erkennbare Zweckbeschreibung. Kein A/B-Test-Ergebnis anderer Firmen als Zackisch-Prognose kommunizieren.
-4. **Mobile ebenso ernst nehmen:** 320/390/768px und reale Touchgeräte, 200% Zoom, kein horizontaler Gesamtseiten-Scroll, keine Unterbrechung durch Autoplay.
-5. **Gastro-Realität testen:** Tischaufsteller unter Lampe, 1-Hand-Bedienung mit Getränk in der anderen Hand, lauter Service mit großen Statusaktionen, langsames Netz, optional persönlicher Service.
-6. **Keine Accessibility-Experimente:** WCAG-Baseline, notwendige Labels, ehrlicher Zahlungsstatus und Nutzerwahl sind nicht verhandelbar – auch dann nicht, wenn ein kurzfristiger Klicktest mehr Klicks liefert.
-
-**Designabnahme:** Mindestens je eine gezielte Usability-Runde mit echter Lokalbetreiber-Person, Gast und Personal, bevor kritische Flows als fertig gelten; Befunde festhalten und die Tokens/Patterns zentral verbessern statt Screen-by-Screen-Sonderlösungen. Ein Experiment ist erst ein belastbares Ergebnis, wenn Stichprobe und methodische Bedingungen ausreichen. Die Forschungsliste wird zentral **in der README** gepflegt.
-
-## 26 · Design-Referenzen und Abgrenzung
-
-**Inspirationsprinzipien** (keine Code-, Layout- oder Markenkopie): me&u zeigt reduzierte Lokalnavigation und prominente Artikelfotos; SO’USE zeigt deutlich getrennte Tisch-/Abholszenarien und verständliche QR-Touchpoints; PayPal/Stripe sind qualitative Vergleichsmaßstäbe für klare Enterprise-taugliche Marketinggestaltung und Vertrauen. Andere Produkte bieten teils POS-Integrationen, Shared Tabs oder spätere Zahlung — das sind **keine automatisch vorhandenen Zackisch-Funktionen**.
-
-**Externe UX-/Accessibility-Referenzen:**
-- [Base UI – headless/accessible](https://base-ui.com/react/overview/about), [Styling](https://base-ui.com/react/handbook/styling)
-- [GOV.UK Notification Banner](https://design-system.service.gov.uk/components/notification-banner/), [Error Summary](https://design-system.service.gov.uk/components/error-summary/), [Error Message](https://design-system.service.gov.uk/components/error-message/)
-- [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/), [Target Size](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum), [Reduced Motion](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions)
-- [me&u redesigned Order & Pay](https://help.meandu.com/hc/en-us/articles/13065055225359-Explore-The-Revamped-Order-Pay-Experience), [SO’USE Tischservice](https://help.so-use.de/de/articles/12768308-servicekonzept-tischservice-was-muss-ich-beachten), [SO’USE Selbstbedienung](https://help.so-use.de/de/articles/12768318-servicekonzept-selbstbedienung-was-muss-ich-beachten)
-- [Motion scroll-linked API](https://motion.dev/docs/react-scroll-animations)
-
-### Migration aus dem bisherigen Repositoryzustand
-
-- Ältere Theme-Regeln sind **Legacy-Implementierungsdetails** und **keine Design-Vorgaben**. Der Zielzustand benutzt Inter und die hier genannten Tokens; vorhandene technische Komponenten werden nur soweit wiederverwendet, wie sie semantisch und accessibility-technisch passen.
-- Kein globales Redesign ohne visuelle Regression über alle vier Oberflächen: Die White-Label-Gäste-App, der Tabletbetrieb und das interne Dashboard haben unterschiedliche Dichten, aber dieselbe tokenbasierte Basissprache.
-- Projekt-READMEs und Agent-Anleitungen nach Implementierung auf diese zentrale Designquelle **verweisen**, statt alte Font-/Komponentenregeln parallel zu verwalten.
-- Zustand, Rechte, Zahlungs- und Fiskalprozesse **nicht** aus UI-Gestaltung ableiten; funktional gegen die jeweiligen Engineering-Verträge prüfen.
-
-**Implementierungsagent:** Zuerst dieses Dokument lesen; technischen Produktkontext aus Projekt-READMEs/AGENTS und Fach-Docs prüfen; UI von Null nach diesen Tokens und semantischen Mustern aufbauen. Keine bestehenden Design-Tokens blind portieren. Die technische Produktwahrheit steht in [`README.md`](README.md) und den dort verlinkten Projekt-/Fachdokumenten. Diese Datei ist die **einzige** visuelle Soll-Spezifikation. Die Funktion, Rechte und Zahlungsfreigaben ändern sich **nicht** aufgrund einer Designentscheidung.
-
-
-## Paper Design und Taste: Designprozess ohne fremdes Theme
-
-**Verbindliche gestalterische Arbeitsweise:** Vor größeren UI-Änderungen wird die Oberfläche **im einzigen Paper-Projekt namens `Zackisch`** ausgearbeitet, geprüft und als benanntes Frame freigegeben bzw. dokumentiert. Paper ist der gemeinsame Design-Arbeitsraum über alle vier Anwendungen hinweg. Die visuelle Identität und Design-Tokens kommen ausschließlich aus dieser Datei und `assets/zackisch/tokens.css`; Paper ist kein zweites Markendesign und keine neue Theme-Bibliothek.
-
-**Paper-Ordnung (ein Projekt `Zackisch`, nicht vier getrennte Projekte):** `00-system`, `10-root-marketing`, `20-app-guest`, `21-app-merchant`, `22-app-staff`, `30-support`, `40-internal`, `90-reviews`. Eine Gruppe enthält passende Desktop-, Tablet- und Mobile-Frames, relevante Interaktionszustände, echte Texte und vorgegebene Asset-Referenzen. Vor neuen Frames ist zu prüfen, ob entsprechende Frames bereits vorhanden sind, damit im bestehenden System weitergearbeitet wird statt Dubletten zu erzeugen.
-
-**Taste-Skill (`design-taste-frontend`) als kritisches Review:** Der Skill `design-taste-frontend` liefert Layout-, Hierarchie-, Bild-/Motion- und Anti-Slop-Hinweise. Er **darf keine** Branding-Tokens, Farben, Typografie, Bildmarke, White-Label-Vorgaben, Komponentenbibliothek oder Layoutfunktionalität überschreiben. Für Zackisch gelten explizit die weißen/off-white Flächen (`#FAFAF9` / `#FFFFFF`) und `#000000` statt eventueller Taste-Defaultvorgaben wie Off-Black oder erzwungenem Dark Mode. Keine erzwungene Animation, keine unnötigen Verzierungsstriche.
-
-**Design-Gates:** Aufgaben-/Zielgruppenkontext → echte Inhalte und Edge Cases → Paper-Frame + Zustände + Breakpoints → Taste-Kritik unter Zackisch-Vorrang → visuelle und semantische Prüfung → Übergabe an Base-UI-Code → Browser-/Accessibility-/Responsiveness-Abgleich gegen das freigegebene Paper-Frame. Bei Nachkorrekturen Paper und Code konsistent halten; keine allein im Code erfundenen großen Screens.
-
-**Technische Tool-Installation, MCP-Konfiguration und Commitablauf:** siehe [`README.md`](./README.md) und [`AGENTS.md`](./AGENTS.md).
-
-## 27 · Verbindlicher Asset-Vertrag (freigegebenes Bundle)
-
-Alle folgenden Repository-Pfade liegen unter `assets/zackisch/` vor und werden über `scripts/sync-brand-assets.mjs` in die Anwendungen synchronisiert.
-
-**Logo-Master (Originaldateien, kein Neuzeichnen):** `assets/zackisch/brand/combination_mark.svg` (Combination Mark, handgezeichneter Schriftzug) und `assets/zackisch/brand/brand_mark.svg` (Katzenkopf). Favicon/Appicons `assets/zackisch/brand/raster/`, OG-/Bannerdarstellungen `assets/zackisch/brand/social/`; Markenexporte in die Anwendung verlinken/übernehmen, nie neu entwerfen.
-
-**Zackisch-Schrift:** `assets/zackisch/font/zackisch.ttf`, `assets/zackisch/font/zackisch.woff2`, `assets/zackisch/font/zackisch.css`; als *dekorative Display-Schrift* und nicht für UI lesen. Der Font ist als Prototyp gekennzeichnet; die handgezeichnete Logoform ist ausschließlich das Original-SVG.
-
-### 27.1 Mascot: finale SVG-Datei pro Kontext
-
-| Datei | Einsatz | Einschränkung |
-|---|---|---|
-| `assets/zackisch/mascot/mascot_curious_welcome.svg` | öffentliche Website: Begrüßung / Onboarding | nicht in Zahlungskarte |
-| `assets/zackisch/mascot/mascot_happy.svg` | abgeschlossener optionaler Schritt, leere positive Antwort | kein Ersatz für Bestätigungslabel |
-| `assets/zackisch/mascot/mascot_wink.svg` | kleine lockere Produkterklärung | nicht bei Warnung oder Fehler |
-| `assets/zackisch/mascot/mascot_focused.svg` | Konfiguration wird geprüft, Suche läuft | kein falscher Fortschritt |
-| `assets/zackisch/mascot/mascot_thinking.svg` | kontextsensitive Hilfe, Tooltip-Illustration | nicht neben jedes Formularfeld |
-| `assets/zackisch/mascot/mascot_sleeping.svg` | Stille / Pause, selten | keine schlafende Figur während echter Zahlungswartezeit |
-| `assets/zackisch/mascot/mascot_excited.svg` | Marketing-Meilenstein | nicht bei alltäglichem Toast |
-| `assets/zackisch/mascot/mascot_celebrating.svg` | Erfolg nach nachweislich abgeschlossener Einrichtung | keine automatische Erfolgsbehauptung |
-| `assets/zackisch/mascot/mascot_peeking.svg` | freundlicher leerer Bereich / visuelles Easter Egg | selten, niemals CTA verdecken |
-| `assets/zackisch/mascot/mascot_helpful_guide.svg` | Einrichtungs-Wizard-Schritt und Hilfeartikel | nicht in rechtlichen Pflichtangaben |
-| `assets/zackisch/mascot/mascot_scan_qr.svg` | Website-Demo einer QR-Interaktion | Illustrations-QR ist nie scannbar |
-| `assets/zackisch/mascot/mascot_payment_success.svg` | Gästeapp bestätigte Zahlung | nur nach verifiziertem Server-/Stripe-Status |
-| `assets/zackisch/mascot/mascot_order_received.svg` | bestätigte Bestellung | Status schriftlich getrennt |
-| `assets/zackisch/mascot/mascot_order_ready.svg` | Abholung ausdrücklich bereit | Abholnummer sichtbar halten |
-| `assets/zackisch/mascot/mascot_empty_state.svg` | keine Bestellungen/Suchergebnisse | 09 peeking nicht parallel |
-| `assets/zackisch/mascot/mascot_error_404.svg` | 404-Not-Found-Seite | nicht für Zahlungsfehler |
-| `assets/zackisch/mascot/mascot_offline_pause.svg` | keine Verbindung, Pause | expliziter Retry und Service-Alternative |
-| `assets/zackisch/mascot/mascot_support_listening.svg` | Kontakt/Support-Einstieg | Kontaktweg stets als Text/Link |
-
-Für diese Varianten gilt: Die SVGs sind *direkt aus der freigegebenen Mascot-Vorschau getraced*. Pupillen nicht beim UI-Rendering verschieben, nicht neu konstruieren, nicht mit zufälligen Strichen dekorieren. `mascot_wink.svg` hat **ein geschlossenes linkes und ein offenes rechtes Auge**. Die grafische Ausrichtung ist nicht semantischer Status.
-
-### 27.2 Doodle-Icon-Pfade
-
-| Icon | Datei | Bedeutung / geeigneter Einsatz |
-|---|---|---|
-| add | `assets/zackisch/icons/icon_add.svg` | Menge erhöhen |
-| arrow left | `assets/zackisch/icons/icon_arrow_left.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| arrow right | `assets/zackisch/icons/icon_arrow_right.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| call | `assets/zackisch/icons/icon_call.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| card payment | `assets/zackisch/icons/icon_card_payment.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| cart | `assets/zackisch/icons/icon_cart.svg` | Warenkorb |
-| cash | `assets/zackisch/icons/icon_cash.svg` | Barzahlung bei Verfügbarkeit |
-| chat | `assets/zackisch/icons/icon_chat.svg` | Nachrichten |
-| close | `assets/zackisch/icons/icon_close.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| confirm | `assets/zackisch/icons/icon_confirm.svg` | Abschlussstatus (Text bleibt erforderlich) |
-| cutlery | `assets/zackisch/icons/icon_cutlery.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| dashboard | `assets/zackisch/icons/icon_dashboard.svg` | Dashboard-Verwaltung |
-| delete | `assets/zackisch/icons/icon_delete.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| favorite | `assets/zackisch/icons/icon_favorite.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| filters | `assets/zackisch/icons/icon_filters.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| help | `assets/zackisch/icons/icon_help.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| image | `assets/zackisch/icons/icon_image.svg` | Mediengrafik |
-| info | `assets/zackisch/icons/icon_info.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| location | `assets/zackisch/icons/icon_location.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| menu | `assets/zackisch/icons/icon_menu.svg` | Menünavigation |
-| message | `assets/zackisch/icons/icon_message.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| notification | `assets/zackisch/icons/icon_notification.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| order | `assets/zackisch/icons/icon_order.svg` | Bestellübersicht |
-| order ticket | `assets/zackisch/icons/icon_order_ticket.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| payment | `assets/zackisch/icons/icon_payment.svg` | Zahlungsart |
-| pickup | `assets/zackisch/icons/icon_pickup.svg` | Abholstatus |
-| plate | `assets/zackisch/icons/icon_plate.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| print qr | `assets/zackisch/icons/icon_print_qr.svg` | QR-Druck-Einstieg |
-| qr code | `assets/zackisch/icons/icon_qr_code.svg` | Dekoratives QR-Symbol für Marketing; keine Scanadresse |
-| receipt | `assets/zackisch/icons/icon_receipt.svg` | Beleg-/Bestätigungsdarstellung |
-| receipt list | `assets/zackisch/icons/icon_receipt_list.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| refresh | `assets/zackisch/icons/icon_refresh.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| remove | `assets/zackisch/icons/icon_remove.svg` | Menge reduzieren |
-| scan | `assets/zackisch/icons/icon_scan.svg` | Scan-Aktion/Scanner-Funktion |
-| search | `assets/zackisch/icons/icon_search.svg` | Suchen |
-| settings | `assets/zackisch/icons/icon_settings.svg` | Einstellungen |
-| shopping bag | `assets/zackisch/icons/icon_shopping_bag.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| smartphone | `assets/zackisch/icons/icon_smartphone.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| staff | `assets/zackisch/icons/icon_staff.svg` | Personalübersicht |
-| staff tablet | `assets/zackisch/icons/icon_staff_tablet.svg` | Personal-Tablet-Kontext |
-| star | `assets/zackisch/icons/icon_star.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| support | `assets/zackisch/icons/icon_support.svg` | Support/Eskalation |
-| table number | `assets/zackisch/icons/icon_table_number.svg` | Tischidentität |
-| takeaway | `assets/zackisch/icons/icon_takeaway.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| tip | `assets/zackisch/icons/icon_tip.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| upload photo | `assets/zackisch/icons/icon_upload_photo.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| view | `assets/zackisch/icons/icon_view.svg` | sekundäres dekoratives Icon für den bezeichneten UI-Kontext |
-| warning | `assets/zackisch/icons/icon_warning.svg` | Warnhinweis mit Text |
-
-**Wichtig:** Kritische Bedienaktionen ausschließlich mit Textlabel und Base-UI-semantischer Komponente. Doodle-Icons allein sind keine zugängliche Beschriftung. Im hochverdichteten Team-Dashboard dürfen sie zugunsten klarer Inter-/Lucide-kompatibler Systemicons entfallen; keine zusätzliche vollständige Icon-Library ohne technische Begründung einführen.
-
-### 27.3 Fotografie und Website-Platzhalter
-
-- `assets/zackisch/media/founder/founder_portrait_original.png`: reales Foto des Founders, nur für freigegebenen optionalen Founder-Abschnitt. **Keine irreführende Darstellung als Gast/Servicepersonal**.
-- `assets/zackisch/media/mars/mars_combination_mark.svg`: bereitgestellte MARS-Markendatei; Nutzung und konkrete Partnerschaftsformulierung vor Veröffentlichung genehmigen lassen.
-- Stockmotive dürfen erst nach Quellen-/Rechteprüfung im Produkt liegen. Bis echte Produkt-Screens existieren: graue, präzise beschriftete Flächen „QR-Aufsteller – echtes Foto folgt“, „Gäste-Menü – finaler Screenshot folgt“, „Personalansicht – finaler Screenshot folgt“ statt erfundener Interfaces.
-- Nur **eine** illustrative Zackisch-Katze pro sichtbarem Hauptkontext; Kombinationslogo nicht in Gäste-App-Navigation. Auf QR-Aufsteller klein und dezent.
-
-
-### 27.4 Verbindliche Website-Bildplatzhalter bis zum echten Produktscreenshot
-
-Es liegen drei absichtlich **neutrale graue**, korrekt beschriftete, nicht irreführende Bilder bei: `assets/zackisch/media/placeholders/qr_stand_placeholder.png`, `assets/zackisch/media/placeholders/guest_menu_placeholder.png`, `assets/zackisch/media/placeholders/staff_tablet_placeholder.png`. Auf der öffentlichen Website nur bis zur Ersetzung durch echte freigegebene Produktbilder nutzen. Sie sind **keine Mockups mit behaupteter bereits implementierter Funktion**.
-
-## 28 · Verbindliche Paper-Designfreigabe und Quellenpriorität (27.10.2026)
-
-Die bestehende kanonische CSS-Tokenliste `assets/zackisch/tokens.css` ist der verbindliche Zahlen-/Farbwert-Vertrag. Paper importiert oder spiegelt diese Tokens. Wenn ein Designreview nachweislich eine Tokenänderung verlangt, wird sie zuerst in `DESIGN.md` beschlossen, anschließend in der CSS-Tokenquelle und in Paper konsistent umgesetzt. **Kein** globales Fremd-Theme, kein von Taste vorgeschlagener Dark-Mode-Zwang, keine neue Brandpalette.
-
-**Visuelle Priorität:** Original-Zackisch-Logo-SVGs > freigegebene Illustrator-/Approved-Preview-Referenzen > verbindliche `DESIGN.md` > kanonische Tokens (`assets/zackisch/tokens.css`) > Paper-Frames > ältere UI-Implementierung. **Design-Handoff:** Paper ist der gestalterische Arbeitsraum, `DESIGN.md` der normative Designvertrag.
-
-**Komponentenpriorität:** natives semantisches HTML für Grundstrukturen; `@base-ui/react` für erforderliche interaktive Primitives; eigene `Zackisch`-Wrapper und tokenisiertes CSS für Appearance. Taste generiert keine Alternative mit fremden Komponenten-/Theme-Libraries.
-
-**Medien:** Die in `assets/zackisch/` eingecheckten Original-Assets sind maßgeblich. Neue Exportdateien müssen auf transparente Ränder, ViewBox-Bounds, Pupillen, Umlaute und semantische Dateinamen geprüft werden.
-
-
-## Exact asset file references
-
-### Approved preview masters
-- `assets/zackisch/previews/font_approved.png`
-- `assets/zackisch/previews/icons_approved.png`
-- `assets/zackisch/previews/mascot_approved.png`
-
-### Official logo masters
-- `assets/zackisch/brand/combination_mark.svg`
-- `assets/zackisch/brand/brand_mark.svg`
-
-### Production icon assets
-- `assets/zackisch/icons/icon_menu.svg`
-- `assets/zackisch/icons/icon_qr_code.svg`
-- `assets/zackisch/icons/icon_smartphone.svg`
-- `assets/zackisch/icons/icon_scan.svg`
-- `assets/zackisch/icons/icon_cart.svg`
-- `assets/zackisch/icons/icon_order.svg`
-- `assets/zackisch/icons/icon_receipt.svg`
-- `assets/zackisch/icons/icon_payment.svg`
-- `assets/zackisch/icons/icon_cash.svg`
-- `assets/zackisch/icons/icon_confirm.svg`
-- `assets/zackisch/icons/icon_close.svg`
-- `assets/zackisch/icons/icon_add.svg`
-- `assets/zackisch/icons/icon_remove.svg`
-- `assets/zackisch/icons/icon_info.svg`
-- `assets/zackisch/icons/icon_warning.svg`
-- `assets/zackisch/icons/icon_search.svg`
-- `assets/zackisch/icons/icon_filters.svg`
-- `assets/zackisch/icons/icon_settings.svg`
-- `assets/zackisch/icons/icon_dashboard.svg`
-- `assets/zackisch/icons/icon_table_number.svg`
-- `assets/zackisch/icons/icon_pickup.svg`
-- `assets/zackisch/icons/icon_takeaway.svg`
-- `assets/zackisch/icons/icon_cutlery.svg`
-- `assets/zackisch/icons/icon_plate.svg`
-- `assets/zackisch/icons/icon_print_qr.svg`
-- `assets/zackisch/icons/icon_upload_photo.svg`
-- `assets/zackisch/icons/icon_favorite.svg`
-- `assets/zackisch/icons/icon_location.svg`
-- `assets/zackisch/icons/icon_staff.svg`
-- `assets/zackisch/icons/icon_support.svg`
-- `assets/zackisch/icons/icon_call.svg`
-- `assets/zackisch/icons/icon_message.svg`
-- `assets/zackisch/icons/icon_notification.svg`
-- `assets/zackisch/icons/icon_help.svg`
-- `assets/zackisch/icons/icon_arrow_right.svg`
-- `assets/zackisch/icons/icon_arrow_left.svg`
-- `assets/zackisch/icons/icon_refresh.svg`
-- `assets/zackisch/icons/icon_shopping_bag.svg`
-- `assets/zackisch/icons/icon_tip.svg`
-- `assets/zackisch/icons/icon_star.svg`
-- `assets/zackisch/icons/icon_view.svg`
-- `assets/zackisch/icons/icon_upload_photo_alt.svg`
-- `assets/zackisch/icons/icon_order_ticket.svg`
-- `assets/zackisch/icons/icon_receipt_list.svg`
-- `assets/zackisch/icons/icon_staff_tablet.svg`
-- `assets/zackisch/icons/icon_chat.svg`
-- `assets/zackisch/icons/icon_card_payment.svg`
-- `assets/zackisch/icons/icon_delete.svg`
-
-### Production mascot assets
-- `assets/zackisch/mascot/mascot_curious_welcome.svg`
-- `assets/zackisch/mascot/mascot_happy.svg`
-- `assets/zackisch/mascot/mascot_wink.svg`
-- `assets/zackisch/mascot/mascot_focused.svg`
-- `assets/zackisch/mascot/mascot_thinking.svg`
-- `assets/zackisch/mascot/mascot_sleeping.svg`
-- `assets/zackisch/mascot/mascot_excited.svg`
-- `assets/zackisch/mascot/mascot_celebrating.svg`
-- `assets/zackisch/mascot/mascot_peeking.svg`
-- `assets/zackisch/mascot/mascot_helpful_guide.svg`
-- `assets/zackisch/mascot/mascot_scan_qr.svg`
-- `assets/zackisch/mascot/mascot_payment_success.svg`
-- `assets/zackisch/mascot/mascot_order_received.svg`
-- `assets/zackisch/mascot/mascot_order_ready.svg`
-- `assets/zackisch/mascot/mascot_empty_state.svg`
-- `assets/zackisch/mascot/mascot_error_404.svg`
-- `assets/zackisch/mascot/mascot_offline_pause.svg`
-- `assets/zackisch/mascot/mascot_support_listening.svg`
-
-### Font assets
-- `assets/zackisch/font/zackisch.ttf`
-- `assets/zackisch/font/zackisch.woff2`
-- `assets/zackisch/font/zackisch.css`
-
-### Asset usage rules
-- Never recreate the official full Zackisch logo from the font. Use `assets/zackisch/brand/combination_mark.svg`.
-- Never redraw the mascot mark in code. Use `assets/zackisch/brand/brand_mark.svg` for the canonical mark and `assets/zackisch/mascot/*.svg` for expressive variants.
-- Use `Inter` for product UI and `Zackisch` only for display accents.
+| Alerts / banners | Neutral card, **status icon + descriptive text** for Success/Warning/Info/Pending/**Error**; only Error icon/message may be red |
+| Toast | White radius 20, subtle shadow, concise text, accessible controls; **every semantic status has an icon; errors MUST show a red error icon plus text** |
+| Badges / chips | Pill, neutral gray 100 or Citron 100, always text; status is not color-only |
+| Modal / dialog | 28px radius, reachable close and heading, focus trap, Escape where safe, warning before destructive action |
+| Drawer / bottom sheet | 28px top radius, useful mobile alternative to dialog; prevent hidden price/pay action |
+| Dropdown / combobox | 20px panel radius; 44px item target; keyboard navigation; selected fill/weight per surface, no marker |
+| Checkbox / radio / switch | Native semantics, 20px checkbox, 48px switch track; high contrast, label clickable; never rely on hue |
+| Tabs / segmented controls | Pill selection, current font 700, dark legible text; focus semantics separated from selected state |
+| Search | Pill field; clear button when populated; zero-result guidance; search icons supplied by Phosphor |
+| Pagination | 40–48px targets; page text and current state; no orphaned icons or color-only status |
+| Stepper / onboarding | Numbered steps and textual labels, neutral completed/next, Citron current highlight; always show progress count |
+| Upload / image crop | Rounded dropzone with dashed/neutral boundary; clear supported formats, upload/loading/error/retry controls |
+| Table / list skeleton | Gray 200 base, Gray 100 highlight, low-motion, shape matching content; `aria-busy` on region |
+| Menu item imagery | 1:1 or 4:3 real food image, crop, title, price, options/dietary info and obvious add control |
+| Order progress | Explicit text and meaningful status icon for consequential state updates; not decorative icons for every step |
+| Checkout summary | High contrast, stable totals, item lines, fees, tax/trinkgeld text; clear button hierarchy |
+| Price display | Tabular numerals; server-authoritative calculation; never convey discount with color alone |
+
+## 9. UX conventions for the four products
+
+**Public website (`root/`):** predominantly white pages, strong League Spartan hero and human images, occasional Citron background sections. Make the product model and POS coexistence legible; large uncomplicated CTAs. Mobile-first hierarchy and no exaggerated claims.
+
+**Merchant product (`app/`):** Citron 300 nav sidebar; Citron 500 selected item with label weight 700 and **regular → fill icon when the item has one**, no marker. Operational screens mostly white and gray. Prioritize actions, filters, order status, sales figures, QR setup and payment account readiness. Multi-step onboarding shows saved progress.
+
+**Guest QR flow (`app/`):** no account/install requirement. High contrast item names/prices; sparse navigation; large touch controls; reliable cart/checkout. Clear loading/retry behavior. Payment result states must be truthful and resilient against duplicate submission; do not imply payment succeeded while processing.
+
+**Staff terminal (`app/`):** strong typographic information architecture, larger action targets, unmistakable order detail, quiet badges, minimal decoration; time-critical actions cannot rely on a tiny icon or hover.
+
+**Support (`support/`):** readable steps, search, FAQ accordions, embedded annotated screenshots, screenshots with alt captions, no overuse of Citron. Content must be comprehensible without color.
+
+**Internal dashboard (`internal/`):** denser tables and filters are allowed. Same font, Phosphor, tokens and error language; no visual reversion to an old design system. Accessibility and restricted-data affordances take priority over decoration.
+
+## 10. Photography / people-first brand system
+
+**Owner rule: only real internet stock photography with verified free commercial usage rights. Never use AI-generated photographs anywhere. Until real product captures exist, product-image regions are text-labelled placeholders describing the intended screenshot, never fabricated mock UI.**
+
+Trust comes from **actual people in believable hospitality contexts**. Photos should feel documentary, warmly lit and respectfully inclusive, not overly directed advertising. Prioritize: (1) guest ordering from a table phone, (2) friendly staff interacting with guests, (3) owner preparing/serving, (4) café/restaurant with welcoming atmosphere, (5) hands and food for detail. Include different ages and venue sizes without reducing people to stereotypes.
+
+- Show staff and real hospitality, not anonymous close-ups of software dashboards alone. Feature people naturally looking at each other or the task, not everyone smiling at the camera.
+- Photo ratio library: hero 16:9 / 3:2, portrait 4:5, square 1:1, background crops 21:9. Ensure negative space for text. Keep contrast overlay solid or subtle if typography overlays photo.
+- Style: authentic daylight or warm indoor light, natural skin tones, clean framing, no excessive HDR, heavy yellow-green filter or fake neon tint. Do not recolor skin in Citron. Reserve Citron for layout, not photographic color casts.
+- Rights: obtain commercial usage licenses, participant/model releases where required, and location permission. Follow GDPR and consent rules. Store source/attribution/consent information **outside public front-end bundles**.
+- Images: use `AVIF` or `WebP` plus responsive `srcset`, 2x density for important images, appropriately sized files, `loading="lazy"` for below-the-fold. Hero/LCP images may need eager loading. Provide meaningful alt text; decorative images use `alt=""`.
+- Do **not** ship random third-party portraits without a verified right to redistribute. This ZIP includes a **shot list**, not unlicensed photos.
+
+Maintain photography provenance and release evidence outside public bundles; credits required by a license remain visible.
+
+## 11. Printed QR guest-order codes — **design rules only**
+
+This section controls the design of **codes dynamically generated by the existing QR workflow**. **Do not include QR templates, demonstration QR files, menu stands, mock codes or PDFs in this branding package.**
+
+- **Monochrome only:** `#000000` QR modules, `#FFFFFF` background. Never include Citron or any extra brand colors, gradients, photo masks, decorative borders or background illustrations.
+- **Centered original black `signet`:** place it at the geometric center, scaled conservatively, with a solid white clearance zone between the logo silhouette and QR modules. Only use the original signet silhouette, not a retypeset Z. Be mindful: central artwork obscures code modules.
+- **Error correction:** use high error correction **where supported**, test with the actual encoded payload length; a central signet must never be assumed universally scannable. Validate using standard QR encoders/decoders and camera devices.
+- **Quiet zone:** keep **at least four modules** of uninterrupted white on all four outer sides. Preserve perfectly square modules, full contrast, sharp print output and no rounded/blurred dots.
+- **Print target:** preferably 35–50mm+ for typical table uses with ample viewing distance; never rely on arbitrary universal minimum. Determine actual physical module size from QR version and viewing distance; assess around 0.4mm/module for ordinary print, then print-test at actual size.
+- **Content:** any necessary “Scannen & bestellen” label, table/location name or short URL may appear in **black text on white** outside the quiet zone; keep the code itself entirely black and white. Use the same League Spartan typography if printed, no brand color.
+- **Tests:** thermal laser/inkjet and office print, black/white grayscale, low toner, glare, matte/laminated versions, multiple phone cameras, low light, older devices, variable-length URL, slightly angled viewpoint. Check destination accuracy, not just “some QR decodes.”
+- **Operational safeguards:** each code uniquely links to the correct authorized venue/table/context. Avoid exposing guessable private tokens. A print design rule does **not** supersede server-side validation of table/venue identity or checkout links.
+
+## 12. Inclusive accessibility, responsiveness and quality gates
+
+- **WCAG 2.2 AA** is the implementation target; test normal/high contrast, keyboard, pointer, screen reader, dark-mode OS (brand design stays light for now), 200–400% zoom, RTL-ready structures if later needed, and localized copy overflow.
+- Keyboard focus visible independently of selection; dialogs return focus appropriately. No inaccessible custom listboxes or hidden-label inputs. Honor reduced motion and touch accessibility.
+- Responsive: mobile first; 0–639px compact; 640–767px larger mobile; 768–1023px tablet; 1024px+ desktop. These are guidance breakpoints, not hard device categories. Content-driven layouts take precedence.
+- Avoid cumulative layout shift: reserve image/media space, skeleton dimensions and button/loading bounds. Error messaging should not make the payment CTA move unpredictably.
+- **Critical flows:** test guest menu → cart → payment → confirmation; merchant sign-up/setup/Stripe connection; staff accept/fulfill orders; printer QR scanning; auth and recovery; support request; error/retry in every role. Test financial copy and financial states with real backend contract rules before deployment.
+- Do not make up analytics, claims, prices, certifications or integrations. Test localization currency/date formatting, safe handling of reattempted payment flows, permissions, input errors and slow/offline network states.
+- Build lint/test visual state snapshots for button, navigation, floating label, dialog, empty card, skeleton, error toast and QR output. Re-validate AA contrast when colors change.
+
+## 13. Repository implementation contract
+
+- Impeccable is the required UI design, implementation and critique workflow. Base UI supplies accessible primitives; focused Zackisch wrappers and these tokens supply the visual system. Mobbin research precedes each UI addition or modification. References inform composition and interaction, never override this brand.
+- Public marketing references favor large established payment/financial brands, such as PayPal and Stripe, for hierarchy and professional presentation. Preserve human hospitality content and independent Zackisch composition. Desktop may use purposeful scroll sequences; mobile and reduced-motion layouts must expose all content without scroll traps.
+- `root/public/brand/` is the only hosted brand asset directory. Its files are served from `https://zackisch.com/brand/...`. The other three applications and email templates use those absolute URLs. No asset copying into other public folders. CSS source imports at build time do not constitute a second asset host.
+- Logo files remain byte-identical to the supplied bundle. Use PNG wordmarks in email clients that cannot render SVG. All fonts are hosted on the website domain; never load Google Fonts at runtime. Provide correct font CORS headers for the three application origins.
+- Compatibility aliases may map existing component token names to this system while individual screens are migrated. They are not a second theme. Document actual coverage in the application README; do not call the whole product redesigned after changing tokens.
+- Use the source token JSON for values, CSS for implementation, and verify rendered contrast. Correct invalid serialization (such as JavaScript-array syntax in CSS font-family) without changing brand decisions.
+- Preserve all functional, legal, security, financial and release contracts in `AGENTS.md`. This visual specification grants no production, payment or fiscal approval.
+- Printed output retains the repository's 92 × 135 mm card, four-per-A4 and duplex workflow until a separately tested change. No venue name/logo; table/pickup identity and personal-service alternative stay visible. The new signet treatment requires independent decoding and physical scan checks before replacement of working QR output.
+
+## 14. Source standards and reference patterns
+
+The research references below support **principles**, not an attempt to visually copy another brand.
+
+- [DTCG Design Tokens Format Module 2025.10](https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/): primitives, aliases and exchange format (W3C Community Group report, not a W3C Recommendation).
+- [WCAG 2.2 Understanding 1.4.11: Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html): 3:1 meaningful state indicators and contrast limitations.
+- [WAI-ARIA Authoring Practices: Navigation Treeview](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-navigation/): navigational current location, semantics and keyboard behavior.
+- [WAI-ARIA Keyboard Focus guidance](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/): independently visible focus.
+- [Material Design Navigation Rail](https://github.com/material-components/material-components-android/blob/master/docs/components/NavigationRail.md): selected navigation surface / label pattern.
+- [Adobe Spectrum Side Navigation](https://spectrum.adobe.com/foundations/app-frame/side-navigation-browsing-context): selected navigation typography and distinctions (Zackisch intentionally does **not** replicate Spectrum's selection bar).
+- [Material Web Outlined Text Fields](https://github.com/material-components/material-web/blob/main/docs/components/text-field.md): floating persistent labels.
+- [Phosphor React icon library](https://github.com/phosphor-icons/react): official `regular` / `fill` weights and React package.
+- [Atlassian Design – icon usage](https://atlassian.design/components/icon/usage): remove unnecessary icons; prefer recognizable metaphors and textual labels.
+- [Nielsen Norman Group – icon usability](https://www.nngroup.com/articles/icon-usability/): icons often need visible labels and recognition testing.
+- [U.S. Web Design System – icon guidance](https://designsystem.digital.gov/components/icon/): intentional semantics, icon accessibility, avoid arbitrary decoration.
+- [Carbon – status indicators](https://www.carbondesignsystem.com/building-blocks/core/patterns/status-indicators): pair icon/symbol with descriptive content, avoid status clutter.
+- [Carbon – notification guidelines](https://www.carbondesignsystem.com/building-blocks/core/components/notification/guidelines): feedback messages with status-specific icons and recovery context (Zackisch intentionally uses only Error red).
+
+**Implementation reminder:** Real-world accessibility compliance depends on rendered markup and user flows, not just brand guidance. This specification should be treated as testable design requirements, not an audit certificate.

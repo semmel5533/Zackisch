@@ -36,7 +36,7 @@ export function SupportShell({
               className="flex items-center gap-3 text-foreground no-underline"
             >
               <img
-                src="/zackisch/brand-mark.svg"
+                src="https://zackisch.com/brand/logo/lockups/signet--transparent--standard.svg"
                 alt="Zackisch"
                 className="size-7 rounded shrink-0"
               />

@@ -144,8 +144,8 @@ export function StaffSessionCard({
                 style: "square",
               }}
               imageSettings={{
-                src: "/combination_mark_qr.png",
-                height: 42,
+                src: "https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard--600w.png",
+                height: (133 * 183) / 600,
                 width: 133,
                 excavate: true,
               }}

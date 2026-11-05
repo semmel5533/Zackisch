@@ -179,7 +179,7 @@ export function AdminLoginForm() {
       <header className="w-full border-b border-[var(--zk-border)] bg-[var(--zk-surface)] px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img
-            src="/zackisch/combination-mark.svg"
+            src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg"
             alt="Zackisch"
             className="h-6 w-auto block"
           />

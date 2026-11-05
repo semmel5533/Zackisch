@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { content, signupUrl, type Locale } from "@/lib/content";
 import { WebsiteShell } from "./website-shell";
@@ -15,25 +16,22 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             <p className="lead">{c.intro}</p>
             <Link className="button button-primary" href={signupUrl}>
               {c.start}
-              <span aria-hidden="true">↗</span>
+              <ArrowUpRight aria-hidden="true" size={20} />
             </Link>
             <p className="hero-note">{c.heroNote}</p>
           </div>
           <figure className="hero-photo">
             <Image
-              src="/media/barista.webp"
+              src="/media/hospitality.webp"
               alt={c.heroAlt}
-              width="1280"
-              height="853"
+              width="2000"
+              height="1164"
+              sizes="(max-width: 899px) 100vw, 92vw"
               fetchPriority="high"
             />
             <figcaption>
-              <Link href="https://commons.wikimedia.org/wiki/File:Barista_prepares_espresso_at_coffee_shop.jpg">
+              <Link href="https://www.pexels.com/photo/delighted-friends-having-lunch-in-cafe-4349791/">
                 {c.photoCredit}
-              </Link>{" "}
-              ·{" "}
-              <Link href="https://creativecommons.org/licenses/by/2.0/">
-                CC BY 2.0
               </Link>
             </figcaption>
           </figure>
@@ -50,7 +48,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             <p className="source">{c.caveat}</p>
             <Link className="inline-link" href={`/${locale}/research`}>
               {c.researchLink}
-              <span aria-hidden="true"> ↗</span>
+              <ArrowUpRight aria-hidden="true" size={18} />
             </Link>
           </aside>
         </section>
@@ -85,15 +83,31 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         </section>
         <section className="hybrid section-space">
           <div className="container hybrid-inner">
-            <Image
-              src="/zackisch/curious.svg"
-              alt=""
-              width="120"
-              height="120"
-              loading="lazy"
-            />
-            <h2>{c.hybridTitle}</h2>
-            <p className="lead">{c.hybridText}</p>
+            <figure className="hospitality-photo">
+              <Image
+                src="/media/conversation.webp"
+                alt={c.conversationAlt}
+                width={1400}
+                height={933}
+                sizes="(max-width: 899px) 100vw, 50vw"
+              />
+              <figcaption>
+                <Link href="https://www.pexels.com/photo/happy-multiracial-friends-having-fun-together-in-cafe-4350223/">
+                  {c.photoCredit}
+                </Link>
+              </figcaption>
+            </figure>
+            <div className="hybrid-copy">
+              <Image
+                src="/brand/logo/lockups/signet--transparent--standard.svg"
+                alt=""
+                width="120"
+                height="120"
+                loading="lazy"
+              />
+              <h2>{c.hybridTitle}</h2>
+              <p className="lead">{c.hybridText}</p>
+            </div>
           </div>
         </section>
         <section className="setup container section-space">
@@ -105,7 +119,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               href={`https://support.zackisch.com/${locale}`}
             >
               {c.setupHelp}
-              <span aria-hidden="true"> ↗</span>
+              <ArrowUpRight aria-hidden="true" size={18} />
             </Link>
           </div>
           <ol className="setup-steps">
@@ -127,7 +141,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               <p>{c.requirements}</p>
               <Link className="inline-link" href={`/${locale}/pricing`}>
                 {c.priceLink}
-                <span aria-hidden="true"> ↗</span>
+                <ArrowUpRight aria-hidden="true" size={18} />
               </Link>
             </div>
           </div>
@@ -141,7 +155,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
           <p className="lead">{c.endText}</p>
           <Link className="button button-primary" href={signupUrl}>
             {c.start}
-            <span aria-hidden="true">↗</span>
+            <ArrowUpRight aria-hidden="true" size={20} />
           </Link>
         </section>
       </main>

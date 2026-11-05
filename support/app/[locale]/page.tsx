@@ -42,7 +42,7 @@ export async function generateMetadata({
       description,
       url: `https://support.zackisch.com/${locale}`,
       siteName: "Zackisch",
-      images: ["/og_image.png"],
+      images: ["https://zackisch.com/brand/logo/social/wordmark--og--citron--1200x630.png"],
       locale: isDe ? "de_DE" : "en_US",
       type: "website",
     },
@@ -50,7 +50,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["/og_image.png"],
+      images: ["https://zackisch.com/brand/logo/social/wordmark--og--citron--1200x630.png"],
     },
     robots: {
       index: true,

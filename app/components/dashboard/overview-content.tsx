@@ -73,7 +73,7 @@ const handlePrint = () => {
 
 function StyledQRCode({ value, size }: { value: string; size: number }) {
   const logoWidth = Math.round((157 * size) / 280);
-  const logoHeight = Math.round((50 * size) / 280);
+  const logoHeight = (logoWidth * 183) / 600;
 
   return (
     <div className="w-full flex items-center justify-center bg-white [&_svg]:w-full [&_svg]:h-auto [&_svg]:block [&_svg]:[shape-rendering:crispEdges]">
@@ -87,7 +87,7 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
         finderPatternOuterSettings={{ color: "#000000", style: "square" }}
         finderPatternInnerSettings={{ color: "#000000", style: "square" }}
         imageSettings={{
-          src: "/combination_mark_qr.png",
+          src: "https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard--600w.png",
           height: logoHeight,
           width: logoWidth,
           excavate: true,
@@ -99,7 +99,7 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
 
 function getInkMetrics(
   text: string,
-  font: string = "700 100px Inter, sans-serif",
+  font: string = "700 100px League Spartan, sans-serif",
 ) {
   if (typeof document === "undefined") {
     const estWidth = Math.max(text.length * 50, 200);
@@ -168,7 +168,7 @@ function InkScaledText({
       if (textRef.current) {
         try {
           const bbox = textRef.current.getBBox();
-          const ink = getInkMetrics(displayText, "700 100px Inter, sans-serif");
+          const ink = getInkMetrics(displayText, "700 100px League Spartan, sans-serif");
           setViewBox(`${bbox.x} ${-ink.ascent} ${bbox.width} ${ink.height}`);
         } catch {}
       }
@@ -192,7 +192,7 @@ function InkScaledText({
         dominantBaseline="alphabetic"
         fill="currentColor"
         className="font-bold tracking-tighter font-inter tabular-nums"
-        style={{ font: "700 100px Inter, sans-serif" }}
+        style={{ font: "700 100px League Spartan, sans-serif" }}
       >
         {displayText}
       </text>
@@ -210,7 +210,7 @@ function InkConnectorText({
   className?: string;
 }) {
   const displayText = text.toLowerCase();
-  const font = `700 ${fontSize}px Inter, sans-serif`;
+  const font = `700 ${fontSize}px League Spartan, sans-serif`;
   const [metrics, setMetrics] = useState(() => ({
     viewBox: `0 -${fontSize} ${displayText.length * fontSize} ${fontSize}`,
     height: fontSize,

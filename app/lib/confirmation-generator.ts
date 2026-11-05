@@ -103,14 +103,12 @@ export function generateOrderConfirmationHtml(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)} - ${isDe ? "Bestellnummer" : "Order number"} ${escapeHtml(order.orderNumber)}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://zackisch.com/brand/fonts/fonts.css" rel="stylesheet">
   <style>
     @page { margin: 15mm; size: portrait; }
     * { box-sizing: border-box; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #111;
       background: #fff;
       margin: 0;
@@ -197,7 +195,7 @@ export function generateOrderConfirmationHtml(
       color: #000;
     }
     .badge-number .num {
-      font-family: 'Inter', sans-serif;
+      font-family: 'League Spartan', sans-serif;
       font-weight: 900;
       font-variant-numeric: tabular-nums;
     }
@@ -233,7 +231,7 @@ export function generateOrderConfirmationHtml(
     }
     .col-qty {
       width: 36px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'League Spartan', sans-serif;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -242,7 +240,7 @@ export function generateOrderConfirmationHtml(
     .col-price {
       width: 90px;
       text-align: right;
-      font-family: 'Inter', sans-serif;
+      font-family: 'League Spartan', sans-serif;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -262,7 +260,7 @@ export function generateOrderConfirmationHtml(
     }
     .total-label { font-size: 16px; font-weight: 700; color: #000; }
     .total-price {
-      font-family: 'Inter', sans-serif;
+      font-family: 'League Spartan', sans-serif;
       font-size: 22px;
       font-weight: 900;
       font-variant-numeric: tabular-nums;
@@ -357,7 +355,7 @@ export function generateOrderConfirmationHtml(
       tipCents > 0
         ? `<div class="sub-row">
             <span>${isDe ? "Freiwilliges Trinkgeld" : "Voluntary tip"}</span>
-            <span style="font-family:'Inter',sans-serif;font-weight:700;">${formatCents(tipCents)} €</span>
+            <span style="font-family:'League Spartan',sans-serif;font-weight:700;">${formatCents(tipCents)} €</span>
           </div>`
         : ""
     }

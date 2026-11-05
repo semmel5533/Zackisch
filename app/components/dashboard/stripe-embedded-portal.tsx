@@ -100,11 +100,12 @@ export function StripeEmbeddedPortal({
         publishableKey: pk,
         fetchClientSecret,
         locale: isDe ? "de-DE" : "en-US",
+        fonts: [{ cssSrc: "https://zackisch.com/brand/fonts/fonts.css" }],
         appearance: {
           overlays: "dialog",
           variables: {
             colorPrimary: "#000000",
-            fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontFamily: "League Spartan, -apple-system, BlinkMacSystemFont, sans-serif",
             borderRadius: "12px",
           },
         },

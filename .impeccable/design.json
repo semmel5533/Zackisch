@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T22:46:23.470468+00:00",
+  "title": "Zackisch — Brand & Product Design System",
+  "extensions": {
+    "colorMeta": {
+      "citron": {
+        "role": "primary",
+        "displayName": "Electric Citron",
+        "tonalRamp": [
+          "#1E2B00",
+          "#354A00",
+          "#506E00",
+          "#79A800",
+          "#9FD600",
+          "#C6FF34",
+          "#DEFF8C",
+          "#F7FFDF"
+        ]
+      },
+      "black": {
+        "role": "neutral",
+        "displayName": "Black"
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White"
+      },
+      "error": {
+        "role": "error",
+        "displayName": "Error red"
+      }
+    },
+    "typographyMeta": {
+      "marketing-display": {
+        "displayName": "Public website hero",
+        "purpose": "Public root marketing only; operational UI retains its own scale."
+      },
+      "marketing-display-mobile": {
+        "displayName": "Mobile public website hero",
+        "purpose": "Widths through 599px."
+      },
+      "marketing-headline": {
+        "displayName": "Public website section heading",
+        "purpose": "Explanatory marketing sections, never operational dashboards or checkout."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog",
+        "value": "0 16px 50px rgba(0,0,0,.10)",
+        "purpose": "Modal elevation; marketing sections remain flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-fast",
+        "value": "120ms",
+        "purpose": "Existing primary and secondary button color transitions."
+      },
+      {
+        "name": "faq-toggle",
+        "value": "180ms ease-out",
+        "purpose": "FAQ disclosure icon rotation."
+      },
+      {
+        "name": "photo-open",
+        "value": "view(); entry 0% cover 35%",
+        "purpose": "Supported desktop browsers only; visible photo clipping from 5% inset to none. Disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "marketing-compact",
+        "value": "599px"
+      },
+      {
+        "name": "marketing-single-column",
+        "value": "899px"
+      },
+      {
+        "name": "marketing-narrow-desktop",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Marketing primary action",
+      "kind": "button",
+      "refersTo": "marketing-button-primary",
+      "description": "One dominant registration or task action.",
+      "html": "<button class=\"ds-control ds-primary\">Lokal einrichten</button>",
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; }"
+    },
+    {
+      "name": "Marketing secondary action",
+      "kind": "button",
+      "refersTo": "marketing-button-secondary",
+      "description": "Secondary controls such as mobile navigation and dialog dismissal.",
+      "html": "<button class=\"ds-control ds-secondary\">Menü öffnen</button>",
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; }"
+    },
+    {
+      "name": "Product image placeholder",
+      "kind": "card",
+      "refersTo": "marketing-placeholder",
+      "description": "Honest text description while a genuine product capture is unavailable.",
+      "html": "<figure class=\"ds-placeholder\"><p>Hier erscheint: Gäste-Menü</p><span>Platzhalter · Produktaufnahme folgt</span></figure>",
+      "css": ".ds-placeholder { margin:0; padding:32px; border-radius:20px; background:var(--zk-color-semantic-background-brand-subtle, #f7ffdf); color:var(--zk-text, #000); text-align:center; font-family:\"League Spartan\", Arial, sans-serif; } .ds-placeholder p { font-size:24px; font-weight:600; } .ds-placeholder span { font-size:14px; }"
+    },
+    {
+      "name": "Public navigation link",
+      "kind": "nav",
+      "description": "Visible text navigation with an underline on hover and a distinct keyboard outline.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Hauptnavigation\"><a href=\"#kosten\">Kosten</a><a href=\"#hilfe\">Hilfe</a></nav>",
+      "css": ".ds-nav { display:flex; gap:32px; font-family:\"League Spartan\", Arial, sans-serif; } .ds-nav a { color:var(--zk-text, #000); padding:12px 0; font-weight:600; text-decoration:none; } .ds-nav a:hover { text-decoration:underline; text-underline-offset:.2em; } .ds-nav a:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
+    },
+    {
+      "name": "Inline explanatory link",
+      "kind": "custom",
+      "description": "A secondary text destination within explanatory content.",
+      "html": "<a class=\"ds-inline-link\" href=\"#gebuehren\">Gebühren und Voraussetzungen ansehen</a>",
+      "css": ".ds-inline-link { display:inline-flex; align-items:center; padding:12px 0; font:600 16px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-link, #000); text-underline-offset:.2em; } .ds-inline-link:hover { text-decoration-thickness:2px; } .ds-inline-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Human service, without unnecessary waiting.",
+    "overview": "Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. The restaurant keeps its POS and service choices; guests do not need an app/account.",
+    "keyCharacteristics": [
+      "League Spartan across marketing and app.",
+      "Unchanged black wordmark and signet.",
+      "White, black and Electric Citron."
+    ],
+    "rules": [
+      {
+        "name": "The Marketing Scope Rule",
+        "body": "Larger display typography belongs to the public website's explanatory hierarchy; keep the operational UI scale unchanged.",
+        "section": "typography"
+      },
+      {
+        "name": "The Visible Motion Rule",
+        "body": "Scroll enhancements begin from visible content.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "Use only real stock photographs from the internet with verified free rights for the intended commercial use.",
+      "Keep product image areas clearly text-labelled until actual screenshots are available."
+    ],
+    "donts": [
+      "Never generate photographs with AI.",
+      "Never recolor or recreate the supplied logo artwork.",
+      "Never invent screenshots, endorsements or commercial claims."
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "module",
   "private": true,
   "scripts": {
@@ -14,11 +14,7 @@
     "dev:cloudflare": "vinext dev",
     "build:cloudflare": "vinext build",
     "check:cloudflare": "vinext-cloudflare deploy --dry-run",
-    "deploy:cloudflare": "vinext-cloudflare deploy",
-    "predev": "node ../scripts/sync-brand-assets.mjs root",
-    "prebuild": "node ../scripts/sync-brand-assets.mjs root",
-    "prebuild:cloudflare": "node ../scripts/sync-brand-assets.mjs root",
-    "predev:cloudflare": "node ../scripts/sync-brand-assets.mjs root"
+    "deploy:cloudflare": "vinext-cloudflare deploy"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

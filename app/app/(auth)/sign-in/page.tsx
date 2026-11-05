@@ -107,7 +107,7 @@ function OtpForm({ state }: { state: any }) {
     <Card className="w-full flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <img
-          src="/combination_mark.svg"
+          src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg"
           alt="Zackisch"
           style={{ height: 28, width: "auto" }}
         />
@@ -257,7 +257,7 @@ function SignInForm({
     <Card className="w-full flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <img
-          src="/combination_mark.svg"
+          src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg"
           alt="Zackisch"
           style={{ height: 28, width: "auto" }}
         />

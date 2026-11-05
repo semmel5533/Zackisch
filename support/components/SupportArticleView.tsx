@@ -77,7 +77,7 @@ export function SupportArticleView({
       url: "https://zackisch.com",
       logo: {
         "@type": "ImageObject",
-        url: "/combination_mark.svg",
+        url: "https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg",
       },
     },
   };

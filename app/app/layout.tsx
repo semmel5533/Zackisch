@@ -11,15 +11,15 @@ export const metadata: Metadata = {
   },
   description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
   icons: {
-    icon: "/brand_mark_512.png",
-    apple: "/apple-touch-icon.png",
+    icon: "https://zackisch.com/brand/logo/platform/signet--pwa--512.png",
+    apple: "https://zackisch.com/brand/logo/platform/signet--apple-touch--180.png",
   },
   openGraph: {
     title: "Zackisch",
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
     url: "https://app.zackisch.com",
     siteName: "Zackisch",
-    images: ["https://zackisch.com/og_image.png"],
+    images: ["https://zackisch.com/brand/logo/social/wordmark--og--citron--1200x630.png"],
     locale: "de_DE",
     type: "website",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Zackisch",
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
-    images: ["https://zackisch.com/og_image.png"],
+    images: ["https://zackisch.com/brand/logo/social/wordmark--og--citron--1200x630.png"],
   },
   robots: {
     index: false,

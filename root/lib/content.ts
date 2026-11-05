@@ -44,11 +44,11 @@ export const content = {
       "Gäste bestellen und bezahlen per QR-Code. Dein Team behält den Überblick, deine bestehende Kasse bleibt. 2 % Zackisch-Gebühr plus Stripe-Gebühren.",
     hero: "Guter Service. Ein Bestellweg mehr.",
     intro:
-      "Gäste bestellen und bezahlen direkt am Smartphone. Dein Team sieht die bezahlten Aufträge auf dem Tablet. Und deine Kasse bleibt, wo sie ist.",
+      "Gäste scannen den QR-Code und bestellen und bezahlen direkt am Smartphone. Dein Team sieht die bezahlten Aufträge auf dem Tablet. Und deine Kasse bleibt, wo sie ist.",
     heroNote: "Für Cafés, Bars und alle, die gern Gastgeber sind.",
-    heroAlt: "Ein Barista bereitet an einer Espressomaschine Kaffee zu.",
+    heroAlt: "Eine Servicekraft begrüßt zwei Gäste beim Essen im Café.",
     photoCredit:
-      "Foto: Shixart1985 · verkleinert. Symbolbild, kein Zackisch-Kundenlokal.",
+      "Stockfoto: Ketut Subiyanto / Pexels. Kein Zackisch-Kundenlokal.",
     problemTitle: "Noch eine Runde. Ohne noch einmal zu winken.",
     problemText:
       "Ein Getränk nachbestellen, das Menü in Ruhe ansehen oder bezahlen: Gäste können selbst entscheiden, wann sie den digitalen Bestellweg nutzen. Für Fragen und persönlichen Service bleibt dein Team da.",
@@ -79,13 +79,14 @@ export const content = {
       },
       {
         title: "Zubereiten & erfassen",
-        text: "Nach serverseitig bestätigter Zahlung erscheint der Auftrag beim Personal. Dein Team bereitet ihn zu und erfasst ihn einmal in eurer Kasse.",
+        text: "Nach bestätigter Zahlung erscheint der Auftrag beim Personal. Dein Team bereitet ihn zu und erfasst ihn einmal in eurer Kasse.",
         placeholder: "Hier erscheint: Personal-Tablet",
         detail:
           "Echte Personalansicht mit bezahltem Auftrag und separater Kassenerfassung.",
       },
     ],
-    placeholderNote: "Produktaufnahme folgt",
+    placeholderNote: "Platzhalter · Produktaufnahme folgt",
+    conversationAlt: "Freunde lachen gemeinsam an einem Tisch im Café.",
     hybridTitle: "Gastfreundschaft bleibt persönlich.",
     hybridText:
       "QR-Bestellen ist eine Möglichkeit. Wer lieber persönlich bestellt, wendet sich weiterhin an dein Team. Bestehende Kasse, persönliche Beratung und gewohnter Service bleiben Teil deines Lokals.",
@@ -236,11 +237,11 @@ export const content = {
       "Guests order and pay by QR code. Your team keeps track and your existing POS stays. 2% Zackisch fee plus Stripe fees.",
     hero: "Good service. One more way to order.",
     intro:
-      "Guests order and pay on their phones. Your team sees paid orders on a tablet. And your existing POS stays right where it is.",
+      "Guests scan the QR code to order and pay on their phones. Your team sees paid orders on a tablet. And your existing POS stays right where it is.",
     heroNote: "For cafés, bars and people who love hosting.",
-    heroAlt: "A barista prepares coffee at an espresso machine.",
+    heroAlt: "A member of the café team welcomes two guests over lunch.",
     photoCredit:
-      "Photo: Shixart1985 · resized. Illustrative photo, not a Zackisch customer venue.",
+      "Stock photo: Ketut Subiyanto / Pexels. Not a Zackisch customer venue.",
     problemTitle: "Another round. Without waving again.",
     problemText:
       "Ordering a drink, browsing the menu or paying: guests choose when to use the digital option. Your team is still there for questions and personal service.",
@@ -276,7 +277,8 @@ export const content = {
           "An actual staff view showing a paid order and separate POS recording status.",
       },
     ],
-    placeholderNote: "Product image to follow",
+    placeholderNote: "Placeholder · Product image to follow",
+    conversationAlt: "Friends laughing together around a café table.",
     hybridTitle: "Hospitality stays personal.",
     hybridText:
       "QR ordering is an option. Guests who prefer ordering in person can still turn to your team. Your existing POS, personal advice and familiar service remain part of your venue.",

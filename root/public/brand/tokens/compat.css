@@ -1,0 +1,47 @@
+/* Compatibility for existing components; all colors alias canonical tokens. */
+:root {
+  --zk-font-ui: var(--zk-typography-font-family-base);
+  --zk-white: var(--zk-color-ref-white);
+  --zk-black: var(--zk-color-ref-black);
+  --zk-neutral-900: var(--zk-color-ref-gray-900);
+  --zk-neutral-700: var(--zk-color-ref-gray-600);
+  --zk-neutral-500: var(--zk-color-ref-gray-500);
+  --zk-neutral-200: var(--zk-color-ref-gray-200);
+  --zk-neutral-100: var(--zk-color-ref-gray-100);
+  --zk-off-white: var(--zk-color-ref-white);
+  --zk-cobalt: var(--zk-color-ref-black);
+  --zk-light-blue: var(--zk-color-ref-citron-100);
+  --zk-page: var(--zk-color-semantic-background-canvas);
+  --zk-surface: var(--zk-color-semantic-surface-default);
+  --zk-surface-muted: var(--zk-color-semantic-surface-subtle);
+  --zk-text: var(--zk-color-semantic-text-primary);
+  --zk-text-body: var(--zk-color-semantic-text-primary);
+  --zk-text-secondary: var(--zk-color-semantic-text-secondary);
+  --zk-border: var(--zk-color-semantic-border-default);
+  --zk-border-strong: var(--zk-color-semantic-border-strong);
+  --zk-action: var(--zk-color-semantic-action-primary);
+  --zk-action-fg: var(--zk-color-semantic-action-primary-label);
+  --zk-link: var(--zk-color-semantic-text-link);
+  --zk-focus: var(--zk-color-semantic-border-focus);
+  --zk-success-text: var(--zk-color-ref-black);
+  --zk-success-bg: var(--zk-color-ref-gray-100);
+  --zk-warning-text: var(--zk-color-ref-black);
+  --zk-warning-bg: var(--zk-color-ref-gray-100);
+  --zk-error-text: var(--zk-color-ref-error);
+  --zk-error-bg: var(--zk-color-ref-white);
+  --zk-info-bg: var(--zk-color-ref-gray-100);
+  --zk-control-sm: var(--zk-size-control-sm);
+  --zk-control-md: var(--zk-size-control-md);
+  --zk-control-lg: var(--zk-size-control-lg);
+  --zk-touch-min: var(--zk-size-touch-target);
+  --zk-stroke-ui: var(--zk-stroke-strong);
+  --zk-duration-fast: var(--zk-motion-duration-fast);
+  --zk-duration-standard: var(--zk-motion-duration-standard);
+  --zk-duration-slow: var(--zk-motion-duration-slow);
+  --zk-space-16: 64px;
+  --zk-space-20: 80px;
+  --zk-space-24: 96px;
+  --zk-space-32: 128px;
+  --zk-ease: cubic-bezier(.2,.8,.2,1);
+  --zk-shadow-dialog: 0 16px 50px rgba(0,0,0,.10);
+}

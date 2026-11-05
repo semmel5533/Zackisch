@@ -1,0 +1,596 @@
+{
+  "version": "1.3",
+  "brand": "Zackisch",
+  "generated_from": [
+    "original/signet.svg",
+    "original/wordmark.svg"
+  ],
+  "logo_color": "#000000",
+  "allowed_backgrounds": {
+    "transparent": null,
+    "white": "#FFFFFF",
+    "citron": "#C6FF34"
+  },
+  "padding_policy": {
+    "original-tight": "0 / unverändert",
+    "standard": "Signet ca. 14% pro Seite; Wordmark 0.35× Worthöhe pro Seite",
+    "spacious": "Signet ca. 21% pro Seite; Wordmark 0.85× Worthöhe pro Seite"
+  },
+  "file_count": 48,
+  "assets": [
+    {
+      "file": "lockups/signet--citron--spacious--1024w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "sha256": "2a89fd9243e13a1bc7c2a90b4ca50dacf51b19c4e62a0f2b164cd929e832a3c1"
+    },
+    {
+      "file": "lockups/signet--citron--spacious--256w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        256,
+        256
+      ],
+      "sha256": "a1f1ac7bc0f7b3ac5daf7b38448073fa8a9f71b40c718353b2192d47f672e8a3"
+    },
+    {
+      "file": "lockups/signet--citron--spacious.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "spacious",
+      "format": "svg",
+      "sha256": "a022ea7e70e29475c03de3e81d2ae1f27f7fc6c8240b0d29f78d37e6f078e1b5"
+    },
+    {
+      "file": "lockups/signet--citron--standard--1024w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "sha256": "869599bff8b1fef13fd3575cfa083f551d7dcb214440d316218024fc8a8ef196"
+    },
+    {
+      "file": "lockups/signet--citron--standard--256w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        256,
+        256
+      ],
+      "sha256": "19d324e381c3cc35ad5a1ec1a022d77a2f9ab64a33a71d1b7ef417d60130f340"
+    },
+    {
+      "file": "lockups/signet--citron--standard.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "standard",
+      "format": "svg",
+      "sha256": "bd66d40990d7662c17b4db0831d177f7a1d9d64cfc759034db5cf02fec093b2b"
+    },
+    {
+      "file": "lockups/signet--transparent--spacious--1024w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "transparent",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "sha256": "1aa28a908ce66d8a20437a3ede87e6c76e47bdd21afa7f7e6ee4651f7c7227b1"
+    },
+    {
+      "file": "lockups/signet--transparent--spacious--256w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "transparent",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        256,
+        256
+      ],
+      "sha256": "58fedb4ccc5789d46f6ba1d785ec8def17200fa12a06faf91c9879d2e4a8b575"
+    },
+    {
+      "file": "lockups/signet--transparent--spacious.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "signet",
+      "background": "transparent",
+      "padding": "spacious",
+      "format": "svg",
+      "sha256": "1eddc3ab30ce7e94999e52c7e332ccae80a2b84ec89909b6d4f19b1a5468b4e5"
+    },
+    {
+      "file": "lockups/signet--transparent--standard--1024w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "transparent",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "sha256": "976821c9bf41db2ebaf90a508264079b27e2e57e9fbf99307529b0a2fa4b3014"
+    },
+    {
+      "file": "lockups/signet--transparent--standard--256w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "transparent",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        256,
+        256
+      ],
+      "sha256": "999acc31d306d92a7c58bfb9b362d9436d9494479561d5a6f80e5cd7514763d4"
+    },
+    {
+      "file": "lockups/signet--transparent--standard.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "signet",
+      "background": "transparent",
+      "padding": "standard",
+      "format": "svg",
+      "sha256": "45cefcdd7ea1218e4634963e7a48a7dc9caedea09732e8c0d7afd473e6638d0c"
+    },
+    {
+      "file": "lockups/signet--white--spacious--1024w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "white",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "sha256": "011c6cc2f657468be062a7aa55059b1149619ae1660700c7f7824cf415f67f97"
+    },
+    {
+      "file": "lockups/signet--white--spacious--256w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "white",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        256,
+        256
+      ],
+      "sha256": "2d4dfc0f945bdea99be6b4e6f6b08bd2d1a9d12fc400cb5daa34fe2f04c78b2a"
+    },
+    {
+      "file": "lockups/signet--white--spacious.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "signet",
+      "background": "white",
+      "padding": "spacious",
+      "format": "svg",
+      "sha256": "e096e944675dbc7bdd9e1e868412685e025d3504c755bdb77be933a3fb1b790b"
+    },
+    {
+      "file": "lockups/signet--white--standard--1024w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "white",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "sha256": "79f4f204292fde345039c0f50afb2c979c2348c2051e14fcc256ad3584b78035"
+    },
+    {
+      "file": "lockups/signet--white--standard--256w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "signet",
+      "background": "white",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        256,
+        256
+      ],
+      "sha256": "13ca941bb2f94600ce98217c3a10ec73f7b0022cfb062712fa348ff769b1eea8"
+    },
+    {
+      "file": "lockups/signet--white--standard.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "signet",
+      "background": "white",
+      "padding": "standard",
+      "format": "svg",
+      "sha256": "be1566a74563dd410217366857363a7d52f5cee1f9f774c3afbd5003cf839e0b"
+    },
+    {
+      "file": "lockups/wordmark--citron--spacious--1200w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "citron",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        1200,
+        492
+      ],
+      "sha256": "d0035be75419559c950882e1fa77bf8cf239710306998b85e721e99a2cb726f2"
+    },
+    {
+      "file": "lockups/wordmark--citron--spacious--600w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "citron",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        600,
+        246
+      ],
+      "sha256": "acdbb2f35a70790df334b107bc1ef2f30cadc216cfdc8798b8d95b52c4c09e0f"
+    },
+    {
+      "file": "lockups/wordmark--citron--spacious.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "wordmark",
+      "background": "citron",
+      "padding": "spacious",
+      "format": "svg",
+      "sha256": "bda87457caa3e0f0df09f62d0dd75cd7213347967380db0e30ef04944026eab4"
+    },
+    {
+      "file": "lockups/wordmark--citron--standard--1200w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "citron",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        1200,
+        365
+      ],
+      "sha256": "c611d2fef895f821e378ceb81f1ff2f2fe647fb68f0e0cafb3b1d82183c63b7f"
+    },
+    {
+      "file": "lockups/wordmark--citron--standard--600w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "citron",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        600,
+        183
+      ],
+      "sha256": "52dd833457313bd15e1c471254781fbd371adab6a497b750ab364f51b5f7366a"
+    },
+    {
+      "file": "lockups/wordmark--citron--standard.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "wordmark",
+      "background": "citron",
+      "padding": "standard",
+      "format": "svg",
+      "sha256": "c59bcd736637116aa4b35b765344d806bed7924f5dcb3500e7867dddeab6f439"
+    },
+    {
+      "file": "lockups/wordmark--transparent--spacious--1200w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "transparent",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        1200,
+        492
+      ],
+      "sha256": "f32934ac3fab37eb671b4c879c24ccc6c9e60e81a9b9decf8d545d2a44ba6bf2"
+    },
+    {
+      "file": "lockups/wordmark--transparent--spacious--600w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "transparent",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        600,
+        246
+      ],
+      "sha256": "6d01183c0da8eef190c98e29534ee9f28c5a9b64cf37dbd05aea5fd967ed9886"
+    },
+    {
+      "file": "lockups/wordmark--transparent--spacious.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "wordmark",
+      "background": "transparent",
+      "padding": "spacious",
+      "format": "svg",
+      "sha256": "6f3564121c3aa46cd099a77c88bcc8baca07c360d5e16ca3e49e9d737c224103"
+    },
+    {
+      "file": "lockups/wordmark--transparent--standard--1200w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "transparent",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        1200,
+        365
+      ],
+      "sha256": "70612619f79dfaff005e0cd75111ee3a8dfac7f99867d380fcfba252e656b293"
+    },
+    {
+      "file": "lockups/wordmark--transparent--standard--600w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "transparent",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        600,
+        183
+      ],
+      "sha256": "f85129136338996795dd323d6b88769c95077df0984ff4236b51669724da6acc"
+    },
+    {
+      "file": "lockups/wordmark--transparent--standard.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "wordmark",
+      "background": "transparent",
+      "padding": "standard",
+      "format": "svg",
+      "sha256": "a36e1ca3d3a4d10da52013a181621be172b0261915e0662104bf80f6569fa4cb"
+    },
+    {
+      "file": "lockups/wordmark--white--spacious--1200w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "white",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        1200,
+        492
+      ],
+      "sha256": "635968d1f91964306eeee7e074c0b23c8232ae5bed9e5c9c4cae53abedf5224a"
+    },
+    {
+      "file": "lockups/wordmark--white--spacious--600w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "white",
+      "padding": "spacious",
+      "format": "png",
+      "pixels": [
+        600,
+        246
+      ],
+      "sha256": "eb3e6651c9b0cbecf5a64b3e5ab7fe40e4764ef7f9fd658fe5b0f1a1fa70975a"
+    },
+    {
+      "file": "lockups/wordmark--white--spacious.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "wordmark",
+      "background": "white",
+      "padding": "spacious",
+      "format": "svg",
+      "sha256": "604954db167d20497d094a795c427d1569ef5bbe4c11556408d6ced0b435fc47"
+    },
+    {
+      "file": "lockups/wordmark--white--standard--1200w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "white",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        1200,
+        365
+      ],
+      "sha256": "95e2c1face4e938910c4bb6ef8cac5983619a308f0e55920beb58ccff6ad9498"
+    },
+    {
+      "file": "lockups/wordmark--white--standard--600w.png",
+      "use": "Bitmap-Fallback für feste Content-/Exportgrößen",
+      "mark": "wordmark",
+      "background": "white",
+      "padding": "standard",
+      "format": "png",
+      "pixels": [
+        600,
+        183
+      ],
+      "sha256": "71dfc362f336fb0ac05d6a1579d00068bbe6ad1294798d6afb466b6c3aeb989d"
+    },
+    {
+      "file": "lockups/wordmark--white--standard.svg",
+      "use": "Skalierbares Website-/Dokumentenlogo, wiederverwendbar im Layout",
+      "mark": "wordmark",
+      "background": "white",
+      "padding": "standard",
+      "format": "svg",
+      "sha256": "294e794aaacb89f7855bcf40ccdbd801ed5ddbe3c83db99c33c156542de3ade6"
+    },
+    {
+      "file": "original/signet.svg",
+      "use": "Unverändertes Original: transparent und ohne Padding",
+      "mark": "signet",
+      "background": "transparent",
+      "padding": "original-tight",
+      "format": "svg",
+      "sha256": "a941c6e57c384f8b8118e7ed76745b39caaecbbc1573c16ea95a60a83633eb48"
+    },
+    {
+      "file": "original/wordmark.svg",
+      "use": "Unverändertes Original: transparent und ohne Padding",
+      "mark": "wordmark",
+      "background": "transparent",
+      "padding": "original-tight",
+      "format": "svg",
+      "sha256": "de379007901a447273624ae86b05e89670e9964423e85ce36bb3f204dab65852"
+    },
+    {
+      "file": "platform/signet--apple-touch--180.png",
+      "use": "iOS Home-Screen / Apple touch icon",
+      "mark": "signet",
+      "background": "#C6FF34",
+      "padding": "platform-safe",
+      "format": "png",
+      "pixels": [
+        180,
+        180
+      ],
+      "sha256": "25661ffe5ec2b05ffe95632569146ca05fb20dc0708fe24cfba58f2241fd0a9b",
+      "corners": "os-masked-full-bleed"
+    },
+    {
+      "file": "platform/signet--favicon--32.png",
+      "use": "32px Browser-Fallback — stark gerundete Citron-Kachel (28% Radius), transparente Ecken",
+      "mark": "signet",
+      "background": "#C6FF34",
+      "padding": "favicon 10%",
+      "format": "png",
+      "pixels": [
+        32,
+        32
+      ],
+      "sha256": "114d76f8e917a62dbe0be559047f1bce1ee2dd64accd396811276018872d3a56",
+      "corners": "rounded-28pct-alpha"
+    },
+    {
+      "file": "platform/signet--favicon.ico",
+      "use": "Favicon-Kompatibilität für ICO-basierte Clients — stark gerundete Citron-Kachel (28% Radius), transparente Ecken",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "favicon 10%",
+      "format": "ico",
+      "sha256": "ab98a88270ca72508f1d39041dc896e53865cb313bb275842a1b263c1187a68d",
+      "corners": "rounded-28pct-alpha"
+    },
+    {
+      "file": "platform/signet--favicon.svg",
+      "use": "Skalierbares Browser-Favicon — stark gerundete Citron-Kachel (28% Radius), transparente Ecken",
+      "mark": "signet",
+      "background": "citron",
+      "padding": "favicon 10%",
+      "format": "svg",
+      "sha256": "374b5ff82eb440ce3ac5c481c8159566e389f5f1f02572b290192d8733a8b29d",
+      "corners": "rounded-28pct-alpha"
+    },
+    {
+      "file": "platform/signet--pwa--192.png",
+      "use": "PWA Manifest purpose=any — abgerundete Kachel, echte transparente Ecken (purpose=any)",
+      "mark": "signet",
+      "background": "#C6FF34",
+      "padding": "platform-safe",
+      "format": "png",
+      "pixels": [
+        192,
+        192
+      ],
+      "sha256": "cb88349317052f27e5069e8d7c22ff6f22c7a119272be7470720111d0a41e873",
+      "corners": "rounded-28pct-alpha"
+    },
+    {
+      "file": "platform/signet--pwa--512.png",
+      "use": "PWA Manifest purpose=any — abgerundete Kachel, echte transparente Ecken (purpose=any)",
+      "mark": "signet",
+      "background": "#C6FF34",
+      "padding": "platform-safe",
+      "format": "png",
+      "pixels": [
+        512,
+        512
+      ],
+      "sha256": "faf6af2185874813083fe36fb94417bc08a3961a3055284e035e7ad867f26235",
+      "corners": "rounded-28pct-alpha"
+    },
+    {
+      "file": "platform/signet--pwa-maskable--512.png",
+      "use": "PWA Manifest purpose=maskable; symbol inside safe circle",
+      "mark": "signet",
+      "background": "#C6FF34",
+      "padding": "maskable 21%",
+      "format": "png",
+      "pixels": [
+        512,
+        512
+      ],
+      "sha256": "2afe738a321385b791653bbce1cb389e47ff4af582f1e25d91a55ce29922a535",
+      "corners": "os-masked-full-bleed"
+    },
+    {
+      "file": "social/signet--avatar--400.png",
+      "use": "Social-Media-Profilbild; mittig und rund crop-safe",
+      "mark": "signet",
+      "background": "#C6FF34",
+      "padding": "avatar-circle-safe",
+      "format": "png",
+      "pixels": [
+        400,
+        400
+      ],
+      "sha256": "50bca579af3da6215fe40ae892536b543fffb660b5d468c882c6404c3b141c3f"
+    },
+    {
+      "file": "social/wordmark--og--citron--1200x630.png",
+      "use": "Open Graph / große Linkvorschau (auch X/Twitter) – ausschließlich Wordmark",
+      "mark": "wordmark",
+      "background": "citron",
+      "padding": "og-centered",
+      "format": "png",
+      "pixels": [
+        1200,
+        630
+      ],
+      "sha256": "4edb28534c9c6e0dbdea627f850346847e39e011c00b81112869bbe89f65261c"
+    },
+    {
+      "file": "social/wordmark--og--white--1200x630.png",
+      "use": "Open Graph / große Linkvorschau (auch X/Twitter) – ausschließlich Wordmark",
+      "mark": "wordmark",
+      "background": "white",
+      "padding": "og-centered",
+      "format": "png",
+      "pixels": [
+        1200,
+        630
+      ],
+      "sha256": "d35fb9cfbbddef79d001469bfb88878524d026ffa55198ca29ef10b603bbd653"
+    }
+  ],
+  "platform_icon_corners": {
+    "favicon": "28% corner radius, Citron tile with true transparent exterior; SVG, 32px PNG, 16/32/48 ICO",
+    "pwa_any": "28% corner radius, transparent outer pixels; manifest purpose=any",
+    "apple_touch": "Full-bleed opaque Citron square; Apple applies platform-standard rounded mask",
+    "pwa_maskable": "Full-bleed opaque Citron square, centered logo in safe zone; OS applies adaptive mask",
+    "social_avatar": "Square background, centered circle-safe signet; social app controls crop"
+  }
+}

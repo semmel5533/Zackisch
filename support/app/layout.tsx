@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   description:
     "Schritt-für-Schritt-Anleitungen zur Einrichtung, Kassen-Erfassung (POS), Stripe Connect Direktzahlungen und QR-Bestellungen bei Zackisch.",
   icons: {
-    icon: "/brand_mark_512.png",
-    apple: "/apple-touch-icon.png",
+    icon: "https://zackisch.com/brand/logo/platform/signet--pwa--512.png",
+    apple: "https://zackisch.com/brand/logo/platform/signet--apple-touch--180.png",
   },
 };
 

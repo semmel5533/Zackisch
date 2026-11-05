@@ -1676,9 +1676,9 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     },
     summary: {
       "de-de":
-        "Warum Zackisch im Gäste-Menü ohne Werbe-Tracker arbeitet und Schriftarten (Inter) lokal ausliefert.",
+        "Warum Zackisch im Gäste-Menü ohne Werbe-Tracker arbeitet und League Spartan über die eigene Zackisch-Website ausliefert.",
       "de-en":
-        "Why Zackisch operates without ad trackers in the guest menu and serves fonts (Inter) locally.",
+        "Why Zackisch operates without ad trackers in the guest menu and serves League Spartan from the Zackisch website.",
     },
     prerequisites: {
       "de-de": ["Keine"],

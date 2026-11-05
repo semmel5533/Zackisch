@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Plus } from "@phosphor-icons/react";
 import { Accordion } from "@base-ui/react/accordion";
 import { Dialog } from "@base-ui/react/dialog";
 import type { Copy } from "@/lib/content";
@@ -13,7 +14,7 @@ export function Faq({ items }: { items: Copy["faqs"] }) {
           <Accordion.Header>
             <Accordion.Trigger className="faq-trigger">
               {item.question}
-              <span aria-hidden="true">+</span>
+              <Plus aria-hidden="true" size={20} />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Panel className="faq-panel">

@@ -190,7 +190,7 @@ export function AdminShell({ children }: AdminShellProps) {
           <div className="flex items-center justify-between gap-2 px-5 py-4 border-b border-[var(--zk-border)]">
             <Link href={defaultRoute} className="inline-flex items-center gap-2">
               <img
-                src="/zackisch/combination-mark.svg"
+                src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg"
                 alt="Zackisch"
                 className="h-6 w-auto block"
               />

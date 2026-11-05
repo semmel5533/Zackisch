@@ -1,14 +1,16 @@
 # Team Dashboard — agent rules
 
-Visual contract: follow `../DESIGN.md`, Base UI primitives, Zackisch wrappers and canonical tokens, with Inter for UI. Existing layouts are not the redesign reference. Preserve the application-specific functional and security rules below.
+Visual contract: follow `../DESIGN.md`, Base UI primitives, Zackisch wrappers and canonical tokens, with League Spartan for UI. Existing layouts are not the redesign reference. Preserve the application-specific functional and security rules below.
 
 Inherit `../AGENTS.md`. Scope: `internal/`; public hostname `internal.zackisch.com`, product name **Team Dashboard**. Keep existing business, order, team, regional admin, partner-ledger, newsletter, email-log, 2FA and audit workflows functional while extending tickets. Maintain strict server-verified staff roles, permissions and region scopes; no broad implicit admin shortcuts. Protect member onboarding, OTP flow, time limits, audit redaction, newsletter unsubscribe compliance and real-payment data.
 
-Ticket replies and internal notes MUST have separate typed operations and backend authorization, not just toggles. Test malicious cross-region ticket IDs, replay, attachment access and accidental note disclosure. Support assignment, queue filtering, status and auditable mutations. Keep interfaces compact and keyboard-operable; ensure destructive actions are confirmed and reversible where possible. No internal dashboards/indexing or sensitive logs exposed publicly. Read `../docs/operations.md` and `../docs/security.md` before touching these flows.
+Ticket replies and internal notes MUST have separate typed operations and backend authorization, not just toggles. Test malicious cross-region ticket IDs, replay, attachment access and accidental note disclosure. Support assignment, queue filtering, status and auditable mutations. Keep interfaces compact and keyboard-operable; ensure destructive actions are confirmed and reversible where possible. No internal dashboards/indexing or sensitive logs exposed publicly. Read the security, operations, recovery and release sections in `../AGENTS.md` before touching these flows.
 
-## Legal, payment and privacy guardrails
+## Shared workflow and release rules
 
-Follow root `AGENTS.md` and canonical `docs/germany-legal-and-regulatory.md`, `docs/privacy-and-data-governance.md`, and `docs/legal-pages-consents-and-contracts.md`. If this application handles checkout, Stripe, merchant registration, tax receipts or billing, also follow `docs/payments-and-stripe.md` and `docs/tax-invoicing-and-fiscalization.md`. Never assume a draft agreement is approved, or publish an unverified legal guarantee. Use the unchanged official Combination Mark and Brand Mark SVG masters referenced in `../DESIGN.md`; Inter is the UI typeface. The decorative Zackisch font is a display prototype, never a replacement for the official logo.
+Inherit `../AGENTS.md`: work on main, mandatory current German/EU legal research for every change, Mobbin references and Impeccable for every UI change, Base UI, Playwright verification, reviewed incremental commits and per-package SemVer. Follow `../DESIGN.md` as the only visual specification. Only free commercially usable real internet stock photos; never AI-generated photography. Product image regions remain explicit text placeholders until actual screenshots exist.
+
+All brand media and fonts are hosted only by `root/public/brand/`; this application uses `https://zackisch.com/brand/...` (root may use its own relative URL). Preserve the payment/POS, privacy, permission, backup and legal contracts in the root instructions. No production/provider effects without required explicit authorization.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

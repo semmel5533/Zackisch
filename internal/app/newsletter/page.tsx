@@ -156,7 +156,8 @@ export default function NewsletterStudioPage() {
 <head>
   <meta charset="utf-8" />
   <style>
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #FAFAF9; margin: 0; padding: 0; color: #000000; }
+    @import url("https://zackisch.com/brand/fonts/fonts.css");
+    body { font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #FAFAF9; margin: 0; padding: 0; color: #000000; }
   </style>
 </head>
 <body style="background-color:#FAFAF9;padding:32px 16px;">
@@ -475,7 +476,7 @@ export default function NewsletterStudioPage() {
               <Card padding="lg">
                 <div className="flex flex-col gap-4">
                   <img
-                    src="/zackisch/combination-mark.svg"
+                    src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg"
                     alt="Zackisch"
                     className="h-7 w-auto block self-start"
                   />

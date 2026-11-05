@@ -90,7 +90,7 @@ export function DashboardShell({
         <div className="flex items-center justify-between gap-3 px-2 pt-1">
           <div className="flex items-center gap-3 min-w-0">
             <img
-              src="/icon.svg"
+              src="https://zackisch.com/brand/logo/lockups/signet--transparent--standard.svg"
               alt="Zackisch"
               className="w-7 h-7 rounded-md shrink-0"
             />

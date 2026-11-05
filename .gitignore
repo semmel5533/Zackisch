@@ -62,11 +62,6 @@ node_modules/
 .e2e/logs/
 .e2e/videos/
 
-# Generated copies of the canonical brand masters (scripts/sync-brand-assets.mjs)
-/root/public/zackisch/
-/app/public/zackisch/
-/support/public/zackisch/
-/internal/public/zackisch/
 
 # Per-application E2E runner artifacts
 **/.e2e/

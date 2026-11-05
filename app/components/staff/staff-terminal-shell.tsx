@@ -122,7 +122,7 @@ export function StaffTerminalShell({
             {mobileMenuOpen ? <X className="size-5" /> : <List className="size-5" />}
           </button>
           <img
-            src="/icon.svg"
+            src="https://zackisch.com/brand/logo/lockups/signet--transparent--standard.svg"
             alt="Zackisch"
             className="size-6 rounded shrink-0"
           />

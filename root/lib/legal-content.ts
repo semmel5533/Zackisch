@@ -8,11 +8,11 @@ export const legalPages = {
       sections: [
         {
           title: "Diensteanbieter",
-          body: "Max Mustermann (Mustername), handelnd unter Zackisch · Einzelunternehmen. Musterstraße 1, 12345 Musterstadt, Deutschland (Musteranschrift; durch ladungsfähige Geschäftsanschrift ersetzen).",
+          body: "Selim Eser, handelnd unter Zackisch · Einzelunternehmen. Musterstraße 1, 12345 Musterstadt, Deutschland (Musteranschrift; durch ladungsfähige Geschäftsanschrift ersetzen).",
         },
         {
           title: "Kontakt",
-          body: "E-Mail: [geschäftliche Kontakt-E-Mail]. Telefon oder anderer unmittelbarer Kommunikationsweg: [Kontakt ergänzen]. Datenschutzanfragen: [Datenschutz-Kontakt ergänzen].",
+          body: "E-Mail: selim@zackisch.com. Telefon oder anderer unmittelbarer Kommunikationsweg: [Kontakt ergänzen]. Datenschutzanfragen: selim@zackisch.com.",
         },
         {
           title: "Register und Identifikationsnummern",
@@ -20,7 +20,7 @@ export const legalPages = {
         },
         {
           title: "Umsatzsteuerlicher Status",
-          body: "[Nach Bestätigung des steuerlichen Status übernehmen: Für die Leistungen von Zackisch wird die Kleinunternehmerregelung nach § 19 UStG angewendet. Es wird keine Umsatzsteuer gesondert ausgewiesen.] Einzelunternehmen bezeichnet die Rechtsform; die Kleinunternehmerregelung betrifft die Umsatzsteuer. Der Status des jeweiligen Restaurants ist davon unabhängig.",
+          body: "Der umsatzsteuerliche Status ist noch nicht festgelegt. Diese Entwurfsfassung behauptet deshalb keine Anwendung der Kleinunternehmerregelung nach § 19 UStG. Einzelunternehmen bezeichnet die Rechtsform; die Kleinunternehmerregelung betrifft die Umsatzsteuer. Der Status des jeweiligen Restaurants ist davon unabhängig.",
         },
         {
           title: "Verbraucherstreitbeilegung",
@@ -43,7 +43,7 @@ export const legalPages = {
     privacy: {
       title: "Datenschutz auf zackisch.com",
       intro:
-        "Diese Hinweise betreffen die öffentliche Zackisch-Website. Verantwortlicher ist Max Mustermann (Mustername), handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland. Kontakt: [Datenschutz-E-Mail ergänzen]. Stand: 26. Oktober 2026.",
+        "Diese Hinweise betreffen die öffentliche Zackisch-Website. Verantwortlicher ist Selim Eser, handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland. Kontakt: selim@zackisch.com. Stand: 5. November 2026.",
       sections: [
         {
           title: "Geltungsbereich und Kontakt",
@@ -92,11 +92,11 @@ export const legalPages = {
       sections: [
         {
           title: "Service provider",
-          body: "Max Mustermann (example name), trading as Zackisch · sole proprietor. Musterstraße 1, 12345 Musterstadt, Germany (example address; replace with the business address at which legal documents can be served).",
+          body: "Selim Eser, trading as Zackisch · sole proprietor. Musterstraße 1, 12345 Musterstadt, Germany (example address; replace with the business address at which legal documents can be served).",
         },
         {
           title: "Contact",
-          body: "Email: [business contact email]. Telephone or another direct communication channel: [complete contact details]. Privacy enquiries: [privacy contact].",
+          body: "Email: selim@zackisch.com. Telephone or another direct communication channel: [complete contact details]. Privacy enquiries: selim@zackisch.com.",
         },
         {
           title: "Registration and identification numbers",
@@ -104,7 +104,7 @@ export const legalPages = {
         },
         {
           title: "VAT status",
-          body: "[Use after confirmation of the tax status: Zackisch services qualify for the German small-business VAT exemption under section 19 UStG. VAT is not separately charged.] Sole proprietorship is a legal form; the small-business exemption is a VAT treatment. Each restaurant has its own independent tax status.",
+          body: "The VAT treatment has not yet been determined. This draft therefore does not claim the German small-business exemption under section 19 UStG. Sole proprietorship is a legal form; the small-business exemption is a VAT treatment. Each restaurant has its own independent tax status.",
         },
         {
           title: "Consumer dispute resolution",
@@ -127,7 +127,7 @@ export const legalPages = {
     privacy: {
       title: "Privacy on zackisch.com",
       intro:
-        "These notices cover the public Zackisch website. The controller is Max Mustermann (example name), trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany. Contact: [privacy email]. Last updated: 26 October 2026.",
+        "These notices cover the public Zackisch website. The controller is Selim Eser, trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany. Contact: selim@zackisch.com. Last updated: 5 November 2026.",
       sections: [
         {
           title: "Scope and contact",

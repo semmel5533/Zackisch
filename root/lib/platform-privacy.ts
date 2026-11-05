@@ -3,11 +3,11 @@ export const platformPrivacy = {
     "privacy-policy": {
       title: "Datenschutz für die Zackisch-Plattform",
       intro:
-        "Informationen für Betreiber, Gäste, Personal, Supportnutzer und Partner. Stand: 26. Oktober 2026. Unbekannte Anbieter- und Verfahrensangaben sind als ausfüllbare Felder markiert.",
+        "Informationen für Betreiber, Gäste, Personal, Supportnutzer und Partner. Stand: 5. November 2026. Unbekannte Anbieter- und Verfahrensangaben sind als ausfüllbare Felder markiert.",
       sections: [
         {
           title: "Verantwortliche und Geltungsbereich",
-          body: "Für die eigene Vertragsverwaltung, Kontosicherheit und Kommunikation von Zackisch ist Max Mustermann (Mustername), handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland verantwortlich. Kontakt: [Datenschutz-E-Mail]. [Datenschutzbeauftragten ergänzen, falls benannt.] Diese Hinweise betreffen Betreiberkonten, Gastbestellungen, Personalzugänge, Support und das Partnerprogramm. Für die reine Marketingwebsite gelten die gesonderten Website-Hinweise.",
+          body: "Für die eigene Vertragsverwaltung, Kontosicherheit und Kommunikation von Zackisch ist Selim Eser, handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland verantwortlich. Kontakt: selim@zackisch.com. [Datenschutzbeauftragten ergänzen, falls benannt.] Diese Hinweise betreffen Betreiberkonten, Gastbestellungen, Personalzugänge, Support und das Partnerprogramm. Für die reine Marketingwebsite gelten die gesonderten Website-Hinweise.",
         },
         {
           title: "Restaurant und Zackisch",
@@ -64,11 +64,11 @@ export const platformPrivacy = {
     "privacy-policy": {
       title: "Privacy for the Zackisch platform",
       intro:
-        "Information for merchants, guests, staff, support users and partners. Updated 26 October 2026. Unknown provider and process details are marked as editable fields.",
+        "Information for merchants, guests, staff, support users and partners. Updated 5 November 2026. Unknown provider and process details are marked as editable fields.",
       sections: [
         {
           title: "Controllers and scope",
-          body: "For Zackisch’s own contract administration, account security and communications, the controller is Max Mustermann (example name), trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany. Contact: [privacy email]. [Add a data protection officer if appointed.] These notices cover merchant accounts, guest orders, staff access, support and the partner programme. Separate website notices cover the marketing website.",
+          body: "For Zackisch’s own contract administration, account security and communications, the controller is Selim Eser, trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany. Contact: selim@zackisch.com. [Add a data protection officer if appointed.] These notices cover merchant accounts, guest orders, staff access, support and the partner programme. Separate website notices cover the marketing website.",
         },
         {
           title: "Restaurant and Zackisch",

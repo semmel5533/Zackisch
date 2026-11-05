@@ -7,7 +7,7 @@ export const dataProcessing = {
       sections: [
         {
           title: "1. Parteien und Gegenstand",
-          body: "Auftraggeber ist [vollständiger Name/Firma des Restaurants, Anschrift, Vertretung, Datenschutzkontakt]. Auftragnehmer ist Max Mustermann (Mustername), handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland; Datenschutzkontakt: [E-Mail]. Diese Vereinbarung ergänzt den Betreibervertrag für die Verarbeitung personenbezogener Daten ausschließlich im Auftrag des Restaurants. Eigene Zwecke von Zackisch, insbesondere die eigene Vertragsverwaltung, fallen nicht unter diese Weisungsbindung und sind gesondert zu beurteilen.",
+          body: "Auftraggeber ist [vollständiger Name/Firma des Restaurants, Anschrift, Vertretung, Datenschutzkontakt]. Auftragnehmer ist Selim Eser, handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland; Datenschutzkontakt: selim@zackisch.com. Diese Vereinbarung ergänzt den Betreibervertrag für die Verarbeitung personenbezogener Daten ausschließlich im Auftrag des Restaurants. Eigene Zwecke von Zackisch, insbesondere die eigene Vertragsverwaltung, fallen nicht unter diese Weisungsbindung und sind gesondert zu beurteilen.",
         },
         {
           title: "2. Art, Zweck und Dauer",
@@ -59,7 +59,7 @@ export const dataProcessing = {
         },
         {
           title: "Vereinbarung und Fassungsstand",
-          body: "Fassung: Muster 2026-10-26. Anlage A, B und C sind Bestandteil dieser Vereinbarung. [Ausgefüllte Fassung, Datum, berechtigte Vertreter und dokumentierte elektronische oder schriftliche Annahme ergänzen.] Änderungen sind nachvollziehbar zu vereinbaren. Die Veröffentlichung dieser Vorlage allein ist weder ein Vertragsschluss noch ein Nachweis einer Sicherheitsprüfung.",
+          body: "Fassung: Muster 2026-11-05. Anlage A, B und C sind Bestandteil dieser Vereinbarung. [Ausgefüllte Fassung, Datum, berechtigte Vertreter und dokumentierte elektronische oder schriftliche Annahme ergänzen.] Änderungen sind nachvollziehbar zu vereinbaren. Die Veröffentlichung dieser Vorlage allein ist weder ein Vertragsschluss noch ein Nachweis einer Sicherheitsprüfung.",
         },
       ],
     },
@@ -72,7 +72,7 @@ export const dataProcessing = {
       sections: [
         {
           title: "1. Parties and subject matter",
-          body: "The controller is [restaurant’s full name/entity, address, representative and privacy contact]. The processor is Max Mustermann (example name), trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany; privacy contact: [email]. This agreement supplements the merchant agreement for personal data processed solely on the restaurant’s behalf. Zackisch’s independent purposes, including its own contract administration, are outside these instructions and require separate assessment.",
+          body: "The controller is [restaurant’s full name/entity, address, representative and privacy contact]. The processor is Selim Eser, trading as Zackisch, Musterstraße 1, 12345 Musterstadt, Germany; privacy contact: selim@zackisch.com. This agreement supplements the merchant agreement for personal data processed solely on the restaurant’s behalf. Zackisch’s independent purposes, including its own contract administration, are outside these instructions and require separate assessment.",
         },
         {
           title: "2. Nature, purpose and duration",
@@ -124,7 +124,7 @@ export const dataProcessing = {
         },
         {
           title: "Agreement and version",
-          body: "Version: template 2026-10-26. Annexes A, B and C form part of this agreement. [Complete the final version, date, authorised representatives and documented electronic or written acceptance.] Amendments must be agreed traceably. Publication of this template alone is neither contract formation nor evidence of a security assessment.",
+          body: "Version: template 2026-11-05. Annexes A, B and C form part of this agreement. [Complete the final version, date, authorised representatives and documented electronic or written acceptance.] Amendments must be agreed traceably. Publication of this template alone is neither contract formation nor evidence of a security assessment.",
         },
       ],
     },
