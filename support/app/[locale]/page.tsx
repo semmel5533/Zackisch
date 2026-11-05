@@ -20,8 +20,8 @@ export async function generateMetadata({
   const isDe = locale === "de-de";
 
   const title = isDe
-    ? "Zackisch Hilfe & Support — Wissensdatenbank & Anleitungen"
-    : "Zackisch Help & Support — Knowledge Base & Guides";
+    ? "Hilfe & Support | Zackisch"
+    : "Help & Support | Zackisch";
   const description = isDe
     ? "Schritt-für-Schritt-Anleitungen zur einfachen Einrichtung, zur einmaligen Kassenerfassung (POS) und zu Stripe Connect Direktzahlungen."
     : "Step-by-step guides for simple onboarding, single-entry POS recording, and Stripe Connect direct charges.";

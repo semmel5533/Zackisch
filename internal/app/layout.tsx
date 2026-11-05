@@ -6,7 +6,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { ZackischToaster } from "@/components/common/toast";
 
 export const metadata: Metadata = {
-  title: "Zackisch Team Dashboard — Interne Team-Oberfläche",
+  title: { default: "Team Dashboard | Zackisch", template: "%s | Zackisch" },
   description:
     "Internes Team- und Verwaltungsdashboard für Zackisch Gastronomie (internal.zackisch.com)",
   icons: {

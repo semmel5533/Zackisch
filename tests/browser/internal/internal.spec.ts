@@ -6,6 +6,7 @@ test("internal sign-in fits 320px, uses self-hosted League Spartan, and opens re
   await page.setViewportSize({ width: 320, height: 800 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/sign-in");
+  await expect(page).toHaveTitle(/ \| Zackisch$/);
   await expect(
     page.getByRole("heading", { name: "Zackisch Team Dashboard" }),
   ).toBeVisible();

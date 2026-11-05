@@ -9,7 +9,7 @@ export function pageMetadata(
   const suffix = slug ? `/${slug}` : "";
   const canonical = `${websiteUrl}/${locale}${suffix}`;
   return {
-    title: title ? `${title} – Zackisch` : content[locale].title,
+    title: `${title ?? content[locale].title.replace(/ [–—|] Zackisch$/, "")} | Zackisch`,
     description: description ?? content[locale].description,
     alternates: {
       canonical,
@@ -20,7 +20,7 @@ export function pageMetadata(
       },
     },
     openGraph: {
-      title: title ?? content[locale].title,
+      title: `${title ?? content[locale].title.replace(/ [–—|] Zackisch$/, "")} | Zackisch`,
       description: description ?? content[locale].description,
       url: canonical,
       siteName: "Zackisch",

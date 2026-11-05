@@ -36,13 +36,13 @@ export function SupportShell({
               className="flex items-center gap-3 text-foreground no-underline"
             >
               <img
-                src="https://zackisch.com/brand/logo/lockups/signet--transparent--standard.svg"
+                src="https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg"
                 alt="Zackisch"
-                className="size-7 rounded shrink-0"
+                className="w-28 h-9 object-contain shrink-0"
               />
               <div className="flex flex-col leading-tight">
                 <span className="font-bold text-base tracking-tight">
-                  Zackisch Support
+                  Support
                 </span>
                 <span className="text-xs text-muted-foreground">
                   support.zackisch.com
@@ -121,7 +121,7 @@ export function SupportShell({
             <div className="flex flex-wrap items-center justify-between gap-4 py-4">
               <div className="flex flex-col gap-1">
                 <span className="font-semibold text-sm text-foreground">
-                  Zackisch Support Center (support.zackisch.com)
+                  Support Center (support.zackisch.com)
                 </span>
                 <span className="text-sm text-muted-foreground">
                   {isDe

@@ -3,7 +3,7 @@ import "./globals.css";
 import { ConvexClientProvider } from "@/lib/convex";
 
 export const metadata: Metadata = {
-  title: "Zackisch Hilfe & Support — Wissensdatenbank & Tickets",
+  title: "Hilfe & Support | Zackisch",
   description:
     "Schritt-für-Schritt-Anleitungen zur Einrichtung, Kassen-Erfassung (POS), Stripe Connect Direktzahlungen und QR-Bestellungen bei Zackisch.",
   icons: {

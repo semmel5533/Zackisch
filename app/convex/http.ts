@@ -326,7 +326,7 @@ http.route({
     return new Response(
       `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><title>Zackisch Newsletter</title><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<head><meta charset="utf-8"><title>Newsletter | Zackisch</title><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #fafafa;">
   <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; max-width: 400px;">
     <h2 style="margin: 0 0 12px; font-size: 20px;">Erfolgreich abgemeldet</h2>

@@ -33,9 +33,7 @@ export async function generateMetadata({
     return {};
   }
   const isDe = locale === "de-de";
-  const title = `${category.title[locale]} — ${
-    isDe ? "Zackisch Hilfe & Support" : "Zackisch Help & Support"
-  }`;
+  const title = `${category.title[locale]} | Zackisch`;
   const description = category.description[locale];
   const canonicalUrl = `https://support.zackisch.com/${locale}/categories/${categorySlug}`;
 

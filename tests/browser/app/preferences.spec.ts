@@ -5,6 +5,7 @@ test("language drafts cancel safely and save across reload", async ({
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/sign-in");
+  await expect(page).toHaveTitle(/ \| Zackisch$/);
   const trigger = page.getByRole("button", { name: "Region & Sprache" });
   await trigger.click();
   await expect(
@@ -37,6 +38,7 @@ test("app typography is self-hosted League Spartan", async ({
   context,
 }) => {
   await page.goto("/sign-in");
+  await expect(page).toHaveTitle(/ \| Zackisch$/);
   const fonts = await page.evaluate(async () => {
     await document.fonts.ready;
     return {
@@ -51,4 +53,13 @@ test("app typography is self-hosted League Spartan", async ({
   expect(fonts.family).toContain("League Spartan");
   expect(fonts.loaded).toBe(true);
   expect(fonts.external).toEqual([]);
+});
+
+test("public account pages consistently place the subject before the brand", async ({ page }) => {
+  for (const path of ["/sign-in", "/sign-up", "/reset-password", "/reset-password/confirm"]) {
+    await page.goto(path);
+    await expect(page).toHaveTitle(/ \| Zackisch$/);
+    expect((await page.title()).match(/\| Zackisch/g)).toHaveLength(1);
+    expect(await page.title()).not.toMatch(/^Zackisch/);
+  }
 });

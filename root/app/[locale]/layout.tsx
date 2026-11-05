@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "Zackisch",
-  icons: { icon: "/brand/logo/lockups/signet--transparent--standard.svg" },
+  title: "QR-Bestellung | Zackisch",
+  icons: { icon: [{ url: "/brand/logo/platform/signet--favicon.svg", type: "image/svg+xml" }, { url: "/brand/logo/platform/signet--favicon--32.png", sizes: "32x32", type: "image/png" }], apple: "/brand/logo/platform/signet--apple-touch--180.png" },
   robots: { index: true, follow: true },
   description: "Zackisch — Modernes Bestellen & Bezahlen in der Gastronomie",
 };

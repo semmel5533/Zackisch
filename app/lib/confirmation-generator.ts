@@ -102,7 +102,7 @@ export function generateOrderConfirmationHtml(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(title)} - ${isDe ? "Bestellnummer" : "Order number"} ${escapeHtml(order.orderNumber)}</title>
+  <title>${escapeHtml(title)} - ${isDe ? "Bestellnummer" : "Order number"} ${escapeHtml(order.orderNumber)} | Zackisch</title>
   <link href="https://zackisch.com/brand/fonts/fonts.css" rel="stylesheet">
   <style>
     @page { margin: 15mm; size: portrait; }

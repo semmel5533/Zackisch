@@ -207,7 +207,7 @@ export function GuestFrontend({
   useEffect(() => {
     const businessName = business.name;
     if (orderId && type === "takeaway") {
-      document.title = `${t("orderStatus")} – ${businessName}`;
+      document.title = `${t("orderStatus")} – ${businessName} | Zackisch`;
       return;
     }
     const prefix =
@@ -216,7 +216,7 @@ export function GuestFrontend({
         : tableNumber
           ? t("titleToStay", { table: tableNumber })
           : t("titleToStayNoTable");
-    document.title = `${prefix} – ${businessName}`;
+    document.title = `${prefix} – ${businessName} | Zackisch`;
   }, [locale, business.name, type, tableNumber, orderId, t]);
 
   const handleAddClick = (item: MenuItem) => {

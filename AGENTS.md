@@ -34,6 +34,10 @@ Read version-matched installed `node_modules/next/dist/docs/` before Next.js edi
 
 One dominant primary action per task area; navigation uses links. Destructive confirmations name consequences and action. Persistent visible labels, associated descriptions/errors, retained input after failure. Radios for exclusive choices, checkboxes for independent ones, tables for dense comparisons. Test focus trap/return, keyboard, touch targets, 320px reflow, zoom, contrast, long translations, loading/disabled/offline/error states and reduced motion. Guest headers prioritize the venue. Financial metrics use tabular numbers. Only authoritative server confirmation can show payment success; POS recording is independent of preparation.
 
+### Page titles and brand hierarchy
+
+Every browser page title in all four applications follows `<localized page subject> | Zackisch`, exactly once, including authentication, guest, support, internal, error and generated confirmation pages. Use Next metadata templates or explicit absolute titles consistently; client-side updates must retain the same convention. Keep Open Graph and social titles consistent. The wordmark is the primary logo. Use the signet only where the wordmark cannot fit, such as a favicon or genuinely compact control. Website favicons use the supplied Citron rounded platform export, not the transparent general-purpose signet.
+
 ### Assets
 
 Only `root/public/brand/` hosts brand assets. The other apps and emails reference `https://zackisch.com/brand/...`, never duplicate public files. Preserve source logo geometry and asset-manifest hashes. Email logos use compatible PNG fallbacks. Fonts are served by the website with appropriate CORS, never runtime Google Fonts requests. Verify all cross-origin URLs, CSP and font loading before deployment; deploy central assets before consumers. Build-time CSS imports may share canonical tokens without duplicating hosted media. Keep app-specific non-brand content where needed.

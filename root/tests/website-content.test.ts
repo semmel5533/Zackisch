@@ -27,6 +27,8 @@ describe("localized website", () => {
             "x-default": `https://zackisch.com/de-de${suffix}`,
           },
         });
+        expect(metadata.title).toMatch(/ \| Zackisch$/);
+        expect(String(metadata.title).match(/\| Zackisch/g)).toHaveLength(1);
         expect(metadata.robots).toMatchObject({ index: true });
       });
     }

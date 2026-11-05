@@ -8,7 +8,7 @@ export async function generateMetadata() {
   return {
     title: {
       default: dict.resetPassword,
-      template: "zakkig: %s",
+      template: "%s | Zackisch",
     },
   };
 }

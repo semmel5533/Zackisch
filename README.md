@@ -13,6 +13,10 @@ Zackisch ergänzt den persönlichen Service und das vorhandene Kassensystem eine
 
 Alle Anwendungen verwenden Next.js 16, React 19 und TypeScript. Die Cloudflare-Builds laufen über vinext. Das einzige Convex-Backend liegt unter `app/convex/`. Öffentliche Website und Hilfe sind für Deutschland auf Deutsch (`de-de`) und Englisch (`de-en`) angelegt. Sprache und rechtliche Geschäftsregion sind getrennt.
 
+## Intelligentes Menü
+
+Das Gäste-Menü ergänzt die Speisekarte um eine automatische Beliebteste-Kategorie. Warenkorb und Checkout zeigen passende zusätzliche Artikel; freiwilliges Trinkgeld bietet Prozentvorschläge und startet bei null. Betreiber steuern diese Funktionen getrennt. Die aktuelle Berechnung, Datenbasis und Grenzen sind vollständig im [App-README](app/README.md#intelligentes-menü-und-freiwilliges-trinkgeld) beschrieben.
+
 ## Unternehmen und Gebühren
 
 Zackisch ist das Einzelunternehmen von **Selim Eser**, derzeit ohne Beschäftigte. Geschäftlicher Kontakt: **selim@zackisch.com**. Finom wird als Geschäftskonto genutzt; daraus folgt keine technische Finom-Anbindung der Anwendung. Die tatsächliche Geschäftsanschrift und der Umsatzsteuerstatus sind noch nicht bestätigt. Musterangaben in Rechtstexten sind keine veröffentlichungsfähigen Unternehmensnachweise.

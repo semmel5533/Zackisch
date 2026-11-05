@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       default: dict.authentication,
-      template: "Zackisch: %s",
+      template: "%s | Zackisch",
     },
     description: isEn
       ? "Sign in, register or reset your password."

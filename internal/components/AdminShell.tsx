@@ -18,6 +18,7 @@ import {
   SignOut,
   ArrowSquareOut,
 } from "@phosphor-icons/react";
+import { pageTitle } from "@/lib/page-titles";
 import { useAdmin } from "@/lib/admin-context";
 import { RegionLanguageSwitcher } from "./RegionLanguageSwitcher";
 import {
@@ -129,6 +130,10 @@ export function AdminShell({ children }: AdminShellProps) {
       permission: null,
     },
   ];
+
+  useEffect(() => {
+    document.title = pageTitle(pathname, currentLocale);
+  }, [pathname, currentLocale]);
 
   const navigation = ALL_NAV_ITEMS.filter((item) => {
     if (isRegionalAdmin) return true;

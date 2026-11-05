@@ -6,6 +6,7 @@ test("support portal renders knowledge base, fits 320px without overflow, and us
   await page.setViewportSize({ width: 320, height: 800 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/de-de");
+  await expect(page).toHaveTitle("Hilfe & Support | Zackisch");
   await expect(
     page.getByRole("heading", {
       name: "Wie können wir deinem Betrieb heute helfen?",
