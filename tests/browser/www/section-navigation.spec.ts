@@ -179,8 +179,14 @@ for (const locale of ["de-de", "de-en"]) {
       await expect(page.locator(".venue-control h3")).toHaveText(
         "Dein Lokal, deine Entscheidung",
       );
+      await expect(page.locator(".service-section h2")).toHaveText(
+        "Am Tisch, am Tresen, mit deinem Team",
+      );
       await expect(page.locator(".start-section h2")).toHaveText(
         "Dein nächster Schritt?",
+      );
+      await expect(page.locator(".start-description")).toHaveText(
+        "Konto anlegen, Menü einrichten, Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
       );
       await expect(page.locator(".last-invitation p")).toHaveCSS(
         "white-space",

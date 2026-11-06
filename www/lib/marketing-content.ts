@@ -54,7 +54,7 @@ export const marketing = {
     control: "Dein Lokal, deine Entscheidung",
     controlText:
       "Du entscheidest, welche Funktionen dein Lokal nutzt. Schalte sie so ein oder aus, wie es zu deinem Betrieb passt.",
-    teamTitle: "Am Tisch. Am Tresen.\nMit deinem Team.",
+    teamTitle: "Am Tisch, am Tresen,\nmit deinem Team",
     teamText:
       "Gäste scannen, wählen und bezahlen. Dein Team bereitet den Auftrag für den Tisch oder zur Abholung vor und erfasst ihn einmal in eurer Kasse. Wer lieber persönlich bestellt, bar bezahlen möchte oder kein Smartphone nutzen kann, wendet sich wie gewohnt an dein Team.",
     teamImage:
@@ -68,7 +68,7 @@ export const marketing = {
       "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Lokal Saisonpause macht.",
     setupTitle: "Dein nächster Schritt?",
     setupText:
-      "Konto anlegen. Menü einrichten. Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
+      "Konto anlegen, Menü einrichten, Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
     setupNote:
       "Du brauchst Internet, kompatible Geräte und deinen bestehenden Kassenablauf. Geräte, Verbindung und Druck können eigene Kosten verursachen.",
     faq: "Noch etwas offen?",
@@ -134,7 +134,7 @@ export const marketing = {
     control: "Your venue, your choice",
     controlText:
       "You decide which features your venue uses. Switch them on or off to suit the way you work.",
-    teamTitle: "At tables. At counters.\nWith your team.",
+    teamTitle: "At tables, at counters,\nwith your team",
     teamText:
       "Guests scan, choose and pay. Your team prepares the order for the table or for pickup and records it once in your POS. Guests who prefer to order in person, want to pay cash or cannot use a smartphone can simply speak to your team.",
     teamImage:
@@ -148,7 +148,7 @@ export const marketing = {
       "With no paid orders, Zackisch is free. Even when your venue closes for the season.",
     setupTitle: "Your next step?",
     setupText:
-      "Create an account. Set up your menu. Connect your payment provider. Get started with your QR codes and a suitable tablet.",
+      "Create an account, set up your menu, connect your payment provider. Get started with your QR codes and a suitable tablet.",
     setupNote:
       "You need internet, compatible devices and your existing POS process. Devices, connectivity and printing may have their own costs.",
     faq: "Anything else?",
