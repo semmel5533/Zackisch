@@ -104,11 +104,10 @@ export const content = {
     nav: ["Funktionen", "Kosten", "Fragen", "Hilfe"],
     login: "Anmelden",
     start: "Lokal einrichten",
-    title: "Bestellen und Bezahlen per QR-Code für deinen Betrieb | Zackisch",
+    title: "Bestellen per QR-Code für deinen Betrieb | Zackisch",
     description:
       "Gäste bestellen und bezahlen per QR-Code. Dein Team und deine Kasse bleiben. 2 % Gebühr, zzgl. Zahlungsanbietergebühren.",
-    ogImageAlt:
-      "Zackisch: Bestellen und Bezahlen per QR-Code für deinen Betrieb",
+    ogImageAlt: "Zackisch: Bestellen per QR-Code für deinen Betrieb",
     newTab: "Öffnet in einem neuen Tab",
     notFoundTitle: "Seite nicht gefunden | Zackisch",
     researchLink: "Quelle und Einordnung lesen",
@@ -219,10 +218,10 @@ export const content = {
     nav: ["Features", "Pricing", "Questions", "Help"],
     login: "Sign in",
     start: "Set up your venue",
-    title: "QR code ordering and payment for your venue | Zackisch",
+    title: "QR code ordering for your venue | Zackisch",
     description:
       "Guests order and pay by QR code. Your team and POS stay. 2% Zackisch fee, plus payment provider fees.",
-    ogImageAlt: "Zackisch: QR code ordering and payment for your venue",
+    ogImageAlt: "Zackisch: QR code ordering for your venue",
     newTab: "Opens in a new tab",
     notFoundTitle: "Page not found | Zackisch",
     researchLink: "Read the source and context",

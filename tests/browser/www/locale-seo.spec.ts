@@ -99,14 +99,14 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page).toHaveTitle(
       de
-        ? "Bestellen und Bezahlen per QR-Code für deinen Betrieb | Zackisch"
-        : "QR code ordering and payment for your venue | Zackisch",
+        ? "Bestellen per QR-Code für deinen Betrieb | Zackisch"
+        : "QR code ordering for your venue | Zackisch",
     );
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
       de
-        ? "Bestellen und Bezahlen per QR-Code für deinen Betrieb | Zackisch"
-        : "QR code ordering and payment for your venue | Zackisch",
+        ? "Bestellen per QR-Code für deinen Betrieb | Zackisch"
+        : "QR code ordering for your venue | Zackisch",
     );
     await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
       "content",
@@ -131,8 +131,8 @@ for (const locale of ["de-de", "de-en"]) {
     await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
       "content",
       de
-        ? "Zackisch: Bestellen und Bezahlen per QR-Code für deinen Betrieb"
-        : "Zackisch: QR code ordering and payment for your venue",
+        ? "Zackisch: Bestellen per QR-Code für deinen Betrieb"
+        : "Zackisch: QR code ordering for your venue",
     );
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
       "content",

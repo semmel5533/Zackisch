@@ -59,6 +59,9 @@ describe("localized website", () => {
         });
         expect(metadata.title).toMatch(/ \| Zackisch$/);
         expect(String(metadata.title).match(/\| Zackisch/g)).toHaveLength(1);
+        if (!slug) {
+          expect(String(metadata.title).length).toBeLessThanOrEqual(60);
+        }
         expect(metadata.openGraph?.title).toBe(metadata.title);
         expect(metadata.twitter?.title).toBe(metadata.title);
         expect(metadata.openGraph?.locale).toBe(localeConfigs[locale].ogLocale);
