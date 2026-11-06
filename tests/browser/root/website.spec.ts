@@ -55,11 +55,11 @@ test("FAQ and privacy controls work without optional cookies", async ({
   context,
 }) => {
   await page.goto("/de-en");
-  const question = page.getByRole("button", { name: "Do I need a new POS?" });
+  const question = page.getByRole("button", { name: "How does it connect to my POS?" });
   await question.click();
   await expect(question).toHaveAttribute("aria-expanded", "true");
   await expect(
-    page.getByText("No. Zackisch supplements your existing POS process.", {
+    page.getByText("Your existing POS stays.", {
       exact: false,
     }),
   ).toBeVisible();

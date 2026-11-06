@@ -43,39 +43,56 @@ export const content = {
     start: "Lokal einrichten",
     title: "QR-Bestellung für dein Lokal – Zackisch",
     description:
-      "Gäste bestellen und bezahlen per QR-Code. Dein Team behält den Überblick, deine bestehende Kasse bleibt. 2 % Zackisch-Gebühr plus Stripe-Gebühren.",
-    heroAlt: "Eine Servicekraft begrüßt zwei Gäste beim Essen im Café.",
-    photoCredit:
-      "Stockfoto: Ketut Subiyanto / Pexels. Kein Zackisch-Kundenlokal.",
+      "Gäste bestellen und bezahlen per QR-Code. Dein Team behält den Überblick, deine bestehende Kasse bleibt. 2 % Zackisch-Gebühr plus Zahlungsanbietergebühren.",
     researchLink: "Quelle und Einordnung lesen",
-    conversationAlt: "Freunde lachen gemeinsam an einem Tisch im Café.",
     setupHelp: "Einrichtungsanleitungen öffnen",
     priceLink: "Gebühren und Voraussetzungen ansehen",
     faqs: [
       {
-        question: "Brauche ich eine neue Kasse?",
+        question: "Wie funktioniert Zackisch im Alltag?",
         answer:
-          "Nein. Zackisch ergänzt deinen bestehenden Kassenablauf. Bereits bezahlte Zackisch-Bestellungen werden einmal in deiner Kasse erfasst. Die für dein Lokal geltenden Beleg- und Steuerpflichten bleiben bestehen.",
+          "Deine Gäste öffnen das Menü per QR-Code, wählen Artikel und bezahlen im Browser. Dein Team sieht den bezahlten Auftrag und bereitet ihn vor. Empfehlungen und freiwilliges Trinkgeld ergänzen den Bestellweg; du entscheidest, welche Funktionen aktiv sind.",
       },
       {
-        question: "Müssen meine Gäste einen Account anlegen?",
+        question: "Was kostet Zackisch – auch in der Saisonpause?",
         answer:
-          "Nein. Gäste öffnen das Menü per QR-Code im Browser und bestellen ohne Zackisch-Account oder App-Installation.",
+          "Du zahlst 2 % auf den erfolgreich bezahlten Bestellwert ohne freiwilliges Trinkgeld, inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Hinzu kommen Zahlungsanbietergebühren. Einrichtung und Grundgebühr kosten nichts. Ohne bezahlte Bestellungen fallen keine Zackisch-Gebühren an – ideal für Saisonbetriebe. Eigene Geräte-, Internet- und weitere Anbietergebühren bleiben davon unabhängig.",
+      },
+      {
+        question: "Wie funktioniert die Anbindung an meine Kasse?",
+        answer:
+          "Deine bestehende Kasse bleibt. Dein Team übernimmt jede bereits bezahlte Zackisch-Bestellung genau einmal manuell in die Kasse und kennzeichnet sie dort als bereits bezahlt. Der Gast bezahlt nicht erneut. Eine automatische Übertragung gibt es derzeit nicht. Dein Lokal stellt den erforderlichen Kassenbeleg oder die Rechnung aus.",
+      },
+      {
+        question: "Warum setzt ihr zunächst auf manuelle Kassenerfassung?",
+        answer:
+          "So brauchst du keine neue Kasse und keine technische Schnittstellenintegration, um einzusteigen. Du kannst Zackisch in deinen vorhandenen Ablauf aufnehmen, sobald Einrichtung und Zahlungsfreigabe abgeschlossen sind. Dafür bleibt die einmalige manuelle Erfassung jeder Bestellung nötig.",
+      },
+      {
+        question: "Wird es automatische Kassenintegrationen geben?",
+        answer:
+          "Optionale Anbindungen an verbreitete Kassensysteme in Deutschland kommen für die Zukunft infrage. Aktuell gibt es keine automatische Integration und keine Zusage für bestimmte Anbieter oder Termine. Für den Einstieg nutzt du deine vorhandene Kasse mit manueller Erfassung.",
+      },
+      {
+        question: "Was brauche ich für den Start?",
+        answer:
+          "Ein Menü mit Artikeln und Preisen, ein geeignetes Tablet mit Browser, Internet und ein freigegebenes Konto beim Zahlungsanbieter. Du richtest dein Lokal selbst ein und platzierst deine QR-Codes. Vor dem Start prüfst du den gesamten Ablauf einschließlich der Erfassung bezahlter Aufträge in deiner Kasse.",
+      },
+      {
+        question:
+          "Müssen meine Gäste eine App installieren oder ein Konto anlegen?",
+        answer:
+          "Nein. Deine Gäste scannen den QR-Code und öffnen das Menü direkt im Browser. Bestellung und Zahlung funktionieren ohne App-Installation und ohne Zackisch-Gastkonto.",
       },
       {
         question: "Kann mein Personal weiterhin Bestellungen aufnehmen?",
         answer:
-          "Ja. Der digitale Bestellweg ist optional. Gäste können sich wie gewohnt persönlich an dein Team wenden.",
+          "Ja. Der digitale Bestellweg ist freiwillig und ergänzt deinen Service. Gäste können weiter persönlich bei deinem Team bestellen. Zackisch ersetzt weder dein Personal noch deine Kasse.",
       },
       {
-        question: "Was passiert bei einer Störung?",
+        question: "Was passiert, wenn das Internet ausfällt?",
         answer:
-          "Neue digitale Bestellungen und Zahlungen benötigen eine Verbindung. Euer persönlicher Service und die bestehende Kasse bleiben unabhängig davon nutzbar. Bereits bezahlte Aufträge müssen geprüft und abgeglichen werden; nicht erneut kassieren.",
-      },
-      {
-        question: "Ist die Zahlungsbestätigung ein Kassenbeleg?",
-        answer:
-          "Nein. Zackisch zeigt eine Bestell- und Zahlungsbestätigung. Den gesetzlich erforderlichen Beleg oder eine Rechnung stellt dein Lokal über seinen eigenen zulässigen Ablauf bereit.",
+          "Neue digitale Bestellungen und Zahlungen benötigen eine Verbindung. Ihr könnt weiter persönlich Bestellungen aufnehmen und euren bestehenden Kassenablauf nutzen. Bereits bezahlte Aufträge müssen geprüft und abgeglichen werden; nicht erneut kassieren.",
       },
     ],
     footerProduct: "Zackisch",
@@ -99,19 +116,20 @@ export const content = {
     pages: {
       pricing: {
         title: "Was Zackisch kostet.",
-        intro: "Softwaregebühr und Zahlungsabwicklung klar getrennt.",
+        intro:
+          "Nur wenn deine Gäste über Zackisch bezahlen, fällt eine Zackisch-Gebühr an. Keine Einrichtungskosten. Keine monatliche Grundgebühr.",
         sections: [
           {
             title: "2 % für Zackisch",
-            body: "Die Gebühr bezieht sich auf den erfolgreich bezahlten Bruttobestellwert ohne freiwilliges Trinkgeld. Die gegebenenfalls auf die Zackisch-Gebühr entfallende Umsatzsteuer ist enthalten. Ohne Zackisch-Bestellungen fällt keine prozentuale Zackisch-Gebühr an.",
+            body: "Die Gebühr bezieht sich auf den erfolgreich bezahlten Bruttobestellwert ohne freiwilliges Trinkgeld. Die gegebenenfalls auf die Zackisch-Gebühr entfallende Umsatzsteuer ist enthalten. Ohne bezahlte Bestellungen ist Zackisch kostenlos – auch in der Saisonpause. Geräte, Internet und Zahlungsabwicklung können eigene Kosten verursachen.",
           },
           {
-            title: "Stripe separat",
-            body: "Für die Zahlungsabwicklung fallen zusätzlich die Gebühren von Stripe gemäß der tatsächlichen Konfiguration und Vereinbarung deines Lokals an. Eine feste pauschale Zahlungsgebühr wird hier nicht versprochen.",
+            title: "Zahlungsanbietergebühren",
+            body: "Für die Zahlungsabwicklung fallen zusätzlich die Gebühren des Zahlungsanbieters gemäß der tatsächlichen Konfiguration und Vereinbarung deines Lokals an. Eine feste pauschale Zahlungsgebühr wird hier nicht versprochen.",
           },
           {
             title: "Was du mitbringst",
-            body: "Ein geeignetes Tablet mit Browser, eine Internetverbindung, ein von Stripe freigegebenes Zahlungskonto und deinen bestehenden Kassenablauf. Geräte, Internet und QR-Druck können eigene Kosten verursachen.",
+            body: "Ein geeignetes Tablet mit Browser, eine Internetverbindung, ein vom Zahlungsanbieter freigegebenes Zahlungskonto und deinen bestehenden Kassenablauf. Geräte, Internet und QR-Druck können eigene Kosten verursachen.",
           },
           {
             title: "Vor dem Echtbetrieb prüfen",
@@ -172,39 +190,55 @@ export const content = {
     start: "Set up your venue",
     title: "QR ordering for your venue – Zackisch",
     description:
-      "Guests order and pay by QR code. Your team keeps track and your existing POS stays. 2% Zackisch fee plus Stripe fees.",
-    heroAlt: "A member of the café team welcomes two guests over lunch.",
-    photoCredit:
-      "Stock photo: Ketut Subiyanto / Pexels. Not a Zackisch customer venue.",
+      "Guests order and pay by QR code. Your team keeps track and your existing POS stays. 2% Zackisch fee plus payment provider fees.",
     researchLink: "Read the source and context",
-    conversationAlt: "Friends laughing together around a café table.",
     setupHelp: "Open setup guides",
     priceLink: "See fees and prerequisites",
     faqs: [
       {
-        question: "Do I need a new POS?",
+        question: "How does Zackisch work day to day?",
         answer:
-          "No. Zackisch supplements your existing POS process. Paid Zackisch orders are recorded once in your POS. Your venue’s receipt and tax obligations remain.",
+          "Guests open the menu by QR code, choose items and pay in their browser. Your team sees the paid order and prepares it. Recommendations and optional tipping complement the ordering flow; you choose which features are active.",
       },
       {
-        question: "Do guests need an account?",
+        question: "What does Zackisch cost, including seasonal closures?",
         answer:
-          "No. Guests open the menu by QR code in their browser and order without a Zackisch account or app installation.",
+          "You pay 2% of the successfully paid order value excluding voluntary tips, including any VAT applicable to our fee. Payment provider fees apply in addition. There is no setup fee or monthly base fee. No paid orders means no Zackisch fees, making it a good fit for seasonal venues. Your own device, internet and other provider costs remain separate.",
+      },
+      {
+        question: "How does it connect to my POS?",
+        answer:
+          "Your existing POS stays. Your team manually records each paid Zackisch order exactly once in the POS and marks it as already paid. The guest does not pay again. There is currently no automatic transfer. Your venue issues the required fiscal receipt or invoice.",
+      },
+      {
+        question: "Why start with manual POS recording?",
+        answer:
+          "You do not need a new POS or a technical integration to get started. You can add Zackisch to your existing process once setup and payment approval are complete. Each order still needs to be recorded manually once.",
+      },
+      {
+        question: "Will automatic POS integrations become available?",
+        answer:
+          "Optional connections to widely used German POS systems are a possibility for the future. There is currently no automatic integration and no commitment to particular providers or dates. To get started, use your existing POS with manual recording.",
+      },
+      {
+        question: "What do I need to get started?",
+        answer:
+          "A menu with items and prices, a suitable tablet with a browser, internet and an approved payment provider account. Set up your venue yourself and place your QR codes. Before going live, check the complete process, including recording paid orders in your POS.",
+      },
+      {
+        question: "Do guests need an app or an account?",
+        answer:
+          "No. Guests scan the QR code and open the menu directly in their browser. Ordering and payment work without installing an app or creating a Zackisch guest account.",
       },
       {
         question: "Can staff still take orders?",
         answer:
-          "Yes. Digital ordering is optional. Guests can still order from your team in person.",
+          "Yes. Digital ordering is optional and complements your service. Guests can still order from your team in person. Zackisch replaces neither your staff nor your POS.",
       },
       {
-        question: "What happens during an outage?",
+        question: "What happens if the internet goes down?",
         answer:
-          "New digital orders and payments need a connection. Personal service and your existing POS remain independent. Already paid orders must be checked and reconciled; do not charge again.",
-      },
-      {
-        question: "Is the payment confirmation a fiscal receipt?",
-        answer:
-          "No. Zackisch provides an order and payment confirmation. Your venue issues the legally required receipt or invoice through its own lawful process.",
+          "New digital orders and payments need a connection. You can continue taking orders in person and using your existing POS process. Check and reconcile orders that have already been paid; do not charge again.",
       },
     ],
     footerProduct: "Zackisch",
@@ -228,19 +262,20 @@ export const content = {
     pages: {
       pricing: {
         title: "What Zackisch costs.",
-        intro: "Software fees and payment processing, clearly separated.",
+        intro:
+          "A Zackisch fee applies only when guests pay through Zackisch. No setup fee. No monthly base fee.",
         sections: [
           {
             title: "2% for Zackisch",
-            body: "The fee applies to the successfully paid gross order value excluding voluntary tips. Any VAT applicable to the Zackisch fee is included. With no Zackisch orders, there is no percentage Zackisch transaction fee.",
+            body: "The fee applies to the successfully paid gross order value excluding voluntary tips. Any VAT applicable to the Zackisch fee is included. Without paid orders, Zackisch is free, including during seasonal closures. Devices, internet and payment processing may have their own costs.",
           },
           {
-            title: "Stripe separately",
-            body: "Stripe’s payment processing fees apply in addition, according to your venue’s actual configuration and agreement. We do not promise a fixed flat processing fee here.",
+            title: "Zahlungsanbietergebührenely",
+            body: "Payment provider fees apply in addition, according to your venue’s actual configuration and agreement. We do not promise a fixed flat processing fee here.",
           },
           {
             title: "What you bring",
-            body: "A suitable tablet with a browser, an internet connection, a Stripe account approved for payments and your existing POS process. Devices, internet and QR printing may incur separate costs.",
+            body: "A suitable tablet with a browser, an internet connection, an account approved by the payment provider and your existing POS process. Devices, internet and QR printing may incur separate costs.",
           },
           {
             title: "Check before going live",

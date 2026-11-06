@@ -73,7 +73,7 @@ test("FAQ keyboard interaction and no optional cookies", async ({
   context,
 }) => {
   await page.goto("/de-en");
-  const question = page.getByRole("button", { name: "Do I need a new POS?" });
+  const question = page.getByRole("button", { name: "How does it connect to my POS?" });
   await question.focus();
   await page.keyboard.press("Enter");
   await expect(question).toHaveAttribute("aria-expanded", "true");

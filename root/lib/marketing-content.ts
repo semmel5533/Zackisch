@@ -12,28 +12,20 @@ export const marketing = {
     personalTitle: "Deine Frage ist nicht aufgelistet?",
     personalText: "Schreibe mir persönlich:",
     explore: "So hilft Zackisch",
-    demoTitle: "Für Lokale wie deins.",
-    demoNote: "Beispielmarken – keine Kundenreferenzen.",
+    demoTitle: "Demo-Lokale",
     pauseLogos: "Logo-Band pausieren",
     resumeLogos: "Logo-Band fortsetzen",
     cafeAlt: "Ein Gast nutzt beim Kaffee im Café sein Smartphone.",
-    cafeCredit:
-      "Stockfoto: Tima Miroshnichenko / Pexels. Kein Zackisch-Kundenlokal.",
     serviceAlt:
       "Ein Mitarbeiter serviert Speisen in einem belebten Restaurant.",
-    serviceCredit:
-      "Stockfoto: Marcus Queiroga Silva / Pexels. Kein Zackisch-Kundenlokal.",
-    menuTitle: "Eine Karte.\nMehr gute Entscheidungen.",
-    menuIntro:
-      "Zackisch hilft deinen Gästen beim Entdecken. Du entscheidest, welche Funktionen dein Lokal nutzt.",
+    menuTitle: "Ein Menü.\nMehr gute Entscheidungen.",
     features: [
       {
         title: "Was gut ankommt,\nsteht vorn.",
-        text: "Die Kategorie „Beliebteste“ zeigt automatisch häufig bestellte Gerichte deines Lokals.",
+        text: "Die Kategorie „Beliebteste“ zeigt automatisch häufig bestellte Artikel deines Lokals.",
         detail:
           "Aus der Bestellhistorie deines Lokals. Ohne manuelles Pflegen einer Bestsellerliste.",
-        image:
-          "Hier folgt die Gäste-Speisekarte mit der Kategorie „Beliebteste“.",
+        image: "Hier folgt das Gäste-Menü mit der Kategorie „Beliebteste“.",
       },
       {
         title: "Passt dazu?\nZeig es deinen Gästen.",
@@ -59,14 +51,16 @@ export const marketing = {
       "Gäste scannen, wählen und bezahlen. Dein Team erhält den bezahlten Auftrag und erfasst ihn einmal in eurer Kasse. Wer persönlich bestellen möchte, tut genau das.",
     teamImage:
       "Hier folgt die Personalansicht mit bezahltem Auftrag und Kassenerfassung.",
-    costTitle: "Einfach anfangen.\nTransparent bezahlen.",
+    costTitle: "Du zahlst erst,\nwenn deine Gäste bezahlen.",
     feeLabel: "je erfolgreich bezahlter Bestellung",
     feeDetail:
-      "Ohne freiwilliges Trinkgeld. Inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Stripe-Gebühren separat.",
-    zero: "Keine Einrichtungskosten. Keine monatliche Zackisch-Grundgebühr.",
+      "Ohne freiwilliges Trinkgeld. Inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Zzgl. Zahlungsanbietergebühren.",
+    zero: "Keine Einrichtungskosten. Keine monatliche Grundgebühr.",
+    seasonal:
+      "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Lokal Saisonpause macht.",
     setupTitle: "Dein nächster Schritt?\nDein eigenes Lokal.",
     setupText:
-      "Konto anlegen. Menü einrichten. Stripe verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
+      "Konto anlegen. Menü einrichten. Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
     setupNote:
       "Du brauchst Internet, kompatible Geräte und deinen bestehenden Kassenablauf. Geräte, Verbindung und Druck können eigene Kosten verursachen.",
     faq: "Noch etwas offen?",
@@ -86,23 +80,16 @@ export const marketing = {
     personalTitle: "Can’t find your question?",
     personalText: "Write to me personally:",
     explore: "How Zackisch helps",
-    demoTitle: "For places like yours.",
-    demoNote: "Example brands — not customer references.",
+    demoTitle: "Demo venues",
     pauseLogos: "Pause logo carousel",
     resumeLogos: "Resume logo carousel",
     cafeAlt: "A café guest uses his smartphone while having coffee.",
-    cafeCredit:
-      "Stock photo: Tima Miroshnichenko / Pexels. Not a Zackisch customer venue.",
     serviceAlt: "A member of staff serves food in a busy restaurant.",
-    serviceCredit:
-      "Stock photo: Marcus Queiroga Silva / Pexels. Not a Zackisch customer venue.",
     menuTitle: "One menu.\nMore good choices.",
-    menuIntro:
-      "Help guests discover what your venue offers. You choose which features to use.",
     features: [
       {
         title: "Guest favourites.\nRight up front.",
-        text: "The “Most popular” category automatically highlights frequently ordered dishes at your venue.",
+        text: "The “Most popular” category automatically highlights frequently ordered items at your venue.",
         detail:
           "Based on your venue’s order history. No bestseller list to maintain by hand.",
         image:
@@ -134,14 +121,16 @@ export const marketing = {
       "Guests scan, choose and pay. Your team receives the paid order and records it once in your POS. Guests who prefer to order in person still can.",
     teamImage:
       "The staff view with a paid order and separate POS recording will appear here.",
-    costTitle: "Simple to start.\nClear on costs.",
+    costTitle: "You pay when\nyour guests pay.",
     feeLabel: "per successfully paid order",
     feeDetail:
-      "Excluding voluntary tips. Including any VAT applicable to our fee. Stripe processing fees are separate.",
-    zero: "No setup fee. No monthly Zackisch base fee.",
+      "Excluding voluntary tips. Including any VAT applicable to our fee. Plus payment provider fees.",
+    zero: "No setup fee. No monthly base fee.",
+    seasonal:
+      "With no paid orders, Zackisch is free. Even when your venue closes for the season.",
     setupTitle: "Your next step?\nYour own venue.",
     setupText:
-      "Create an account. Set up your menu. Connect Stripe. Get started with your QR codes and a suitable tablet.",
+      "Create an account. Set up your menu. Connect your payment provider. Get started with your QR codes and a suitable tablet.",
     setupNote:
       "You need internet, compatible devices and your existing POS process. Devices, connectivity and printing may have their own costs.",
     faq: "Anything else?",

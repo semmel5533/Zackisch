@@ -14,7 +14,6 @@ const examples = [
 
 type DemoCopy = {
   demoTitle: string;
-  demoNote: string;
   pauseLogos: string;
   resumeLogos: string;
 };
@@ -26,7 +25,6 @@ export function DemoVenues({ copy }: { copy: DemoCopy }) {
       <div className="demo-heading">
         <div>
           <h2>{copy.demoTitle}</h2>
-          <p>{copy.demoNote}</p>
         </div>
         <button
           type="button"

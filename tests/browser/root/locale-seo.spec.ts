@@ -125,7 +125,7 @@ test("demo logo band is explicitly illustrative and motion can be paused", async
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/de-de");
   await expect(
-    page.getByText("Beispielmarken – keine Kundenreferenzen."),
+    page.getByRole("heading", { name: "Demo-Lokale" }),
   ).toBeVisible();
   const track = page.locator(".logo-track");
   const before = await track.evaluate((el) => getComputedStyle(el).transform);
@@ -147,3 +147,55 @@ test("demo logo band is explicitly illustrative and motion can be paused", async
   ).toBeHidden();
   await expect(page.getByRole("button", { name: /Logo-Band/ })).toBeHidden();
 });
+
+for (const locale of ["de-de", "de-en"]) {
+  test(`${locale}: marketing terminology, seasonal pricing and manual POS are clear`, async ({
+    page,
+  }) => {
+    await page.goto(`/${locale}`);
+    const main = page.locator("main");
+    await expect(main).not.toContainText("Stripe");
+    await expect(
+      page.locator(".welcome-main-photo figcaption, .story-photo figcaption"),
+    ).toHaveCount(0);
+    const styles = await page.locator(".site-header").evaluate((el) => {
+      const properties = [
+        "backgroundColor",
+        "borderColor",
+        "borderRadius",
+        "minHeight",
+        "padding",
+        "fontSize",
+        "lineHeight",
+      ];
+      return [".region-trigger", ".header-login"].map((selector) => {
+        const style = getComputedStyle(el.querySelector(selector)!);
+        return properties.map(
+          (property) => style[property as keyof CSSStyleDeclaration],
+        );
+      });
+    });
+    expect(styles[0]).toEqual(styles[1]);
+    await expect(page.locator(".questions .faq-trigger")).toHaveCount(9);
+    const german = locale === "de-de";
+    await expect(page.locator(".cost-details")).toContainText(
+      german ? "Saisonpause" : "season",
+    );
+    const question = page.getByRole("button", {
+      name: german
+        ? "Wie funktioniert die Anbindung an meine Kasse?"
+        : "How does it connect to my POS?",
+    });
+    await question.click();
+    await expect(page.locator(".questions")).toContainText(
+      german ? "genau einmal manuell" : "exactly once",
+    );
+    if (german)
+      await expect(main).not.toContainText(/Speisekarte|Gerichte|Eine Karte/);
+    await page.goto(`/${locale}/pricing`);
+    await expect(page.locator("main")).not.toContainText("Stripe");
+    await expect(page.locator("main")).toContainText(
+      german ? "Saisonpause" : "seasonal",
+    );
+  });
+}

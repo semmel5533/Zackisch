@@ -43,11 +43,6 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                 loading="eager"
                 fetchPriority="high"
               />
-              <figcaption>
-                <a href="https://www.pexels.com/photo/diverse-female-friends-checking-social-media-on-mobile-in-cafe-4350217/">
-                  {c.photoCredit}
-                </a>
-              </figcaption>
             </figure>
           </div>
         </section>
@@ -66,17 +61,11 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               height={1800}
               sizes="(max-width: 799px) 100vw, 50vw"
             />
-            <figcaption>
-              <a href="https://www.pexels.com/photo/man-using-a-phone-while-having-coffee-6336634/">
-                {m.cafeCredit}
-              </a>
-            </figcaption>
           </figure>
         </section>
         <section id="how-it-works" className="menu-chapters">
           <div className="chapter-introduction container">
             <h2>{m.menuTitle}</h2>
-            <p>{m.menuIntro}</p>
           </div>
           <div className="chapter-stack container">
             {m.features.map((feature, i) => (
@@ -110,11 +99,6 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               height={2100}
               sizes="(max-width: 799px) 100vw, 50vw"
             />
-            <figcaption>
-              <a href="https://www.pexels.com/photo/waiter-standing-by-table-in-restaurant-19595138/">
-                {m.serviceCredit}
-              </a>
-            </figcaption>
           </figure>
           <div>
             <h2>{m.teamTitle}</h2>
@@ -136,6 +120,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             </div>
             <div className="cost-details">
               <h3>{m.zero}</h3>
+              <p>{m.seasonal}</p>
               <p>{m.feeDetail}</p>
               <Link className="inline-link" href={`/${locale}/pricing`}>
                 {c.priceLink}

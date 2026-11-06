@@ -795,6 +795,18 @@ p {
 }
 
 .region-country { font-size: .875rem; font-weight: 600; }
+.site-header .region-trigger {
+  min-height: var(--zk-control-md);
+  padding: var(--zk-space-3) var(--zk-space-5);
+  background: var(--zk-surface);
+  border-color: var(--zk-border-strong);
+  font-size: 1rem;
+  line-height: 1.25;
+  transition: background-color var(--zk-duration-fast), border-color var(--zk-duration-fast);
+}
+.site-header .region-trigger:hover { background: var(--zk-surface-muted); }
+.site-header .region-country { font-size: inherit; }
+.problem-section .story-photo img { object-position: center bottom; }
 .site-footer .region-trigger { background: transparent; border-color: var(--zk-color-ref-citron-700); }
 .site-footer .region-trigger:hover { background: var(--zk-color-semantic-background-brand-soft); }
 .footer-grid a, .footer-grid .text-button { text-decoration: none; }
