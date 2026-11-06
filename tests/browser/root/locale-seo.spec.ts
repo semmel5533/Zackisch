@@ -190,6 +190,12 @@ for (const locale of ["de-de", "de-en"]) {
       german ? "Bestellnummer und den Abholstatus" : "order number and pickup status",
     );
     await expect(page.locator(".personal-contact")).toHaveCSS("text-align", "right");
+    await expect(page.locator(".personal-contact")).toHaveCSS("border-top-width", "0px");
+    await expect(page.locator(".personal-contact")).toHaveCSS("border-bottom-width", "1px");
+    await page.getByRole("button", {
+      name: german ? "Können meine Gäste persönlich bestellen oder bar bezahlen?" : "Can guests order in person or pay cash?",
+    }).click();
+    await expect(page.locator(".questions")).toContainText(german ? "Barzahlungen erfolgen beim Lokal" : "Cash payments are handled by the venue");
     const email = page.locator(".personal-contact > a");
     await expect(email.locator("svg")).toHaveCount(0);
     await expect(email).toHaveCSS("text-decoration-line", "none");

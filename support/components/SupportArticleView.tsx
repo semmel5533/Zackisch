@@ -228,7 +228,7 @@ export function SupportArticleView({
               </h3>
               <p className="text-sm text-muted-foreground">
                 {isDe
-                  ? "Erstelle ein Support-Ticket zu diesem Thema — unser Team hilft dir direkt weiter."
+                  ? "Erstelle ein Support-Ticket zu diesem Thema. Unser Team hilft dir direkt weiter."
                   : "Create a support ticket on this topic and our team will assist you directly."}
               </p>
             </div>

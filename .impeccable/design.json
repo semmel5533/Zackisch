@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-11-06T01:26:50.380152+00:00",
-  "title": "Zackisch — Brand & Product Design System",
+  "title": "Zackisch: Brand & Product Design System",
   "extensions": {
     "colorMeta": {
       "citron": {
@@ -198,13 +198,14 @@
       "Use real color stock photographs with verified free commercial rights; no optional attribution captions. Keep provenance.",
       "Keep product image areas clearly text-labelled until actual screenshots are available.",
       "Header country trigger matches the login secondary pill and forms a 12px-gap group with it; footer country trigger retains its transparent Citron treatment. Label fictional logo band with Demo-Lokale / Demo venues.",
-      "Right-align the personal contact block; email uses no arrow and underlines on hover or keyboard focus.",
+      "Right-align the personal contact block with a bottom separator and no top border; email uses no arrow and underlines on hover or keyboard focus.",
       "Footer: three columns, country trigger first above unheaded navigation, then contact/help and legal. Below 900px the first group spans the row above the remaining two."
     ],
     "donts": [
       "Never generate photographs with AI.",
       "Never recolor or recreate the supplied logo artwork.",
-      "Never invent screenshots, endorsements or commercial claims."
+      "Never invent screenshots, endorsements or commercial claims.",
+      "Do not use em or en dashes as sentence punctuation in authored copy."
     ]
   }
 }

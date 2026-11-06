@@ -57,7 +57,7 @@ export function SetupAndBillingPanel({
     business.posSystemName || "Bestehende Restaurantkasse (TSE)",
   );
   const [posExternalPaymentLabel, setPosExternalPaymentLabel] = useState(
-    business.posExternalPaymentLabel || "Online bezahlt – Zackisch",
+    business.posExternalPaymentLabel || "Online bezahlt: Zackisch",
   );
   const [legalName, setLegalName] = useState(
     business.legalName || business.name || "",

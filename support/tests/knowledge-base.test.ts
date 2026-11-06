@@ -93,7 +93,7 @@ describe("support knowledge base", () => {
       path.resolve(__dirname, "../components/SupportShell.tsx"),
       "utf8"
     );
-    expect(shellSrc).toContain("https://zackisch.com/brand/logo/lockups/signet--transparent--standard.svg");
+    expect(shellSrc).toContain("https://zackisch.com/brand/logo/lockups/wordmark--transparent--standard.svg");
     expect(shellSrc).not.toMatch(legacyPattern);
   });
 });

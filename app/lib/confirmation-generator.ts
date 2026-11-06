@@ -379,7 +379,7 @@ export function generateOrderConfirmationHtml(
     </div>
 
     <div class="notice-box">
-      <strong>${isDe ? "Wichtiger Hinweis – Kein Kassenbeleg und keine Rechnung:" : "Important note – Not a fiscal POS receipt or tax invoice:"}</strong><br/>
+      <strong>${isDe ? "Wichtiger Hinweis: Kein Kassenbeleg und keine Rechnung:" : "Important note: Not a fiscal POS receipt or tax invoice:"}</strong><br/>
       ${
         isDe
           ? 'Diese Bestätigung zeigt deine Zahlung und Bestellung über <a href="https://zackisch.com" target="_blank" rel="noopener noreferrer" style="color: #000; font-weight: 500; text-decoration: underline; text-underline-offset: 3px;">zackisch.com</a>. Sie ist kein Kassenbeleg und keine Rechnung. Den gesetzlich erforderlichen Kassenbeleg beziehungsweise eine Rechnung stellt dir der Gastronomiebetrieb zur Verfügung.'

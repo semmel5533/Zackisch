@@ -55,7 +55,7 @@ export const dataProcessing = {
         },
         {
           title: "Anlage C · Unterauftragnehmerverzeichnis",
-          body: "Auszufüllende Einträge: Cloudflare – Webauslieferung [Vertragsgesellschaft, Anschrift, konkrete Dienste, Datenorte, Datenarten, Vertrags-/Garantienachweis]; Convex – Backend und Speicherung [dieselben Angaben]; E-Mail-Anbieter – Nachrichtenversand [dieselben Angaben]; weitere beauftragte Anbieter [Einträge]. Für jeden Eintrag sind Genehmigungsdatum und Änderungsstand festzuhalten. Stripe ist tätigkeitsbezogen einzuordnen: eigenständig verantwortliche Zahlungsdienste dürfen nicht ungeprüft als bloße Unterauftragsverarbeitung des Restaurants bezeichnet werden. [Tatsächliche Stripe-Rollen und Verträge zuordnen.]",
+          body: "Auszufüllende Einträge: Cloudflare: Webauslieferung [Vertragsgesellschaft, Anschrift, konkrete Dienste, Datenorte, Datenarten, Vertrags-/Garantienachweis]; Convex: Backend und Speicherung [dieselben Angaben]; E-Mail-Anbieter: Nachrichtenversand [dieselben Angaben]; weitere beauftragte Anbieter [Einträge]. Für jeden Eintrag sind Genehmigungsdatum und Änderungsstand festzuhalten. Stripe ist tätigkeitsbezogen einzuordnen: eigenständig verantwortliche Zahlungsdienste dürfen nicht ungeprüft als bloße Unterauftragsverarbeitung des Restaurants bezeichnet werden. [Tatsächliche Stripe-Rollen und Verträge zuordnen.]",
         },
         {
           title: "Vereinbarung und Fassungsstand",
@@ -120,7 +120,7 @@ export const dataProcessing = {
         },
         {
           title: "Annex C · Subprocessor register",
-          body: "Entries to complete: Cloudflare – web delivery [contracting entity, address, actual services, locations, data categories, agreement/safeguard evidence]; Convex – backend and storage [same details]; email provider – message delivery [same details]; other commissioned providers [entries]. Record authorisation date and revision for each entry. Classify Stripe by activity: independently controlled payment services must not be treated without assessment as mere restaurant subprocessing. [Map the actual Stripe roles and agreements.]",
+          body: "Entries to complete: Cloudflare: web delivery [contracting entity, address, actual services, locations, data categories, agreement/safeguard evidence]; Convex: backend and storage [same details]; email provider: message delivery [same details]; other commissioned providers [entries]. Record authorisation date and revision for each entry. Classify Stripe by activity: independently controlled payment services must not be treated without assessment as mere restaurant subprocessing. [Map the actual Stripe roles and agreements.]",
         },
         {
           title: "Agreement and version",

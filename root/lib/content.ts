@@ -41,7 +41,7 @@ export const content = {
     nav: ["Funktionen", "Kosten", "Fragen", "Hilfe"],
     login: "Anmelden",
     start: "Lokal einrichten",
-    title: "QR-Bestellung für dein Lokal – Zackisch",
+    title: "QR-Bestellung für dein Lokal | Zackisch",
     description:
       "Gäste bestellen und bezahlen per QR-Code. Dein Team behält den Überblick, deine bestehende Kasse bleibt. 2 % Zackisch-Gebühr plus Zahlungsanbietergebühren.",
     researchLink: "Quelle und Einordnung lesen",
@@ -59,9 +59,9 @@ export const content = {
           "Ja. Gäste scannen deinen Abhol-QR-Code, wählen Artikel und bezahlen im Browser. Danach sehen sie ihre Bestellnummer und den Abholstatus. Dein Team bereitet die Bestellung vor und markiert sie als abholbereit. Dafür brauchst du keine Tische. Die bereits bezahlte Bestellung erfasst ihr wie beim Tischservice einmal in eurer Kasse.",
       },
       {
-        question: "Was kostet Zackisch – auch in der Saisonpause?",
+        question: "Was kostet Zackisch auch in der Saisonpause?",
         answer:
-          "Du zahlst 2 % auf den erfolgreich bezahlten Bestellwert ohne freiwilliges Trinkgeld, inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Hinzu kommen Zahlungsanbietergebühren. Einrichtung und Grundgebühr kosten nichts. Ohne bezahlte Bestellungen fallen keine Zackisch-Gebühren an – ideal für Saisonbetriebe. Eigene Geräte-, Internet- und weitere Anbietergebühren bleiben davon unabhängig.",
+          "Du zahlst 2 % auf den erfolgreich bezahlten Bestellwert ohne freiwilliges Trinkgeld, inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Hinzu kommen Zahlungsanbietergebühren. Einrichtung und Grundgebühr kosten nichts. Ohne bezahlte Bestellungen fallen keine Zackisch-Gebühren an. Das passt gut zu Saisonbetrieben. Eigene Geräte-, Internet- und weitere Anbietergebühren bleiben davon unabhängig.",
       },
       {
         question: "Wie funktioniert die Anbindung an meine Kasse?",
@@ -90,9 +90,9 @@ export const content = {
           "Nein. Deine Gäste scannen den QR-Code und öffnen das Menü direkt im Browser. Bestellung und Zahlung funktionieren ohne App-Installation und ohne Zackisch-Gastkonto.",
       },
       {
-        question: "Kann mein Personal weiterhin Bestellungen aufnehmen?",
+        question: "Können meine Gäste persönlich bestellen oder bar bezahlen?",
         answer:
-          "Ja. Der digitale Bestellweg ist freiwillig und ergänzt deinen Service. Gäste können weiter persönlich bei deinem Team bestellen. Zackisch ersetzt weder dein Personal noch deine Kasse.",
+          "Ja. Wer lieber persönlich bestellt, bar bezahlen möchte oder nicht mit dem Smartphone bestellen und bezahlen kann, wendet sich wie gewohnt an dein Team. Ihr nehmt die Bestellung auf und kassiert über euren bestehenden Kassenablauf. Barzahlungen erfolgen beim Lokal, nicht im digitalen Zackisch-Checkout.",
       },
       {
         question: "Was passiert, wenn das Internet ausfällt?",
@@ -124,7 +124,7 @@ export const content = {
         sections: [
           {
             title: "2 % für Zackisch",
-            body: "Die Gebühr bezieht sich auf den erfolgreich bezahlten Bruttobestellwert ohne freiwilliges Trinkgeld. Die gegebenenfalls auf die Zackisch-Gebühr entfallende Umsatzsteuer ist enthalten. Ohne bezahlte Bestellungen ist Zackisch kostenlos – auch in der Saisonpause. Geräte, Internet und Zahlungsabwicklung können eigene Kosten verursachen.",
+            body: "Die Gebühr bezieht sich auf den erfolgreich bezahlten Bruttobestellwert ohne freiwilliges Trinkgeld. Die gegebenenfalls auf die Zackisch-Gebühr entfallende Umsatzsteuer ist enthalten. Ohne bezahlte Bestellungen ist Zackisch kostenlos, auch in der Saisonpause. Geräte, Internet und Zahlungsabwicklung können eigene Kosten verursachen.",
           },
           {
             title: "Zahlungsanbietergebühren",
@@ -191,7 +191,7 @@ export const content = {
     nav: ["Features", "Pricing", "Questions", "Help"],
     login: "Sign in",
     start: "Set up your venue",
-    title: "QR ordering for your venue – Zackisch",
+    title: "QR ordering for your venue | Zackisch",
     description:
       "Guests order and pay by QR code. Your team keeps track and your existing POS stays. 2% Zackisch fee plus payment provider fees.",
     researchLink: "Read the source and context",
@@ -239,9 +239,9 @@ export const content = {
           "No. Guests scan the QR code and open the menu directly in their browser. Ordering and payment work without installing an app or creating a Zackisch guest account.",
       },
       {
-        question: "Can staff still take orders?",
+        question: "Can guests order in person or pay cash?",
         answer:
-          "Yes. Digital ordering is optional and complements your service. Guests can still order from your team in person. Zackisch replaces neither your staff nor your POS.",
+          "Yes. Guests who prefer to order in person, want to pay cash or cannot order and pay with a smartphone can speak to your team as usual. You take their order and payment through your existing POS process. Cash payments are handled by the venue, not through Zackisch’s digital checkout.",
       },
       {
         question: "What happens if the internet goes down?",

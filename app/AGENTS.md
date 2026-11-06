@@ -1,4 +1,4 @@
-# Merchant, staff and guest app — agent rules
+# Merchant, staff and guest app: agent rules
 
 Visual contract: follow `../DESIGN.md`, Base UI primitives, Zackisch wrappers and canonical tokens, with League Spartan for UI. Existing layouts are not the redesign reference. Preserve the application-specific functional and security rules below.
 

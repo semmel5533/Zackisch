@@ -1,4 +1,4 @@
-# Zackisch — engineering and agent contract
+# Zackisch: engineering and agent contract
 
 Scope: the whole repository. Read the relevant application's `AGENTS.md` before editing it. Human documentation is German; agent instructions and `DESIGN.md` are English. Maintain only root `README.md`, `AGENTS.md`, `DESIGN.md`, Impeccable's `PRODUCT.md`, and one README/AGENTS pair per application as product documentation. Installed skill instructions and required third-party license notices are tooling, not competing product documentation. Keep plans, research logs, screenshots, approval evidence and audit reports outside the repository.
 
@@ -33,6 +33,10 @@ Read version-matched installed `node_modules/next/dist/docs/` before Next.js edi
 ### Interaction contract
 
 One dominant primary action per task area; navigation uses links. Destructive confirmations name consequences and action. Persistent visible labels, associated descriptions/errors, retained input after failure. Radios for exclusive choices, checkboxes for independent ones, tables for dense comparisons. Test focus trap/return, keyboard, touch targets, 320px reflow, zoom, contrast, long translations, loading/disabled/offline/error states and reduced motion. Guest headers prioritize the venue. Financial metrics use tabular numbers. Only authoritative server confirmation can show payment success; POS recording is independent of preparation.
+
+### Writing style
+
+Do not use em dashes or en dashes as sentence punctuation in authored copy, documentation, UI, metadata or emails. Rewrite with full stops, commas, colons or parentheses. Preserve technical hyphens, numeric ranges, data placeholders and third-party/generated instructions where they are not sentence punctuation.
 
 ### Public website terminology
 

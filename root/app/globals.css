@@ -481,7 +481,7 @@ p {
 .service-photo { grid-column: 1; grid-row: 1 / span 2; }
 .service-photo img { aspect-ratio: 4 / 5; object-fit: cover; object-position: center; }
 .service-section > div, .service-section > .staff-placeholder { grid-column: 2; }
-.personal-contact { text-align: right; border-top: 1px solid var(--zk-border); padding-block: 64px 112px; }
+.personal-contact { text-align: right; border-bottom: 1px solid var(--zk-border); padding-block: 64px 112px; }
 .marketing .personal-contact h2 { font-size: 1.5rem; letter-spacing: -.02em; }
 .personal-contact p { margin-top: 12px; color: var(--zk-text-secondary); font-size: 1.25rem; }
 .personal-contact > a { display: inline-block; font-size: clamp(1.65rem, 5.8vw, 5rem); line-height: 1.2; font-weight: 600; letter-spacing: -.03em; margin-top: 24px; text-decoration: none; text-decoration-thickness: 2px; text-underline-offset: .12em; }

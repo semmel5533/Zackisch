@@ -8,7 +8,7 @@ export const marketing = {
     problemText:
       "Am Tisch warten Gäste auf die nächste Bestellung. Am Tresen kommen Bestellen, Bezahlen und Abholen zusammen. Dein Team wird überall gleichzeitig gebraucht.",
     solutionText:
-      "Lass Gäste per QR-Code selbst bestellen und bezahlen – am Tisch oder zur Abholung am Tresen. Persönlicher Service bleibt immer eine Wahl.",
+      "Lass Gäste per QR-Code selbst bestellen und bezahlen, am Tisch oder zur Abholung am Tresen. Persönlicher Service bleibt immer eine Wahl.",
     personalTitle: "Deine Frage ist nicht aufgelistet?",
     personalText: "Schreibe mir persönlich:",
     explore: "So hilft Zackisch",
@@ -48,7 +48,7 @@ export const marketing = {
       "Empfehlungen, Beliebteste und Trinkgeld schaltest du unabhängig voneinander ein oder aus.",
     teamTitle: "Am Tisch. Am Tresen.\nMit deinem Team.",
     teamText:
-      "Gäste scannen, wählen und bezahlen. Dein Team bereitet den Auftrag für den Tisch oder zur Abholung vor und erfasst ihn einmal in eurer Kasse. Wer persönlich bestellen möchte, tut genau das.",
+      "Gäste scannen, wählen und bezahlen. Dein Team bereitet den Auftrag für den Tisch oder zur Abholung vor und erfasst ihn einmal in eurer Kasse. Wer lieber persönlich bestellt, bar bezahlen möchte oder kein Smartphone nutzen kann, wendet sich wie gewohnt an dein Team.",
     teamImage:
       "Hier folgt die Personalansicht mit bezahltem Auftrag und Kassenerfassung.",
     costTitle: "Du zahlst erst,\nwenn deine Gäste bezahlen.",
@@ -76,7 +76,7 @@ export const marketing = {
     problemText:
       "At tables, guests wait to place their next order. At the counter, ordering, payment and collection happen at once. Your team is needed everywhere.",
     solutionText:
-      "Let guests order and pay by QR code – at the table or for counter pickup. Personal service is always a choice.",
+      "Let guests order and pay by QR code, at the table or for counter pickup. Personal service is always a choice.",
     personalTitle: "Can’t find your question?",
     personalText: "Write to me personally:",
     explore: "How Zackisch helps",
@@ -118,7 +118,7 @@ export const marketing = {
       "Switch recommendations, the popular category and tipping on or off independently.",
     teamTitle: "At tables. At counters.\nWith your team.",
     teamText:
-      "Guests scan, choose and pay. Your team prepares the order for the table or for pickup and records it once in your POS. Guests who prefer to order in person still can.",
+      "Guests scan, choose and pay. Your team prepares the order for the table or for pickup and records it once in your POS. Guests who prefer to order in person, want to pay cash or cannot use a smartphone can simply speak to your team.",
     teamImage:
       "The staff view with a paid order and separate POS recording will appear here.",
     costTitle: "You pay when\nyour guests pay.",

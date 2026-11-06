@@ -152,9 +152,9 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     },
     summary: {
       "de-de":
-        "So führst du deinen Gastronomiebetrieb selbstständig durch den Zackisch Setup-Assistenten — ohne Kassenwechsel und ohne neue Hardware.",
+        "So führst du deinen Gastronomiebetrieb selbstständig durch den Zackisch Setup-Assistenten, ohne Kassenwechsel und ohne neue Hardware.",
       "de-en":
-        "How to guide your hospitality venue through the Zackisch Setup Wizard on your own — without changing your POS or buying new hardware.",
+        "How to guide your hospitality venue through the Zackisch Setup Wizard on your own, without changing your POS or buying new hardware.",
     },
     prerequisites: {
       "de-de": [
@@ -562,12 +562,12 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
       "de-de": [
         "Aktiviere unter Einstellungen -> Bestellmodi die Option Zur Abholung (Takeaway).",
         "Drucke den Abhol-QR-Code aus und platziere ihn gut sichtbar im Wartebereich oder an der Theke.",
-        "Sobald das Gericht fertig ist, tippt dein Team auf Abholbereit — der Status im Smartphone des Gastes springt sofort um.",
+        "Sobald das Gericht fertig ist, tippt dein Team auf Abholbereit. Der Status im Smartphone des Gastes springt sofort um.",
       ],
       "de-en": [
         "Enable Pickup (Takeaway) under Settings -> Order Modes.",
         "Print the Pickup QR code and place it visibly at the counter or waiting area.",
-        "When the order is ready, staff tap Ready for Pickup — the guest's phone updates in real time.",
+        "When the order is ready, staff tap Ready for Pickup. The guest's phone updates in real time.",
       ],
     },
     verification: {
@@ -821,7 +821,7 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     steps: {
       "de-de": [
         "Sobald ein Gast per QR bestellt und bezahlt hat, erscheint die Bestellung auf deinem Tablet mit dem grünen Hinweis Bereits mit Zackisch bezahlt.",
-        "Erfasse die Artikel der Bestellung genau einmal in deiner vorhandenen Kasse unter der unbaren Zahlungsart (z. B. Onlinezahlung / Zackisch / Stripe — niemals als Barzahlung, damit dein Bargeldbestand stimmt!).",
+        "Erfasse die Artikel der Bestellung genau einmal in deiner vorhandenen Kasse unter der unbaren Zahlungsart (z. B. Onlinezahlung / Zackisch / Stripe, niemals als Barzahlung, damit dein Bargeldbestand stimmt!).",
         "Tippe direkt auf der Bestellkarte in Zackisch auf den Button In Kasse erfasst (optional mit Kassen-Bonnummer).",
         "Prüfe zum Schichtende den Bereich Kassenabgleich offen, damit keine Bestellung vergessen oder doppelt gebucht wurde.",
       ],
@@ -927,7 +927,7 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     },
     summary: {
       "de-de":
-        "Wenn ein Gericht in der Küche ausgeht, sperrt dein Team es mit einem Tipp — Gäste können es sofort nicht mehr bestellen.",
+        "Wenn ein Gericht in der Küche ausgeht, sperrt dein Team es mit einem Tipp. Gäste können es sofort nicht mehr bestellen.",
       "de-en":
         "When a dish runs out in the kitchen, staff toggle it off with one tap so guests can no longer order it.",
     },
@@ -1099,9 +1099,9 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     },
     summary: {
       "de-de":
-        "Zackisch legt Bestellungen erst nach bestätigter Stripe-Zahlung an — jede Bestellung auf dem Tablet trägt das Siegel Bereits mit Zackisch bezahlt.",
+        "Zackisch legt Bestellungen erst nach bestätigter Stripe-Zahlung an. Jede Bestellung auf dem Tablet trägt das Siegel Bereits mit Zackisch bezahlt.",
       "de-en":
-        "Zackisch creates orders only after verified Stripe payment — every order on the tablet carries the badge Already paid with Zackisch.",
+        "Zackisch creates orders only after verified Stripe payment. Every order on the tablet carries the badge Already paid with Zackisch.",
     },
     prerequisites: {
       "de-de": ["Aktives Stripe Connect Konto"],
@@ -1202,13 +1202,13 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     steps: {
       "de-de": [
         "Dein Gastronomiebetrieb ist Verkäufer (Seller of Record) und Inhaber der Direktzahlung (Direct Charge) auf deinem verbundenen Stripe-Konto.",
-        "Zackisch berechnet 2 % Provision auf den erfolgreich bezahlten Bruttowarenwert nach Rabatten — inklusive der auf unsere eigene Leistung gegebenenfalls entfallenden Umsatzsteuer (niemals 2 % plus 19 % obendrauf).",
+        "Zackisch berechnet 2 % Provision auf den erfolgreich bezahlten Bruttowarenwert nach Rabatten, inklusive der auf unsere eigene Leistung gegebenenfalls entfallenden Umsatzsteuer (niemals 2 % plus 19 % obendrauf).",
         "Freiwilliges Trinkgeld deiner Gäste ist zu 100 % provisionsfrei für Zackisch (0 % Zackisch-Gebühr auf Trinkgeld).",
         "Die regulären Stripe-Zahlungsgebühren werden von Stripe direkt auf deinem verbundenen Stripe-Konto gemäß deinem Stripe-Tarif belastet.",
       ],
       "de-en": [
         "Your restaurant is the Seller of Record and owner of the Direct Charge on your connected Stripe account.",
-        "Zackisch charges a 2% platform fee on the captured gross goods/services value after discounts — inclusive of any VAT applicable to Zackisch's own service (never 2% plus 19% on top).",
+        "Zackisch charges a 2% platform fee on the captured gross goods/services value after discounts, inclusive of any VAT applicable to Zackisch's own service (never 2% plus 19% on top).",
         "Voluntary guest tips carry 0% Zackisch platform fee.",
         "Standard Stripe payment processing fees are charged directly by Stripe to your connected Stripe account.",
       ],
@@ -1686,11 +1686,11 @@ export const SUPPORT_ARTICLES: SupportArticle[] = [
     },
     steps: {
       "de-de": [
-        "Alle Schriftarten werden lokal vom Server ausgeliefert — es findet keine IP-Übermittlung an Google Fonts statt.",
+        "Alle Schriftarten werden lokal vom Server ausgeliefert. Es findet keine IP-Übermittlung an Google Fonts statt.",
         "Für die Zahlungsabwicklung wird Stripe erst beim Aufruf des Checkouts geladen.",
       ],
       "de-en": [
-        "All fonts are self-hosted — no guest IP addresses are transmitted to Google Fonts.",
+        "All fonts are self-hosted. No guest IP addresses are transmitted to Google Fonts.",
         "Stripe is loaded strictly when the guest initiates checkout.",
       ],
     },

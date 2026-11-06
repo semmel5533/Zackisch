@@ -105,8 +105,8 @@ export const sendEmailOtp = internalAction({
 
     const title = isOpsLogin
       ? isDe
-        ? "Zackisch Team Dashboard — Zwei-Faktor-Code"
-        : "Zackisch Team Dashboard — Two-Factor Code"
+        ? "Zackisch Team Dashboard: Zwei-Faktor-Code"
+        : "Zackisch Team Dashboard: Two-Factor Code"
       : subject;
 
     const intro = isOpsLogin

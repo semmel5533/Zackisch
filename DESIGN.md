@@ -96,7 +96,7 @@ components:
     padding: "64px"
 ---
 
-# Zackisch — Brand & Product Design System
+# Zackisch: Brand & Product Design System
 
 > **Version 1.3 · 6 November 2026 · Canonical design specification**
 > Applies to `root/` (public website), `app/` (merchant/guest/staff), `support/` and `internal/`.
@@ -109,7 +109,7 @@ components:
 | Identity | Original `wordmark.svg` and `signet.svg` supplied by the founder; their vector outlines stay intact and **always #000000**. No recoloring. Only the public footer wordmark uses the owner-authorized 0.22 CSS opacity. |
 | Foundation | Pure white `#FFFFFF`, pure black `#000000`, **Electric Citron `#C6FF34`**. No substitutions. |
 | Selection | On Citron menus: background `citron.300` (`#C6FF34`); selected **pill** `citron.500` (`#9FD600`), black font weight **700**, Phosphor icon **fill** when an icon is present (inactive **regular**); **no black marker, stripe, dot or side border**. |
-| Feedback | **Every meaningful status, including Error, uses a recognizable Phosphor status icon + explicit text.** Only Error has a separate hue: icon/message/border `#C62828`. Success, Warning, Info and Pending stay black/gray, distinguished by icon shape and wording — never green/yellow/blue. |
+| Feedback | **Every meaningful status, including Error, uses a recognizable Phosphor status icon + explicit text.** Only Error has a separate hue: icon/message/border `#C62828`. Success, Warning, Info and Pending stay black/gray, distinguished by icon shape and wording: never green/yellow/blue. |
 | Typography | **League Spartan** across marketing and app, weights 400/500/600/700/800; the public marketing hero uses variable weight 650. Original letterforms of the logo are artwork, not retyped in the font. |
 | Icons | **Phosphor** exclusively and **only where they add information**. No icons automatically on every button, field, card, menu item or metric; see §6. |
 | Shape | Rounded language. Pill buttons, menu items, tabs and chips. Large rounded cards; input corners 16px for a practical floating-label field. |
@@ -122,7 +122,7 @@ components:
 
 ### Brand idea
 
-**Human service, without unnecessary waiting.** Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. The restaurant keeps its POS and service choices; guests do not need an app/account. The visual system should feel **direct, warm, fast, trustworthy, calm** — more useful product than neon experiment.
+**Human service, without unnecessary waiting.** Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. The restaurant keeps its POS and service choices; guests do not need an app/account. The visual system should feel **direct, warm, fast, trustworthy, calm**: more useful product than neon experiment.
 
 - **Personality:** approachable, confident, practical, cheerful without being childish; transparent and never coercive.
 - **Promise:** “Deine Kasse bleibt. Deine Gäste bestellen selbst.” Use as an approved product message when contextually accurate; do not imply Zackisch replaces the POS or guarantees operations.
@@ -170,7 +170,7 @@ Prefer SVG for web/UI and editable vector handoffs; use exact-size PNG only for 
 
 **QR printing is not a logo asset export.** Printed order QR designs are specified later in this document: functional black on white, a black signet centered only when scan reliability allows, no Citron or ornamentation. **No QR codes, table-tent print layouts or PDFs belong in this package.**
 
-## 3. Palette — primitives
+## 3. Palette: primitives
 
 Three fixed brand values:
 
@@ -273,7 +273,7 @@ Use **League Spartan** in every property, including data tables, labels, mobile 
 
 Load the approved self-hosted League Spartan font from `root/public/brand/fonts/`, with all required weights, `font-display: swap` and sensible fallback fonts. The other applications use the absolute website URL with the configured CORS headers. Ensure the correct diacritics and German numeric formatting. Prefer tighter letter spacing only for large display, not microcopy. Preserve legibility in long support articles: cap line length around 65–75 characters and use generous line height. Optical sizing varies; test text in actual browsers and zoom.
 
-### Public marketing scale — root only
+### Public marketing scale: root only
 
 The table above remains the operational UI scale for merchant, guest, staff, support and internal screens. The public website has a separate responsive display hierarchy to support the founder's requested desktop emphasis. This exception does not enlarge checkout controls, dashboards or support reading text.
 
@@ -297,7 +297,7 @@ The self-hosted variable font declares weights 100–900; the hero's 650 is a su
 
 **The Visible Motion Rule.** Scroll enhancements begin from visible content. On the public website, desktop-only photo clipping is progressive enhancement; reduced-motion mode disables animations, transitions and sticky chapter panels. No content depends on animation support or scroll position to become readable.
 
-### Public marketing layout and motion — root only
+### Public marketing layout and motion: root only
 
 The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header has a 112px minimum height, reduced to 96px through 599px; desktop navigation becomes a dialog menu through 899px. Between 900px and 1199px navigation wraps onto its own centered row. Through 599px the header uses two rows: wordmark and menu above, region/language and the simple secondary login pill grouped below with a 12px gap. The mobile menu trigger is a 48px square pill with a 24px Phosphor List icon and a localized accessible name, without visible text. These content-driven breakpoints override the general device guidance only for this website.
 
@@ -305,7 +305,7 @@ The centered introduction uses a single black headline color, with a real smartp
 
 The example-venue strip below the hero contains six fictional typographic brands in League Spartan, under the localized heading “Demo-Lokale” / “Demo venues”, without a separate disclaimer line. The strip has a 64px top margin, 32px vertical padding and light top/bottom borders. Its duplicated track drifts horizontally over 36 seconds, linearly and infinitely, and pauses on hover or with the 44px pause/resume control. Duplicate content is hidden from assistive technology. Reduced motion removes the animation and duplicate list and shows all six examples in a static three-column grid, reduced to two columns through 599px; the unnecessary pause control is hidden.
 
-A fully right-aligned personal-contact area follows the FAQ, separated by a light border. The email link has no arrow or resting underline; hover and keyboard focus underline it, with the focus outline retained. Its heading is 24px, supporting text 20px and direct email link `clamp(1.65rem, 5.8vw, 5rem)`, weight 600 and line height 1.2. It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
+A fully right-aligned personal-contact area follows the FAQ, with a light bottom border before the final invitation and no top border. The email link has no arrow or resting underline; hover and keyboard focus underline it, with the focus outline retained. Its heading is 24px, supporting text 20px and direct email link `clamp(1.65rem, 5.8vw, 5rem)`, weight 600 and line height 1.2. It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
 
 **The Footer Logo Exception Rule.** Only the public footer presents the unchanged original black wordmark at CSS opacity 0.22 on Electric Citron, with 16px side margins and 8px bottom padding. Other logo placements remain opaque black.
 
@@ -325,7 +325,7 @@ In browsers supporting `animation-timeline: view()`, only widths from 800px with
 
 **One library: Phosphor Icons** (`@phosphor-icons/react` in React, or official Phosphor equivalents elsewhere). Use `currentColor`; no mixing with Lucide, emoji, custom glyphs or decorative illustrations as functional UI icons. **Icons are optional in most product components, not mandatory decoration.** A meaningful icon must make the interface faster to recognize, expose an action/affordance, or clarify a non-trivial status. When words are clearer, use words alone.
 
-### When to use icons — decision guide
+### When to use icons: decision guide
 
 | Context | Recommended treatment | Avoid |
 |---|---|---|
@@ -345,7 +345,7 @@ In browsers supporting `animation-timeline: view()`, only widths from 800px with
 
 - **Inactive/current pairing:** if a navigation item has an icon, render that **same Phosphor icon in `weight="regular"` when inactive and `weight="fill"` when active/selected**. Simultaneously use label **500 → 700** and background **Citron 300 → Citron 500**. This is the canonical pattern for sidebars, brand-colored menus, mobile navigation and nav-like tabs. **No marker, left rail, dot or indicator stroke.**
 - **Without icon:** keep the same background and font-weight change. **Do not add an icon just to create a selected state.**
-- Choose only icon concepts with a clear, recognizable **regular/fill pair**; audit the filled silhouette at actual size. If filled meaning is ambiguous or illegible, use **text-only across that navigation group** or choose a better metaphor — do not silently switch active state back to `bold`.
+- Choose only icon concepts with a clear, recognizable **regular/fill pair**; audit the filled silhouette at actual size. If filled meaning is ambiguous or illegible, use **text-only across that navigation group** or choose a better metaphor: do not silently switch active state back to `bold`.
 - For ordinary controls that aren't active nav, default to `regular`; `fill` may convey persistent selected/toggled state when conventionally meaningful. Don't use filled icons as generic emphasis. Status icons use the explicit weight mapping below, independently of navigation.
 - Recommended sizes: 16px compact supplementary, 20px standard, 24px primary nav/action, 28–32px large status (not automatic). Pair icon and text in `currentColor` and center-align optically. Interactive hit targets ideally ≥44×44px; icon size is not the hit target.
 - With a visible text label, normally set the icon `aria-hidden="true"` to avoid duplicate announcement. Icon-only buttons need a meaningful **`aria-label`**; if a status icon adds meaning not present in text, ensure the accessible text describes the state. Respect screen-reader live-region urgency and avoid double announcements.
@@ -378,7 +378,7 @@ For a non-urgent success/info state use `role="status"`/polite announcement when
 
 **Motion:** quick 120–180ms state changes; slow 260ms for larger spatial transitions. Use only transform/opacity for animation where feasible; skeleton 1400ms subtle pulse/shimmer. Respect `prefers-reduced-motion`; no motion necessary to understand feedback. Avoid animation around monetary totals.
 
-## 8. Components — standards and states
+## 8. Components: standards and states
 
 Every component requires: default, hover (if pointer), `:focus-visible`, pressed/active, selected where relevant, disabled, loading (where relevant), error (where relevant), empty content and long localized copy behavior. Prefer semantic HTML and an accessible headless primitive to custom keyboard logic.
 
@@ -390,7 +390,7 @@ Every component requires: default, hover (if pointer), `:focus-visible`, pressed
 - **Destructive:** do not make general red buttons. Use neutral button; in irreversible/error flow highlight the *error message/icon* red, confirmation text must be explicit.
 - Disabled never by opacity alone on a control with ambiguous function; disable interaction semantically and explain prerequisite. While loading, hold button width/label area to prevent layout shift.
 
-### Navigation — fixed brand pattern
+### Navigation: fixed brand pattern
 
 **This rule applies consistently to desktop sidebar, compact menus, popovers, mobile navigation and tab-like brand navigation where the containing surface is Citron.**
 
@@ -404,7 +404,7 @@ Every component requires: default, hover (if pointer), `:focus-visible`, pressed
 
 ARIA rule: use `<nav aria-label="...">` and current route `<a aria-current="page">`. Tabs use valid tab semantics and keyboard mapping; do not apply `aria-current` to arbitrary toggles. Header nav on white uses equivalent semantic selected-background patterns appropriate for the context; never introduce dark-lime sidebar as default. Prefer one permanent nav level, consistent names and a visible section heading when needed. More than two nested navigation levels is a signal to simplify IA.
 
-### Text fields — floating labels
+### Text fields: floating labels
 
 - **Persistent real label**, never only a placeholder or `aria-label`. Label starts *within* input. On focus **or non-empty value (including autofill)**, animate to its **upper internal edge**; keep it visible after blur while filled.
 - Recommended field height 56px (larger for high-density checkouts where necessary), 16px radius, 16px side padding. Resting label 16px; floated 12px. Maintain sufficient contrast of label and typed text.
@@ -471,7 +471,7 @@ Trust comes from **actual people in believable hospitality contexts**. Photos sh
 
 Maintain photography provenance and release evidence outside public bundles; credits required by a license remain visible.
 
-## 11. Printed QR guest-order codes — **design rules only**
+## 11. Printed QR guest-order codes: **design rules only**
 
 This section controls the design of **codes dynamically generated by the existing QR workflow**. **Do not include QR templates, demonstration QR files, menu stands, mock codes or PDFs in this branding package.**
 
@@ -517,14 +517,16 @@ The research references below support **principles**, not an attempt to visually
 - [Adobe Spectrum Side Navigation](https://spectrum.adobe.com/foundations/app-frame/side-navigation-browsing-context): selected navigation typography and distinctions (Zackisch intentionally does **not** replicate Spectrum's selection bar).
 - [Material Web Outlined Text Fields](https://github.com/material-components/material-web/blob/main/docs/components/text-field.md): floating persistent labels.
 - [Phosphor React icon library](https://github.com/phosphor-icons/react): official `regular` / `fill` weights and React package.
-- [Atlassian Design – icon usage](https://atlassian.design/components/icon/usage): remove unnecessary icons; prefer recognizable metaphors and textual labels.
-- [Nielsen Norman Group – icon usability](https://www.nngroup.com/articles/icon-usability/): icons often need visible labels and recognition testing.
-- [U.S. Web Design System – icon guidance](https://designsystem.digital.gov/components/icon/): intentional semantics, icon accessibility, avoid arbitrary decoration.
-- [Carbon – status indicators](https://www.carbondesignsystem.com/building-blocks/core/patterns/status-indicators): pair icon/symbol with descriptive content, avoid status clutter.
-- [Carbon – notification guidelines](https://www.carbondesignsystem.com/building-blocks/core/components/notification/guidelines): feedback messages with status-specific icons and recovery context (Zackisch intentionally uses only Error red).
+- [Atlassian Design: icon usage](https://atlassian.design/components/icon/usage): remove unnecessary icons; prefer recognizable metaphors and textual labels.
+- [Nielsen Norman Group: icon usability](https://www.nngroup.com/articles/icon-usability/): icons often need visible labels and recognition testing.
+- [U.S. Web Design System: icon guidance](https://designsystem.digital.gov/components/icon/): intentional semantics, icon accessibility, avoid arbitrary decoration.
+- [Carbon: status indicators](https://www.carbondesignsystem.com/building-blocks/core/patterns/status-indicators): pair icon/symbol with descriptive content, avoid status clutter.
+- [Carbon: notification guidelines](https://www.carbondesignsystem.com/building-blocks/core/components/notification/guidelines): feedback messages with status-specific icons and recovery context (Zackisch intentionally uses only Error red).
 
 **Implementation reminder:** Real-world accessibility compliance depends on rendered markup and user flows, not just brand guidance. This specification should be treated as testable design requirements, not an audit certificate.
 
 ### Brand hierarchy and browser titles
 
 The **wordmark is the primary logo** across all four applications. Reserve the signet for positions where the wordmark cannot fit, including favicons and genuinely compact navigation. Do not use an isolated signet as decoration in a spacious marketing section. Browser titles use `<localized page subject> | Zackisch` exactly once; this applies to metadata and dynamic title updates. The website favicon uses `platform/signet--favicon.svg` with its supplied Citron background and rounded transparent exterior, with the matching 32px PNG fallback.
+
+**Copy punctuation:** Use sentences, commas, colons or parentheses instead of em/en dashes. This applies to visible copy, metadata and email text.
