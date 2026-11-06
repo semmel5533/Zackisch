@@ -85,9 +85,47 @@ for (const locale of ["de-de", "de-en"]) {
     request,
   }) => {
     await page.goto(`/${locale}`);
+    const de = locale === "de-de";
+    await expect(page.locator("html")).toHaveAttribute(
+      "lang",
+      de ? "de" : "en",
+    );
+    await expect(page).toHaveTitle(
+      de
+        ? "QR-Bestellung für dein Lokal | Zackisch"
+        : "QR ordering for your venue | Zackisch",
+    );
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      "content",
+      de
+        ? "QR-Bestellung für dein Lokal | Zackisch"
+        : "QR ordering for your venue | Zackisch",
+    );
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+      "content",
+      de ? "de_DE" : "en_DE",
+    );
+    await expect(
+      page.locator('meta[property="og:locale:alternate"]'),
+    ).toHaveAttribute("content", de ? "en_DE" : "de_DE");
+    const ogDescription = await page
+      .locator('meta[property="og:description"]')
+      .getAttribute("content");
+    expect(ogDescription).toBeTruthy();
+    expect(ogDescription!.length).toBeLessThanOrEqual(120);
+    const twitterDescription = await page
+      .locator('meta[name="twitter:description"]')
+      .getAttribute("content");
+    expect(twitterDescription).toBe(ogDescription);
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
       "content",
-      /https:\/\/zackisch.com\/brand\/logo\/social\/.*1200x630.png$/,
+      /https:\/\/zackisch\.com\/brand\/logo\/social\/.*1200x630\.png$/,
+    );
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
+      "content",
+      de
+        ? "Zackisch: QR-Bestellung und Bezahlen für die Gastronomie"
+        : "Zackisch: QR ordering and payments for hospitality",
     );
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
       "content",

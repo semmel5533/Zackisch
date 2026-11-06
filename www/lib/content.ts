@@ -61,7 +61,7 @@ export const content = {
     start: "Lokal einrichten",
     title: "QR-Bestellung für dein Lokal | Zackisch",
     description:
-      "Gäste bestellen und bezahlen per QR-Code. Dein Team behält den Überblick, deine bestehende Kasse bleibt. 2 % Zackisch-Gebühr plus Zahlungsanbietergebühren.",
+      "Gäste bestellen und bezahlen per QR-Code. Dein Team und deine Kasse bleiben. 2 % Gebühr, zzgl. Zahlungsanbietergebühren.",
     researchLink: "Quelle und Einordnung lesen",
     setupHelp: "Einrichtungsanleitungen öffnen",
     faqs: [
@@ -172,7 +172,7 @@ export const content = {
     start: "Set up your venue",
     title: "QR ordering for your venue | Zackisch",
     description:
-      "Guests order and pay by QR code. Your team keeps track and your existing POS stays. 2% Zackisch fee plus payment provider fees.",
+      "Guests order and pay by QR code. Your team and POS stay. 2% Zackisch fee, plus payment provider fees.",
     researchLink: "Read the source and context",
     setupHelp: "Open setup guides",
     faqs: [

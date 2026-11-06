@@ -34,10 +34,11 @@ describe("localized website", () => {
     );
   });
   for (const locale of locales) {
-    for (const slug of ["", ...pageSlugs]) {
-      it(`publishes consistent alternate URLs for ${locale}/${slug}`, () => {
-        const suffix = slug ? `/${slug}` : "";
-        const metadata = pageMetadata(locale, slug);
+      for (const slug of ["", ...pageSlugs] as const) {
+        it(`publishes consistent alternate URLs for ${locale}/${slug}`, () => {
+          const suffix = slug ? `/${slug}` : "";
+          const page = slug ? content[locale].pages[slug] : undefined;
+          const metadata = pageMetadata(locale, slug, page?.title, page?.intro);
         expect(metadata.alternates).toEqual({
           canonical: `https://zackisch.com/${locale}${suffix}`,
           languages: {
@@ -48,6 +49,20 @@ describe("localized website", () => {
         });
         expect(metadata.title).toMatch(/ \| Zackisch$/);
         expect(String(metadata.title).match(/\| Zackisch/g)).toHaveLength(1);
+        expect(metadata.openGraph?.title).toBe(metadata.title);
+        expect(metadata.twitter?.title).toBe(metadata.title);
+        expect(metadata.openGraph?.locale).toBe(
+          locale === "de-de" ? "de_DE" : "en_DE",
+        );
+        expect(metadata.openGraph?.alternateLocale).toBe(
+          locale === "de-de" ? "en_DE" : "de_DE",
+        );
+        expect(
+          String(metadata.openGraph?.description).length,
+        ).toBeLessThanOrEqual(120);
+        expect(
+          String(metadata.twitter?.description).length,
+        ).toBeLessThanOrEqual(120);
         expect(metadata.robots).toMatchObject({ index: true });
       });
     }
