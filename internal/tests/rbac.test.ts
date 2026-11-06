@@ -94,8 +94,8 @@ describe("internal team dashboard RBAC & ticket security", () => {
       "utf8",
     );
     const legacyPattern = new RegExp(["pop" + "pins", "ast" + "ryx", "sty" + "lex"].join("|"), "i");
-    expect(globalsCss).toContain("root/public/brand/tokens/tokens.css");
-    expect(globalsCss).toContain("root/public/brand/fonts/fonts.css");
+    expect(globalsCss).toContain("www/public/brand/tokens/tokens.css");
+    expect(globalsCss).toContain("www/public/brand/fonts/fonts.css");
     expect(globalsCss).not.toMatch(legacyPattern);
 
     const shellSrc = fs.readFileSync(

@@ -6,15 +6,15 @@ import { resolve, extname, sep } from "node:path";
 // This is not evidence that these assets are already available in production.
 export const test = base.extend({
   page: async ({ page }, use) => {
-    const root = resolve("root/public/brand");
+    const brandDir = resolve("www/public/brand");
     await page.route("https://zackisch.com/brand/**", async (route) => {
       const path = resolve(
-        root,
+        brandDir,
         decodeURIComponent(
           new URL(route.request().url()).pathname.slice("/brand/".length),
         ),
       );
-      if (!path.startsWith(root + sep)) return route.abort();
+      if (!path.startsWith(brandDir + sep)) return route.abort();
       const contentType =
         {
           ".svg": "image/svg+xml",

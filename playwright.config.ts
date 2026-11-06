@@ -1,13 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const target = process.env.TEST_APP ?? "root";
+const target = process.env.TEST_APP ?? "www";
 const browser = process.env.TEST_BROWSER ?? "chromium";
 if (browser !== "chromium" && browser !== "firefox" && browser !== "webkit")
   throw new Error("Invalid TEST_BROWSER");
-if (!["root", "app", "support", "internal"].includes(target))
+if (!["www", "app", "support", "internal"].includes(target))
   throw new Error("Invalid TEST_APP");
-const port = { root: 3000, app: 3001, internal: 3002, support: 3003 }[
-  target as "root"
+const port = { www: 3000, app: 3001, internal: 3002, support: 3003 }[
+  target as "www"
 ];
 const baseURL = process.env.WEBSITE_TEST_URL ?? `http://127.0.0.1:${port}`;
 const desktop =
@@ -65,7 +65,7 @@ export default defineConfig({
     ? undefined
     : {
         command: `npm run dev --prefix ${target} -- --hostname 127.0.0.1`,
-        url: `${baseURL}${target === "root" || target === "support" ? "/de-de" : "/sign-in"}`,
+        url: `${baseURL}${target === "www" || target === "support" ? "/de-de" : "/sign-in"}`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
       },

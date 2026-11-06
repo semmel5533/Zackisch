@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "zackisch-root",
+  "name": "zackisch-www",
   "compatibility_date": "2026-09-19",
   "pages_build_output_dir": "./out"
 }

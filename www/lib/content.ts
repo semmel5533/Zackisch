@@ -8,6 +8,25 @@ export type Locale = (typeof locales)[number];
 export function isLocale(value: string): value is Locale {
   return locales.includes(value as Locale);
 }
+export function resolveBrowserLocale(
+  languages?: readonly string[],
+  primaryLanguage?: string,
+): Locale {
+  const candidates = [
+    ...(Array.isArray(languages) ? languages : []),
+    ...(primaryLanguage ? [primaryLanguage] : []),
+  ];
+  for (const raw of candidates) {
+    if (typeof raw !== "string") continue;
+    const normalized = raw.trim().toLowerCase().replace(/_/g, "-");
+    if (!normalized) continue;
+    if (isLocale(normalized)) return normalized;
+    const [language] = normalized.split("-");
+    if (language === "de") return "de-de";
+    if (language === "en") return "de-en";
+  }
+  return "de-de";
+}
 export const surveyUrl = "https://www.presseportal.de/pm/165632/6151909";
 export const websiteUrl = "https://zackisch.com";
 export const signupUrl = "https://app.zackisch.com/sign-up";

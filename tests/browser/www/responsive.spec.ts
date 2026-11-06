@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { pageSlugs } from "../../../root/lib/content";
+import { pageSlugs } from "../../../www/lib/content";
 
 const viewports = [
   { width: 320, height: 800 }, { width: 390, height: 844 },

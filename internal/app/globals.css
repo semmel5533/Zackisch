@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import "../../root/public/brand/tokens/tokens.css";
-@import "../../root/public/brand/tokens/compat.css";
-@import "../../root/public/brand/tokens/theme.css";
-@import "../../root/public/brand/fonts/fonts.css";
+@import "../../www/public/brand/tokens/tokens.css";
+@import "../../www/public/brand/tokens/compat.css";
+@import "../../www/public/brand/tokens/theme.css";
+@import "../../www/public/brand/fonts/fonts.css";
 @import "../components/ui/primitives.css";
 
 @layer base {
