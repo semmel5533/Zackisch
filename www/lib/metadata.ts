@@ -37,8 +37,8 @@ export function pageMetadata(
     height: 630,
     alt:
       locale === "de-de"
-        ? "Zackisch: QR-Bestellung und Bezahlen für die Gastronomie"
-        : "Zackisch: QR ordering and payments for hospitality",
+        ? "Zackisch: Bestellen und Bezahlen per QR-Code für deinen Betrieb"
+        : "Zackisch: QR code ordering and payment for your venue",
   };
   return {
     title: fullTitle,

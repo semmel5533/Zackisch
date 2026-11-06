@@ -124,8 +124,8 @@ for (const locale of ["de-de", "de-en"]) {
     await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
       "content",
       de
-        ? "Zackisch: QR-Bestellung und Bezahlen für die Gastronomie"
-        : "Zackisch: QR ordering and payments for hospitality",
+        ? "Zackisch: Bestellen und Bezahlen per QR-Code für deinen Betrieb"
+        : "Zackisch: QR code ordering and payment for your venue",
     );
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
       "content",
