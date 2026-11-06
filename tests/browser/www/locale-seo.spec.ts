@@ -145,6 +145,28 @@ test("photographs load and the footer ends immediately after its full-width word
     "text-decoration-line",
     "none",
   );
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator(".footer-grid")).toHaveCSS("text-align", "center");
+  await expect(page.locator(".footer-grid > div").first()).toHaveCSS(
+    "align-items",
+    "center",
+  );
+});
+
+test("entry route selects browser locale and defaults to de-de when unsupported", async ({
+  browser,
+}) => {
+  for (const [localeHeader, expectedPath] of [
+    ["en-US", /\/de-en$/],
+    ["de-DE", /\/de-de$/],
+    ["fr-FR", /\/de-de$/],
+  ] as const) {
+    const context = await browser.newContext({ locale: localeHeader });
+    const page = await context.newPage();
+    await page.goto("/");
+    await expect(page).toHaveURL(expectedPath);
+    await context.close();
+  }
 });
 
 test("demo logo band is explicitly illustrative and motion can be paused", async ({
@@ -221,7 +243,7 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page.locator(".personal-contact")).toHaveCSS(
       "text-align",
-      "right",
+      "left",
     );
     await expect(page.locator(".personal-contact")).toHaveCSS(
       "border-top-width",

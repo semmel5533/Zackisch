@@ -16,8 +16,35 @@ for (const locale of ["de-de", "de-en"]) {
       const drawer = page.locator(".mobile-navigation");
       await expect(drawer).toBeVisible();
       await expect(drawer).toHaveCSS("background-color", "rgb(198, 255, 52)");
-      await expect(drawer.locator("nav a")).toHaveCount(7);
-      await expect(drawer.locator(".region-trigger")).toBeVisible();
+      await expect(drawer.locator("nav a")).toHaveCount(4);
+      const navLabels = await drawer.locator("nav a").allInnerTexts();
+      expect(navLabels.map((label) => label.trim())).toEqual(
+        de
+          ? ["Funktionen", "Kosten", "Fragen", "Kontakt"]
+          : ["Features", "Pricing", "Questions", "Contact"],
+      );
+      await expect(
+        drawer.getByRole("link", {
+          name: de ? /Lokal einrichten/ : /Set up your venue/,
+        }),
+      ).toHaveCount(0);
+      const actionChildren = drawer.locator(".mobile-actions > *");
+      await expect(actionChildren).toHaveCount(3);
+      await expect(actionChildren.nth(0)).toHaveClass(/mobile-help/);
+      await expect(actionChildren.nth(1)).toHaveClass(/region-trigger/);
+      await expect(actionChildren.nth(2)).toHaveClass(/mobile-login/);
+      await expect(drawer.locator(".mobile-help")).not.toHaveCSS(
+        "border-color",
+        "rgba(0, 0, 0, 0)",
+      );
+      await expect(drawer.locator(".region-trigger")).not.toHaveCSS(
+        "border-color",
+        "rgba(0, 0, 0, 0)",
+      );
+      await expect(drawer.locator(".mobile-login")).toHaveCSS(
+        "background-color",
+        "rgb(0, 0, 0)",
+      );
       expect((await drawer.boundingBox())!.x).toBe(0);
       expect(
         await drawer.evaluate((el) => el.scrollWidth <= el.clientWidth),

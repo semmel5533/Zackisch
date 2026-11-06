@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { WebsiteLink } from "./section-navigation";
 import type { ReactNode } from "react";
-import { content, loginUrl, signupUrl, type Locale } from "@/lib/content";
+import { content, loginUrl, type Locale } from "@/lib/content";
 import {
   MobileNavigation,
   PrivacySettings,
@@ -72,12 +72,9 @@ export function WebsiteShell({
             copy={c}
             locale={locale}
             slug={slug}
-            links={[
-              ...links,
-              { href: help, label: c.nav[3] },
-              { href: loginUrl, label: c.login },
-              { href: signupUrl, label: c.start },
-            ]}
+            links={links}
+            helpHref={help}
+            loginHref={loginUrl}
           />
         </header>
       </div>
@@ -92,7 +89,12 @@ export function WebsiteShell({
             >
               {c.nav[3]}
             </WebsiteLink>
-            <WebsiteLink href={`/${locale}/research`}>{c.research}</WebsiteLink>
+            <WebsiteLink
+              className="button button-secondary footer-research"
+              href={`/${locale}/research`}
+            >
+              {c.research}
+            </WebsiteLink>
             <WebsiteLink href={`/${locale}#how-it-works`}>
               {c.nav[0]}
             </WebsiteLink>

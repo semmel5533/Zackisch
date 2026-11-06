@@ -31,7 +31,7 @@ for (const locale of ["de-de", "de-en"]) {
     await expect(page).toHaveURL(new RegExp(`/${locale}$`));
     await expect(page.locator("#questions h2")).toBeFocused();
     const signup = page.locator(".welcome-actions .button-primary");
-    await expect(signup).toHaveCSS("font-size", "18px");
+    await expect(signup).toHaveCSS("font-size", "19px");
     await expect(signup).toHaveAccessibleDescription(
       locale === "de-de" ? "Öffnet in einem neuen Tab" : "Opens in a new tab",
     );
@@ -80,18 +80,25 @@ test("region pills share sizing and header ghost differs from footer outlines", 
     await page.setViewportSize({ width, height: 900 });
     const header = page.locator("header .region-trigger");
     const footer = page.locator("footer .region-trigger");
+    const footerResearch = page.locator(".footer-research");
     for (const control of [
       ...(width >= 1250 ? [header] : []),
       footer,
       page.locator(".footer-help"),
+      footerResearch,
     ]) {
-      await expect(control).toHaveCSS("height", "44px");
-      await expect(control).toHaveCSS("font-size", "15px");
+      await expect(control).toHaveCSS("height", "48px");
+      await expect(control).toHaveCSS("font-size", "17px");
       await expect(control).toHaveCSS("align-items", "center");
+      await expect(control.locator("svg")).toHaveCSS("translate", /0px -/);
     }
     await expect(header).toHaveCSS("border-color", "rgba(0, 0, 0, 0)");
     await expect(footer).not.toHaveCSS("border-color", "rgba(0, 0, 0, 0)");
     await expect(page.locator(".footer-help")).not.toHaveCSS(
+      "border-color",
+      "rgba(0, 0, 0, 0)",
+    );
+    await expect(footerResearch).not.toHaveCSS(
       "border-color",
       "rgba(0, 0, 0, 0)",
     );

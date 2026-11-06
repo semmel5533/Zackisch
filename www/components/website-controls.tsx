@@ -40,11 +40,15 @@ export function MobileNavigation({
   links,
   locale,
   slug,
+  helpHref,
+  loginHref,
 }: {
   copy: Copy;
   locale: Locale;
   slug: string;
   links: { href: string; label: string }[];
+  helpHref: string;
+  loginHref: string;
 }) {
   const [open, setOpen] = useState(false);
   const pendingNavigation = useRef<(() => void) | null>(null);
@@ -109,12 +113,28 @@ export function MobileNavigation({
               </WebsiteLink>
             ))}
           </nav>
-          <RegionLanguage
-            copy={copy}
-            locale={locale}
-            slug={slug}
-            onSelect={() => setOpen(false)}
-          />
+          <div className="mobile-actions">
+            <WebsiteLink
+              className="button button-secondary mobile-help"
+              href={helpHref}
+              onClick={() => setOpen(false)}
+            >
+              {copy.nav[3]}
+            </WebsiteLink>
+            <RegionLanguage
+              copy={copy}
+              locale={locale}
+              slug={slug}
+              onSelect={() => setOpen(false)}
+            />
+            <WebsiteLink
+              className="button button-primary mobile-login"
+              href={loginHref}
+              onClick={() => setOpen(false)}
+            >
+              {copy.login}
+            </WebsiteLink>
+          </div>
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
