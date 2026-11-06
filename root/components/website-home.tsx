@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { content, signupUrl, type Locale } from "@/lib/content";
 import { marketing } from "@/lib/marketing-content";
 import { WebsiteShell } from "./website-shell";
+import { DemoVenues } from "./demo-venues";
 import { Faq } from "./website-controls";
 
 export function WebsiteHome({ locale }: { locale: Locale }) {
@@ -13,58 +14,64 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
     <WebsiteShell locale={locale}>
       <main id="main" lang={c.lang} className="marketing">
         <section className="welcome container">
-          <h1>
-            {m.hero[0]}
-            <br />
-            <span>{m.hero[1]}</span>
-          </h1>
-          <p className="welcome-intro">{m.intro}</p>
-          <div className="welcome-actions">
-            <Link className="button button-primary" href={signupUrl}>
-              {c.start}
-              <ArrowUpRight aria-hidden size={20} />
-            </Link>
-            <a className="quiet-link" href="#how-it-works">
-              {m.explore}
-              <ArrowDown aria-hidden size={18} />
-            </a>
-          </div>
-          <div className="welcome-pictures">
+          <div className="welcome-composition">
+            <div className="welcome-copy">
+              <h1>
+                {m.hero[0]}
+                <br />
+                <span>{m.hero[1]}</span>
+              </h1>
+              <p className="welcome-intro">{m.intro}</p>
+              <div className="welcome-actions">
+                <Link className="button button-primary" href={signupUrl}>
+                  {c.start}
+                  <ArrowUpRight aria-hidden size={20} />
+                </Link>
+                <a className="quiet-link" href="#problem">
+                  {m.explore}
+                  <ArrowDown aria-hidden size={18} />
+                </a>
+              </div>
+            </div>
             <figure className="welcome-main-photo">
               <Image
-                src="/media/hospitality.webp"
-                alt={c.heroAlt}
-                width={2000}
-                height={1164}
-                sizes="(max-width: 700px) 100vw, 66vw"
+                src="/media/phone-guests.webp"
+                alt={m.phoneAlt}
+                width={1800}
+                height={1200}
+                sizes="(max-width: 799px) 100vw, 60vw"
+                loading="eager"
                 fetchPriority="high"
               />
               <figcaption>
-                <a href="https://www.pexels.com/photo/delighted-friends-having-lunch-in-cafe-4349791/">
-                  {c.photoCredit}
-                </a>
-              </figcaption>
-            </figure>
-            <figure className="welcome-side-photo">
-              <Image
-                src="/media/conversation.webp"
-                alt={c.conversationAlt}
-                width={1400}
-                height={933}
-                sizes="(max-width: 700px) 40vw, 30vw"
-              />
-              <figcaption>
-                <a href="https://www.pexels.com/photo/happy-multiracial-friends-having-fun-together-in-cafe-4350223/">
+                <a href="https://www.pexels.com/photo/diverse-female-friends-checking-social-media-on-mobile-in-cafe-4350217/">
                   {c.photoCredit}
                 </a>
               </figcaption>
             </figure>
           </div>
-          <ul className="promise-line">
-            {m.promise.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
+        </section>
+        <DemoVenues copy={m} />
+        <section id="problem" className="problem-section container">
+          <div className="problem-copy">
+            <h2>{m.problemTitle}</h2>
+            <p>{m.problemText}</p>
+            <p>{m.solutionText}</p>
+          </div>
+          <figure className="story-photo">
+            <Image
+              src="/media/cafe-guest.webp"
+              alt={m.cafeAlt}
+              width={1200}
+              height={1800}
+              sizes="(max-width: 799px) 100vw, 50vw"
+            />
+            <figcaption>
+              <a href="https://www.pexels.com/photo/man-using-a-phone-while-having-coffee-6336634/">
+                {m.cafeCredit}
+              </a>
+            </figcaption>
+          </figure>
         </section>
         <section id="how-it-works" className="menu-chapters">
           <div className="chapter-introduction container">
@@ -95,6 +102,20 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
           </div>
         </section>
         <section className="service-section container">
+          <figure className="story-photo service-photo">
+            <Image
+              src="/media/restaurant-service.webp"
+              alt={m.serviceAlt}
+              width={1400}
+              height={2100}
+              sizes="(max-width: 799px) 100vw, 50vw"
+            />
+            <figcaption>
+              <a href="https://www.pexels.com/photo/waiter-standing-by-table-in-restaurant-19595138/">
+                {m.serviceCredit}
+              </a>
+            </figcaption>
+          </figure>
           <div>
             <h2>{m.teamTitle}</h2>
             <p>{m.teamText}</p>
@@ -140,6 +161,14 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="questions" className="questions container">
           <h2>{m.faq}</h2>
           <Faq items={c.faqs} />
+        </section>
+        <section className="personal-contact container">
+          <h2>{m.personalTitle}</h2>
+          <p>{m.personalText}</p>
+          <a href="mailto:selim@zackisch.com">
+            selim@zackisch.com
+            <ArrowUpRight size={32} aria-hidden />
+          </a>
         </section>
         <section className="last-invitation container">
           <h2>{m.close}</h2>

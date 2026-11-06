@@ -38,10 +38,10 @@ THESIS: The menu does more while the operator remains the host. Explain discover
 
 OWN-WORLD: Original black primary wordmark, League Spartan, white canvas and Citron. Oversized editorial type, generous space and real hospitality photography. Signet only for constrained positions. No invented product images.
 
-STORY: Understand the product in the hero; discover popular items, complementary recommendations and optional tips; understand venue control and staff/POS handoff; inspect fees; register.
+STORY: Understand the optional QR route in the hero; recognize the small requests that coincide during service; discover popular items, complementary recommendations and optional tips; understand venue control and staff/POS handoff; inspect fees and setup; ask questions or contact the founder; register.
 
-FIRST VIEWPORT: Centered two-line display headline, one short explanation and primary signup action, followed by two offset hospitality photographs. No statistic, feature dump or decorative signet.
+FIRST VIEWPORT: Centered single-color display headline, one short explanation and primary signup action above one large real photograph of café guests holding a smartphone. No statistic, feature dump or decorative signet.
 
-FORM: Three progressively stronger Citron product chapters stack during desktop scrolling, each with one core message and an explicitly textual screenshot placeholder. On mobile and reduced motion, they remain sequential. A visible-default photographic scroll entrance introduces the page. Code-led implementation; seed:48372546b412a709 is the original recorded workflow reference; current composition follows the user's explicit new brief.
+FORM: Header/footer region-language dialog triggers show the native country name; dialog options stack native country/language names. A clearly labelled fictional venue-logo carousel runs below the hero with pause and reduced-motion support. A primary Citron footer ends with a translucent full-width unchanged wordmark and minimal bottom space. Three progressively stronger Citron product chapters stack during desktop scrolling, each with one core message and an explicitly textual screenshot placeholder. On mobile and reduced motion, they remain sequential. A visible-default photographic scroll entrance introduces the page. Code-led implementation; seed:48372546b412a709 is the original recorded workflow reference; current composition follows the user's explicit new brief.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

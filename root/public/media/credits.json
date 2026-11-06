@@ -1,22 +1,32 @@
 {
-  "hospitality.webp": {
-    "source_url": "https://www.pexels.com/photo/delighted-friends-having-lunch-in-cafe-4349791/",
+  "phone-guests.webp": {
+    "source_url": "https://www.pexels.com/photo/diverse-female-friends-checking-social-media-on-mobile-in-cafe-4350217/",
     "author": "Ketut Subiyanto",
     "license_name": "Pexels License (free commercial use)",
-    "license_url": "https://www.pexels.com/license/",
-    "downloaded_at": "2026-11-05",
+    "license_url": "https://www.pexels.com/legal-pages/license/",
+    "downloaded_at": "2026-11-06",
     "changes": "Resized, converted to WebP. Responsive display crops the original photograph.",
-    "provenance": "Original photographic listing dates to April 2020; photographer and camera metadata inspected.",
+    "provenance": "Original May 2020 photographic listing, taken April 28 2020, Sony ILCE-7M3 camera metadata inspected. Three café guests looking at a smartphone; not an actual Zackisch transaction.",
     "usage": "Illustrative hospitality stock photography only; no endorsement, testimonial or customer affiliation asserted. No separate model-release document held."
   },
-  "conversation.webp": {
-    "source_url": "https://www.pexels.com/photo/happy-multiracial-friends-having-fun-together-in-cafe-4350223/",
-    "author": "Ketut Subiyanto",
+  "cafe-guest.webp": {
+    "source_url": "https://www.pexels.com/photo/man-using-a-phone-while-having-coffee-6336634/",
+    "author": "Tima Miroshnichenko",
     "license_name": "Pexels License (free commercial use)",
-    "license_url": "https://www.pexels.com/license/",
-    "downloaded_at": "2026-11-05",
+    "license_url": "https://www.pexels.com/legal-pages/license/",
+    "downloaded_at": "2026-11-06",
     "changes": "Resized, converted to WebP. Responsive display crops the original photograph.",
-    "provenance": "Original photographic listing dates to April 2020; photographer and camera metadata inspected.",
+    "provenance": "Photographic listing December 30 2020; taken December 23 2020, Sony ILCE-7M3 camera metadata. Original black-and-white photograph.",
+    "usage": "Illustrative hospitality stock photography only; no endorsement, testimonial or customer affiliation asserted. No separate model-release document held."
+  },
+  "restaurant-service.webp": {
+    "source_url": "https://www.pexels.com/photo/waiter-standing-by-table-in-restaurant-19595138/",
+    "author": "Marcus Queiroga Silva",
+    "license_name": "Pexels License (free commercial use)",
+    "license_url": "https://www.pexels.com/legal-pages/license/",
+    "downloaded_at": "2026-11-06",
+    "changes": "Resized, converted to WebP. Responsive display crops the original photograph.",
+    "provenance": "Photographic listing December 22 2023; taken August 24 2023, Sony ILCE-7M4 camera metadata inspected.",
     "usage": "Illustrative hospitality stock photography only; no endorsement, testimonial or customer affiliation asserted. No separate model-release document held."
   }
 }

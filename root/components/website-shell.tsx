@@ -2,7 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { content, loginUrl, signupUrl, type Locale } from "@/lib/content";
-import { MobileNavigation, PrivacySettings } from "./website-controls";
+import {
+  MobileNavigation,
+  PrivacySettings,
+  RegionLanguage,
+} from "./website-controls";
 
 export function WebsiteShell({
   locale,
@@ -31,6 +35,7 @@ export function WebsiteShell({
           <Image
             src="/brand/logo/lockups/wordmark--transparent--standard.svg"
             alt=""
+            loading="eager"
             width="150"
             height="64"
           />
@@ -42,7 +47,8 @@ export function WebsiteShell({
             </Link>
           ))}
         </nav>
-        <Link className="header-login" href={loginUrl}>
+        <RegionLanguage copy={c} locale={locale} slug={slug} />
+        <Link className="header-login button button-secondary" href={loginUrl}>
           {c.login}
         </Link>
         <MobileNavigation
@@ -55,24 +61,17 @@ export function WebsiteShell({
         />
       </header>
       {children}
-      <footer className="site-footer container">
-        <div className="footer-grid">
+      <footer className="site-footer">
+        <div className="footer-grid container">
           <div>
             <p className="footer-heading">{c.footerNote}</p>
-            <p>{c.market}</p>
-            <Link
-              href={`/${c.otherLocale}${slug ? `/${slug}` : ""}`}
-              hrefLang={c.otherLocale === "de-en" ? "en-DE" : "de-DE"}
-              lang={c.otherLocale === "de-en" ? "en" : "de"}
-            >
-              {c.other}
-            </Link>
+            <RegionLanguage copy={c} locale={locale} slug={slug} />
           </div>
           <div>
             <p className="footer-heading">{c.footerProduct}</p>
             <Link href={`/${locale}/pricing`}>{c.nav[1]}</Link>
+            <Link href={`/${locale}#how-it-works`}>{c.nav[0]}</Link>
             <Link href={`/${locale}/research`}>{c.research}</Link>
-            <Link href={loginUrl}>{c.login}</Link>
           </div>
           <div>
             <p className="footer-heading">{c.footerHelp}</p>
@@ -92,10 +91,10 @@ export function WebsiteShell({
         </div>
         <Image
           className="footer-mark"
-          src="/brand/logo/lockups/wordmark--transparent--standard.svg"
+          src="/brand/logo/original/wordmark.svg"
           alt="Zackisch"
-          width="576"
-          height="246"
+          width="420"
+          height="86"
           loading="lazy"
         />
       </footer>

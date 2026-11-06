@@ -1,10 +1,28 @@
 export const marketing = {
   "de-de": {
-    hero: ["Dein Menü kann mehr.", "Du bleibst Gastgeber."],
+    hero: ["Mehr Raum", "für deine Gäste."],
     intro:
-      "QR-Bestellung, passende Empfehlungen und digitales Bezahlen. Für dein Lokal. Mit deiner bestehenden Kasse.",
-    explore: "Das steckt drin",
-    promise: ["Ohne Gäste-App.", "Ohne Kassenwechsel.", "Ohne Monatsgebühr."],
+      "QR-Bestellung und Bezahlen direkt am Tisch. Für deine Gäste ganz einfach. Mit deinem Service und deiner bestehenden Kasse.",
+    phoneAlt: "Drei Gäste schauen im Café gemeinsam auf ein Smartphone.",
+    problemTitle: "Volle Tische.\nViele kleine Wege.",
+    problemText:
+      "Noch ein Getränk. Eine Bestellung. Die Rechnung. Im Service kommt oft vieles gleichzeitig zusammen.",
+    solutionText:
+      "Gib deinen Gästen einen zusätzlichen Weg: selbst bestellen und bezahlen. Persönlicher Service bleibt immer eine Wahl.",
+    personalTitle: "Deine Frage ist nicht aufgelistet?",
+    personalText: "Schreibe mir persönlich:",
+    explore: "So hilft Zackisch",
+    demoTitle: "Für Lokale wie deins.",
+    demoNote: "Beispielmarken – keine Kundenreferenzen.",
+    pauseLogos: "Logo-Band pausieren",
+    resumeLogos: "Logo-Band fortsetzen",
+    cafeAlt: "Ein Gast nutzt beim Kaffee im Café sein Smartphone.",
+    cafeCredit:
+      "Stockfoto: Tima Miroshnichenko / Pexels. Kein Zackisch-Kundenlokal.",
+    serviceAlt:
+      "Ein Mitarbeiter serviert Speisen in einem belebten Restaurant.",
+    serviceCredit:
+      "Stockfoto: Marcus Queiroga Silva / Pexels. Kein Zackisch-Kundenlokal.",
     menuTitle: "Eine Karte.\nMehr gute Entscheidungen.",
     menuIntro:
       "Zackisch hilft deinen Gästen beim Entdecken. Du entscheidest, welche Funktionen dein Lokal nutzt.",
@@ -56,11 +74,28 @@ export const marketing = {
     closeText: "Richte dein Lokal ein. In deinem Tempo.",
   },
   "de-en": {
-    hero: ["Your menu does more.", "You stay the host."],
+    hero: ["More room", "for your guests."],
     intro:
-      "QR ordering, relevant recommendations and digital payments. For your venue. Alongside your existing POS.",
-    explore: "Explore the features",
-    promise: ["No guest app.", "No POS switch.", "No monthly base fee."],
+      "QR ordering and payment right at the table. Simple for your guests. Alongside your service and existing POS.",
+    phoneAlt: "Three café guests look at a smartphone together.",
+    problemTitle: "Busy tables.\nSo many little trips.",
+    problemText:
+      "Another drink. An order. The bill. In hospitality, many small requests can arrive at once.",
+    solutionText:
+      "Give guests another way: order and pay for themselves. Personal service is always a choice.",
+    personalTitle: "Can’t find your question?",
+    personalText: "Write to me personally:",
+    explore: "How Zackisch helps",
+    demoTitle: "For places like yours.",
+    demoNote: "Example brands — not customer references.",
+    pauseLogos: "Pause logo carousel",
+    resumeLogos: "Resume logo carousel",
+    cafeAlt: "A café guest uses his smartphone while having coffee.",
+    cafeCredit:
+      "Stock photo: Tima Miroshnichenko / Pexels. Not a Zackisch customer venue.",
+    serviceAlt: "A member of staff serves food in a busy restaurant.",
+    serviceCredit:
+      "Stock photo: Marcus Queiroga Silva / Pexels. Not a Zackisch customer venue.",
     menuTitle: "One menu.\nMore good choices.",
     menuIntro:
       "Help guests discover what your venue offers. You choose which features to use.",

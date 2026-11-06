@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "@phosphor-icons/react";
+import Link from "next/link";
+import { Globe, Check, Plus, X, List } from "@phosphor-icons/react";
 import { Accordion } from "@base-ui/react/accordion";
 import { Dialog } from "@base-ui/react/dialog";
-import type { Copy } from "@/lib/content";
+import type { Copy, Locale } from "@/lib/content";
 
 export function Faq({ items }: { items: Copy["faqs"] }) {
   return (
@@ -36,8 +37,11 @@ export function MobileNavigation({
   const [open, setOpen] = useState(false);
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger className="button button-secondary mobile-menu">
-        {copy.menu}
+      <Dialog.Trigger
+        className="button button-secondary mobile-menu"
+        aria-label={copy.menu}
+      >
+        <List size={24} aria-hidden />
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Backdrop className="dialog-backdrop" />
@@ -81,6 +85,71 @@ export function PrivacySettings({ copy }: { copy: Copy }) {
           <Dialog.Close className="button button-primary">
             {copy.dismiss}
           </Dialog.Close>
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+const regions = [
+  { locale: "de-de", country: "Deutschland", language: "Deutsch", lang: "de" },
+  { locale: "de-en", country: "Germany", language: "English", lang: "en" },
+] as const;
+
+export function RegionLanguage({
+  copy,
+  locale,
+  slug = "",
+}: {
+  copy: Copy;
+  locale: Locale;
+  slug?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const selected = regions.find((option) => option.locale === locale)!;
+  return (
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger
+        className="region-trigger"
+        aria-label={`${copy.localeTitle}: ${selected.country}`}
+      >
+        <Globe size={20} aria-hidden />
+        <span className="region-country">{selected.country}</span>
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Backdrop className="dialog-backdrop" />
+        <Dialog.Popup className="dialog-popup locale-dialog">
+          <div className="locale-dialog-heading">
+            <Dialog.Title className="dialog-title">
+              {copy.localeTitle}
+            </Dialog.Title>
+            <Dialog.Close
+              className="dialog-icon-close"
+              aria-label={copy.dismiss}
+            >
+              <X size={24} aria-hidden />
+            </Dialog.Close>
+          </div>
+          <Dialog.Description>{copy.localeDescription}</Dialog.Description>
+          <nav className="locale-options" aria-label={copy.localeTitle}>
+            {regions.map((option) => (
+              <Link
+                key={option.locale}
+                onClick={() => setOpen(false)}
+                href={`/${option.locale}${slug ? `/${slug}` : ""}`}
+                hrefLang={`${option.lang}-DE`}
+                lang={option.lang}
+                className="locale-option"
+                aria-current={locale === option.locale ? "page" : undefined}
+              >
+                <span className="region-label">
+                  <span>{option.country}</span>
+                  <span>{option.language}</span>
+                </span>
+                {locale === option.locale && <Check size={20} aria-hidden />}
+              </Link>
+            ))}
+          </nav>
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>

@@ -100,13 +100,13 @@ components:
 
 > **Version 1.3 · 6 November 2026 · Canonical design specification**
 > Applies to `root/` (public website), `app/` (merchant/guest/staff), `support/` and `internal/`.
-> This document defines the **new** visual direction. It intentionally does not inherit, preserve, or adapt the repository's previous visual identity. It does **not** change checkout, POS or payment behavior.
+> This document defines the current visual system. It does **not** change checkout, POS or payment behavior.
 
 ## 0. Quick decisions
 
 | Area | Non-negotiable rule |
 |---|---|
-| Identity | Original `wordmark.svg` and `signet.svg` supplied by the founder; their vector outlines stay intact and **always #000000**. No recoloring. |
+| Identity | Original `wordmark.svg` and `signet.svg` supplied by the founder; their vector outlines stay intact and **always #000000**. No recoloring. Only the public footer wordmark uses the owner-authorized 0.22 CSS opacity. |
 | Foundation | Pure white `#FFFFFF`, pure black `#000000`, **Electric Citron `#C6FF34`**. No substitutions. |
 | Selection | On Citron menus: background `citron.300` (`#C6FF34`); selected **pill** `citron.500` (`#9FD600`), black font weight **700**, Phosphor icon **fill** when an icon is present (inactive **regular**); **no black marker, stripe, dot or side border**. |
 | Feedback | **Every meaningful status, including Error, uses a recognizable Phosphor status icon + explicit text.** Only Error has a separate hue: icon/message/border `#C62828`. Success, Warning, Info and Pending stay black/gray, distinguished by icon shape and wording — never green/yellow/blue. |
@@ -136,7 +136,7 @@ Write in plain language and present a next action. Prefer “Bestellung abschick
 
 ## 2. Brand assets and logo governance
 
-**The two original source files are authoritative:** `root/public/brand/logo/original/signet.svg` and `root/public/brand/logo/original/wordmark.svg`. They are **byte-identical** to the supplied cropped vectors, with neither white space nor a new font. Every derivative includes **only** the unmodified black artwork, optionally positioned within a white or Electric Citron canvas. **No slogans, taglines, headings, supporting text, illustrations, decorative frames, shadows, extra marks or additional logo combinations** are allowed in any published logo/social asset. Never typeset the wordmark using League Spartan. The logo is *always* `#000000`; there is no white or colored-reversal mark.
+**The two original source files are authoritative:** `root/public/brand/logo/original/signet.svg` and `root/public/brand/logo/original/wordmark.svg`. They are **byte-identical** to the supplied cropped vectors, with neither white space nor a new font. Every derivative includes **only** the unmodified black artwork, optionally positioned within a white or Electric Citron canvas. **No slogans, taglines, headings, supporting text, illustrations, decorative frames, shadows, extra marks or additional logo combinations** are allowed in any published logo/social asset. Never typeset the wordmark using League Spartan. The artwork is *always* `#000000`; there is no white or colored-reversal mark. The owner-authorized public footer presentation alone uses CSS opacity `0.22` on the unchanged original wordmark over Citron. Other logo placements remain opaque black.
 
 ### Curated source, lockup and platform formats
 
@@ -160,7 +160,7 @@ This is an **intentionally constrained** set, not a collection of all export siz
 - **Standard:** practical default. Signet occupies ~72% of square canvas height; wordmark has clear space of `0.35×` source mark height on every side.
 - **Spacious:** for visually isolated placements and co-branding. Signet occupies ~58% of a square canvas; wordmark clear space `0.85×` source mark height on every side.
 - **Platform treatments:** favicon icon is deliberately larger (~80% signet height) for tiny tab sizes; its Citron canvas has strongly rounded (28% radius) corners with actual transparent exterior. PWA `purpose=any` uses the same rounded-square treatment at ~70% signet height. Apple Touch must remain opaque square because iOS rounds it; PWA `maskable` must remain opaque square because Android/OS masks it. Both preserve original artwork and safe areas; 512px maskable and round-cropped avatar use ~58% high signet. Check actual device/platform crops before release.
-- When placing an original tight SVG in a custom layout, reserve at least the **standard** clear space around it and test at actual display size. Do not stretch, rotate, recolor, outline, add filters or draw a replacement wordmark.
+- When placing an original tight SVG in a custom layout, reserve at least the **standard** clear space around it and test at actual display size, except for the explicitly authorized near-edge public footer treatment described below. Do not stretch, rotate, recolor, outline, add filters or draw a replacement wordmark.
 
 ### Asset integration and quality control
 
@@ -299,9 +299,19 @@ The self-hosted variable font declares weights 100–900; the hero's 650 is a su
 
 ### Public marketing layout and motion — root only
 
-The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header is 112px tall, reduced to 96px through 599px; desktop navigation becomes a dialog menu through 899px. These content-driven breakpoints override the general device guidance only for this website.
+The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header has a 112px minimum height, reduced to 96px through 599px; desktop navigation becomes a dialog menu through 899px. Between 900px and 1199px navigation wraps onto its own centered row. Through 599px the header uses two rows: wordmark and menu above, region/language and the simple secondary login pill below. The mobile menu trigger is a 48px square pill with a 24px Phosphor List icon and a localized accessible name, without visible text. These content-driven breakpoints override the general device guidance only for this website.
 
-The centered introduction leads into two offset photographs in a 1.7:1 grid with a 24px gap. Main and side images are 440px and 376px high, respectively; the side figure begins 64px lower. Image corners are 32px. Through 799px the supporting photo is omitted, and the main photograph uses its natural height within a 4:3 aspect ratio. The promise list stacks vertically at that width. Through 399px the introductory actions also stack.
+The centered introduction uses a single black headline color, with a real smartphone photograph below the copy and actions. Its one-column grid has a 48px gap, reduced to 32px through 799px; the photograph is centered at a maximum width of 1080px and retains its natural aspect ratio. Photos have 32px corners. The problem section pairs explanatory text with a separate black-and-white café guest portrait in equal columns with a 96px gap and 128px top padding; through 799px it becomes one column with a 32px gap and 80px top padding. The problem portrait is cropped to 4:5. The separate restaurant-service portrait also uses a 4:5 crop, occupying the first column across two rows; the team explanation and text-labelled staff screenshot placeholder occupy the second column. Through 799px all service items follow a single-column flow. The three photographs show distinct scenes and people. Through 399px the introductory actions also stack.
+
+The example-venue strip below the hero contains six fictional typographic brands in League Spartan, with an explicit localized disclaimer that they are not customer references. The strip has a 64px top margin, 32px vertical padding and light top/bottom borders. Its duplicated track drifts horizontally over 36 seconds, linearly and infinitely, and pauses on hover or with the 44px pause/resume control. Duplicate content is hidden from assistive technology. Reduced motion removes the animation and duplicate list and shows all six examples in a static three-column grid, reduced to two columns through 599px; the unnecessary pause control is hidden.
+
+A personal-contact area follows the FAQ, separated by a light border. Its heading is 24px, supporting text 20px and direct email link `clamp(1.65rem, 5.8vw, 5rem)`, weight 600 and line height 1.2. It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
+
+**The Footer Logo Exception Rule.** Only the public footer presents the unchanged original black wordmark at CSS opacity 0.22 on Electric Citron, with 16px side margins and 8px bottom padding. Other logo placements remain opaque black.
+
+The footer uses an Electric Citron background, four link columns becoming two through 899px, and the original wordmark beneath. The wordmark has CSS opacity 0.22, width `calc(100% - 32px)`, 16px side margins and an 80px top margin (48px through 599px). Footer bottom padding is 8px. This presentation changes neither the logo asset nor other logo placements. Footer links and the privacy-settings text button have no resting underline; hover adds it.
+
+Header and footer use country-only pill region/language triggers: a 20px globe beside Deutschland or Germany (14px, weight 600), with 9px/12px vertical/horizontal padding. The header trigger is white with a neutral border; the footer trigger is transparent on Citron with a Citron 700 border, changing to brand-soft on hover. Dialog options retain stacked country and language labels (14px, line height 1.2, 3px gap). The dialog presents native-language links for Deutschland / Deutsch and Germany / English, retaining the current page slug; language does not change the trusted German business region. The active link has a checkmark and pale Citron surface. A 44px icon button with an accessible label closes the dialog at the upper right; outside click and Escape also dismiss it, and focus returns to the trigger. There is no separate bottom close button.
 
 Product chapters use two equal columns, 64px padding and gap, 32px corners, a 32px top sticky offset and `min(720px, calc(100svh - 64px))` minimum height. Their surfaces progress from Citron 50 through Citron 100 to Citron 300. Through 1100px padding becomes 40px and gap 32px; through 799px chapters become static single-column panels with 32px padding and no fixed minimum height. Through 399px padding is 28px vertically and 20px horizontally. Viewport heights through 650px and reduced motion also make the chapters static.
 
@@ -309,7 +319,7 @@ Screenshot regions remain explicitly labelled text descriptions: transparent bac
 
 Chapter introductions, staff explanation and setup use split layouts; all become single-column through 799px. Major desktop sections use up to 144px vertical spacing; mobile sequences use 64–80px. The fee section is full-width Citron with a two-column inner grid, becoming one column through 799px. These spacious marketing rules do not change operational card density or radii.
 
-In browsers supporting `animation-timeline: view()`, only widths from 800px with no reduced-motion preference receive photo entrances. The main figure opens from `clip-path: inset(0 6% round 32px)` to zero inset over `entry 0% cover 45%`; the side figure rises from 40px to zero over `entry 0% cover 60%`. Both use linear progression and visible defaults. Sticky panels use native scrolling, without scroll hijacking. Buttons retain 120ms background/border transitions; the FAQ icon rotates 45 degrees over 180ms ease-out. Reduced motion removes these animations and transitions.
+In browsers supporting `animation-timeline: view()`, only widths from 800px with no reduced-motion preference receive photo entrances. The main figure opens from `clip-path: inset(0 6% round 32px)` to zero inset over `entry 0% cover 45%`, with linear progression and a visible default. Sticky panels use native scrolling, without scroll hijacking. Buttons retain 120ms background/border transitions; the FAQ icon rotates 45 degrees over 180ms ease-out. Reduced motion removes these animations and transitions.
 
 ## 6. Iconography and semantic feedback
 

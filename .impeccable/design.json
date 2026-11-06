@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-05T23:32:27.013023+00:00",
+  "generatedAt": "2026-11-06T01:26:50.380152+00:00",
   "title": "Zackisch — Brand & Product Design System",
   "extensions": {
     "colorMeta": {
@@ -77,14 +77,14 @@
         "purpose": "Source .welcome-main-photo: clip-path inset(0 6% round 32px) to inset(0 0 round 32px); only supported browsers from 800px with no reduced-motion preference."
       },
       {
-        "name": "welcome-rise",
-        "value": "linear both; view(); entry 0% cover 60%",
-        "purpose": "Source .welcome-side-photo: translateY(40px) to translateY(0); same desktop and motion conditions as welcome-expand."
-      },
-      {
         "name": "chapter-stack",
         "value": "position: sticky; top: 32px",
         "purpose": "Source .menu-chapter: native sticky panels, static through 799px width, through 650px viewport height, and with reduced motion. All content visible by default."
+      },
+      {
+        "name": "logo-drift",
+        "value": "36s linear infinite; translateX(-50%)",
+        "purpose": "Six explicitly fictional example venue brands, never customer references. Pause/resume control and hover pause the track; reduced motion shows all six in a static grid, hiding the duplicate list and pause control. Duplicated content is aria-hidden."
       }
     ],
     "breakpoints": [
@@ -115,6 +115,10 @@
       {
         "name": "chapter-static-maximum-height",
         "value": "650px"
+      },
+      {
+        "name": "header-navigation-wrap-maximum",
+        "value": "1199px"
       }
     ]
   },
@@ -131,8 +135,8 @@
       "name": "Marketing secondary action",
       "kind": "button",
       "refersTo": "marketing-button-secondary",
-      "description": "Secondary controls such as mobile navigation and dialog dismissal.",
-      "html": "<button class=\"ds-control ds-secondary\">Menü öffnen</button>",
+      "description": "Secondary controls such as the header login pill and mobile navigation.",
+      "html": "<a class=\"ds-control ds-secondary\" href=\"https://app.zackisch.com/sign-in\">Anmelden</a>",
       "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
@@ -156,6 +160,13 @@
       "description": "A secondary text destination within explanatory content.",
       "html": "<a class=\"ds-inline-link\" href=\"#gebuehren\">Gebühren und Voraussetzungen ansehen</a>",
       "css": ".ds-inline-link { display:inline-flex; align-items:center; padding:12px 0; font:600 16px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-link, #000); text-underline-offset:.2em; } .ds-inline-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
+    },
+    {
+      "name": "Footer text link",
+      "kind": "nav",
+      "description": "Footer links and the privacy-settings text button use plain text at rest and underline on hover on the Citron surface.",
+      "html": "<a class=\"ds-footer-link\" href=\"/de-de/privacy\">Datenschutz</a>",
+      "css": ".ds-footer-link { display:inline-block; padding-block:12px; font:400 14px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-text, #000); text-decoration:none; } .ds-footer-link:hover { text-decoration:underline; } .ds-footer-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
     }
   ],
   "narrative": {
@@ -163,7 +174,7 @@
     "overview": "Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. The restaurant keeps its POS and service choices; guests do not need an app/account.",
     "keyCharacteristics": [
       "League Spartan across marketing and app.",
-      "Unchanged black wordmark and signet.",
+      "Unchanged black wordmark and signet; only the public footer wordmark uses owner-authorized CSS opacity 0.22.",
       "White, black and Electric Citron."
     ],
     "rules": [
@@ -175,6 +186,11 @@
       {
         "name": "The Visible Motion Rule",
         "body": "Scroll enhancements begin from visible content. On the public website, desktop-only photo clipping is progressive enhancement; reduced-motion mode disables animations, transitions and sticky chapter panels. No content depends on animation support or scroll position to become readable.",
+        "section": "layout"
+      },
+      {
+        "name": "The Footer Logo Exception Rule",
+        "body": "Only the public footer presents the unchanged original black wordmark at CSS opacity 0.22 on Electric Citron, with 16px side margins and 8px bottom padding. Other logo placements remain opaque black.",
         "section": "layout"
       }
     ],

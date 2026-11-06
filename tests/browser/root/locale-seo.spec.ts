@@ -1,0 +1,149 @@
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+test("header and footer locale dialogs retain the page and use native language labels", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto("/de-de/pricing");
+  const triggers = page.getByRole("button", {
+    name: "Region & Sprache: Deutschland",
+  });
+  await expect(triggers).toHaveCount(2);
+  for (const trigger of [triggers.first(), triggers.last()]) {
+    await trigger.click();
+    const dialog = page.getByRole("dialog", { name: "Region & Sprache" });
+    await expect(
+      dialog.getByRole("link", { name: "Deutschland Deutsch" }),
+    ).toHaveAttribute("aria-current", "page");
+    await expect(
+      dialog.getByRole("link", { name: "Germany English" }),
+    ).toHaveAttribute("href", "/de-en/pricing");
+    expect(
+      (await new AxeBuilder({ page }).include('[role="dialog"]').analyze())
+        .violations,
+    ).toEqual([]);
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(trigger).toBeFocused();
+  }
+  await triggers.first().click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Schließen", exact: true })
+    .click();
+  await expect(triggers.first()).toBeFocused();
+  await triggers.first().click();
+  await page.mouse.click(2, 2);
+  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(triggers.first()).toBeFocused();
+  await triggers.last().click();
+  await page
+    .getByRole("dialog")
+    .getByRole("link", { name: "Germany English" })
+    .click();
+  await expect(page).toHaveURL(/\/de-en\/pricing$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(
+    page.getByRole("button", { name: "Region & language: Germany" }),
+  ).toHaveCount(2);
+});
+
+for (const locale of ["de-de", "de-en"]) {
+  test(`${locale}: search and social metadata match visible business facts`, async ({
+    page,
+    request,
+  }) => {
+    await page.goto(`/${locale}`);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      "content",
+      /https:\/\/zackisch.com\/brand\/logo\/social\/.*1200x630.png$/,
+    );
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+      "content",
+      "summary_large_image",
+    );
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      "content",
+      /index, follow/,
+    );
+    const data = JSON.parse(
+      await page.locator('script[type="application/ld+json"]').innerText(),
+    );
+    const org = data["@graph"].find(
+      (entry: { "@type": string }) => entry["@type"] === "Organization",
+    );
+    expect(org.email).toBe("selim@zackisch.com");
+    expect(org).not.toHaveProperty("address");
+    await expect(page.locator(".personal-contact a")).toHaveAttribute(
+      "href",
+      `mailto:${org.email}`,
+    );
+    const logoPath = new URL(org.logo).pathname;
+    expect((await request.get(logoPath)).ok()).toBe(true);
+    expect((await request.get("/robots.txt")).status()).toBe(200);
+    expect(await (await request.get("/sitemap.xml")).text()).toContain(
+      `https://zackisch.com/${locale}`,
+    );
+  });
+}
+
+test("photographs load and the footer ends immediately after its full-width wordmark", async ({
+  page,
+}) => {
+  await page.goto("/de-de");
+  await page.locator(".footer-mark").scrollIntoViewIfNeeded();
+  await page
+    .locator(".footer-mark")
+    .evaluate(async (el) => (el as HTMLImageElement).decode());
+  const bounds = await page.locator(".footer-mark").evaluate((el) => {
+    const box = el.getBoundingClientRect();
+    return {
+      width: box.width / innerWidth,
+      gap: document.documentElement.scrollHeight - (box.bottom + scrollY),
+      opacity: Number(getComputedStyle(el).opacity),
+    };
+  });
+  expect(bounds.width).toBeGreaterThan(0.89);
+  expect(bounds.gap).toBeLessThanOrEqual(9);
+  expect(bounds.opacity).toBeGreaterThan(0);
+  expect(bounds.opacity).toBeLessThan(1);
+  await expect(page.locator(".marketing img")).toHaveCount(3);
+  await expect(page.locator(".site-footer .region-trigger")).toHaveCSS(
+    "background-color",
+    "rgba(0, 0, 0, 0)",
+  );
+  await expect(page.locator(".site-footer .text-button")).toHaveCSS(
+    "text-decoration-line",
+    "none",
+  );
+});
+
+test("demo logo band is explicitly illustrative and motion can be paused", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/de-de");
+  await expect(
+    page.getByText("Beispielmarken – keine Kundenreferenzen."),
+  ).toBeVisible();
+  const track = page.locator(".logo-track");
+  const before = await track.evaluate((el) => getComputedStyle(el).transform);
+  await expect
+    .poll(() => track.evaluate((el) => getComputedStyle(el).transform))
+    .not.toBe(before);
+  await page.getByRole("button", { name: "Logo-Band pausieren" }).click();
+  expect(
+    await track.evaluate((el) => getComputedStyle(el).animationPlayState),
+  ).toBe("paused");
+  await page.getByRole("button", { name: "Logo-Band fortsetzen" }).click();
+  await expect(track).toHaveAttribute("data-paused", "false");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(await track.evaluate((el) => getComputedStyle(el).animationName)).toBe(
+    "none",
+  );
+  await expect(
+    page.locator('.demo-logo-list[aria-hidden="true"]'),
+  ).toBeHidden();
+  await expect(page.getByRole("button", { name: /Logo-Band/ })).toBeHidden();
+});
