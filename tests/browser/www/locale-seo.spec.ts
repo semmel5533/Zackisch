@@ -20,12 +20,19 @@ test("header and footer locale dialogs retain the page and use native language l
     await expect(
       dialog.getByRole("button", { name: "Schließen", exact: true }),
     ).toBeFocused();
-    await expect(
-      dialog.getByRole("link", { name: "Deutschland Deutsch" }),
-    ).toHaveAttribute("aria-current", "page");
-    await expect(
-      dialog.getByRole("link", { name: "Germany English" }),
-    ).toHaveAttribute("href", "/de-en/research");
+    const activeOption = dialog.getByRole("link", {
+      name: "Deutschland Deutsch",
+    });
+    const inactiveOption = dialog.getByRole("link", {
+      name: "Germany English",
+    });
+    await expect(activeOption).toHaveAttribute("aria-current", "page");
+    await expect(inactiveOption).toHaveAttribute("href", "/de-en/research");
+    const activeBg = await activeOption.evaluate(
+      (el) => getComputedStyle(el).backgroundColor,
+    );
+    await inactiveOption.hover();
+    await expect(inactiveOption).toHaveCSS("background-color", activeBg);
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
     await expect(trigger).toBeFocused();

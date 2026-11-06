@@ -1,5 +1,6 @@
 import { BrowserLocaleRedirect } from "@/components/browser-locale-redirect";
 import { WebsiteHome } from "@/components/website-home";
+import { defaultLocale } from "@/lib/content";
 import { websiteStructuredData } from "@/lib/structured-data";
 
 export default function EntryPage() {
@@ -8,14 +9,14 @@ export default function EntryPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(websiteStructuredData("de-de")).replace(
+          __html: JSON.stringify(websiteStructuredData(defaultLocale)).replace(
             /</g,
             "\\u003c",
           ),
         }}
       />
       <BrowserLocaleRedirect />
-      <WebsiteHome locale="de-de" />
+      <WebsiteHome locale={defaultLocale} />
     </>
   );
 }

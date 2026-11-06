@@ -3,10 +3,53 @@ import { platformPrivacy } from "./platform-privacy";
 import { guestTerms } from "./guest-terms";
 import { merchantTerms } from "./merchant-terms";
 import { legalPages } from "./legal-content";
+export const defaultLocale = "de-de" as const;
+export const localeConfigs = {
+  "de-de": {
+    locale: "de-de",
+    lang: "de",
+    hrefLang: "de-DE",
+    ogLocale: "de_DE",
+    country: "Deutschland",
+    language: "Deutsch",
+  },
+  "de-en": {
+    locale: "de-en",
+    lang: "en",
+    hrefLang: "en-DE",
+    ogLocale: "en_DE",
+    country: "Germany",
+    language: "English",
+  },
+} as const;
 export const locales = ["de-de", "de-en"] as const;
 export type Locale = (typeof locales)[number];
+export const regions = locales.map((locale) => localeConfigs[locale]);
 export function isLocale(value: string): value is Locale {
   return locales.includes(value as Locale);
+}
+export function resolveLocale(value?: string | null): Locale {
+  return value && isLocale(value) ? value : defaultLocale;
+}
+export function resolveLocaleFromPathname(pathname?: string | null): Locale {
+  if (!pathname) return defaultLocale;
+  const [, firstSegment] = pathname.split("/");
+  return resolveLocale(firstSegment);
+}
+export function resolveLanguageAlternateUrls(
+  slug = "",
+  includeDefault = true,
+): Record<string, string> {
+  const suffix = slug ? `/${slug}` : "";
+  const languages: Record<string, string> = {};
+  for (const locale of locales) {
+    languages[localeConfigs[locale].hrefLang] =
+      `${websiteUrl}/${locale}${suffix}`;
+  }
+  if (includeDefault) {
+    languages["x-default"] = `${websiteUrl}/${defaultLocale}${suffix}`;
+  }
+  return languages;
 }
 export function resolveBrowserLocale(
   languages?: readonly string[],
@@ -22,10 +65,12 @@ export function resolveBrowserLocale(
     if (!normalized) continue;
     if (isLocale(normalized)) return normalized;
     const [language] = normalized.split("-");
-    if (language === "de") return "de-de";
-    if (language === "en") return "de-en";
+    const matched = locales.find(
+      (locale) => localeConfigs[locale].lang === language,
+    );
+    if (matched) return matched;
   }
-  return "de-de";
+  return defaultLocale;
 }
 export const surveyUrl = "https://www.presseportal.de/pm/165632/6151909";
 export const websiteUrl = "https://zackisch.com";
@@ -62,6 +107,10 @@ export const content = {
     title: "Bestellen und Bezahlen per QR-Code für deinen Betrieb | Zackisch",
     description:
       "Gäste bestellen und bezahlen per QR-Code. Dein Team und deine Kasse bleiben. 2 % Gebühr, zzgl. Zahlungsanbietergebühren.",
+    ogImageAlt:
+      "Zackisch: Bestellen und Bezahlen per QR-Code für deinen Betrieb",
+    newTab: "Öffnet in einem neuen Tab",
+    notFoundTitle: "Seite nicht gefunden | Zackisch",
     researchLink: "Quelle und Einordnung lesen",
     setupHelp: "Einrichtungsanleitungen öffnen",
     faqs: [
@@ -173,6 +222,9 @@ export const content = {
     title: "QR code ordering and payment for your venue | Zackisch",
     description:
       "Guests order and pay by QR code. Your team and POS stay. 2% Zackisch fee, plus payment provider fees.",
+    ogImageAlt: "Zackisch: QR code ordering and payment for your venue",
+    newTab: "Opens in a new tab",
+    notFoundTitle: "Page not found | Zackisch",
     researchLink: "Read the source and context",
     setupHelp: "Open setup guides",
     faqs: [

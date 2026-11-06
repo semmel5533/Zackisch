@@ -157,8 +157,3 @@ export const marketing = {
       "Give guests another way to order,\nalongside your team and existing POS.",
   },
 } as const;
-
-export const navigationCopy = {
-  "de-de": { newTab: "Öffnet in einem neuen Tab" },
-  "de-en": { newTab: "Opens in a new tab" },
-} as const;

@@ -14,7 +14,7 @@ import {
 } from "@phosphor-icons/react";
 import { Accordion } from "@base-ui/react/accordion";
 import { Dialog } from "@base-ui/react/dialog";
-import type { Copy, Locale } from "@/lib/content";
+import { localeConfigs, regions, type Copy, type Locale } from "@/lib/content";
 
 export function Faq({ items }: { items: Copy["faqs"] }) {
   return (
@@ -164,11 +164,6 @@ export function PrivacySettings({ copy }: { copy: Copy }) {
   );
 }
 
-const regions = [
-  { locale: "de-de", country: "Deutschland", language: "Deutsch", lang: "de" },
-  { locale: "de-en", country: "Germany", language: "English", lang: "en" },
-] as const;
-
 export function RegionLanguage({
   copy,
   locale,
@@ -181,7 +176,7 @@ export function RegionLanguage({
   slug?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const selected = regions.find((option) => option.locale === locale)!;
+  const selected = localeConfigs[locale];
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
@@ -215,7 +210,7 @@ export function RegionLanguage({
                   onSelect?.();
                 }}
                 href={`/${option.locale}${slug ? `/${slug}` : ""}`}
-                hrefLang={`${option.lang}-DE`}
+                hrefLang={option.hrefLang}
                 lang={option.lang}
                 className="locale-option page-link"
                 aria-current={locale === option.locale ? "page" : undefined}

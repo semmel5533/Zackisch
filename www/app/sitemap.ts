@@ -1,5 +1,10 @@
 import type { MetadataRoute } from "next";
-import { locales, pageSlugs, websiteUrl } from "@/lib/content";
+import {
+  locales,
+  pageSlugs,
+  resolveLanguageAlternateUrls,
+  websiteUrl,
+} from "@/lib/content";
 export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   return ["", ...pageSlugs].flatMap((slug) =>
@@ -8,10 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       return {
         url: `${websiteUrl}/${locale}${suffix}`,
         alternates: {
-          languages: {
-            "de-DE": `${websiteUrl}/de-de${suffix}`,
-            "en-DE": `${websiteUrl}/de-en${suffix}`,
-          },
+          languages: resolveLanguageAlternateUrls(slug, false),
         },
       };
     }),

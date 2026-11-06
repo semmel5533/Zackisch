@@ -2,30 +2,29 @@
 
 import { useEffect, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import {
+  content,
+  localeConfigs,
+  resolveLocaleFromPathname,
+  type Locale,
+} from "@/lib/content";
 import { SectionNavigationProvider } from "./section-navigation";
 
-const titles = {
-  de: "Seite nicht gefunden | Zackisch",
-  en: "Page not found | Zackisch",
-};
-
 export function LocalizedNotFound({
-  german,
-  english,
+  pages,
 }: {
-  german: ReactNode;
-  english: ReactNode;
+  pages: Record<Locale, ReactNode>;
 }) {
   const pathname = usePathname();
-  const language =
-    pathname?.startsWith("/de-en/") || pathname === "/de-en" ? "en" : "de";
+  const locale = resolveLocaleFromPathname(pathname);
+  const lang = localeConfigs[locale].lang;
   useEffect(() => {
-    document.documentElement.lang = language;
-  }, [language]);
+    document.documentElement.lang = lang;
+  }, [lang]);
   return (
     <SectionNavigationProvider>
-      <title>{titles[language]}</title>
-      {language === "en" ? english : german}
+      <title>{content[locale].notFoundTitle}</title>
+      {pages[locale]}
     </SectionNavigationProvider>
   );
 }

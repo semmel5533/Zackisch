@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react";
-import { navigationCopy } from "@/lib/marketing-content";
+import { content, resolveLocaleFromPathname } from "@/lib/content";
 import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
@@ -113,8 +113,7 @@ export function WebsiteLink({
     /^https?:$/.test(destination.protocol) &&
     destination.host !== "zackisch.com";
   const section = Boolean(destination.hash) && !external;
-  const copy =
-    navigationCopy[pathname?.startsWith("/de-en") ? "de-en" : "de-de"];
+  const copy = content[resolveLocaleFromPathname(pathname)];
   const arrow = decoration && !section;
 
   return (

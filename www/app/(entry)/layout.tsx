@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { SectionNavigationProvider } from "@/components/section-navigation";
+import { defaultLocale, localeConfigs } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  ...pageMetadata("de-de"),
+  ...pageMetadata(defaultLocale),
   icons: {
     icon: [
       {
@@ -27,7 +28,7 @@ export default function EntryLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="de">
+    <html lang={localeConfigs[defaultLocale].lang}>
       <body className="antialiased">
         <SectionNavigationProvider>{children}</SectionNavigationProvider>
       </body>

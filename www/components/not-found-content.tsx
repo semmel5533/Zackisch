@@ -1,4 +1,4 @@
-import { content, type Locale } from "@/lib/content";
+import { content, locales, type Locale } from "@/lib/content";
 import { WebsiteShell } from "./website-shell";
 import { WebsiteLink } from "./section-navigation";
 import { LocalizedNotFound } from "./localized-not-found";
@@ -21,10 +21,8 @@ function ErrorPage({ locale }: { locale: Locale }) {
 }
 
 export default function NotFoundContent() {
-  return (
-    <LocalizedNotFound
-      german={<ErrorPage locale="de-de" />}
-      english={<ErrorPage locale="de-en" />}
-    />
-  );
+  const pages = Object.fromEntries(
+    locales.map((locale) => [locale, <ErrorPage key={locale} locale={locale} />]),
+  ) as Record<Locale, React.ReactNode>;
+  return <LocalizedNotFound pages={pages} />;
 }

@@ -1,6 +1,8 @@
-import { content, websiteUrl, type Locale } from "./content";
+import { content, localeConfigs, locales, websiteUrl, type Locale } from "./content";
 
 export function websiteStructuredData(locale: Locale) {
+  const copy = content[locale];
+  const localeConfig = localeConfigs[locale];
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -18,16 +20,16 @@ export function websiteStructuredData(locale: Locale) {
         "@id": `${websiteUrl}/#website`,
         name: "Zackisch",
         url: websiteUrl,
-        inLanguage: ["de-DE", "en-DE"],
+        inLanguage: locales.map((candidate) => localeConfigs[candidate].hrefLang),
         publisher: { "@id": `${websiteUrl}/#organization` },
       },
       {
         "@type": "WebPage",
         "@id": `${websiteUrl}/${locale}#webpage`,
         url: `${websiteUrl}/${locale}`,
-        name: content[locale].title.replace(/ [–—|] Zackisch$/, ""),
-        description: content[locale].description,
-        inLanguage: locale === "de-de" ? "de-DE" : "en-DE",
+        name: copy.title.replace(/ [–—|] Zackisch$/, ""),
+        description: copy.description,
+        inLanguage: localeConfig.hrefLang,
         isPartOf: { "@id": `${websiteUrl}/#website` },
         about: { "@id": `${websiteUrl}/#organization` },
       },

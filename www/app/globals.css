@@ -650,7 +650,7 @@ p {
   border-color: var(--zk-text);
 }
 .locale-option:hover {
-  background: var(--zk-color-semantic-background-brand-soft);
+  background: var(--zk-color-semantic-background-brand-subtle);
 }
 .chapter-introduction {
   padding-block: 144px 72px;
@@ -1263,9 +1263,6 @@ p {
 .footer-grid .page-link:hover,
 .desktop-navigation .page-link:hover {
   text-decoration: none;
-}
-.locale-option.page-link:hover {
-  background: transparent;
 }
 .marketing .button-primary {
   font-size: 1.1875rem;

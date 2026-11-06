@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { SectionNavigationProvider } from "@/components/section-navigation";
-import { isLocale } from "@/lib/content";
+import { localeConfigs, resolveLocale } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
 
 const icons: Metadata["icons"] = {
@@ -25,9 +25,8 @@ export async function generateMetadata({
   params: Promise<{ locale?: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolvedLocale = locale && isLocale(locale) ? locale : "de-de";
   return {
-    ...pageMetadata(resolvedLocale),
+    ...pageMetadata(resolveLocale(locale)),
     icons,
   };
 }
@@ -40,8 +39,9 @@ export default async function RootLayout({
   params: Promise<{ locale?: string }>;
 }>) {
   const { locale } = await params;
+  const resolvedLocale = resolveLocale(locale);
   return (
-    <html lang={locale === "de-en" ? "en" : "de"}>
+    <html lang={localeConfigs[resolvedLocale].lang}>
       <body className="antialiased">
         <SectionNavigationProvider>{children}</SectionNavigationProvider>
       </body>

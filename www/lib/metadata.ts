@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { content, websiteUrl, type Locale } from "./content";
+import {
+  content,
+  localeConfigs,
+  locales,
+  resolveLanguageAlternateUrls,
+  websiteUrl,
+  type Locale,
+} from "./content";
 
 const MAX_SOCIAL_DESCRIPTION_LENGTH = 120;
 
@@ -28,37 +35,36 @@ export function pageMetadata(
 ): Metadata {
   const suffix = slug ? `/${slug}` : "";
   const canonical = `${websiteUrl}/${locale}${suffix}`;
-  const fullTitle = `${title ?? content[locale].title.replace(/ [–—|] Zackisch$/, "")} | Zackisch`;
-  const fullDescription = description ?? content[locale].description;
+  const copy = content[locale];
+  const localeConfig = localeConfigs[locale];
+  const alternateLocales = locales
+    .filter((candidate) => candidate !== locale)
+    .map((candidate) => localeConfigs[candidate].ogLocale);
+  const fullTitle = `${title ?? copy.title.replace(/ [–—|] Zackisch$/, "")} | Zackisch`;
+  const fullDescription = description ?? copy.description;
   const socialDescription = toSocialDescription(fullDescription);
   const image = {
     url: `${websiteUrl}/brand/logo/social/wordmark--og--citron--1200x630.png`,
     width: 1200,
     height: 630,
-    alt:
-      locale === "de-de"
-        ? "Zackisch: Bestellen und Bezahlen per QR-Code für deinen Betrieb"
-        : "Zackisch: QR code ordering and payment for your venue",
+    alt: copy.ogImageAlt,
   };
   return {
     title: fullTitle,
     description: fullDescription,
     alternates: {
       canonical,
-      languages: {
-        "de-DE": `${websiteUrl}/de-de${suffix}`,
-        "en-DE": `${websiteUrl}/de-en${suffix}`,
-        "x-default": `${websiteUrl}/de-de${suffix}`,
-      },
+      languages: resolveLanguageAlternateUrls(slug),
     },
     openGraph: {
       title: fullTitle,
       description: socialDescription,
       url: canonical,
       siteName: "Zackisch",
-      locale: locale === "de-de" ? "de_DE" : "en_DE",
+      locale: localeConfig.ogLocale,
       type: "website",
-      alternateLocale: locale === "de-de" ? "en_DE" : "de_DE",
+      alternateLocale:
+        alternateLocales.length === 1 ? alternateLocales[0] : alternateLocales,
       images: [image],
     },
     twitter: {
