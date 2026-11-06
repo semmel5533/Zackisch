@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { WebsiteLink } from "./section-navigation";
+import { formatCopy } from "./website-home";
 import {
   Globe,
   Check,
@@ -22,12 +23,12 @@ export function Faq({ items }: { items: Copy["faqs"] }) {
         <Accordion.Item key={item.question} className="faq-item">
           <Accordion.Header>
             <Accordion.Trigger className="faq-trigger">
-              {item.question}
+              <span>{formatCopy(item.question)}</span>
               <Plus aria-hidden="true" size={20} />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Panel className="faq-panel">
-            <p>{item.answer}</p>
+            <p>{formatCopy(item.answer)}</p>
           </Accordion.Panel>
         </Accordion.Item>
       ))}

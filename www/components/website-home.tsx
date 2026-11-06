@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import Image from "next/image";
 import { WebsiteLink } from "./section-navigation";
 import { content, signupUrl, type Locale } from "@/lib/content";
@@ -6,6 +7,23 @@ import { WebsiteShell } from "./website-shell";
 import { StaffPreview } from "./staff-preview";
 import { DemoVenues } from "./demo-venues";
 import { Faq } from "./website-controls";
+
+const NOWRAP_PATTERN =
+  /(zzgl\.\s+Zahlungsanbietergebühren\.?|plus payment provider fees\.?|\bQR codes?[\p{P}]*|\b\d+(?:[.,]\d+)?\s*(?:%|€)[\p{P}]*|\b[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)+[\p{P}]*)/gu;
+
+export function formatCopy(text: string): ReactNode {
+  const parts = text.split(NOWRAP_PATTERN);
+  if (parts.length === 1) return text;
+  return parts.map((part, index) =>
+    index % 2 === 1 ? (
+      <span key={index} className="nowrap">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+}
 
 export function WebsiteHome({ locale }: { locale: Locale }) {
   const c = content[locale];
@@ -21,7 +39,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                 <br />
                 <span>{m.hero[1]}</span>
               </h1>
-              <p className="welcome-intro">{m.intro}</p>
+              <p className="welcome-intro">{formatCopy(m.intro)}</p>
               <div className="welcome-actions">
                 <WebsiteLink
                   className="button button-primary hero-primary"
@@ -51,8 +69,8 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="problem" className="problem-section container">
           <div className="problem-copy">
             <h2>{m.problemTitle}</h2>
-            <p>{m.problemText}</p>
-            <p>{m.solutionText}</p>
+            <p>{formatCopy(m.problemText)}</p>
+            <p>{formatCopy(m.solutionText)}</p>
           </div>
           <figure className="story-photo">
             <Image
@@ -67,7 +85,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="how-it-works" className="menu-chapters">
           <div className="chapter-introduction container">
             <h2>{m.menuTitle}</h2>
-            <p>{m.menuFlexibility}</p>
+            <p>{formatCopy(m.menuFlexibility)}</p>
           </div>
           <div className="chapter-stack container">
             {m.features.map((feature, i) => (
@@ -76,31 +94,31 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                 key={feature.title}
               >
                 <div className="chapter-copy">
-                  <h3>{feature.title}</h3>
-                  <p className="chapter-summary">{feature.text}</p>
-                  <p className="chapter-detail">{feature.detail}</p>
+                  <h3>{formatCopy(feature.title)}</h3>
+                  <p className="chapter-summary">{formatCopy(feature.text)}</p>
+                  <p className="chapter-detail">{formatCopy(feature.detail)}</p>
                 </div>
                 <figure className="screenshot-placeholder phone-placeholder">
                   <figcaption>{m.placeholder}</figcaption>
-                  <p>{feature.image}</p>
+                  <p>{formatCopy(feature.image)}</p>
                 </figure>
               </article>
             ))}
           </div>
           <div className="venue-control container">
             <h3>{m.control}</h3>
-            <p>{m.controlText}</p>
+            <p>{formatCopy(m.controlText)}</p>
           </div>
         </section>
         <section className="service-section container">
           <div>
             <h2>{m.teamTitle}</h2>
-            <p>{m.teamText}</p>
+            <p>{formatCopy(m.teamText)}</p>
           </div>
           <StaffPreview>
             <figure className="screenshot-placeholder staff-placeholder">
               <figcaption>{m.placeholder}</figcaption>
-              <p>{m.teamImage}</p>
+              <p>{formatCopy(m.teamImage)}</p>
             </figure>
           </StaffPreview>
         </section>
@@ -115,16 +133,16 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             </div>
             <div className="cost-details">
               <h3>{m.zero}</h3>
-              <p>{m.seasonal}</p>
-              <p>{m.feeDetail}</p>
+              <p>{formatCopy(m.seasonal)}</p>
+              <p>{formatCopy(m.feeDetail)}</p>
             </div>
           </div>
         </section>
         <section className="start-section container">
           <h2>{m.setupTitle}</h2>
           <div>
-            <p className="start-description">{m.setupText}</p>
-            <p>{m.setupNote}</p>
+            <p className="start-description">{formatCopy(m.setupText)}</p>
+            <p>{formatCopy(m.setupNote)}</p>
             <WebsiteLink
               className="inline-link"
               href={`https://support.zackisch.com/${locale}`}
@@ -144,7 +162,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         </section>
         <section className="last-invitation container">
           <h2>{m.close}</h2>
-          <p>{m.closeText}</p>
+          <p>{formatCopy(m.closeText)}</p>
           <WebsiteLink className="button button-primary" href={signupUrl}>
             {c.start}
           </WebsiteLink>

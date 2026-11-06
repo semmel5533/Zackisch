@@ -169,33 +169,80 @@ for (const locale of ["de-de", "de-en"]) {
         ? "Ein digitales Menü, mehr Optionen"
         : "One digital menu, more options",
     );
-    if (locale === "de-de") {
-      await expect(page.locator("#problem h2")).toHaveText(
-        "Volle Tische, Schlange am Tresen",
-      );
-      await expect(page.locator(".chapter-2 h3")).toHaveText(
-        "Ein Dankeschön, ganz freiwillig",
-      );
-      await expect(page.locator(".venue-control h3")).toHaveText(
-        "Dein Lokal, deine Entscheidung",
-      );
-      await expect(page.locator(".service-section h2")).toHaveText(
-        "Am Tisch, am Tresen, mit deinem Team",
-      );
-      await expect(page.locator(".start-section h2")).toHaveText(
-        "Dein nächster Schritt?",
-      );
-      await expect(page.locator(".start-description")).toHaveText(
-        "Konto anlegen, Menü einrichten, Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
-      );
-      await expect(page.locator(".last-invitation p")).toHaveCSS(
-        "white-space",
-        "pre-line",
-      );
-      expect(await page.locator(".last-invitation p").innerText()).toBe(
-        "Gib deinen Gästen einen weiteren Bestellweg,\ndein Team und deine Kasse bleiben dabei.",
-      );
+    await expect(page.locator("#problem h2")).toHaveText(
+      locale === "de-de"
+        ? "Volle Tische, Schlange am Tresen"
+        : "Busy tables, queues at the counter",
+    );
+    await expect(page.locator(".chapter-0 h3")).toHaveText(
+      locale === "de-de"
+        ? "Was gut ankommt, steht vorn"
+        : "Guest favourites, right up front",
+    );
+    await expect(page.locator(".chapter-2 h3")).toHaveText(
+      locale === "de-de"
+        ? "Ein Dankeschön, ganz freiwillig"
+        : "A little thank-you, always optional",
+    );
+    await expect(page.locator(".venue-control h3")).toHaveText(
+      locale === "de-de"
+        ? "Dein Lokal, deine Entscheidung"
+        : "Your venue, your choice",
+    );
+    await expect(page.locator(".service-section h2")).toHaveText(
+      locale === "de-de"
+        ? "Am Tisch, am Tresen, mit deinem Team"
+        : "At tables, at counters, with your team",
+    );
+    await expect(page.locator(".start-section h2")).toHaveText(
+      locale === "de-de" ? "Dein nächster Schritt?" : "Your next step?",
+    );
+    await expect(page.locator(".start-description")).toHaveText(
+      locale === "de-de"
+        ? "Konto anlegen, Menü einrichten, Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten."
+        : "Create an account, set up your menu, connect your payment provider. Get started with your QR codes and a suitable tablet.",
+    );
+    await expect(page.locator(".cost-details h3")).toHaveText(
+      locale === "de-de"
+        ? "Keine Einrichtungskosten oder monatliche Grundgebühr"
+        : "No setup fee or monthly base fee",
+    );
+    await expect(page.locator(".cost-details > p").last()).toHaveText(
+      locale === "de-de"
+        ? "Auf den Bestellwert nach Rabatten, ohne freiwilliges Trinkgeld. Inklusive Umsatzsteuer auf unsere Gebühr, zzgl. Zahlungsanbietergebühren."
+        : "On the order subtotal after discounts, excluding voluntary tips. Including VAT on our fee, plus payment provider fees.",
+    );
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "";
+    });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    for (const phrase of locale === "de-de"
+      ? ["QR-Codes", "zzgl. Zahlungsanbietergebühren."]
+      : ["QR codes", "plus payment provider fees."]) {
+      const rects = await page
+        .locator(".nowrap", { hasText: phrase })
+        .first()
+        .evaluate((el) => el.getClientRects().length);
+      expect(rects, phrase).toBe(1);
     }
+    await expect(page.locator(".welcome-intro")).toHaveCSS(
+      "white-space",
+      "pre-line",
+    );
+    expect(await page.locator(".welcome-intro").innerText()).toBe(
+      locale === "de-de"
+        ? "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen.\nMit deinem Service und deiner bestehenden Kasse."
+        : "QR ordering and payment at the table or for counter pickup.\nAlongside your service and existing POS.",
+    );
+    await expect(page.locator(".last-invitation p")).toHaveCSS(
+      "white-space",
+      "pre-line",
+    );
+    expect(await page.locator(".last-invitation p").innerText()).toBe(
+      locale === "de-de"
+        ? "Gib deinen Gästen einen weiteren Bestellweg,\ndein Team und deine Kasse bleiben dabei."
+        : "Give guests another way to order,\nalongside your team and existing POS.",
+    );
     await expect(page.locator(".demo-heading h2")).toHaveText(
       locale === "de-de"
         ? "Hier könnte dein Lokal auftauchen"

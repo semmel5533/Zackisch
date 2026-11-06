@@ -1326,6 +1326,10 @@ p {
 .last-invitation p {
   white-space: pre-line;
 }
+.nowrap {
+  display: inline-block;
+  max-width: 100%;
+}
 
 .hero-primary {
   background: var(--zk-color-semantic-background-brand);

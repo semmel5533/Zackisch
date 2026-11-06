@@ -62,8 +62,8 @@ export const marketing = {
     costTitle: "Du zahlst erst,\nwenn deine Gäste bezahlen",
     feeLabel: "je erfolgreich bezahlter Bestellung",
     feeDetail:
-      "Auf den Bestellwert nach Rabatten, ohne freiwilliges Trinkgeld. Inklusive Umsatzsteuer auf unsere Gebühr. Zzgl. Zahlungsanbietergebühren.",
-    zero: "Keine Einrichtungskosten. Keine monatliche Grundgebühr.",
+      "Auf den Bestellwert nach Rabatten, ohne freiwilliges Trinkgeld. Inklusive Umsatzsteuer auf unsere Gebühr, zzgl. Zahlungsanbietergebühren.",
+    zero: "Keine Einrichtungskosten oder monatliche Grundgebühr",
     seasonal:
       "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Lokal Saisonpause macht.",
     setupTitle: "Dein nächster Schritt?",
@@ -79,7 +79,7 @@ export const marketing = {
   "de-en": {
     hero: ["More room", "for your guests"],
     intro:
-      "QR ordering and payment at the table or for counter pickup. Alongside your service and existing POS.",
+      "QR ordering and payment at the table or for counter pickup.\nAlongside your service and existing POS.",
     phoneAlt: "Three café guests look at a smartphone together.",
     problemTitle: "Busy tables,\nqueues at the counter",
     problemText:
@@ -106,7 +106,7 @@ export const marketing = {
       "You define variants, extras and selection steps. Your guests use them to customise their item just the way they like it.",
     features: [
       {
-        title: "Guest favourites\nRight up front",
+        title: "Guest favourites,\nright up front",
         text: "The “Most popular” category automatically highlights frequently ordered items at your venue.",
         detail:
           "Based on your venue’s order history. No bestseller list to maintain by hand.",
@@ -142,8 +142,8 @@ export const marketing = {
     costTitle: "You pay when\nyour guests pay",
     feeLabel: "per successfully paid order",
     feeDetail:
-      "On the order subtotal after discounts, excluding voluntary tips. Including VAT on our fee. Plus payment provider fees.",
-    zero: "No setup fee. No monthly base fee.",
+      "On the order subtotal after discounts, excluding voluntary tips. Including VAT on our fee, plus payment provider fees.",
+    zero: "No setup fee or monthly base fee",
     seasonal:
       "With no paid orders, Zackisch is free. Even when your venue closes for the season.",
     setupTitle: "Your next step?",
