@@ -10,7 +10,7 @@ Ticket replies and internal notes MUST have separate typed operations and backen
 
 Inherit `../AGENTS.md`: work on main, mandatory current German/EU legal research for every change, Mobbin references and Impeccable for every UI change, Base UI, Playwright verification, reviewed incremental commits and per-package SemVer. Follow `../DESIGN.md` as the only visual specification. Only free commercially usable real internet stock photos; never AI-generated photography. Product image regions remain explicit text placeholders until actual screenshots exist.
 
-All brand media and fonts are hosted only by `root/public/brand/`; this application uses `https://zackisch.com/brand/...` (root may use its own relative URL). Preserve the payment/POS, privacy, permission, backup and legal contracts in the root instructions. No production/provider effects without required explicit authorization.
+All brand media and fonts are hosted only by `www/public/brand/`; this application uses `https://zackisch.com/brand/...` (www may use its own relative URL). Preserve the payment/POS, privacy, permission, backup and legal contracts in the root instructions. No production/provider effects without required explicit authorization.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

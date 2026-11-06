@@ -12,12 +12,12 @@ The founder confirmed Selim Eser, trading as Zackisch, a German sole proprietors
 
 | Directory | Host | Responsibility |
 | --- | --- | --- |
-| `root/` | `zackisch.com` | Public marketing, legal pages and sole brand asset host |
+| `www/` | `zackisch.com` | Public marketing, legal pages and sole brand asset host |
 | `app/` | `app.zackisch.com` | Merchant, guest, staff; sole backend in `app/convex/` |
 | `support/` | `support.zackisch.com` | Public localized help and authenticated business tickets |
 | `internal/` | `internal.zackisch.com` | Authorized Team Dashboard |
 
-All four use Next.js/React on Cloudflare Workers through vinext. Do not create another database or Convex project. UI → validated Server Action → authenticated/authorized domain operation → Convex/provider. Client-triggered Convex mutations follow the established Server Action boundary; exceptions need a security-reviewed architectural decision and negative tests. Server business/region/menu data is authority, never browser IDs or prices. Keep public DTOs minimal and privileged helpers internal.
+All four use Next.js/React. `www/` deploys to Cloudflare Pages as a static export (`out/`) without Cloudflare Workers or vinext. `app/`, `support/` and `internal/` target Cloudflare Workers through vinext. Do not create another database or Convex project. UI → validated Server Action → authenticated/authorized domain operation → Convex/provider. Client-triggered Convex mutations follow the established Server Action boundary; exceptions need a security-reviewed architectural decision and negative tests. Server business/region/menu data is authority, never browser IDs or prices. Keep public DTOs minimal and privileged helpers internal.
 
 Read version-matched installed `node_modules/next/dist/docs/` before Next.js edits. Check exact vinext/Workers support, build artifacts and runtime restrictions. Use Next.js 16 `proxy.ts` where applicable. Prefer ESM, strict TypeScript, explicit contracts and focused modules. Avoid speculative packages, shallow wrappers and giant conditional files; split around actual responsibilities.
 
@@ -48,7 +48,7 @@ Every browser page title in all four applications follows `<localized page subje
 
 ### Assets
 
-Only `root/public/brand/` hosts brand assets. The other apps and emails reference `https://zackisch.com/brand/...`, never duplicate public files. Preserve source logo geometry and asset-manifest hashes. Email logos use compatible PNG fallbacks. Fonts are served by the website with appropriate CORS, never runtime Google Fonts requests. Verify all cross-origin URLs, CSP and font loading before deployment; deploy central assets before consumers. Build-time CSS imports may share canonical tokens without duplicating hosted media. Keep app-specific non-brand content where needed.
+Only `www/public/brand/` hosts brand assets. The other apps and emails reference `https://zackisch.com/brand/...`, never duplicate public files. Preserve source logo geometry and asset-manifest hashes. Email logos use compatible PNG fallbacks. Fonts are served by the website with appropriate CORS, never runtime Google Fonts requests. Verify all cross-origin URLs, CSP and font loading before deployment; deploy central assets before consumers. Build-time CSS imports may share canonical tokens without duplicating hosted media. Keep app-specific non-brand content where needed.
 
 QR signs must encode the correct canonical venue/table/pickup URL, never credentials. Black square modules on white, four-module quiet zone, high correction and independently tested central signet if used. Preserve 92 × 135 mm cards, four per A4, duplex alignment and personal-service alternative; no venue logo/name. Decode actual payloads and physically test actual-size prints with several cameras before shipping QR changes. A brand spec does not prove scannability.
 
@@ -84,7 +84,7 @@ Use [Gesetze im Internet](https://www.gesetze-im-internet.de/) as the default of
 
 For administrative interpretation and implementation, prefer the competent authority: BMF/BZSt and tax administrations, BaFin, BMAS and the BFSG market-surveillance authority, BfDI/state privacy regulators and EDPB. Guidance explains the law; distinguish its status from binding legislation and relevant court decisions. Vendor documentation establishes product behavior, not legal compliance. Blogs, forums and commercial legal summaries may help discovery but never replace the underlying official source. Cite the exact provision or official guidance, not only a portal homepage. Check effective dates, territorial scope and amendments; surface unresolved conflicts instead of silently choosing the convenient source.
 
-The baseline source map below was researched on 5 November 2026 and must be refreshed for the next change. It is an engineering requirement, not legal advice or evidence of professional approval.
+The baseline source map below was researched on 6 November 2026 and must be refreshed for the next change. It is an engineering requirement, not legal advice or evidence of professional approval.
 
 | Topic | Primary sources and implementation consequence |
 | --- | --- |
@@ -133,4 +133,4 @@ Work directly on **main** in this solo-developer repository. Do not create branc
 
 Commit identity: `Selim Eser <semmel5533@gmail.com>`; verify configured identity. Messages are English, entirely lowercase, concise past-tense action, no emoji, no terminal punctuation, no Conventional Commit prefix; join related actions with `and`.
 
-Independent package/lock versions for `root`, `app`, `support`, `internal`; evaluate all affected packages **before each commit**. Patch for fixes/refactors/text/style, minor for features/routes/schema. Never advance to 1.0.0 or any major without explicit owner approval. Root tooling package also keeps manifest/lock versions aligned. Read → map dependencies → research → implement reversible changes → test/review → sync verified docs → commit.
+Independent package/lock versions for `www`, `app`, `support`, `internal`; evaluate all affected packages **before each commit**. Patch for fixes/refactors/text/style, minor for features/routes/schema. Never advance to 1.0.0 or any major without explicit owner approval. Root tooling package also keeps manifest/lock versions aligned. Read → map dependencies → research → implement reversible changes → test/review → sync verified docs → commit.

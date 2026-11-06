@@ -15,49 +15,51 @@ colors:
 typography:
   marketing-display:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "clamp(3rem, 6.7vw, 6rem)"
+    fontSize: "clamp(3.35rem, 7vw, 6.25rem)"
     fontWeight: 650
     lineHeight: 0.98
     letterSpacing: "-0.035em"
   marketing-display-mobile:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "2.6rem"
+    fontSize: "2.85rem"
     fontWeight: 650
     lineHeight: 0.98
     letterSpacing: "-0.035em"
   marketing-headline:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "clamp(2.6rem, 4.7vw, 4rem)"
+    fontSize: "clamp(2.75rem, 4.9vw, 4.25rem)"
     fontWeight: 700
     lineHeight: 1.03
     letterSpacing: "-0.035em"
   marketing-chapter-title:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "clamp(2rem, 3.8vw, 3.4rem)"
-    fontWeight: 600
+    fontSize: "clamp(2.25rem, 4vw, 3.6rem)"
+    fontWeight: 700
     lineHeight: 1.05
     letterSpacing: "-0.03em"
   marketing-intro:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "1.25rem"
+    fontSize: "clamp(1.25rem, 2vw, 1.4375rem)"
+    fontWeight: 500
     lineHeight: 1.45
   body:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "1rem"
+    fontSize: "1.125rem"
+    fontWeight: 450
     lineHeight: 1.5
   button-label:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "1rem"
+    fontSize: "1.0625rem"
     fontWeight: 600
     lineHeight: 1.25
   marketing-primary-label:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "1.125rem"
+    fontSize: "1.1875rem"
     fontWeight: 600
     lineHeight: 1.25
   marketing-compact-label:
     fontFamily: "League Spartan, Arial, sans-serif"
-    fontSize: "0.9375rem"
+    fontSize: "1.0625rem"
     fontWeight: 600
     lineHeight: 1.25
 rounded:
@@ -83,8 +85,8 @@ components:
     textColor: "{colors.white}"
     rounded: "{rounded.marketing-pill}"
     typography: "{typography.marketing-primary-label}"
-    padding: "12px 20px"
-    height: "52px"
+    padding: "14px 24px"
+    height: "56px"
   marketing-button-primary-hover:
     backgroundColor: "{colors.hover-neutral}"
     textColor: "{colors.white}"
@@ -93,8 +95,8 @@ components:
     textColor: "{colors.black}"
     rounded: "{rounded.marketing-pill}"
     typography: "{typography.marketing-compact-label}"
-    padding: "10px 16px"
-    height: "44px"
+    padding: "12px 20px"
+    height: "48px"
   marketing-placeholder:
     textColor: "{colors.black}"
     rounded: "{rounded.dialog}"
@@ -108,8 +110,8 @@ components:
 
 # Zackisch: Brand & Product Design System
 
-> **Version 1.3 · 6 November 2026 · Canonical design specification**
-> Applies to `root/` (public website), `app/` (merchant/guest/staff), `support/` and `internal/`.
+> **Version 1.4 · 6 November 2026 · Canonical design specification**
+> Applies to `www/` (public website), `app/` (merchant/guest/staff), `support/` and `internal/`.
 > This document defines the current visual system. It does **not** change checkout, POS or payment behavior.
 
 ## 0. Quick decisions
@@ -146,20 +148,20 @@ Write in plain language and present a next action. Prefer “Bestellung abschick
 
 ## 2. Brand assets and logo governance
 
-**The two original source files are authoritative:** `root/public/brand/logo/original/signet.svg` and `root/public/brand/logo/original/wordmark.svg`. They are **byte-identical** to the supplied cropped vectors, with neither white space nor a new font. Every derivative includes **only** the unmodified black artwork, optionally positioned within a white or Electric Citron canvas. **No slogans, taglines, headings, supporting text, illustrations, decorative frames, shadows, extra marks or additional logo combinations** are allowed in any published logo/social asset. Never typeset the wordmark using League Spartan. The artwork is *always* `#000000`; there is no white or colored-reversal mark. The owner-authorized public footer presentation alone uses CSS opacity `0.22` on the unchanged original wordmark over Citron. Other logo placements remain opaque black.
+**The two original source files are authoritative:** `www/public/brand/logo/original/signet.svg` and `www/public/brand/logo/original/wordmark.svg`. They are **byte-identical** to the supplied cropped vectors, with neither white space nor a new font. Every derivative includes **only** the unmodified black artwork, optionally positioned within a white or Electric Citron canvas. **No slogans, taglines, headings, supporting text, illustrations, decorative frames, shadows, extra marks or additional logo combinations** are allowed in any published logo/social asset. Never typeset the wordmark using League Spartan. The artwork is *always* `#000000`; there is no white or colored-reversal mark. The owner-authorized public footer presentation alone uses CSS opacity `0.22` on the unchanged original wordmark over Citron. Other logo placements remain opaque black.
 
 ### Curated source, lockup and platform formats
 
 | Layer | Exact location / naming | Practical use |
 |---|---|---|
-| Original / zero padding | `root/public/brand/logo/original/{signet,wordmark}.svg` | Tight transparent vector source; retain unchanged |
-| Responsive padded SVG | `root/public/brand/logo/lockups/{signet,wordmark}--{transparent,white,citron}--{standard,spacious}.svg` | UI header, marketing layout, presentations, email signature; CSS scalable |
-| Bitmap fallback | `root/public/brand/logo/lockups/{signet,wordmark}--{background}--{padding}--{width}w.png` | Fixed-resolution placement when SVG is not supported |
-| Favicon | `root/public/brand/logo/platform/signet--favicon.{svg,ico}` and `signet--favicon--32.png` | Browser tab/bookmarks; rounded 28%-radius Citron tile with transparent outer corners; ICO 16/32/48 px |
-| Apple touch | `root/public/brand/logo/platform/signet--apple-touch--180.png` | Full-bleed square Citron; OS applies rounded mask automatically |
-| PWA | `root/public/brand/logo/platform/signet--pwa--{192,512}.png`, `signet--pwa-maskable--512.png` | `any`: round-square/transparent corners; `maskable`: full-bleed square for OS-provided mask |
-| Social profile | `root/public/brand/logo/social/signet--avatar--400.png` | Square avatar, centered and circle-crop safe |
-| Open Graph | `root/public/brand/logo/social/wordmark--og--{citron,white}--1200x630.png` | Link preview / OG and large social card; logo only |
+| Original / zero padding | `www/public/brand/logo/original/{signet,wordmark}.svg` | Tight transparent vector source; retain unchanged |
+| Responsive padded SVG | `www/public/brand/logo/lockups/{signet,wordmark}--{transparent,white,citron}--{standard,spacious}.svg` | UI header, marketing layout, presentations, email signature; CSS scalable |
+| Bitmap fallback | `www/public/brand/logo/lockups/{signet,wordmark}--{background}--{padding}--{width}w.png` | Fixed-resolution placement when SVG is not supported |
+| Favicon | `www/public/brand/logo/platform/signet--favicon.{svg,ico}` and `signet--favicon--32.png` | Browser tab/bookmarks; rounded 28%-radius Citron tile with transparent outer corners; ICO 16/32/48 px |
+| Apple touch | `www/public/brand/logo/platform/signet--apple-touch--180.png` | Full-bleed square Citron; OS applies rounded mask automatically |
+| PWA | `www/public/brand/logo/platform/signet--pwa--{192,512}.png`, `signet--pwa-maskable--512.png` | `any`: round-square/transparent corners; `maskable`: full-bleed square for OS-provided mask |
+| Social profile | `www/public/brand/logo/social/signet--avatar--400.png` | Square avatar, centered and circle-crop safe |
+| Open Graph | `www/public/brand/logo/social/wordmark--og--{citron,white}--1200x630.png` | Link preview / OG and large social card; logo only |
 
 This is an **intentionally constrained** set, not a collection of all export sizes a design tool can generate. No redundant WebP logos, 10-size PNG ladders, standalone social banners, platform-specific extra dimensions, old logo variants or combined wordmark/signet compositions. A dedicated social-cover asset should be added **only after** an actual platform's cover crop and requirements are confirmed; render the existing original artwork, without slogans.
 
@@ -174,7 +176,7 @@ This is an **intentionally constrained** set, not a collection of all export siz
 
 ### Asset integration and quality control
 
-All filenames in the delivered brand library begin with **`signet`** or **`wordmark`** (besides the machine-readable `manifest.json`); the original artwork stays in `original/`. File naming follows `mark--background--padding--size`, so a developer can reliably choose the needed variant. `root/public/brand/logo/manifest.json` lists every exported file, its specific purpose, format, pixel dimensions where relevant and SHA-256 checksum. A background-specific file is visually just the black logo on that color, nothing else.
+All filenames in the delivered brand library begin with **`signet`** or **`wordmark`** (besides the machine-readable `manifest.json`); the original artwork stays in `original/`. File naming follows `mark--background--padding--size`, so a developer can reliably choose the needed variant. `www/public/brand/logo/manifest.json` lists every exported file, its specific purpose, format, pixel dimensions where relevant and SHA-256 checksum. A background-specific file is visually just the black logo on that color, nothing else.
 
 Prefer SVG for web/UI and editable vector handoffs; use exact-size PNG only for systems requiring raster. For Next.js App Router, copy/route the relevant source under the framework's expected metadata name or configure `metadata.icons`; this runtime wiring does **not** rename the source asset in the design library. The same **1200×630** OG PNG may be used for a large social share card; site titles and descriptions belong in HTML/OG metadata, **not printed onto the graphic**. Asset filenames and platform masks are listed above.
 
@@ -224,13 +226,13 @@ Three fixed brand values:
 
 ## 4. Token architecture and implementation
 
-**Canonical source:** `root/public/brand/tokens/design-tokens.json` uses Design Tokens Community Group 2025.10-style `$type`, `$value`, type-aware values and aliases. Reference the source tokens by semantic intent rather than copying a hex into components:
+**Canonical source:** `www/public/brand/tokens/design-tokens.json` uses Design Tokens Community Group 2025.10-style `$type`, `$value`, type-aware values and aliases. Reference the source tokens by semantic intent rather than copying a hex into components:
 
 1. **Reference / primitive:** `color.ref.*`, `space.*`, `radius.*`, `typography.*`, `motion.*`.
 2. **Semantic:** `color.semantic.text.primary`, `.background.canvas`, `.navigation.item-active`, `.skeleton.base`.
 3. **Component:** `component.sidebar.item-radius`, `component.input.height`, `component.card.radius`.
 
-**Deliverables:** `root/public/brand/tokens/tokens.css` (CSS custom properties), `root/public/brand/tokens/tokens.ts` (TypeScript lookup), `root/public/brand/tokens/tailwind-v4.css` (optional theme bridge), `root/public/brand/tokens/theme.css` (base reset/typographic use), `root/public/brand/tokens/contrast-audit.json` (reference audit). Do not invent duplicate per-app token catalogs. CSS tokens use `--zk-` prefix, e.g. `--zk-color-semantic-navigation-item-active`.
+**Deliverables:** `www/public/brand/tokens/tokens.css` (CSS custom properties), `www/public/brand/tokens/tokens.ts` (TypeScript lookup), `www/public/brand/tokens/tailwind-v4.css` (optional theme bridge), `www/public/brand/tokens/theme.css` (base reset/typographic use), `www/public/brand/tokens/contrast-audit.json` (reference audit). Do not invent duplicate per-app token catalogs. CSS tokens use `--zk-` prefix, e.g. `--zk-color-semantic-navigation-item-active`.
 
 A token is not permission to use a color everywhere. Red is strictly error; dark Citron is not a global sidebar treatment; neutral, white and black make up most application surfaces.
 
@@ -281,47 +283,47 @@ Use **League Spartan** in every property, including data tables, labels, mobile 
 | Helper / captions | 12–14px / 1.45 | 500; avoid critical 12px |
 | Numeric data / amounts | 16–36px, according to hierarchy | 600–700; `font-variant-numeric: tabular-nums` |
 
-Load the approved self-hosted League Spartan font from `root/public/brand/fonts/`, with all required weights, `font-display: swap` and sensible fallback fonts. The other applications use the absolute website URL with the configured CORS headers. Ensure the correct diacritics and German numeric formatting. Prefer tighter letter spacing only for large display, not microcopy. Preserve legibility in long support articles: cap line length around 65–75 characters and use generous line height. Optical sizing varies; test text in actual browsers and zoom.
+Load the approved self-hosted League Spartan font from `www/public/brand/fonts/`, with all required weights, `font-display: swap` and sensible fallback fonts. The other applications use the absolute website URL with the configured CORS headers. Ensure the correct diacritics and German numeric formatting. Prefer tighter letter spacing only for large display, not microcopy. Preserve legibility in long support articles: cap line length around 65–75 characters and use generous line height. Optical sizing varies; test text in actual browsers and zoom.
 
-### Public marketing scale: root only
+### Public marketing scale: www only
 
-The table above remains the operational UI scale for merchant, guest, staff, support and internal screens. The public website has a separate responsive display hierarchy to support the founder's requested desktop emphasis. This exception does not enlarge checkout controls, dashboards or support reading text.
+The table above remains the operational UI scale for merchant, guest, staff, support and internal screens. The public website (`www/`) uses a larger, higher-weight responsive hierarchy across desktop and mobile so neither headings nor supporting text feel thin or cramped. This exception does not enlarge checkout controls, dashboards or support reading text.
 
 | Public website role | Implemented size / line height | Weight / tracking |
 |---|---|---|
-| Hero, widths from 400px | `clamp(3rem, 6.7vw, 6rem)` / 0.98; maximum 96px at the default root size | 650 / −0.035em |
-| Hero, widths through 399px | 2.6rem / 0.98 | 650 / −0.035em |
-| Marketing section heading | `clamp(2.6rem, 4.7vw, 4rem)` / 1.03; maximum 64px | 700 / −0.035em |
-| Product chapter heading | `clamp(2rem, 3.8vw, 3.4rem)` / 1.05 | 600 / −0.03em |
-| Closing invitation heading | `clamp(3rem, 6.5vw, 6rem)` / 1.03 | 700 / −0.035em |
-| Article/legal title | `clamp(2.75rem, 4vw, 3.25rem)` / 1.05 | 700 / −0.035em |
-| Article/legal section heading | 26px / 1.1 | 700 / −0.035em |
-| Hero introduction | 20px / 1.45, maximum 54ch | Inherited body weight |
-| General lead | 18px / 1.55, maximum 65ch | Inherited body weight |
-| Chapter summary | 22px / 1.35; 20px through 799px, maximum 30ch | Inherited body weight |
-| Fee figure | `clamp(7rem, 16vw, 14rem)` / 0.85; 8rem through 799px | 600 / −0.04em; tabular figures |
+| Hero, widths from 400px | `clamp(3.35rem, 7vw, 6.25rem)` / 0.98 | 650 / −0.035em |
+| Hero, widths through 399px | 2.85rem / 0.98 | 650 / −0.035em |
+| Marketing section heading | `clamp(2.75rem, 4.9vw, 4.25rem)` / 1.03; 2.45rem through 399px | 700 / −0.035em |
+| Product chapter heading | `clamp(2.25rem, 4vw, 3.6rem)` / 1.05 | 700 / −0.03em |
+| Closing invitation heading | `clamp(3rem, 6.5vw, 6rem)` / 1.03; 2.6rem through 399px | 700 / −0.035em |
+| Article/legal title | `clamp(2.75rem, 4.2vw, 3.5rem)` / 1.05 | 700 / −0.035em |
+| Article/legal section heading | 1.75rem / 1.12 | 700 / −0.03em |
+| Hero introduction | `clamp(1.25rem, 2vw, 1.4375rem)` / 1.45, maximum 54ch | 500 |
+| General lead / public body | `clamp(1.25rem, 1.8vw, 1.375rem)` / 1.55 lead; 1.125rem / 1.5 body | 500 lead; 450 body |
+| Chapter summary and detail | `clamp(1.375rem, 2.2vw, 1.625rem)` / 1.35 summary; 1.1875rem / 1.5 detail | 600 summary; 500 detail |
+| Fee figure | `clamp(7rem, 16vw, 14rem)` / 0.85; 8.5rem through 799px | 600 / −0.04em; tabular figures |
 
-The self-hosted variable font declares weights 100–900; the hero's 650 is a supported marketing-specific setting, not a replacement for operational weight roles.
+The self-hosted variable font declares weights 100–900; the hero's 650 and the public body's 450/500 are supported marketing-specific settings, not replacements for operational weight roles. Because League Spartan's cap-height midpoint sits above the OpenType line-box center, inline icons and arrows inside single-line buttons and links use `translate: 0 -0.08em` for optical vertical centering with the text.
 
 **The Marketing Scope Rule.** Larger display typography belongs to the public website's explanatory hierarchy; keep the operational UI scale unchanged. Headings wrap naturally, without fixed-height text containers. Body copy retains a maximum 65-character measure where the layout permits; long legal text uses a narrower 760px article container. Test the actual translation at 320px and with enlarged text.
 
 **The Visible Motion Rule.** Scroll enhancements begin from visible content. On the public website, desktop-only photo clipping is progressive enhancement; reduced-motion mode disables animations, transitions and sticky chapter panels. No content depends on animation support or scroll position to become readable.
 
-### Public marketing layout and motion: root only
+### Public marketing layout and motion: www only
 
-The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header has a 112px minimum height, reduced to 96px through 599px. Below 1250px, only the wordmark and 44px Phosphor List button remain visible. All navigation links, help, login, registration and country/language selection move into a left-edge Electric Citron drawer. It is at most 460px wide, fills the viewport height, scrolls internally and has a 44px close icon at the upper right. No visible navigation heading appears; a hidden accessible title names it. Native links retain normal semantics within Base UI's focus-managed overlay. A 280ms ease-out slide is disabled for reduced motion. Escape, close, section navigation and language selection dismiss it; resizing to desktop also closes it. These content-driven breakpoints override the general device guidance only for this website.
+The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header has a 112px minimum height, reduced to 96px through 599px. Below 1250px, only the wordmark and 44px Phosphor List button remain visible. The left-edge Electric Citron drawer (`min(460px, 100%)`, full viewport height, internal scroll, 44px upper-right close button, hidden accessible title) contains the four section links (features, costs, questions, contact) in `<nav>`, followed by `.mobile-actions` in the exact desktop header order: outlined `Hilfe` pill, outlined `Region & Sprache` pill and black `Anmelden` pill. The registration CTA (`Lokal einrichten`) is omitted from the mobile drawer. Both `.mobile-navigation` and `.dialog-backdrop` use `@starting-style` and Base UI `[data-starting-style]`/`[data-ending-style]` for a 280ms cubic-bezier entry/exit animation, disabled for reduced motion. Escape, close, section navigation and language selection dismiss it; resizing to desktop also closes it. These content-driven breakpoints override the general device guidance only for this website.
 
 The centered introduction uses a single black headline color, with a real smartphone photograph below the copy and actions. Its one-column grid has a 48px gap, reduced to 32px through 799px; the photograph fills the same container width as the following sections, up to 1280px with a 16:9 crop anchored bottom-center, trimming the top of the original 3:2 photo. Photos have 32px corners. The problem section pairs explanatory text with a separate color café guest portrait in equal columns with a 96px gap and 128px top padding; through 799px it becomes one column with a 32px gap and 80px top padding. The problem portrait is cropped to 4:3 and aligned bottom-center to retain the guest and phone. The team section is centered without photography, with a wide 16:9 staff placeholder beneath its copy. On desktop with normal motion, its frame grows from 88% to 100% as it enters the viewport, using a passive scroll listener and requestAnimationFrame; mobile and reduced motion use full size immediately. The two photographs show distinct scenes and people. Through 399px the introductory actions also stack.
 
 The example-venue strip below the hero contains six localized generic venue placeholders in League Spartan, under the invitation “Hier könnte dein Lokal auftauchen” / “Your venue could be here”, without claiming actual customers or guaranteed promotion. The strip has a 64px top margin, 32px vertical padding and light top/bottom borders. Its duplicated track drifts horizontally over 36 seconds, linearly and infinitely, and pauses on hover or with the 44px pause/resume control. Duplicate content is hidden from assistive technology. Reduced motion removes the animation and duplicate list and shows all six examples in a static three-column grid, reduced to two columns through 599px; the unnecessary pause control is hidden.
 
-A fully right-aligned personal-contact area follows the FAQ, with a light bottom border before the final invitation and no top border. The mailto email link has no arrow or resting underline; hover and keyboard focus underline it, with the focus outline retained. Its heading is 24px, supporting text 20px and direct email link `clamp(1.65rem, 5.8vw, 5rem)`, weight 600 and line height 1.2. It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
+A left-aligned personal-contact area follows the FAQ, with a light bottom border before the final invitation and no top border. The mailto email link has no arrow or resting underline; hover and keyboard focus underline it, with the focus outline retained. Its heading is `clamp(1.625rem, 2.5vw, 2rem)`, supporting text `clamp(1.25rem, 2vw, 1.4375rem)` (weight 500) and direct email link `clamp(1.75rem, 5.8vw, 5rem)` (weight 600, line height 1.2). It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
 
 **The Footer Logo Exception Rule.** Only the public footer presents the unchanged original black wordmark at CSS opacity 0.22 on Electric Citron, with 16px side margins and 8px bottom padding. Other logo placements remain opaque black.
 
-The footer uses an Electric Citron background, two equal link columns: country trigger above unheaded navigation including help/contact, and legal. The first group starts with the country trigger and outlined help pill, followed by research, features, pricing, questions and contact. Help links to localized support; contact targets the homepage email section. The original wordmark follows beneath. The wordmark has CSS opacity 0.22, width `calc(100% - 32px)`, 16px side margins and an 80px top margin (48px through 599px). Footer bottom padding is 8px. This presentation changes neither the logo asset nor other logo placements. Footer section links and the privacy-settings text button have no resting underline; hover adds it. Page links show a persistent arrow without hover underlining.
+The footer uses an Electric Citron background and two equal link columns on desktop: country trigger above unheaded navigation including help/contact, and legal. Through 799px the footer stacks into a centered single-column layout (`text-align: center`, `align-items: center`). The first group starts with three outlined pills (country trigger, help pill and research pill), followed by features, pricing, questions and contact. Help links to localized support; contact targets the homepage email section. The original wordmark follows beneath. The wordmark has CSS opacity 0.22, width `calc(100% - 32px)`, 16px side margins and an 80px top margin (48px through 599px). Footer bottom padding is 8px. This presentation changes neither the logo asset nor other logo placements. Footer section links and the privacy-settings text button use 18px (`1.125rem`, weight 500) text and have no resting underline; hover adds it. Page links show a persistent optically centered arrow without hover underlining.
 
-The header region and login pills form one flex group with a 12px gap at every viewport width. Header and footer use country-only pill region/language triggers: a 20px globe beside Deutschland or Germany. Both region triggers share 44px minimum height, 10px/16px padding and 15px text at 1.25 line height. The header trigger is ghost with transparent border and background at rest. Footer region and help pills have transparent backgrounds and Citron 700 outlines; hover uses muted surface in the header and brand-soft in the Citron footer. Text and icons align centrally. Desktop navigation has 12px extra separation from the wordmark. Dialog options retain stacked country and language labels (14px, line height 1.2, 3px gap). The dialog presents native-language links for Deutschland / Deutsch and Germany / English, retaining the current page slug; language does not change the trusted German business region. The active link has a checkmark and pale Citron surface. A 44px icon button with an accessible label closes the dialog at the upper right; outside click and Escape also dismiss it, and focus returns to the trigger. There is no separate bottom close button.
+The header region and login pills form one flex group with a 12px gap at every viewport width. Header and footer use country-only pill region/language triggers: a 20px globe beside Deutschland or Germany. Compact pill controls (`region-trigger`, `header-help`, `header-login`, `footer-help`, `footer-research`, `mobile-help`, `mobile-login`) share 48px minimum height, 12px/20px padding and 17px (`1.0625rem`) text at 1.25 line height. The header trigger and header help are ghost pills with transparent borders and backgrounds at rest. Footer region, help and research pills, as well as mobile drawer help and region pills, have transparent backgrounds and Citron 700 outlines; hover uses muted surface in the header and brand-soft on Citron surfaces. Text and icons align centrally. Desktop navigation uses 17px (`1.0625rem`, weight 600) links and 12px extra separation from the wordmark. Dialog options retain stacked country and language labels (16px, line height 1.25, 3px gap). The dialog presents native-language links for Deutschland / Deutsch and Germany / English, retaining the current page slug; language does not change the trusted German business region. On `/`, browser language preferences (`navigator.languages` / `navigator.language`) automatically select `de-de` for German or `de-en` for English, defaulting to `de-de` (`Deutschland` / `Deutsch`) whenever no preference is available or matched. The active link has a checkmark and pale Citron surface. A 44px icon button with an accessible label closes the dialog at the upper right; outside click and Escape also dismiss it, and focus returns to the trigger. There is no separate bottom close button.
 
 Product chapters use two equal columns, 64px padding and gap, 32px corners, a 32px top sticky offset and `min(720px, calc(100svh - 64px))` minimum height. Their surfaces progress from Citron 50 through Citron 100 to Citron 300. Through 1100px padding becomes 40px and gap 32px; through 799px chapters become static single-column panels with 32px padding and no fixed minimum height. Through 399px padding is 28px vertically and 20px horizontally. Viewport heights through 650px and reduced motion also make the chapters static.
 
@@ -454,7 +456,7 @@ ARIA rule: use `<nav aria-label="...">` and current route `<a aria-current="page
 
 ## 9. UX conventions for the four products
 
-**Public website (`root/`):** predominantly white pages, strong League Spartan hero and human images, occasional Citron background sections. Make the product model and POS coexistence legible; large uncomplicated CTAs. Mobile-first hierarchy and no exaggerated claims.
+**Public website (`www/`):** predominantly white pages, strong League Spartan hero and human images, occasional Citron background sections. Make the product model and POS coexistence legible; large uncomplicated CTAs. Mobile-first hierarchy and no exaggerated claims.
 
 **Merchant product (`app/`):** Citron 300 nav sidebar; Citron 500 selected item with label weight 700 and **regular → fill icon when the item has one**, no marker. Operational screens mostly white and gray. Prioritize actions, filters, order status, sales figures, QR setup and payment account readiness. Multi-step onboarding shows saved progress.
 
@@ -508,7 +510,7 @@ This section controls the design of **codes dynamically generated by the existin
 
 - Impeccable is the required UI design, implementation and critique workflow. Base UI supplies accessible primitives; focused Zackisch wrappers and these tokens supply the visual system. Mobbin research precedes each UI addition or modification. References inform composition and interaction, never override this brand.
 - Public marketing references favor large established payment/financial brands, such as PayPal and Stripe, for hierarchy and professional presentation. Preserve human hospitality content and independent Zackisch composition. Desktop may use purposeful scroll sequences; mobile and reduced-motion layouts must expose all content without scroll traps.
-- `root/public/brand/` is the only hosted brand asset directory. Its files are served from `https://zackisch.com/brand/...`. The other three applications and email templates use those absolute URLs. No asset copying into other public folders. CSS source imports at build time do not constitute a second asset host.
+- `www/public/brand/` is the only hosted brand asset directory. Its files are served from `https://zackisch.com/brand/...`. The other three applications and email templates use those absolute URLs. No asset copying into other public folders. CSS source imports at build time do not constitute a second asset host.
 - Logo files remain byte-identical to the supplied bundle. Use PNG wordmarks in email clients that cannot render SVG. All fonts are hosted on the website domain; never load Google Fonts at runtime. Provide correct font CORS headers for the three application origins.
 - Compatibility aliases may map existing component token names to this system while individual screens are migrated. They are not a second theme. Document actual coverage in the application README; do not call the whole product redesigned after changing tokens.
 - Use the source token JSON for values, CSS for implementation, and verify rendered contrast. Correct invalid serialization (such as JavaScript-array syntax in CSS font-family) without changing brand decisions.
@@ -553,7 +555,7 @@ Menu flexibility is introduced below the digital-menu heading. Staff availabilit
 
 Links to homepage sections have no arrow and only gain an underline on hover. Links to other pages carry a persistent Phosphor ArrowUpRight and never gain a hover underline. Other hosts, including Zackisch subdomains and external sources, open a new tab with noopener/noreferrer and a localized accessible description and title; same-host public pages stay in the current tab. Brand home links retain the unchanged logo without an appended icon. The mailto contact keeps its explicit underline interaction. Non-navigation controls remain buttons with their existing focus/interaction states.
 
-Both homepage primary registration CTAs use 18px text, 52px minimum height, a 16px label/icon gap and a 20px arrow. Compact header navigation pills retain 15px text and 44px minimum height. Keyboard focus rings remain visible for every link type.
+Both homepage primary registration CTAs use 19px (`1.1875rem`) text, 56px minimum height, a 14px label/icon gap and a 20px optically centered arrow. Compact header, mobile drawer and footer navigation pills use 17px (`1.0625rem`) text and 48px minimum height. Keyboard focus rings remain visible for every link type.
 
 ### Public error and pricing routes
 
@@ -561,6 +563,6 @@ Pricing is the homepage #costs section, reached through the same smooth section-
 
 Use no terminal full stop on a single coherent heading or short standalone label, such as the hero and venue invitation. Distinct statements in one heading retain separating periods, such as “Volle Tische. Schlange am Tresen.” Multi-sentence prose retains grammatical punctuation. This does not remove necessary punctuation from legal documents or longer explanations.
 
-The desktop header places the logo then features, costs, questions and contact on the left. Help, country/language and login form the right-aligned action group. Header help uses a transparent ghost pill; footer help uses a Citron 700 outline. Both retain the persistent page-navigation arrow and use 15px text, 10px/16px padding and a 44px minimum height. Footer columns stack below 380px so outlined controls fit without breaking country names. The hero registration CTA alone uses Primary Citron with black text; the desktop login pill uses black with white text. Below 1250px the header action group moves into the drawer.
+The desktop header places the logo then features, costs, questions and contact on the left. Help, country/language and login form the right-aligned action group. Header help uses a transparent ghost pill; footer help and research use Citron 700 outlines. All retain the persistent optically centered page-navigation arrow and use 17px (`1.0625rem`) text, 12px/20px padding and a 48px minimum height. Below 800px the footer stacks into a centered single-column layout. The hero registration CTA alone uses Primary Citron with black text; the desktop and mobile drawer login pills use black with white text. Below 1250px the header action group moves into the drawer in the same order (`Hilfe` outline pill, `Region & Sprache` outline pill, `Anmelden` black pill) without duplicating the registration CTA.
 
 The homepage FAQ contains eight questions; POS recording, its low-integration rationale and possible future integrations share one answer. The German hero introduction starts its second sentence on a new line, preserving natural wrapping on narrow screens.

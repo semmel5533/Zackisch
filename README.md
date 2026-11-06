@@ -6,12 +6,12 @@ Zackisch ergänzt den persönlichen Service und das vorhandene Kassensystem eine
 
 | Anwendung | Aufgabe | Einstieg |
 | --- | --- | --- |
-| Website | Produkt, Kosten, Registrierungseinstieg und Rechtstexte | [`root/README.md`](root/README.md) |
+| Website | Produkt, Kosten, Registrierungseinstieg und Rechtstexte | [`www/README.md`](www/README.md) |
 | App | Betreiberkonto, Einrichtung, Menü, Gäste und Personal | [`app/README.md`](app/README.md) |
 | Hilfe-Center | Öffentliche Anleitungen und private Support-Tickets | [`support/README.md`](support/README.md) |
 | Team Dashboard | Geschützte Verwaltung, Support und kaufmännische Abläufe | [`internal/README.md`](internal/README.md) |
 
-Alle Anwendungen verwenden Next.js 16, React 19 und TypeScript. Die Cloudflare-Builds laufen über vinext. Das einzige Convex-Backend liegt unter `app/convex/`. Öffentliche Website und Hilfe sind für Deutschland auf Deutsch (`de-de`) und Englisch (`de-en`) angelegt. Sprache und rechtliche Geschäftsregion sind getrennt.
+Alle Anwendungen verwenden Next.js 16, React 19 und TypeScript. Die Website (`www/`) wird als statischer Export (`out/`) auf Cloudflare Pages ausgeliefert; App (`app/`), Hilfe-Center (`support/`) und Team Dashboard (`internal/`) nutzen Cloudflare Workers über vinext. Das einzige Convex-Backend liegt unter `app/convex/`. Öffentliche Website und Hilfe sind für Deutschland auf Deutsch (`de-de`) und Englisch (`de-en`) angelegt; beim Aufruf von `/` wählt die Website anhand der Browsersprache automatisch `de-de` oder `de-en` und fällt standardmäßig auf `de-de` zurück. Sprache und rechtliche Geschäftsregion sind getrennt.
 
 ## Intelligentes Menü
 
@@ -31,8 +31,8 @@ Jeder Anwendungsordner hat ein eigenes `package.json` und Lockfile. Abhängigkei
 
 ```sh
 npm ci
-npm ci --prefix root
-npm run dev --prefix root
+npm ci --prefix www
+npm run dev --prefix www
 npm run test:unit
 npm run typecheck
 npm run test:browser
@@ -46,7 +46,7 @@ Playwright Test ist mit Chromium, Desktop- und Mobilprofil, Fehler-Screenshots, 
 
 [`DESIGN.md`](DESIGN.md) ist die einzige visuelle Spezifikation: schwarze Originalmarken, Weiß, Electric Citron und League Spartan. Impeccable unterstützt Gestaltung und Review; Mobbin liefert mehrere echte Referenzen vor jeder UI-Änderung. Zugängliche Komponenten entstehen auf Base UI. Für die Website dienen insbesondere etablierte Payment-, Banking- und Commerce-Marken als strukturelle Referenzen.
 
-Fotos stammen ausschließlich aus echten Internet-Stockbeständen mit belegtem kostenlosem kommerziellem Nutzungsrecht. **KI-generierte Fotos sind ausgeschlossen.** Noch fehlende Produktaufnahmen werden mit Text als Platzhalter gekennzeichnet. Der zentrale öffentliche Assetpfad ist `root/public/brand/`, erreichbar über `https://zackisch.com/brand/...`; App, Support, Team Dashboard und E-Mails verwenden diese Adresse.
+Fotos stammen ausschließlich aus echten Internet-Stockbeständen mit belegtem kostenlosem kommerziellem Nutzungsrecht. **KI-generierte Fotos sind ausgeschlossen.** Noch fehlende Produktaufnahmen werden mit Text als Platzhalter gekennzeichnet. Der zentrale öffentliche Assetpfad ist `www/public/brand/`, erreichbar über `https://zackisch.com/brand/...`; App, Support, Team Dashboard und E-Mails verwenden diese Adresse.
 
 Entwicklung und kleine, geprüfte Commits erfolgen bewusst direkt auf `main`. Jede Anwendung wird unabhängig versioniert. Die vollständigen Regeln für Tests, Recht, Sicherheit, Zahlungen, Betrieb und Commits stehen in [`AGENTS.md`](AGENTS.md); [`PRODUCT.md`](PRODUCT.md) enthält den ergänzenden Produktkontext für Impeccable. Die README-Dateien beschreiben vorhandene Funktionen; Arbeitspläne und Prüfnachweise liegen außerhalb des Produktrepositories.
 

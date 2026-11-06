@@ -34,7 +34,7 @@
     "typographyMeta": {
       "marketing-display": {
         "displayName": "Public website hero",
-        "purpose": "Public root marketing only; operational UI retains its own scale."
+        "purpose": "Public www marketing only; operational UI retains its own scale."
       },
       "marketing-display-mobile": {
         "displayName": "Mobile public website hero",
@@ -136,8 +136,8 @@
       "regionTrigger": {
         "header": "ghost",
         "footer": "outline",
-        "fontSize": 15,
-        "minHeight": 44
+        "fontSize": 17,
+        "minHeight": 48
       }
     }
   },
@@ -148,7 +148,7 @@
       "refersTo": "marketing-button-primary",
       "description": "One dominant registration or task action.",
       "html": "<a class=\"ds-control ds-primary\" href=\"https://app.zackisch.com/sign-up\" target=\"_blank\" rel=\"noopener noreferrer\" aria-description=\"Öffnet in einem neuen Tab\">Lokal einrichten</a>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 18px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:14px 24px; border:1px solid transparent; border-radius:999px; font:600 19px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Marketing secondary action",
@@ -156,7 +156,7 @@
       "refersTo": "marketing-button-secondary",
       "description": "Secondary controls such as the header login pill and mobile navigation.",
       "html": "<a class=\"ds-control ds-secondary\" href=\"https://app.zackisch.com/sign-in\" target=\"_blank\" rel=\"noopener noreferrer\">Anmelden</a>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:10px 16px; border:1px solid transparent; border-radius:999px; font:600 15px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 17px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Product image placeholder",
@@ -216,9 +216,9 @@
     "dos": [
       "Use real color stock photographs with verified free commercial rights; no optional attribution captions. Keep provenance.",
       "Keep product image areas clearly text-labelled until actual screenshots are available.",
-      "Header country trigger matches the login secondary pill and forms a 12px-gap group with it with 44px minimum height and 15px text; footer country trigger retains its transparent Citron treatment. Label venue placeholder band with Hier könnte dein Lokal auftauchen / Your venue could be here",
-      "Right-align the personal contact block with a bottom separator and no top border; email uses no arrow and underlines on hover or keyboard focus.",
-      "Footer: two columns, country trigger first above unheaded navigation ordered ghost help, research, features, pricing, questions, contact, then legal. Contact scrolls to the homepage email section with a clean URL."
+      "Header country trigger matches the login secondary pill and forms a 12px-gap group with it with 48px minimum height and 17px text; footer country, help and research triggers use transparent Citron outline pills. Label venue placeholder band with Hier könnte dein Lokal auftauchen / Your venue could be here",
+      "Left-align the personal contact block with a bottom separator and no top border; email uses no arrow and underlines on hover or keyboard focus.",
+      "Footer: two columns on desktop and centered single column below 800px, country trigger first above unheaded navigation ordered outlined help, outlined research, features, pricing, questions, contact, then legal. Contact scrolls to the homepage email section with a clean URL."
     ],
     "donts": [
       "Never generate photographs with AI.",
