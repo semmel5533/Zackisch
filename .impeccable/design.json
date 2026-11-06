@@ -50,7 +50,7 @@
       },
       "marketing-intro": {
         "displayName": "Hero introduction",
-        "purpose": "Centered public marketing explanation, maximum 42ch."
+        "purpose": "Centered public marketing explanation, maximum 54ch."
       }
     },
     "shadows": [
@@ -84,7 +84,7 @@
       {
         "name": "logo-drift",
         "value": "36s linear infinite; translateX(-50%)",
-        "purpose": "Six explicitly fictional example venue brands, never customer references. Pause/resume control and hover pause the track; reduced motion shows all six in a static grid, hiding the duplicate list and pause control. Duplicated content is aria-hidden."
+        "purpose": "Six localized generic venue placeholders under an invitation, never actual customer references or guaranteed advertising. Pause/resume control and hover pause the track; reduced motion shows all six in a static grid, hiding the duplicate list and pause control. Duplicated content is aria-hidden."
       }
     ],
     "breakpoints": [
@@ -120,7 +120,26 @@
         "name": "header-navigation-wrap-maximum",
         "value": "1199px"
       }
-    ]
+    ],
+    "marketingNavigation": {
+      "compactBelow": 1250,
+      "drawer": {
+        "edge": "left",
+        "maxWidth": 460,
+        "background": "Electric Citron",
+        "visibleTitle": false,
+        "close": "upper right",
+        "reducedMotion": "no transition"
+      },
+      "heroAction": "Electric Citron with black text",
+      "desktopLogin": "black with white text",
+      "regionTrigger": {
+        "header": "ghost",
+        "footer": "outline",
+        "fontSize": 15,
+        "minHeight": 44
+      }
+    }
   },
   "components": [
     {
@@ -128,24 +147,24 @@
       "kind": "button",
       "refersTo": "marketing-button-primary",
       "description": "One dominant registration or task action.",
-      "html": "<button class=\"ds-control ds-primary\">Lokal einrichten</button>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
+      "html": "<a class=\"ds-control ds-primary\" href=\"https://app.zackisch.com/sign-up\" target=\"_blank\" rel=\"noopener noreferrer\" aria-description=\"Öffnet in einem neuen Tab\">Lokal einrichten</a>",
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 18px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Marketing secondary action",
       "kind": "button",
       "refersTo": "marketing-button-secondary",
       "description": "Secondary controls such as the header login pill and mobile navigation.",
-      "html": "<a class=\"ds-control ds-secondary\" href=\"https://app.zackisch.com/sign-in\">Anmelden</a>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 16px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
+      "html": "<a class=\"ds-control ds-secondary\" href=\"https://app.zackisch.com/sign-in\" target=\"_blank\" rel=\"noopener noreferrer\">Anmelden</a>",
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:10px 16px; border:1px solid transparent; border-radius:999px; font:600 15px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Product image placeholder",
       "kind": "card",
       "refersTo": "marketing-placeholder",
-      "description": "Text-only future capture, transparent inside a Citron chapter; the staff variant uses a muted surface. No fabricated product UI.",
+      "description": "Text-only future capture inside a black 6px smartphone frame; the full-width staff variant uses the same border, a muted surface and a 16:9 preferred ratio. No fabricated product UI.",
       "html": "<figure class=\"ds-placeholder\"><figcaption>Platzhalter · Produktaufnahme folgt</figcaption><p>Hier erscheint: Gäste-Menü</p></figure>",
-      "css": ".ds-placeholder { margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; min-height:420px; padding:40px; border:1px dashed var(--zk-color-ref-citron-700, #506e00); border-radius:24px; color:var(--zk-text, #000); text-align:center; font-family:\"League Spartan\", Arial, sans-serif; } .ds-placeholder p { margin:0; font-size:24px; line-height:1.25; max-width:24ch; font-weight:500; } .ds-placeholder figcaption { font-size:14px; font-weight:500; } @media (max-width:1100px) { .ds-placeholder { padding:24px; } } @media (max-width:799px) { .ds-placeholder { min-height:300px; } }"
+      "css": ".ds-placeholder { margin:0; display:grid; align-content:center; justify-items:center; justify-content:center; gap:24px; width:min(100%,280px); aspect-ratio:9/18; padding:32px 20px; border:6px solid var(--zk-text, #000); border-radius:40px; background:var(--zk-page, #fff); color:var(--zk-text, #000); text-align:center; font-family:\"League Spartan\", Arial, sans-serif; } .ds-placeholder p { margin:0; font-size:24px; line-height:1.25; max-width:24ch; font-weight:500; } .ds-placeholder figcaption { font-size:14px; font-weight:500; } .ds-placeholder.staff { width:100%; aspect-ratio:16/9; min-height:auto; border-radius:24px; background:var(--zk-surface-muted, #fafafa); }"
     },
     {
       "name": "Public navigation link",
@@ -164,8 +183,8 @@
     {
       "name": "Footer text link",
       "kind": "nav",
-      "description": "Footer links and the privacy-settings text button use plain text at rest and underline on hover on the Citron surface.",
-      "html": "<a class=\"ds-footer-link\" href=\"/de-de/privacy\">Datenschutz</a>",
+      "description": "Section links and the privacy-settings action underline on hover. Other-page links show a persistent arrow and no hover underline; external hosts open a new tab with an accessible notice.",
+      "html": "<a class=\"ds-footer-link\" href=\"/de-de#questions\">Fragen</a>",
       "css": ".ds-footer-link { display:inline-block; padding-block:12px; font:400 14px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-text, #000); text-decoration:none; } .ds-footer-link:hover { text-decoration:underline; } .ds-footer-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
     }
   ],
@@ -197,9 +216,9 @@
     "dos": [
       "Use real color stock photographs with verified free commercial rights; no optional attribution captions. Keep provenance.",
       "Keep product image areas clearly text-labelled until actual screenshots are available.",
-      "Header country trigger matches the login secondary pill and forms a 12px-gap group with it; footer country trigger retains its transparent Citron treatment. Label fictional logo band with Demo-Lokale / Demo venues.",
+      "Header country trigger matches the login secondary pill and forms a 12px-gap group with it with 44px minimum height and 15px text; footer country trigger retains its transparent Citron treatment. Label venue placeholder band with Hier könnte dein Lokal auftauchen / Your venue could be here",
       "Right-align the personal contact block with a bottom separator and no top border; email uses no arrow and underlines on hover or keyboard focus.",
-      "Footer: three columns, country trigger first above unheaded navigation, then contact/help and legal. Below 900px the first group spans the row above the remaining two."
+      "Footer: two columns, country trigger first above unheaded navigation ordered ghost help, research, features, pricing, questions, contact, then legal. Contact scrolls to the homepage email section with a clean URL."
     ],
     "donts": [
       "Never generate photographs with AI.",

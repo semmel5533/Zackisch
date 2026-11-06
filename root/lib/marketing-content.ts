@@ -1,8 +1,8 @@
 export const marketing = {
   "de-de": {
-    hero: ["Mehr Raum", "für deine Gäste."],
+    hero: ["Mehr Raum", "für deine Gäste"],
     intro:
-      "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen. Mit deinem Service und deiner bestehenden Kasse.",
+      "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen.\nMit deinem Service und deiner bestehenden Kasse.",
     phoneAlt: "Drei Gäste schauen im Café gemeinsam auf ein Smartphone.",
     problemTitle: "Volle Tische.\nSchlange am Tresen.",
     problemText:
@@ -11,24 +11,32 @@ export const marketing = {
       "Lass Gäste per QR-Code selbst bestellen und bezahlen, am Tisch oder zur Abholung am Tresen. Persönlicher Service bleibt immer eine Wahl.",
     personalTitle: "Deine Frage ist nicht aufgelistet?",
     personalText: "Schreibe mir persönlich:",
-    explore: "So hilft Zackisch",
-    demoTitle: "Demo-Lokale",
+    explore: "So helfen wir",
+    demoTitle: "Hier könnte dein Lokal auftauchen",
+    demoVenues: [
+      "Dein Café",
+      "Dein Bistro",
+      "Dein Restaurant",
+      "Dein Imbiss",
+      "Deine Bar",
+      "Dein Foodtruck",
+    ],
     pauseLogos: "Logo-Band pausieren",
     resumeLogos: "Logo-Band fortsetzen",
     cafeAlt: "Ein Gast nutzt beim Kaffee im Café sein Smartphone.",
-    serviceAlt:
-      "Ein Mitarbeiter serviert Speisen in einem belebten Restaurant.",
-    menuTitle: "Ein Menü.\nMehr gute Entscheidungen.",
+    menuTitle: "Ein digitales Menü.\nMehr Optionen",
+    menuFlexibility:
+      "Du legst Varianten, Extras und Auswahlschritte fest. Deine Gäste stellen ihren Artikel daraus nach Wunsch zusammen.",
     features: [
       {
-        title: "Was gut ankommt,\nsteht vorn.",
+        title: "Was gut ankommt,\nsteht vorn",
         text: "Die Kategorie „Beliebteste“ zeigt automatisch häufig bestellte Artikel deines Lokals.",
         detail:
           "Aus der Bestellhistorie deines Lokals. Ohne manuelles Pflegen einer Bestsellerliste.",
         image: "Hier folgt das Gäste-Menü mit der Kategorie „Beliebteste“.",
       },
       {
-        title: "Passt dazu?\nZeig es deinen Gästen.",
+        title: "Passt dazu?\nZeig es deinen Gästen",
         text: "Passende Ergänzungen im Warenkorb. Kleine Extras vor dem Bezahlen.",
         detail:
           "Empfehlungen berücksichtigen gemeinsam bestellte Artikel. Gäste wählen selbst, was dazukommt.",
@@ -43,32 +51,33 @@ export const marketing = {
       },
     ],
     placeholder: "Produktansicht folgt",
-    control: "Dein Lokal. Deine Entscheidung.",
+    control: "Dein Lokal. Deine Entscheidung",
     controlText:
-      "Empfehlungen, Beliebteste und Trinkgeld schaltest du unabhängig voneinander ein oder aus.",
+      "Du entscheidest, welche Funktionen dein Lokal nutzt. Schalte sie so ein oder aus, wie es zu deinem Betrieb passt.",
     teamTitle: "Am Tisch. Am Tresen.\nMit deinem Team.",
     teamText:
       "Gäste scannen, wählen und bezahlen. Dein Team bereitet den Auftrag für den Tisch oder zur Abholung vor und erfasst ihn einmal in eurer Kasse. Wer lieber persönlich bestellt, bar bezahlen möchte oder kein Smartphone nutzen kann, wendet sich wie gewohnt an dein Team.",
     teamImage:
       "Hier folgt die Personalansicht mit bezahltem Auftrag und Kassenerfassung.",
-    costTitle: "Du zahlst erst,\nwenn deine Gäste bezahlen.",
+    costTitle: "Du zahlst erst,\nwenn deine Gäste bezahlen",
     feeLabel: "je erfolgreich bezahlter Bestellung",
     feeDetail:
-      "Ohne freiwilliges Trinkgeld. Inklusive Umsatzsteuer auf unsere Gebühr. Zzgl. Zahlungsanbietergebühren.",
+      "Auf den Bestellwert nach Rabatten, ohne freiwilliges Trinkgeld. Inklusive Umsatzsteuer auf unsere Gebühr. Zzgl. Zahlungsanbietergebühren.",
     zero: "Keine Einrichtungskosten. Keine monatliche Grundgebühr.",
     seasonal:
       "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Lokal Saisonpause macht.",
-    setupTitle: "Dein nächster Schritt?\nDein eigenes Lokal.",
+    setupTitle: "Dein nächster Schritt?\nDein eigenes Lokal",
     setupText:
       "Konto anlegen. Menü einrichten. Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
     setupNote:
       "Du brauchst Internet, kompatible Geräte und deinen bestehenden Kassenablauf. Geräte, Verbindung und Druck können eigene Kosten verursachen.",
     faq: "Noch etwas offen?",
-    close: "Bereit, Gastgeber\nzu bleiben?",
-    closeText: "Richte dein Lokal ein. In deinem Tempo.",
+    close: "Bring dein Menü aufs Smartphone",
+    closeText:
+      "Gib deinen Gästen einen weiteren Bestellweg. Dein Team und deine Kasse bleiben dabei.",
   },
   "de-en": {
-    hero: ["More room", "for your guests."],
+    hero: ["More room", "for your guests"],
     intro:
       "QR ordering and payment at the table or for counter pickup. Alongside your service and existing POS.",
     phoneAlt: "Three café guests look at a smartphone together.",
@@ -79,16 +88,25 @@ export const marketing = {
       "Let guests order and pay by QR code, at the table or for counter pickup. Personal service is always a choice.",
     personalTitle: "Can’t find your question?",
     personalText: "Write to me personally:",
-    explore: "How Zackisch helps",
-    demoTitle: "Demo venues",
+    explore: "How we help",
+    demoTitle: "Your venue could be here",
+    demoVenues: [
+      "Your café",
+      "Your bistro",
+      "Your restaurant",
+      "Your snack bar",
+      "Your bar",
+      "Your food truck",
+    ],
     pauseLogos: "Pause logo carousel",
     resumeLogos: "Resume logo carousel",
     cafeAlt: "A café guest uses his smartphone while having coffee.",
-    serviceAlt: "A member of staff serves food in a busy restaurant.",
-    menuTitle: "One menu.\nMore good choices.",
+    menuTitle: "One digital menu.\nMore options",
+    menuFlexibility:
+      "You define variants, extras and selection steps. Your guests use them to customise their item just the way they like it.",
     features: [
       {
-        title: "Guest favourites.\nRight up front.",
+        title: "Guest favourites\nRight up front",
         text: "The “Most popular” category automatically highlights frequently ordered items at your venue.",
         detail:
           "Based on your venue’s order history. No bestseller list to maintain by hand.",
@@ -96,7 +114,7 @@ export const marketing = {
           "The guest menu with its “Most popular” category will appear here.",
       },
       {
-        title: "A good match?\nLet guests discover it.",
+        title: "A good match?\nLet guests discover it",
         text: "Relevant additions in the cart. Small extras before payment.",
         detail:
           "Recommendations take items ordered together into account. Guests decide what to add.",
@@ -113,28 +131,34 @@ export const marketing = {
       },
     ],
     placeholder: "Product view to follow",
-    control: "Your venue. Your choice.",
+    control: "Your venue. Your choice",
     controlText:
-      "Switch recommendations, the popular category and tipping on or off independently.",
+      "You decide which features your venue uses. Switch them on or off to suit the way you work.",
     teamTitle: "At tables. At counters.\nWith your team.",
     teamText:
       "Guests scan, choose and pay. Your team prepares the order for the table or for pickup and records it once in your POS. Guests who prefer to order in person, want to pay cash or cannot use a smartphone can simply speak to your team.",
     teamImage:
       "The staff view with a paid order and separate POS recording will appear here.",
-    costTitle: "You pay when\nyour guests pay.",
+    costTitle: "You pay when\nyour guests pay",
     feeLabel: "per successfully paid order",
     feeDetail:
-      "Excluding voluntary tips. Including VAT on our fee. Plus payment provider fees.",
+      "On the order subtotal after discounts, excluding voluntary tips. Including VAT on our fee. Plus payment provider fees.",
     zero: "No setup fee. No monthly base fee.",
     seasonal:
       "With no paid orders, Zackisch is free. Even when your venue closes for the season.",
-    setupTitle: "Your next step?\nYour own venue.",
+    setupTitle: "Your next step?\nYour own venue",
     setupText:
       "Create an account. Set up your menu. Connect your payment provider. Get started with your QR codes and a suitable tablet.",
     setupNote:
       "You need internet, compatible devices and your existing POS process. Devices, connectivity and printing may have their own costs.",
     faq: "Anything else?",
-    close: "Ready to stay\nthe host?",
-    closeText: "Set up your venue. At your own pace.",
+    close: "Bring your menu to your guests’ phones",
+    closeText:
+      "Give guests another way to order, alongside your team and existing POS.",
   },
+} as const;
+
+export const navigationCopy = {
+  "de-de": { newTab: "Öffnet in einem neuen Tab" },
+  "de-en": { newTab: "Opens in a new tab" },
 } as const;

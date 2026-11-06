@@ -4,8 +4,8 @@ import AxeBuilder from "@axe-core/playwright";
 test("header and footer locale dialogs retain the page and use native language labels", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 320, height: 800 });
-  await page.goto("/de-de/pricing");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/de-de/research");
   const triggers = page.getByRole("button", {
     name: "Region & Sprache: Deutschland",
   });
@@ -13,16 +13,16 @@ test("header and footer locale dialogs retain the page and use native language l
   for (const trigger of [triggers.first(), triggers.last()]) {
     await trigger.click();
     const dialog = page.getByRole("dialog", { name: "Region & Sprache" });
+    await expect(dialog).toBeVisible();
+    await expect(
+      dialog.getByRole("button", { name: "Schließen", exact: true }),
+    ).toBeFocused();
     await expect(
       dialog.getByRole("link", { name: "Deutschland Deutsch" }),
     ).toHaveAttribute("aria-current", "page");
     await expect(
       dialog.getByRole("link", { name: "Germany English" }),
-    ).toHaveAttribute("href", "/de-en/pricing");
-    expect(
-      (await new AxeBuilder({ page }).include('[role="dialog"]').analyze())
-        .violations,
-    ).toEqual([]);
+    ).toHaveAttribute("href", "/de-en/research");
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
     await expect(trigger).toBeFocused();
@@ -42,11 +42,28 @@ test("header and footer locale dialogs retain the page and use native language l
     .getByRole("dialog")
     .getByRole("link", { name: "Germany English" })
     .click();
-  await expect(page).toHaveURL(/\/de-en\/pricing$/);
+  await expect(page).toHaveURL(/\/de-en\/research$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(
     page.getByRole("button", { name: "Region & language: Germany" }),
   ).toHaveCount(2);
+});
+
+test("locale dialog passes the automated accessibility scan", async ({
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName === "firefox",
+    "The current Firefox runner crashes during axe dialog scanning; interaction tests and homepage axe still run",
+  );
+  await page.goto("/de-de/research");
+  await page.locator(".site-footer .region-trigger").click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  expect(
+    (await new AxeBuilder({ page }).include('[role="dialog"]').analyze())
+      .violations,
+  ).toEqual([]);
 });
 
 for (const locale of ["de-de", "de-en"]) {
@@ -93,6 +110,17 @@ test("photographs load and the footer ends immediately after its full-width word
 }) => {
   await page.goto("/de-de");
   await page.locator(".footer-mark").scrollIntoViewIfNeeded();
+  await expect
+    .poll(() =>
+      page
+        .locator(".footer-mark")
+        .evaluate(
+          (el) =>
+            (el as HTMLImageElement).complete &&
+            (el as HTMLImageElement).naturalWidth > 0,
+        ),
+    )
+    .toBe(true);
   await page
     .locator(".footer-mark")
     .evaluate(async (el) => (el as HTMLImageElement).decode());
@@ -108,7 +136,7 @@ test("photographs load and the footer ends immediately after its full-width word
   expect(bounds.gap).toBeLessThanOrEqual(9);
   expect(bounds.opacity).toBeGreaterThan(0);
   expect(bounds.opacity).toBeLessThan(1);
-  await expect(page.locator(".marketing img")).toHaveCount(3);
+  await expect(page.locator(".marketing img")).toHaveCount(2);
   await expect(page.locator(".site-footer .region-trigger")).toHaveCSS(
     "background-color",
     "rgba(0, 0, 0, 0)",
@@ -125,7 +153,7 @@ test("demo logo band is explicitly illustrative and motion can be paused", async
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/de-de");
   await expect(
-    page.getByRole("heading", { name: "Demo-Lokale" }),
+    page.getByRole("heading", { name: "Hier könnte dein Lokal auftauchen" }),
   ).toBeVisible();
   const track = page.locator(".logo-track");
   const before = await track.evaluate((el) => getComputedStyle(el).transform);
@@ -160,8 +188,6 @@ for (const locale of ["de-de", "de-en"]) {
     ).toHaveCount(0);
     const styles = await page.locator(".site-header").evaluate((el) => {
       const properties = [
-        "backgroundColor",
-        "borderColor",
         "borderRadius",
         "minHeight",
         "padding",
@@ -176,26 +202,47 @@ for (const locale of ["de-de", "de-en"]) {
       });
     });
     expect(styles[0]).toEqual(styles[1]);
-    await expect(page.locator(".questions .faq-trigger")).toHaveCount(10);
+    await expect(page.locator(".questions .faq-trigger")).toHaveCount(8);
     const german = locale === "de-de";
     await expect(page.locator(".welcome-intro")).toContainText(
       german ? "Abholung am Tresen" : "counter pickup",
     );
-    await page.getByRole("button", {
-      name: german
-        ? "Funktioniert Zackisch auch ohne Tische, nur mit Abholung?"
-        : "Does Zackisch work for counter pickup without tables?",
-    }).click();
+    await page
+      .getByRole("button", {
+        name: german
+          ? "Funktioniert Zackisch auch ohne Tische, nur mit Abholung?"
+          : "Does Zackisch work for counter pickup without tables?",
+      })
+      .click();
     await expect(page.locator(".questions")).toContainText(
-      german ? "Bestellnummer und den Abholstatus" : "order number and pickup status",
+      german
+        ? "Bestellnummer und den Abholstatus"
+        : "order number and pickup status",
     );
-    await expect(page.locator(".personal-contact")).toHaveCSS("text-align", "right");
-    await expect(page.locator(".personal-contact")).toHaveCSS("border-top-width", "0px");
-    await expect(page.locator(".personal-contact")).toHaveCSS("border-bottom-width", "1px");
-    await page.getByRole("button", {
-      name: german ? "Können meine Gäste persönlich bestellen oder bar bezahlen?" : "Can guests order in person or pay cash?",
-    }).click();
-    await expect(page.locator(".questions")).toContainText(german ? "Barzahlungen erfolgen beim Lokal" : "Cash payments are handled by the venue");
+    await expect(page.locator(".personal-contact")).toHaveCSS(
+      "text-align",
+      "right",
+    );
+    await expect(page.locator(".personal-contact")).toHaveCSS(
+      "border-top-width",
+      "0px",
+    );
+    await expect(page.locator(".personal-contact")).toHaveCSS(
+      "border-bottom-width",
+      "1px",
+    );
+    await page
+      .getByRole("button", {
+        name: german
+          ? "Können meine Gäste persönlich bestellen oder bar bezahlen?"
+          : "Can guests order in person or pay cash?",
+      })
+      .click();
+    await expect(page.locator(".questions")).toContainText(
+      german
+        ? "Barzahlungen erfolgen beim Lokal"
+        : "Cash payments are handled by the venue",
+    );
     const email = page.locator(".personal-contact > a");
     await expect(email.locator("svg")).toHaveCount(0);
     await expect(email).toHaveCSS("text-decoration-line", "none");
@@ -215,10 +262,10 @@ for (const locale of ["de-de", "de-en"]) {
     );
     if (german)
       await expect(main).not.toContainText(/Speisekarte|Gerichte|Eine Karte/);
-    await page.goto(`/${locale}/pricing`);
+    await page.goto(`/${locale}`);
     await expect(page.locator("main")).not.toContainText("Stripe");
     await expect(page.locator("main")).toContainText(
-      german ? "Saisonpause" : "seasonal",
+      german ? "Saisonpause" : "season",
     );
   });
 }

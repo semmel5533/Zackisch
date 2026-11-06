@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { WebsiteLink } from "./section-navigation";
 import { content, signupUrl, type Locale } from "@/lib/content";
 import { marketing } from "@/lib/marketing-content";
 import { WebsiteShell } from "./website-shell";
+import { StaffPreview } from "./staff-preview";
 import { DemoVenues } from "./demo-venues";
 import { Faq } from "./website-controls";
 
@@ -23,14 +23,15 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               </h1>
               <p className="welcome-intro">{m.intro}</p>
               <div className="welcome-actions">
-                <Link className="button button-primary" href={signupUrl}>
+                <WebsiteLink
+                  className="button button-primary hero-primary"
+                  href={signupUrl}
+                >
                   {c.start}
-                  <ArrowUpRight aria-hidden size={20} />
-                </Link>
-                <a className="quiet-link" href="#problem">
+                </WebsiteLink>
+                <WebsiteLink className="quiet-link" href="#problem">
                   {m.explore}
-                  <ArrowDown aria-hidden size={18} />
-                </a>
+                </WebsiteLink>
               </div>
             </div>
             <figure className="welcome-main-photo">
@@ -39,7 +40,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                 alt={m.phoneAlt}
                 width={1800}
                 height={1200}
-                sizes="(max-width: 799px) 100vw, 60vw"
+                sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1376px) calc(100vw - 96px), 1280px"
                 loading="eager"
                 fetchPriority="high"
               />
@@ -66,6 +67,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="how-it-works" className="menu-chapters">
           <div className="chapter-introduction container">
             <h2>{m.menuTitle}</h2>
+            <p>{m.menuFlexibility}</p>
           </div>
           <div className="chapter-stack container">
             {m.features.map((feature, i) => (
@@ -78,7 +80,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                   <p className="chapter-summary">{feature.text}</p>
                   <p className="chapter-detail">{feature.detail}</p>
                 </div>
-                <figure className="screenshot-placeholder">
+                <figure className="screenshot-placeholder phone-placeholder">
                   <figcaption>{m.placeholder}</figcaption>
                   <p>{feature.image}</p>
                 </figure>
@@ -91,25 +93,18 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
           </div>
         </section>
         <section className="service-section container">
-          <figure className="story-photo service-photo">
-            <Image
-              src="/media/restaurant-service.webp"
-              alt={m.serviceAlt}
-              width={1400}
-              height={2100}
-              sizes="(max-width: 799px) 100vw, 50vw"
-            />
-          </figure>
           <div>
             <h2>{m.teamTitle}</h2>
             <p>{m.teamText}</p>
           </div>
-          <figure className="screenshot-placeholder staff-placeholder">
-            <figcaption>{m.placeholder}</figcaption>
-            <p>{m.teamImage}</p>
-          </figure>
+          <StaffPreview>
+            <figure className="screenshot-placeholder staff-placeholder">
+              <figcaption>{m.placeholder}</figcaption>
+              <p>{m.teamImage}</p>
+            </figure>
+          </StaffPreview>
         </section>
-        <section className="cost-section">
+        <section id="costs" className="cost-section">
           <div className="container cost-inner">
             <h2>{m.costTitle}</h2>
             <div className="cost-figure">
@@ -122,10 +117,6 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               <h3>{m.zero}</h3>
               <p>{m.seasonal}</p>
               <p>{m.feeDetail}</p>
-              <Link className="inline-link" href={`/${locale}/pricing`}>
-                {c.priceLink}
-                <ArrowUpRight aria-hidden size={18} />
-              </Link>
             </div>
           </div>
         </section>
@@ -134,20 +125,19 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
           <div>
             <p className="start-description">{m.setupText}</p>
             <p>{m.setupNote}</p>
-            <a
+            <WebsiteLink
               className="inline-link"
               href={`https://support.zackisch.com/${locale}`}
             >
               {c.setupHelp}
-              <ArrowUpRight aria-hidden size={18} />
-            </a>
+            </WebsiteLink>
           </div>
         </section>
         <section id="questions" className="questions container">
           <h2>{m.faq}</h2>
           <Faq items={c.faqs} />
         </section>
-        <section className="personal-contact container">
+        <section id="contact" className="personal-contact container">
           <h2>{m.personalTitle}</h2>
           <p>{m.personalText}</p>
           <a href="mailto:selim@zackisch.com">selim@zackisch.com</a>
@@ -155,10 +145,9 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section className="last-invitation container">
           <h2>{m.close}</h2>
           <p>{m.closeText}</p>
-          <Link className="button button-primary" href={signupUrl}>
+          <WebsiteLink className="button button-primary" href={signupUrl}>
             {c.start}
-            <ArrowUpRight aria-hidden size={20} />
-          </Link>
+          </WebsiteLink>
         </section>
       </main>
     </WebsiteShell>

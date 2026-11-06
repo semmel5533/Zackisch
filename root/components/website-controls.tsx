@@ -1,8 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Globe, Check, Plus, X, List } from "@phosphor-icons/react";
+import { WebsiteLink } from "./section-navigation";
+import {
+  Globe,
+  Check,
+  Plus,
+  X,
+  List,
+  ArrowUpRight,
+} from "@phosphor-icons/react";
 import { Accordion } from "@base-ui/react/accordion";
 import { Dialog } from "@base-ui/react/dialog";
 import type { Copy, Locale } from "@/lib/content";
@@ -30,13 +38,40 @@ export function Faq({ items }: { items: Copy["faqs"] }) {
 export function MobileNavigation({
   copy,
   links,
+  locale,
+  slug,
 }: {
   copy: Copy;
+  locale: Locale;
+  slug: string;
   links: { href: string; label: string }[];
 }) {
   const [open, setOpen] = useState(false);
+  const pendingNavigation = useRef<(() => void) | null>(null);
+  const followingSection = useRef(false);
+  useEffect(() => {
+    const desktop = matchMedia("(min-width: 1250px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (isOpen) followingSection.current = false;
+        setOpen(isOpen);
+      }}
+      onOpenChangeComplete={(isOpen) => {
+        if (!isOpen) {
+          const follow = pendingNavigation.current;
+          pendingNavigation.current = null;
+          if (follow) requestAnimationFrame(follow);
+        }
+      }}
+    >
       <Dialog.Trigger
         className="button button-secondary mobile-menu"
         aria-label={copy.menu}
@@ -45,24 +80,41 @@ export function MobileNavigation({
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Backdrop className="dialog-backdrop" />
-        <Dialog.Popup className="dialog-popup mobile-navigation">
-          <Dialog.Title className="dialog-title">
+        <Dialog.Popup
+          className="mobile-navigation"
+          finalFocus={() => !followingSection.current}
+        >
+          <Dialog.Title className="visually-hidden">
             {copy.navigation}
           </Dialog.Title>
+          <Dialog.Close
+            className="dialog-icon-close drawer-close"
+            aria-label={copy.close}
+          >
+            <X size={24} aria-hidden />
+          </Dialog.Close>
           <nav aria-label={copy.navLabel}>
             {links.map((link) => (
-              <a
+              <WebsiteLink
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
+                deferNavigation={(follow) => {
+                  followingSection.current = true;
+                  pendingNavigation.current = follow;
+                  setOpen(false);
+                }}
               >
                 {link.label}
-              </a>
+              </WebsiteLink>
             ))}
           </nav>
-          <Dialog.Close className="button button-secondary">
-            {copy.close}
-          </Dialog.Close>
+          <RegionLanguage
+            copy={copy}
+            locale={locale}
+            slug={slug}
+            onSelect={() => setOpen(false)}
+          />
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
@@ -100,7 +152,9 @@ export function RegionLanguage({
   copy,
   locale,
   slug = "",
+  onSelect,
 }: {
+  onSelect?: () => void;
   copy: Copy;
   locale: Locale;
   slug?: string;
@@ -117,7 +171,7 @@ export function RegionLanguage({
         <span className="region-country">{selected.country}</span>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Backdrop className="dialog-backdrop" />
+        <Dialog.Backdrop className="dialog-backdrop locale-backdrop" />
         <Dialog.Popup className="dialog-popup locale-dialog">
           <div className="locale-dialog-heading">
             <Dialog.Title className="dialog-title">
@@ -135,18 +189,29 @@ export function RegionLanguage({
             {regions.map((option) => (
               <Link
                 key={option.locale}
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  onSelect?.();
+                }}
                 href={`/${option.locale}${slug ? `/${slug}` : ""}`}
                 hrefLang={`${option.lang}-DE`}
                 lang={option.lang}
-                className="locale-option"
+                className="locale-option page-link"
                 aria-current={locale === option.locale ? "page" : undefined}
               >
                 <span className="region-label">
                   <span>{option.country}</span>
                   <span>{option.language}</span>
                 </span>
-                {locale === option.locale && <Check size={20} aria-hidden />}
+                {locale === option.locale ? (
+                  <Check size={20} aria-hidden />
+                ) : (
+                  <ArrowUpRight
+                    className="navigation-arrow"
+                    size={18}
+                    aria-hidden
+                  />
+                )}
               </Link>
             ))}
           </nav>

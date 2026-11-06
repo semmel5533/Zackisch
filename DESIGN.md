@@ -50,6 +50,16 @@ typography:
     fontSize: "1rem"
     fontWeight: 600
     lineHeight: 1.25
+  marketing-primary-label:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 600
+    lineHeight: 1.25
+  marketing-compact-label:
+    fontFamily: "League Spartan, Arial, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 600
+    lineHeight: 1.25
 rounded:
   sm: "8px"
   md: "12px"
@@ -72,9 +82,9 @@ components:
     backgroundColor: "{colors.black}"
     textColor: "{colors.white}"
     rounded: "{rounded.marketing-pill}"
-    typography: "{typography.button-label}"
+    typography: "{typography.marketing-primary-label}"
     padding: "12px 20px"
-    height: "48px"
+    height: "52px"
   marketing-button-primary-hover:
     backgroundColor: "{colors.hover-neutral}"
     textColor: "{colors.white}"
@@ -82,9 +92,9 @@ components:
     backgroundColor: "{colors.white}"
     textColor: "{colors.black}"
     rounded: "{rounded.marketing-pill}"
-    typography: "{typography.button-label}"
-    padding: "12px 20px"
-    height: "48px"
+    typography: "{typography.marketing-compact-label}"
+    padding: "10px 16px"
+    height: "44px"
   marketing-placeholder:
     textColor: "{colors.black}"
     rounded: "{rounded.dialog}"
@@ -286,7 +296,7 @@ The table above remains the operational UI scale for merchant, guest, staff, sup
 | Closing invitation heading | `clamp(3rem, 6.5vw, 6rem)` / 1.03 | 700 / −0.035em |
 | Article/legal title | `clamp(2.75rem, 4vw, 3.25rem)` / 1.05 | 700 / −0.035em |
 | Article/legal section heading | 26px / 1.1 | 700 / −0.035em |
-| Hero introduction | 20px / 1.45, maximum 42ch | Inherited body weight |
+| Hero introduction | 20px / 1.45, maximum 54ch | Inherited body weight |
 | General lead | 18px / 1.55, maximum 65ch | Inherited body weight |
 | Chapter summary | 22px / 1.35; 20px through 799px, maximum 30ch | Inherited body weight |
 | Fee figure | `clamp(7rem, 16vw, 14rem)` / 0.85; 8rem through 799px | 600 / −0.04em; tabular figures |
@@ -299,25 +309,25 @@ The self-hosted variable font declares weights 100–900; the hero's 650 is a su
 
 ### Public marketing layout and motion: root only
 
-The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header has a 112px minimum height, reduced to 96px through 599px; desktop navigation becomes a dialog menu through 899px. Between 900px and 1199px navigation wraps onto its own centered row. Through 599px the header uses two rows: wordmark and menu above, region/language and the simple secondary login pill grouped below with a 12px gap. The mobile menu trigger is a 48px square pill with a 24px Phosphor List icon and a localized accessible name, without visible text. These content-driven breakpoints override the general device guidance only for this website.
+The public container is `min(100% - 96px, 1280px)`, with 32px side gutters through 1100px and 20px through 599px. The header has a 112px minimum height, reduced to 96px through 599px. Below 1250px, only the wordmark and 44px Phosphor List button remain visible. All navigation links, help, login, registration and country/language selection move into a left-edge Electric Citron drawer. It is at most 460px wide, fills the viewport height, scrolls internally and has a 44px close icon at the upper right. No visible navigation heading appears; a hidden accessible title names it. Native links retain normal semantics within Base UI's focus-managed overlay. A 280ms ease-out slide is disabled for reduced motion. Escape, close, section navigation and language selection dismiss it; resizing to desktop also closes it. These content-driven breakpoints override the general device guidance only for this website.
 
-The centered introduction uses a single black headline color, with a real smartphone photograph below the copy and actions. Its one-column grid has a 48px gap, reduced to 32px through 799px; the photograph is centered at a maximum width of 1080px and retains its natural aspect ratio. Photos have 32px corners. The problem section pairs explanatory text with a separate color café guest portrait in equal columns with a 96px gap and 128px top padding; through 799px it becomes one column with a 32px gap and 80px top padding. The problem portrait is cropped to 4:5 and aligned bottom-center to retain the guest and phone. The separate restaurant-service portrait also uses a 4:5 crop, occupying the first column across two rows; the team explanation and text-labelled staff screenshot placeholder occupy the second column. Through 799px all service items follow a single-column flow. The three photographs show distinct scenes and people. Through 399px the introductory actions also stack.
+The centered introduction uses a single black headline color, with a real smartphone photograph below the copy and actions. Its one-column grid has a 48px gap, reduced to 32px through 799px; the photograph fills the same container width as the following sections, up to 1280px with a 16:9 crop anchored bottom-center, trimming the top of the original 3:2 photo. Photos have 32px corners. The problem section pairs explanatory text with a separate color café guest portrait in equal columns with a 96px gap and 128px top padding; through 799px it becomes one column with a 32px gap and 80px top padding. The problem portrait is cropped to 4:3 and aligned bottom-center to retain the guest and phone. The team section is centered without photography, with a wide 16:9 staff placeholder beneath its copy. On desktop with normal motion, its frame grows from 88% to 100% as it enters the viewport, using a passive scroll listener and requestAnimationFrame; mobile and reduced motion use full size immediately. The two photographs show distinct scenes and people. Through 399px the introductory actions also stack.
 
-The example-venue strip below the hero contains six fictional typographic brands in League Spartan, under the localized heading “Demo-Lokale” / “Demo venues”, without a separate disclaimer line. The strip has a 64px top margin, 32px vertical padding and light top/bottom borders. Its duplicated track drifts horizontally over 36 seconds, linearly and infinitely, and pauses on hover or with the 44px pause/resume control. Duplicate content is hidden from assistive technology. Reduced motion removes the animation and duplicate list and shows all six examples in a static three-column grid, reduced to two columns through 599px; the unnecessary pause control is hidden.
+The example-venue strip below the hero contains six localized generic venue placeholders in League Spartan, under the invitation “Hier könnte dein Lokal auftauchen” / “Your venue could be here”, without claiming actual customers or guaranteed promotion. The strip has a 64px top margin, 32px vertical padding and light top/bottom borders. Its duplicated track drifts horizontally over 36 seconds, linearly and infinitely, and pauses on hover or with the 44px pause/resume control. Duplicate content is hidden from assistive technology. Reduced motion removes the animation and duplicate list and shows all six examples in a static three-column grid, reduced to two columns through 599px; the unnecessary pause control is hidden.
 
-A fully right-aligned personal-contact area follows the FAQ, with a light bottom border before the final invitation and no top border. The email link has no arrow or resting underline; hover and keyboard focus underline it, with the focus outline retained. Its heading is 24px, supporting text 20px and direct email link `clamp(1.65rem, 5.8vw, 5rem)`, weight 600 and line height 1.2. It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
+A fully right-aligned personal-contact area follows the FAQ, with a light bottom border before the final invitation and no top border. The mailto email link has no arrow or resting underline; hover and keyboard focus underline it, with the focus outline retained. Its heading is 24px, supporting text 20px and direct email link `clamp(1.65rem, 5.8vw, 5rem)`, weight 600 and line height 1.2. It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
 
 **The Footer Logo Exception Rule.** Only the public footer presents the unchanged original black wordmark at CSS opacity 0.22 on Electric Citron, with 16px side margins and 8px bottom padding. Other logo placements remain opaque black.
 
-The footer uses an Electric Citron background, three equal link columns: country trigger above unheaded navigation, contact/help and legal. Through 899px the country/navigation group spans the full first row above the two remaining columns, and the original wordmark beneath. The wordmark has CSS opacity 0.22, width `calc(100% - 32px)`, 16px side margins and an 80px top margin (48px through 599px). Footer bottom padding is 8px. This presentation changes neither the logo asset nor other logo placements. Footer links and the privacy-settings text button have no resting underline; hover adds it.
+The footer uses an Electric Citron background, two equal link columns: country trigger above unheaded navigation including help/contact, and legal. The first group starts with the country trigger and outlined help pill, followed by research, features, pricing, questions and contact. Help links to localized support; contact targets the homepage email section. The original wordmark follows beneath. The wordmark has CSS opacity 0.22, width `calc(100% - 32px)`, 16px side margins and an 80px top margin (48px through 599px). Footer bottom padding is 8px. This presentation changes neither the logo asset nor other logo placements. Footer section links and the privacy-settings text button have no resting underline; hover adds it. Page links show a persistent arrow without hover underlining.
 
-The header region and login pills form one flex group with a 12px gap at every viewport width. Header and footer use country-only pill region/language triggers: a 20px globe beside Deutschland or Germany. The footer uses 14px text at weight 600 with 9px/12px vertical/horizontal padding. The header trigger matches the login secondary pill: 48px minimum height, 12px/20px padding, 16px text at 1.25 line height and the same surface, strong border and hover treatment; the footer trigger is transparent on Citron with a Citron 700 border, changing to brand-soft on hover. Dialog options retain stacked country and language labels (14px, line height 1.2, 3px gap). The dialog presents native-language links for Deutschland / Deutsch and Germany / English, retaining the current page slug; language does not change the trusted German business region. The active link has a checkmark and pale Citron surface. A 44px icon button with an accessible label closes the dialog at the upper right; outside click and Escape also dismiss it, and focus returns to the trigger. There is no separate bottom close button.
+The header region and login pills form one flex group with a 12px gap at every viewport width. Header and footer use country-only pill region/language triggers: a 20px globe beside Deutschland or Germany. Both region triggers share 44px minimum height, 10px/16px padding and 15px text at 1.25 line height. The header trigger is ghost with transparent border and background at rest. Footer region and help pills have transparent backgrounds and Citron 700 outlines; hover uses muted surface in the header and brand-soft in the Citron footer. Text and icons align centrally. Desktop navigation has 12px extra separation from the wordmark. Dialog options retain stacked country and language labels (14px, line height 1.2, 3px gap). The dialog presents native-language links for Deutschland / Deutsch and Germany / English, retaining the current page slug; language does not change the trusted German business region. The active link has a checkmark and pale Citron surface. A 44px icon button with an accessible label closes the dialog at the upper right; outside click and Escape also dismiss it, and focus returns to the trigger. There is no separate bottom close button.
 
 Product chapters use two equal columns, 64px padding and gap, 32px corners, a 32px top sticky offset and `min(720px, calc(100svh - 64px))` minimum height. Their surfaces progress from Citron 50 through Citron 100 to Citron 300. Through 1100px padding becomes 40px and gap 32px; through 799px chapters become static single-column panels with 32px padding and no fixed minimum height. Through 399px padding is 28px vertically and 20px horizontally. Viewport heights through 650px and reduced motion also make the chapters static.
 
-Screenshot regions remain explicitly labelled text descriptions: transparent backgrounds inherit their chapter surface, a dashed Citron 700 boundary uses 24px corners, 40px padding and 420px minimum height. Padding reduces to 24px through 1100px; minimum height reduces to 300px through 799px. The staff variant uses a muted surface and secondary-text border with a 460px desktop minimum height. No preview controls or synthetic screenshots are implied.
+Screenshot regions remain explicitly labelled text descriptions in device frames. Guest views use a white surface, a 6px black border, 40px corners, a 9:18 preferred ratio and 280px maximum width. The centered staff view uses a muted surface, the same 6px border, 24px corners, full container width, a 16:9 preferred ratio and content-driven minimum height. Text can enlarge either frame without clipping. No preview controls or synthetic screenshots are implied.
 
-Chapter introductions use the full container width with natural text wrapping, retaining only the editorial break after “Ein Menü.” / “One menu.”. Staff explanation and setup use split layouts and become single-column through 799px. Major desktop sections use up to 144px vertical spacing; mobile sequences use 64–80px. The fee section is full-width Citron with a two-column inner grid, becoming one column through 799px. These spacious marketing rules do not change operational card density or radii.
+Chapter introductions use the full container width with natural text wrapping, retaining only the editorial break after “Ein digitales Menü.” / “One digital menu.”. The staff explanation is centered above the wide preview. Setup uses a split layout and becomes single-column through 799px. Major desktop sections use up to 144px vertical spacing; mobile sequences use 64–80px. The fee section is full-width Citron with a two-column inner grid, becoming one column through 799px. These spacious marketing rules do not change operational card density or radii.
 
 In browsers supporting `animation-timeline: view()`, only widths from 800px with no reduced-motion preference receive photo entrances. The main figure opens from `clip-path: inset(0 6% round 32px)` to zero inset over `entry 0% cover 45%`, with linear progression and a visible default. Sticky panels use native scrolling, without scroll hijacking. Buttons retain 120ms background/border transitions; the FAQ icon rotates 45 degrees over 180ms ease-out. Reduced motion removes these animations and transitions.
 
@@ -530,3 +540,27 @@ The research references below support **principles**, not an attempt to visually
 The **wordmark is the primary logo** across all four applications. Reserve the signet for positions where the wordmark cannot fit, including favicons and genuinely compact navigation. Do not use an isolated signet as decoration in a spacious marketing section. Browser titles use `<localized page subject> | Zackisch` exactly once; this applies to metadata and dynamic title updates. The website favicon uses `platform/signet--favicon.svg` with its supplied Citron background and rounded transparent exterior, with the matching 32px PNG fallback.
 
 **Copy punctuation:** Use sentences, commas, colons or parentheses instead of em/en dashes. This applies to visible copy, metadata and email text.
+
+### Public section navigation and preview frames
+
+Normal same-origin section clicks retain clean URLs, including navigation from another public page. Native smooth scrolling targets the section heading with 40px top space on desktop and 24px below 800px; reduced motion scrolls instantly. Focus follows the heading after the mobile dialog closes. Real hash hrefs remain as no-JavaScript and new-tab fallbacks. The standalone contact route is absent.
+
+The hero introduction has a 54ch maximum measure. FAQ questions align with the setup text column: equal columns and 96px gap, 48px through 1100px, stacked through 799px. Guest placeholders have a black 6px smartphone frame, 40px corners, a 9:18 preferred ratio and 280px maximum width; text may expand the frame at enlarged text sizes. No fabricated interface or hardware branding appears. The staff placeholder uses a 6px black wide frame, a 16:9 preferred ratio and a content-driven minimum height. All preview contents remain localized text descriptions until real captures exist.
+
+Menu flexibility is introduced below the digital-menu heading. Staff availability controls for items, options and whole selection steps are explained in a localized FAQ answer, not in the centered team introduction.
+
+### Public navigation cues
+
+Links to homepage sections have no arrow and only gain an underline on hover. Links to other pages carry a persistent Phosphor ArrowUpRight and never gain a hover underline. Other hosts, including Zackisch subdomains and external sources, open a new tab with noopener/noreferrer and a localized accessible description and title; same-host public pages stay in the current tab. Brand home links retain the unchanged logo without an appended icon. The mailto contact keeps its explicit underline interaction. Non-navigation controls remain buttons with their existing focus/interaction states.
+
+Both homepage primary registration CTAs use 18px text, 52px minimum height, a 16px label/icon gap and a 20px arrow. Compact header navigation pills retain 15px text and 44px minimum height. Keyboard focus rings remain visible for every link type.
+
+### Public error and pricing routes
+
+Pricing is the homepage #costs section, reached through the same smooth section-navigation contract; the standalone pricing page and detail link are absent. A full-viewport-width light divider sits below the header container. Public 404 pages retain the complete header/footer and center the localized heading, explanatory text and primary home action without a visible numeric code or decorative panel. Mobile vertical padding is 48px/80px. Paths beginning /de-en/ use English; /de-de/ and unrecognized prefixes default to German. The 404 language selector links to the selected homepage, while valid-page language switching preserves the page slug. HTTP 404 and noindex remain intact.
+
+Use no terminal full stop on a single coherent heading or short standalone label, such as the hero and venue invitation. Distinct statements in one heading retain separating periods, such as “Volle Tische. Schlange am Tresen.” Multi-sentence prose retains grammatical punctuation. This does not remove necessary punctuation from legal documents or longer explanations.
+
+The desktop header places the logo then features, costs, questions and contact on the left. Help, country/language and login form the right-aligned action group. Header help uses a transparent ghost pill; footer help uses a Citron 700 outline. Both retain the persistent page-navigation arrow and use 15px text, 10px/16px padding and a 44px minimum height. Footer columns stack below 380px so outlined controls fit without breaking country names. The hero registration CTA alone uses Primary Citron with black text; the desktop login pill uses black with white text. Below 1250px the header action group moves into the drawer.
+
+The homepage FAQ contains eight questions; POS recording, its low-integration rationale and possible future integrations share one answer. The German hero introduction starts its second sentence on a new line, preserving natural wrapping on narrow screens.

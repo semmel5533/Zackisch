@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { content, locales, pageSlugs } from "../lib/content";
+import { marketing } from "../lib/marketing-content";
 import { pageMetadata } from "../lib/metadata";
 
 function leafPaths(value: unknown, path = ""): string[] {
@@ -13,6 +14,9 @@ function leafPaths(value: unknown, path = ""): string[] {
 describe("localized website", () => {
   it("has matching complete dictionary structures", () => {
     expect(leafPaths(content["de-en"])).toEqual(leafPaths(content["de-de"]));
+    expect(leafPaths(marketing["de-en"])).toEqual(
+      leafPaths(marketing["de-de"]),
+    );
   });
   for (const locale of locales) {
     for (const slug of ["", ...pageSlugs]) {

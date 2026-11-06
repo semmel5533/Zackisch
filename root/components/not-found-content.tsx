@@ -1,20 +1,30 @@
-import Image from "next/image";
-import Link from "next/link";
-import { content } from "@/lib/content";
-export default function NotFound() {
+import { content, type Locale } from "@/lib/content";
+import { WebsiteShell } from "./website-shell";
+import { WebsiteLink } from "./section-navigation";
+import { LocalizedNotFound } from "./localized-not-found";
+
+function ErrorPage({ locale }: { locale: Locale }) {
+  const copy = content[locale];
   return (
-    <main className="not-found container" id="main">
-      <Image src="/brand/logo/lockups/wordmark--transparent--standard.svg" alt="" width="200" height="80" />
-      <section lang="de">
-        <h1>{content["de-de"].notFound}</h1>
-        <p>{content["de-de"].notFoundText}</p>
-        <Link href="/de-de">{content["de-de"].back}</Link>
-      </section>
-      <section lang="en">
-        <h2>{content["de-en"].notFound}</h2>
-        <p>{content["de-en"].notFoundText}</p>
-        <Link href="/de-en">{content["de-en"].back}</Link>
-      </section>
-    </main>
+    <WebsiteShell locale={locale}>
+      <main className="not-found container" id="main" lang={copy.lang}>
+        <div className="not-found-copy">
+          <h1>{copy.notFound}</h1>
+          <p>{copy.notFoundText}</p>
+          <WebsiteLink className="button button-primary" href={`/${locale}`}>
+            {copy.back}
+          </WebsiteLink>
+        </div>
+      </main>
+    </WebsiteShell>
+  );
+}
+
+export default function NotFoundContent() {
+  return (
+    <LocalizedNotFound
+      german={<ErrorPage locale="de-de" />}
+      english={<ErrorPage locale="de-en" />}
+    />
   );
 }

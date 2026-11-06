@@ -13,9 +13,7 @@ export const websiteUrl = "https://zackisch.com";
 export const signupUrl = "https://app.zackisch.com/sign-up";
 export const loginUrl = "https://app.zackisch.com/sign-in";
 export const pageSlugs = [
-  "pricing",
   "research",
-  "contact",
   "legal-notice",
   "privacy",
   "privacy-policy",
@@ -46,13 +44,7 @@ export const content = {
       "Gäste bestellen und bezahlen per QR-Code. Dein Team behält den Überblick, deine bestehende Kasse bleibt. 2 % Zackisch-Gebühr plus Zahlungsanbietergebühren.",
     researchLink: "Quelle und Einordnung lesen",
     setupHelp: "Einrichtungsanleitungen öffnen",
-    priceLink: "Gebühren und Voraussetzungen ansehen",
     faqs: [
-      {
-        question: "Wie funktioniert Zackisch im Alltag?",
-        answer:
-          "Deine Gäste öffnen das Menü per QR-Code, wählen Artikel und bezahlen im Browser. Dein Team sieht den bezahlten Auftrag und bereitet ihn vor. Empfehlungen und freiwilliges Trinkgeld ergänzen den Bestellweg; du entscheidest, welche Funktionen aktiv sind.",
-      },
       {
         question: "Funktioniert Zackisch auch ohne Tische, nur mit Abholung?",
         answer:
@@ -66,17 +58,7 @@ export const content = {
       {
         question: "Wie funktioniert die Anbindung an meine Kasse?",
         answer:
-          "Deine bestehende Kasse bleibt. Dein Team übernimmt jede bereits bezahlte Zackisch-Bestellung genau einmal manuell in die Kasse und kennzeichnet sie dort als bereits bezahlt. Der Gast bezahlt nicht erneut. Eine automatische Übertragung gibt es derzeit nicht. Dein Lokal stellt den erforderlichen Kassenbeleg oder die Rechnung aus.",
-      },
-      {
-        question: "Warum setzt ihr zunächst auf manuelle Kassenerfassung?",
-        answer:
-          "So brauchst du keine neue Kasse und keine technische Schnittstellenintegration, um einzusteigen. Du kannst Zackisch in deinen vorhandenen Ablauf aufnehmen, sobald Einrichtung und Zahlungsfreigabe abgeschlossen sind. Dafür bleibt die einmalige manuelle Erfassung jeder Bestellung nötig.",
-      },
-      {
-        question: "Wird es automatische Kassenintegrationen geben?",
-        answer:
-          "Optionale Anbindungen an verbreitete Kassensysteme in Deutschland kommen für die Zukunft infrage. Aktuell gibt es keine automatische Integration und keine Zusage für bestimmte Anbieter oder Termine. Für den Einstieg nutzt du deine vorhandene Kasse mit manueller Erfassung.",
+          "Deine bestehende Kasse bleibt. Dein Team übernimmt jede bereits bezahlte Zackisch-Bestellung genau einmal manuell in die Kasse und kennzeichnet sie dort als bereits bezahlt. Der Gast bezahlt nicht erneut. Eine automatische Übertragung gibt es derzeit nicht. Dein Lokal stellt den erforderlichen Kassenbeleg oder die Rechnung aus. So startest du ohne technische Schnittstellenintegration. Optionale Kassenanbindungen kommen künftig infrage, ohne feste Anbieter oder Termine.",
       },
       {
         question: "Was brauche ich für den Start?",
@@ -95,12 +77,17 @@ export const content = {
           "Ja. Wer lieber persönlich bestellt, bar bezahlen möchte oder nicht mit dem Smartphone bestellen und bezahlen kann, wendet sich wie gewohnt an dein Team. Ihr nehmt die Bestellung auf und kassiert über euren bestehenden Kassenablauf. Barzahlungen erfolgen beim Lokal, nicht im digitalen Zackisch-Checkout.",
       },
       {
+        question:
+          "Was mache ich, wenn ein Artikel oder eine Option ausverkauft ist?",
+        answer:
+          "Dein Team kann in der Personalansicht Artikel, einzelne Optionen und ganze Auswahlschritte ausschalten und wieder aktivieren. So passt ihr die Verfügbarkeit direkt im laufenden Betrieb an, ohne das Menü neu anzulegen.",
+      },
+      {
         question: "Was passiert, wenn das Internet ausfällt?",
         answer:
           "Neue digitale Bestellungen und Zahlungen benötigen eine Verbindung. Ihr könnt weiter persönlich Bestellungen aufnehmen und euren bestehenden Kassenablauf nutzen. Bereits bezahlte Aufträge müssen geprüft und abgeglichen werden; nicht erneut kassieren.",
       },
     ],
-    footerHelp: "Kontakt & Hilfe",
     footerLegal: "Rechtliches",
     contact: "Kontakt",
     research: "Forschung & Quellen",
@@ -117,29 +104,6 @@ export const content = {
       "Diese Website lädt keine optionalen Analyse- oder Werbedienste. Bilder und Schriften werden lokal ausgeliefert. Hier gibt es deshalb keine optionalen Cookies einzuschalten.",
     market: "Deutschland",
     pages: {
-      pricing: {
-        title: "Was Zackisch kostet.",
-        intro:
-          "Nur wenn deine Gäste über Zackisch bezahlen, fällt eine Zackisch-Gebühr an. Keine Einrichtungskosten. Keine monatliche Grundgebühr.",
-        sections: [
-          {
-            title: "2 % für Zackisch",
-            body: "Die Gebühr bezieht sich auf den erfolgreich bezahlten Bruttobestellwert ohne freiwilliges Trinkgeld. Die gegebenenfalls auf die Zackisch-Gebühr entfallende Umsatzsteuer ist enthalten. Ohne bezahlte Bestellungen ist Zackisch kostenlos, auch in der Saisonpause. Geräte, Internet und Zahlungsabwicklung können eigene Kosten verursachen.",
-          },
-          {
-            title: "Zahlungsanbietergebühren",
-            body: "Für die Zahlungsabwicklung fallen zusätzlich die Gebühren des Zahlungsanbieters gemäß der tatsächlichen Konfiguration und Vereinbarung deines Lokals an. Eine feste pauschale Zahlungsgebühr wird hier nicht versprochen.",
-          },
-          {
-            title: "Was du mitbringst",
-            body: "Ein geeignetes Tablet mit Browser, eine Internetverbindung, ein vom Zahlungsanbieter freigegebenes Zahlungskonto und deinen bestehenden Kassenablauf. Geräte, Internet und QR-Druck können eigene Kosten verursachen.",
-          },
-          {
-            title: "Vor dem Echtbetrieb prüfen",
-            body: "Zahlungsfreigabe, Menüangaben, QR-Ziele, Tablet-Verbindung und die Übernahme bereits bezahlter Aufträge in die Kasse müssen stimmen. Beleg-, Steuer- und Datenschutzpflichten werden durch Zackisch nicht ersetzt.",
-          },
-        ],
-      },
       research: {
         title: "Was die Forschung zeigt. Und was nicht.",
         intro:
@@ -159,19 +123,13 @@ export const content = {
           },
         ],
       },
-      contact: {
-        title: "Ein guter Einstieg beginnt mit einer Frage.",
-        intro:
-          "Hilfe zur Einrichtung und zum Betrieb findest du im öffentlichen Hilfe-Center. Für betriebsbezogene Anliegen nutze dort deinen privaten Ticketbereich.",
-        sections: [],
-      },
       ...legalPages["de-de"],
       ...platformPrivacy["de-de"],
       ...merchantTerms["de-de"],
       ...dataProcessing["de-de"],
       ...guestTerms["de-de"],
     },
-    notFound: "Diese Seite gibt es nicht.",
+    notFound: "Diese Seite gibt es nicht",
     notFoundText: "Prüfe die Adresse oder gehe zurück zur Startseite.",
     back: "Zur Startseite",
   },
@@ -196,13 +154,7 @@ export const content = {
       "Guests order and pay by QR code. Your team keeps track and your existing POS stays. 2% Zackisch fee plus payment provider fees.",
     researchLink: "Read the source and context",
     setupHelp: "Open setup guides",
-    priceLink: "See fees and prerequisites",
     faqs: [
-      {
-        question: "How does Zackisch work day to day?",
-        answer:
-          "Guests open the menu by QR code, choose items and pay in their browser. Your team sees the paid order and prepares it. Recommendations and optional tipping complement the ordering flow; you choose which features are active.",
-      },
       {
         question: "Does Zackisch work for counter pickup without tables?",
         answer:
@@ -216,17 +168,7 @@ export const content = {
       {
         question: "How does it connect to my POS?",
         answer:
-          "Your existing POS stays. Your team manually records each paid Zackisch order exactly once in the POS and marks it as already paid. The guest does not pay again. There is currently no automatic transfer. Your venue issues the required fiscal receipt or invoice.",
-      },
-      {
-        question: "Why start with manual POS recording?",
-        answer:
-          "You do not need a new POS or a technical integration to get started. You can add Zackisch to your existing process once setup and payment approval are complete. Each order still needs to be recorded manually once.",
-      },
-      {
-        question: "Will automatic POS integrations become available?",
-        answer:
-          "Optional connections to widely used German POS systems are a possibility for the future. There is currently no automatic integration and no commitment to particular providers or dates. To get started, use your existing POS with manual recording.",
+          "Your existing POS stays. Your team manually records each paid Zackisch order exactly once in the POS and marks it as already paid. The guest does not pay again. There is currently no automatic transfer. Your venue issues the required fiscal receipt or invoice. This lets you start without a technical integration. Optional POS connections may follow, with no confirmed providers or dates.",
       },
       {
         question: "What do I need to get started?",
@@ -244,12 +186,16 @@ export const content = {
           "Yes. Guests who prefer to order in person, want to pay cash or cannot order and pay with a smartphone can speak to your team as usual. You take their order and payment through your existing POS process. Cash payments are handled by the venue, not through Zackisch’s digital checkout.",
       },
       {
+        question: "What if an item or option sells out?",
+        answer:
+          "Your team can switch items, individual options and entire selection steps off and back on in the staff view. This lets you adjust availability during service without rebuilding your menu.",
+      },
+      {
         question: "What happens if the internet goes down?",
         answer:
           "New digital orders and payments need a connection. You can continue taking orders in person and using your existing POS process. Check and reconcile orders that have already been paid; do not charge again.",
       },
     ],
-    footerHelp: "Contact & help",
     footerLegal: "Legal",
     contact: "Contact",
     research: "Research & sources",
@@ -266,29 +212,6 @@ export const content = {
       "This website loads no optional analytics or advertising services. Images and fonts are served locally. There are therefore no optional cookies to enable here.",
     market: "Deutschland",
     pages: {
-      pricing: {
-        title: "What Zackisch costs.",
-        intro:
-          "A Zackisch fee applies only when guests pay through Zackisch. No setup fee. No monthly base fee.",
-        sections: [
-          {
-            title: "2% for Zackisch",
-            body: "The fee applies to the successfully paid gross order value excluding voluntary tips. Any VAT applicable to the Zackisch fee is included. Without paid orders, Zackisch is free, including during seasonal closures. Devices, internet and payment processing may have their own costs.",
-          },
-          {
-            title: "Zahlungsanbietergebührenely",
-            body: "Payment provider fees apply in addition, according to your venue’s actual configuration and agreement. We do not promise a fixed flat processing fee here.",
-          },
-          {
-            title: "What you bring",
-            body: "A suitable tablet with a browser, an internet connection, an account approved by the payment provider and your existing POS process. Devices, internet and QR printing may incur separate costs.",
-          },
-          {
-            title: "Check before going live",
-            body: "Payment approval, menu information, QR destinations, tablet connectivity and recording paid orders in your POS all need to work. Zackisch does not replace receipt, tax or privacy obligations.",
-          },
-        ],
-      },
       research: {
         title: "What research shows. And what it doesn’t.",
         intro:
@@ -308,19 +231,13 @@ export const content = {
           },
         ],
       },
-      contact: {
-        title: "A good start begins with a question.",
-        intro:
-          "Find setup and operating guidance in the public help centre. For venue-specific matters, use your private ticket area there.",
-        sections: [],
-      },
       ...legalPages["de-en"],
       ...platformPrivacy["de-en"],
       ...merchantTerms["de-en"],
       ...dataProcessing["de-en"],
       ...guestTerms["de-en"],
     },
-    notFound: "This page doesn’t exist.",
+    notFound: "This page doesn’t exist",
     notFoundText: "Check the address or return to the homepage.",
     back: "Back to home",
   },

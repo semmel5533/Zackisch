@@ -1,6 +1,6 @@
 import { legalSources, hasLegalSources } from "@/lib/legal-content";
 import { notFound } from "next/navigation";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { WebsiteLink } from "@/components/section-navigation";
 import {
   content,
   isLocale,
@@ -56,31 +56,18 @@ export default async function InformationPage({
             <ul>
               {legalSources[paramsValue.slug].map((source) => (
                 <li key={source.url}>
-                  <a className="inline-link" href={source.url}>
+                  <WebsiteLink className="inline-link" href={source.url}>
                     {source.label}
-                  </a>
+                  </WebsiteLink>
                 </li>
               ))}
             </ul>
           </section>
         )}
         {paramsValue.slug === "research" && (
-          <a className="inline-link" href={surveyUrl}>
-            {c.researchLink} <ArrowUpRight aria-hidden="true" size={18} />
-          </a>
-        )}
-        {paramsValue.slug === "contact" && (
-          <div className="contact-actions">
-            <a className="inline-link" href="mailto:selim@zackisch.com">
-              selim@zackisch.com
-            </a>
-            <a
-              className="button button-primary"
-              href={`https://support.zackisch.com/${locale}`}
-            >
-              {c.nav[3]} <ArrowUpRight aria-hidden="true" size={18} />
-            </a>
-          </div>
+          <WebsiteLink className="inline-link" href={surveyUrl}>
+            {c.researchLink}
+          </WebsiteLink>
         )}
       </main>
     </WebsiteShell>

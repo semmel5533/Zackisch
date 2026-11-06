@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 for (const [locale, lang, title] of [
-  ["de-de", "de", "Mehr Raum für deine Gäste."],
-  ["de-en", "en", "More room for your guests."],
+  ["de-de", "de", "Mehr Raum für deine Gäste"],
+  ["de-en", "en", "More room for your guests"],
 ]) {
   test(`${locale} has localized metadata and fits small screens`, async ({
     page,
@@ -48,7 +48,8 @@ test("mobile menu closes after anchor selection and returns focus on Escape", as
     .getByRole("link", { name: "Funktionen" })
     .click();
   await expect(page.getByRole("dialog", { name: "Navigation" })).toBeHidden();
-  await expect(page).toHaveURL(/#how-it-works$/);
+  await expect(page).toHaveURL(/\/de-de$/);
+  await expect(page.locator(".chapter-introduction h2")).toBeFocused();
 });
 test("FAQ and privacy controls work without optional cookies", async ({
   page,
@@ -78,7 +79,7 @@ test("unknown routes return an actual 404", async ({ page, context }) => {
   expect(response.status()).toBe(404);
   await page.goto("/de-de/unknown-page");
   await expect(
-    page.getByRole("heading", { name: "Diese Seite gibt es nicht." }),
+    page.getByRole("heading", { name: "Diese Seite gibt es nicht" }),
   ).toBeVisible();
 });
 test("marketing images load from the local host", async ({ page, context }) => {

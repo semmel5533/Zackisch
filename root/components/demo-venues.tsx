@@ -3,17 +3,9 @@
 import { useState } from "react";
 import { Pause, Play } from "@phosphor-icons/react";
 
-const examples = [
-  "CAFÉ NORDA",
-  "bistro lumo",
-  "TISCHZEIT",
-  "morgenrot",
-  "BAR VELA",
-  "Korn & Kanne",
-];
-
 type DemoCopy = {
   demoTitle: string;
+  demoVenues: readonly string[];
   pauseLogos: string;
   resumeLogos: string;
 };
@@ -47,7 +39,7 @@ export function DemoVenues({ copy }: { copy: DemoCopy }) {
               key={String(duplicate)}
               aria-hidden={duplicate || undefined}
             >
-              {examples.map((name, i) => (
+              {copy.demoVenues.map((name, i) => (
                 <li key={name} className={`demo-logo demo-logo-${i}`}>
                   {name}
                 </li>
