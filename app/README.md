@@ -48,7 +48,7 @@ Die maßgeblichen Stellen sind `convex/smartMenu.ts`, `components/guest/cart-rec
 
 ## Weitere Produktbereiche
 
-Das Menü unterstützt Kategorien, manuelle Reihenfolge, Artikelbilder, Preise, Verfügbarkeit, Varianten und Zusätze sowie Ernährungsmerkmale, Allergene und Zusatzstoffe. Die Auswahl validiert Pflichtoptionen und berechnet Aufpreise; der Server rekonstruiert den Checkoutpreis unabhängig vom Browser.
+Das Menü unterstützt Kategorien, manuelle Reihenfolge, Artikelbilder, Preise, Verfügbarkeit, Varianten und Zusätze sowie Ernährungsmerkmale, Allergene und Zusatzstoffe. Das Personal kann in der Verfügbarkeitsansicht Artikel, einzelne Optionen oder ganze Auswahlschritte aus- und wieder einschalten. Ein Artikelschalter setzt auch seine Schritte und Optionen, ein Schrittschalter auch dessen Optionen; einzelne Optionen können separat geändert werden. Änderungen werden erst nach erfolgreicher Serverantwort übernommen. Die Auswahl validiert Pflichtoptionen und berechnet Aufpreise; der Server rekonstruiert den Checkoutpreis unabhängig vom Browser.
 
 Betreiber finden Einrichtung, Tisch- und QR-Verwaltung sowie Personal-Kopplung in der Übersicht. Weitere Seiten verwalten aktive Bestellungen, Historie, Menü und Betriebseinstellungen. Gäste nutzen `/table/[businessId]` mit Tischkennung beziehungsweise `/pickup/[businessId]`, jeweils mit eigener Checkout- und Erfolgsseite. Der Bestellstatus bleibt von der gesonderten Erfassung in der bestehenden Kasse getrennt.
 
