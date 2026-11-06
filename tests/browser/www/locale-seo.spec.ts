@@ -146,6 +146,8 @@ test("photographs load and the footer ends immediately after its full-width word
     "none",
   );
   await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator(".welcome-main-photo")).toBeHidden();
+  await expect(page.locator(".problem-section .story-photo")).toBeHidden();
   await expect(page.locator(".footer-grid")).toHaveCSS("text-align", "center");
   await expect(page.locator(".footer-grid > div").first()).toHaveCSS(
     "align-items",

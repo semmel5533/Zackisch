@@ -874,6 +874,10 @@ p {
   .welcome {
     padding-top: 40px;
   }
+  .welcome-main-photo,
+  .problem-section .story-photo {
+    display: none;
+  }
   .welcome-composition,
   .problem-section {
     grid-template-columns: 1fr;
