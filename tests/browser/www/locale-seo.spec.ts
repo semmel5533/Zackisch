@@ -14,6 +14,9 @@ test("header and footer locale dialogs retain the page and use native language l
     await trigger.click();
     const dialog = page.getByRole("dialog", { name: "Region & Sprache" });
     await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText(
+      "Wähle die Region deines Betriebs und deine gewünschte Anzeigesprache.",
+    );
     await expect(
       dialog.getByRole("button", { name: "Schließen", exact: true }),
     ).toBeFocused();
@@ -47,6 +50,16 @@ test("header and footer locale dialogs retain the page and use native language l
   await expect(
     page.getByRole("button", { name: "Region & language: Germany" }),
   ).toHaveCount(2);
+  await page
+    .getByRole("button", { name: "Region & language: Germany" })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Region & language" }),
+  ).toContainText(
+    "Choose your venue’s region and your preferred display language.",
+  );
+  await page.keyboard.press("Escape");
 });
 
 test("locale dialog passes the automated accessibility scan", async ({

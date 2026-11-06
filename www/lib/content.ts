@@ -54,7 +54,8 @@ export const content = {
     dismiss: "Schließen",
     navigation: "Navigation",
     localeTitle: "Region & Sprache",
-    localeDescription: "Hier kannst du deine Region und Sprache auswählen.",
+    localeDescription:
+      "Wähle die Region deines Betriebs und deine gewünschte Anzeigesprache.",
     nav: ["Funktionen", "Kosten", "Fragen", "Hilfe"],
     login: "Anmelden",
     start: "Lokal einrichten",
@@ -164,7 +165,8 @@ export const content = {
     dismiss: "Close",
     navigation: "Navigation",
     localeTitle: "Region & language",
-    localeDescription: "Choose your region and language.",
+    localeDescription:
+      "Choose your venue’s region and your preferred display language.",
     nav: ["Features", "Pricing", "Questions", "Help"],
     login: "Sign in",
     start: "Set up your venue",
