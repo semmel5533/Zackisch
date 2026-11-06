@@ -150,10 +150,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section className="personal-contact container">
           <h2>{m.personalTitle}</h2>
           <p>{m.personalText}</p>
-          <a href="mailto:selim@zackisch.com">
-            selim@zackisch.com
-            <ArrowUpRight size={32} aria-hidden />
-          </a>
+          <a href="mailto:selim@zackisch.com">selim@zackisch.com</a>
         </section>
         <section className="last-invitation container">
           <h2>{m.close}</h2>

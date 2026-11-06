@@ -243,7 +243,7 @@ p {
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--zk-space-8);
 }
 .footer-grid > div {
@@ -261,6 +261,7 @@ p {
   color: var(--zk-text);
   margin-bottom: var(--zk-space-4);
 }
+.footer-grid > div:first-child > .region-trigger { margin-bottom: var(--zk-space-4); }
 .footer-mark {
   width: calc(100% - 32px);
   height: auto;
@@ -379,6 +380,7 @@ p {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
+  .footer-grid > div:first-child { grid-column: 1 / -1; }
 }
 @media (max-width: 599px) {
   .container {
@@ -479,10 +481,11 @@ p {
 .service-photo { grid-column: 1; grid-row: 1 / span 2; }
 .service-photo img { aspect-ratio: 4 / 5; object-fit: cover; object-position: center; }
 .service-section > div, .service-section > .staff-placeholder { grid-column: 2; }
-.personal-contact { border-top: 1px solid var(--zk-border); padding-block: 64px 112px; }
+.personal-contact { text-align: right; border-top: 1px solid var(--zk-border); padding-block: 64px 112px; }
 .marketing .personal-contact h2 { font-size: 1.5rem; letter-spacing: -.02em; }
 .personal-contact p { margin-top: 12px; color: var(--zk-text-secondary); font-size: 1.25rem; }
-.personal-contact > a { display: inline-flex; align-items: center; gap: 24px; font-size: clamp(1.65rem, 5.8vw, 5rem); line-height: 1.2; font-weight: 600; letter-spacing: -.03em; margin-top: 24px; text-decoration-thickness: 2px; }
+.personal-contact > a { display: inline-block; font-size: clamp(1.65rem, 5.8vw, 5rem); line-height: 1.2; font-weight: 600; letter-spacing: -.03em; margin-top: 24px; text-decoration: none; text-decoration-thickness: 2px; text-underline-offset: .12em; }
+.personal-contact > a:hover, .personal-contact > a:focus-visible { text-decoration-line: underline; }
 .region-trigger { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--zk-border); border-radius: 999px; background: var(--zk-page); color: var(--zk-text); padding: 9px 12px; cursor: pointer; text-align: left; flex-shrink: 0; }
 .region-trigger:hover { background: var(--zk-surface-muted); }
 .region-label { display: flex; flex-direction: column; line-height: 1.2; gap: 3px; }
@@ -685,8 +688,6 @@ p {
   .problem-section { padding-top: 80px; }
   .service-photo, .service-section > div, .service-section > .staff-placeholder { grid-column: auto; grid-row: auto; }
   .personal-contact { padding-block: 48px 64px; }
-  .personal-contact > a { gap: 10px; }
-  .personal-contact > a svg { width: 22px; }
   .chapter-introduction {
     grid-template-columns: 1fr;
     padding-block: 80px 40px;

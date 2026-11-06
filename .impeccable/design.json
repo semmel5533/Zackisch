@@ -171,7 +171,7 @@
   ],
   "narrative": {
     "northStar": "Human service, without unnecessary waiting.",
-    "overview": "Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. The restaurant keeps its POS and service choices; guests do not need an app/account.",
+    "overview": "Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. Table service and counter pickup are both supported. The restaurant keeps its POS and service choices; guests do not need an app/account.",
     "keyCharacteristics": [
       "League Spartan across marketing and app.",
       "Unchanged black wordmark and signet; only the public footer wordmark uses owner-authorized CSS opacity 0.22.",
@@ -197,7 +197,9 @@
     "dos": [
       "Use real color stock photographs with verified free commercial rights; no optional attribution captions. Keep provenance.",
       "Keep product image areas clearly text-labelled until actual screenshots are available.",
-      "Header country trigger matches the login secondary pill and forms a 12px-gap group with it; footer country trigger retains its transparent Citron treatment. Label fictional logo band with Demo-Lokale / Demo venues."
+      "Header country trigger matches the login secondary pill and forms a 12px-gap group with it; footer country trigger retains its transparent Citron treatment. Label fictional logo band with Demo-Lokale / Demo venues.",
+      "Right-align the personal contact block; email uses no arrow and underlines on hover or keyboard focus.",
+      "Footer: three columns, country trigger first above unheaded navigation, then contact/help and legal. Below 900px the first group spans the row above the remaining two."
     ],
     "donts": [
       "Never generate photographs with AI.",

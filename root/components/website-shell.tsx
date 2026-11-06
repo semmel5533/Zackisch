@@ -66,11 +66,7 @@ export function WebsiteShell({
       <footer className="site-footer">
         <div className="footer-grid container">
           <div>
-            <p className="footer-heading">{c.footerNote}</p>
             <RegionLanguage copy={c} locale={locale} slug={slug} />
-          </div>
-          <div>
-            <p className="footer-heading">{c.footerProduct}</p>
             <Link href={`/${locale}/pricing`}>{c.nav[1]}</Link>
             <Link href={`/${locale}#how-it-works`}>{c.nav[0]}</Link>
             <Link href={`/${locale}/research`}>{c.research}</Link>

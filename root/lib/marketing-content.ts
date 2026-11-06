@@ -2,13 +2,13 @@ export const marketing = {
   "de-de": {
     hero: ["Mehr Raum", "für deine Gäste."],
     intro:
-      "QR-Bestellung und Bezahlen direkt am Tisch. Für deine Gäste ganz einfach. Mit deinem Service und deiner bestehenden Kasse.",
+      "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen. Mit deinem Service und deiner bestehenden Kasse.",
     phoneAlt: "Drei Gäste schauen im Café gemeinsam auf ein Smartphone.",
-    problemTitle: "Volle Tische.\nViele kleine Wege.",
+    problemTitle: "Volle Tische.\nSchlange am Tresen.",
     problemText:
-      "Noch ein Getränk. Eine Bestellung. Die Rechnung. Im Service kommt oft vieles gleichzeitig zusammen.",
+      "Am Tisch warten Gäste auf die nächste Bestellung. Am Tresen kommen Bestellen, Bezahlen und Abholen zusammen. Dein Team wird überall gleichzeitig gebraucht.",
     solutionText:
-      "Gib deinen Gästen einen zusätzlichen Weg: selbst bestellen und bezahlen. Persönlicher Service bleibt immer eine Wahl.",
+      "Lass Gäste per QR-Code selbst bestellen und bezahlen – am Tisch oder zur Abholung am Tresen. Persönlicher Service bleibt immer eine Wahl.",
     personalTitle: "Deine Frage ist nicht aufgelistet?",
     personalText: "Schreibe mir persönlich:",
     explore: "So hilft Zackisch",
@@ -46,9 +46,9 @@ export const marketing = {
     control: "Dein Lokal. Deine Entscheidung.",
     controlText:
       "Empfehlungen, Beliebteste und Trinkgeld schaltest du unabhängig voneinander ein oder aus.",
-    teamTitle: "Am Tisch digital.\nIm Service persönlich.",
+    teamTitle: "Am Tisch. Am Tresen.\nMit deinem Team.",
     teamText:
-      "Gäste scannen, wählen und bezahlen. Dein Team erhält den bezahlten Auftrag und erfasst ihn einmal in eurer Kasse. Wer persönlich bestellen möchte, tut genau das.",
+      "Gäste scannen, wählen und bezahlen. Dein Team bereitet den Auftrag für den Tisch oder zur Abholung vor und erfasst ihn einmal in eurer Kasse. Wer persönlich bestellen möchte, tut genau das.",
     teamImage:
       "Hier folgt die Personalansicht mit bezahltem Auftrag und Kassenerfassung.",
     costTitle: "Du zahlst erst,\nwenn deine Gäste bezahlen.",
@@ -70,13 +70,13 @@ export const marketing = {
   "de-en": {
     hero: ["More room", "for your guests."],
     intro:
-      "QR ordering and payment right at the table. Simple for your guests. Alongside your service and existing POS.",
+      "QR ordering and payment at the table or for counter pickup. Alongside your service and existing POS.",
     phoneAlt: "Three café guests look at a smartphone together.",
-    problemTitle: "Busy tables.\nSo many little trips.",
+    problemTitle: "Busy tables.\nQueues at the counter.",
     problemText:
-      "Another drink. An order. The bill. In hospitality, many small requests can arrive at once.",
+      "At tables, guests wait to place their next order. At the counter, ordering, payment and collection happen at once. Your team is needed everywhere.",
     solutionText:
-      "Give guests another way: order and pay for themselves. Personal service is always a choice.",
+      "Let guests order and pay by QR code – at the table or for counter pickup. Personal service is always a choice.",
     personalTitle: "Can’t find your question?",
     personalText: "Write to me personally:",
     explore: "How Zackisch helps",
@@ -116,9 +116,9 @@ export const marketing = {
     control: "Your venue. Your choice.",
     controlText:
       "Switch recommendations, the popular category and tipping on or off independently.",
-    teamTitle: "Digital at the table.\nPersonal in service.",
+    teamTitle: "At tables. At counters.\nWith your team.",
     teamText:
-      "Guests scan, choose and pay. Your team receives the paid order and records it once in your POS. Guests who prefer to order in person still can.",
+      "Guests scan, choose and pay. Your team prepares the order for the table or for pickup and records it once in your POS. Guests who prefer to order in person still can.",
     teamImage:
       "The staff view with a paid order and separate POS recording will appear here.",
     costTitle: "You pay when\nyour guests pay.",

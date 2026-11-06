@@ -176,8 +176,25 @@ for (const locale of ["de-de", "de-en"]) {
       });
     });
     expect(styles[0]).toEqual(styles[1]);
-    await expect(page.locator(".questions .faq-trigger")).toHaveCount(9);
+    await expect(page.locator(".questions .faq-trigger")).toHaveCount(10);
     const german = locale === "de-de";
+    await expect(page.locator(".welcome-intro")).toContainText(
+      german ? "Abholung am Tresen" : "counter pickup",
+    );
+    await page.getByRole("button", {
+      name: german
+        ? "Funktioniert Zackisch auch ohne Tische, nur mit Abholung?"
+        : "Does Zackisch work for counter pickup without tables?",
+    }).click();
+    await expect(page.locator(".questions")).toContainText(
+      german ? "Bestellnummer und den Abholstatus" : "order number and pickup status",
+    );
+    await expect(page.locator(".personal-contact")).toHaveCSS("text-align", "right");
+    const email = page.locator(".personal-contact > a");
+    await expect(email.locator("svg")).toHaveCount(0);
+    await expect(email).toHaveCSS("text-decoration-line", "none");
+    await email.hover();
+    await expect(email).toHaveCSS("text-decoration-line", "underline");
     await expect(page.locator(".cost-details")).toContainText(
       german ? "Saisonpause" : "season",
     );

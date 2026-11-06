@@ -54,6 +54,11 @@ export const content = {
           "Deine Gäste öffnen das Menü per QR-Code, wählen Artikel und bezahlen im Browser. Dein Team sieht den bezahlten Auftrag und bereitet ihn vor. Empfehlungen und freiwilliges Trinkgeld ergänzen den Bestellweg; du entscheidest, welche Funktionen aktiv sind.",
       },
       {
+        question: "Funktioniert Zackisch auch ohne Tische, nur mit Abholung?",
+        answer:
+          "Ja. Gäste scannen deinen Abhol-QR-Code, wählen Artikel und bezahlen im Browser. Danach sehen sie ihre Bestellnummer und den Abholstatus. Dein Team bereitet die Bestellung vor und markiert sie als abholbereit. Dafür brauchst du keine Tische. Die bereits bezahlte Bestellung erfasst ihr wie beim Tischservice einmal in eurer Kasse.",
+      },
+      {
         question: "Was kostet Zackisch – auch in der Saisonpause?",
         answer:
           "Du zahlst 2 % auf den erfolgreich bezahlten Bestellwert ohne freiwilliges Trinkgeld, inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Hinzu kommen Zahlungsanbietergebühren. Einrichtung und Grundgebühr kosten nichts. Ohne bezahlte Bestellungen fallen keine Zackisch-Gebühren an – ideal für Saisonbetriebe. Eigene Geräte-, Internet- und weitere Anbietergebühren bleiben davon unabhängig.",
@@ -95,7 +100,6 @@ export const content = {
           "Neue digitale Bestellungen und Zahlungen benötigen eine Verbindung. Ihr könnt weiter persönlich Bestellungen aufnehmen und euren bestehenden Kassenablauf nutzen. Bereits bezahlte Aufträge müssen geprüft und abgeglichen werden; nicht erneut kassieren.",
       },
     ],
-    footerProduct: "Zackisch",
     footerHelp: "Kontakt & Hilfe",
     footerLegal: "Rechtliches",
     contact: "Kontakt",
@@ -112,7 +116,6 @@ export const content = {
     privacyText:
       "Diese Website lädt keine optionalen Analyse- oder Werbedienste. Bilder und Schriften werden lokal ausgeliefert. Hier gibt es deshalb keine optionalen Cookies einzuschalten.",
     market: "Deutschland",
-    footerNote: "Zusätzlich bestellen. Persönlich bleiben.",
     pages: {
       pricing: {
         title: "Was Zackisch kostet.",
@@ -201,6 +204,11 @@ export const content = {
           "Guests open the menu by QR code, choose items and pay in their browser. Your team sees the paid order and prepares it. Recommendations and optional tipping complement the ordering flow; you choose which features are active.",
       },
       {
+        question: "Does Zackisch work for counter pickup without tables?",
+        answer:
+          "Yes. Guests scan your pickup QR code, choose items and pay in their browser. They then see their order number and pickup status. Your team prepares the order and marks it as ready for pickup. No tables are needed. As with table service, record the paid order once in your existing POS.",
+      },
+      {
         question: "What does Zackisch cost, including seasonal closures?",
         answer:
           "You pay 2% of the successfully paid order value excluding voluntary tips, including any VAT applicable to our fee. Payment provider fees apply in addition. There is no setup fee or monthly base fee. No paid orders means no Zackisch fees, making it a good fit for seasonal venues. Your own device, internet and other provider costs remain separate.",
@@ -241,7 +249,6 @@ export const content = {
           "New digital orders and payments need a connection. You can continue taking orders in person and using your existing POS process. Check and reconcile orders that have already been paid; do not charge again.",
       },
     ],
-    footerProduct: "Zackisch",
     footerHelp: "Contact & help",
     footerLegal: "Legal",
     contact: "Contact",
@@ -258,7 +265,6 @@ export const content = {
     privacyText:
       "This website loads no optional analytics or advertising services. Images and fonts are served locally. There are therefore no optional cookies to enable here.",
     market: "Deutschland",
-    footerNote: "Another way to order. Still personal.",
     pages: {
       pricing: {
         title: "What Zackisch costs.",
