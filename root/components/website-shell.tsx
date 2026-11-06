@@ -47,10 +47,12 @@ export function WebsiteShell({
             </Link>
           ))}
         </nav>
-        <RegionLanguage copy={c} locale={locale} slug={slug} />
-        <Link className="header-login button button-secondary" href={loginUrl}>
-          {c.login}
-        </Link>
+        <div className="header-actions">
+          <RegionLanguage copy={c} locale={locale} slug={slug} />
+          <Link className="header-login button button-secondary" href={loginUrl}>
+            {c.login}
+          </Link>
+        </div>
         <MobileNavigation
           copy={c}
           links={[

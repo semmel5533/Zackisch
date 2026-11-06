@@ -497,11 +497,10 @@ p {
 .locale-option:hover { background: var(--zk-color-semantic-background-brand-soft); }
 .chapter-introduction {
   padding-block: 144px 72px;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  align-items: end;
-  gap: 80px;
+  display: block;
 }
+.chapter-introduction h2 { text-wrap: wrap; }
+.header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .marketing h2 {
   font-size: clamp(2.6rem, 4.7vw, 4rem);
   letter-spacing: -0.035em;
@@ -790,8 +789,7 @@ p {
   .site-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding-block: 12px; }
   .site-header .brand { grid-column: 1; grid-row: 1; }
   .site-header .mobile-menu { grid-column: 2; grid-row: 1; justify-self: end; padding: 0; }
-  .site-header .region-trigger { grid-column: 1; grid-row: 2; justify-self: start; }
-  .site-header .header-login { display: inline-flex; grid-column: 2; grid-row: 2; justify-self: end; }
+  .site-header .header-actions { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
 }
 
 .region-country { font-size: .875rem; font-weight: 600; }

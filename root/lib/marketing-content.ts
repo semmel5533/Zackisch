@@ -54,7 +54,7 @@ export const marketing = {
     costTitle: "Du zahlst erst,\nwenn deine Gäste bezahlen.",
     feeLabel: "je erfolgreich bezahlter Bestellung",
     feeDetail:
-      "Ohne freiwilliges Trinkgeld. Inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Zzgl. Zahlungsanbietergebühren.",
+      "Ohne freiwilliges Trinkgeld. Inklusive Umsatzsteuer auf unsere Gebühr. Zzgl. Zahlungsanbietergebühren.",
     zero: "Keine Einrichtungskosten. Keine monatliche Grundgebühr.",
     seasonal:
       "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Lokal Saisonpause macht.",
@@ -124,7 +124,7 @@ export const marketing = {
     costTitle: "You pay when\nyour guests pay.",
     feeLabel: "per successfully paid order",
     feeDetail:
-      "Excluding voluntary tips. Including any VAT applicable to our fee. Plus payment provider fees.",
+      "Excluding voluntary tips. Including VAT on our fee. Plus payment provider fees.",
     zero: "No setup fee. No monthly base fee.",
     seasonal:
       "With no paid orders, Zackisch is free. Even when your venue closes for the season.",
