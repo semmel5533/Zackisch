@@ -4,7 +4,7 @@ export const marketing = {
     intro:
       "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen.\nMit deinem Service und deiner bestehenden Kasse.",
     phoneAlt: "Drei Gäste schauen im Café gemeinsam auf ein Smartphone.",
-    problemTitle: "Volle Tische.\nSchlange am Tresen.",
+    problemTitle: "Volle Tische,\nSchlange am Tresen",
     problemText:
       "Am Tisch warten Gäste auf die nächste Bestellung. Am Tresen kommen Bestellen, Bezahlen und Abholen zusammen. Dein Team wird überall gleichzeitig gebraucht.",
     solutionText:
@@ -24,7 +24,7 @@ export const marketing = {
     pauseLogos: "Logo-Band pausieren",
     resumeLogos: "Logo-Band fortsetzen",
     cafeAlt: "Ein Gast nutzt beim Kaffee im Café sein Smartphone.",
-    menuTitle: "Ein digitales Menü.\nMehr Optionen",
+    menuTitle: "Ein digitales Menü,\nmehr Optionen",
     menuFlexibility:
       "Du legst Varianten, Extras und Auswahlschritte fest. Deine Gäste stellen ihren Artikel daraus nach Wunsch zusammen.",
     features: [
@@ -43,7 +43,7 @@ export const marketing = {
         image: "Hier folgt der Warenkorb mit ergänzenden Artikelempfehlungen.",
       },
       {
-        title: "Ein Dankeschön.\nGanz freiwillig.",
+        title: "Ein Dankeschön,\nganz freiwillig",
         text: "Trinkgeld direkt beim Bezahlen. Mit einfachen Prozentvorschlägen und ohne Vorauswahl.",
         detail:
           "Deine Gäste entscheiden. Auf freiwilliges Trinkgeld fällt keine Zackisch-Gebühr an.",
@@ -51,7 +51,7 @@ export const marketing = {
       },
     ],
     placeholder: "Produktansicht folgt",
-    control: "Dein Lokal. Deine Entscheidung",
+    control: "Dein Lokal, deine Entscheidung",
     controlText:
       "Du entscheidest, welche Funktionen dein Lokal nutzt. Schalte sie so ein oder aus, wie es zu deinem Betrieb passt.",
     teamTitle: "Am Tisch. Am Tresen.\nMit deinem Team.",
@@ -66,7 +66,7 @@ export const marketing = {
     zero: "Keine Einrichtungskosten. Keine monatliche Grundgebühr.",
     seasonal:
       "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Lokal Saisonpause macht.",
-    setupTitle: "Dein nächster Schritt?\nDein eigenes Lokal",
+    setupTitle: "Dein nächster Schritt?",
     setupText:
       "Konto anlegen. Menü einrichten. Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
     setupNote:
@@ -74,14 +74,14 @@ export const marketing = {
     faq: "Noch etwas offen?",
     close: "Bring dein Menü aufs Smartphone",
     closeText:
-      "Gib deinen Gästen einen weiteren Bestellweg. Dein Team und deine Kasse bleiben dabei.",
+      "Gib deinen Gästen einen weiteren Bestellweg,\ndein Team und deine Kasse bleiben dabei.",
   },
   "de-en": {
     hero: ["More room", "for your guests"],
     intro:
       "QR ordering and payment at the table or for counter pickup. Alongside your service and existing POS.",
     phoneAlt: "Three café guests look at a smartphone together.",
-    problemTitle: "Busy tables.\nQueues at the counter.",
+    problemTitle: "Busy tables,\nqueues at the counter",
     problemText:
       "At tables, guests wait to place their next order. At the counter, ordering, payment and collection happen at once. Your team is needed everywhere.",
     solutionText:
@@ -101,7 +101,7 @@ export const marketing = {
     pauseLogos: "Pause logo carousel",
     resumeLogos: "Resume logo carousel",
     cafeAlt: "A café guest uses his smartphone while having coffee.",
-    menuTitle: "One digital menu.\nMore options",
+    menuTitle: "One digital menu,\nmore options",
     menuFlexibility:
       "You define variants, extras and selection steps. Your guests use them to customise their item just the way they like it.",
     features: [
@@ -122,7 +122,7 @@ export const marketing = {
           "The cart with complementary item recommendations will appear here.",
       },
       {
-        title: "A little thank-you.\nAlways optional.",
+        title: "A little thank-you,\nalways optional",
         text: "Tip at checkout with simple percentage suggestions. No tip is preselected.",
         detail:
           "The choice stays with your guests. Zackisch charges no fee on voluntary tips.",
@@ -131,7 +131,7 @@ export const marketing = {
       },
     ],
     placeholder: "Product view to follow",
-    control: "Your venue. Your choice",
+    control: "Your venue, your choice",
     controlText:
       "You decide which features your venue uses. Switch them on or off to suit the way you work.",
     teamTitle: "At tables. At counters.\nWith your team.",
@@ -146,7 +146,7 @@ export const marketing = {
     zero: "No setup fee. No monthly base fee.",
     seasonal:
       "With no paid orders, Zackisch is free. Even when your venue closes for the season.",
-    setupTitle: "Your next step?\nYour own venue",
+    setupTitle: "Your next step?",
     setupText:
       "Create an account. Set up your menu. Connect your payment provider. Get started with your QR codes and a suitable tablet.",
     setupNote:
@@ -154,7 +154,7 @@ export const marketing = {
     faq: "Anything else?",
     close: "Bring your menu to your guests’ phones",
     closeText:
-      "Give guests another way to order, alongside your team and existing POS.",
+      "Give guests another way to order,\nalongside your team and existing POS.",
   },
 } as const;
 

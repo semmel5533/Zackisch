@@ -1318,7 +1318,8 @@ p {
     margin-right: 12px;
   }
 }
-.welcome-intro {
+.welcome-intro,
+.last-invitation p {
   white-space: pre-line;
 }
 

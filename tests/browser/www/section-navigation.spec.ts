@@ -166,9 +166,30 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page.locator(".chapter-introduction h2")).toHaveText(
       locale === "de-de"
-        ? "Ein digitales Menü. Mehr Optionen"
-        : "One digital menu. More options",
+        ? "Ein digitales Menü, mehr Optionen"
+        : "One digital menu, more options",
     );
+    if (locale === "de-de") {
+      await expect(page.locator("#problem h2")).toHaveText(
+        "Volle Tische, Schlange am Tresen",
+      );
+      await expect(page.locator(".chapter-2 h3")).toHaveText(
+        "Ein Dankeschön, ganz freiwillig",
+      );
+      await expect(page.locator(".venue-control h3")).toHaveText(
+        "Dein Lokal, deine Entscheidung",
+      );
+      await expect(page.locator(".start-section h2")).toHaveText(
+        "Dein nächster Schritt?",
+      );
+      await expect(page.locator(".last-invitation p")).toHaveCSS(
+        "white-space",
+        "pre-line",
+      );
+      expect(await page.locator(".last-invitation p").innerText()).toBe(
+        "Gib deinen Gästen einen weiteren Bestellweg,\ndein Team und deine Kasse bleiben dabei.",
+      );
+    }
     await expect(page.locator(".demo-heading h2")).toHaveText(
       locale === "de-de"
         ? "Hier könnte dein Lokal auftauchen"

@@ -62,7 +62,7 @@ Links zu anderen Hosts, einschließlich app.zackisch.com, support.zackisch.com u
 
 Die Fehlerseite verwendet denselben Header und Footer, zentrierte Texte ohne sichtbare Fehlernummer und einen direkten Weg zur Startseite. Pfade unter `/de-en/` zeigen Englisch, unter `/de-de/` und ohne bekanntes Sprachpräfix Deutsch. Ein Sprachwechsel auf der 404 führt zur Startseite der gewählten Sprache; auf vorhandenen Seiten bleibt der Seitenpfad erhalten. Unbekannte und entfernte Seiten liefern HTTP 404 und noindex.
 
-Das aufgeweitete Hero-Foto nutzt dieselbe volle Containerbreite wie die folgenden Abschnitte. Unter dem Header verläuft eine durchgehende Trennlinie. Einzelne zusammenhängende Überschriften und kurze Einzelzeilen vermeiden abschließende Punkte. Mehrere eigenständige Aussagen wie „Volle Tische. Schlange am Tresen.“ behalten ihre Punkte. Das Hero-Foto ist unten ausgerichtet und auf 16:9 beschnitten; dadurch entfällt ein Teil des oberen Bildrands.
+Das aufgeweitete Hero-Foto nutzt dieselbe volle Containerbreite wie die folgenden Abschnitte. Unter dem Header verläuft eine durchgehende Trennlinie. Einzelne zusammenhängende Überschriften und kurze Einzelzeilen vermeiden abschließende Punkte. Mehrere eigenständige Aussagen wie „Am Tisch. Am Tresen. Mit deinem Team.“ behalten ihre Punkte. Das Hero-Foto ist unten ausgerichtet und auf 16:9 beschnitten; dadurch entfällt ein Teil des oberen Bildrands.
 
 Der automatische Axe-Dialogscan ist im aktuellen Firefox-Testlauf wegen eines reproduzierbaren Browserabsturzes ausdrücklich übersprungen. Dialoginteraktion, Sprachwechsel, Fokus sowie die übrigen Firefox-Prüfungen laufen weiter; Chromium und WebKit prüfen auch den Dialog mit Axe.
 
