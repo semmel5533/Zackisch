@@ -1374,11 +1374,13 @@ p {
   right: 20px;
 }
 .mobile-navigation nav a {
-  font-size: clamp(1.75rem, 5vw, 2.25rem);
-  font-weight: 650;
-  line-height: 1.2;
-  min-height: 54px;
-  padding-block: 14px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  min-height: 48px;
+  padding-block: 12px;
 }
 .mobile-actions {
   display: flex;

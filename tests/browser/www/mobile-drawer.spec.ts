@@ -45,6 +45,14 @@ for (const locale of ["de-de", "de-en"]) {
         "background-color",
         "rgb(0, 0, 0)",
       );
+      for (const item of [
+        drawer.locator("nav a").first(),
+        drawer.locator(".mobile-help"),
+        drawer.locator(".region-trigger"),
+        drawer.locator(".mobile-login"),
+      ]) {
+        await expect(item).toHaveCSS("font-size", "17px");
+      }
       expect((await drawer.boundingBox())!.x).toBe(0);
       expect(
         await drawer.evaluate((el) => el.scrollWidth <= el.clientWidth),
