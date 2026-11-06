@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { locales, isLocale } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
+import { websiteStructuredData } from "@/lib/structured-data";
 import { WebsiteHome } from "@/components/website-home";
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -22,5 +23,8 @@ export default async function Home({
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return <WebsiteHome locale={locale} />;
+  return <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData(locale)).replace(/</g, "\\u003c") }} />
+    <WebsiteHome locale={locale} />
+  </>;
 }

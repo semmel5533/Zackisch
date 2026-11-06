@@ -8,6 +8,12 @@ export function pageMetadata(
 ): Metadata {
   const suffix = slug ? `/${slug}` : "";
   const canonical = `${websiteUrl}/${locale}${suffix}`;
+  const image = {
+    url: `${websiteUrl}/brand/logo/social/wordmark--og--citron--1200x630.png`,
+    width: 1200,
+    height: 630,
+    alt: locale === "de-de" ? "Zackisch – QR-Bestellung und Bezahlen für die Gastronomie" : "Zackisch – QR ordering and payments for hospitality",
+  };
   return {
     title: `${title ?? content[locale].title.replace(/ [–—|] Zackisch$/, "")} | Zackisch`,
     description: description ?? content[locale].description,
@@ -26,7 +32,15 @@ export function pageMetadata(
       siteName: "Zackisch",
       locale: locale === "de-de" ? "de_DE" : "en_DE",
       type: "website",
+      alternateLocale: locale === "de-de" ? "en_DE" : "de_DE",
+      images: [image],
     },
-    robots: { index: true, follow: true },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title ?? content[locale].title.replace(/ [–—|] Zackisch$/, "")} | Zackisch`,
+      description: description ?? content[locale].description,
+      images: [image],
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   };
 }

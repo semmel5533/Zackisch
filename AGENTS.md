@@ -115,6 +115,10 @@ Operational fallback: stop unconfirmed checkout during provider failure, retain 
 
 Production deployment/DNS, destructive migration/restore, real charges/refunds, secret changes and broadcast email require explicit human authorization. Legal and fiscal sign-off is separate from tests. A release needs real proprietor/vendor details, payment/account capability evidence, agreed contracts, tax/fiscal classification and no unresolved material security/financial defect. Report blockers honestly; do not manufacture readiness.
 
+## Current-state documentation
+
+Every change that alters documented behavior, UI, architecture, setup or operating rules must update every affected documentation location in the same change, including README files, AGENTS.md, DESIGN.md, PRODUCT.md and the Impeccable sidecar where applicable. Cross-check duplicated facts and links. Document only the verified latest state; replace superseded statements instead of appending history, migration notes or temporary plans. Git preserves history. Evidence and delivery logs stay outside the repository. Documentation synchronization is a completion gate for every task.
+
 ## Git and versions
 
 Work directly on **main** in this solo-developer repository. Do not create branches or worktrees unless the owner explicitly overrides this rule. Inspect and preserve unrelated changes. Commit small reviewed, tested units regularly, not one final giant commit. Do not push or deploy by implication.

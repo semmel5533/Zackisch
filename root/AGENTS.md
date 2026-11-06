@@ -19,3 +19,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Search and generative discovery
+
+Keep server-rendered product facts concise, accurate and discoverable through real internal links. Maintain per-page title/description, canonical and reciprocal language alternates, crawlable assets, sitemap/robots, localized Open Graph and Twitter metadata with a working social image. Structured data must match visible verified facts; never publish sample addresses, invented ratings, prices or affiliations as schema facts. Follow current official Google Search Central and Bing Webmaster guidance for SEO and generative discovery; no hidden keyword/AI instruction stuffing or unsupported special-file promises. Test rendered head, JSON-LD and asset responses. Local crawlability is not live indexing: check production CDN/robots, verified webmaster properties and URL inspection after authorized deployment. Do not deploy or claim indexing from a local check.
