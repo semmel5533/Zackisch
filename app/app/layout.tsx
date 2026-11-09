@@ -6,7 +6,7 @@ import { ConvexClientProvider } from "@/components/providers/convex-client-provi
 
 export const metadata: Metadata = {
   title: {
-    default: "Bestellen und bezahlen | Zackisch",
+    default: "Bestellen & Bezahlen mit QR-Code | Zackisch",
     template: "%s | Zackisch",
   },
   description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     apple: "https://zackisch.com/brand/logo/platform/signet--apple-touch--180.png",
   },
   openGraph: {
-    title: "Bestellen und bezahlen | Zackisch",
+    title: "Bestellen & Bezahlen mit QR-Code | Zackisch",
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
     url: "https://app.zackisch.com",
     siteName: "Zackisch",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bestellen und bezahlen | Zackisch",
+    title: "Bestellen & Bezahlen mit QR-Code | Zackisch",
     description: "Digitales Bestell- und Bezahlsystem für die Gastronomie.",
     images: ["https://zackisch.com/brand/logo/social/wordmark--og--citron--1200x630.png"],
   },

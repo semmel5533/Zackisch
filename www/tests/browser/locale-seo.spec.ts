@@ -99,14 +99,14 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page).toHaveTitle(
       de
-        ? "Bestellen per QR-Code für deinen Betrieb | Zackisch"
-        : "QR code ordering for your venue | Zackisch",
+        ? "Bestellen & Bezahlen mit QR-Code | Zackisch"
+        : "Order & pay by QR code | Zackisch",
     );
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
       de
-        ? "Bestellen per QR-Code für deinen Betrieb | Zackisch"
-        : "QR code ordering for your venue | Zackisch",
+        ? "Bestellen & Bezahlen mit QR-Code | Zackisch"
+        : "Order & pay by QR code | Zackisch",
     );
     await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
       "content",
@@ -131,8 +131,8 @@ for (const locale of ["de-de", "de-en"]) {
     await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
       "content",
       de
-        ? "Zackisch: Bestellen per QR-Code für deinen Betrieb"
-        : "Zackisch: QR code ordering for your venue",
+        ? "Zackisch: Bestellen & Bezahlen mit QR-Code"
+        : "Zackisch: Order & pay by QR code",
     );
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
       "content",
@@ -192,7 +192,8 @@ test("photographs load and the footer ends immediately after its full-width word
   });
   expect(bounds.width).toBeGreaterThan(0.89);
   expect(bounds.gap).toBeLessThanOrEqual(9);
-  expect(bounds.opacity).toBe(1);
+  expect(bounds.opacity).toBeGreaterThan(0);
+  expect(bounds.opacity).toBeLessThan(1);
   await expect(page.locator(".marketing img")).toHaveCount(2);
   await expect(page.locator(".site-footer .region-trigger")).toHaveCSS(
     "background-color",

@@ -193,7 +193,7 @@
     "overview": "Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. Table service and counter pickup are both supported. The restaurant keeps its POS and service choices; guests do not need an app/account.",
     "keyCharacteristics": [
       "Lexend across marketing and app.",
-      "Unchanged black wordmark and signet at full opacity.",
+      "Unchanged black wordmark and signet; only the public footer wordmark uses owner-authorized CSS opacity 0.22.",
       "White, black and Electric Citron."
     ],
     "rules": [
@@ -208,8 +208,8 @@
         "section": "layout"
       },
       {
-        "name": "The Footer Logo Rule",
-        "body": "The public footer presents the unchanged original black wordmark at full opacity on Electric Citron, with 16px side margins and 8px bottom padding.",
+        "name": "The Footer Logo Exception Rule",
+        "body": "Only the public footer presents the unchanged original black wordmark at CSS opacity 0.22 on Electric Citron, with 16px side margins and 8px bottom padding. Other logo placements remain opaque black.",
         "section": "layout"
       }
     ],

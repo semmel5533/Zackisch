@@ -1,6 +1,6 @@
 export const marketing = {
   "de-de": {
-    hero: ["Mehr Raum", "für deine Gäste"],
+    hero: ["Bestellen & Bezahlen", "mit QR-Code"],
     intro:
       "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen.\nMit deinem Service und deiner bestehenden Kasse.",
     phoneAlt: "Drei Gäste schauen im Café gemeinsam auf ein Smartphone.",
@@ -77,7 +77,7 @@ export const marketing = {
       "Gib deinen Gästen einen weiteren Bestellweg,\ndein Team und deine Kasse bleiben dabei.",
   },
   "de-en": {
-    hero: ["More room", "for your guests"],
+    hero: ["Order & pay", "by QR code"],
     intro:
       "QR ordering and payment at the table or for counter pickup.\nAlongside your service and existing POS.",
     phoneAlt: "Three café guests look at a smartphone together.",
