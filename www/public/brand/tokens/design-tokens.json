@@ -509,7 +509,7 @@
         "item-text-active": {
           "$type": "color",
           "$value": "{color.ref.black}",
-          "$description": "Active item uses bold League Spartan 700; never any selection marker"
+          "$description": "Active item uses bold Lexend 700; never any selection marker"
         },
         "item-icon-active": {
           "$type": "color",
@@ -1006,7 +1006,7 @@
         "base": {
           "$type": "fontFamily",
           "$value": [
-            "League Spartan",
+            "Lexend",
             "Arial",
             "sans-serif"
           ]

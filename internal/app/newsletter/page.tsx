@@ -157,7 +157,7 @@ export default function NewsletterStudioPage() {
   <meta charset="utf-8" />
   <style>
     @import url("https://zackisch.com/brand/fonts/fonts.css");
-    body { font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #FAFAF9; margin: 0; padding: 0; color: #000000; }
+    body { font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #FAFAF9; margin: 0; padding: 0; color: #000000; }
   </style>
 </head>
 <body style="background-color:#FAFAF9;padding:32px 16px;">

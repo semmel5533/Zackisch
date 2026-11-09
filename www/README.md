@@ -10,7 +10,7 @@ Die Startseite erklärt konfigurierbare Varianten, Extras und Auswahlschritte, d
 
 ## Umsetzung
 
-Next.js 16, React 19 und TypeScript; Base UI für Dialoge und Akkordeon. Die Website wird als statischer Export (`out/`) für Cloudflare Pages gebaut und benötigt keine Cloudflare Workers oder vinext. Deutsche und englische Texte liegen in lokalisierten Wörterbüchern. [DESIGN.md](../DESIGN.md) definiert League Spartan, Citron, unveränderte Zackisch-Logos und die Gestaltung. Alle Markenressourcen und Schriften liegen zentral in `public/brand/`. Die anderen Anwendungen verwenden dafür absolute URLs auf `https://zackisch.com/brand/`.
+Next.js 16, React 19 und TypeScript; Base UI für Dialoge und Akkordeon. Die Website wird als statischer Export (`out/`) für Cloudflare Pages gebaut und benötigt keine Cloudflare Workers oder vinext. Deutsche und englische Texte liegen in lokalisierten Wörterbüchern. [DESIGN.md](../DESIGN.md) definiert Lexend, Citron, unveränderte Zackisch-Logos und die Gestaltung. Alle Markenressourcen und Schriften liegen zentral in `public/brand/`. Die anderen Anwendungen verwenden dafür absolute URLs auf `https://zackisch.com/brand/`.
 
 Auf Desktop laufen die drei Funktionskapitel beim Scrollen übereinander. Browser mit Unterstützung für Scroll-Animationen öffnen den großen Fotoausschnitt sanft. Bei reduzierter Bewegung entfallen diese Effekte. Bei höchstens 650 Pixeln Fensterhöhe werden die Funktionskapitel nicht angeheftet. Auf schmalen Geräten folgen die Inhalte untereinander. Die Website lädt keine optionalen Analyse- oder Werbedienste und keine externen Google Fonts.
 

@@ -1,5 +1,5 @@
 import { test, expect } from "../brand-fixture";
-test("internal sign-in fits 320px, uses self-hosted League Spartan, and opens region/language dialog", async ({
+test("internal sign-in fits 320px, uses self-hosted Lexend, and opens region/language dialog", async ({
   page,
   context,
 }) => {
@@ -22,7 +22,7 @@ test("internal sign-in fits 320px, uses self-hosted League Spartan, and opens re
     };
   });
   expect(metrics.overflow).toBe(false);
-  expect(metrics.family).toContain("League Spartan");
+  expect(metrics.family).toContain("Lexend");
   expect(metrics.externalFonts).toEqual([]);
   const regionBtn = page.getByRole("button", { name: /DE · DE/ });
   await regionBtn.click();

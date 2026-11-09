@@ -1,5 +1,5 @@
 /* Import after tokens.css. Single brand light theme, semantic roles only. */
-/* Load League Spartan using the application font pipeline (e.g. next/font/google). */
+/* Load self-hosted Lexend from www/public/brand/fonts/ before this file; no runtime third-party font request. */
 :root { color-scheme: light; }
 html { font-family: var(--zk-typography-font-family-base); font-synthesis: none; }
 body { background: var(--zk-color-semantic-background-canvas); color: var(--zk-color-semantic-text-primary); }

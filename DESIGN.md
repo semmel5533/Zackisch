@@ -14,51 +14,51 @@ colors:
   error: "#C62828"
 typography:
   marketing-display:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "clamp(3.35rem, 7vw, 6.25rem)"
     fontWeight: 650
-    lineHeight: 0.98
+    lineHeight: 1.05
     letterSpacing: "-0.035em"
   marketing-display-mobile:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "2.85rem"
     fontWeight: 650
-    lineHeight: 0.98
+    lineHeight: 1.05
     letterSpacing: "-0.035em"
   marketing-headline:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "clamp(2.75rem, 4.9vw, 4.25rem)"
     fontWeight: 700
-    lineHeight: 1.03
+    lineHeight: 1.08
     letterSpacing: "-0.035em"
   marketing-chapter-title:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "clamp(2.25rem, 4vw, 3.6rem)"
     fontWeight: 700
-    lineHeight: 1.05
+    lineHeight: 1.08
     letterSpacing: "-0.03em"
   marketing-intro:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "clamp(1.25rem, 2vw, 1.4375rem)"
     fontWeight: 500
     lineHeight: 1.45
   body:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 450
     lineHeight: 1.5
   button-label:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 600
     lineHeight: 1.25
   marketing-primary-label:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "1.1875rem"
     fontWeight: 600
     lineHeight: 1.25
   marketing-compact-label:
-    fontFamily: "League Spartan, Arial, sans-serif"
+    fontFamily: "Lexend, Arial, sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 600
     lineHeight: 1.25
@@ -110,7 +110,7 @@ components:
 
 # Zackisch: Brand & Product Design System
 
-> **Version 1.4 · 6 November 2026 · Canonical design specification**
+> **Version 1.6 · 9 November 2026 · Canonical design specification**
 > Applies to `www/` (public website), `app/` (merchant/guest/staff), `support/` and `internal/`.
 > This document defines the current visual system. It does **not** change checkout, POS or payment behavior.
 
@@ -122,7 +122,7 @@ components:
 | Foundation | Pure white `#FFFFFF`, pure black `#000000`, **Electric Citron `#C6FF34`**. No substitutions. |
 | Selection | On Citron menus: background `citron.300` (`#C6FF34`); selected **pill** `citron.500` (`#9FD600`), black font weight **700**, Phosphor icon **fill** when an icon is present (inactive **regular**); **no black marker, stripe, dot or side border**. |
 | Feedback | **Every meaningful status, including Error, uses a recognizable Phosphor status icon + explicit text.** Only Error has a separate hue: icon/message/border `#C62828`. Success, Warning, Info and Pending stay black/gray, distinguished by icon shape and wording: never green/yellow/blue. |
-| Typography | **League Spartan** across marketing and app, weights 400/500/600/700/800; the public marketing hero uses variable weight 650. Original letterforms of the logo are artwork, not retyped in the font. |
+| Typography | **Lexend** across marketing and app, weights 400/500/600/700/800; the public marketing hero uses variable weight 650. Original letterforms of the logo are artwork, not retyped in the font. |
 | Icons | **Phosphor** exclusively and **only where they add information**. No icons automatically on every button, field, card, menu item or metric; see §6. |
 | Shape | Rounded language. Pill buttons, menu items, tabs and chips. Large rounded cards; input corners 16px for a practical floating-label field. |
 | Inputs | Persistent accessible `<label>` inside the outline. Resting: centered; on focus **or filled**: floats to upper inner edge, never disappears. |
@@ -148,7 +148,7 @@ Write in plain language and present a next action. Prefer “Bestellung abschick
 
 ## 2. Brand assets and logo governance
 
-**The two original source files are authoritative:** `www/public/brand/logo/original/signet.svg` and `www/public/brand/logo/original/wordmark.svg`. They are **byte-identical** to the supplied cropped vectors, with neither white space nor a new font. Every derivative includes **only** the unmodified black artwork, optionally positioned within a white or Electric Citron canvas. **No slogans, taglines, headings, supporting text, illustrations, decorative frames, shadows, extra marks or additional logo combinations** are allowed in any published logo/social asset. Never typeset the wordmark using League Spartan. The artwork is *always* `#000000`; there is no white or colored-reversal mark. The owner-authorized public footer presentation alone uses CSS opacity `0.22` on the unchanged original wordmark over Citron. Other logo placements remain opaque black.
+**The two original source files are authoritative:** `www/public/brand/logo/original/signet.svg` and `www/public/brand/logo/original/wordmark.svg`. They are **byte-identical** to the supplied cropped vectors, with neither white space nor a new font. Every derivative includes **only** the unmodified black artwork, optionally positioned within a white or Electric Citron canvas. **No slogans, taglines, headings, supporting text, illustrations, decorative frames, shadows, extra marks or additional logo combinations** are allowed in any published logo/social asset. Never typeset the wordmark using Lexend. The artwork is *always* `#000000`; there is no white or colored-reversal mark. The owner-authorized public footer presentation alone uses CSS opacity `0.22` on the unchanged original wordmark over Citron. Other logo placements remain opaque black.
 
 ### Curated source, lockup and platform formats
 
@@ -270,7 +270,7 @@ A token is not permission to use a color everywhere. Red is strictly error; dark
 
 ## 5. Typography
 
-Use **League Spartan** in every property, including data tables, labels, mobile checkout and support article text. The custom Zackisch wordmark is never recreated as typeset League Spartan.
+Use **Lexend** in every property, including data tables, labels, mobile checkout and support article text. The custom Zackisch wordmark is never recreated as typeset Lexend.
 
 | Text role | Size / line height | Weight |
 |---|---|---|
@@ -283,7 +283,7 @@ Use **League Spartan** in every property, including data tables, labels, mobile 
 | Helper / captions | 12–14px / 1.45 | 500; avoid critical 12px |
 | Numeric data / amounts | 16–36px, according to hierarchy | 600–700; `font-variant-numeric: tabular-nums` |
 
-Load the approved self-hosted League Spartan font from `www/public/brand/fonts/`, with all required weights, `font-display: swap` and sensible fallback fonts. The other applications use the absolute website URL with the configured CORS headers. Ensure the correct diacritics and German numeric formatting. Prefer tighter letter spacing only for large display, not microcopy. Preserve legibility in long support articles: cap line length around 65–75 characters and use generous line height. Optical sizing varies; test text in actual browsers and zoom.
+Load the approved self-hosted Lexend font from `www/public/brand/fonts/`, with all required weights, `font-display: swap` and sensible fallback fonts. The other applications use the absolute website URL with the configured CORS headers. Ensure the correct diacritics and German numeric formatting. Prefer tighter letter spacing only for large display, not microcopy. Preserve legibility in long support articles: cap line length around 65–75 characters and use generous line height. Optical sizing varies; test text in actual browsers and zoom.
 
 ### Public marketing scale: www only
 
@@ -291,11 +291,11 @@ The table above remains the operational UI scale for merchant, guest, staff, sup
 
 | Public website role | Implemented size / line height | Weight / tracking |
 |---|---|---|
-| Hero, widths from 400px | `clamp(3.35rem, 7vw, 6.25rem)` / 0.98 | 650 / −0.035em |
-| Hero, widths through 399px | 2.85rem / 0.98 | 650 / −0.035em |
-| Marketing section heading | `clamp(2.75rem, 4.9vw, 4.25rem)` / 1.03; 2.45rem through 399px | 700 / −0.035em |
-| Product chapter heading | `clamp(2.25rem, 4vw, 3.6rem)` / 1.05 | 700 / −0.03em |
-| Closing invitation heading | `clamp(3rem, 6.5vw, 6rem)` / 1.03; 2.6rem through 399px | 700 / −0.035em |
+| Hero, widths from 400px | `clamp(3.25rem, 7vw, 6.25rem)` / 1.05 | 650 / −0.035em |
+| Hero, widths through 399px | 2.85rem / 1.05 | 650 / −0.035em |
+| Marketing section heading | `clamp(2.75rem, 5vw, 4.25rem)` / 1.08; 2.45rem through 399px | 700 / −0.035em |
+| Product chapter heading | `clamp(2.25rem, 4vw, 3.6rem)` / 1.08 | 700 / −0.03em |
+| Closing invitation heading | `clamp(3rem, 6.5vw, 6rem)` / 1.08; 2.6rem through 399px | 700 / −0.035em |
 | Article/legal title | `clamp(2.75rem, 4.2vw, 3.5rem)` / 1.05 | 700 / −0.035em |
 | Article/legal section heading | 1.75rem / 1.12 | 700 / −0.03em |
 | Hero introduction | `clamp(1.25rem, 2vw, 1.4375rem)` / 1.45, maximum 54ch | 500 |
@@ -303,7 +303,7 @@ The table above remains the operational UI scale for merchant, guest, staff, sup
 | Chapter summary and detail | `clamp(1.375rem, 2.2vw, 1.625rem)` / 1.35 summary; 1.1875rem / 1.5 detail | 600 summary; 500 detail |
 | Fee figure | `clamp(7rem, 16vw, 14rem)` / 0.85; 8.5rem through 799px | 600 / −0.04em; tabular figures |
 
-The self-hosted variable font declares weights 100–900; the hero's 650 and the public body's 450/500 are supported marketing-specific settings, not replacements for operational weight roles. Because League Spartan's cap-height midpoint sits above the OpenType line-box center, inline icons and arrows inside single-line buttons and links use `translate: 0 -0.08em` for optical vertical centering with the text.
+The self-hosted variable font declares weights 100–900; the hero's 650 and the public body's 450/500 are supported marketing-specific settings, not replacements for operational weight roles. Inline icons and arrows inside single-line buttons and links use `translate: 0 -0.08em` for optical vertical centering with the text.
 
 **The Marketing Scope Rule.** Larger display typography belongs to the public website's explanatory hierarchy; keep the operational UI scale unchanged. Headings wrap naturally, without fixed-height text containers. Body copy retains a maximum 65-character measure where the layout permits; long legal text uses a narrower 760px article container. Test the actual translation at 320px and with enlarged text.
 
@@ -315,7 +315,7 @@ The public container is `min(100% - 96px, 1280px)`, with 32px side gutters throu
 
 The centered introduction uses a single black headline color, with a real smartphone photograph below the copy and actions on desktop. Its one-column grid has a 48px gap, reduced to 32px through 799px; the photograph fills the same container width as the following sections, up to 1280px with a 16:9 crop anchored bottom-center, trimming the top of the original 3:2 photo. Photos have 32px corners. The problem section pairs explanatory text with a separate color café guest portrait in equal columns with a 96px gap and 128px top padding; through 799px it becomes one column with a 32px gap and 80px top padding, and both the hero photograph (`.welcome-main-photo`) and the problem section photograph (`.problem-section .story-photo`) are omitted (`display: none`). The problem portrait is cropped to 4:3 and aligned bottom-center to retain the guest and phone. The team section is centered without photography, with a wide 16:9 staff placeholder beneath its copy. On desktop with normal motion, its frame grows from 88% to 100% as it enters the viewport, using a passive scroll listener and requestAnimationFrame; mobile and reduced motion use full size immediately. The two photographs show distinct scenes and people. Through 399px the introductory actions also stack.
 
-The example-venue strip below the hero contains six localized generic venue placeholders in League Spartan, under the invitation “Hier könnte dein Lokal auftauchen” / “Your venue could be here”, without claiming actual customers or guaranteed promotion. The strip has a 64px top margin, 32px vertical padding and light top/bottom borders. Its duplicated track drifts horizontally over 36 seconds, linearly and infinitely, and pauses on hover or with the 44px pause/resume control. Duplicate content is hidden from assistive technology. Reduced motion removes the animation and duplicate list and shows all six examples in a static three-column grid, reduced to two columns through 599px; the unnecessary pause control is hidden.
+The example-venue strip below the hero contains six localized generic venue placeholders in Lexend, under the invitation “Hier könnte dein Lokal auftauchen” / “Your venue could be here”, without claiming actual customers or guaranteed promotion. The strip has a 64px top margin, 32px vertical padding and light top/bottom borders. Its duplicated track drifts horizontally over 36 seconds, linearly and infinitely, and pauses on hover or with the 44px pause/resume control. Duplicate content is hidden from assistive technology. Reduced motion removes the animation and duplicate list and shows all six examples in a static three-column grid, reduced to two columns through 599px; the unnecessary pause control is hidden.
 
 A left-aligned personal-contact area follows the FAQ, with a light bottom border before the final invitation and no top border. The mailto email link has no arrow or resting underline; hover and keyboard focus underline it, with the focus outline retained. Its heading is `clamp(1.625rem, 2.5vw, 2rem)`, supporting text `clamp(1.25rem, 2vw, 1.4375rem)` (weight 500) and direct email link `clamp(1.75rem, 5.8vw, 5rem)` (weight 600, line height 1.2). It uses 64px/112px top/bottom padding, reduced to 48px/64px through 799px. The final registration invitation follows it.
 
@@ -456,7 +456,7 @@ ARIA rule: use `<nav aria-label="...">` and current route `<a aria-current="page
 
 ## 9. UX conventions for the four products
 
-**Public website (`www/`):** predominantly white pages, strong League Spartan hero and human images, occasional Citron background sections. Make the product model and POS coexistence legible; large uncomplicated CTAs. Mobile-first hierarchy and no exaggerated claims.
+**Public website (`www/`):** predominantly white pages, strong Lexend hero and human images, occasional Citron background sections. Make the product model and POS coexistence legible; large uncomplicated CTAs. Mobile-first hierarchy and no exaggerated claims.
 
 **Merchant product (`app/`):** Citron 300 nav sidebar; Citron 500 selected item with label weight 700 and **regular → fill icon when the item has one**, no marker. Operational screens mostly white and gray. Prioritize actions, filters, order status, sales figures, QR setup and payment account readiness. Multi-step onboarding shows saved progress.
 
@@ -492,7 +492,7 @@ This section controls the design of **codes dynamically generated by the existin
 - **Error correction:** use high error correction **where supported**, test with the actual encoded payload length; a central signet must never be assumed universally scannable. Validate using standard QR encoders/decoders and camera devices.
 - **Quiet zone:** keep **at least four modules** of uninterrupted white on all four outer sides. Preserve perfectly square modules, full contrast, sharp print output and no rounded/blurred dots.
 - **Print target:** preferably 35–50mm+ for typical table uses with ample viewing distance; never rely on arbitrary universal minimum. Determine actual physical module size from QR version and viewing distance; assess around 0.4mm/module for ordinary print, then print-test at actual size.
-- **Content:** any necessary “Scannen & bestellen” label, table/location name or short URL may appear in **black text on white** outside the quiet zone; keep the code itself entirely black and white. Use the same League Spartan typography if printed, no brand color.
+- **Content:** any necessary “Scannen & bestellen” label, table/location name or short URL may appear in **black text on white** outside the quiet zone; keep the code itself entirely black and white. Use the same Lexend typography if printed, no brand color.
 - **Tests:** thermal laser/inkjet and office print, black/white grayscale, low toner, glare, matte/laminated versions, multiple phone cameras, low light, older devices, variable-length URL, slightly angled viewpoint. Check destination accuracy, not just “some QR decodes.”
 - **Operational safeguards:** each code uniquely links to the correct authorized venue/table/context. Avoid exposing guessable private tokens. A print design rule does **not** supersede server-side validation of table/venue identity or checkout links.
 

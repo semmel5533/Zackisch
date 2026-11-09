@@ -125,8 +125,8 @@ export function WebsiteShell({
           className="footer-mark"
           src="/brand/logo/original/wordmark.svg"
           alt="Zackisch"
-          width="420"
-          height="86"
+          width="460"
+          height="95"
           loading="lazy"
         />
       </footer>

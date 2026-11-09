@@ -44,7 +44,7 @@ Playwright Test ist mit Chromium, Desktop- und Mobilprofil, Fehler-Screenshots, 
 
 ## Gestaltung und Zusammenarbeit
 
-[`DESIGN.md`](DESIGN.md) ist die einzige visuelle Spezifikation: schwarze Originalmarken, Weiß, Electric Citron und League Spartan. Impeccable unterstützt Gestaltung und Review; Mobbin liefert mehrere echte Referenzen vor jeder UI-Änderung. Zugängliche Komponenten entstehen auf Base UI. Für die Website dienen insbesondere etablierte Payment-, Banking- und Commerce-Marken als strukturelle Referenzen.
+[`DESIGN.md`](DESIGN.md) ist die einzige visuelle Spezifikation: schwarze Originalmarken, Weiß, Electric Citron und Lexend. Impeccable unterstützt Gestaltung und Review; Mobbin liefert mehrere echte Referenzen vor jeder UI-Änderung. Zugängliche Komponenten entstehen auf Base UI. Für die Website dienen insbesondere etablierte Payment-, Banking- und Commerce-Marken als strukturelle Referenzen.
 
 Fotos stammen ausschließlich aus echten Internet-Stockbeständen mit belegtem kostenlosem kommerziellem Nutzungsrecht. **KI-generierte Fotos sind ausgeschlossen.** Noch fehlende Produktaufnahmen werden mit Text als Platzhalter gekennzeichnet. Der zentrale öffentliche Assetpfad ist `www/public/brand/`, erreichbar über `https://zackisch.com/brand/...`; App, Support, Team Dashboard und E-Mails verwenden diese Adresse.
 

@@ -13,8 +13,8 @@ interface PriceProps {
 }
 
 /**
- * Renders prices with digits (and decimal comma) strictly in League Spartan (tabular-nums),
- * with the same self-hosted League Spartan face for the currency, prefix and surrounding text.
+ * Renders prices with digits (and decimal comma) strictly in Lexend (tabular-nums),
+ * with the same self-hosted Lexend face for the currency, prefix and surrounding text.
  */
 export function Price({
   cents,

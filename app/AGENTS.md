@@ -1,6 +1,6 @@
 # Merchant, staff and guest app: agent rules
 
-Visual contract: follow `../DESIGN.md`, Base UI primitives, Zackisch wrappers and canonical tokens, with League Spartan for UI. Existing layouts are not the redesign reference. Preserve the application-specific functional and security rules below.
+Visual contract: follow `../DESIGN.md`, Base UI primitives, Zackisch wrappers and canonical tokens, with Lexend for UI. Existing layouts are not the redesign reference. Preserve the application-specific functional and security rules below.
 
 Inherit `../AGENTS.md`. Scope: `app/` including the **sole** `app/convex/` backend. This application powers owners, staff tablets and guests. Maintain separate privileges; never let guest routes serialize internal org/Stripe/fee/tax data. All mutations go via the vetted Next.js Server Action boundary and must be checked again in Convex. Protect the existing `checkoutPricing`, payment/webhook status, 001-999 order-number behavior, staff terminal session cookies and live order state machine unless proven change is required and tests are updated.
 

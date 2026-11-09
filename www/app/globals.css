@@ -466,7 +466,7 @@ p {
 .welcome h1 {
   text-align: center;
   font-size: clamp(3.25rem, 7vw, 6.25rem);
-  line-height: 0.98;
+  line-height: 1.05;
   letter-spacing: -0.035em;
   font-weight: 650;
 }
@@ -670,7 +670,7 @@ p {
 .marketing h2 {
   font-size: clamp(2.75rem, 5vw, 4.25rem);
   letter-spacing: -0.035em;
-  line-height: 1.04;
+  line-height: 1.08;
 }
 .chapter-introduction p {
   margin-top: 32px;
@@ -701,7 +701,7 @@ p {
 .chapter-copy h3 {
   font-size: clamp(2.25rem, 4vw, 3.6rem);
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1.08;
   letter-spacing: -0.03em;
 }
 .chapter-summary {
@@ -880,7 +880,7 @@ p {
   }
   .welcome-composition,
   .problem-section {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
   }
   .problem-section {
@@ -890,13 +890,13 @@ p {
     padding-block: 48px 64px;
   }
   .chapter-introduction {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding-block: 80px 40px;
     gap: 24px;
   }
   .menu-chapter {
     position: static;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding: 32px;
     min-height: auto;
     gap: 32px;
@@ -919,7 +919,7 @@ p {
   }
   .service-section,
   .start-section {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
     padding-block: 32px 80px;
   }
@@ -927,20 +927,20 @@ p {
     padding-block: 64px;
   }
   .cost-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 40px;
   }
   .cost-inner h2 {
     grid-column: auto;
   }
   .cost-number {
-    font-size: 8.5rem;
+    font-size: min(8.5rem, 70vw);
   }
   .start-section {
     padding-top: 80px;
   }
   .marketing .questions {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding-bottom: 64px;
     gap: 32px;
   }
@@ -1156,11 +1156,12 @@ p {
   }
   .demo-logo-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
   }
   .demo-logo {
     width: auto;
+    min-width: 0;
   }
   .demo-logo-list[aria-hidden="true"],
   .carousel-toggle {
@@ -1169,7 +1170,7 @@ p {
 }
 @media (max-width: 599px) and (prefers-reduced-motion: reduce) {
   .demo-logo-list {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .demo-logo {
     padding: 16px 4px;
@@ -1183,10 +1184,15 @@ p {
   max-width: 100%;
 }
 .marketing section > *,
+.welcome-copy,
+.menu-chapter,
+.chapter-copy,
+.cost-figure,
+.cost-details,
 .footer-grid > div {
   min-width: 0;
 }
-.marketing :is(h1, h2, h3, p, a),
+.marketing :is(h1, h2, h3, p, a, button),
 .footer-grid :is(a, button, p),
 .demo-logo {
   overflow-wrap: anywhere;
@@ -1232,8 +1238,7 @@ p {
 }
 
 /* Section jumps and page navigation carry different, consistent cues.
-   League Spartan cap-height sits ~0.08em above the line-box midpoint;
-   optical vertical alignment centers icons and arrows with the glyphs. */
+   Optical vertical alignment centers icons and arrows with the glyphs. */
 .section-link {
   text-decoration: none;
 }

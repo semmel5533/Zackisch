@@ -38,7 +38,7 @@
       },
       "marketing-display-mobile": {
         "displayName": "Mobile public website hero",
-        "purpose": "Widths through 399px; inherits weight 650 and line height 0.98 from the hero."
+        "purpose": "Widths through 399px; inherits weight 650 and line height 1.05 from the hero."
       },
       "marketing-headline": {
         "displayName": "Public website section heading",
@@ -148,7 +148,7 @@
       "refersTo": "marketing-button-primary",
       "description": "One dominant registration or task action.",
       "html": "<a class=\"ds-control ds-primary\" href=\"https://app.zackisch.com/sign-up\" target=\"_blank\" rel=\"noopener noreferrer\" aria-description=\"Öffnet in einem neuen Tab\">Lokal einrichten</a>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:14px 24px; border:1px solid transparent; border-radius:999px; font:600 19px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding:14px 24px; border:1px solid transparent; border-radius:999px; font:600 19px/1.25 \"Lexend\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-primary { background:var(--zk-action, #000); color:var(--zk-action-fg, #fff); } .ds-primary:hover { background:var(--zk-neutral-900, #171717); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Marketing secondary action",
@@ -156,7 +156,7 @@
       "refersTo": "marketing-button-secondary",
       "description": "Secondary controls such as the header login pill and mobile navigation.",
       "html": "<a class=\"ds-control ds-secondary\" href=\"https://app.zackisch.com/sign-in\" target=\"_blank\" rel=\"noopener noreferrer\">Anmelden</a>",
-      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 17px/1.25 \"League Spartan\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
+      "css": ".ds-control { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border:1px solid transparent; border-radius:999px; font:600 17px/1.25 \"Lexend\", Arial, sans-serif; text-decoration:none; cursor:pointer; transition:background-color 120ms,border-color 120ms; } .ds-secondary { background:var(--zk-surface, #fff); color:var(--zk-text, #000); border-color:var(--zk-border-strong, #d4d4d4); } .ds-secondary:hover { background:var(--zk-surface-muted, #fafafa); } .ds-control:focus-visible { outline: 2px solid var(--zk-focus, #000); outline-offset: 3px; } @media (prefers-reduced-motion:reduce) { .ds-control { transition:none; } }"
     },
     {
       "name": "Product image placeholder",
@@ -164,35 +164,35 @@
       "refersTo": "marketing-placeholder",
       "description": "Text-only future capture inside a black 6px smartphone frame; the full-width staff variant uses the same border, a muted surface and a 16:9 preferred ratio. No fabricated product UI.",
       "html": "<figure class=\"ds-placeholder\"><figcaption>Platzhalter · Produktaufnahme folgt</figcaption><p>Hier erscheint: Gäste-Menü</p></figure>",
-      "css": ".ds-placeholder { margin:0; display:grid; align-content:center; justify-items:center; justify-content:center; gap:24px; width:min(100%,280px); aspect-ratio:9/18; padding:32px 20px; border:6px solid var(--zk-text, #000); border-radius:40px; background:var(--zk-page, #fff); color:var(--zk-text, #000); text-align:center; font-family:\"League Spartan\", Arial, sans-serif; } .ds-placeholder p { margin:0; font-size:24px; line-height:1.25; max-width:24ch; font-weight:500; } .ds-placeholder figcaption { font-size:14px; font-weight:500; } .ds-placeholder.staff { width:100%; aspect-ratio:16/9; min-height:auto; border-radius:24px; background:var(--zk-surface-muted, #fafafa); }"
+      "css": ".ds-placeholder { margin:0; display:grid; align-content:center; justify-items:center; justify-content:center; gap:24px; width:min(100%,280px); aspect-ratio:9/18; padding:32px 20px; border:6px solid var(--zk-text, #000); border-radius:40px; background:var(--zk-page, #fff); color:var(--zk-text, #000); text-align:center; font-family:\"Lexend\", Arial, sans-serif; } .ds-placeholder p { margin:0; font-size:24px; line-height:1.25; max-width:24ch; font-weight:500; } .ds-placeholder figcaption { font-size:14px; font-weight:500; } .ds-placeholder.staff { width:100%; aspect-ratio:16/9; min-height:auto; border-radius:24px; background:var(--zk-surface-muted, #fafafa); }"
     },
     {
       "name": "Public navigation link",
       "kind": "nav",
       "description": "Visible text navigation with an underline on hover and a distinct keyboard outline.",
       "html": "<nav class=\"ds-nav\" aria-label=\"Hauptnavigation\"><a href=\"#kosten\">Kosten</a><a href=\"#hilfe\">Hilfe</a></nav>",
-      "css": ".ds-nav { display:flex; gap:32px; font-family:\"League Spartan\", Arial, sans-serif; } .ds-nav a { color:var(--zk-text, #000); padding:12px 0; font-weight:600; text-decoration:none; } .ds-nav a:hover { text-decoration:underline; text-underline-offset:.2em; } .ds-nav a:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
+      "css": ".ds-nav { display:flex; gap:32px; font-family:\"Lexend\", Arial, sans-serif; } .ds-nav a { color:var(--zk-text, #000); padding:12px 0; font-weight:600; text-decoration:none; } .ds-nav a:hover { text-decoration:underline; text-underline-offset:.2em; } .ds-nav a:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
     },
     {
       "name": "Inline explanatory link",
       "kind": "custom",
       "description": "A secondary text destination within explanatory content.",
       "html": "<a class=\"ds-inline-link\" href=\"#gebuehren\">Gebühren und Voraussetzungen ansehen</a>",
-      "css": ".ds-inline-link { display:inline-flex; align-items:center; padding:12px 0; font:600 16px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-link, #000); text-underline-offset:.2em; } .ds-inline-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
+      "css": ".ds-inline-link { display:inline-flex; align-items:center; padding:12px 0; font:600 16px/1.5 \"Lexend\", Arial, sans-serif; color:var(--zk-link, #000); text-underline-offset:.2em; } .ds-inline-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
     },
     {
       "name": "Footer text link",
       "kind": "nav",
       "description": "Section links and the privacy-settings action underline on hover. Other-page links show a persistent arrow and no hover underline; external hosts open a new tab with an accessible notice.",
       "html": "<a class=\"ds-footer-link\" href=\"/de-de#questions\">Fragen</a>",
-      "css": ".ds-footer-link { display:inline-block; padding-block:12px; font:400 14px/1.5 \"League Spartan\", Arial, sans-serif; color:var(--zk-text, #000); text-decoration:none; } .ds-footer-link:hover { text-decoration:underline; } .ds-footer-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
+      "css": ".ds-footer-link { display:inline-block; padding-block:12px; font:400 14px/1.5 \"Lexend\", Arial, sans-serif; color:var(--zk-text, #000); text-decoration:none; } .ds-footer-link:hover { text-decoration:underline; } .ds-footer-link:focus-visible { outline:2px solid var(--zk-focus, #000); outline-offset:3px; }"
     }
   ],
   "narrative": {
     "northStar": "Human service, without unnecessary waiting.",
     "overview": "Zackisch adds optional browser-based QR ordering and payments to existing hospitality workflows. Table service and counter pickup are both supported. The restaurant keeps its POS and service choices; guests do not need an app/account.",
     "keyCharacteristics": [
-      "League Spartan across marketing and app.",
+      "Lexend across marketing and app.",
       "Unchanged black wordmark and signet; only the public footer wordmark uses owner-authorized CSS opacity 0.22.",
       "White, black and Electric Citron."
     ],

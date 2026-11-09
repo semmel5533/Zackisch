@@ -33,7 +33,7 @@ test("language drafts cancel safely and save across reload", async ({
     page.getByRole("button", { name: "Region & Language" }),
   ).toBeFocused();
 });
-test("app typography is self-hosted League Spartan", async ({
+test("app typography is self-hosted Lexend", async ({
   page,
   context,
 }) => {
@@ -43,14 +43,14 @@ test("app typography is self-hosted League Spartan", async ({
     await document.fonts.ready;
     return {
       family: getComputedStyle(document.body).fontFamily,
-      loaded: document.fonts.check('16px "League Spartan"'),
+      loaded: document.fonts.check('16px "Lexend"'),
       external: performance
         .getEntriesByType("resource")
         .map((r) => r.name)
         .filter((url) => /fonts\.(googleapis|gstatic)\.com/.test(url)),
     };
   });
-  expect(fonts.family).toContain("League Spartan");
+  expect(fonts.family).toContain("Lexend");
   expect(fonts.loaded).toBe(true);
   expect(fonts.external).toEqual([]);
 });

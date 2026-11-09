@@ -1,6 +1,6 @@
 # Support app: agent rules
 
-Visual contract: follow `../DESIGN.md`, Base UI primitives, Zackisch wrappers and canonical tokens, with League Spartan for UI. Existing layouts are not the redesign reference. Preserve the application-specific functional and security rules below.
+Visual contract: follow `../DESIGN.md`, Base UI primitives, Zackisch wrappers and canonical tokens, with Lexend for UI. Existing layouts are not the redesign reference. Preserve the application-specific functional and security rules below.
 
 Inherit `../AGENTS.md`. Scope: `support/`; Cloudflare Workers/vinext, Next.js 16, React, Tailwind, Base UI and `next-intl`. Use shared `../app/convex` only. Public regional knowledge-base content at `/de-de` and `/de-en` is readable without login and crawlable where appropriate. Private `/tickets` routes require the existing account's secure identity, verified business ownership and a region match; no second user store. Ensure deep links retain locale and return safely after login.
 

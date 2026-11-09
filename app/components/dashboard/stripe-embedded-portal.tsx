@@ -105,7 +105,7 @@ export function StripeEmbeddedPortal({
           overlays: "dialog",
           variables: {
             colorPrimary: "#000000",
-            fontFamily: "League Spartan, -apple-system, BlinkMacSystemFont, sans-serif",
+            fontFamily: "Lexend, -apple-system, BlinkMacSystemFont, sans-serif",
             borderRadius: "12px",
           },
         },

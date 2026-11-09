@@ -14,7 +14,7 @@ describe("founder-supplied brand exports", () => {
   });
   it("uses a valid font-family and central cross-origin font source", () => {
     const css = readFileSync(resolve(assets,"tokens/tokens.css"),"utf8");
-    expect(css).toContain('--zk-typography-font-family-base: "League Spartan", Arial, sans-serif;');
+    expect(css).toContain('--zk-typography-font-family-base: "Lexend", Arial, sans-serif;');
     expect(readFileSync(resolve(assets,"fonts/fonts.css"),"utf8")).toContain('https://zackisch.com/brand/fonts/');
   });
 });

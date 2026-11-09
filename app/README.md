@@ -20,7 +20,7 @@ Die Browserprüfung läuft vom Repository-Root mit `TEST_APP=app npm run test:br
 
 ## Gestaltung, Recht und Betrieb
 
-[`../DESIGN.md`](../DESIGN.md) definiert League Spartan, die neuen Originalmarken und die gemeinsame visuelle Sprache. Neue und geänderte UI wird mit Impeccable, mehreren Mobbin-Referenzen und Base UI umgesetzt und mit Playwright geprüft. Die neue Spezifikation allein bedeutet nicht, dass alle bestehenden Ansichten bereits vollständig neu gestaltet sind. Fotos dürfen nur echte, kostenlos kommerziell nutzbare Internet-Stockfotos sein; KI-generierte Fotos sind ausgeschlossen. Fehlende Produktaufnahmen bleiben beschriftete Platzhalter.
+[`../DESIGN.md`](../DESIGN.md) definiert Lexend, die neuen Originalmarken und die gemeinsame visuelle Sprache. Neue und geänderte UI wird mit Impeccable, mehreren Mobbin-Referenzen und Base UI umgesetzt und mit Playwright geprüft. Die neue Spezifikation allein bedeutet nicht, dass alle bestehenden Ansichten bereits vollständig neu gestaltet sind. Fotos dürfen nur echte, kostenlos kommerziell nutzbare Internet-Stockfotos sein; KI-generierte Fotos sind ausgeschlossen. Fehlende Produktaufnahmen bleiben beschriftete Platzhalter.
 
 Branding wird ausschließlich unter `https://zackisch.com/brand/...` von der Website ausgeliefert. Die anwendungsübergreifenden Sicherheits-, Zahlungs-, Datenschutz-, Rechtsrecherche-, Backup- und Releasepflichten stehen in [`../AGENTS.md`](../AGENTS.md). Öffentliches Hosting einer Vertragsvorlage ist keine rechtliche Freigabe. Produktionsänderungen und Echtgeldaktionen benötigen ausdrückliche Zustimmung.
 

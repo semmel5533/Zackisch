@@ -108,7 +108,7 @@ export function generateOrderConfirmationHtml(
     @page { margin: 15mm; size: portrait; }
     * { box-sizing: border-box; }
     body {
-      font-family: 'League Spartan', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #111;
       background: #fff;
       margin: 0;
@@ -195,7 +195,7 @@ export function generateOrderConfirmationHtml(
       color: #000;
     }
     .badge-number .num {
-      font-family: 'League Spartan', sans-serif;
+      font-family: 'Lexend', sans-serif;
       font-weight: 900;
       font-variant-numeric: tabular-nums;
     }
@@ -231,7 +231,7 @@ export function generateOrderConfirmationHtml(
     }
     .col-qty {
       width: 36px;
-      font-family: 'League Spartan', sans-serif;
+      font-family: 'Lexend', sans-serif;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -240,7 +240,7 @@ export function generateOrderConfirmationHtml(
     .col-price {
       width: 90px;
       text-align: right;
-      font-family: 'League Spartan', sans-serif;
+      font-family: 'Lexend', sans-serif;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -260,7 +260,7 @@ export function generateOrderConfirmationHtml(
     }
     .total-label { font-size: 16px; font-weight: 700; color: #000; }
     .total-price {
-      font-family: 'League Spartan', sans-serif;
+      font-family: 'Lexend', sans-serif;
       font-size: 22px;
       font-weight: 900;
       font-variant-numeric: tabular-nums;
@@ -355,7 +355,7 @@ export function generateOrderConfirmationHtml(
       tipCents > 0
         ? `<div class="sub-row">
             <span>${isDe ? "Freiwilliges Trinkgeld" : "Voluntary tip"}</span>
-            <span style="font-family:'League Spartan',sans-serif;font-weight:700;">${formatCents(tipCents)} €</span>
+            <span style="font-family:'Lexend',sans-serif;font-weight:700;">${formatCents(tipCents)} €</span>
           </div>`
         : ""
     }

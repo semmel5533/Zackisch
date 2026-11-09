@@ -1,5 +1,5 @@
 import { test, expect } from "../brand-fixture";
-test("support portal renders knowledge base, fits 320px without overflow, and uses self-hosted League Spartan", async ({
+test("support portal renders knowledge base, fits 320px without overflow, and uses self-hosted Lexend", async ({
   page,
   context,
 }) => {
@@ -24,7 +24,7 @@ test("support portal renders knowledge base, fits 320px without overflow, and us
     };
   });
   expect(metrics.overflow).toBe(false);
-  expect(metrics.family).toContain("League Spartan");
+  expect(metrics.family).toContain("Lexend");
   expect(metrics.externalFonts).toEqual([]);
 });
 test("support ticket portal requires merchant authentication when unauthenticated", async ({

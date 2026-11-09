@@ -99,7 +99,7 @@ function StyledQRCode({ value, size }: { value: string; size: number }) {
 
 function getInkMetrics(
   text: string,
-  font: string = "700 100px League Spartan, sans-serif",
+  font: string = "700 100px Lexend, sans-serif",
 ) {
   if (typeof document === "undefined") {
     const estWidth = Math.max(text.length * 50, 200);
@@ -168,7 +168,7 @@ function InkScaledText({
       if (textRef.current) {
         try {
           const bbox = textRef.current.getBBox();
-          const ink = getInkMetrics(displayText, "700 100px League Spartan, sans-serif");
+          const ink = getInkMetrics(displayText, "700 100px Lexend, sans-serif");
           setViewBox(`${bbox.x} ${-ink.ascent} ${bbox.width} ${ink.height}`);
         } catch {}
       }
@@ -192,7 +192,7 @@ function InkScaledText({
         dominantBaseline="alphabetic"
         fill="currentColor"
         className="font-bold tracking-tighter font-inter tabular-nums"
-        style={{ font: "700 100px League Spartan, sans-serif" }}
+        style={{ font: "700 100px Lexend, sans-serif" }}
       >
         {displayText}
       </text>
@@ -210,7 +210,7 @@ function InkConnectorText({
   className?: string;
 }) {
   const displayText = text.toLowerCase();
-  const font = `700 ${fontSize}px League Spartan, sans-serif`;
+  const font = `700 ${fontSize}px Lexend, sans-serif`;
   const [metrics, setMetrics] = useState(() => ({
     viewBox: `0 -${fontSize} ${displayText.length * fontSize} ${fontSize}`,
     height: fontSize,

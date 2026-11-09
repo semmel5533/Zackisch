@@ -184,7 +184,7 @@ export const designTokens = {
   "color.semantic.scrollbar.track": "#FAFAFA",
   "color.semantic.avatar.background": "#F5F5F5",
   "color.semantic.avatar.placeholder": "#404040",
-  "typography.font.family.base": ["League Spartan", "Arial", "sans-serif"],
+  "typography.font.family.base": ["Lexend", "Arial", "sans-serif"],
   "typography.font.weight.regular": "400",
   "typography.font.weight.medium": "500",
   "typography.font.weight.semibold": "600",
