@@ -10,7 +10,7 @@ Der Ticketbereich führt offene und zugewiesene Fälle, Antworten, interne Notiz
 
 ## Technik und Entwicklung
 
-Next.js 16, React 19, TypeScript, Tailwind CSS 4, Base UI, lokalisierte UI-Texte und Cloudflare Workers/vinext. Backend ist die gemeinsame Convex-Instanz in `../app/convex`. In `internal/`: `npm ci` und die verfügbaren `dev`, `typecheck`, `test`, `build:cloudflare`, `check:cloudflare`-Kommandos aus `package.json`. Interne Funktionen dürfen nie öffentlich indexiert werden. Siehe [zentrale Regeln](../AGENTS.md).
+Next.js 16, React 19, TypeScript, Tailwind CSS 4, Base UI, lokalisierte UI-Texte und Cloudflare Workers/vinext. Backend ist die gemeinsame Convex-Instanz in `../app/convex`. In `internal/`: `npm ci` und die verfügbaren `dev`, `typecheck`, `test`, `test:browser`, `build:cloudflare`, `check:cloudflare`-Kommandos aus `package.json`. Interne Funktionen dürfen nie öffentlich indexiert werden. Siehe [zentrale Regeln](../AGENTS.md).
 
 ## Gestaltung, Recht und Betrieb
 

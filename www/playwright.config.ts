@@ -1,15 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const target = process.env.TEST_APP ?? "www";
 const browser = process.env.TEST_BROWSER ?? "chromium";
 if (browser !== "chromium" && browser !== "firefox" && browser !== "webkit")
   throw new Error("Invalid TEST_BROWSER");
-if (!["www", "app", "support", "internal"].includes(target))
-  throw new Error("Invalid TEST_APP");
-const port = { www: 3000, app: 3001, internal: 3002, support: 3003 }[
-  target as "www"
-];
-const baseURL = process.env.WEBSITE_TEST_URL ?? `http://127.0.0.1:${port}`;
+const baseURL = process.env.WEBSITE_TEST_URL ?? "http://127.0.0.1:3000";
 const desktop =
   devices[
     browser === "firefox"
@@ -28,18 +22,15 @@ const mobile =
     : devices[browser === "webkit" ? "iPhone 13" : "Pixel 7"];
 
 export default defineConfig({
-  testDir: `./tests/browser/${target}`,
+  testDir: "./tests/browser",
   fullyParallel: true,
-  outputDir: `test-results/${target}/${browser}`,
+  outputDir: `test-results/${browser}`,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   workers: 2,
   reporter: [
     ["list"],
-    [
-      "html",
-      { open: "never", outputFolder: `playwright-report/${target}/${browser}` },
-    ],
+    ["html", { open: "never", outputFolder: `playwright-report/${browser}` }],
   ],
   use: {
     baseURL,
@@ -64,8 +55,8 @@ export default defineConfig({
   webServer: process.env.WEBSITE_TEST_URL
     ? undefined
     : {
-        command: `npm run dev --prefix ${target} -- --hostname 127.0.0.1`,
-        url: `${baseURL}${target === "www" || target === "support" ? "/de-de" : "/sign-in"}`,
+        command: "npm run dev -- --hostname 127.0.0.1",
+        url: `${baseURL}/de-de`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
       },

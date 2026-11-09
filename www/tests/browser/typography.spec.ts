@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 test("uses self-hosted Lexend without external font requests", async ({
   page,
-  context,
 }) => {
   await page.goto("/");
   const result = await page.evaluate(async () => {

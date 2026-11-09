@@ -14,9 +14,9 @@ Next.js 16, React 19, TypeScript, Tailwind CSS 4, `next-intl`, `@base-ui/react` 
 
 ## Entwicklung und Tests
 
-In `app/`: `npm ci`, `npx convex dev` für eine isolierte Entwicklungsumgebung und die im `package.json` definierten `dev`, `typecheck`, `test`, `build:cloudflare` und `check:cloudflare`-Skripte. Keine produktiven Convex-Restores oder Stripe-Live-Tests ohne Freigabe. Siehe [zentrale Regeln](../AGENTS.md).
+In `app/`: `npm ci`, `npx convex dev` für eine isolierte Entwicklungsumgebung und die im `package.json` definierten `dev`, `typecheck`, `test`, `test:browser`, `build:cloudflare` und `check:cloudflare`-Skripte. Keine produktiven Convex-Restores oder Stripe-Live-Tests ohne Freigabe. Siehe [zentrale Regeln](../AGENTS.md).
 
-Die Browserprüfung läuft vom Repository-Root mit `TEST_APP=app npm run test:browser`. Der Menütest benötigt `E2E_GUEST_PATH` (öffentlicher Pfad eines Entwicklungslokals) und `E2E_SIMPLE_ITEM_NAME` (verfügbarer Artikel ohne Optionen); ohne diese Angaben wird er ausdrücklich übersprungen. Er verändert ausschließlich den lokalen Warenkorb und löst keine Zahlung aus. Mit `E2E_CUSTOM_ITEM_NAME` wird zusätzlich die vorbereitete Größen-/Belag-Fixture geprüft (Klassisch/Familienpizza, Champignons; Gesamtpreis 15,50 €). Die Artikelauswahl verwendet Base-UI-Radios und -Checkboxen, zeigt Pflichtfehler am betroffenen Abschnitt und sperrt beschädigte Optionsdefinitionen.
+Die Browserprüfung läuft in `app/` mit `npm run test:browser` (beziehungsweise `npm run test:browser --prefix app`). Der Menütest benötigt `E2E_GUEST_PATH` (öffentlicher Pfad eines Entwicklungslokals) und `E2E_SIMPLE_ITEM_NAME` (verfügbarer Artikel ohne Optionen); ohne diese Angaben wird er ausdrücklich übersprungen. Er verändert ausschließlich den lokalen Warenkorb und löst keine Zahlung aus. Mit `E2E_CUSTOM_ITEM_NAME` wird zusätzlich die vorbereitete Größen-/Belag-Fixture geprüft (Klassisch/Familienpizza, Champignons; Gesamtpreis 15,50 €). Die Artikelauswahl verwendet Base-UI-Radios und -Checkboxen, zeigt Pflichtfehler am betroffenen Abschnitt und sperrt beschädigte Optionsdefinitionen.
 
 ## Gestaltung, Recht und Betrieb
 

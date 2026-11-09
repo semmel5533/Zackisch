@@ -10,7 +10,7 @@ Angemeldete Betreiber eröffnen Tickets für den eigenen Betrieb, lesen Antworte
 
 ## Technik und Entwicklung
 
-Eigenes Next.js-16-Projekt mit React 19, TypeScript, Tailwind CSS 4, Base UI, `next-intl` und Cloudflare Workers/vinext. Das Projekt nutzt das bestehende Convex-Backend in `../app/convex`, keine zusätzliche Datenbank und keinen zweiten Accountspeicher. Authentifizierung und regionale Isolation sind mit der Betreiber-App abgestimmt. Aus `support/`: `npm ci` und die im Manifest dokumentierten `dev`, `typecheck`, `test`, `build:cloudflare` und `check:cloudflare`-Skripte. Details: [zentrale Regeln](../AGENTS.md).
+Eigenes Next.js-16-Projekt mit React 19, TypeScript, Tailwind CSS 4, Base UI, `next-intl` und Cloudflare Workers/vinext. Das Projekt nutzt das bestehende Convex-Backend in `../app/convex`, keine zusätzliche Datenbank und keinen zweiten Accountspeicher. Authentifizierung und regionale Isolation sind mit der Betreiber-App abgestimmt. Aus `support/`: `npm ci` und die im Manifest dokumentierten `dev`, `typecheck`, `test`, `test:browser`, `build:cloudflare` und `check:cloudflare`-Skripte. Details: [zentrale Regeln](../AGENTS.md).
 
 ## Gestaltung, Recht und Betrieb
 

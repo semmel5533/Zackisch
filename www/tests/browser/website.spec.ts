@@ -5,7 +5,6 @@ for (const [locale, lang, title] of [
 ]) {
   test(`${locale} has localized metadata and fits small screens`, async ({
     page,
-    context,
   }) => {
     await page.setViewportSize({ width: 320, height: 800 });
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -32,7 +31,6 @@ for (const [locale, lang, title] of [
 }
 test("mobile menu closes after anchor selection and returns focus on Escape", async ({
   page,
-  context,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/de-de");
@@ -74,7 +72,7 @@ test("FAQ and privacy controls work without optional cookies", async ({
   await expect(page.getByRole("dialog")).toBeHidden();
   expect(await context.cookies()).toEqual([]);
 });
-test("unknown routes return an actual 404", async ({ page, context }) => {
+test("unknown routes return an actual 404", async ({ page }) => {
   const response = await page.request.get("/de-de/unknown-page");
   expect(response.status()).toBe(404);
   await page.goto("/de-de/unknown-page");
@@ -82,7 +80,7 @@ test("unknown routes return an actual 404", async ({ page, context }) => {
     page.getByRole("heading", { name: "Diese Seite gibt es nicht" }),
   ).toBeVisible();
 });
-test("marketing images load from the local host", async ({ page, context }) => {
+test("marketing images load from the local host", async ({ page }) => {
   await page.goto("/de-de");
   const sources = await page.evaluate(() =>
     [...document.images].map((image) => image.src),
@@ -100,7 +98,6 @@ for (const [locale, title, privacy] of [
 ]) {
   test(`${locale} exposes editable legal pages through normal footer navigation`, async ({
     page,
-    context,
   }) => {
     await page.setViewportSize({ width: 320, height: 800 });
     await page.goto(`/${locale}`);
@@ -138,7 +135,6 @@ for (const [locale, merchant, guest] of [
 ]) {
   test(`${locale} distinguishes merchant agreement and guest information`, async ({
     page,
-    context,
   }) => {
     await page.setViewportSize({ width: 320, height: 800 });
     await page.goto(`/${locale}`);
@@ -170,7 +166,6 @@ for (const [locale, label] of [
 ]) {
   test(`${locale} opens platform privacy separately from website privacy`, async ({
     page,
-    context,
   }) => {
     await page.setViewportSize({ width: 320, height: 800 });
     await page.goto(`/${locale}`);
@@ -213,7 +208,6 @@ for (const [locale, label, annex] of [
 ]) {
   test(`${locale} makes the processing agreement and its annexes accessible`, async ({
     page,
-    context,
   }) => {
     await page.setViewportSize({ width: 320, height: 800 });
     await page.goto(`/${locale}`);

@@ -1,4 +1,4 @@
-import { test, expect } from "../brand-fixture";
+import { test, expect } from "./brand-fixture";
 test("support portal renders knowledge base, fits 320px without overflow, and uses self-hosted Lexend", async ({
   page,
   context,

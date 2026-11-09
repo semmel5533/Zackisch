@@ -1,4 +1,4 @@
-import { test, expect } from "../brand-fixture";
+import { test, expect } from "./brand-fixture";
 test("guest menu changes local quantities and opens the cart", async ({
   page,
   context,

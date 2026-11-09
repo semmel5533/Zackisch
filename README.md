@@ -27,20 +27,19 @@ Das Lokal bleibt Verkäufer. Zackischs Bestell- und Zahlungsbestätigung ist kei
 
 ## Entwicklung
 
-Jeder Anwendungsordner hat ein eigenes `package.json` und Lockfile. Abhängigkeiten werden mit `npm ci` im jeweiligen Ordner installiert; die Werkzeuge für das Gesamtprojekt zusätzlich im Repository-Root.
+Das Repository-Root enthält keine JavaScript-Konfiguration und kein eigenes `package.json`. Jeder der vier Anwendungsordner (`www/`, `app/`, `support/`, `internal/`) ist eigenständig und besitzt ein eigenes `package.json`, Lockfile, Vitest-Setup und eine eigene Playwright-Konfiguration (`playwright.config.ts`, Browsertests unter `tests/browser/`). Abhängigkeiten und Skripte werden direkt im jeweiligen Anwendungsordner oder per `--prefix` ausgeführt.
 
 ```sh
-npm ci
 npm ci --prefix www
 npm run dev --prefix www
-npm run test:unit
-npm run typecheck
-npm run test:browser
+npm run test --prefix www
+npm run typecheck --prefix www
+npm run test:browser --prefix www
 ```
 
-Die lokalen Entwicklungsports sind 3000 für die Website, 3001 für die App, 3002 für das Team Dashboard und 3003 für Support. Die jeweiligen Manifest-Skripte sind maßgeblich. Backendabhängige Abläufe benötigen eine passend konfigurierte Entwicklungsumgebung; Zugangsdaten gehören nicht ins Repository.
+Die lokalen Entwicklungsports sind 3000 für die Website, 3001 für die App, 3002 für das Team Dashboard und 3003 für Support. Die jeweiligen Manifest-Skripte (`dev`, `test`, `test:browser`, `typecheck`, `lint`, `build`) sind maßgeblich. Backendabhängige Abläufe benötigen eine passend konfigurierte Entwicklungsumgebung; Zugangsdaten gehören nicht ins Repository.
 
-Playwright Test ist mit Chromium, Desktop- und Mobilprofil, Fehler-Screenshots, Traces und axe-Prüfung eingerichtet. `WEBSITE_TEST_URL` erlaubt Tests gegen einen bereits gestarteten lokalen oder freigegebenen Testserver. Die Tests aller vier Anwendungen laufen über dieselbe Playwright-Konfiguration; `TEST_APP=app`, `TEST_APP=support` oder `TEST_APP=internal` wählt die jeweilige Anwendung. Tests mit fehlenden Backend-Fixtures beweisen keine vollständige Anbieterzahlung.
+Playwright Test ist in jedem Teilprojekt mit Chromium (optional `TEST_BROWSER=firefox` oder `TEST_BROWSER=webkit`), Desktop- und Mobilprofil, Fehler-Screenshots, Traces und axe-Prüfung eingerichtet. `WEBSITE_TEST_URL` erlaubt Tests gegen einen bereits gestarteten lokalen oder freigegebenen Testserver. Tests mit fehlenden Backend-Fixtures beweisen keine vollständige Anbieterzahlung.
 
 ## Gestaltung und Zusammenarbeit
 

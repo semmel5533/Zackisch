@@ -16,14 +16,14 @@ Auf Desktop laufen die drei Funktionskapitel beim Scrollen übereinander. Browse
 
 ## Lokal arbeiten
 
-Vom Repository-Root:
+Im Ordner `www/` (oder vom Repository-Root mit `--prefix www`):
 
 ```sh
 npm run dev --prefix www
 npm run lint --prefix www
 npm run typecheck --prefix www
 npm run test --prefix www
-npm run test:browser
+npm run test:browser --prefix www
 npm run build --prefix www
 npm run dev:pages --prefix www
 ```

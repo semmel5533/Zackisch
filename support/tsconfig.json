@@ -40,8 +40,6 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "e2e.config.ts",
-    "tests/**/*.e2e.ts"
+    "node_modules"
   ]
 }

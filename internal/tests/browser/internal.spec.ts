@@ -1,4 +1,4 @@
-import { test, expect } from "../brand-fixture";
+import { test, expect } from "./brand-fixture";
 test("internal sign-in fits 320px, uses self-hosted Lexend, and opens region/language dialog", async ({
   page,
   context,

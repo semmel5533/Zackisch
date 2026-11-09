@@ -6,7 +6,7 @@ import { resolve, extname, sep } from "node:path";
 // This is not evidence that these assets are already available in production.
 export const test = base.extend({
   page: async ({ page }, use) => {
-    const brandDir = resolve("www/public/brand");
+    const brandDir = resolve(import.meta.dirname, "../../../www/public/brand");
     await page.route("https://zackisch.com/brand/**", async (route) => {
       const path = resolve(
         brandDir,

@@ -67,6 +67,6 @@ node_modules/
 **/.e2e/
 
 # Browser verification and local design evidence
-/playwright-report/
-/test-results/
+playwright-report/
+test-results/
 /.impeccable/review/

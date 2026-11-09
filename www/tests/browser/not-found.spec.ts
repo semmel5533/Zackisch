@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { pageSlugs } from "../../../www/lib/content";
+import { pageSlugs } from "../../lib/content";
 
 for (const [path, language] of [
   ["/de-de/asd", "de"],

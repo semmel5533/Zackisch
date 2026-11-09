@@ -1,6 +1,6 @@
 {
   "name": "www",
-  "version": "0.8.14",
+  "version": "0.8.15",
   "type": "module",
   "private": true,
   "scripts": {
@@ -11,6 +11,8 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
+    "test:browser": "playwright test",
+    "test:e2e": "playwright test",
     "dev:pages": "wrangler pages dev out",
     "deploy:pages": "wrangler pages deploy out"
   },
@@ -25,8 +27,10 @@
     "sharp": "^0.35.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@babel/plugin-transform-runtime": "^7.29.7",
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "1.65.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^26",

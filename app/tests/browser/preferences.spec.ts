@@ -1,4 +1,4 @@
-import { test, expect } from "../brand-fixture";
+import { test, expect } from "./brand-fixture";
 test("language drafts cancel safely and save across reload", async ({
   page,
   context,

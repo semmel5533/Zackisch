@@ -36,7 +36,9 @@ for (const locale of ["de-de", "de-en"] as const) {
     await page.goto(`/${locale}`);
     for (const src of await page
       .locator("img")
-      .evaluateAll((images) => images.map((image) => image.src))) {
+      .evaluateAll((images) =>
+        images.map((image) => (image as HTMLImageElement).src),
+      )) {
       const response = await request.get(src);
       expect(response.ok(), src).toBe(true);
       expect(response.headers()["content-type"]).toMatch(/^image\//);
