@@ -80,12 +80,10 @@ test("region pills share sizing and header ghost differs from footer outlines", 
     await page.setViewportSize({ width, height: 900 });
     const header = page.locator("header .region-trigger");
     const footer = page.locator("footer .region-trigger");
-    const footerResearch = page.locator(".footer-research");
     for (const control of [
       ...(width >= 1250 ? [header] : []),
       footer,
       page.locator(".footer-help"),
-      footerResearch,
     ]) {
       await expect(control).toHaveCSS("height", "48px");
       await expect(control).toHaveCSS("font-size", "17px");
@@ -105,10 +103,6 @@ test("region pills share sizing and header ghost differs from footer outlines", 
     await expect(header).toHaveCSS("border-color", "rgba(0, 0, 0, 0)");
     await expect(footer).not.toHaveCSS("border-color", "rgba(0, 0, 0, 0)");
     await expect(page.locator(".footer-help")).not.toHaveCSS(
-      "border-color",
-      "rgba(0, 0, 0, 0)",
-    );
-    await expect(footerResearch).not.toHaveCSS(
       "border-color",
       "rgba(0, 0, 0, 0)",
     );

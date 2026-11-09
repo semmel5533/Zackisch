@@ -5,7 +5,7 @@ test("header and footer locale dialogs retain the page and use native language l
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/de-de/research");
+  await page.goto("/de-de/privacy");
   const triggers = page.getByRole("button", {
     name: "Region & Sprache: Deutschland",
   });
@@ -27,7 +27,7 @@ test("header and footer locale dialogs retain the page and use native language l
       name: "Germany English",
     });
     await expect(activeOption).toHaveAttribute("aria-current", "page");
-    await expect(inactiveOption).toHaveAttribute("href", "/de-en/research");
+    await expect(inactiveOption).toHaveAttribute("href", "/de-en/privacy");
     const activeBg = await activeOption.evaluate(
       (el) => getComputedStyle(el).backgroundColor,
     );
@@ -52,7 +52,7 @@ test("header and footer locale dialogs retain the page and use native language l
     .getByRole("dialog")
     .getByRole("link", { name: "Germany English" })
     .click();
-  await expect(page).toHaveURL(/\/de-en\/research$/);
+  await expect(page).toHaveURL(/\/de-en\/privacy$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(
     page.getByRole("button", { name: "Region & language: Germany" }),
@@ -77,7 +77,7 @@ test("locale dialog passes the automated accessibility scan", async ({
     browserName === "firefox",
     "The current Firefox runner crashes during axe dialog scanning; interaction tests and homepage axe still run",
   );
-  await page.goto("/de-de/research");
+  await page.goto("/de-de/privacy");
   await page.locator(".site-footer .region-trigger").click();
   await expect(page.getByRole("dialog")).toBeVisible();
   expect(
@@ -194,7 +194,7 @@ test("photographs load and the footer ends immediately after its full-width word
   expect(bounds.gap).toBeLessThanOrEqual(9);
   expect(bounds.opacity).toBeGreaterThan(0);
   expect(bounds.opacity).toBeLessThan(1);
-  await expect(page.locator(".marketing img")).toHaveCount(2);
+  await expect(page.locator(".marketing img")).toHaveCount(3);
   await expect(page.locator(".site-footer .region-trigger")).toHaveCSS(
     "background-color",
     "rgba(0, 0, 0, 0)",
@@ -205,7 +205,7 @@ test("photographs load and the footer ends immediately after its full-width word
   );
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".welcome-main-photo")).toBeHidden();
-  await expect(page.locator(".problem-section .story-photo")).toBeHidden();
+  await expect(page.locator(".problem-photos")).toBeHidden();
   await expect(page.locator(".footer-grid")).toHaveCSS("text-align", "center");
   await expect(page.locator(".footer-grid > div").first()).toHaveCSS(
     "align-items",
@@ -329,6 +329,18 @@ for (const locale of ["de-de", "de-en"]) {
       german ? "Schreibe mir persönlich" : "Write to me personally",
     );
     await expect(page.locator(".personal-contact p")).toHaveCount(0);
+    await expect(page.locator(".problem-study .study-number")).toHaveText("27%");
+    await expect(page.locator(".problem-study")).toContainText(
+      german ? "Lightspeed und Medallia" : "Lightspeed and Medallia",
+    );
+    await expect(page.locator(".founder-section h2")).toHaveText(
+      german ? "Warum ich Zackisch baue" : "Why I’m building Zackisch",
+    );
+    await expect(page.locator(".founder-signature")).toHaveText(
+      german
+        ? "Selim Eser, Gründer von Zackisch"
+        : "Selim Eser, Founder of Zackisch",
+    );
     const email = page.locator(".personal-contact > a");
     await expect(email.locator("svg")).toHaveCount(0);
     await expect(email).toHaveCSS("text-decoration-line", "none");

@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import Image from "next/image";
 import { WebsiteLink } from "./section-navigation";
-import { content, signupUrl, type Locale } from "@/lib/content";
+import { content, signupUrl, surveyUrl, type Locale } from "@/lib/content";
 import { marketing } from "@/lib/marketing-content";
 import { WebsiteShell } from "./website-shell";
 import { StaffPreview } from "./staff-preview";
@@ -58,7 +58,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                 alt={m.phoneAlt}
                 width={1800}
                 height={1200}
-                sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1376px) calc(100vw - 96px), 1280px"
+                sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1696px) calc(100vw - 96px), 1600px"
                 loading="eager"
                 fetchPriority="high"
               />
@@ -67,20 +67,48 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         </section>
         <DemoVenues copy={m} />
         <section id="problem" className="problem-section container">
-          <div className="problem-copy">
-            <h2>{m.problemTitle}</h2>
-            <p>{formatCopy(m.problemText)}</p>
-            <p>{formatCopy(m.solutionText)}</p>
+          <div className="problem-lead">
+            <div className="problem-copy">
+              <h2>{m.problemTitle}</h2>
+              <p>{formatCopy(m.problemText)}</p>
+              <p>{formatCopy(m.solutionText)}</p>
+            </div>
+            <div className="problem-photos">
+              <figure className="story-photo">
+                <Image
+                  src="/media/cafe-guest.webp"
+                  alt={m.cafeAlt}
+                  width={1200}
+                  height={1800}
+                  sizes="(max-width: 799px) 100vw, 28vw"
+                />
+              </figure>
+              <figure className="story-photo counter-photo">
+                <Image
+                  src="/media/counter-service.webp"
+                  alt={m.counterAlt}
+                  width={1200}
+                  height={801}
+                  sizes="(max-width: 799px) 100vw, 28vw"
+                />
+              </figure>
+            </div>
           </div>
-          <figure className="story-photo">
-            <Image
-              src="/media/cafe-guest.webp"
-              alt={m.cafeAlt}
-              width={1200}
-              height={1800}
-              sizes="(max-width: 799px) 100vw, 50vw"
-            />
-          </figure>
+          <div className="problem-study">
+            <div className="study-figure">
+              <p className="study-number">
+                27<span>%</span>
+              </p>
+              <p className="study-caption">{formatCopy(m.studyCaption)}</p>
+            </div>
+            <div className="study-details">
+              <h3>{m.studyTitle}</h3>
+              <p>{formatCopy(m.studyText)}</p>
+              <WebsiteLink className="inline-link" href={surveyUrl}>
+                {c.researchLink}
+              </WebsiteLink>
+            </div>
+          </div>
         </section>
         <section id="how-it-works" className="menu-chapters">
           <div className="chapter-introduction container">
@@ -154,6 +182,14 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="questions" className="questions container">
           <h2>{m.faq}</h2>
           <Faq items={c.faqs} />
+        </section>
+        <section className="founder-section container">
+          <h2>{m.founderTitle}</h2>
+          <div className="founder-copy">
+            <p className="founder-lead">{formatCopy(m.founderLead)}</p>
+            <p>{formatCopy(m.founderText)}</p>
+            <p className="founder-signature">{m.founderSignature}</p>
+          </div>
         </section>
         <section id="contact" className="personal-contact container">
           <h2>{m.personalTitle}</h2>

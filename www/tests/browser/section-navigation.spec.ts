@@ -83,12 +83,12 @@ for (const locale of ["de-de", "de-en"]) {
     page,
     request,
   }) => {
-    await page.goto(`/${locale}/research`);
+    await page.goto(`/${locale}/privacy`);
     await page.locator(`.site-footer a[href="/${locale}#contact"]`).click();
     await expect(page).toHaveURL(new RegExp(`/${locale}$`));
     await alignedTarget(page, "#contact h2", page.viewportSize()!.width);
     await page.goBack();
-    await expect(page).toHaveURL(new RegExp(`/${locale}/research$`));
+    await expect(page).toHaveURL(new RegExp(`/${locale}/privacy$`));
     expect((await request.get(`/${locale}/contact`)).status()).toBe(404);
     expect(await (await request.get("/sitemap.xml")).text()).not.toContain(
       `/${locale}/contact`,
@@ -151,22 +151,8 @@ for (const locale of ["de-de", "de-en"]) {
       page.locator(".footer-grid > div").first().locator("a"),
     ).toHaveText(
       locale === "de-de"
-        ? [
-            "Hilfe",
-            "Forschung & Quellen",
-            "Funktionen",
-            "Kosten",
-            "Fragen",
-            "Kontakt",
-          ]
-        : [
-            "Help",
-            "Research & sources",
-            "Features",
-            "Pricing",
-            "Questions",
-            "Contact",
-          ],
+        ? ["Hilfe", "Funktionen", "Kosten", "Fragen", "Kontakt"]
+        : ["Help", "Features", "Pricing", "Questions", "Contact"],
     );
     await expect(page.locator(".chapter-introduction h2")).toHaveText(
       locale === "de-de"

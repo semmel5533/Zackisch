@@ -6,7 +6,6 @@ import {
   isLocale,
   locales,
   pageSlugs,
-  surveyUrl,
   type PageSlug,
 } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
@@ -63,11 +62,6 @@ export default async function InformationPage({
               ))}
             </ul>
           </section>
-        )}
-        {paramsValue.slug === "research" && (
-          <WebsiteLink className="inline-link" href={surveyUrl}>
-            {c.researchLink}
-          </WebsiteLink>
         )}
       </main>
     </WebsiteShell>

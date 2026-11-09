@@ -35,7 +35,7 @@ describe("localized website", () => {
     expect(resolveBrowserLocale(undefined, undefined)).toBe(defaultLocale);
     expect(resolveLocale("de-en")).toBe("de-en");
     expect(resolveLocale("unknown")).toBe(defaultLocale);
-    expect(resolveLocaleFromPathname("/de-en/research")).toBe("de-en");
+    expect(resolveLocaleFromPathname("/de-en/privacy")).toBe("de-en");
     expect(resolveLocaleFromPathname("/unknown")).toBe(defaultLocale);
   });
   it("has matching complete dictionary structures across all configured locales", () => {

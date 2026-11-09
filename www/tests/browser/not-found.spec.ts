@@ -81,6 +81,8 @@ test("404 accessibility and removed routes remain honest", async ({ page }) => {
     "/de-en/pricing",
     "/de-de/contact",
     "/de-en/contact",
+    "/de-de/research",
+    "/de-en/research",
   ]) {
     expect((await page.goto(path))?.status()).toBe(404);
   }
@@ -89,5 +91,5 @@ test("404 accessibility and removed routes remain honest", async ({ page }) => {
     .analyze();
   expect(results.violations).toEqual([]);
   const sitemap = await (await page.request.get("/sitemap.xml")).text();
-  expect(sitemap).not.toMatch(/\/(pricing|contact)</);
+  expect(sitemap).not.toMatch(/\/(pricing|contact|research)</);
 });

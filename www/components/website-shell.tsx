@@ -89,12 +89,6 @@ export function WebsiteShell({
             >
               {c.nav[3]}
             </WebsiteLink>
-            <WebsiteLink
-              className="button button-secondary footer-research"
-              href={`/${locale}/research`}
-            >
-              {c.research}
-            </WebsiteLink>
             <WebsiteLink href={`/${locale}#how-it-works`}>
               {c.nav[0]}
             </WebsiteLink>

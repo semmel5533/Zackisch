@@ -77,7 +77,6 @@ export const websiteUrl = "https://zackisch.com";
 export const signupUrl = "https://app.zackisch.com/sign-up";
 export const loginUrl = "https://app.zackisch.com/sign-in";
 export const pageSlugs = [
-  "research",
   "legal-notice",
   "privacy",
   "privacy-policy",
@@ -158,7 +157,6 @@ export const content = {
     ],
     footerLegal: "Rechtliches",
     contact: "Kontakt",
-    research: "Forschung & Quellen",
     legalSources: "Rechtsquellen und weiterführende Informationen",
     guestTerms: "Gastbestellung",
     dataProcessing: "Auftragsverarbeitung",
@@ -172,25 +170,6 @@ export const content = {
       "Diese Website lädt keine optionalen Analyse- oder Werbedienste. Bilder und Schriften werden lokal ausgeliefert. Hier gibt es deshalb keine optionalen Cookies einzuschalten.",
     market: "Deutschland",
     pages: {
-      research: {
-        title: "Was die Forschung zeigt. Und was nicht.",
-        intro:
-          "Warum ein zusätzlicher Bestellweg sinnvoll sein kann, ohne daraus ein Umsatzversprechen abzuleiten.",
-        sections: [
-          {
-            title: "Wartezeiten aus Gästesicht",
-            body: "Lightspeed und Medallia befragten im Mai 2025 rund 1.000 Erwachsene in Deutschland, die in den letzten sechs Monaten einen Gastronomiebetrieb besucht hatten. 27 % berichteten, wegen Wartezeiten schon einmal vor der Bestellung gegangen zu sein. Veröffentlicht am 5. November 2025.",
-          },
-          {
-            title: "Die Grenzen",
-            body: "Es handelt sich um Selbstauskünfte in einer von einem Kassensystemanbieter beauftragten Umfrage. Die Zahl beschreibt keine Abbruchquote pro Besuch. Untersucht wurde weder Zackisch noch die Wirkung seines QR-Bestellwegs.",
-          },
-          {
-            title: "Unsere Einordnung",
-            body: "Gäste möchten bestellen können, wenn sie bereit sind. Ein freiwilliger digitaler Bestellweg ist eine zusätzliche Möglichkeit. Ob er in deinem Betrieb hilft, muss im tatsächlichen Betriebsablauf geprüft werden.",
-          },
-        ],
-      },
       ...legalPages["de-de"],
       ...platformPrivacy["de-de"],
       ...merchantTerms["de-de"],
@@ -270,7 +249,6 @@ export const content = {
     ],
     footerLegal: "Legal",
     contact: "Contact",
-    research: "Research & sources",
     legalSources: "Legal references and further information",
     guestTerms: "Guest ordering",
     dataProcessing: "Data processing agreement",
@@ -284,25 +262,6 @@ export const content = {
       "This website loads no optional analytics or advertising services. Images and fonts are served locally. There are therefore no optional cookies to enable here.",
     market: "Deutschland",
     pages: {
-      research: {
-        title: "What research shows. And what it doesn’t.",
-        intro:
-          "Why an additional way to order may help, without turning that into a revenue promise.",
-        sections: [
-          {
-            title: "Waiting from the guest’s perspective",
-            body: "In May 2025, Lightspeed and Medallia surveyed around 1,000 adults in Germany who had visited a venue in the previous six months. 27% reported leaving before ordering because of waiting times. Published on 5 November 2025.",
-          },
-          {
-            title: "The limits",
-            body: "These are self-reported experiences from a survey commissioned by a POS provider. The figure is not a per-visit abandonment rate. Neither Zackisch nor its QR ordering experience was tested.",
-          },
-          {
-            title: "Our interpretation",
-            body: "Guests want to order when they are ready. Voluntary digital ordering adds another option. Whether it helps your venue needs to be tested in your actual service process.",
-          },
-        ],
-      },
       ...legalPages["de-en"],
       ...platformPrivacy["de-en"],
       ...merchantTerms["de-en"],

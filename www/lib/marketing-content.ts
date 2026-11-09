@@ -9,6 +9,19 @@ export const marketing = {
       "Am Tisch warten Gäste auf die nächste Bestellung. Am Tresen kommen Bestellen, Bezahlen und Abholen zusammen. Dein Team wird überall gleichzeitig gebraucht.",
     solutionText:
       "Lass Gäste per QR-Code selbst bestellen und bezahlen, am Tisch oder zur Abholung am Tresen. Persönlicher Service bleibt immer eine Wahl.",
+    studyTitle: "Was die Umfrage zeigt, und was nicht",
+    studyCaption:
+      "der Befragten in Deutschland sind wegen Wartezeiten schon einmal vor der Bestellung wieder gegangen.",
+    studyText:
+      "Lightspeed und Medallia befragten im Mai 2025 rund 1.000 Erwachsene in Deutschland, die in den letzten sechs Monaten einen Gastronomiebetrieb besucht hatten (veröffentlicht am 5. November 2025). Es sind Selbstauskünfte, keine Abbruchquote pro Besuch und kein Umsatzversprechen. Ein zusätzlicher Bestellweg per QR-Code gibt deinen Gästen eine weitere Option, wenn sie bereit sind.",
+    counterAlt:
+      "Eine Servicekraft reicht einem Gast am Tresen einen Kaffeebecher.",
+    founderTitle: "Warum ich Zackisch baue",
+    founderLead:
+      "In vielen Betrieben fehlt es nicht an gutem Essen oder Gastfreundschaft, sondern an freien Händen im richtigen Moment. Wenn Tische voll sind oder sich vor dem Tresen eine Schlange bildet, warten Gäste unnötig, während das Team bereits alles gibt.",
+    founderText:
+      "Ich habe Zackisch gegründet, damit jeder Betrieb vom Café und Imbiss bis zum Restaurant seinen Gästen einen einfachen Bestellweg per QR-Code anbieten kann. Ohne App-Zwang, ohne Kassensystemwechsel und ohne laufende Grundgebühr.",
+    founderSignature: "Selim Eser, Gründer von Zackisch",
     personalTitle: "Schreibe mir persönlich",
     explore: "So funktioniert’s",
     demoTitle: "Hier könnte dein Betrieb auftauchen",
@@ -85,6 +98,19 @@ export const marketing = {
       "At tables, guests wait to place their next order. At the counter, ordering, payment and collection happen at once. Your team is needed everywhere.",
     solutionText:
       "Let guests order and pay by QR code, at the table or for counter pickup. Personal service is always a choice.",
+    studyTitle: "What the survey shows, and what it doesn’t",
+    studyCaption:
+      "of surveyed guests in Germany have left a venue before ordering because of waiting times.",
+    studyText:
+      "In May 2025, Lightspeed and Medallia surveyed around 1,000 adults in Germany who had visited a hospitality venue in the previous six months (published on 5 November 2025). These are self-reported experiences, not a per-visit abandonment rate or revenue promise. An additional QR ordering route gives your guests another option as soon as they are ready.",
+    counterAlt:
+      "A barista hands a takeaway coffee cup across the counter to a guest.",
+    founderTitle: "Why I’m building Zackisch",
+    founderLead:
+      "In many venues, the bottleneck isn’t good food or hospitality, it’s having enough hands at the right moment. When tables fill up or a queue forms at the counter, guests end up waiting while the team is already giving its all.",
+    founderText:
+      "I founded Zackisch so every venue, from cafés and snack bars to restaurants, can offer guests a straightforward way to order and pay by QR code. With no app download, no POS replacement and no monthly base fee.",
+    founderSignature: "Selim Eser, Founder of Zackisch",
     personalTitle: "Write to me personally",
     explore: "How it works",
     demoTitle: "Your venue could be here",
