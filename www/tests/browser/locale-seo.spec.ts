@@ -235,7 +235,7 @@ test("demo logo band is explicitly illustrative and motion can be paused", async
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/de-de");
   await expect(
-    page.getByRole("heading", { name: "Hier könnte dein Lokal auftauchen" }),
+    page.getByRole("heading", { name: "Hier könnte dein Betrieb auftauchen" }),
   ).toBeVisible();
   const track = page.locator(".logo-track");
   const before = await track.evaluate((el) => getComputedStyle(el).transform);
@@ -322,9 +322,13 @@ for (const locale of ["de-de", "de-en"]) {
       .click();
     await expect(page.locator(".questions")).toContainText(
       german
-        ? "Barzahlungen erfolgen beim Lokal"
+        ? "Barzahlungen erfolgen im Betrieb"
         : "Cash payments are handled by the venue",
     );
+    await expect(page.locator(".personal-contact h2")).toHaveText(
+      german ? "Schreibe mir persönlich" : "Write to me personally",
+    );
+    await expect(page.locator(".personal-contact p")).toHaveCount(0);
     const email = page.locator(".personal-contact > a");
     await expect(email.locator("svg")).toHaveCount(0);
     await expect(email).toHaveCSS("text-decoration-line", "none");

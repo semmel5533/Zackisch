@@ -103,7 +103,7 @@ export const content = {
       "Wähle die Region deines Betriebs und deine gewünschte Anzeigesprache.",
     nav: ["Funktionen", "Kosten", "Fragen", "Hilfe"],
     login: "Anmelden",
-    start: "Lokal einrichten",
+    start: "Betrieb einrichten",
     title: "Bestellen & Bezahlen mit QR-Code | Zackisch",
     description:
       "Gäste bestellen und bezahlen per QR-Code. Dein Team und deine Kasse bleiben. 2 % Gebühr, zzgl. Zahlungsanbietergebühren.",
@@ -126,12 +126,12 @@ export const content = {
       {
         question: "Wie funktioniert die Anbindung an meine Kasse?",
         answer:
-          "Deine bestehende Kasse bleibt. Dein Team übernimmt jede bereits bezahlte Zackisch-Bestellung genau einmal manuell in die Kasse und kennzeichnet sie dort als bereits bezahlt. Der Gast bezahlt nicht erneut. Eine automatische Übertragung gibt es derzeit nicht. Dein Lokal stellt den erforderlichen Kassenbeleg oder die Rechnung aus. So startest du ohne technische Schnittstellenintegration. Optionale Kassenanbindungen kommen künftig infrage, ohne feste Anbieter oder Termine.",
+          "Deine bestehende Kasse bleibt. Dein Team übernimmt jede bereits bezahlte Zackisch-Bestellung genau einmal manuell in die Kasse und kennzeichnet sie dort als bereits bezahlt. Der Gast bezahlt nicht erneut. Eine automatische Übertragung gibt es derzeit nicht. Dein Betrieb stellt den erforderlichen Kassenbeleg oder die Rechnung aus. So startest du ohne technische Schnittstellenintegration. Optionale Kassenanbindungen kommen künftig infrage, ohne feste Anbieter oder Termine.",
       },
       {
         question: "Was brauche ich für den Start?",
         answer:
-          "Ein Menü mit Artikeln und Preisen, ein geeignetes Tablet mit Browser, Internet und ein freigegebenes Konto beim Zahlungsanbieter. Du richtest dein Lokal selbst ein und platzierst deine QR-Codes. Vor dem Start prüfst du den gesamten Ablauf einschließlich der Erfassung bezahlter Aufträge in deiner Kasse.",
+          "Ein Menü mit Artikeln und Preisen, ein geeignetes Tablet mit Browser, Internet und ein freigegebenes Konto beim Zahlungsanbieter. Du richtest deinen Betrieb selbst ein und platzierst deine QR-Codes. Vor dem Start prüfst du den gesamten Ablauf einschließlich der Erfassung bezahlter Aufträge in deiner Kasse.",
       },
       {
         question:
@@ -142,7 +142,7 @@ export const content = {
       {
         question: "Können meine Gäste persönlich bestellen oder bar bezahlen?",
         answer:
-          "Ja. Wer lieber persönlich bestellt, bar bezahlen möchte oder nicht mit dem Smartphone bestellen und bezahlen kann, wendet sich wie gewohnt an dein Team. Ihr nehmt die Bestellung auf und kassiert über euren bestehenden Kassenablauf. Barzahlungen erfolgen beim Lokal, nicht im digitalen Zackisch-Checkout.",
+          "Ja. Wer lieber persönlich bestellt, bar bezahlen möchte oder nicht mit dem Smartphone bestellen und bezahlen kann, wendet sich wie gewohnt an dein Team. Ihr nehmt die Bestellung auf und kassiert über euren bestehenden Kassenablauf. Barzahlungen erfolgen im Betrieb, nicht im digitalen Zackisch-Checkout.",
       },
       {
         question:
@@ -179,7 +179,7 @@ export const content = {
         sections: [
           {
             title: "Wartezeiten aus Gästesicht",
-            body: "Lightspeed und Medallia befragten im Mai 2025 rund 1.000 Erwachsene in Deutschland, die in den letzten sechs Monaten ein Lokal besucht hatten. 27 % berichteten, wegen Wartezeiten schon einmal vor der Bestellung gegangen zu sein. Veröffentlicht am 5. November 2025.",
+            body: "Lightspeed und Medallia befragten im Mai 2025 rund 1.000 Erwachsene in Deutschland, die in den letzten sechs Monaten einen Gastronomiebetrieb besucht hatten. 27 % berichteten, wegen Wartezeiten schon einmal vor der Bestellung gegangen zu sein. Veröffentlicht am 5. November 2025.",
           },
           {
             title: "Die Grenzen",
@@ -187,7 +187,7 @@ export const content = {
           },
           {
             title: "Unsere Einordnung",
-            body: "Gäste möchten bestellen können, wenn sie bereit sind. Ein freiwilliger digitaler Bestellweg ist eine zusätzliche Möglichkeit. Ob er in deinem Lokal hilft, muss im tatsächlichen Betriebsablauf geprüft werden.",
+            body: "Gäste möchten bestellen können, wenn sie bereit sind. Ein freiwilliger digitaler Bestellweg ist eine zusätzliche Möglichkeit. Ob er in deinem Betrieb hilft, muss im tatsächlichen Betriebsablauf geprüft werden.",
           },
         ],
       },

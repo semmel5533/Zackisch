@@ -2,17 +2,16 @@ export const marketing = {
   "de-de": {
     hero: ["Bestellen & Bezahlen", "mit QR-Code"],
     intro:
-      "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen.\nMit deinem Service und deiner bestehenden Kasse.",
+      "Am Tisch oder zur Abholung am Tresen, direkt im Browser ohne App.\nMit deinem Service und deiner bestehenden Kasse.",
     phoneAlt: "Drei Gäste schauen im Café gemeinsam auf ein Smartphone.",
     problemTitle: "Volle Tische,\nSchlange am Tresen",
     problemText:
       "Am Tisch warten Gäste auf die nächste Bestellung. Am Tresen kommen Bestellen, Bezahlen und Abholen zusammen. Dein Team wird überall gleichzeitig gebraucht.",
     solutionText:
       "Lass Gäste per QR-Code selbst bestellen und bezahlen, am Tisch oder zur Abholung am Tresen. Persönlicher Service bleibt immer eine Wahl.",
-    personalTitle: "Deine Frage ist nicht aufgelistet?",
-    personalText: "Schreibe mir persönlich:",
-    explore: "So helfen wir",
-    demoTitle: "Hier könnte dein Lokal auftauchen",
+    personalTitle: "Schreibe mir persönlich",
+    explore: "So funktioniert’s",
+    demoTitle: "Hier könnte dein Betrieb auftauchen",
     demoVenues: [
       "Dein Café",
       "Dein Bistro",
@@ -30,9 +29,9 @@ export const marketing = {
     features: [
       {
         title: "Was gut ankommt,\nsteht vorn",
-        text: "Die Kategorie „Beliebteste“ zeigt automatisch häufig bestellte Artikel deines Lokals.",
+        text: "Die Kategorie „Beliebteste“ zeigt automatisch häufig bestellte Artikel deines Betriebs.",
         detail:
-          "Aus der Bestellhistorie deines Lokals. Ohne manuelles Pflegen einer Bestsellerliste.",
+          "Aus der Bestellhistorie deines Betriebs. Ohne manuelles Pflegen einer Bestsellerliste.",
         image: "Hier folgt das Gäste-Menü mit der Kategorie „Beliebteste“.",
       },
       {
@@ -51,9 +50,9 @@ export const marketing = {
       },
     ],
     placeholder: "Produktansicht folgt",
-    control: "Dein Lokal, deine Entscheidung",
+    control: "Dein Betrieb, deine Entscheidung",
     controlText:
-      "Du entscheidest, welche Funktionen dein Lokal nutzt. Schalte sie so ein oder aus, wie es zu deinem Betrieb passt.",
+      "Du entscheidest, welche Funktionen dein Betrieb nutzt. Schalte sie so ein oder aus, wie es zu eurem Ablauf passt.",
     teamTitle: "Am Tisch, am Tresen,\nmit deinem Team",
     teamText:
       "Gäste scannen, wählen und bezahlen. Dein Team bereitet den Auftrag für den Tisch oder zur Abholung vor und erfasst ihn einmal in eurer Kasse. Wer lieber persönlich bestellt, bar bezahlen möchte oder kein Smartphone nutzen kann, wendet sich wie gewohnt an dein Team.",
@@ -65,7 +64,7 @@ export const marketing = {
       "Auf den Bestellwert nach Rabatten, ohne freiwilliges Trinkgeld. Inklusive Umsatzsteuer auf unsere Gebühr, zzgl. Zahlungsanbietergebühren.",
     zero: "Keine Einrichtungskosten oder monatliche Grundgebühr",
     seasonal:
-      "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Lokal Saisonpause macht.",
+      "Ohne bezahlte Bestellungen ist Zackisch kostenlos. Auch wenn dein Betrieb Saisonpause macht.",
     setupTitle: "Dein nächster Schritt?",
     setupText:
       "Konto anlegen, Menü einrichten, Zahlungsanbieter verbinden. Mit deinen QR-Codes und einem geeigneten Tablet starten.",
@@ -79,16 +78,15 @@ export const marketing = {
   "de-en": {
     hero: ["Order & pay", "by QR code"],
     intro:
-      "QR ordering and payment at the table or for counter pickup.\nAlongside your service and existing POS.",
+      "At the table or for counter pickup, right in the browser with no app.\nAlongside your service and existing POS.",
     phoneAlt: "Three café guests look at a smartphone together.",
     problemTitle: "Busy tables,\nqueues at the counter",
     problemText:
       "At tables, guests wait to place their next order. At the counter, ordering, payment and collection happen at once. Your team is needed everywhere.",
     solutionText:
       "Let guests order and pay by QR code, at the table or for counter pickup. Personal service is always a choice.",
-    personalTitle: "Can’t find your question?",
-    personalText: "Write to me personally:",
-    explore: "How we help",
+    personalTitle: "Write to me personally",
+    explore: "How it works",
     demoTitle: "Your venue could be here",
     demoVenues: [
       "Your café",

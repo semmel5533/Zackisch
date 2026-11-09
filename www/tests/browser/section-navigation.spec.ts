@@ -63,6 +63,10 @@ for (const locale of ["de-de", "de-en"]) {
           .click();
       }
       await alignedTarget(page, "#questions h2", width);
+      await expect(page.locator("#questions h2")).toHaveCSS(
+        "position",
+        width < 800 ? "static" : "sticky",
+      );
       const columns = await page.evaluate(() => ({
         setup: document
           .querySelector(".start-section > div")!
@@ -186,7 +190,7 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page.locator(".venue-control h3")).toHaveText(
       locale === "de-de"
-        ? "Dein Lokal, deine Entscheidung"
+        ? "Dein Betrieb, deine Entscheidung"
         : "Your venue, your choice",
     );
     await expect(page.locator(".service-section h2")).toHaveText(
@@ -231,8 +235,8 @@ for (const locale of ["de-de", "de-en"]) {
     );
     expect(await page.locator(".welcome-intro").innerText()).toBe(
       locale === "de-de"
-        ? "QR-Bestellung und Bezahlen am Tisch oder zur Abholung am Tresen.\nMit deinem Service und deiner bestehenden Kasse."
-        : "QR ordering and payment at the table or for counter pickup.\nAlongside your service and existing POS.",
+        ? "Am Tisch oder zur Abholung am Tresen, direkt im Browser ohne App.\nMit deinem Service und deiner bestehenden Kasse."
+        : "At the table or for counter pickup, right in the browser with no app.\nAlongside your service and existing POS.",
     );
     await expect(page.locator(".last-invitation p")).toHaveCSS(
       "white-space",
@@ -245,7 +249,7 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page.locator(".demo-heading h2")).toHaveText(
       locale === "de-de"
-        ? "Hier könnte dein Lokal auftauchen"
+        ? "Hier könnte dein Betrieb auftauchen"
         : "Your venue could be here",
     );
     await expect(page.locator(".demo-logo-list").first()).toContainText(

@@ -25,7 +25,7 @@ for (const locale of ["de-de", "de-en"]) {
       );
       await expect(
         drawer.getByRole("link", {
-          name: de ? /Lokal einrichten/ : /Set up your venue/,
+          name: de ? /Betrieb einrichten/ : /Set up your venue/,
         }),
       ).toHaveCount(0);
       const actionChildren = drawer.locator(".mobile-actions > *");

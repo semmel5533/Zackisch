@@ -203,10 +203,13 @@ p {
 .questions {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: start;
   gap: 96px;
 }
 .questions h2 {
   max-width: 13ch;
+  position: sticky;
+  top: 40px;
 }
 .faq-item {
   border-bottom: 1px solid var(--zk-border);
@@ -552,12 +555,6 @@ p {
   font-size: clamp(1.75rem, 2.8vw, 2.25rem);
   letter-spacing: -0.025em;
 }
-.personal-contact p {
-  margin-top: 12px;
-  color: var(--zk-text-secondary);
-  font-size: 1.375rem;
-  font-weight: 500;
-}
 .personal-contact > a {
   display: inline-block;
   font-size: clamp(1.85rem, 6vw, 5.25rem);
@@ -840,7 +837,7 @@ p {
   line-height: 1.5;
 }
 .marketing .questions {
-  padding-block: 0 128px;
+  margin-bottom: 128px;
 }
 .last-invitation {
   padding: 72px 24px 112px;
@@ -940,8 +937,11 @@ p {
   }
   .marketing .questions {
     grid-template-columns: minmax(0, 1fr);
-    padding-bottom: 64px;
+    margin-bottom: 64px;
     gap: 32px;
+  }
+  .questions h2 {
+    position: static;
   }
   .last-invitation {
     padding-block: 40px 80px;

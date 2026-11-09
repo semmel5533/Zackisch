@@ -7,7 +7,7 @@ export const merchantTerms = {
       sections: [
         {
           title: "1. Vertragspartner und Anwendungsbereich",
-          body: "Anbieter ist Selim Eser, handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland; Kontakt: selim@zackisch.com. Diese Bedingungen gelten ausschließlich gegenüber Unternehmern, die Zackisch für ihr Lokal nutzen. Der Vertrag über Speisen und Getränke entsteht zwischen dem Restaurant und seinem Gast. Diese Bedingungen sind keine Restaurant-AGB für Gäste.",
+          body: "Anbieter ist Selim Eser, handelnd unter Zackisch, Musterstraße 1, 12345 Musterstadt, Deutschland; Kontakt: selim@zackisch.com. Diese Bedingungen gelten ausschließlich gegenüber Unternehmern, die Zackisch für ihren Betrieb nutzen. Der Vertrag über Speisen und Getränke entsteht zwischen dem Restaurant und seinem Gast. Diese Bedingungen sind keine Restaurant-AGB für Gäste.",
         },
         {
           title: "2. Leistung und Voraussetzungen",

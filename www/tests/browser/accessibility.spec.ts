@@ -101,7 +101,7 @@ test("product placeholders and desktop motion respect user preferences", async (
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/de-de");
-  await expect(page.locator(".welcome-intro")).toContainText("QR-Bestellung");
+  await expect(page.locator(".welcome-intro")).toContainText("Abholung am Tresen");
   await expect(page.locator(".screenshot-placeholder")).toHaveCount(4);
   await expect(page.locator(".screenshot-placeholder img")).toHaveCount(0);
   expect(

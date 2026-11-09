@@ -19,7 +19,7 @@ export const platformPrivacy = {
         },
         {
           title: "Gastbestellung und Bestätigung",
-          body: "Eine Gastbestellung erfordert kein Zackisch-Konto. Verarbeitet werden Lokal, Tisch oder Abholung, Artikel und Optionen, Menge, Beträge, Trinkgeld, Zeitpunkte, Bestellnummer sowie Bestell-, Zahlungs-, Erstattungs- und Kassenerfassungsstatus. Das Restaurant und berechtigtes Personal benötigen diese Informationen zur Abwicklung. Eine E-Mail-Adresse für eine Bestätigung ist optional und keine Werbeeinwilligung. Für die Bestellabwicklung ist grundsätzlich Artikel 6 Absatz 1 Buchstabe b DSGVO einschlägig; gesetzliche Nachweise werden nach Buchstabe c gesondert behandelt.",
+          body: "Eine Gastbestellung erfordert kein Zackisch-Konto. Verarbeitet werden Betrieb, Tisch oder Abholung, Artikel und Optionen, Menge, Beträge, Trinkgeld, Zeitpunkte, Bestellnummer sowie Bestell-, Zahlungs-, Erstattungs- und Kassenerfassungsstatus. Das Restaurant und berechtigtes Personal benötigen diese Informationen zur Abwicklung. Eine E-Mail-Adresse für eine Bestätigung ist optional und keine Werbeeinwilligung. Für die Bestellabwicklung ist grundsätzlich Artikel 6 Absatz 1 Buchstabe b DSGVO einschlägig; gesetzliche Nachweise werden nach Buchstabe c gesondert behandelt.",
         },
         {
           title: "Zahlungsabwicklung mit Stripe",
