@@ -192,8 +192,7 @@ test("photographs load and the footer ends immediately after its full-width word
   });
   expect(bounds.width).toBeGreaterThan(0.89);
   expect(bounds.gap).toBeLessThanOrEqual(9);
-  expect(bounds.opacity).toBeGreaterThan(0);
-  expect(bounds.opacity).toBeLessThan(1);
+  expect(bounds.opacity).toBe(1);
   await expect(page.locator(".marketing img")).toHaveCount(2);
   await expect(page.locator(".site-footer .region-trigger")).toHaveCSS(
     "background-color",

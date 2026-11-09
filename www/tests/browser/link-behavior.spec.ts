@@ -90,7 +90,17 @@ test("region pills share sizing and header ghost differs from footer outlines", 
       await expect(control).toHaveCSS("height", "48px");
       await expect(control).toHaveCSS("font-size", "17px");
       await expect(control).toHaveCSS("align-items", "center");
-      await expect(control.locator("svg")).toHaveCSS("translate", /0px -/);
+      await expect(control.locator("svg")).toHaveCSS("translate", "none");
+      const centers = await control.evaluate((el) => {
+        const label = el.querySelector("span")!;
+        const icon = el.querySelector("svg")!;
+        const lBox = label.getBoundingClientRect();
+        const iBox = icon.getBoundingClientRect();
+        return Math.abs(
+          (lBox.top + lBox.bottom) / 2 - (iBox.top + iBox.bottom) / 2,
+        );
+      });
+      expect(centers).toBeLessThanOrEqual(0.5);
     }
     await expect(header).toHaveCSS("border-color", "rgba(0, 0, 0, 0)");
     await expect(footer).not.toHaveCSS("border-color", "rgba(0, 0, 0, 0)");

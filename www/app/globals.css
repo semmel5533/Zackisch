@@ -235,7 +235,6 @@ p {
 }
 .faq-trigger svg {
   flex-shrink: 0;
-  translate: 0 -0.08em;
   transition: transform 180ms ease-out;
 }
 .faq-trigger[data-panel-open] svg {
@@ -289,7 +288,6 @@ p {
   width: calc(100% - 32px);
   height: auto;
   margin: 80px 16px 0;
-  opacity: 0.22;
 }
 .text-button {
   cursor: pointer;
@@ -1257,12 +1255,10 @@ p {
 }
 .navigation-arrow {
   flex: none;
-  translate: 0 -0.08em;
 }
 .region-trigger svg,
 .locale-option > svg {
   flex: none;
-  translate: 0 -0.08em;
 }
 .page-link:hover,
 .footer-grid .page-link:hover,
