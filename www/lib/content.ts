@@ -88,8 +88,6 @@ export type PageSlug = (typeof pageSlugs)[number];
 export const content = {
   "de-de": {
     lang: "de",
-    other: "English",
-    otherLocale: "de-en",
     skip: "Zum Inhalt",
     home: "Zackisch Startseite",
     navLabel: "Hauptnavigation",
@@ -183,8 +181,6 @@ export const content = {
   },
   "de-en": {
     lang: "en",
-    other: "Deutsch",
-    otherLocale: "de-de",
     skip: "Skip to content",
     home: "Zackisch home",
     navLabel: "Main navigation",

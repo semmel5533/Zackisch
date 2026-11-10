@@ -46,7 +46,6 @@ export const marketing = {
     ],
     pauseLogos: "Logo-Band pausieren",
     resumeLogos: "Logo-Band fortsetzen",
-    cafeAlt: "Ein Gast nutzt beim Kaffee im Café sein Smartphone.",
     menuTitle: "Ein digitales Menü,\nmehr Optionen",
     menuFlexibility:
       "Du legst Varianten, Extras und Auswahlschritte fest. Gäste stellen ihren Artikel nach Wunsch zusammen.",
@@ -145,7 +144,6 @@ export const marketing = {
     ],
     pauseLogos: "Pause logo carousel",
     resumeLogos: "Resume logo carousel",
-    cafeAlt: "A café guest uses his smartphone while having coffee.",
     menuTitle: "One digital menu,\nmore options",
     menuFlexibility:
       "You define variants, extras and selection steps. Guests customise their item the way they like.",
