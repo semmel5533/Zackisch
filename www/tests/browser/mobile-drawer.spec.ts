@@ -16,12 +16,12 @@ for (const locale of ["de-de", "de-en"]) {
       const drawer = page.locator(".mobile-navigation");
       await expect(drawer).toBeVisible();
       await expect(drawer).toHaveCSS("background-color", "rgb(198, 255, 52)");
-      await expect(drawer.locator("nav a")).toHaveCount(5);
+      await expect(drawer.locator("nav a")).toHaveCount(4);
       const navLabels = await drawer.locator("nav a").allInnerTexts();
       expect(navLabels.map((label) => label.trim())).toEqual(
         de
-          ? ["Funktionen", "Kosten", "Über mich", "Fragen", "Kontakt"]
-          : ["Features", "Pricing", "About me", "Questions", "Contact"],
+          ? ["Funktionen", "Kosten", "Fragen", "Kontakt"]
+          : ["Features", "Pricing", "Questions", "Contact"],
       );
       await expect(
         drawer.getByRole("link", {

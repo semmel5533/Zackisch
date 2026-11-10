@@ -35,8 +35,6 @@ for (const locale of ["de-de", "de-en"]) {
         .locator(`.site-footer a[href="/${locale}#how-it-works"]`)
         .click();
       await alignedTarget(page, ".chapter-introduction h2", width);
-      await page.locator(`.site-footer a[href="/${locale}#about"]`).click();
-      await alignedTarget(page, "#about h2", width);
       await page.locator(`.site-footer a[href="/${locale}#contact"]`).click();
       await alignedTarget(page, "#contact h2", width);
       await page.locator(`.site-footer a[href="/${locale}#costs"]`).click();
@@ -153,8 +151,8 @@ for (const locale of ["de-de", "de-en"]) {
       page.locator(".footer-grid > div").first().locator("a"),
     ).toHaveText(
       locale === "de-de"
-        ? ["Hilfe", "Funktionen", "Kosten", "Über mich", "Fragen", "Kontakt"]
-        : ["Help", "Features", "Pricing", "About me", "Questions", "Contact"],
+        ? ["Hilfe", "Funktionen", "Kosten", "Fragen", "Kontakt"]
+        : ["Help", "Features", "Pricing", "Questions", "Contact"],
     );
     await expect(page.locator(".chapter-introduction h2")).toHaveText(
       locale === "de-de"
@@ -175,11 +173,6 @@ for (const locale of ["de-de", "de-en"]) {
       locale === "de-de"
         ? "Ein Dankeschön, ganz freiwillig"
         : "A little thank-you, always optional",
-    );
-    await expect(page.locator(".venue-control h3")).toHaveText(
-      locale === "de-de"
-        ? "Dein Betrieb, deine Entscheidung"
-        : "Your venue, your choice",
     );
     await expect(page.locator(".service-section h2")).toHaveText(
       locale === "de-de"
@@ -237,8 +230,8 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page.locator(".top-banner")).toContainText(
       locale === "de-de"
-        ? "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren."
-        : "After completing setup, try 30 days for free, plus payment provider fees.",
+        ? "Als Neukunde 30 Tage kostenlos testen (zzgl. Gebühren des Zahlungsanbieters)."
+        : "Try 30 days for free as a new venue (plus payment provider fees).",
     );
   });
 }

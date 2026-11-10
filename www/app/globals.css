@@ -944,7 +944,32 @@ p {
 }
 .cost-section {
   background: var(--zk-color-semantic-background-brand);
-  padding-block: 120px;
+  padding-top: 0;
+  padding-bottom: 120px;
+}
+.cost-banner {
+  background: var(--zk-text);
+  color: var(--zk-page);
+  border-bottom: 1px solid rgb(255 255 255 / 0.15);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin-bottom: 96px;
+}
+.cost-banner-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 20px;
+  text-align: center;
+}
+.cost-banner-text {
+  max-width: 1200px;
+  margin: 0;
+  color: var(--zk-page);
 }
 .cost-inner {
   display: flex;
@@ -1123,7 +1148,20 @@ p {
     padding-block: 32px 80px;
   }
   .cost-section {
-    padding-block: 64px;
+    padding-top: 0;
+    padding-bottom: 64px;
+  }
+  .cost-banner {
+    margin-bottom: 48px;
+    font-size: 0.8125rem;
+    overflow-wrap: anywhere;
+  }
+  .cost-banner .nowrap {
+    white-space: normal;
+  }
+  .cost-banner-inner {
+    padding: 8px 16px;
+    min-height: 40px;
   }
   .cost-inner {
     gap: 32px;
@@ -1479,9 +1517,9 @@ p {
 }
 
 .welcome-main-photo img {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 21 / 9;
   object-fit: cover;
-  object-position: center bottom;
+  object-position: center 65%;
 }
 
 @media (min-width: 1250px) {

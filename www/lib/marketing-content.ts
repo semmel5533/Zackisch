@@ -27,7 +27,7 @@ export const marketing = {
     founderSignature: "Selim Eser, Gründer von Zackisch",
     personalTitle: "Schreibe mir persönlich",
     heroTrial:
-      "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren.",
+      "Als Neukunde 30 Tage kostenlos testen (zzgl. Gebühren des Zahlungsanbieters).",
     dismissTrial: "Hinweis schließen",
     trialLabel: "Zackisch-Gebühr in den ersten 30 Tagen",
     trialTitle: "30 Tage kostenlos testen",
@@ -113,7 +113,7 @@ export const marketing = {
     founderSignature: "Selim Eser, Founder of Zackisch",
     personalTitle: "Write to me personally",
     heroTrial:
-      "After completing setup, try 30 days for free, plus payment provider fees.",
+      "Try 30 days for free as a new venue (plus payment provider fees).",
     dismissTrial: "Dismiss notification",
     trialLabel: "Zackisch fee in the first 30 days",
     trialTitle: "Try 30 days for free",

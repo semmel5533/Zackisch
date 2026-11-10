@@ -131,6 +131,11 @@ export const content = {
           "Ein Menü mit Artikeln und Preisen, ein geeignetes Tablet mit Browser, Internet und ein freigegebenes Konto beim Zahlungsanbieter. Du richtest deinen Betrieb selbst ein und platzierst deine QR-Codes. Vor dem Start prüfst du den gesamten Ablauf einschließlich der Erfassung bezahlter Aufträge in deiner Kasse.",
       },
       {
+        question: "Kann ich entscheiden, welche Funktionen aktiv sind?",
+        answer:
+          "Ja. Du entscheidest, welche Funktionen aktiv sind, passend zu eurem Ablauf. Dein Betrieb, deine Entscheidung.",
+      },
+      {
         question:
           "Müssen meine Gäste eine App installieren oder ein Konto anlegen?",
         answer:
@@ -222,6 +227,11 @@ export const content = {
         question: "What do I need to get started?",
         answer:
           "A menu with items and prices, a suitable tablet with a browser, internet and an approved payment provider account. Set up your venue yourself and place your QR codes. Before going live, check the complete process, including recording paid orders in your POS.",
+      },
+      {
+        question: "Can I decide which features are active?",
+        answer:
+          "Yes. You decide which features are active to match your workflow. Your venue, your choice.",
       },
       {
         question: "Do guests need an app or an account?",

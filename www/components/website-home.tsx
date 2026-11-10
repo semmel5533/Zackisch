@@ -5,7 +5,7 @@ import { marketing } from "@/lib/marketing-content";
 import { WebsiteShell } from "./website-shell";
 import { StaffPreview } from "./staff-preview";
 import { TrialBanner } from "./trial-banner";
-import { ActionArrow, Faq } from "./website-controls";
+import { Faq } from "./website-controls";
 import { formatCopy } from "@/lib/format-copy";
 export { formatCopy };
 
@@ -106,10 +106,6 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               </article>
             ))}
           </div>
-          <div className="venue-control container">
-            <h3>{m.control}</h3>
-            <p>{formatCopy(m.controlText)}</p>
-          </div>
         </section>
         <section className="service-section container">
           <div>
@@ -124,6 +120,11 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
           </StaffPreview>
         </section>
         <section id="costs" className="cost-section">
+          <aside className="cost-banner" aria-label={m.heroTrial}>
+            <div className="container cost-banner-inner">
+              <p className="cost-banner-text">{formatCopy(m.heroTrial)}</p>
+            </div>
+          </aside>
           <div className="container cost-inner">
             <h2>{m.costTitle}</h2>
             <div className="cost-content">
@@ -152,45 +153,6 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             >
               {c.setupHelp}
             </WebsiteLink>
-          </div>
-        </section>
-        <section id="about" className="founder-section container">
-          <h2>{m.founderTitle}</h2>
-          <div className="founder-grid">
-            <div className="founder-col-left">
-              <blockquote className="founder-lead">
-                {formatCopy(m.founderLead)}
-              </blockquote>
-            </div>
-            <div className="founder-col-right">
-              <p className="founder-text">{formatCopy(m.founderText)}</p>
-              <div className="founder-support-block">
-                <span className="founder-support-label">
-                  {m.founderSupportLabel}
-                </span>
-                <WebsiteLink
-                  className="button button-ghost founder-support"
-                  href="https://launchtomars.de"
-                  decoration={false}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    className="mars-logo"
-                    src="/media/mars-logo.webp"
-                    alt={m.marsAlt}
-                    width={72}
-                    height={23}
-                  />
-                  <span className="founder-support-name">
-                    {m.founderSupportText}
-                  </span>
-                  <span className="founder-support-action" aria-hidden="true">
-                    <ActionArrow size={16} />
-                  </span>
-                </WebsiteLink>
-              </div>
-            </div>
           </div>
         </section>
         <section id="questions" className="questions container">

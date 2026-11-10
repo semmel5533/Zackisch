@@ -194,7 +194,7 @@ test("photographs load and the footer ends immediately after its full-width word
   expect(bounds.gap).toBeLessThanOrEqual(9);
   expect(bounds.opacity).toBeGreaterThan(0);
   expect(bounds.opacity).toBeLessThan(1);
-  await expect(page.locator(".marketing img")).toHaveCount(3);
+  await expect(page.locator(".marketing img")).toHaveCount(2);
   await expect(page.locator(".site-footer .region-trigger")).toHaveCSS(
     "background-color",
     "rgba(0, 0, 0, 0)",
@@ -236,7 +236,7 @@ test("trial announcement banner is visible above the header", async ({
   const banner = page.locator(".top-banner");
   await expect(banner).toBeVisible();
   await expect(banner).toContainText(
-    "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren.",
+    "Als Neukunde 30 Tage kostenlos testen (zzgl. Gebühren des Zahlungsanbieters).",
   );
   const bannerBox = await banner.boundingBox();
   const headerBox = await page.locator(".site-header").boundingBox();
@@ -270,7 +270,7 @@ for (const locale of ["de-de", "de-en"]) {
       });
     });
     expect(styles[0]).toEqual(styles[1]);
-    await expect(page.locator(".questions .faq-trigger")).toHaveCount(8);
+    await expect(page.locator(".questions .faq-trigger")).toHaveCount(9);
     const german = locale === "de-de";
     await expect(page.locator(".welcome-intro")).toContainText(
       german ? "Abholung am Tresen" : "counter pickup",
@@ -319,29 +319,6 @@ for (const locale of ["de-de", "de-en"]) {
     await expect(page.locator(".problem-study")).toContainText(
       german ? "Lightspeed und Medallia" : "Lightspeed and Medallia",
     );
-    const studyBg = await page
-      .locator(".problem-study")
-      .evaluate((el) => getComputedStyle(el).backgroundColor);
-    const founderBg = await page
-      .locator(".founder-section")
-      .evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(studyBg).toBe(founderBg);
-    await expect(page.locator(".founder-section h2")).toHaveText(
-      german ? "Wer steckt dahinter?" : "Who is behind it?",
-    );
-    await expect(page.locator(".founder-section")).toContainText(
-      german
-        ? "Technischen Hochschule Mannheim"
-        : "Technische Hochschule Mannheim",
-    );
-    await expect(page.locator(".founder-section")).toContainText(
-      "MARS Center for Entrepreneurship",
-    );
-    await expect(page.locator(".founder-section .mars-logo")).toBeVisible();
-    const marsLink = page.locator(".founder-support");
-    await expect(marsLink).toHaveAttribute("href", "https://launchtomars.de");
-    await expect(marsLink).toHaveAttribute("target", "_blank");
-    await expect(marsLink.locator(".founder-support-action svg")).toBeVisible();
     const sectionOrder = await page.evaluate(() =>
       [...document.querySelectorAll("main > section[id]")].map((s) => s.id),
     );
@@ -349,14 +326,31 @@ for (const locale of ["de-de", "de-en"]) {
       "problem",
       "how-it-works",
       "costs",
-      "about",
       "questions",
       "contact",
     ]);
+    const costBanner = page.locator(".cost-banner");
+    await expect(costBanner).toBeVisible();
+    await expect(costBanner).toContainText(
+      german
+        ? "Als Neukunde 30 Tage kostenlos testen (zzgl. Gebühren des Zahlungsanbieters)."
+        : "Try 30 days for free as a new venue (plus payment provider fees).",
+    );
+    await expect(costBanner).toHaveCSS("background-color", "rgb(0, 0, 0)");
+    await expect(costBanner).toHaveCSS("color", "rgb(255, 255, 255)");
+    const featuresQuestion = page.getByRole("button", {
+      name: german
+        ? "Kann ich entscheiden, welche Funktionen aktiv sind?"
+        : "Can I decide which features are active?",
+    });
+    await featuresQuestion.click();
+    await expect(page.locator(".questions")).toContainText(
+      german ? "Dein Betrieb, deine Entscheidung." : "Your venue, your choice.",
+    );
     await expect(page.locator(".top-banner")).toContainText(
       german
-        ? "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren."
-        : "After completing setup, try 30 days for free, plus payment provider fees.",
+        ? "Als Neukunde 30 Tage kostenlos testen (zzgl. Gebühren des Zahlungsanbieters)."
+        : "Try 30 days for free as a new venue (plus payment provider fees).",
     );
     await expect(page.locator(".cost-number")).toHaveText("2%");
     const email = page.locator(".personal-contact > a");
