@@ -51,6 +51,7 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                   {m.explore}
                 </WebsiteLink>
               </div>
+              <p className="welcome-trial">{formatCopy(m.heroTrial)}</p>
             </div>
             <figure className="welcome-main-photo">
               <Image
@@ -76,20 +77,11 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             <div className="problem-photos">
               <figure className="story-photo">
                 <Image
-                  src="/media/cafe-guest.webp"
-                  alt={m.cafeAlt}
-                  width={1200}
-                  height={1800}
-                  sizes="(max-width: 799px) 100vw, 28vw"
-                />
-              </figure>
-              <figure className="story-photo counter-photo">
-                <Image
-                  src="/media/counter-service.webp"
+                  src="/media/counter-queue.webp"
                   alt={m.counterAlt}
-                  width={1200}
-                  height={801}
-                  sizes="(max-width: 799px) 100vw, 28vw"
+                  width={1600}
+                  height={1068}
+                  sizes="(max-width: 799px) 100vw, (max-width: 1696px) 56vw, 880px"
                 />
               </figure>
             </div>
@@ -164,6 +156,10 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               <p>{formatCopy(m.seasonal)}</p>
               <p>{formatCopy(m.feeDetail)}</p>
             </div>
+            <div className="cost-trial">
+              <h3>{m.trialTitle}</h3>
+              <p>{formatCopy(m.trialText)}</p>
+            </div>
           </div>
         </section>
         <section className="start-section container">
@@ -183,17 +179,32 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
           <h2>{m.faq}</h2>
           <Faq items={c.faqs} />
         </section>
-        <section className="founder-section container">
-          <h2>{m.founderTitle}</h2>
+        <section id="contact" className="personal-contact container">
+          <h2>{m.personalTitle}</h2>
+          <a href="mailto:selim@zackisch.com">selim@zackisch.com</a>
+        </section>
+        <section id="about" className="founder-section container">
+          <div className="founder-header">
+            <h2>{m.founderTitle}</h2>
+            <div className="founder-support">
+              <Image
+                className="mars-logo"
+                src="/media/mars-logo.webp"
+                alt={m.marsAlt}
+                width={184}
+                height={59}
+              />
+              <div className="founder-support-copy">
+                <p className="founder-support-label">{m.founderSupportLabel}</p>
+                <p className="founder-support-name">{m.founderSupportText}</p>
+              </div>
+            </div>
+          </div>
           <div className="founder-copy">
             <p className="founder-lead">{formatCopy(m.founderLead)}</p>
             <p>{formatCopy(m.founderText)}</p>
             <p className="founder-signature">{m.founderSignature}</p>
           </div>
-        </section>
-        <section id="contact" className="personal-contact container">
-          <h2>{m.personalTitle}</h2>
-          <a href="mailto:selim@zackisch.com">selim@zackisch.com</a>
         </section>
         <section className="last-invitation container">
           <h2>{m.close}</h2>

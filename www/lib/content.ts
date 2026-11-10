@@ -120,7 +120,7 @@ export const content = {
       {
         question: "Was kostet Zackisch auch in der Saisonpause?",
         answer:
-          "Du zahlst 2 % auf den erfolgreich bezahlten Bestellwert ohne freiwilliges Trinkgeld, inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr. Hinzu kommen Zahlungsanbietergebühren. Einrichtung und Grundgebühr kosten nichts. Ohne bezahlte Bestellungen fallen keine Zackisch-Gebühren an. Das passt gut zu Saisonbetrieben. Eigene Geräte-, Internet- und weitere Anbietergebühren bleiben davon unabhängig.",
+          "In den ersten 30 Tagen nach der ersten Registrierung deines Betriebs fällt keine Zackisch-Gebühr auf deine Transaktionen an, lediglich die Zahlungsanbietergebühren. Danach zahlst du 2 % auf den erfolgreich bezahlten Bestellwert ohne freiwilliges Trinkgeld, inklusive gegebenenfalls anfallender Umsatzsteuer auf unsere Gebühr, zzgl. Zahlungsanbietergebühren. Einrichtung und Grundgebühr kosten nichts. Ohne bezahlte Bestellungen fallen keine Zackisch-Gebühren an. Das passt gut zu Saisonbetrieben. Eigene Geräte-, Internet- und weitere Anbietergebühren bleiben davon unabhängig.",
       },
       {
         question: "Wie funktioniert die Anbindung an meine Kasse?",
@@ -156,6 +156,7 @@ export const content = {
       },
     ],
     footerLegal: "Rechtliches",
+    about: "Über mich",
     contact: "Kontakt",
     legalSources: "Rechtsquellen und weiterführende Informationen",
     guestTerms: "Gastbestellung",
@@ -214,7 +215,7 @@ export const content = {
       {
         question: "What does Zackisch cost, including seasonal closures?",
         answer:
-          "You pay 2% of the successfully paid order value excluding voluntary tips, including any VAT applicable to our fee. Payment provider fees apply in addition. There is no setup fee or monthly base fee. No paid orders means no Zackisch fees, making it a good fit for seasonal venues. Your own device, internet and other provider costs remain separate.",
+          "During the first 30 days after your venue’s initial registration, no Zackisch fee applies to your transactions, only payment provider fees. After that, you pay 2% of the successfully paid order value excluding voluntary tips, including any VAT applicable to our fee, plus payment provider fees. There is no setup fee or monthly base fee. No paid orders means no Zackisch fees, making it a good fit for seasonal venues. Your own device, internet and other provider costs remain separate.",
       },
       {
         question: "How does it connect to my POS?",
@@ -248,6 +249,7 @@ export const content = {
       },
     ],
     footerLegal: "Legal",
+    about: "About me",
     contact: "Contact",
     legalSources: "Legal references and further information",
     guestTerms: "Guest ordering",

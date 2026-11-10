@@ -23,6 +23,7 @@ export function WebsiteShell({
     { href: `/${locale}#how-it-works`, label: c.nav[0] },
     { href: `/${locale}#costs`, label: c.nav[1] },
     { href: `/${locale}#questions`, label: c.nav[2] },
+    { href: `/${locale}#about`, label: c.about },
     { href: `/${locale}#contact`, label: c.contact },
   ];
   return (
@@ -94,6 +95,7 @@ export function WebsiteShell({
             </WebsiteLink>
             <WebsiteLink href={`/${locale}#costs`}>{c.nav[1]}</WebsiteLink>
             <WebsiteLink href={`/${locale}#questions`}>{c.nav[2]}</WebsiteLink>
+            <WebsiteLink href={`/${locale}#about`}>{c.about}</WebsiteLink>
             <WebsiteLink href={`/${locale}#contact`}>{c.contact}</WebsiteLink>
           </div>
           <div>

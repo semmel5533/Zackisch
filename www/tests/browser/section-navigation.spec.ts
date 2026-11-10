@@ -35,6 +35,8 @@ for (const locale of ["de-de", "de-en"]) {
         .locator(`.site-footer a[href="/${locale}#how-it-works"]`)
         .click();
       await alignedTarget(page, ".chapter-introduction h2", width);
+      await page.locator(`.site-footer a[href="/${locale}#about"]`).click();
+      await alignedTarget(page, "#about h2", width);
       await page.locator(`.site-footer a[href="/${locale}#contact"]`).click();
       await alignedTarget(page, "#contact h2", width);
       await page.locator(`.site-footer a[href="/${locale}#costs"]`).click();
@@ -151,8 +153,8 @@ for (const locale of ["de-de", "de-en"]) {
       page.locator(".footer-grid > div").first().locator("a"),
     ).toHaveText(
       locale === "de-de"
-        ? ["Hilfe", "Funktionen", "Kosten", "Fragen", "Kontakt"]
-        : ["Help", "Features", "Pricing", "Questions", "Contact"],
+        ? ["Hilfe", "Funktionen", "Kosten", "Fragen", "Über mich", "Kontakt"]
+        : ["Help", "Features", "Pricing", "Questions", "About me", "Contact"],
     );
     await expect(page.locator(".chapter-introduction h2")).toHaveText(
       locale === "de-de"

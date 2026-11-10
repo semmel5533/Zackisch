@@ -15,14 +15,24 @@ export const marketing = {
     studyText:
       "Lightspeed und Medallia befragten im Mai 2025 rund 1.000 Erwachsene in Deutschland, die in den letzten sechs Monaten einen Gastronomiebetrieb besucht hatten (veröffentlicht am 5. November 2025). Es sind Selbstauskünfte, keine Abbruchquote pro Besuch und kein Umsatzversprechen. Ein zusätzlicher Bestellweg per QR-Code gibt deinen Gästen eine weitere Option, wenn sie bereit sind.",
     counterAlt:
-      "Eine Servicekraft reicht einem Gast am Tresen einen Kaffeebecher.",
-    founderTitle: "Warum ich Zackisch baue",
+      "Gäste stehen am Tresen eines Cafés, während das Team Bestellungen aufnimmt und zubereitet.",
+    founderTitle: "Wer hinter Zackisch steckt",
     founderLead:
       "In vielen Betrieben fehlt es nicht an gutem Essen oder Gastfreundschaft, sondern an freien Händen im richtigen Moment. Wenn Tische voll sind oder sich vor dem Tresen eine Schlange bildet, warten Gäste unnötig, während das Team bereits alles gibt.",
     founderText:
-      "Ich habe Zackisch gegründet, damit jeder Betrieb vom Café und Imbiss bis zum Restaurant seinen Gästen einen einfachen Bestellweg per QR-Code anbieten kann. Ohne App-Zwang, ohne Kassensystemwechsel und ohne laufende Grundgebühr.",
+      "Ich bin Selim Eser, Informatik-Student an der Technischen Hochschule Mannheim, und habe Zackisch gegründet, damit jeder Betrieb vom Café und Imbiss bis zum Restaurant seinen Gästen einen einfachen Bestellweg per QR-Code anbieten kann. Ohne App-Zwang, ohne Kassensystemwechsel und ohne monatliche Grundgebühr.",
+    founderSupportLabel: "Unterstützt durch",
+    founderSupportText:
+      "MARS Center for Entrepreneurship der Technischen Hochschule Mannheim",
+    marsAlt:
+      "MARS Center for Entrepreneurship der Technischen Hochschule Mannheim",
     founderSignature: "Selim Eser, Gründer von Zackisch",
     personalTitle: "Schreibe mir persönlich",
+    heroTrial:
+      "30 Tage ohne Zackisch-Gebühr beim ersten Registrieren, zzgl. Zahlungsanbietergebühren.",
+    trialTitle: "30 Tage ohne Zackisch-Gebühr testen",
+    trialText:
+      "Bei der ersten Registrierung deines Betriebs fällt in den ersten 30 Tagen keine Zackisch-Gebühr auf deine Transaktionen an. In dieser Zeit zahlst du lediglich die Zahlungsanbietergebühren.",
     explore: "So funktioniert’s",
     demoTitle: "Hier könnte dein Betrieb auftauchen",
     demoVenues: [
@@ -104,14 +114,24 @@ export const marketing = {
     studyText:
       "In May 2025, Lightspeed and Medallia surveyed around 1,000 adults in Germany who had visited a hospitality venue in the previous six months (published on 5 November 2025). These are self-reported experiences, not a per-visit abandonment rate or revenue promise. An additional QR ordering route gives your guests another option as soon as they are ready.",
     counterAlt:
-      "A barista hands a takeaway coffee cup across the counter to a guest.",
-    founderTitle: "Why I’m building Zackisch",
+      "Guests wait and place orders at a café counter while staff prepare drinks and food.",
+    founderTitle: "Who is behind Zackisch",
     founderLead:
       "In many venues, the bottleneck isn’t good food or hospitality, it’s having enough hands at the right moment. When tables fill up or a queue forms at the counter, guests end up waiting while the team is already giving its all.",
     founderText:
-      "I founded Zackisch so every venue, from cafés and snack bars to restaurants, can offer guests a straightforward way to order and pay by QR code. With no app download, no POS replacement and no monthly base fee.",
+      "I am Selim Eser, a Computer Science student at Technische Hochschule Mannheim, and I founded Zackisch so every venue, from cafés and snack bars to restaurants, can offer guests a straightforward way to order and pay by QR code. With no app download, no POS replacement and no monthly base fee.",
+    founderSupportLabel: "Supported by",
+    founderSupportText:
+      "MARS Center for Entrepreneurship at Technische Hochschule Mannheim",
+    marsAlt:
+      "MARS Center for Entrepreneurship at Technische Hochschule Mannheim",
     founderSignature: "Selim Eser, Founder of Zackisch",
     personalTitle: "Write to me personally",
+    heroTrial:
+      "30 days with 0% Zackisch fee on first registration, plus payment provider fees.",
+    trialTitle: "Try 30 days with no Zackisch fee",
+    trialText:
+      "When you register your venue for the first time, no Zackisch fee applies to your transactions during the first 30 days. During this trial period, only payment provider fees apply.",
     explore: "How it works",
     demoTitle: "Your venue could be here",
     demoVenues: [

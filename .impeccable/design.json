@@ -218,7 +218,7 @@
       "Keep product image areas clearly text-labelled until actual screenshots are available.",
       "Header country trigger matches the login secondary pill and forms a 12px-gap group with it with 48px minimum height and 17px text; footer country and help triggers use transparent Citron outline pills. Label venue placeholder band with Hier könnte dein Betrieb auftauchen / Your venue could be here",
       "Left-align the personal contact block with a bottom separator and no top border; email uses no arrow and underlines on hover or keyboard focus.",
-      "Footer: two columns on desktop and centered single column below 800px, country trigger first above unheaded navigation ordered outlined help, features, pricing, questions, contact, then legal. Contact scrolls to the homepage email section with a clean URL."
+      "Footer: two columns on desktop and centered single column below 800px, country trigger first above unheaded navigation ordered outlined help, features, pricing, questions, about, contact, then legal. Contact scrolls to the homepage email section with a clean URL."
     ],
     "donts": [
       "Never generate photographs with AI.",

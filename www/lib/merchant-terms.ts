@@ -19,7 +19,7 @@ export const merchantTerms = {
         },
         {
           title: "4. Zackisch-Gebühr",
-          body: "Es fallen keine Zackisch-Einrichtungsgebühr und keine monatliche Zackisch-Grundgebühr an. Zackisch erhält 2 % des erfolgreich vereinnahmten Restaurant-Bestellwerts nach Rabatten, einschließlich der darin enthaltenen Restaurant-Umsatzsteuer und ohne freiwilliges Trinkgeld. Die gegebenenfalls auf die Zackisch-Leistung entfallende Umsatzsteuer ist in diesen 2 % enthalten und wird nicht zusätzlich aufgeschlagen. Bei 10,00 € maßgeblichem Bestellwert beträgt die Zackisch-Gebühr insgesamt 0,20 €. Fehlgeschlagene, abgebrochene oder nicht eingezogene Zahlungen lösen diese Gebühr nicht aus. Geräte-, Internet- und Druckkosten sowie Stripe-Gebühren bleiben getrennt.",
+          body: "Es fallen keine Zackisch-Einrichtungsgebühr und keine monatliche Zackisch-Grundgebühr an. In den ersten 30 Tagen nach der erstmaligen Registrierung eines Betriebs erhebt Zackisch keine Zackisch-Gebühr (0 %) auf Transaktionen; Gebühren des Zahlungsanbieters bleiben davon unberührt. Danach erhält Zackisch 2 % des erfolgreich vereinnahmten Restaurant-Bestellwerts nach Rabatten, einschließlich der darin enthaltenen Restaurant-Umsatzsteuer und ohne freiwilliges Trinkgeld. Die gegebenenfalls auf die Zackisch-Leistung entfallende Umsatzsteuer ist in diesen 2 % enthalten und wird nicht zusätzlich aufgeschlagen. Bei 10,00 € maßgeblichem Bestellwert beträgt die Zackisch-Gebühr insgesamt 0,20 €. Fehlgeschlagene, abgebrochene oder nicht eingezogene Zahlungen lösen diese Gebühr nicht aus. Geräte-, Internet- und Druckkosten sowie Stripe-Gebühren bleiben getrennt.",
         },
         {
           title: "5. Abrechnung und Umsatzsteuer",
@@ -76,7 +76,7 @@ export const merchantTerms = {
         },
         {
           title: "4. Zackisch fee",
-          body: "There is no Zackisch setup fee or monthly Zackisch base fee. Zackisch receives 2% of the successfully captured restaurant order value after discounts, including restaurant VAT within that value and excluding voluntary tips. Any VAT applicable to the Zackisch service is included in the 2% and is not added on top. An eligible order value of €10.00 results in a total Zackisch fee of €0.20. Failed, abandoned or uncaptured payments do not incur this fee. Device, internet and printing costs and Stripe fees are separate.",
+          body: "There is no Zackisch setup fee or monthly Zackisch base fee. During the first 30 days following a venue’s initial registration, Zackisch charges no Zackisch fee (0%) on transactions; payment provider fees still apply. After that, Zackisch receives 2% of the successfully captured restaurant order value after discounts, including restaurant VAT within that value and excluding voluntary tips. Any VAT applicable to the Zackisch service is included in the 2% and is not added on top. An eligible order value of €10.00 results in a total Zackisch fee of €0.20. Failed, abandoned or uncaptured payments do not incur this fee. Device, internet and printing costs and Stripe fees are separate.",
         },
         {
           title: "5. Billing and VAT",

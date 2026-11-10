@@ -333,13 +333,46 @@ for (const locale of ["de-de", "de-en"]) {
     await expect(page.locator(".problem-study")).toContainText(
       german ? "Lightspeed und Medallia" : "Lightspeed and Medallia",
     );
+    const studyBg = await page
+      .locator(".problem-study")
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    const founderBg = await page
+      .locator(".founder-section")
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(studyBg).toBe(founderBg);
     await expect(page.locator(".founder-section h2")).toHaveText(
-      german ? "Warum ich Zackisch baue" : "Why I’m building Zackisch",
+      german ? "Wer hinter Zackisch steckt" : "Who is behind Zackisch",
     );
+    await expect(page.locator(".founder-section")).toContainText(
+      german
+        ? "Technischen Hochschule Mannheim"
+        : "Technische Hochschule Mannheim",
+    );
+    await expect(page.locator(".founder-section")).toContainText(
+      "MARS Center for Entrepreneurship",
+    );
+    await expect(page.locator(".founder-section .mars-logo")).toBeVisible();
     await expect(page.locator(".founder-signature")).toHaveText(
       german
         ? "Selim Eser, Gründer von Zackisch"
         : "Selim Eser, Founder of Zackisch",
+    );
+    const sectionOrder = await page.evaluate(() =>
+      [...document.querySelectorAll("main > section[id]")].map((s) => s.id),
+    );
+    expect(sectionOrder).toEqual([
+      "problem",
+      "how-it-works",
+      "costs",
+      "questions",
+      "contact",
+      "about",
+    ]);
+    await expect(page.locator(".welcome-trial")).toContainText("30");
+    await expect(page.locator(".cost-trial h3")).toHaveText(
+      german
+        ? "30 Tage ohne Zackisch-Gebühr testen"
+        : "Try 30 days with no Zackisch fee",
     );
     const email = page.locator(".personal-contact > a");
     await expect(email.locator("svg")).toHaveCount(0);
