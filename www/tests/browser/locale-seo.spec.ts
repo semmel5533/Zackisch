@@ -341,7 +341,7 @@ for (const locale of ["de-de", "de-en"]) {
       .evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(studyBg).toBe(founderBg);
     await expect(page.locator(".founder-section h2")).toHaveText(
-      german ? "Wer hinter Zackisch steckt" : "Who is behind Zackisch",
+      german ? "Wer steckt dahinter?" : "Who is behind it?",
     );
     await expect(page.locator(".founder-section")).toContainText(
       german
@@ -368,11 +368,14 @@ for (const locale of ["de-de", "de-en"]) {
       "contact",
       "about",
     ]);
-    await expect(page.locator(".welcome-trial")).toContainText("30");
-    await expect(page.locator(".cost-trial h3")).toHaveText(
+    await expect(page.locator(".welcome-trial")).toHaveText(
       german
-        ? "30 Tage ohne Zackisch-Gebühr testen"
-        : "Try 30 days with no Zackisch fee",
+        ? "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren."
+        : "After completing setup, try 30 days for free, plus payment provider fees.",
+    );
+    await expect(page.locator(".cost-trial .trial-number")).toHaveText("0%");
+    await expect(page.locator(".cost-trial h3")).toHaveText(
+      german ? "30 Tage kostenlos testen" : "Try 30 days for free",
     );
     const email = page.locator(".personal-contact > a");
     await expect(email.locator("svg")).toHaveCount(0);

@@ -9,7 +9,7 @@ import { DemoVenues } from "./demo-venues";
 import { Faq } from "./website-controls";
 
 const NOWRAP_PATTERN =
-  /(zzgl\.\s+Zahlungsanbietergebühren\.?|plus payment provider fees\.?|\bQR codes?[\p{P}]*|\b\d+(?:[.,]\d+)?\s*(?:%|€)[\p{P}]*|\b[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)+[\p{P}]*)/gu;
+  /(zzgl\.\s+Zahlungsanbietergebühren\.?|plus payment provider fees\.?|Schlange am Tresen|queues at the counter|\bQR codes?[\p{P}]*|\b\d+(?:[.,]\d+)?\s*(?:%|€)[\p{P}]*|\b[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)+[\p{P}]*)/gu;
 
 export function formatCopy(text: string): ReactNode {
   const parts = text.split(NOWRAP_PATTERN);
@@ -53,34 +53,36 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
               </div>
               <p className="welcome-trial">{formatCopy(m.heroTrial)}</p>
             </div>
-            <figure className="welcome-main-photo">
-              <Image
-                src="/media/phone-guests.webp"
-                alt={m.phoneAlt}
-                width={1800}
-                height={1200}
-                sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1696px) calc(100vw - 96px), 1600px"
-                loading="eager"
-                fetchPriority="high"
-              />
-            </figure>
+            <div className="welcome-stage">
+              <figure className="welcome-main-photo">
+                <Image
+                  src="/media/phone-guests.webp"
+                  alt={m.phoneAlt}
+                  width={1800}
+                  height={1200}
+                  sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1696px) calc(100vw - 96px), 1600px"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </figure>
+              <DemoVenues copy={m} />
+            </div>
           </div>
         </section>
-        <DemoVenues copy={m} />
         <section id="problem" className="problem-section container">
           <div className="problem-lead">
             <div className="problem-copy">
-              <h2>{m.problemTitle}</h2>
+              <h2>{formatCopy(m.problemTitle)}</h2>
               <p>{formatCopy(m.problemText)}</p>
               <p>{formatCopy(m.solutionText)}</p>
             </div>
             <div className="problem-photos">
               <figure className="story-photo">
                 <Image
-                  src="/media/counter-queue.webp"
+                  src="/media/counter-order.webp"
                   alt={m.counterAlt}
                   width={1600}
-                  height={1068}
+                  height={1067}
                   sizes="(max-width: 799px) 100vw, (max-width: 1696px) 56vw, 880px"
                 />
               </figure>
@@ -145,20 +147,30 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="costs" className="cost-section">
           <div className="container cost-inner">
             <h2>{m.costTitle}</h2>
-            <div className="cost-figure">
-              <p className="cost-number">
-                2<span>%</span>
-              </p>
-              <p>{m.feeLabel}</p>
-            </div>
-            <div className="cost-details">
-              <h3>{m.zero}</h3>
-              <p>{formatCopy(m.seasonal)}</p>
-              <p>{formatCopy(m.feeDetail)}</p>
+            <div className="cost-card-primary">
+              <div className="cost-figure">
+                <p className="cost-number">
+                  2<span>%</span>
+                </p>
+                <p>{m.feeLabel}</p>
+              </div>
+              <div className="cost-details">
+                <h3>{m.zero}</h3>
+                <p>{formatCopy(m.seasonal)}</p>
+                <p>{formatCopy(m.feeDetail)}</p>
+              </div>
             </div>
             <div className="cost-trial">
-              <h3>{m.trialTitle}</h3>
-              <p>{formatCopy(m.trialText)}</p>
+              <div className="trial-figure">
+                <p className="trial-number">
+                  0<span>%</span>
+                </p>
+                <p>{m.trialLabel}</p>
+              </div>
+              <div className="trial-details">
+                <h3>{m.trialTitle}</h3>
+                <p>{formatCopy(m.trialText)}</p>
+              </div>
             </div>
           </div>
         </section>

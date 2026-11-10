@@ -74,7 +74,7 @@
       {
         "name": "welcome-expand",
         "value": "linear both; view(); entry 0% cover 45%",
-        "purpose": "Source .welcome-main-photo: clip-path inset(0 6% round 32px) to inset(0 0 round 32px); only supported browsers from 800px with no reduced-motion preference."
+        "purpose": "Source .welcome-stage: clip-path inset(0 5% round 32px) to inset(0 0 round 32px); only supported browsers from 800px with no reduced-motion preference."
       },
       {
         "name": "chapter-stack",
@@ -83,8 +83,8 @@
       },
       {
         "name": "logo-drift",
-        "value": "36s linear infinite; translateX(-50%)",
-        "purpose": "Six localized generic venue placeholders under an invitation, never actual customer references or guaranteed advertising. Pause/resume control and hover pause the track; reduced motion shows all six in a static grid, hiding the duplicate list and pause control. Duplicated content is aria-hidden."
+        "value": "34s linear infinite; translateX(-50%)",
+        "purpose": "Six localized generic venue logo lockups (custom geometric SVG emblem and distinct wordmark) under an invitation, docked inside the bottom of the hero stage on desktop and standalone on mobile, never actual customer references or guaranteed advertising. Pause/resume control and hover pause the track; reduced motion shows all six in a static grid, hiding the duplicate list and pause control. Duplicated content is aria-hidden."
       }
     ],
     "breakpoints": [

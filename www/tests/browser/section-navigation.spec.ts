@@ -209,8 +209,8 @@ for (const locale of ["de-de", "de-en"]) {
     });
     await page.setViewportSize({ width: 1280, height: 900 });
     for (const phrase of locale === "de-de"
-      ? ["QR-Codes", "zzgl. Zahlungsanbietergebühren."]
-      : ["QR codes", "plus payment provider fees."]) {
+      ? ["QR-Codes", "Schlange am Tresen", "zzgl. Zahlungsanbietergebühren."]
+      : ["QR codes", "queues at the counter", "plus payment provider fees."]) {
       const rects = await page
         .locator(".nowrap", { hasText: phrase })
         .first()
