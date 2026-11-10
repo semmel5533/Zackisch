@@ -1,43 +1,27 @@
-import { type ReactNode } from "react";
 import Image from "next/image";
 import { WebsiteLink } from "./section-navigation";
 import { content, signupUrl, surveyUrl, type Locale } from "@/lib/content";
 import { marketing } from "@/lib/marketing-content";
 import { WebsiteShell } from "./website-shell";
 import { StaffPreview } from "./staff-preview";
-import { DemoVenues } from "./demo-venues";
-import { Faq } from "./website-controls";
-
-const NOWRAP_PATTERN =
-  /(zzgl\.\s+Zahlungsanbietergebühren\.?|plus payment provider fees\.?|Schlange am Tresen|queues at the counter|\bQR codes?[\p{P}]*|\b\d+(?:[.,]\d+)?\s*(?:%|€)[\p{P}]*|\b[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)+[\p{P}]*)/gu;
-
-export function formatCopy(text: string): ReactNode {
-  const parts = text.split(NOWRAP_PATTERN);
-  if (parts.length === 1) return text;
-  return parts.map((part, index) =>
-    index % 2 === 1 ? (
-      <span key={index} className="nowrap">
-        {part}
-      </span>
-    ) : (
-      part
-    ),
-  );
-}
+import { TrialBanner } from "./trial-banner";
+import { ActionArrow, Faq } from "./website-controls";
+import { formatCopy } from "@/lib/format-copy";
+export { formatCopy };
 
 export function WebsiteHome({ locale }: { locale: Locale }) {
   const c = content[locale];
   const m = marketing[locale];
   return (
-    <WebsiteShell locale={locale}>
+    <WebsiteShell locale={locale} banner={<TrialBanner copy={m} />}>
       <main id="main" lang={c.lang} className="marketing">
         <section className="welcome container">
           <div className="welcome-composition">
             <div className="welcome-copy">
               <h1>
-                {m.hero[0]}
+                {formatCopy(m.hero[0])}
                 <br />
-                <span>{m.hero[1]}</span>
+                <span>{formatCopy(m.hero[1])}</span>
               </h1>
               <p className="welcome-intro">{formatCopy(m.intro)}</p>
               <div className="welcome-actions">
@@ -51,22 +35,18 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
                   {m.explore}
                 </WebsiteLink>
               </div>
-              <p className="welcome-trial">{formatCopy(m.heroTrial)}</p>
             </div>
-            <div className="welcome-stage">
-              <figure className="welcome-main-photo">
-                <Image
-                  src="/media/phone-guests.webp"
-                  alt={m.phoneAlt}
-                  width={1800}
-                  height={1200}
-                  sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1696px) calc(100vw - 96px), 1600px"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </figure>
-              <DemoVenues copy={m} />
-            </div>
+            <figure className="welcome-main-photo">
+              <Image
+                src="/media/phone-guests.webp"
+                alt={m.phoneAlt}
+                width={1800}
+                height={1200}
+                sizes="(max-width: 599px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1696px) calc(100vw - 96px), 1600px"
+                loading="eager"
+                fetchPriority="high"
+              />
+            </figure>
           </div>
         </section>
         <section id="problem" className="problem-section container">
@@ -74,16 +54,15 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             <div className="problem-copy">
               <h2>{formatCopy(m.problemTitle)}</h2>
               <p>{formatCopy(m.problemText)}</p>
-              <p>{formatCopy(m.solutionText)}</p>
             </div>
             <div className="problem-photos">
               <figure className="story-photo">
                 <Image
                   src="/media/counter-order.webp"
                   alt={m.counterAlt}
-                  width={1600}
-                  height={1067}
-                  sizes="(max-width: 799px) 100vw, (max-width: 1696px) 56vw, 880px"
+                  width={1200}
+                  height={1500}
+                  sizes="(max-width: 799px) 100vw, (max-width: 1696px) 50vw, 680px"
                 />
               </figure>
             </div>
@@ -147,29 +126,17 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="costs" className="cost-section">
           <div className="container cost-inner">
             <h2>{m.costTitle}</h2>
-            <div className="cost-card-primary">
+            <div className="cost-content">
               <div className="cost-figure">
                 <p className="cost-number">
                   2<span>%</span>
                 </p>
-                <p>{m.feeLabel}</p>
+                <p className="cost-label">{m.feeLabel}</p>
               </div>
               <div className="cost-details">
                 <h3>{m.zero}</h3>
                 <p>{formatCopy(m.seasonal)}</p>
                 <p>{formatCopy(m.feeDetail)}</p>
-              </div>
-            </div>
-            <div className="cost-trial">
-              <div className="trial-figure">
-                <p className="trial-number">
-                  0<span>%</span>
-                </p>
-                <p>{m.trialLabel}</p>
-              </div>
-              <div className="trial-details">
-                <h3>{m.trialTitle}</h3>
-                <p>{formatCopy(m.trialText)}</p>
               </div>
             </div>
           </div>
@@ -187,6 +154,45 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
             </WebsiteLink>
           </div>
         </section>
+        <section id="about" className="founder-section container">
+          <h2>{m.founderTitle}</h2>
+          <div className="founder-grid">
+            <div className="founder-col-left">
+              <blockquote className="founder-lead">
+                {formatCopy(m.founderLead)}
+              </blockquote>
+            </div>
+            <div className="founder-col-right">
+              <p className="founder-text">{formatCopy(m.founderText)}</p>
+              <div className="founder-support-block">
+                <span className="founder-support-label">
+                  {m.founderSupportLabel}
+                </span>
+                <WebsiteLink
+                  className="button button-ghost founder-support"
+                  href="https://launchtomars.de"
+                  decoration={false}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    className="mars-logo"
+                    src="/media/mars-logo.webp"
+                    alt={m.marsAlt}
+                    width={72}
+                    height={23}
+                  />
+                  <span className="founder-support-name">
+                    {m.founderSupportText}
+                  </span>
+                  <span className="founder-support-action" aria-hidden="true">
+                    <ActionArrow size={16} />
+                  </span>
+                </WebsiteLink>
+              </div>
+            </div>
+          </div>
+        </section>
         <section id="questions" className="questions container">
           <h2>{m.faq}</h2>
           <Faq items={c.faqs} />
@@ -194,29 +200,6 @@ export function WebsiteHome({ locale }: { locale: Locale }) {
         <section id="contact" className="personal-contact container">
           <h2>{m.personalTitle}</h2>
           <a href="mailto:selim@zackisch.com">selim@zackisch.com</a>
-        </section>
-        <section id="about" className="founder-section container">
-          <div className="founder-header">
-            <h2>{m.founderTitle}</h2>
-            <div className="founder-support">
-              <Image
-                className="mars-logo"
-                src="/media/mars-logo.webp"
-                alt={m.marsAlt}
-                width={184}
-                height={59}
-              />
-              <div className="founder-support-copy">
-                <p className="founder-support-label">{m.founderSupportLabel}</p>
-                <p className="founder-support-name">{m.founderSupportText}</p>
-              </div>
-            </div>
-          </div>
-          <div className="founder-copy">
-            <p className="founder-lead">{formatCopy(m.founderLead)}</p>
-            <p>{formatCopy(m.founderText)}</p>
-            <p className="founder-signature">{m.founderSignature}</p>
-          </div>
         </section>
         <section className="last-invitation container">
           <h2>{m.close}</h2>

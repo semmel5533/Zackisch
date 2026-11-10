@@ -229,33 +229,19 @@ test("entry route selects browser locale and defaults to de-de when unsupported"
   }
 });
 
-test("demo logo band is explicitly illustrative and motion can be paused", async ({
+test("trial announcement banner is visible above the header", async ({
   page,
 }) => {
-  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/de-de");
-  await expect(
-    page.getByRole("heading", { name: "Hier könnte dein Betrieb auftauchen" }),
-  ).toBeVisible();
-  const track = page.locator(".logo-track");
-  const before = await track.evaluate((el) => getComputedStyle(el).transform);
-  await expect
-    .poll(() => track.evaluate((el) => getComputedStyle(el).transform))
-    .not.toBe(before);
-  await page.getByRole("button", { name: "Logo-Band pausieren" }).click();
-  expect(
-    await track.evaluate((el) => getComputedStyle(el).animationPlayState),
-  ).toBe("paused");
-  await page.getByRole("button", { name: "Logo-Band fortsetzen" }).click();
-  await expect(track).toHaveAttribute("data-paused", "false");
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  expect(await track.evaluate((el) => getComputedStyle(el).animationName)).toBe(
-    "none",
+  const banner = page.locator(".top-banner");
+  await expect(banner).toBeVisible();
+  await expect(banner).toContainText(
+    "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren.",
   );
-  await expect(
-    page.locator('.demo-logo-list[aria-hidden="true"]'),
-  ).toBeHidden();
-  await expect(page.getByRole("button", { name: /Logo-Band/ })).toBeHidden();
+  const bannerBox = await banner.boundingBox();
+  const headerBox = await page.locator(".site-header").boundingBox();
+  expect(bannerBox!.y).toBeLessThan(headerBox!.y);
+  await expect(page.locator(".top-banner-dismiss")).toHaveCount(0);
 });
 
 for (const locale of ["de-de", "de-en"]) {
@@ -352,11 +338,10 @@ for (const locale of ["de-de", "de-en"]) {
       "MARS Center for Entrepreneurship",
     );
     await expect(page.locator(".founder-section .mars-logo")).toBeVisible();
-    await expect(page.locator(".founder-signature")).toHaveText(
-      german
-        ? "Selim Eser, Gründer von Zackisch"
-        : "Selim Eser, Founder of Zackisch",
-    );
+    const marsLink = page.locator(".founder-support");
+    await expect(marsLink).toHaveAttribute("href", "https://launchtomars.de");
+    await expect(marsLink).toHaveAttribute("target", "_blank");
+    await expect(marsLink.locator(".founder-support-action svg")).toBeVisible();
     const sectionOrder = await page.evaluate(() =>
       [...document.querySelectorAll("main > section[id]")].map((s) => s.id),
     );
@@ -364,19 +349,16 @@ for (const locale of ["de-de", "de-en"]) {
       "problem",
       "how-it-works",
       "costs",
+      "about",
       "questions",
       "contact",
-      "about",
     ]);
-    await expect(page.locator(".welcome-trial")).toHaveText(
+    await expect(page.locator(".top-banner")).toContainText(
       german
         ? "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren."
         : "After completing setup, try 30 days for free, plus payment provider fees.",
     );
-    await expect(page.locator(".cost-trial .trial-number")).toHaveText("0%");
-    await expect(page.locator(".cost-trial h3")).toHaveText(
-      german ? "30 Tage kostenlos testen" : "Try 30 days for free",
-    );
+    await expect(page.locator(".cost-number")).toHaveText("2%");
     const email = page.locator(".personal-contact > a");
     await expect(email.locator("svg")).toHaveCount(0);
     await expect(email).toHaveCSS("text-decoration-line", "none");

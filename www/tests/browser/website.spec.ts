@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 for (const [locale, lang, title] of [
-  ["de-de", "de", "Bestellen & Bezahlen mit QR-Code"],
-  ["de-en", "en", "Order & pay by QR code"],
+  ["de-de", "de", "Lass deine Gäste per QR-Code bestellen"],
+  ["de-en", "en", "Let your guests order by QR code"],
 ]) {
   test(`${locale} has localized metadata and fits small screens`, async ({
     page,

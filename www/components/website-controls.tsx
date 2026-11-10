@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { WebsiteLink } from "./section-navigation";
-import { formatCopy } from "./website-home";
+import { formatCopy } from "@/lib/format-copy";
 import {
   Globe,
   Check,
@@ -15,6 +15,10 @@ import {
 import { Accordion } from "@base-ui/react/accordion";
 import { Dialog } from "@base-ui/react/dialog";
 import { localeConfigs, regions, type Copy, type Locale } from "@/lib/content";
+
+export function ActionArrow({ size = 20 }: { size?: number }) {
+  return <ArrowUpRight size={size} weight="bold" aria-hidden />;
+}
 
 export function Faq({ items }: { items: Copy["faqs"] }) {
   return (

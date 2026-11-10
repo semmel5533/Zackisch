@@ -20,8 +20,8 @@ for (const locale of ["de-de", "de-en"]) {
       const navLabels = await drawer.locator("nav a").allInnerTexts();
       expect(navLabels.map((label) => label.trim())).toEqual(
         de
-          ? ["Funktionen", "Kosten", "Fragen", "Über mich", "Kontakt"]
-          : ["Features", "Pricing", "Questions", "About me", "Contact"],
+          ? ["Funktionen", "Kosten", "Über mich", "Fragen", "Kontakt"]
+          : ["Features", "Pricing", "About me", "Questions", "Contact"],
       );
       await expect(
         drawer.getByRole("link", {

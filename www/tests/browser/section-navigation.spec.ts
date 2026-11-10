@@ -153,8 +153,8 @@ for (const locale of ["de-de", "de-en"]) {
       page.locator(".footer-grid > div").first().locator("a"),
     ).toHaveText(
       locale === "de-de"
-        ? ["Hilfe", "Funktionen", "Kosten", "Fragen", "Über mich", "Kontakt"]
-        : ["Help", "Features", "Pricing", "Questions", "About me", "Contact"],
+        ? ["Hilfe", "Funktionen", "Kosten", "Über mich", "Fragen", "Kontakt"]
+        : ["Help", "Features", "Pricing", "About me", "Questions", "Contact"],
     );
     await expect(page.locator(".chapter-introduction h2")).toHaveText(
       locale === "de-de"
@@ -163,8 +163,8 @@ for (const locale of ["de-de", "de-en"]) {
     );
     await expect(page.locator("#problem h2")).toHaveText(
       locale === "de-de"
-        ? "Volle Tische, Schlange am Tresen"
-        : "Busy tables, queues at the counter",
+        ? "Problem der Wartezeiten"
+        : "The problem with waiting times",
     );
     await expect(page.locator(".chapter-0 h3")).toHaveText(
       locale === "de-de"
@@ -209,8 +209,8 @@ for (const locale of ["de-de", "de-en"]) {
     });
     await page.setViewportSize({ width: 1280, height: 900 });
     for (const phrase of locale === "de-de"
-      ? ["QR-Codes", "Schlange am Tresen", "zzgl. Zahlungsanbietergebühren."]
-      : ["QR codes", "queues at the counter", "plus payment provider fees."]) {
+      ? ["QR-Codes", "zzgl. Zahlungsanbietergebühren."]
+      : ["QR codes", "plus payment provider fees."]) {
       const rects = await page
         .locator(".nowrap", { hasText: phrase })
         .first()
@@ -235,13 +235,10 @@ for (const locale of ["de-de", "de-en"]) {
         ? "Gib deinen Gästen einen weiteren Bestellweg,\ndein Team und deine Kasse bleiben dabei."
         : "Give guests another way to order,\nalongside your team and existing POS.",
     );
-    await expect(page.locator(".demo-heading h2")).toHaveText(
+    await expect(page.locator(".top-banner")).toContainText(
       locale === "de-de"
-        ? "Hier könnte dein Betrieb auftauchen"
-        : "Your venue could be here",
-    );
-    await expect(page.locator(".demo-logo-list").first()).toContainText(
-      locale === "de-de" ? "Dein Café" : "Your café",
+        ? "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren."
+        : "After completing setup, try 30 days for free, plus payment provider fees.",
     );
   });
 }

@@ -1,24 +1,22 @@
 export const marketing = {
   "de-de": {
-    hero: ["Bestellen & Bezahlen", "mit QR-Code"],
+    hero: ["Lass deine Gäste", "per QR-Code bestellen"],
     intro:
       "Am Tisch oder zur Abholung am Tresen, direkt im Browser ohne App.\nMit deinem Service und deiner bestehenden Kasse.",
     phoneAlt: "Drei Gäste schauen im Café gemeinsam auf ein Smartphone.",
-    problemTitle: "Volle Tische,\nSchlange am Tresen",
+    problemTitle: "Problem der Wartezeiten",
     problemText:
-      "Am Tisch warten Gäste auf die nächste Bestellung. Am Tresen treffen Bestellen, Bezahlen und Abholen aufeinander.",
-    solutionText:
-      "Mit Zackisch bestellen und bezahlen Gäste per QR-Code selbst. Persönlicher Service bleibt jederzeit möglich.",
-    studyTitle: "Was die Umfrage zeigt, und was nicht",
+      "Am Tisch warten Gäste auf die nächste Bestellung. Am Tresen stauen sich Bestellen, Bezahlen und Abholen.",
+    studyTitle: "Was eine Umfrage zeigt",
     studyCaption:
       "der Befragten in Deutschland sind wegen Wartezeiten schon einmal vor der Bestellung wieder gegangen.",
     studyText:
-      "Lightspeed und Medallia befragten im Mai 2025 rund 1.000 Erwachsene in Deutschland nach einem Gastronomiebesuch (veröffentlicht am 5. November 2025). Es sind Selbstauskünfte, keine Abbruchquote pro Besuch und kein Umsatzversprechen. Ein Bestellweg per QR-Code gibt Gästen eine direkte Option, sobald sie bereit sind.",
+      "Lightspeed und Medallia befragten im Mai 2025 rund 1.000 Erwachsene in Deutschland nach einem Gastronomiebesuch. Lange Wartezeiten führen zu Abbrüchen.",
     counterAlt:
-      "Zwei Gäste schauen am Tresen eines Cafés in das Menü, während eine Mitarbeiterin die Bestellung an der Kasse aufnimmt.",
+      "Ein Barista bereitet an der Kaffeemaschine Espresso am Tresen eines gut besuchten Cafés zu.",
     founderTitle: "Wer steckt dahinter?",
     founderLead:
-      "In vielen Betrieben fehlt es nicht an gutem Essen oder Gastfreundschaft, sondern an freien Händen im richtigen Moment. Wenn Tische voll sind oder sich am Tresen eine Schlange bildet, warten Gäste unnötig.",
+      "In vielen Betrieben fehlt es nicht an gutem Essen oder Gastfreundschaft, sondern an freien Händen im richtigen Moment.",
     founderText:
       "Ich bin Selim Eser, Informatik-Student an der Technischen Hochschule Mannheim. Mit Zackisch gebe ich Cafés, Imbissen und Restaurants einen einfachen Bestellweg per QR-Code. Ohne App-Zwang, ohne Kassenwechsel und ohne monatliche Grundgebühr.",
     founderSupportLabel: "Unterstützt durch",
@@ -30,22 +28,12 @@ export const marketing = {
     personalTitle: "Schreibe mir persönlich",
     heroTrial:
       "Nach Abschluss des Einrichten 30 Tage kostenlos testen, zzgl. Zahlungsanbietergebühren.",
+    dismissTrial: "Hinweis schließen",
     trialLabel: "Zackisch-Gebühr in den ersten 30 Tagen",
     trialTitle: "30 Tage kostenlos testen",
     trialText:
       "Nach Abschluss des Einrichten fällt beim ersten Registrieren 30 Tage lang keine Zackisch-Gebühr an, zzgl. Zahlungsanbietergebühren.",
     explore: "So funktioniert’s",
-    demoTitle: "Hier könnte dein Betrieb auftauchen",
-    demoVenues: [
-      "Dein Café",
-      "Dein Bistro",
-      "Dein Restaurant",
-      "Dein Imbiss",
-      "Deine Bar",
-      "Dein Foodtruck",
-    ],
-    pauseLogos: "Logo-Band pausieren",
-    resumeLogos: "Logo-Band fortsetzen",
     menuTitle: "Ein digitales Menü,\nmehr Optionen",
     menuFlexibility:
       "Du legst Varianten, Extras und Auswahlschritte fest. Gäste stellen ihren Artikel nach Wunsch zusammen.",
@@ -98,25 +86,23 @@ export const marketing = {
       "Gib deinen Gästen einen weiteren Bestellweg,\ndein Team und deine Kasse bleiben dabei.",
   },
   "de-en": {
-    hero: ["Order & pay", "by QR code"],
+    hero: ["Let your guests", "order by QR code"],
     intro:
       "At the table or for counter pickup, right in the browser with no app.\nAlongside your service and existing POS.",
     phoneAlt: "Three café guests look at a smartphone together.",
-    problemTitle: "Busy tables,\nqueues at the counter",
+    problemTitle: "The problem with waiting times",
     problemText:
       "At tables, guests wait for their next order. At the counter, ordering, payment and pickup collide.",
-    solutionText:
-      "With Zackisch, guests order and pay by QR code themselves. Personal service stays available anytime.",
-    studyTitle: "What the survey shows, and what it doesn’t",
+    studyTitle: "What a survey shows",
     studyCaption:
       "of surveyed guests in Germany have left a venue before ordering because of waiting times.",
     studyText:
-      "In May 2025, Lightspeed and Medallia surveyed around 1,000 adults in Germany after visiting a hospitality venue (published on 5 November 2025). These are self-reported experiences, not a per-visit abandonment rate or revenue promise. QR ordering gives guests a direct option as soon as they are ready.",
+      "In May 2025, Lightspeed and Medallia surveyed around 1,000 adults in Germany after visiting a venue. Long waiting times lead to dropouts.",
     counterAlt:
-      "Two guests look at a menu at a café counter while a barista takes the order at the POS terminal.",
+      "A barista operates an espresso machine at the counter of a busy café.",
     founderTitle: "Who is behind it?",
     founderLead:
-      "In many venues, the bottleneck isn’t good food or hospitality, it’s having free hands at the right moment. When tables fill up or a queue forms at the counter, guests wait unnecessarily.",
+      "In many venues, what is missing isn’t great food or hospitality, but free hands during rush hours.",
     founderText:
       "I am Selim Eser, a Computer Science student at Technische Hochschule Mannheim. I built Zackisch to give cafés, snack bars and restaurants a straightforward way for guests to order and pay by QR code, with no app, no POS replacement and no monthly fee.",
     founderSupportLabel: "Supported by",
@@ -128,22 +114,12 @@ export const marketing = {
     personalTitle: "Write to me personally",
     heroTrial:
       "After completing setup, try 30 days for free, plus payment provider fees.",
+    dismissTrial: "Dismiss notification",
     trialLabel: "Zackisch fee in the first 30 days",
     trialTitle: "Try 30 days for free",
     trialText:
       "After completing setup on your first registration, no Zackisch fee applies for 30 days, plus payment provider fees.",
     explore: "How it works",
-    demoTitle: "Your venue could be here",
-    demoVenues: [
-      "Your café",
-      "Your bistro",
-      "Your restaurant",
-      "Your snack bar",
-      "Your bar",
-      "Your food truck",
-    ],
-    pauseLogos: "Pause logo carousel",
-    resumeLogos: "Resume logo carousel",
     menuTitle: "One digital menu,\nmore options",
     menuFlexibility:
       "You define variants, extras and selection steps. Guests customise their item the way they like.",
